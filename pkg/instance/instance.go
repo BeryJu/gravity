@@ -1,0 +1,125 @@
+package instance
+
+import (
+	"context"
+	"strings"
+	"sync"
+
+	log "github.com/sirupsen/logrus"
+
+	"beryju.io/ddet/pkg/extconfig"
+	"beryju.io/ddet/pkg/roles"
+	"beryju.io/ddet/pkg/roles/api"
+	"beryju.io/ddet/pkg/roles/dhcp"
+	"beryju.io/ddet/pkg/roles/discovery"
+	"beryju.io/ddet/pkg/roles/dns"
+	"beryju.io/ddet/pkg/roles/etcd"
+	"beryju.io/ddet/pkg/storage"
+)
+
+const (
+	KeyInstance = "instance"
+	KeyRole     = "role"
+)
+
+type Instance struct {
+	roles      map[string]roles.Role
+	kv         *storage.Client
+	log        *log.Entry
+	identifier string
+
+	eventHandlersM sync.RWMutex
+	eventHandlers  map[string]map[string][]roles.EventHandler
+
+	etcd *etcd.EmbeddedEtcd
+}
+
+func NewInstance() {
+	extCfg := extconfig.Get()
+	instance := Instance{
+		log:            log.WithField("instance", extCfg.Instance.Identifier),
+		roles:          make(map[string]roles.Role),
+		identifier:     extCfg.Instance.Identifier,
+		eventHandlersM: sync.RWMutex{},
+		eventHandlers:  make(map[string]map[string][]roles.EventHandler),
+	}
+	defer instance.Stop()
+	if strings.Contains(extCfg.BootstrapRoles, "etcd") {
+		instance.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
+		// TODO: join existing cluster?
+		instance.etcd = etcd.New(extCfg.Etcd.Prefix)
+		err := instance.etcd.Start(func() {
+			instance.bootstrap()
+		})
+		if err != nil {
+			instance.log.WithError(err).Warning("failed to start etcd")
+		}
+	} else {
+		instance.bootstrap()
+	}
+}
+
+func (i *Instance) getRoles() []string {
+	rr, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, i.identifier, "roles"))
+	roles := extconfig.Get().BootstrapRoles
+	if err == nil && len(rr.Kvs) > 0 {
+		roles = rr.Kvs[0].String()
+	} else {
+		i.log.Info("defaulting to bootstrap roles")
+	}
+	return strings.Split(roles, ";")
+}
+
+func (i *Instance) GetKV() *storage.Client {
+	return i.kv
+}
+
+func (i *Instance) bootstrap() {
+	i.log.Debug("bootstrapping instance")
+	i.kv = storage.NewClient(
+		extconfig.Get().Etcd.Endpoint,
+		extconfig.Get().Etcd.Prefix,
+	)
+	for _, roleId := range i.getRoles() {
+		roleInst := i.ForRole(roleId)
+		switch roleId {
+		case "dhcp":
+			i.roles[roleId] = dhcp.New(roleInst)
+		case "dns":
+			i.roles[roleId] = dns.New(roleInst)
+		case "api":
+			i.roles[roleId] = api.New(roleInst)
+		case "discovery":
+			i.roles[roleId] = discovery.New(roleInst)
+		case "etcd":
+			// Special case
+			continue
+		default:
+			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
+		}
+	}
+	wg := sync.WaitGroup{}
+	for roleId := range i.roles {
+		wg.Add(1)
+		go i.startRole(roleId, wg)
+	}
+	wg.Wait()
+}
+
+func (i *Instance) startRole(id string, wg sync.WaitGroup) {
+	i.log.WithField("roleId", id).Info("starting role")
+	role := i.roles[id]
+	config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id))
+	rawConfig := []byte{}
+	if err == nil && len(config.Kvs) > 0 {
+		rawConfig = config.Kvs[0].Value
+	}
+	role.Start(rawConfig)
+	wg.Done()
+}
+
+func (i *Instance) Stop() {
+	if i.etcd != nil {
+		i.etcd.Stop()
+	}
+}
