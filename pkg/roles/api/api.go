@@ -5,12 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/api/types"
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -29,10 +28,10 @@ func New(instance roles.Instance) *APIRole {
 		if !extconfig.Get().Debug {
 			return
 		}
-		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.api").Subrouter()
-		mux.Name("v0.debug").Path("/api/v0/debug").Methods("GET").HandlerFunc(r.apiHandlerDebugGet)
-		mux.Name("v0.debug").Path("/api/v0/debug").Methods("POST").HandlerFunc(r.apiHandlerDebugPost)
-		mux.Name("v0.debug").Path("/api/v0/debug").Methods("DELETE").HandlerFunc(r.apiHandlerDebugDel)
+		mux := ev.Payload.Data["mux"].(*chi.Mux)
+		mux.Get("/api/v0/debug", r.apiHandlerDebugGet)
+		mux.Post("/api/v0/debug", r.apiHandlerDebugPost)
+		mux.Delete("/api/v0/debug", r.apiHandlerDebugDel)
 	})
 	return r
 }
@@ -40,7 +39,7 @@ func New(instance roles.Instance) *APIRole {
 func (r *APIRole) Start(config []byte) error {
 	cfg := r.decodeAPIRoleConfig(config)
 
-	m := mux.NewRouter()
+	m := chi.NewRouter()
 	m.Use(NewLoggingHandler(r.log, nil))
 	m.Use(NewAuthMiddleware(r))
 
@@ -48,24 +47,11 @@ func (r *APIRole) Start(config []byte) error {
 		"mux": m,
 	}))
 	r.log.Debug("Registered routes:")
-	m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-		fullName := []string{route.GetName()}
-		for _, anc := range ancestors {
-			fullName = append([]string{anc.GetName()}, fullName...)
-		}
-		var methods []string
-		var err error
-		if methods, err = route.GetMethods(); err != nil {
-			methods = []string{}
-		}
-		var path string
-		if path, err = route.GetPathTemplate(); err != nil {
-			return nil
-		}
+	chi.Walk(m, func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
 		r.log.WithFields(log.Fields{
-			"routeName": strings.Join(fullName, "."),
-			"method":    methods,
-		}).Debug(path)
+			// "routeName": ,
+			"method": method,
+		}).Debug(route)
 		return nil
 	})
 

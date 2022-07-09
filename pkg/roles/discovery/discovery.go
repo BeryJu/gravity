@@ -6,7 +6,7 @@ import (
 	apitypes "beryju.io/ddet/pkg/roles/api/types"
 	"beryju.io/ddet/pkg/roles/discovery/types"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -22,8 +22,8 @@ func New(instance roles.Instance) *DiscoveryRole {
 		i:   instance,
 	}
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.discovery").Subrouter()
-		mux.Name("v0.applyDevice").Path("/api/v0/discovery/apply").Methods("POST").HandlerFunc(r.apiHandlerApply)
+		mux := ev.Payload.Data["mux"].(*chi.Mux)
+		mux.Post("/api/v0/discovery/apply", r.apiHandlerApply)
 	})
 	return r
 }
