@@ -34,6 +34,7 @@ func GetIP() (net.IP, error) {
 			if ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() {
 				continue
 			}
+			log.Infof("Detected IP of instance as %s", ip.String())
 			return ip, nil
 		}
 	}

@@ -2,9 +2,11 @@ package dns
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 	"time"
 
+	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/dhcp/types"
 	log "github.com/sirupsen/logrus"
@@ -44,10 +46,16 @@ func (r *DNSRole) Start(config []byte) error {
 	dnsMux.HandleFunc(".", r.loggingHandler(r.handler))
 	wg := sync.WaitGroup{}
 	wg.Add(2)
+
+	listen := fmt.Sprintf("%s:%d", extconfig.Get().Instance.IP, cfg.Port)
+	if runtime.GOOS == "darwin" {
+		listen = fmt.Sprintf(":%d", cfg.Port)
+	}
+
 	srv := func(proto string, wg sync.WaitGroup) {
 		defer wg.Done()
 		server := &dns.Server{
-			Addr:    fmt.Sprintf(":%d", cfg.Port),
+			Addr:    listen,
 			Net:     proto,
 			Handler: dnsMux,
 		}
