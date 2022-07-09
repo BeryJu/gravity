@@ -29,12 +29,23 @@ func New(instance roles.Instance) *APIRole {
 func (r *APIRole) Start(config []byte) error {
 	cfg := r.decodeAPIRoleConfig(config)
 
+	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		if !extconfig.Get().Debug {
+			return
+		}
+		mux := ev.Payload.Data["mux"].(*mux.Router)
+		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("GET").HandlerFunc(r.handleAPIGet)
+		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("POST").HandlerFunc(r.handleAPIPost)
+		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("DELETE").HandlerFunc(r.handleAPIDel)
+	})
+
 	mux := mux.NewRouter()
 	mux.Use(NewLoggingHandler(r.log, nil))
 	mux.Use(NewAuthMiddleware(r))
-	mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("GET").HandlerFunc(r.handleAPIGet)
-	mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("POST").HandlerFunc(r.handleAPIPost)
-	mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("DELETE").HandlerFunc(r.handleAPIDel)
+
+	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
+		"mux": mux,
+	}))
 
 	r.log.WithField("port", cfg.Port).Info("Starting API Server")
 	return http.ListenAndServe(fmt.Sprintf("%s:%d", extconfig.Get().Instance.IP, cfg.Port), mux)

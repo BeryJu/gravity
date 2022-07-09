@@ -8,11 +8,13 @@ import (
 )
 
 type ExtConfig struct {
-	Etcd struct {
+	// TODO Change default
+	Debug bool `env:"DEBUG,default=true"`
+	Etcd  struct {
 		Prefix   string `env:"ETCD_PREFIX,default=/ddet"`
 		Endpoint string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 	}
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery"`
 	Instance       struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`

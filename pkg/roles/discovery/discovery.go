@@ -13,6 +13,7 @@ const (
 type DiscoveryRole struct {
 	log *log.Entry
 	i   roles.Instance
+	cfg *DiscoveryRoleConfig
 }
 
 func New(instance roles.Instance) *DiscoveryRole {
@@ -23,6 +24,10 @@ func New(instance roles.Instance) *DiscoveryRole {
 }
 
 func (r *DiscoveryRole) Start(config []byte) error {
+	r.cfg = r.decodeDiscoveryRoleConfig(config)
+	if !r.cfg.Enabled {
+		return nil
+	}
 	return nil
 }
 
