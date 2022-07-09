@@ -41,16 +41,6 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(fallback)
 }
 
-func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) *Record {
-	rec := Record{}
-	err := json.Unmarshal(kv.Value, &rec)
-	if err != nil {
-		z.log.WithError(err).Warning("failed to parse record")
-		return nil
-	}
-	return &rec
-}
-
 func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	z := Zone{
 		inst: r.i,

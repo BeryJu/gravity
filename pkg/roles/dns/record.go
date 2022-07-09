@@ -8,6 +8,7 @@ import (
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/dns/types"
 	"github.com/miekg/dns"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -20,6 +21,16 @@ type Record struct {
 
 	inst roles.Instance
 	zone *Zone
+}
+
+func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) *Record {
+	rec := Record{}
+	err := json.Unmarshal(kv.Value, &rec)
+	if err != nil {
+		z.log.WithError(err).Warning("failed to parse record")
+		return nil
+	}
+	return &rec
 }
 
 func (z *Zone) newRecord(name string, t string) *Record {

@@ -7,6 +7,7 @@ import (
 
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/discovery/types"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -22,6 +23,18 @@ func NewDevice(inst roles.Instance) *Device {
 	return &Device{
 		inst: inst,
 	}
+}
+
+func (r *DiscoveryRole) deviceFromKV(kv *mvccpb.KeyValue) *Device {
+	rec := Device{
+		inst: r.i,
+	}
+	err := json.Unmarshal(kv.Value, &rec)
+	if err != nil {
+		r.log.WithError(err).Warning("failed to parse device")
+		return nil
+	}
+	return &rec
 }
 
 func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
@@ -72,4 +85,12 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	d.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, ev)
 
 	return nil
+}
+
+func (d *Device) toDNS() {
+
+}
+
+func (d *Device) toDHCP() {
+
 }
