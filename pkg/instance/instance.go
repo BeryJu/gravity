@@ -22,6 +22,10 @@ const (
 	KeyRole     = "role"
 )
 
+const (
+	EventTopicInstanceBootstrapped = "instance.root.bootstrapped"
+)
+
 type Instance struct {
 	roles      map[string]roles.Role
 	kv         *storage.Client
@@ -34,28 +38,30 @@ type Instance struct {
 	etcd *etcd.EmbeddedEtcd
 }
 
-func NewInstance() {
+func NewInstance() *Instance {
 	extCfg := extconfig.Get()
-	instance := Instance{
+	return &Instance{
 		log:            log.WithField("instance", extCfg.Instance.Identifier),
 		roles:          make(map[string]roles.Role),
 		identifier:     extCfg.Instance.Identifier,
 		eventHandlersM: sync.RWMutex{},
 		eventHandlers:  make(map[string]map[string][]roles.EventHandler),
 	}
-	defer instance.Stop()
-	if strings.Contains(extCfg.BootstrapRoles, "etcd") {
-		instance.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
+}
+
+func (i *Instance) Start() {
+	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
+		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		// TODO: join existing cluster?
-		instance.etcd = etcd.New(extCfg.Etcd.Prefix)
-		err := instance.etcd.Start(func() {
-			instance.bootstrap()
+		i.etcd = etcd.New(extconfig.Get().Etcd.Prefix)
+		err := i.etcd.Start(func() {
+			i.bootstrap()
 		})
 		if err != nil {
-			instance.log.WithError(err).Warning("failed to start etcd")
+			i.log.WithError(err).Warning("failed to start etcd")
 		}
 	} else {
-		instance.bootstrap()
+		i.bootstrap()
 	}
 }
 
@@ -75,7 +81,7 @@ func (i *Instance) GetKV() *storage.Client {
 }
 
 func (i *Instance) bootstrap() {
-	i.log.Debug("bootstrapping instance")
+	i.log.Trace("bootstrapping instance")
 	i.kv = storage.NewClient(
 		extconfig.Get().Etcd.Endpoint,
 		extconfig.Get().Etcd.Prefix,
@@ -98,6 +104,7 @@ func (i *Instance) bootstrap() {
 			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
 		}
 	}
+	i.dispatchEvent(EventTopicInstanceBootstrapped, roles.NewEvent(map[string]interface{}{}))
 	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
 		wg.Add(1)
@@ -119,6 +126,10 @@ func (i *Instance) startRole(id string, wg sync.WaitGroup) {
 }
 
 func (i *Instance) Stop() {
+	i.log.Info("Stopping")
+	for _, role := range i.roles {
+		go role.Stop()
+	}
 	if i.etcd != nil {
 		i.etcd.Stop()
 	}

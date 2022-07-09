@@ -15,7 +15,7 @@ type Event struct {
 	topic   string
 }
 
-func (ev *Event) FromTopic(topic string) *Event {
+func (ev *Event) WithTopic(topic string) *Event {
 	ev.topic = topic
 	return ev
 }

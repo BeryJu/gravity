@@ -3,7 +3,6 @@ package etcd
 import (
 	"fmt"
 	"net/url"
-	"os"
 
 	"beryju.io/ddet/pkg/extconfig"
 	log "github.com/sirupsen/logrus"
@@ -28,8 +27,7 @@ func urlMustParse(raw string) *url.URL {
 
 func New(prefix string) *EmbeddedEtcd {
 	cfg := embed.NewConfig()
-	os.MkdirAll("../data/etcd", os.ModeDir)
-	cfg.Dir = "../data/etcd/"
+	cfg.Dir = "data/etcd/"
 	cfg.LogLevel = "warn"
 	cfg.LPUrls = []url.URL{
 		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
@@ -38,6 +36,7 @@ func New(prefix string) *EmbeddedEtcd {
 		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
+	cfg.InitialCluster = fmt.Sprintf("%s=http://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
 	return &EmbeddedEtcd{
 		cfg:    cfg,
 		log:    log.WithField("role", "embedded-etcd"),
@@ -64,6 +63,6 @@ func (ee *EmbeddedEtcd) Stop() {
 		return
 	}
 	ee.log.Info("Stopping etcd")
-	ee.e.Server.Stop()
+	// ee.e.Server.Stop()
 	ee.e.Close()
 }

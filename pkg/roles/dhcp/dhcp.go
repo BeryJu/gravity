@@ -51,5 +51,7 @@ func (r *DHCPRole) startServer4() error {
 }
 
 func (r *DHCPRole) Stop() {
-	r.s4.Close()
+	if r.s4 != nil {
+		r.s4.Close()
+	}
 }

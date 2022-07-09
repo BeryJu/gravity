@@ -15,7 +15,9 @@ var rootCmd = &cobra.Command{
 	Short: "A brief description of your application",
 	Run: func(cmd *cobra.Command, args []string) {
 		rand.Seed(time.Now().Unix())
-		instance.NewInstance()
+		inst := instance.NewInstance()
+		defer inst.Stop()
+		inst.Start()
 	},
 }
 
