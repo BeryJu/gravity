@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"strings"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
@@ -54,12 +55,15 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
 	if extconfig.Get().Etcd.JoinCluster != "" {
 		cfg.ClusterState = "existing"
+		joinParts := strings.Split(extconfig.Get().Etcd.JoinCluster, ";")
 		cfg.InitialCluster = fmt.Sprintf(
-			"%s,%[2]s=https://%[2]s:2380",
+			"%s,%s=https://%s:2380",
 			cfg.InitialCluster,
-			extconfig.Get().Etcd.JoinCluster,
+			joinParts[0],
+			joinParts[1],
 		)
 	}
+	ee.log.Trace(cfg.InitialCluster)
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(certDir, relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(certDir, relInstKeyPath)
