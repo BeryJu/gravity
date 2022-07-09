@@ -8,7 +8,8 @@ import (
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dhcp/types"
+	dhcptypes "beryju.io/ddet/pkg/roles/dhcp/types"
+	"beryju.io/ddet/pkg/roles/dns/types"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/miekg/dns"
@@ -26,14 +27,14 @@ func New(instance roles.Instance) *DNSRole {
 	return &DNSRole{
 		servers: make(map[string]*dns.Server),
 		zones:   make(map[string]*Zone, 0),
-		log:     log.WithField("role", "dns"),
+		log:     instance.GetLogger().WithField("role", types.KeyRole),
 		i:       instance,
 	}
 }
 
 func (r *DNSRole) Start(config []byte) error {
 	cfg := r.decodeDNSRoleConfig(config)
-	r.i.AddEventListener(types.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
+	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
 
 	go r.startWatchZones()
 

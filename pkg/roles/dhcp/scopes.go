@@ -104,7 +104,7 @@ func (s *Scope) createLeaseFor(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHC
 		ScopeKey: s.Name,
 
 		inst:  s.inst,
-		log:   log.WithField("lease", ident),
+		log:   s.log.WithField("lease", ident),
 		scope: s,
 	}
 	if requestIp, ok := netip.AddrFromSlice(m.Options.Get(dhcpv4.OptionRequestedIPAddress)); ok {

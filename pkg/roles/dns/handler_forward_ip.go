@@ -35,7 +35,7 @@ func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler
 
 	return &IPForwarderHandler{
 		r:   r,
-		log: log.WithField("handler", "forward_ip"),
+		log: z.log.WithField("handler", "forward_ip"),
 	}
 }
 

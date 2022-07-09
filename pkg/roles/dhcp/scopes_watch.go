@@ -3,6 +3,7 @@ package dhcp
 import (
 	"context"
 	"strings"
+	"time"
 
 	"beryju.io/ddet/pkg/roles/dhcp/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -35,6 +36,7 @@ func (r *DHCPRole) startWatchScopes() {
 	scopes, err := r.i.GetKV().Get(context.Background(), prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")
+		time.Sleep(5 * time.Second)
 		r.startWatchScopes()
 		return
 	}

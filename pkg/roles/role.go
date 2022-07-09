@@ -2,6 +2,7 @@ package roles
 
 import (
 	"beryju.io/ddet/pkg/storage"
+	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -43,6 +44,7 @@ type EventHandler func(ev *Event)
 
 type Instance interface {
 	GetKV() *storage.Client
+	GetLogger() *log.Entry
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 }

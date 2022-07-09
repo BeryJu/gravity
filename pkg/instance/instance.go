@@ -76,8 +76,8 @@ func (i *Instance) getRoles() []string {
 	return strings.Split(roles, ";")
 }
 
-func (i *Instance) GetKV() *storage.Client {
-	return i.kv
+func (i *Instance) GetLogger() *log.Entry {
+	return i.log
 }
 
 func (i *Instance) bootstrap() {

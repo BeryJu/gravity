@@ -16,7 +16,7 @@ type EtcdHandler struct {
 
 func NewEtcdHandler(z Zone, config map[string]string) *EtcdHandler {
 	return &EtcdHandler{
-		log: log.WithField("handler", "etcd"),
+		log: z.log.WithField("handler", "etcd"),
 		z:   z,
 	}
 }

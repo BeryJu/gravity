@@ -23,7 +23,7 @@ func NewAuthMiddleware(r *APIRole) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return &AuthMiddleware{
 			role:  r,
-			log:   log.WithField("role", "api").WithField("mw", "auth"),
+			log:   r.log.WithField("mw", "auth"),
 			inner: h,
 		}
 	}

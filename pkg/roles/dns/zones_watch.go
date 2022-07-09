@@ -3,6 +3,7 @@ package dns
 import (
 	"context"
 	"strings"
+	"time"
 
 	"beryju.io/ddet/pkg/roles/dns/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -35,6 +36,7 @@ func (r *DNSRole) startWatchZones() {
 	zones, err := r.i.GetKV().Get(context.Background(), prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")
+		time.Sleep(5 * time.Second)
 		r.startWatchZones()
 		return
 	}

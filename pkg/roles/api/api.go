@@ -21,7 +21,7 @@ type APIRole struct {
 
 func New(instance roles.Instance) *APIRole {
 	return &APIRole{
-		log: log.WithField("role", types.KeyRole),
+		log: instance.GetLogger().WithField("role", types.KeyRole),
 		i:   instance,
 	}
 }

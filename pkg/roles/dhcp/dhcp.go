@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"beryju.io/ddet/pkg/roles"
+	"beryju.io/ddet/pkg/roles/dhcp/types"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/insomniacslk/dhcp/dhcpv4/server4"
@@ -22,7 +23,7 @@ type DHCPRole struct {
 
 func New(instance roles.Instance) *DHCPRole {
 	return &DHCPRole{
-		log:    log.WithField("role", "dhcp"),
+		log:    instance.GetLogger().WithField("role", types.KeyRole),
 		i:      instance,
 		scopes: make(map[string]*Scope),
 	}

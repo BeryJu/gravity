@@ -15,7 +15,7 @@ type RoleInstance struct {
 
 func (i *Instance) ForRole(roleId string) *RoleInstance {
 	in := &RoleInstance{
-		log:    log.WithField("forRole", roleId),
+		log:    i.log.WithField("forRole", roleId),
 		kv:     i.kv,
 		roleId: roleId,
 		parent: i,
@@ -25,6 +25,10 @@ func (i *Instance) ForRole(roleId string) *RoleInstance {
 
 func (ri *RoleInstance) GetKV() *storage.Client {
 	return ri.kv
+}
+
+func (ri *RoleInstance) GetLogger() *log.Entry {
+	return ri.log
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
