@@ -10,6 +10,7 @@ import (
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/api"
+	"beryju.io/ddet/pkg/roles/backup"
 	"beryju.io/ddet/pkg/roles/dhcp"
 	"beryju.io/ddet/pkg/roles/discovery"
 	"beryju.io/ddet/pkg/roles/dns"
@@ -96,6 +97,8 @@ func (i *Instance) bootstrap() {
 			i.roles[roleId] = api.New(roleInst)
 		case "discovery":
 			i.roles[roleId] = discovery.New(roleInst)
+		case "backup":
+			i.roles[roleId] = backup.New(roleInst)
 		case "etcd":
 			// Special case
 			continue

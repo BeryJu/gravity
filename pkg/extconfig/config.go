@@ -2,6 +2,7 @@ package extconfig
 
 import (
 	"os"
+	"path"
 
 	env "github.com/Netflix/go-env"
 	log "github.com/sirupsen/logrus"
@@ -15,12 +16,18 @@ type ExtConfig struct {
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup"`
 	Instance       struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
 	}
 	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
+}
+
+type ExtConfigDirs struct {
+	EtcdDir   string
+	CertDir   string
+	BackupDir string
 }
 
 var globalExtConfig *ExtConfig
@@ -38,6 +45,14 @@ func Get() *ExtConfig {
 	cfg.defaults()
 	globalExtConfig = &cfg
 	return &cfg
+}
+
+func (e *ExtConfig) Dirs() *ExtConfigDirs {
+	return &ExtConfigDirs{
+		EtcdDir:   path.Join(e.DataPath, "etcd/"),
+		CertDir:   path.Join(e.DataPath, "cert/"),
+		BackupDir: path.Join(e.DataPath, "backup/"),
+	}
 }
 
 func (e *ExtConfig) defaults() {
