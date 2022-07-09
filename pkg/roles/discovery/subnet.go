@@ -44,6 +44,7 @@ func (s *Subnet) RunDiscovery() {
 		nmap.WithServiceInfo(),
 		nmap.WithSystemDNS(),
 	)
+	s.log.Trace(scanner.Args())
 	if err != nil {
 		s.log.Fatalf("unable to create nmap scanner: %v", err)
 		return
@@ -63,10 +64,14 @@ func (s *Subnet) RunDiscovery() {
 		s.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, roles.NewEvent(map[string]interface{}{
 			"device": host,
 		}))
-		s.log.WithFields(log.Fields{
-			"address":  host.Addresses,
-			"hostname": host.Hostnames,
-			"host":     host,
-		}).Debug("found device")
+		dev := &Device{}
+		if len(host.Hostnames) > 0 {
+			dev.Hostname = host.Hostnames[0].String()
+		}
+		// s.log.WithFields(log.Fields{
+		// 	"address":  host.Addresses,
+		// 	"hostname": host.Hostnames,
+		// 	"host":     host,
+		// }).Debug("found device")
 	}
 }
