@@ -53,7 +53,7 @@ func (i *Instance) Start() {
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		// TODO: join existing cluster?
-		i.etcd = etcd.New(extconfig.Get().Etcd.Prefix)
+		i.etcd = etcd.New(i.ForRole("etcd"))
 		err := i.etcd.Start(func() {
 			i.bootstrap()
 		})
@@ -104,7 +104,7 @@ func (i *Instance) bootstrap() {
 			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
 		}
 	}
-	i.dispatchEvent(EventTopicInstanceBootstrapped, roles.NewEvent(map[string]interface{}{}))
+	i.ForRole("root").DispatchEvent(EventTopicInstanceBootstrapped, roles.NewEvent(map[string]interface{}{}))
 	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
 		wg.Add(1)

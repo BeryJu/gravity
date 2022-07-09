@@ -2,9 +2,9 @@ package discovery
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"beryju.io/ddet/pkg/roles"
+	"beryju.io/ddet/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -30,37 +30,43 @@ func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 }
 
 func (s *Subnet) RunDiscovery() {
+	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(map[string]interface{}{
+		"subnet": s,
+	}))
+	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(map[string]interface{}{
+		"subnet": s,
+	}))
+
 	scanner, err := nmap.NewScanner(
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
+		nmap.WithServiceInfo(),
+		nmap.WithSystemDNS(),
 	)
 	if err != nil {
-		log.Fatalf("unable to create nmap scanner: %v", err)
+		s.log.Fatalf("unable to create nmap scanner: %v", err)
+		return
 	}
 
 	result, warnings, err := scanner.Run()
 	if err != nil {
-		log.Fatalf("unable to run nmap scan: %v", err)
+		s.log.Fatalf("unable to run nmap scan: %v", err)
+		return
 	}
-
 	if warnings != nil {
-		log.Printf("Warnings: \n %v", warnings)
+		s.log.Printf("Warnings: \n %v", warnings)
 	}
 
 	// Use the results to print an example output
 	for _, host := range result.Hosts {
-		if len(host.Ports) == 0 || len(host.Addresses) == 0 {
-			continue
-		}
-
-		fmt.Printf("Host %q:\n", host.Addresses[0])
-
-		for _, port := range host.Ports {
-			fmt.Printf("\tPort %d/%s %s %s\n", port.ID, port.Protocol, port.State, port.Service.Name)
-		}
+		s.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, roles.NewEvent(map[string]interface{}{
+			"device": host,
+		}))
+		s.log.WithFields(log.Fields{
+			"address":  host.Addresses,
+			"hostname": host.Hostnames,
+			"host":     host,
+		}).Debug("found device")
 	}
-
-	fmt.Printf("Nmap done: %d hosts up scanned in %3f seconds\n", len(result.Hosts), result.Stats.Finished.Elapsed)
-
 }

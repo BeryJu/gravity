@@ -14,11 +14,9 @@ func GetIP() (net.IP, error) {
 	}
 	for _, i := range ifaces {
 		if i.Flags&net.FlagLoopback != 0 {
-			log.WithField("if", i).Trace("Interface is loopback")
 			continue
 		}
 		if i.Flags&net.FlagUp == 0 {
-			log.WithField("if", i).Trace("Interface is not up")
 			continue
 		}
 		addrs, err := i.Addrs()

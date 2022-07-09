@@ -32,6 +32,7 @@ func (ri *RoleInstance) GetLogger() *log.Entry {
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
+	ri.log.WithField("topic", topic).Debug("dispatching event")
 	ri.parent.dispatchEvent(topic, ev.WithTopic(topic))
 }
 

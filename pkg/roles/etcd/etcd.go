@@ -5,16 +5,17 @@ import (
 	"net/url"
 
 	"beryju.io/ddet/pkg/extconfig"
+	"beryju.io/ddet/pkg/roles"
 	log "github.com/sirupsen/logrus"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
 
 type EmbeddedEtcd struct {
-	e      *embed.Etcd
-	cfg    *embed.Config
-	log    *log.Entry
-	prefix string
+	e   *embed.Etcd
+	cfg *embed.Config
+	log *log.Entry
+	i   roles.Instance
 }
 
 func urlMustParse(raw string) *url.URL {
@@ -25,7 +26,7 @@ func urlMustParse(raw string) *url.URL {
 	return u
 }
 
-func New(prefix string) *EmbeddedEtcd {
+func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg := embed.NewConfig()
 	cfg.Dir = "data/etcd/"
 	cfg.LogLevel = "warn"
@@ -38,9 +39,9 @@ func New(prefix string) *EmbeddedEtcd {
 	cfg.Name = extconfig.Get().Instance.Identifier
 	cfg.InitialCluster = fmt.Sprintf("%s=http://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
 	return &EmbeddedEtcd{
-		cfg:    cfg,
-		log:    log.WithField("role", "embedded-etcd"),
-		prefix: prefix,
+		cfg: cfg,
+		log: instance.GetLogger().WithField("role", "embedded-etcd"),
+		i:   instance,
 	}
 }
 
@@ -63,6 +64,5 @@ func (ee *EmbeddedEtcd) Stop() {
 		return
 	}
 	ee.log.Info("Stopping etcd")
-	// ee.e.Server.Stop()
 	ee.e.Close()
 }
