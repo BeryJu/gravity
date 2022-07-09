@@ -17,6 +17,7 @@ type Zone struct {
 
 	Authoritative  bool                `json:"authoritative"`
 	HandlerConfigs []map[string]string `json:"handlerConfigs"`
+	DefaultTTL     uint32              `json:"defaultTTL"`
 
 	h []Handler
 
@@ -43,8 +44,9 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 
 func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	z := Zone{
-		inst: r.i,
-		h:    make([]Handler, 0),
+		DefaultTTL: 3600,
+		inst:       r.i,
+		h:          make([]Handler, 0),
 	}
 	err := json.Unmarshal(raw.Value, &z)
 	if err != nil {
