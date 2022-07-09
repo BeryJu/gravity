@@ -51,6 +51,9 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 		etcdDir: etcdDir,
 		certDir: certDir,
 	}
+	if extconfig.Get().Etcd.Discovery != "" {
+		cfg.Durl = extconfig.Get().Etcd.Discovery
+	}
 	// ee.configureCertificates()
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(certDir, relInstCertPath)

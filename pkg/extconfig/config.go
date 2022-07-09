@@ -11,8 +11,9 @@ type ExtConfig struct {
 	Debug    bool   `env:"DEBUG,default=false"`
 	DataPath string `env:"DATA_PATH,default=./data"`
 	Etcd     struct {
-		Prefix   string `env:"ETCD_PREFIX,default=/ddet"`
-		Endpoint string `env:"ETCD_ENDPOINT,default=localhost:2379"`
+		Prefix    string `env:"ETCD_PREFIX,default=/ddet"`
+		Endpoint  string `env:"ETCD_ENDPOINT,default=localhost:2379"`
+		Discovery string `env:"ETCD_DISCOVERY"`
 	}
 	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery"`
 	Instance       struct {
