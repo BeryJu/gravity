@@ -82,15 +82,10 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	}
 	s.ipam = ipamInst
 
-	// go s.prefetchLeases()
 	return s, nil
 }
 
 func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) bool {
-	return false
-}
-
-func (s *Scope) prefetchLeases(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) bool {
 	return false
 }
 

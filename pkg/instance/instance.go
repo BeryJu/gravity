@@ -108,21 +108,19 @@ func (i *Instance) bootstrap() {
 	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
 		wg.Add(1)
-		go i.startRole(roleId, wg)
+		go func(id string) {
+			i.log.WithField("roleId", id).Info("starting role")
+			role := i.roles[id]
+			config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id))
+			rawConfig := []byte{}
+			if err == nil && len(config.Kvs) > 0 {
+				rawConfig = config.Kvs[0].Value
+			}
+			role.Start(rawConfig)
+			wg.Done()
+		}(roleId)
 	}
 	wg.Wait()
-}
-
-func (i *Instance) startRole(id string, wg sync.WaitGroup) {
-	i.log.WithField("roleId", id).Info("starting role")
-	role := i.roles[id]
-	config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id))
-	rawConfig := []byte{}
-	if err == nil && len(config.Kvs) > 0 {
-		rawConfig = config.Kvs[0].Value
-	}
-	role.Start(rawConfig)
-	wg.Done()
 }
 
 func (i *Instance) Stop() {

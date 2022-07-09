@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
-	"time"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
@@ -50,7 +49,7 @@ func (r *DNSRole) Start(config []byte) error {
 		listen = fmt.Sprintf(":%d", cfg.Port)
 	}
 
-	srv := func(proto string, wg sync.WaitGroup) {
+	srv := func(proto string) {
 		defer wg.Done()
 		server := &dns.Server{
 			Addr:    listen,
@@ -64,9 +63,8 @@ func (r *DNSRole) Start(config []byte) error {
 			r.log.WithField("port", cfg.Port).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
 		}
 	}
-	go srv("udp", wg)
-	time.Sleep(1)
-	go srv("tcp", wg)
+	go srv("udp")
+	go srv("tcp")
 	wg.Wait()
 	return nil
 }
