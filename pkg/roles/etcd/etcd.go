@@ -43,7 +43,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
+	cfg.InitialCluster = ""
 	ee := &EmbeddedEtcd{
 		cfg:     cfg,
 		log:     instance.GetLogger().WithField("role", "embedded-etcd"),
@@ -51,16 +51,20 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 		etcdDir: etcdDir,
 		certDir: certDir,
 	}
-	if extconfig.Get().Etcd.Discovery != "" {
-		cfg.Durl = extconfig.Get().Etcd.Discovery
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
+	if extconfig.Get().Etcd.JoinCluster != "" {
+		cfg.ClusterState = "existing"
+		cfg.InitialCluster = fmt.Sprintf(
+			"%s,%[2]s=https://%[2]s:2380",
+			cfg.InitialCluster,
+			extconfig.Get().Etcd.JoinCluster,
+		)
 	}
-	// ee.configureCertificates()
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(certDir, relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(certDir, relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
-	// cfg.Dir
 	return ee
 }
 
