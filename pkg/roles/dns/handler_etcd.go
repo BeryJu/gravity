@@ -27,10 +27,10 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	ctx := context.Background()
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
-		fullRecordKey := eh.z.inst.GetKV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
+		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
 		eh.log.WithField("key", fullRecordKey).Trace("tracing tested key")
 		// TODO: Optimise this
-		res, err := eh.z.inst.GetKV().Get(ctx, fullRecordKey)
+		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey)
 		if err != nil || len(res.Kvs) < 1 {
 			continue
 		}

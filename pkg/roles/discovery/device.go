@@ -40,19 +40,19 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	}
 
 	if expiry > 0 {
-		exp, err := d.inst.GetKV().Lease.Grant(context.TODO(), expiry)
+		exp, err := d.inst.KV().Lease.Grant(context.TODO(), expiry)
 		if err != nil {
 			return err
 		}
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
-	key := d.inst.GetKV().Key(types.KeyRole, types.KeyDevices, by, identifier)
+	key := d.inst.KV().Key(types.KeyRole, types.KeyDevices, by, identifier)
 	raw, err := json.Marshal(&d)
 	if err != nil {
 		return err
 	}
-	_, err = d.inst.GetKV().Put(
+	_, err = d.inst.KV().Put(
 		context.Background(),
 		key,
 		string(raw),

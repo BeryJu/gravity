@@ -9,7 +9,7 @@ import (
 )
 
 func (r *DHCPRole) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
-	match, err := r.i.GetKV().KV.Get(context.TODO(), r.i.GetKV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()))
+	match, err := r.i.KV().KV.Get(context.TODO(), r.i.KV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()))
 	var lease *Lease
 	if err == nil && len(match.Kvs) > 0 {
 		// TODO: Update lease of lease

@@ -87,9 +87,9 @@ func (r *APIRole) CreateUser(username, password string) error {
 		return err
 	}
 
-	_, err = r.i.GetKV().Put(
+	_, err = r.i.KV().Put(
 		context.TODO(),
-		r.i.GetKV().Key(
+		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
 			username,

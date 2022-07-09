@@ -41,7 +41,7 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	if err != nil {
 		return nil, err
 	}
-	prefix := r.i.GetKV().Key(
+	prefix := r.i.KV().Key(
 		types.KeyRole,
 		types.KeyScopes,
 		// l.Scope.Name,
@@ -63,21 +63,21 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	}
 
 	if expiry > 0 {
-		exp, err := l.inst.GetKV().Lease.Grant(context.TODO(), expiry)
+		exp, err := l.inst.KV().Lease.Grant(context.TODO(), expiry)
 		if err != nil {
 			return err
 		}
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
-	leaseKey := l.inst.GetKV().Key(
+	leaseKey := l.inst.KV().Key(
 		types.KeyRole,
 		types.KeyScopes,
 		l.scope.Name,
 		types.KeyLeases,
 		l.Identifier,
 	)
-	_, err = l.inst.GetKV().Put(
+	_, err = l.inst.KV().Put(
 		context.TODO(),
 		leaseKey,
 		string(raw),

@@ -60,7 +60,7 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	if err != nil {
 		return nil, err
 	}
-	prefix := r.i.GetKV().Key(types.KeyRole, types.KeyZones, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones, "")
 	z.Name = strings.TrimPrefix(string(raw.Key), prefix)
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
 	z.etcdKey = string(raw.Key)[1:]
@@ -107,9 +107,9 @@ func (z *Zone) put() error {
 		return err
 	}
 
-	_, err = z.inst.GetKV().Put(
+	_, err = z.inst.KV().Put(
 		context.TODO(),
-		z.inst.GetKV().Key(
+		z.inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
 			z.Name,

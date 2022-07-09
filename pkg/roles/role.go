@@ -43,7 +43,7 @@ func NewEvent(data map[string]interface{}) *Event {
 type EventHandler func(ev *Event)
 
 type Instance interface {
-	GetKV() *storage.Client
+	KV() *storage.Client
 	GetLogger() *log.Entry
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)

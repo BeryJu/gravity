@@ -19,8 +19,8 @@ func (r *DiscoveryRole) startDiscovery(raw *mvccpb.KeyValue) {
 }
 
 func (r *DiscoveryRole) startWatchSubnets() {
-	prefix := r.i.GetKV().Key(types.KeyRole, types.KeySubnets, "")
-	subnets, err := r.i.GetKV().Get(context.Background(), prefix, clientv3.WithPrefix())
+	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets, "")
+	subnets, err := r.i.KV().Get(context.Background(), prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial subnets")
 		time.Sleep(5 * time.Second)
@@ -31,7 +31,7 @@ func (r *DiscoveryRole) startWatchSubnets() {
 		r.startDiscovery(subnet)
 	}
 
-	watchChan := r.i.GetKV().Watch(
+	watchChan := r.i.KV().Watch(
 		context.Background(),
 		prefix,
 		clientv3.WithPrefix(),

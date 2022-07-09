@@ -14,7 +14,7 @@ type getBody struct {
 }
 
 func (ro *APIRole) apiHandlerDebugGet(rw http.ResponseWriter, r *http.Request) {
-	k, err := ro.i.GetKV().KV.Get(r.Context(), ro.i.GetKV().Key(), clientv3.WithPrefix())
+	k, err := ro.i.KV().KV.Get(r.Context(), ro.i.KV().Key(), clientv3.WithPrefix())
 	if err != nil {
 		ro.log.WithError(err).Warning("failed to get keys")
 		return
@@ -36,14 +36,14 @@ func (ro *APIRole) apiHandlerDebugPost(rw http.ResponseWriter, r *http.Request) 
 		ro.log.WithError(err).Warning("failed to read body")
 		return
 	}
-	_, err = ro.i.GetKV().Put(r.Context(), ro.i.GetKV().Key(r.URL.Query().Get("key")), string(b))
+	_, err = ro.i.KV().Put(r.Context(), ro.i.KV().Key(r.URL.Query().Get("key")), string(b))
 	if err != nil {
 		ro.log.WithError(err).Warning("failed to put")
 	}
 }
 
 func (ro *APIRole) apiHandlerDebugDel(rw http.ResponseWriter, r *http.Request) {
-	_, err := ro.i.GetKV().Delete(r.Context(), ro.i.GetKV().Key(r.URL.Query().Get("key")))
+	_, err := ro.i.KV().Delete(r.Context(), ro.i.KV().Key(r.URL.Query().Get("key")))
 	if err != nil {
 		ro.log.WithError(err).Warning("failed to delete")
 	}

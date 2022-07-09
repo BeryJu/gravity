@@ -67,21 +67,21 @@ func (r *Record) put(expiry int64, opts ...clientv3.OpOption) error {
 	}
 
 	if expiry > 0 {
-		exp, err := r.inst.GetKV().Lease.Grant(context.TODO(), expiry)
+		exp, err := r.inst.KV().Lease.Grant(context.TODO(), expiry)
 		if err != nil {
 			return err
 		}
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
-	leaseKey := r.inst.GetKV().Key(
+	leaseKey := r.inst.KV().Key(
 		types.KeyRole,
 		types.KeyZones,
 		r.zone.Name,
 		r.Name,
 		r.Type,
 	)
-	_, err = r.inst.GetKV().Put(
+	_, err = r.inst.KV().Put(
 		context.TODO(),
 		leaseKey,
 		string(raw),

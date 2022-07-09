@@ -23,7 +23,7 @@ func (i *Instance) ForRole(roleId string) *RoleInstance {
 	return in
 }
 
-func (ri *RoleInstance) GetKV() *storage.Client {
+func (ri *RoleInstance) KV() *storage.Client {
 	return ri.kv
 }
 

@@ -36,9 +36,9 @@ func (am *AuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rawUsers, err := am.role.i.GetKV().Get(
+	rawUsers, err := am.role.i.KV().Get(
 		r.Context(),
-		am.role.i.GetKV().Key(
+		am.role.i.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
 			username,
