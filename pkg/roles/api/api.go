@@ -34,9 +34,9 @@ func (r *APIRole) Start(config []byte) error {
 			return
 		}
 		mux := ev.Payload.Data["mux"].(*mux.Router)
-		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("GET").HandlerFunc(r.handleAPIGet)
-		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("POST").HandlerFunc(r.handleAPIPost)
-		mux.Name("ddet.api.v0.test").Path("/api/v0/test").Methods("DELETE").HandlerFunc(r.handleAPIDel)
+		mux.Name("ddet.api.v0.debug").Path("/api/v0/debug").Methods("GET").HandlerFunc(r.handleAPIGet)
+		mux.Name("ddet.api.v0.debug").Path("/api/v0/debug").Methods("POST").HandlerFunc(r.handleAPIPost)
+		mux.Name("ddet.api.v0.debug").Path("/api/v0/debug").Methods("DELETE").HandlerFunc(r.handleAPIDel)
 	})
 
 	mux := mux.NewRouter()

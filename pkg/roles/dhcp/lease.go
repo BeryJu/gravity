@@ -52,7 +52,7 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
 	s.etcdKey = string(raw.Key)[1:]
 
-	s.log = log.WithField("lease", prefix)
+	s.log = r.log.WithField("lease", prefix)
 	return s, nil
 }
 

@@ -25,7 +25,7 @@ func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	if err != nil {
 		return nil, err
 	}
-	sub.log = log.WithField("subnet", sub.CIDR)
+	sub.log = sub.log.WithField("subnet", sub.CIDR)
 	return sub, nil
 }
 
@@ -61,17 +61,16 @@ func (s *Subnet) RunDiscovery() {
 
 	// Use the results to print an example output
 	for _, host := range result.Hosts {
-		s.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, roles.NewEvent(map[string]interface{}{
-			"device": host,
-		}))
-		dev := &Device{}
+		dev := NewDevice(s.inst)
 		if len(host.Hostnames) > 0 {
 			dev.Hostname = host.Hostnames[0].String()
 		}
-		// s.log.WithFields(log.Fields{
-		// 	"address":  host.Addresses,
-		// 	"hostname": host.Hostnames,
-		// 	"host":     host,
-		// }).Debug("found device")
+		for _, addr := range host.Addresses {
+			if addr.AddrType == "mac" {
+				dev.MAC = addr.Addr
+			} else {
+				dev.IP = addr.Addr
+			}
+		}
 	}
 }

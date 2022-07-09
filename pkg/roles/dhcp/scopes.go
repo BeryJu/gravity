@@ -72,7 +72,7 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
 	s.etcdKey = string(raw.Key)[1:]
 
-	s.log = log.WithField("scope", s.Name)
+	s.log = r.log.WithField("scope", s.Name)
 
 	// TODO: other IPAMs
 	var ipamInst ipam.IPAM

@@ -64,7 +64,7 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	z.Name = strings.TrimPrefix(string(raw.Key), prefix)
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
 	z.etcdKey = string(raw.Key)[1:]
-	z.log = log.WithField("zone", z.Name)
+	z.log = r.log.WithField("zone", z.Name)
 
 	if len(z.HandlerConfigs) < 1 {
 		r.log.Trace("No handler defined, defaulting to etcd")
