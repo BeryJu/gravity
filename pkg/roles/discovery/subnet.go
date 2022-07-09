@@ -2,6 +2,7 @@ package discovery
 
 import (
 	"encoding/json"
+	"time"
 
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/discovery/types"
@@ -11,7 +12,8 @@ import (
 )
 
 type Subnet struct {
-	CIDR string `json:"cidr"`
+	CIDR         string `json:"cidr"`
+	DiscoveryTTL int    `json:"discoveryTTL"`
 
 	inst roles.Instance
 	log  *log.Entry
@@ -19,17 +21,19 @@ type Subnet struct {
 
 func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	sub := &Subnet{
-		inst: r.i,
+		DiscoveryTTL: int((24 * time.Hour).Seconds()),
+		inst:         r.i,
 	}
 	err := json.Unmarshal(raw.Value, &sub)
 	if err != nil {
 		return nil, err
 	}
-	sub.log = sub.log.WithField("subnet", sub.CIDR)
+	sub.log = r.log.WithField("subnet", sub.CIDR)
 	return sub, nil
 }
 
 func (s *Subnet) RunDiscovery() {
+	s.log.Trace("Starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(map[string]interface{}{
 		"subnet": s,
 	}))
@@ -41,16 +45,24 @@ func (s *Subnet) RunDiscovery() {
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
-		nmap.WithServiceInfo(),
 		nmap.WithSystemDNS(),
 	)
-	s.log.Trace(scanner.Args())
+	s.log.WithField("args", scanner.Args()).Trace("nmap args")
 	if err != nil {
 		s.log.Fatalf("unable to create nmap scanner: %v", err)
 		return
 	}
 
-	result, warnings, err := scanner.Run()
+	progress := make(chan float32, 1)
+
+	// Function to listen and print the progress
+	go func() {
+		for p := range progress {
+			s.log.WithField("progress", p).Debug("scan progress")
+		}
+	}()
+
+	result, warnings, err := scanner.RunWithProgress(progress)
 	if err != nil {
 		s.log.Fatalf("unable to run nmap scan: %v", err)
 		return
@@ -71,6 +83,10 @@ func (s *Subnet) RunDiscovery() {
 			} else {
 				dev.IP = addr.Addr
 			}
+		}
+		err := dev.put(int64(s.DiscoveryTTL))
+		if err != nil {
+			s.log.WithError(err).Warning("ignoring device")
 		}
 	}
 }

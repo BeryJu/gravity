@@ -7,6 +7,7 @@ import (
 
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/discovery/types"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Device struct {
@@ -23,7 +24,7 @@ func NewDevice(inst roles.Instance) *Device {
 	}
 }
 
-func (d *Device) save() error {
+func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	by := ""
 	identifier := ""
 	if d.IP != "" {
@@ -37,6 +38,15 @@ func (d *Device) save() error {
 	if by == "" {
 		return errors.New("device without IP and MAC")
 	}
+
+	if expiry > 0 {
+		exp, err := d.inst.GetKV().Lease.Grant(context.TODO(), expiry)
+		if err != nil {
+			return err
+		}
+		opts = append(opts, clientv3.WithLease(exp.ID))
+	}
+
 	key := d.inst.GetKV().Key(types.KeyRole, types.KeyDevices, by, identifier)
 	raw, err := json.Marshal(&d)
 	if err != nil {
@@ -46,12 +56,20 @@ func (d *Device) save() error {
 		context.Background(),
 		key,
 		string(raw),
+		opts...,
 	)
 	if err != nil {
 		return err
 	}
-	d.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, roles.NewEvent(map[string]interface{}{
-		"device": d,
-	}))
+
+	ev := roles.NewEvent(
+		map[string]interface{}{
+			"device": d,
+		},
+	)
+	ev.Payload.RelatedObjectKey = key
+	ev.Payload.RelatedObjectOptions = opts
+	d.inst.DispatchEvent(types.EventTopicDiscoveryDeviceFound, ev)
+
 	return nil
 }

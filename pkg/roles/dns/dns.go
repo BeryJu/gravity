@@ -16,7 +16,7 @@ import (
 )
 
 type DNSRole struct {
-	servers map[string]*dns.Server
+	servers []*dns.Server
 	zones   map[string]*Zone
 
 	log *log.Entry
@@ -25,7 +25,7 @@ type DNSRole struct {
 
 func New(instance roles.Instance) *DNSRole {
 	return &DNSRole{
-		servers: make(map[string]*dns.Server),
+		servers: make([]*dns.Server, 0),
 		zones:   make(map[string]*Zone, 0),
 		log:     instance.GetLogger().WithField("role", types.KeyRole),
 		i:       instance,
@@ -55,7 +55,7 @@ func (r *DNSRole) Start(config []byte) error {
 			Net:     proto,
 			Handler: dnsMux,
 		}
-		r.servers[proto] = server
+		r.servers = append(r.servers, server)
 		r.log.WithField("port", cfg.Port).WithField("proto", proto).Info("Starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
