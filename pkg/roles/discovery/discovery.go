@@ -1,6 +1,7 @@
 package discovery
 
 import (
+	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	apitypes "beryju.io/ddet/pkg/roles/api/types"
 	"beryju.io/ddet/pkg/roles/discovery/types"
@@ -29,7 +30,7 @@ func New(instance roles.Instance) *DiscoveryRole {
 
 func (r *DiscoveryRole) Start(config []byte) error {
 	r.cfg = r.decodeDiscoveryRoleConfig(config)
-	if !r.cfg.Enabled {
+	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		return nil
 	}
 	r.startWatchSubnets()

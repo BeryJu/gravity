@@ -19,6 +19,7 @@ type ExtConfig struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
 	}
+	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
 }
 
 var globalExtConfig *ExtConfig
