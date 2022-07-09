@@ -8,8 +8,9 @@ import (
 )
 
 type ExtConfig struct {
-	Debug bool `env:"DEBUG,default=false"`
-	Etcd  struct {
+	Debug    bool   `env:"DEBUG,default=false"`
+	DataPath string `env:"DATA_PATH,default=./data"`
+	Etcd     struct {
 		Prefix   string `env:"ETCD_PREFIX,default=/ddet"`
 		Endpoint string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 	}

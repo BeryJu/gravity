@@ -52,7 +52,6 @@ func NewInstance() *Instance {
 func (i *Instance) Start() {
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
-		// TODO: join existing cluster?
 		i.etcd = etcd.New(i.ForRole("etcd"))
 		err := i.etcd.Start(func() {
 			i.bootstrap()

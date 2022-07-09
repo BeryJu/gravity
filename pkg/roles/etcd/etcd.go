@@ -3,6 +3,7 @@ package etcd
 import (
 	"fmt"
 	"net/url"
+	"path"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
@@ -12,6 +13,9 @@ import (
 )
 
 type EmbeddedEtcd struct {
+	etcdDir string
+	certDir string
+
 	e   *embed.Etcd
 	cfg *embed.Config
 	log *log.Entry
@@ -27,22 +31,34 @@ func urlMustParse(raw string) *url.URL {
 }
 
 func New(instance roles.Instance) *EmbeddedEtcd {
+	etcdDir := path.Join(extconfig.Get().DataPath, "etcd/")
+	certDir := path.Join(extconfig.Get().DataPath, "cert/")
 	cfg := embed.NewConfig()
-	cfg.Dir = "data/etcd/"
+	cfg.Dir = etcdDir
 	cfg.LogLevel = "warn"
 	cfg.LPUrls = []url.URL{
-		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.APUrls = []url.URL{
-		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = fmt.Sprintf("%s=http://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
-	return &EmbeddedEtcd{
-		cfg: cfg,
-		log: instance.GetLogger().WithField("role", "embedded-etcd"),
-		i:   instance,
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
+	ee := &EmbeddedEtcd{
+		cfg:     cfg,
+		log:     instance.GetLogger().WithField("role", "embedded-etcd"),
+		i:       instance,
+		etcdDir: etcdDir,
+		certDir: certDir,
 	}
+	// ee.configureCertificates()
+	cfg.PeerAutoTLS = true
+	cfg.PeerTLSInfo.ClientCertFile = path.Join(certDir, relInstCertPath)
+	cfg.PeerTLSInfo.ClientKeyFile = path.Join(certDir, relInstKeyPath)
+	cfg.PeerTLSInfo.ClientCertAuth = true
+	cfg.SelfSignedCertValidity = 1
+	// cfg.Dir
+	return ee
 }
 
 func (ee *EmbeddedEtcd) Start(ready func()) error {
