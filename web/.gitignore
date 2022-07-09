@@ -1,0 +1,5 @@
+coverage
+junit
+node_modules
+dist/**
+!dist/static.go

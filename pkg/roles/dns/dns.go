@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
+	apitypes "beryju.io/ddet/pkg/roles/api/types"
 	dhcptypes "beryju.io/ddet/pkg/roles/dhcp/types"
 	"beryju.io/ddet/pkg/roles/dns/types"
 	log "github.com/sirupsen/logrus"
@@ -35,6 +36,7 @@ func New(instance roles.Instance) *DNSRole {
 func (r *DNSRole) Start(config []byte) error {
 	cfg := r.decodeDNSRoleConfig(config)
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
 
 	go r.startWatchZones()
 

@@ -1,0 +1,23 @@
+html {
+    --color-primary: #e1a101;
+    --color-primary-background: #1c2629;
+    --color-primary-background-dark: #0b1d23;
+    --color-primary-background-light: #344448;
+    --color-primary-text: #e9e5da;
+    --color-primary-text-inverted: #0b1d23;
+}
+
+body {
+    margin: 0;
+
+    background-color: var(--color-primary-background);
+    color: var(--color-primary-text);
+
+    font-family: Roboto, "Courier New", Courier, monospace;
+
+    min-height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
+}

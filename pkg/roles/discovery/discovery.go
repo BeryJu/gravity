@@ -23,7 +23,7 @@ func New(instance roles.Instance) *DiscoveryRole {
 	}
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		mux := ev.Payload.Data["mux"].(*chi.Mux)
-		mux.Post("/api/v0/discovery/apply", r.apiHandlerApply)
+		mux.Post("/v0/discovery/apply", r.apiHandlerApply)
 	})
 	return r
 }
