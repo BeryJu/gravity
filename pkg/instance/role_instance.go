@@ -28,7 +28,7 @@ func (ri *RoleInstance) GetKV() *storage.Client {
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
-	ri.parent.dispatchEvent(topic, ev)
+	ri.parent.dispatchEvent(topic, ev.FromTopic(topic))
 }
 
 func (ri *RoleInstance) AddEventListener(topic string, handler roles.EventHandler) {

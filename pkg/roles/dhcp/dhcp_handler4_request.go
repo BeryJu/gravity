@@ -22,7 +22,7 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 	}
 
 	// TODO: Update
-	r.replyWithLease(match, conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
+	match.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 		return d
 	})

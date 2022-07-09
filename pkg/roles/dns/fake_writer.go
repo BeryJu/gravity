@@ -21,7 +21,7 @@ func (fd *fakeDNSWriter) TsigStatus() error           { return fd.inner.TsigStat
 func (fd *fakeDNSWriter) TsigTimersOnly(v bool)       { fd.inner.TsigTimersOnly(v) }
 func (fd *fakeDNSWriter) Hijack()                     { fd.inner.Hijack() }
 
-func NweFakeDNSWriter(w dns.ResponseWriter) *fakeDNSWriter {
+func NewFakeDNSWriter(w dns.ResponseWriter) *fakeDNSWriter {
 	return &fakeDNSWriter{
 		inner: w,
 	}

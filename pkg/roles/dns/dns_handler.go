@@ -6,6 +6,22 @@ import (
 	"github.com/miekg/dns"
 )
 
+func (r *DNSRole) findZone(fqdn string) *Zone {
+	lastLongest := 0
+	var longestZone *Zone
+	for name, zone := range r.zones {
+		// Zone doesn't have the correct suffix for the question
+		if !strings.HasSuffix(fqdn, name) {
+			continue
+		}
+		if len(name) > lastLongest {
+			lastLongest = len(name)
+			longestZone = zone
+		}
+	}
+	return longestZone
+}
+
 func (ro *DNSRole) handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
 	var longestZone *Zone

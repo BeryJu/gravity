@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"beryju.io/ddet/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 )
@@ -25,15 +26,17 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	m.Authoritative = eh.z.Authoritative
 	ctx := context.Background()
 	for _, question := range r.Question {
-		relRecordName := strings.TrimSuffix(question.Name, "."+eh.z.Name)
+		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.GetKV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
+		eh.log.WithField("key", fullRecordKey).Trace("tracing tested key")
 		// TODO: Optimise this
 		res, err := eh.z.inst.GetKV().Get(ctx, fullRecordKey)
 		if err != nil || len(res.Kvs) < 1 {
 			continue
 		}
-		for _, key := range res.Kvs {
-			ans := eh.z.kvToDNS(question.Name, key, question.Qtype)
+		for _, kv := range res.Kvs {
+			rec := eh.z.recordFromKV(kv)
+			ans := rec.ToDNS(question.Name, question.Qtype)
 			if ans != nil {
 				m.Answer = append(m.Answer, ans)
 			}

@@ -4,12 +4,13 @@ import (
 	"context"
 	"strings"
 
+	"beryju.io/ddet/pkg/roles/dns/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) {
-	prefix := r.i.GetKV().Key(KeyRole, KeyZones, "")
+	prefix := r.i.GetKV().Key(types.KeyRole, types.KeyZones, "")
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about zone-level updates, everything underneath doesn't matter
 	if strings.Contains(relKey, "/") {
@@ -30,7 +31,7 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) {
 }
 
 func (r *DNSRole) startWatchZones() {
-	prefix := r.i.GetKV().Key(KeyRole, KeyZones, "")
+	prefix := r.i.GetKV().Key(types.KeyRole, types.KeyZones, "")
 	zones, err := r.i.GetKV().Get(context.Background(), prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")

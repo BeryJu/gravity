@@ -1,6 +1,11 @@
 package etcd
 
 import (
+	"fmt"
+	"net/url"
+	"os"
+
+	"beryju.io/ddet/pkg/extconfig"
 	log "github.com/sirupsen/logrus"
 
 	"go.etcd.io/etcd/server/v3/embed"
@@ -13,10 +18,26 @@ type EmbeddedEtcd struct {
 	prefix string
 }
 
+func urlMustParse(raw string) *url.URL {
+	u, err := url.Parse(raw)
+	if err != nil {
+		panic(err)
+	}
+	return u
+}
+
 func New(prefix string) *EmbeddedEtcd {
 	cfg := embed.NewConfig()
-	cfg.Dir = "default.etcd"
+	os.MkdirAll("../data/etcd", os.ModeDir)
+	cfg.Dir = "../data/etcd/"
 	cfg.LogLevel = "warn"
+	cfg.LPUrls = []url.URL{
+		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+	}
+	cfg.APUrls = []url.URL{
+		*urlMustParse(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+	}
+	cfg.Name = extconfig.Get().Instance.Identifier
 	return &EmbeddedEtcd{
 		cfg:    cfg,
 		log:    log.WithField("role", "embedded-etcd"),

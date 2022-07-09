@@ -31,7 +31,7 @@ func (r *DHCPRole) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dh
 		lease.put(int64(r.cfg.LeaseNegotiateTimeout))
 	}
 
-	r.replyWithLease(lease, conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
+	lease.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeOffer))
 		return d
 	})

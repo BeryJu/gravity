@@ -3,10 +3,10 @@ package dns
 import (
 	"context"
 	"encoding/json"
-	"net"
 	"strings"
 
 	"beryju.io/ddet/pkg/roles"
+	"beryju.io/ddet/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -25,14 +25,9 @@ type Zone struct {
 	log     *log.Entry
 }
 
-type Record struct {
-	Data string `json:"data"`
-	TTL  uint32 `json:"ttl"`
-}
-
 func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	for _, handler := range z.h {
-		handlerReply := handler.Handle(NweFakeDNSWriter(w), r)
+		handlerReply := handler.Handle(NewFakeDNSWriter(w), r)
 		if handlerReply != nil {
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
@@ -46,23 +41,14 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(fallback)
 }
 
-func (z *Zone) kvToDNS(qname string, kv *mvccpb.KeyValue, t uint16) dns.RR {
+func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) *Record {
 	rec := Record{}
 	err := json.Unmarshal(kv.Value, &rec)
 	if err != nil {
 		z.log.WithError(err).Warning("failed to parse record")
 		return nil
 	}
-	hdr := dns.RR_Header{
-		Name:   qname,
-		Rrtype: t,
-		Class:  dns.ClassINET,
-		Ttl:    rec.TTL,
-	}
-	return &dns.A{
-		Hdr: hdr,
-		A:   net.ParseIP(rec.Data),
-	}
+	return &rec
 }
 
 func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
@@ -74,7 +60,7 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	if err != nil {
 		return nil, err
 	}
-	prefix := r.i.GetKV().Key(KeyRole, KeyZones, "")
+	prefix := r.i.GetKV().Key(types.KeyRole, types.KeyZones, "")
 	z.Name = strings.TrimPrefix(string(raw.Key), prefix)
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
 	z.etcdKey = string(raw.Key)[1:]
@@ -110,6 +96,11 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	return &z, nil
 }
 
+func (z *Zone) Record() *Record {
+	r := &Record{}
+	return r
+}
+
 func (z *Zone) put() error {
 	raw, err := json.Marshal(&z)
 	if err != nil {
@@ -119,8 +110,8 @@ func (z *Zone) put() error {
 	_, err = z.inst.GetKV().Put(
 		context.TODO(),
 		z.inst.GetKV().Key(
-			KeyRole,
-			KeyZones,
+			types.KeyRole,
+			types.KeyZones,
 			z.Name,
 		),
 		string(raw),

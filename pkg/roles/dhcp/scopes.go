@@ -45,7 +45,9 @@ type Scope struct {
 		End   string `json:"end"`
 	} `json:"range"`
 	DNS struct {
-		Zone string `json:"zone"`
+		Zone              string   `json:"zone"`
+		Search            []string `json:"search"`
+		AddZoneInHostname bool     `json:"addZoneInHostname"`
 	} `json:"dns"`
 
 	etcdKey string

@@ -14,11 +14,6 @@ import (
 	"github.com/miekg/dns"
 )
 
-const (
-	KeyRole  = "dns"
-	KeyZones = "zones"
-)
-
 type DNSRole struct {
 	servers map[string]*dns.Server
 	zones   map[string]*Zone
