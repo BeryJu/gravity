@@ -1,11 +1,15 @@
 const baseUrl = new URL("/api", window.location.toString());
+var globalHeaders: {[key: string]: string} = {};
 
 export const isLoggedIn = () => {
     return document.cookie.includes("ddet_session");
 };
 
+export const login = (username: string, password: string) => {
+    globalHeaders["Authorization"] = `Basic ${btoa(`${username}:${password}`)}`;
+};
+
 export const logout = () => {
-    document.cookie = `ddet_session=; Max-Age=0; Path=/; Domain=${document.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.location.reload();
 };
 
@@ -26,6 +30,7 @@ export const request = async <T>(
 ) => {
     const headers: HeadersInit = {
         accepts: "application/json",
+        ...globalHeaders,
         ...options.headers,
     };
 

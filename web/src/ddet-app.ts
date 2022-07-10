@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { customElement } from "lit/decorators.js";
 import "./router";
+import "./ddet-login";
 import "@spectrum-web-components/theme/theme-light.js";
 import "@spectrum-web-components/theme/scale-medium.js";
 import "@spectrum-web-components/theme/sp-theme.js";
@@ -10,6 +11,7 @@ import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/sidenav/sp-sidenav.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-heading.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-item.js";
+import { isLoggedIn } from "src/services/api";
 
 @customElement("ddet-app")
 export class App extends LitElement {

@@ -50,7 +50,9 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	r.m.Use(NewLoggingHandler(r.log, nil))
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	apiRouter.Use(NewAuthMiddleware(r))
+	if !extconfig.Get().Debug {
+		apiRouter.Use(NewAuthMiddleware(r))
+	}
 	apiRouter.Use(func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Accept", "application/json")
@@ -66,8 +68,8 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	service.Use(adminSecuritySchema)
 	// apiRouter.Handle("/", service)
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
-		// "mux": service,
 		"mux": apiRouter,
+		"svc": service,
 	}))
 	r.log.Debug("Registered routes:")
 	r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
