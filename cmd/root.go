@@ -30,7 +30,7 @@ func Execute() {
 
 func init() {
 	log.SetLevel(log.TraceLevel)
-	// log.SetFormatter(&log.JSONFormatter{
-	// 	DisableHTMLEscape: true,
-	// })
+	log.SetFormatter(&log.JSONFormatter{
+		DisableHTMLEscape: true,
+	})
 }

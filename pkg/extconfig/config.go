@@ -46,6 +46,15 @@ func Get() *ExtConfig {
 	}
 	cfg.defaults()
 	globalExtConfig = &cfg
+	if cfg.Debug {
+		log.SetLevel(log.TraceLevel)
+		log.SetFormatter(&log.TextFormatter{})
+	} else {
+		log.SetLevel(log.DebugLevel)
+		log.SetFormatter(&log.JSONFormatter{
+			DisableHTMLEscape: true,
+		})
+	}
 	return &cfg
 }
 

@@ -30,9 +30,6 @@ func New(instance roles.Instance) *APIRole {
 		m:   mux.NewRouter(),
 	}
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		if !extconfig.Get().Debug {
-			return
-		}
 		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.api").Subrouter()
 		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodGet).HandlerFunc(r.apiHandlerDebugGet)
 		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodPost).HandlerFunc(r.apiHandlerDebugPost)
