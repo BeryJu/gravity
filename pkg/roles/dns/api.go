@@ -11,10 +11,10 @@ import (
 
 func (ro *DNSRole) eventHandlerAPIMux(ev *roles.Event) {
 	m := ev.Payload.Data["mux"].(*mux.Router)
-	m.Path("/v0/dns/zones").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Path("/v0/dns/zones").Methods(http.MethodGet).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(ro.zones)
 	})
-	m.Path("/v0/dns/zones/{zone}/recods").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Path("/v0/dns/zones/{zone}/recods").Methods(http.MethodGet).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		zoneName := vars["zone"]
 		zone, ok := ro.zones[zoneName]

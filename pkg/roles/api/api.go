@@ -35,9 +35,9 @@ func New(instance roles.Instance) *APIRole {
 			return
 		}
 		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.api").Subrouter()
-		mux.Name("v0.debug").Path("/v0/debug").Methods("GET").HandlerFunc(r.apiHandlerDebugGet)
-		mux.Name("v0.debug").Path("/v0/debug").Methods("POST").HandlerFunc(r.apiHandlerDebugPost)
-		mux.Name("v0.debug").Path("/v0/debug").Methods("DELETE").HandlerFunc(r.apiHandlerDebugDel)
+		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodGet).HandlerFunc(r.apiHandlerDebugGet)
+		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodPost).HandlerFunc(r.apiHandlerDebugPost)
+		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodDelete).HandlerFunc(r.apiHandlerDebugDel)
 	})
 	go r.setupUI()
 	return r
