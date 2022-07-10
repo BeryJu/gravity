@@ -11,10 +11,21 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ^1.18
-      - uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3.1.0
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+      - name: Build web
+        working-directory: web/
+        run: |
+          npm ci
+          npm run build
       - run: go get -v -t -d ./...
       - name: Build
         run: go build -v .
