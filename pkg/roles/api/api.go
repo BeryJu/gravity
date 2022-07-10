@@ -11,6 +11,8 @@ import (
 	"beryju.io/ddet/pkg/roles/api/types"
 	"github.com/go-chi/chi/v5"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/nethttp"
+	"github.com/swaggest/rest/web"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -56,8 +58,14 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 				h.ServeHTTP(w, r)
 			})
 		})
+		service := web.DefaultService()
+		service.OpenAPI.Info.Title = "ye"
+		service.OpenAPI.Info.Version = "v1.0.0"
+		adminSecuritySchema := nethttp.HTTPBasicSecurityMiddleware(service.OpenAPICollector, "Admin", "Admin access")
+		service.Use(adminSecuritySchema)
+		ro.Handle("/*", service)
 		r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
-			"mux": ro,
+			"mux": service,
 		}))
 	})
 	r.log.Debug("Registered routes:")
