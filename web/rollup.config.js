@@ -6,7 +6,6 @@ import minifyHTML from "rollup-plugin-minify-html-literals";
 import { terser } from "rollup-plugin-terser";
 
 const resources = [
-    { src: "src/style.css", dest: "./dist" },
     { src: "assets/*", dest: "./dist/assets" },
 ];
 
@@ -15,8 +14,8 @@ module.exports = [
         input: "./src/main.js",
         output: [
             {
-                format: "esm",
-                file: "./dist/bundle.js",
+                format: "es",
+                dir: "./dist/",
                 sourcemap: true,
             },
         ],
