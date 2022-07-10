@@ -29,7 +29,7 @@ func New(instance roles.Instance) *APIRole {
 		i:   instance,
 		m:   mux.NewRouter(),
 	}
-	go r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		if !extconfig.Get().Debug {
 			return
 		}
@@ -38,7 +38,7 @@ func New(instance roles.Instance) *APIRole {
 		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodPost).HandlerFunc(r.apiHandlerDebugPost)
 		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodDelete).HandlerFunc(r.apiHandlerDebugDel)
 	})
-	go r.setupUI()
+	r.setupUI()
 	return r
 }
 
