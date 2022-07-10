@@ -11,7 +11,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "dns-dhcp-etcd-thingy",
+	Use:   "ddet",
 	Short: "A brief description of your application",
 	Run: func(cmd *cobra.Command, args []string) {
 		rand.Seed(time.Now().Unix())

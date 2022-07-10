@@ -3,12 +3,13 @@ package api
 import (
 	_ "embed"
 	"html/template"
+	"io/fs"
 	"net/http"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/api/types"
-	"beryju.io/ddet/web/dist"
+	"beryju.io/ddet/web"
 )
 
 //go:embed ui/index.html
@@ -36,7 +37,12 @@ func (r *APIRole) setupUI() {
 		if extconfig.Get().Debug {
 			handler = http.StripPrefix("/ui/static", http.FileServer(http.Dir("./web/dist")))
 		} else {
-			handler = http.StripPrefix("/ui/static", http.FileServer(http.FS(dist.Static)))
+			fs, err := fs.Sub(web.Static, "dist")
+			if err != nil {
+				r.log.WithError(err).Warning("failed to subst static fs")
+				return
+			}
+			handler = http.StripPrefix("/ui/static", http.FileServer(http.FS(fs)))
 		}
 		r.m.PathPrefix("/ui/static/").Handler(handler)
 	})

@@ -1,8 +1,8 @@
-package dist
+package web
 
 import (
 	"embed"
 )
 
-//go:embed *
+//go:embed dist/*
 var Static embed.FS
