@@ -86,6 +86,7 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 }
 
 func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) bool {
+	// TODO: Stub method
 	return false
 }
 

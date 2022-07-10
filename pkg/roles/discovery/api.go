@@ -1,38 +1,14 @@
 package discovery
 
 import (
-	"net/http"
-	"strings"
-
-	"beryju.io/ddet/pkg/roles/discovery/types"
+	"beryju.io/ddet/pkg/roles"
+	"github.com/gorilla/mux"
 )
 
-func (ro *DiscoveryRole) apiHandlerApply(w http.ResponseWriter, r *http.Request) {
-	relKey := r.URL.Query().Get("relKey")
-	by := strings.SplitN(relKey, "/", 1)[0]
-	if by != types.KeyDevicesByMAC && by != types.KeyDevicesByIP {
-		http.Error(w, "invalid key", 400)
-		return
-	}
-
-	rawDevice, err := ro.i.KV().Get(r.Context(), ro.i.KV().Key(
-		types.KeyRole,
-		types.KeyDevices,
-		relKey,
-	))
-	if err != nil || len(rawDevice.Kvs) < 1 {
-		http.Error(w, "device not found", 404)
-		return
-	}
-
-	device := ro.deviceFromKV(rawDevice.Kvs[0])
-	if by == types.KeyDevicesByIP {
-		err = device.toDHCP(r.URL.Query().Get("dhcpScope"))
-	} else {
-		err = device.toDNS(r.URL.Query().Get("dnsZone"))
-	}
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+func (ro *DiscoveryRole) eventHandlerAPIMux(ev *roles.Event) {
+	mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.discovery").Subrouter()
+	mux.Name("v0.applyDevice").Path("/v0/discovery/apply").Methods("POST").HandlerFunc(ro.apiHandlerDeviceApply)
+	mux.Name("v0.listDevices").Path("/v0/discovery/list").Methods("GET").HandlerFunc(ro.apiHandlerDeviceList)
+	mux.Name("v0.listSubnets").Path("/v0/discovery/subnets").Methods("GET").HandlerFunc(ro.apiHandlerSubnetList)
+	mux.Name("v0.listDevices").Path("/v0/discovery/subnets").Methods("POST").HandlerFunc(ro.apiHandlerDeviceList)
 }

@@ -49,7 +49,7 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 
 	r.m.Use(NewLoggingHandler(r.log, nil))
 
-	apiRouter := r.m.PathPrefix("/api").Subrouter()
+	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
 	apiRouter.Use(NewAuthMiddleware(r))
 	apiRouter.Use(func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -64,10 +64,10 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	service.OpenAPI.Info.Version = "v1.0.0"
 	adminSecuritySchema := nethttp.HTTPBasicSecurityMiddleware(service.OpenAPICollector, "Admin", "Admin access")
 	service.Use(adminSecuritySchema)
-	apiRouter.Handle("/", service)
+	// apiRouter.Handle("/", service)
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
 		// "mux": service,
-		"mux": r.m,
+		"mux": apiRouter,
 	}))
 	r.log.Debug("Registered routes:")
 	r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

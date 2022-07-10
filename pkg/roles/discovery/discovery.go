@@ -8,7 +8,6 @@ import (
 	apitypes "beryju.io/ddet/pkg/roles/api/types"
 	"beryju.io/ddet/pkg/roles/discovery/types"
 
-	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -24,10 +23,7 @@ func New(instance roles.Instance) *DiscoveryRole {
 		log: instance.GetLogger().WithField("role", types.KeyRole),
 		i:   instance,
 	}
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.discovery").Subrouter()
-		mux.Name("v0.applyDevice").Path("/v0/discovery/apply").Methods("POST").HandlerFunc(r.apiHandlerApply)
-	})
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
 	return r
 }
 
@@ -35,6 +31,7 @@ func (r *DiscoveryRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeDiscoveryRoleConfig(config)
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
+		r.log.Info("Not enabling discovery")
 		return nil
 	}
 	r.startWatchSubnets()
