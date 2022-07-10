@@ -11,19 +11,21 @@
         "@rollup/plugin-commonjs": "^22.0.0",
         "@rollup/plugin-node-resolve": "^13.3.0",
         "@rollup/plugin-typescript": "^8.3.3",
+        "@spectrum-css/table": "^4.0.19",
+        "@spectrum-css/typography": "^4.0.20",
         "@spectrum-web-components/bundle": "^0.26.0",
         "@spectrum-web-components/sidenav": "^0.12.13",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
-        "eslint": "^8.18.0",
         "eslint-config-google": "^0.14.0",
+        "eslint": "^8.18.0",
         "lit": "^2.2.7",
         "prettier": "^2.7.1",
-        "rollup": "^2.75.6",
         "rollup-plugin-copy": "^3.4.0",
         "rollup-plugin-cssimport": "^1.0.2",
         "rollup-plugin-minify-html-literals": "^1.2.6",
         "rollup-plugin-terser": "^7.0.2",
+        "rollup": "^2.75.6",
         "ts-lit-plugin": "^1.2.1"
     }
 }

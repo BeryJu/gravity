@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from "lit";
+import { css, CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
@@ -26,6 +26,15 @@ export class Router extends LitElement {
     @property({ attribute: false })
     activeRoute?: Route;
 
+    static get styles(): CSSResult {
+        return css`
+            .wrapper {
+                height: 100vh;
+                margin: 3rem 13rem;
+            }
+        `;
+    }
+
     constructor() {
         super();
         window.addEventListener("hashchange", () => {
@@ -46,6 +55,6 @@ export class Router extends LitElement {
     }
 
     render(): TemplateResult {
-        return html` ${this.activeRoute?.render()} `;
+        return html`<div class="wrapper">${this.activeRoute?.render()}</div>`;
     }
 }

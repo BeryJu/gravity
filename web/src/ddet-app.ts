@@ -3,8 +3,9 @@ import { customElement } from "lit/decorators.js";
 import "./router";
 import "./ddet-login";
 import "@spectrum-web-components/theme/theme-light.js";
+import "@spectrum-web-components/theme/theme-darkest.js";
 import "@spectrum-web-components/theme/scale-medium.js";
-import "@spectrum-web-components/theme/sp-theme.js";
+import "@spectrum-web-components/theme/sp-theme.js";;
 
 import "@spectrum-web-components/split-view/sp-split-view.js";
 import "@spectrum-web-components/theme/sp-theme.js";
@@ -21,6 +22,10 @@ export const ROUTES = [
     new Route("/cluster/nodes", async () => {
         await import("./pages/ClusterNodesPage");
         return html`<ddet-cluster-nodes></ddet-cluster-nodes>`;
+    }),
+    new Route("/dns/zones", async () => {
+        await import("./pages/DNSZonePage");
+        return html`<ddet-dns-zones></ddet-dns-zones>`;
     }),
 ];
 
@@ -100,7 +105,7 @@ export class App extends LitElement {
 
     render() {
         return html`
-            <sp-theme color="light" scale="medium">
+            <sp-theme theme="classic" scale="medium" color="darkest">
                 <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
                     ${this.renderSidebar()}
                     <ddet-router .routes=${ROUTES}> </ddet-router>
