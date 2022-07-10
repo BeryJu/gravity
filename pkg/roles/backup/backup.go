@@ -80,6 +80,7 @@ func (r *BackupRole) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *BackupRole) saveSnapshot() {
+	// TODO: Only let the master do backups to prevent duplicates
 	read, err := r.i.KV().Snapshot(r.ctx)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to snapshot")
