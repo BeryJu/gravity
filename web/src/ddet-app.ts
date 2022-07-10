@@ -15,11 +15,11 @@ import { Route } from "./router";
 
 export const ROUTES = [
     new Route("/overview", async () => {
-        await import ("./pages/OverviewPage");
+        await import("./pages/OverviewPage");
         return html`<ddet-overview></ddet-overview>`;
     }),
     new Route("/cluster/nodes", async () => {
-        await import ("./pages/ClusterNodesPage");
+        await import("./pages/ClusterNodesPage");
         return html`<ddet-cluster-nodes></ddet-cluster-nodes>`;
     }),
 ];
@@ -103,8 +103,7 @@ export class App extends LitElement {
             <sp-theme color="light" scale="medium">
                 <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
                     ${this.renderSidebar()}
-                    <ddet-router .routes=${ROUTES}>
-                    </ddet-router>
+                    <ddet-router .routes=${ROUTES}> </ddet-router>
                 </sp-split-view>
             </sp-theme>
         `;

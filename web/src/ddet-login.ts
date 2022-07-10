@@ -11,7 +11,6 @@ import { isLoggedIn, login } from "src/services/api";
 
 @customElement("ddet-login")
 export class Login extends LitElement {
-
     static get styles() {
         return css`
             :host {
@@ -29,9 +28,12 @@ export class Login extends LitElement {
     }
 
     login(): void {
-        const username = this.shadowRoot?.querySelector<HTMLInputElement>("sp-textfield[id=username]");
-        const password =
-            this.shadowRoot?.querySelector < HTMLInputElement>("sp-textfield[id=password]");
+        const username = this.shadowRoot?.querySelector<HTMLInputElement>(
+            "sp-textfield[id=username]",
+        );
+        const password = this.shadowRoot?.querySelector<HTMLInputElement>(
+            "sp-textfield[id=password]",
+        );
         if (!username || !password) {
             return;
         }
@@ -55,9 +57,13 @@ export class Login extends LitElement {
                         ></sp-textfield>
                     </div>
                     <div class="group">
-                        <sp-button size="l" @click=${() => {
-                            this.login();
-                        }}>Login</sp-button>
+                        <sp-button
+                            size="l"
+                            @click=${() => {
+                                this.login();
+                            }}
+                            >Login</sp-button
+                        >
                     </div>
                 </form>
             </sp-theme>

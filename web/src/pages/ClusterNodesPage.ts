@@ -5,7 +5,6 @@ import { get } from "src/services/api";
 
 @customElement("ddet-cluster-nodes")
 export class ClusterNodePage extends LitElement {
-
     render(): TemplateResult {
         return html`
             ${until(
@@ -17,5 +16,4 @@ export class ClusterNodePage extends LitElement {
             )}
         `;
     }
-
 }

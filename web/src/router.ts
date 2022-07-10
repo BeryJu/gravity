@@ -4,7 +4,7 @@ import { until } from "lit/directives/until.js";
 
 export class Route {
     name: string;
-    handler:  () => Promise<TemplateResult> = async () => html``;
+    handler: () => Promise<TemplateResult> = async () => html``;
 
     constructor(name: string, handler: () => Promise<TemplateResult>) {
         this.name = name;
@@ -16,16 +16,14 @@ export class Route {
     render(): TemplateResult {
         return html`${until(this.handler(), html`Loading...`)}`;
     }
-
 }
 
 @customElement("ddet-router")
 export class Router extends LitElement {
-
-    @property({attribute: false})
+    @property({ attribute: false })
     routes: Route[] = [];
 
-    @property({attribute: false})
+    @property({ attribute: false })
     activeRoute?: Route;
 
     constructor() {
@@ -41,16 +39,13 @@ export class Router extends LitElement {
 
     navigate(): void {
         const name = window.location.hash.substring(1, Infinity);
-        const route = this.routes.filter(route => route.name == name)[0];
+        const route = this.routes.filter((route) => route.name == name)[0];
         console.debug(route);
         this.activeRoute = route;
         this.requestUpdate();
     }
 
     render(): TemplateResult {
-        return html`
-            ${this.activeRoute?.render()}
-        `;
+        return html` ${this.activeRoute?.render()} `;
     }
-
 }

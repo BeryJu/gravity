@@ -1,5 +1,5 @@
 const baseUrl = new URL("/api", window.location.toString());
-var globalHeaders: {[key: string]: string} = {};
+var globalHeaders: { [key: string]: string } = {};
 
 export const isLoggedIn = () => {
     return document.cookie.includes("ddet_session");
@@ -14,7 +14,7 @@ export const logout = () => {
 };
 
 export const get = async (url: string) => {
-    return request<null>(url,null );
+    return request<null>(url, null);
 };
 export const post = async <T>(url: string, body: T) => {
     return request(url, body);

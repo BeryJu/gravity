@@ -3,11 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("ddet-overview")
 export class OverviewPage extends LitElement {
-
     render(): TemplateResult {
-        return html`
-            Hello overview
-        `;
+        return html` Hello overview `;
     }
-
 }
