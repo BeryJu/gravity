@@ -13,7 +13,7 @@ export class Router extends LitElement {
 
     render(): TemplateResult {
         return html`
-
+            <slot></slot>
         `;
     }
 

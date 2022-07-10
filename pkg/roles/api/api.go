@@ -50,9 +50,7 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	r.m.Use(NewLoggingHandler(r.log, nil))
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	if !extconfig.Get().Debug {
-		apiRouter.Use(NewAuthMiddleware(r))
-	}
+	apiRouter.Use(NewAuthMiddleware(r))
 	apiRouter.Use(func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Accept", "application/json")

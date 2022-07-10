@@ -7,6 +7,7 @@ import { terser } from "rollup-plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 
 const resources = [
+    { src: "src/style.css", dest: "./dist" },
     { src: "assets/*", dest: "./dist/assets" },
 ];
 
