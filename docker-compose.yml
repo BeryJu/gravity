@@ -1,0 +1,17 @@
+---
+version: '3.4'
+
+services:
+  gravity:
+    # Important for this to be static and unique
+    hostname: gravity1
+    image: ghcr.io/beryju/gravity:latest
+    restart: unless-stopped
+    volumes:
+      - data:/data
+    environment:
+      LISTEN_ONLY: "true"
+
+volumes:
+  data:
+    driver: local

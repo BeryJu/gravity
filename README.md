@@ -39,3 +39,4 @@ TODO
 - [ ] Testing
 - [ ] Docs
 - [ ] Real world testing
+- [ ] Replicated DNS caching
