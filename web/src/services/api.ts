@@ -2,7 +2,7 @@ const baseUrl = new URL("/api", window.location.toString());
 var globalHeaders: { [key: string]: string } = {};
 
 export const isLoggedIn = () => {
-    return document.cookie.includes("ddet_session");
+    return document.cookie.includes("gravity_session");
 };
 
 export const login = (username: string, password: string) => {

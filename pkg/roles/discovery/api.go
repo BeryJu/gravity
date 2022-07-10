@@ -3,7 +3,7 @@ package discovery
 import (
 	"net/http"
 
-	"beryju.io/ddet/pkg/roles"
+	"beryju.io/gravity/pkg/roles"
 	"github.com/gorilla/mux"
 )
 

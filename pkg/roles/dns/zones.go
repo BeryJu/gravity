@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"

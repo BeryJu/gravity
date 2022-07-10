@@ -6,13 +6,13 @@ import "../elements/Table";
 import "../elements/Header";
 import "@spectrum-web-components/divider/sp-divider.js";
 
-@customElement("ddet-dns-zones")
+@customElement("gravity-dns-zones")
 export class DNSZonePage extends LitElement {
     render(): TemplateResult {
         return html`
-            <ddet-header>DNS Zones</ddet-header>
+            <gravity-header>DNS Zones</gravity-header>
             <sp-divider size="m"></sp-divider>
-            <ddet-table></ddet-table>
+            <gravity-table></gravity-table>
             ${until(
                 get("/api/v0/dns/zones").then((res) => {
                     return res.map((member: any) => {

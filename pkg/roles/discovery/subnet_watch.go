@@ -3,7 +3,7 @@ package discovery
 import (
 	"time"
 
-	"beryju.io/ddet/pkg/roles/discovery/types"
+	"beryju.io/gravity/pkg/roles/discovery/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )

@@ -4,9 +4,9 @@ import (
 	"net/netip"
 	"strings"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dns/types"
-	"beryju.io/ddet/pkg/roles/dns/utils"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 )
 

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/gorilla/mux"
 )
 

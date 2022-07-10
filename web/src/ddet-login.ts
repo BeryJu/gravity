@@ -9,7 +9,7 @@ import "@spectrum-web-components/textfield/sp-textfield.js";
 import "@spectrum-web-components/field-label/sp-field-label.js";
 import { isLoggedIn, login } from "src/services/api";
 
-@customElement("ddet-login")
+@customElement("gravity-login")
 export class Login extends LitElement {
     static get styles() {
         return css`

@@ -1,6 +1,6 @@
 package instance
 
-import "beryju.io/ddet/pkg/roles"
+import "beryju.io/gravity/pkg/roles"
 
 func (i *Instance) dispatchEvent(topic string, ev *roles.Event) {
 	i.eventHandlersM.RLock()

@@ -5,13 +5,13 @@ import (
 	"os"
 	"time"
 
-	"beryju.io/ddet/pkg/instance"
+	"beryju.io/gravity/pkg/instance"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "ddet",
+	Use:   "gravity",
 	Short: "A brief description of your application",
 	Run: func(cmd *cobra.Command, args []string) {
 		rand.Seed(time.Now().Unix())

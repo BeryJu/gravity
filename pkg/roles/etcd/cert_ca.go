@@ -21,7 +21,7 @@ func (ee *EmbeddedEtcd) generateCA() error {
 	ca := &x509.Certificate{
 		SerialNumber: big.NewInt(0),
 		Subject: pkix.Name{
-			Organization:  []string{"ddet"},
+			Organization:  []string{"gravity"},
 			Country:       []string{"idk"},
 			Province:      []string{""},
 			Locality:      []string{""},

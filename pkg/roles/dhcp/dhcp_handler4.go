@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"beryju.io/ddet/pkg/extconfig"
+	"beryju.io/gravity/pkg/extconfig"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 

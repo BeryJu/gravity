@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )

@@ -6,11 +6,11 @@ import (
 	"runtime"
 	"sync"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/pkg/roles"
-	apitypes "beryju.io/ddet/pkg/roles/api/types"
-	dhcptypes "beryju.io/ddet/pkg/roles/dhcp/types"
-	"beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
+	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/miekg/dns"

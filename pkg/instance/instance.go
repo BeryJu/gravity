@@ -7,15 +7,15 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/api"
-	"beryju.io/ddet/pkg/roles/backup"
-	"beryju.io/ddet/pkg/roles/dhcp"
-	"beryju.io/ddet/pkg/roles/discovery"
-	"beryju.io/ddet/pkg/roles/dns"
-	"beryju.io/ddet/pkg/roles/etcd"
-	"beryju.io/ddet/pkg/storage"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/backup"
+	"beryju.io/gravity/pkg/roles/dhcp"
+	"beryju.io/gravity/pkg/roles/discovery"
+	"beryju.io/gravity/pkg/roles/dns"
+	"beryju.io/gravity/pkg/roles/etcd"
+	"beryju.io/gravity/pkg/storage"
 )
 
 const (

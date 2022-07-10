@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"beryju.io/ddet/pkg/roles/dns/utils"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 )

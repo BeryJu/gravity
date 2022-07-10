@@ -4,8 +4,8 @@ import (
 	"context"
 	"net"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dhcp/types"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/insomniacslk/dhcp/dhcpv4/server4"

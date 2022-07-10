@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"beryju.io/ddet/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/api/types"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -32,7 +32,7 @@ func NewAuthMiddleware(r *APIRole) func(h http.Handler) http.Handler {
 func (am *AuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	username, password, ok := r.BasicAuth()
 	if !ok {
-		rw.Header().Set("WWW-Authenticate", "Basic realm=ddet")
+		rw.Header().Set("WWW-Authenticate", "Basic realm=gravity")
 		http.Error(rw, "missing http basic authentication", http.StatusUnauthorized)
 		return
 	}

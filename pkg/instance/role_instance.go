@@ -1,8 +1,8 @@
 package instance
 
 import (
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/storage"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/storage"
 	log "github.com/sirupsen/logrus"
 )
 

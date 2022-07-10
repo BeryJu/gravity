@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/pkg/roles"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
 	"github.com/gorilla/mux"
 )
 

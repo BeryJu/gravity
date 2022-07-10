@@ -1,6 +1,6 @@
 package main
 
-import "beryju.io/ddet/cmd"
+import "beryju.io/gravity/cmd"
 
 func main() {
 	cmd.Execute()

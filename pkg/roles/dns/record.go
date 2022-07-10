@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"

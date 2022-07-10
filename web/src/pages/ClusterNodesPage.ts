@@ -4,7 +4,7 @@ import { until } from "lit/directives/until.js";
 import { get } from "src/services/api";
 import "@spectrum-web-components/status-light/sp-status-light.js";
 
-@customElement("ddet-cluster-nodes")
+@customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends LitElement {
     render(): TemplateResult {
         return html`

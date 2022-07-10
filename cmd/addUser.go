@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"syscall"
 
-	"beryju.io/ddet/pkg/instance"
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/api"
+	"beryju.io/gravity/pkg/instance"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"beryju.io/ddet/pkg/roles/discovery/types"
+	"beryju.io/gravity/pkg/roles/discovery/types"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 

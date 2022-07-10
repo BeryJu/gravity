@@ -6,15 +6,15 @@ import (
 	"io/fs"
 	"net/http"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/web"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/web"
 )
 
 //go:embed ui/index.html
 var IndexTemplate string
 
 func (r *APIRole) setupUI() {
-	t, err := template.New("ddet.ui").Parse(IndexTemplate)
+	t, err := template.New("gravity.ui").Parse(IndexTemplate)
 	if err != nil {
 		panic(err)
 	}

@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import "./router";
-import "./ddet-login";
+import "./gravity-login";
 import "@spectrum-web-components/theme/theme-light.js";
 import "@spectrum-web-components/theme/theme-darkest.js";
 import "@spectrum-web-components/theme/scale-medium.js";
@@ -17,19 +17,19 @@ import { Route } from "./router";
 export const ROUTES = [
     new Route("/overview", async () => {
         await import("./pages/OverviewPage");
-        return html`<ddet-overview></ddet-overview>`;
+        return html`<gravity-overview></gravity-overview>`;
     }),
     new Route("/cluster/nodes", async () => {
         await import("./pages/ClusterNodesPage");
-        return html`<ddet-cluster-nodes></ddet-cluster-nodes>`;
+        return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route("/dns/zones", async () => {
         await import("./pages/DNSZonePage");
-        return html`<ddet-dns-zones></ddet-dns-zones>`;
+        return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
 ];
 
-@customElement("ddet-app")
+@customElement("gravity-app")
 export class App extends LitElement {
     static get styles() {
         return css`
@@ -108,7 +108,7 @@ export class App extends LitElement {
             <sp-theme theme="classic" scale="medium" color="darkest">
                 <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
                     ${this.renderSidebar()}
-                    <ddet-router .routes=${ROUTES}> </ddet-router>
+                    <gravity-router .routes=${ROUTES}> </gravity-router>
                 </sp-split-view>
             </sp-theme>
         `;

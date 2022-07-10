@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/discovery/types"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"

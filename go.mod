@@ -1,4 +1,4 @@
-module beryju.io/ddet
+module beryju.io/gravity
 
 go 1.18
 

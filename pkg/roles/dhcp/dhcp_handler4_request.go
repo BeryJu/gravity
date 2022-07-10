@@ -4,7 +4,7 @@ import (
 	"context"
 	"net"
 
-	"beryju.io/ddet/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 

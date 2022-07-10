@@ -19,14 +19,14 @@ RUN go mod download
 COPY . .
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
-RUN CGO_ENABLED=0 GOOS=linux go build -v -a -o ddet .
+RUN CGO_ENABLED=0 GOOS=linux go build -v -a -o gravity .
 
 # Stage 3: Run
 FROM docker.io/library/debian:stable-slim
 
 WORKDIR /
 
-COPY --from=builder /workspace/ddet /app/ddet
+COPY --from=builder /workspace/gravity /app/gravity
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends nmap bash && \
@@ -38,4 +38,4 @@ USER 65532:65532
 
 ENV INSTANCE_LISTEN=0.0.0.0
 
-ENTRYPOINT ["/app/ddet"]
+ENTRYPOINT ["/app/gravity"]

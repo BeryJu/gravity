@@ -3,7 +3,7 @@ package roles
 import (
 	"context"
 
-	"beryju.io/ddet/pkg/storage"
+	"beryju.io/gravity/pkg/storage"
 	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )

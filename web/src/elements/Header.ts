@@ -3,7 +3,7 @@ import SPTypographyIndexVars from "@spectrum-css/typography/dist/index-vars.css"
 import SPTypographyVars from "@spectrum-css/typography/dist/vars.css";
 import { customElement } from "lit/decorators.js";
 
-@customElement("ddet-header")
+@customElement("gravity-header")
 export class Table extends LitElement {
     static get styles(): CSSResult[] {
         return [

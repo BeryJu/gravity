@@ -6,9 +6,9 @@ import (
 	"path"
 	"strings"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/pkg/roles"
-	apitypes "beryju.io/ddet/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
+	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	log "github.com/sirupsen/logrus"
 
 	"go.etcd.io/etcd/server/v3/embed"

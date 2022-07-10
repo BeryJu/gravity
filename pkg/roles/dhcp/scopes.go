@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"beryju.io/ddet/pkg/ipam"
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/ipam"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"

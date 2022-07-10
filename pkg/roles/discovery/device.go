@@ -6,10 +6,10 @@ import (
 	"errors"
 	"strings"
 
-	"beryju.io/ddet/pkg/roles"
-	dhcptypes "beryju.io/ddet/pkg/roles/dhcp/types"
-	"beryju.io/ddet/pkg/roles/discovery/types"
-	dnstypes "beryju.io/ddet/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles"
+	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/roles/discovery/types"
+	dnstypes "beryju.io/gravity/pkg/roles/dns/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )

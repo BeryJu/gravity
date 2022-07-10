@@ -18,7 +18,7 @@ export class Route {
     }
 }
 
-@customElement("ddet-router")
+@customElement("gravity-router")
 export class Router extends LitElement {
     @property({ attribute: false })
     routes: Route[] = [];

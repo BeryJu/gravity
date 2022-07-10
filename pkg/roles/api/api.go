@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"beryju.io/ddet/pkg/extconfig"
-	"beryju.io/ddet/pkg/roles"
-	"beryju.io/ddet/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/nethttp"

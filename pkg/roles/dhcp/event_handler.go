@@ -1,7 +1,7 @@
 package dhcp
 
 import (
-	"beryju.io/ddet/pkg/roles"
+	"beryju.io/gravity/pkg/roles"
 )
 
 func (r *DHCPRole) eventCreateLease(ev *roles.Event) {

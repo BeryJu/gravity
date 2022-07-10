@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v2.10.0
         with:
           tags: |
-            ghcr.io/beryju/ddet:latest
+            ghcr.io/beryju/gravity:latest
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/amd64,linux/arm64
           build-args: |

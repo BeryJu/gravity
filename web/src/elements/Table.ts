@@ -4,7 +4,7 @@ import SPTableVars from "@spectrum-css/table/dist/vars.css";
 import { customElement } from "lit/decorators.js";
 import "@spectrum-web-components/icons/sp-icons-medium.js";
 
-@customElement("ddet-table")
+@customElement("gravity-table")
 export class Table extends LitElement {
     static get styles(): CSSResult[] {
         return [

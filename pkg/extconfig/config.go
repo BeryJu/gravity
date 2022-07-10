@@ -13,7 +13,7 @@ type ExtConfig struct {
 	Debug    bool   `env:"DEBUG,default=false"`
 	DataPath string `env:"DATA_PATH,default=./data"`
 	Etcd     struct {
-		Prefix      string `env:"ETCD_PREFIX,default=/ddet"`
+		Prefix      string `env:"ETCD_PREFIX,default=/gravity"`
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}

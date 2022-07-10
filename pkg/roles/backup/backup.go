@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"beryju.io/ddet/pkg/roles"
+	"beryju.io/gravity/pkg/roles"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/robfig/cron/v3"
@@ -86,7 +86,7 @@ func (r *BackupRole) saveSnapshot() {
 		return
 	}
 	now := time.Now()
-	fileName := fmt.Sprintf("ddet-snapshot-%d-%d-%d", now.Year(), now.Month(), now.Day())
+	fileName := fmt.Sprintf("gravity-snapshot-%d-%d-%d", now.Year(), now.Month(), now.Day())
 	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
 	if err != nil {
 		r.log.WithError(err).Warning("failed to upload snapshot")
