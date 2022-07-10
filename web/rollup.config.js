@@ -4,6 +4,7 @@ import cssimport from "rollup-plugin-cssimport";
 import copy from "rollup-plugin-copy";
 import minifyHTML from "rollup-plugin-minify-html-literals";
 import { terser } from "rollup-plugin-terser";
+import typescript from "@rollup/plugin-typescript";
 
 const resources = [
     { src: "assets/*", dest: "./dist/assets" },
@@ -11,7 +12,7 @@ const resources = [
 
 module.exports = [
     {
-        input: "./src/main.js",
+        input: "./src/main.ts",
         output: [
             {
                 format: "es",
@@ -23,6 +24,7 @@ module.exports = [
             resolve({ browser: true }),
             commonjs(),
             cssimport(),
+            typescript(),
             process.env.NODE_ENV === "production" && minifyHTML(),
             process.env.NODE_ENV === "production" && terser(),
             copy({

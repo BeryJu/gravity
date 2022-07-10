@@ -1,4 +1,4 @@
-const baseUrl = new URL("/api", window.location);
+const baseUrl = new URL("/api", window.location.toString());
 
 export const isLoggedIn = () => {
     return document.cookie.includes("ddet_session");
@@ -9,15 +9,22 @@ export const logout = () => {
     document.location.reload();
 };
 
-export const get = async (url) => {
-    return request(url);
+export const get = async (url: string) => {
+    return request<null>(url,null );
 };
-export const post = async (url, body) => {
+export const post = async <T>(url: string, body: T) => {
     return request(url, body);
 };
 
-export const request = async (url, body, options = {}) => {
-    const headers = {
+export const request = async <T>(
+    url: string,
+    body: T,
+    options: {
+        headers?: HeadersInit;
+        method?: string;
+    } = {},
+) => {
+    const headers: HeadersInit = {
         accepts: "application/json",
         ...options.headers,
     };
@@ -46,7 +53,7 @@ export const request = async (url, body, options = {}) => {
                     return {};
                 }
                 return res.json().then(({ error }) => {
-                    console.error(e);
+                    console.error(error);
                     console.error("api error: " + error);
                     throw new Error(error);
                 });
