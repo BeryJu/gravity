@@ -22,9 +22,9 @@ module.exports = [
             },
         ],
         plugins: [
+            cssimport(),
             resolve({ browser: true }),
             commonjs(),
-            cssimport(),
             typescript(),
             process.env.NODE_ENV === "production" && minifyHTML(),
             process.env.NODE_ENV === "production" && terser(),
