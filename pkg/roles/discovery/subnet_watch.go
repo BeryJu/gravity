@@ -1,7 +1,6 @@
 package discovery
 
 import (
-	"context"
 	"time"
 
 	"beryju.io/ddet/pkg/roles/discovery/types"
@@ -20,7 +19,7 @@ func (r *DiscoveryRole) startDiscovery(raw *mvccpb.KeyValue) {
 
 func (r *DiscoveryRole) startWatchSubnets() {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets, "")
-	subnets, err := r.i.KV().Get(context.Background(), prefix, clientv3.WithPrefix())
+	subnets, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial subnets")
 		time.Sleep(5 * time.Second)
@@ -32,7 +31,7 @@ func (r *DiscoveryRole) startWatchSubnets() {
 	}
 
 	watchChan := r.i.KV().Watch(
-		context.Background(),
+		r.ctx,
 		prefix,
 		clientv3.WithPrefix(),
 		clientv3.WithProgressNotify(),

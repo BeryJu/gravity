@@ -1,6 +1,8 @@
 package discovery
 
 import (
+	"context"
+
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	apitypes "beryju.io/ddet/pkg/roles/api/types"
@@ -14,6 +16,7 @@ type DiscoveryRole struct {
 	log *log.Entry
 	i   roles.Instance
 	cfg *DiscoveryRoleConfig
+	ctx context.Context
 }
 
 func New(instance roles.Instance) *DiscoveryRole {
@@ -28,7 +31,8 @@ func New(instance roles.Instance) *DiscoveryRole {
 	return r
 }
 
-func (r *DiscoveryRole) Start(config []byte) error {
+func (r *DiscoveryRole) Start(ctx context.Context, config []byte) error {
+	r.ctx = ctx
 	r.cfg = r.decodeDiscoveryRoleConfig(config)
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		return nil

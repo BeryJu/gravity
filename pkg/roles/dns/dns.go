@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"sync"
@@ -21,6 +22,7 @@ type DNSRole struct {
 
 	log *log.Entry
 	i   roles.Instance
+	ctx context.Context
 }
 
 func New(instance roles.Instance) *DNSRole {
@@ -32,7 +34,8 @@ func New(instance roles.Instance) *DNSRole {
 	}
 }
 
-func (r *DNSRole) Start(config []byte) error {
+func (r *DNSRole) Start(ctx context.Context, config []byte) error {
+	r.ctx = ctx
 	cfg := r.decodeDNSRoleConfig(config)
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)

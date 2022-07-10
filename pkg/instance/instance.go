@@ -27,8 +27,14 @@ const (
 	EventTopicInstanceBootstrapped = "instance.root.bootstrapped"
 )
 
+type RoleContext struct {
+	Role              roles.Role
+	Context           context.Context
+	ContextCancelFunc context.CancelFunc
+}
+
 type Instance struct {
-	roles      map[string]roles.Role
+	roles      map[string]RoleContext
 	kv         *storage.Client
 	log        *log.Entry
 	identifier string
@@ -43,7 +49,7 @@ func NewInstance() *Instance {
 	extCfg := extconfig.Get()
 	return &Instance{
 		log:            log.WithField("instance", extCfg.Instance.Identifier),
-		roles:          make(map[string]roles.Role),
+		roles:          make(map[string]RoleContext),
 		identifier:     extCfg.Instance.Identifier,
 		eventHandlersM: sync.RWMutex{},
 		eventHandlers:  make(map[string]map[string][]roles.EventHandler),
@@ -87,24 +93,31 @@ func (i *Instance) bootstrap() {
 		extconfig.Get().Etcd.Prefix,
 	)
 	for _, roleId := range i.getRoles() {
+		ctx, cancel := context.WithCancel(context.Background())
+		rc := RoleContext{
+			Context:           ctx,
+			ContextCancelFunc: cancel,
+		}
 		roleInst := i.ForRole(roleId)
 		switch roleId {
 		case "dhcp":
-			i.roles[roleId] = dhcp.New(roleInst)
+			rc.Role = dhcp.New(roleInst)
 		case "dns":
-			i.roles[roleId] = dns.New(roleInst)
+			rc.Role = dns.New(roleInst)
 		case "api":
-			i.roles[roleId] = api.New(roleInst)
+			rc.Role = api.New(roleInst)
 		case "discovery":
-			i.roles[roleId] = discovery.New(roleInst)
+			rc.Role = discovery.New(roleInst)
 		case "backup":
-			i.roles[roleId] = backup.New(roleInst)
+			rc.Role = backup.New(roleInst)
 		case "etcd":
 			// Special case
 			continue
 		default:
 			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
+			continue
 		}
+		i.roles[roleId] = rc
 	}
 	i.ForRole("root").DispatchEvent(EventTopicInstanceBootstrapped, roles.NewEvent(map[string]interface{}{}))
 	wg := sync.WaitGroup{}
@@ -118,7 +131,7 @@ func (i *Instance) bootstrap() {
 			if err == nil && len(config.Kvs) > 0 {
 				rawConfig = config.Kvs[0].Value
 			}
-			role.Start(rawConfig)
+			role.Role.Start(role.Context, rawConfig)
 			wg.Done()
 		}(roleId)
 	}
@@ -128,7 +141,8 @@ func (i *Instance) bootstrap() {
 func (i *Instance) Stop() {
 	i.log.Info("Stopping")
 	for _, role := range i.roles {
-		go role.Stop()
+		role.ContextCancelFunc()
+		go role.Role.Stop()
 	}
 	if i.etcd != nil {
 		i.etcd.Stop()

@@ -1,8 +1,10 @@
 package dhcp
 
 import (
+	"context"
 	"net"
 
+	"beryju.io/ddet/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
@@ -28,5 +30,19 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 }
 
 func (r *DHCPRole) findLease(m *dhcpv4.DHCPv4) *Lease {
-	return nil
+	match, err := r.i.KV().KV.Get(context.TODO(), r.i.KV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()))
+	var lease *Lease
+	if err != nil {
+		r.log.WithError(err).Trace("no lease")
+		return nil
+	}
+	if len(match.Kvs) < 1 {
+		return nil
+	}
+	lease, err = r.leaseFromKV(match.Kvs[0])
+	if err != nil {
+		r.log.WithError(err).Warning("failed to get lease fromKV")
+		return nil
+	}
+	return lease
 }

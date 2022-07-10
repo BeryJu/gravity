@@ -18,6 +18,7 @@ type APIRole struct {
 	m   *chi.Mux
 	log *log.Entry
 	i   roles.Instance
+	ctx context.Context
 }
 
 func New(instance roles.Instance) *APIRole {
@@ -39,7 +40,8 @@ func New(instance roles.Instance) *APIRole {
 	return r
 }
 
-func (r *APIRole) Start(config []byte) error {
+func (r *APIRole) Start(ctx context.Context, config []byte) error {
+	r.ctx = ctx
 	cfg := r.decodeAPIRoleConfig(config)
 
 	r.m.Use(NewLoggingHandler(r.log, nil))

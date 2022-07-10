@@ -1,7 +1,6 @@
 package dhcp
 
 import (
-	"context"
 	"strings"
 	"time"
 
@@ -33,7 +32,7 @@ func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 
 func (r *DHCPRole) startWatchScopes() {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
-	scopes, err := r.i.KV().Get(context.Background(), prefix, clientv3.WithPrefix())
+	scopes, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")
 		time.Sleep(5 * time.Second)
@@ -45,7 +44,7 @@ func (r *DHCPRole) startWatchScopes() {
 	}
 
 	watchChan := r.i.KV().Watch(
-		context.Background(),
+		r.ctx,
 		prefix,
 		clientv3.WithPrefix(),
 		clientv3.WithProgressNotify(),

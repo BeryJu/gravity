@@ -87,10 +87,10 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	return nil
 }
 
-func (d *Device) toDNS() {
-
+func (d *Device) toDNS(zone string) {
+	// TODO: Stub method
 }
 
 func (d *Device) toDHCP() {
-
+	// TODO: Stub method
 }

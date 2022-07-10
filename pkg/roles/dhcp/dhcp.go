@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"net"
 
 	"beryju.io/ddet/pkg/roles"
@@ -19,6 +20,7 @@ type DHCPRole struct {
 	s6  *server6.Server
 	log *log.Entry
 	i   roles.Instance
+	ctx context.Context
 }
 
 func New(instance roles.Instance) *DHCPRole {
@@ -29,7 +31,8 @@ func New(instance roles.Instance) *DHCPRole {
 	}
 }
 
-func (r *DHCPRole) Start(config []byte) error {
+func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
+	r.ctx = ctx
 	r.cfg = r.decodeDHCPRoleConfig(config)
 
 	go r.startWatchScopes()

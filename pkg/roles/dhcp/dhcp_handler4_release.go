@@ -7,5 +7,5 @@ import (
 )
 
 func (r *DHCPRole) handleDHCPRelease4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
-
+	// TODO: Implement DHCP release
 }

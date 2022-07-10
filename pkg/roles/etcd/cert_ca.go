@@ -13,6 +13,7 @@ import (
 )
 
 func (ee *EmbeddedEtcd) loadCA() (*x509.Certificate, *rsa.PrivateKey, error) {
+	// TODO: Stub method
 	return nil, nil, nil
 }
 

@@ -1,13 +1,15 @@
 package roles
 
 import (
+	"context"
+
 	"beryju.io/ddet/pkg/storage"
 	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Role interface {
-	Start(config []byte) error
+	Start(ctx context.Context, config []byte) error
 	Stop()
 }
 

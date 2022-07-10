@@ -21,9 +21,11 @@ const (
 type BackupRole struct {
 	mc  *minio.Client
 	cfg *BackupRoleConfig
+	c   *cron.Cron
 
 	log *log.Entry
 	i   roles.Instance
+	ctx context.Context
 }
 
 func New(instance roles.Instance) *BackupRole {
@@ -33,7 +35,8 @@ func New(instance roles.Instance) *BackupRole {
 	}
 }
 
-func (r *BackupRole) Start(config []byte) error {
+func (r *BackupRole) Start(ctx context.Context, config []byte) error {
+	r.ctx = ctx
 	r.cfg = r.decodeBackupRoleConfig(config)
 	if !r.cfg.Enabled {
 		return nil
@@ -63,28 +66,28 @@ func (r *BackupRole) Start(config []byte) error {
 		return err
 	}
 	r.mc = minioClient
-	c := cron.New()
-	ei, err := c.AddFunc(r.cfg.CronExpr, func() {
+	r.c = cron.New()
+	ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
 		r.saveSnapshot()
 	})
 	if err != nil {
 		return err
 	}
-	r.log.WithField("next", c.Entry(ei).Next).Debug("next backup run")
-	c.Start()
+	r.log.WithField("next", r.c.Entry(ei).Next).Debug("next backup run")
+	r.c.Start()
 	go r.saveSnapshot()
 	return nil
 }
 
 func (r *BackupRole) saveSnapshot() {
-	read, err := r.i.KV().Snapshot(context.Background())
+	read, err := r.i.KV().Snapshot(r.ctx)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to snapshot")
 		return
 	}
 	now := time.Now()
 	fileName := fmt.Sprintf("ddet-snapshot-%d-%d-%d", now.Year(), now.Month(), now.Day())
-	i, err := r.mc.PutObject(context.Background(), r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
+	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
 	if err != nil {
 		r.log.WithError(err).Warning("failed to upload snapshot")
 		return
@@ -92,4 +95,8 @@ func (r *BackupRole) saveSnapshot() {
 	r.log.WithField("size", i.Size).Info("Uploaded snapshot")
 }
 
-func (r *BackupRole) Stop() {}
+func (r *BackupRole) Stop() {
+	if r.c != nil {
+		<-r.c.Stop().Done()
+	}
+}
