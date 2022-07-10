@@ -38,7 +38,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg.Dir = dirs.EtcdDir
 	cfg.LogLevel = "warn"
 	cfg.LPUrls = []url.URL{
-		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
+		*urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
 	}
 	cfg.APUrls = []url.URL{
 		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),

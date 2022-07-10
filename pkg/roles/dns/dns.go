@@ -50,7 +50,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
-	listen := fmt.Sprintf("%s:%d", extconfig.Get().Instance.IP, cfg.Port)
+	listen := extconfig.Get().Listen(cfg.Port)
 	if runtime.GOOS == "darwin" {
 		listen = fmt.Sprintf(":%d", cfg.Port)
 	}
@@ -63,10 +63,10 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 			Handler: dnsMux,
 		}
 		r.servers = append(r.servers, server)
-		r.log.WithField("port", cfg.Port).WithField("proto", proto).Info("Starting DNS Server")
+		r.log.WithField("listen", listen).WithField("proto", proto).Info("Starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
-			r.log.WithField("port", cfg.Port).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
+			r.log.WithField("listen", listen).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
 		}
 	}
 	go srv("udp")

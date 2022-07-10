@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -91,8 +90,9 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 		return nil
 	})
 
-	r.log.WithField("port", cfg.Port).Info("Starting API Server")
-	return http.ListenAndServe(fmt.Sprintf("%s:%d", extconfig.Get().Instance.IP, cfg.Port), r.m)
+	listen := extconfig.Get().Listen(cfg.Port)
+	r.log.WithField("listen", listen).Info("Starting API Server")
+	return http.ListenAndServe(listen, r.m)
 }
 
 func (r *APIRole) CreateUser(username, password string) error {

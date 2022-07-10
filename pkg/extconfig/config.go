@@ -1,6 +1,7 @@
 package extconfig
 
 import (
+	"fmt"
 	"os"
 	"path"
 
@@ -20,6 +21,7 @@ type ExtConfig struct {
 	Instance       struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
+		Listen     string `env:"INSTANCE_LISTEN"`
 	}
 	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
 }
@@ -53,6 +55,14 @@ func (e *ExtConfig) Dirs() *ExtConfigDirs {
 		CertDir:   path.Join(e.DataPath, "cert/"),
 		BackupDir: path.Join(e.DataPath, "backup/"),
 	}
+}
+
+func (e *ExtConfig) Listen(port int32) string {
+	listen := e.Instance.IP
+	if e.Instance.Listen != "" {
+		listen = e.Instance.Listen
+	}
+	return fmt.Sprintf("%s:%d", listen, port)
 }
 
 func (e *ExtConfig) defaults() {

@@ -26,7 +26,7 @@ FROM docker.io/library/debian:stable-slim
 
 WORKDIR /
 
-COPY --from=builder /app/ddet .
+COPY --from=builder /workspace/ddet /app/ddet
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends nmap bash && \
@@ -35,5 +35,7 @@ RUN apt-get update && \
     chown 65532:65532 /data
 
 USER 65532:65532
+
+ENV INSTANCE_LISTEN=0.0.0.0
 
 ENTRYPOINT ["/app/ddet"]
