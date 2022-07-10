@@ -26,21 +26,22 @@ type DNSRole struct {
 }
 
 func New(instance roles.Instance) *DNSRole {
-	return &DNSRole{
+	r := &DNSRole{
 		servers: make([]*dns.Server, 0),
 		zones:   make(map[string]*Zone, 0),
 		log:     instance.GetLogger().WithField("role", types.KeyRole),
 		i:       instance,
 	}
+	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
+	return r
 }
 
 func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	cfg := r.decodeDNSRoleConfig(config)
-	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
-	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
-	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
 
 	go r.startWatchZones()
 

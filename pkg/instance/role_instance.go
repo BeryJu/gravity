@@ -7,7 +7,6 @@ import (
 )
 
 type RoleInstance struct {
-	kv     *storage.Client
 	log    *log.Entry
 	roleId string
 	parent *Instance
@@ -16,7 +15,6 @@ type RoleInstance struct {
 func (i *Instance) ForRole(roleId string) *RoleInstance {
 	in := &RoleInstance{
 		log:    i.log.WithField("forRole", roleId),
-		kv:     i.kv,
 		roleId: roleId,
 		parent: i,
 	}
@@ -24,7 +22,7 @@ func (i *Instance) ForRole(roleId string) *RoleInstance {
 }
 
 func (ri *RoleInstance) KV() *storage.Client {
-	return ri.kv
+	return ri.parent.kv
 }
 
 func (ri *RoleInstance) GetLogger() *log.Entry {
@@ -37,8 +35,6 @@ func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
 }
 
 func (ri *RoleInstance) AddEventListener(topic string, handler roles.EventHandler) {
-	ri.parent.eventHandlersM.Lock()
-	defer ri.parent.eventHandlersM.Unlock()
 	topicHandlers, ok := ri.parent.eventHandlers[topic]
 	if !ok {
 		topicHandlers = make(map[string][]roles.EventHandler)
@@ -49,5 +45,7 @@ func (ri *RoleInstance) AddEventListener(topic string, handler roles.EventHandle
 	}
 	roleHandlers = append(roleHandlers, handler)
 	topicHandlers[ri.roleId] = roleHandlers
+	ri.parent.eventHandlersM.Lock()
+	defer ri.parent.eventHandlersM.Unlock()
 	ri.parent.eventHandlers[topic] = topicHandlers
 }

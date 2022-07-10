@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
+	apitypes "beryju.io/ddet/pkg/roles/api/types"
 	log "github.com/sirupsen/logrus"
 
 	"go.etcd.io/etcd/server/v3/embed"
@@ -68,6 +69,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
+	ee.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, ee.eventHandlerAPIMux)
 	return ee
 }
 

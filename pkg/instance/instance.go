@@ -82,10 +82,6 @@ func (i *Instance) getRoles() []string {
 	return strings.Split(roles, ";")
 }
 
-func (i *Instance) GetLogger() *log.Entry {
-	return i.log
-}
-
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
 	i.kv = storage.NewClient(

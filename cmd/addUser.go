@@ -20,13 +20,14 @@ var addUserCmd = &cobra.Command{
 		if username == "" {
 			panic("Must set -u")
 		}
-		fmt.Printf("Enter the password for %s:\n", username)
-		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
-		if err != nil {
-			panic(err)
-		}
 		inst := instance.NewInstance()
 		inst.ForRole("api").AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+			fmt.Printf("Enter the password for %s: ", username)
+			bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println("")
 			api := api.New(inst.ForRole("api"))
 			err = api.CreateUser(username, string(bytePassword))
 			if err != nil {

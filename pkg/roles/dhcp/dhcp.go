@@ -24,17 +24,18 @@ type DHCPRole struct {
 }
 
 func New(instance roles.Instance) *DHCPRole {
-	return &DHCPRole{
+	r := &DHCPRole{
 		log:    instance.GetLogger().WithField("role", types.KeyRole),
 		i:      instance,
 		scopes: make(map[string]*Scope),
 	}
+	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
+	return r
 }
 
 func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeDHCPRoleConfig(config)
-	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 
 	go r.startWatchScopes()
 
