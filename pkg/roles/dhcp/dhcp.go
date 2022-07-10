@@ -34,6 +34,7 @@ func New(instance roles.Instance) *DHCPRole {
 func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeDHCPRoleConfig(config)
+	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 
 	go r.startWatchScopes()
 

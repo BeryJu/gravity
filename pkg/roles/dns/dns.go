@@ -39,6 +39,8 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	cfg := r.decodeDNSRoleConfig(config)
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
 
 	go r.startWatchZones()
 

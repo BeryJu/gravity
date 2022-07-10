@@ -44,7 +44,7 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	prefix := r.i.KV().Key(
 		types.KeyRole,
 		types.KeyScopes,
-		// l.Scope.Name,
+		// lr.Scope.Name,
 		types.KeyLeases,
 		"",
 	)
@@ -72,8 +72,8 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 
 	leaseKey := l.inst.KV().Key(
 		types.KeyRole,
-		types.KeyScopes,
-		l.scope.Name,
+		// types.KeyScopes,
+		// l.scope.Name,
 		types.KeyLeases,
 		l.Identifier,
 	)

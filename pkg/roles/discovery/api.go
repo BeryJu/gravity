@@ -26,5 +26,13 @@ func (ro *DiscoveryRole) apiHandlerApply(w http.ResponseWriter, r *http.Request)
 	}
 
 	device := ro.deviceFromKV(rawDevice.Kvs[0])
-	device.toDHCP()
+	if by == types.KeyDevicesByIP {
+		err = device.toDHCP(r.URL.Query().Get("dhcpScope"))
+	} else {
+		err = device.toDNS(r.URL.Query().Get("dnsZone"))
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
