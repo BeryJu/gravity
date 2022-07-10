@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
-import "./router";
-import "./gravity-login";
+import "./Router";
+import "./Login";
 import "@spectrum-web-components/theme/theme-light.js";
 import "@spectrum-web-components/theme/theme-darkest.js";
 import "@spectrum-web-components/theme/scale-medium.js";
@@ -12,7 +12,7 @@ import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/sidenav/sp-sidenav.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-heading.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-item.js";
-import { Route } from "./router";
+import { Route } from "./Router";
 
 export const ROUTES = [
     new Route("/overview", async () => {

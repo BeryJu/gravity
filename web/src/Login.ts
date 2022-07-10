@@ -7,7 +7,7 @@ import "@spectrum-web-components/button/sp-button.js";
 
 import "@spectrum-web-components/textfield/sp-textfield.js";
 import "@spectrum-web-components/field-label/sp-field-label.js";
-import { isLoggedIn, login } from "src/services/api";
+import { login } from "src/services/api";
 
 @customElement("gravity-login")
 export class Login extends LitElement {
