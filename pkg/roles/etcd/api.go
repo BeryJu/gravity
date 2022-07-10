@@ -7,12 +7,12 @@ import (
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
-	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/mux"
 )
 
 func (ro *EmbeddedEtcd) eventHandlerAPIMux(ev *roles.Event) {
-	mux := ev.Payload.Data["mux"].(*chi.Mux)
-	mux.Get("/v0/etcd/members", func(w http.ResponseWriter, r *http.Request) {
+	m := ev.Payload.Data["mux"].(*mux.Router)
+	m.Path("/v0/etcd/members").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		members, err := ro.i.KV().MemberList(r.Context())
 		if err != nil {
 			ro.log.WithError(err).Warning("failed to list members")
@@ -20,7 +20,7 @@ func (ro *EmbeddedEtcd) eventHandlerAPIMux(ev *roles.Event) {
 		}
 		json.NewEncoder(w).Encode(members.Members)
 	})
-	mux.Post("/v0/etcd/join", func(w http.ResponseWriter, r *http.Request) {
+	m.Path("/v0/etcd/join").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := ro.i.KV().MemberAddAsLearner(r.Context(), []string{r.URL.Query().Get("peer")})
 		if err != nil {
 			ro.log.WithError(err).Warning("added member")

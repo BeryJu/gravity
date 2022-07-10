@@ -6,16 +6,17 @@ import (
 
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/dns/types"
-	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/mux"
 )
 
 func (ro *DNSRole) eventHandlerAPIMux(ev *roles.Event) {
-	mux := ev.Payload.Data["mux"].(*chi.Mux)
-	mux.Get("/v0/dns/zones", func(w http.ResponseWriter, r *http.Request) {
+	m := ev.Payload.Data["mux"].(*mux.Router)
+	m.Path("/v0/dns/zones").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(ro.zones)
 	})
-	mux.Get("/v0/dns/zones/{zone}/recods", func(w http.ResponseWriter, r *http.Request) {
-		zoneName := chi.URLParam(r, "zone")
+	m.Path("/v0/dns/zones/{zone}/recods").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		zoneName := vars["zone"]
 		zone, ok := ro.zones[zoneName]
 		if !ok {
 			http.Error(w, "not found", http.StatusNotFound)

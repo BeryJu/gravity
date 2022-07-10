@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"beryju.io/ddet/pkg/extconfig"
 	"beryju.io/ddet/pkg/roles"
 	"beryju.io/ddet/pkg/roles/api/types"
-	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/nethttp"
 	"github.com/swaggest/rest/web"
@@ -17,7 +18,7 @@ import (
 )
 
 type APIRole struct {
-	m   *chi.Mux
+	m   *mux.Router
 	log *log.Entry
 	i   roles.Instance
 	ctx context.Context
@@ -27,16 +28,16 @@ func New(instance roles.Instance) *APIRole {
 	r := &APIRole{
 		log: instance.GetLogger().WithField("role", types.KeyRole),
 		i:   instance,
-		m:   chi.NewRouter(),
+		m:   mux.NewRouter(),
 	}
 	go r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		if !extconfig.Get().Debug {
 			return
 		}
-		mux := ev.Payload.Data["mux"].(*chi.Mux)
-		mux.Get("/v0/debug", r.apiHandlerDebugGet)
-		mux.Post("/v0/debug", r.apiHandlerDebugPost)
-		mux.Delete("/v0/debug", r.apiHandlerDebugDel)
+		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.api").Subrouter()
+		mux.Name("v0.debug").Path("/v0/debug").Methods("GET").HandlerFunc(r.apiHandlerDebugGet)
+		mux.Name("v0.debug").Path("/v0/debug").Methods("POST").HandlerFunc(r.apiHandlerDebugPost)
+		mux.Name("v0.debug").Path("/v0/debug").Methods("DELETE").HandlerFunc(r.apiHandlerDebugDel)
 	})
 	go r.setupUI()
 	return r
@@ -48,31 +49,45 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 
 	r.m.Use(NewLoggingHandler(r.log, nil))
 
-	r.m.Route("/api", func(ro chi.Router) {
-		ro.Use(NewAuthMiddleware(r))
-		// Auto-set some common headers
-		ro.Use(func(h http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.Header().Set("Accept", "application/json")
-				w.Header().Set("Content-Type", "application/json")
-				h.ServeHTTP(w, r)
-			})
+	apiRouter := r.m.PathPrefix("/api").Subrouter()
+	apiRouter.Use(NewAuthMiddleware(r))
+	apiRouter.Use(func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Accept", "application/json")
+			w.Header().Set("Content-Type", "application/json")
+			h.ServeHTTP(w, r)
 		})
-		service := web.DefaultService()
-		service.OpenAPI.Info.Title = "ye"
-		service.OpenAPI.Info.Version = "v1.0.0"
-		adminSecuritySchema := nethttp.HTTPBasicSecurityMiddleware(service.OpenAPICollector, "Admin", "Admin access")
-		service.Use(adminSecuritySchema)
-		ro.Handle("/*", service)
-		r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
-			"mux": service,
-		}))
 	})
+	// Auto-set some common headers
+	service := web.DefaultService()
+	service.OpenAPI.Info.Title = "ye"
+	service.OpenAPI.Info.Version = "v1.0.0"
+	adminSecuritySchema := nethttp.HTTPBasicSecurityMiddleware(service.OpenAPICollector, "Admin", "Admin access")
+	service.Use(adminSecuritySchema)
+	apiRouter.Handle("/", service)
+	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
+		// "mux": service,
+		"mux": r.m,
+	}))
 	r.log.Debug("Registered routes:")
-	chi.Walk(r.m, func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+	r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		fullName := []string{route.GetName()}
+		for _, anc := range ancestors {
+			fullName = append([]string{anc.GetName()}, fullName...)
+		}
+		var methods []string
+		var err error
+		if methods, err = route.GetMethods(); err != nil {
+			methods = []string{}
+		}
+		var path string
+		if path, err = route.GetPathTemplate(); err != nil {
+			return nil
+		}
 		r.log.WithFields(log.Fields{
-			"method": method,
-		}).Debug(route)
+			"routeName": strings.Join(fullName, "."),
+			"method":    methods,
+		}).Debug(path)
 		return nil
 	})
 
