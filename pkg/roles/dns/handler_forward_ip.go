@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"net"
 	"net/netip"
+	"strconv"
 	"strings"
 	"time"
 
@@ -13,11 +14,21 @@ import (
 )
 
 type IPForwarderHandler struct {
+	CacheTTL int
+
 	r   *net.Resolver
+	z   Zone
 	log *log.Entry
 }
 
 func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler {
+	l := z.log.WithField("handler", "forward_ip")
+	cacheTtl, err := strconv.Atoi(config["cache_ttl"])
+	if err != nil {
+		l.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
+		cacheTtl = 0
+	}
+
 	forwarders := strings.Split(config["to"], ";")
 	r := &net.Resolver{
 		PreferGo: true,
@@ -34,8 +45,31 @@ func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler
 	}
 
 	return &IPForwarderHandler{
-		r:   r,
-		log: z.log.WithField("handler", "forward_ip"),
+		CacheTTL: cacheTtl,
+		r:        r,
+		z:        z,
+		log:      l,
+	}
+}
+
+func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
+	if ipf.CacheTTL < 1 {
+		return
+	}
+	name := strings.TrimSuffix(query.Name, ".")
+	record := ipf.z.newRecord(name, dns.TypeToString[ans.Header().Rrtype])
+	switch v := ans.(type) {
+	case *dns.A:
+		record.Data = v.A.String()
+	case *dns.AAAA:
+		record.Data = v.AAAA.String()
+	case *dns.PTR:
+		record.Data = v.Ptr
+	}
+	record.TTL = ans.Header().Ttl
+	err := record.put(int64(ipf.CacheTTL))
+	if err != nil {
+		ipf.log.WithError(err).Warning("failed to cache answer")
 	}
 }
 
@@ -82,6 +116,7 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 				A: net.ParseIP(ip.String()),
 			}
 		}
+		go ipf.cacheToEtcd(question, m.Answer[idx])
 	}
 	if len(m.Answer) < 1 {
 		m.SetRcode(r, dns.RcodeNameError)
