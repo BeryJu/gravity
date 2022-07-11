@@ -72,8 +72,6 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 
 	leaseKey := l.inst.KV().Key(
 		types.KeyRole,
-		// types.KeyScopes,
-		// l.scope.Name,
 		types.KeyLeases,
 		l.Identifier,
 	)

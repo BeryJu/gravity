@@ -50,6 +50,7 @@ type Scope struct {
 		AddZoneInHostname bool     `json:"addZoneInHostname"`
 	} `json:"dns"`
 
+	cidr    netip.Prefix
 	etcdKey string
 	ipam    ipam.IPAM
 	inst    roles.Instance
@@ -67,6 +68,12 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	if err != nil {
 		return nil, err
 	}
+	cidr, err := netip.ParsePrefix(s.SubnetCIDR)
+	if err != nil {
+		return nil, err
+	}
+	s.cidr = cidr
+
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
 	s.Name = strings.TrimPrefix(string(raw.Key), prefix)
 	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
@@ -85,9 +92,39 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	return s, nil
 }
 
-func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) bool {
-	// TODO: Stub method
-	return false
+func (r *DHCPRole) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
+	var match *Scope
+	longestBits := 0
+	for _, scope := range r.scopes {
+		if subBits := scope.match(conn, peer, m); subBits > -1 {
+			if subBits < longestBits {
+				r.log.WithField("name", scope.Name).Debug("selected scope based on cidr match")
+				match = scope
+				longestBits = subBits
+			}
+		}
+		if match == nil && scope.Default {
+			r.log.WithField("name", scope.Name).Debug("selected scope based on default state")
+			match = scope
+		}
+	}
+	if match != nil {
+		r.log.Trace("found scope for request")
+	}
+	return match
+}
+
+func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) int {
+	clientIP := strings.Split(peer.String(), ":")[0]
+	ip, err := netip.ParseAddr(clientIP)
+	if err != nil {
+		s.log.WithError(err).Warning("failed to parse client ip")
+		return -1
+	}
+	if s.cidr.Contains(ip) {
+		return s.cidr.Bits()
+	}
+	return -1
 }
 
 func (s *Scope) createLeaseFor(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Lease {
