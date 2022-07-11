@@ -1,17 +1,18 @@
-import { LitElement, html, css, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import "./Router";
-import "./Login";
-import "@spectrum-web-components/theme/theme-light.js";
-import "@spectrum-web-components/theme/theme-darkest.js";
-import "@spectrum-web-components/theme/scale-medium.js";
-import "@spectrum-web-components/theme/sp-theme.js";;
-
-import "@spectrum-web-components/split-view/sp-split-view.js";
-import "@spectrum-web-components/theme/sp-theme.js";
-import "@spectrum-web-components/sidenav/sp-sidenav.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-heading.js";
 import "@spectrum-web-components/sidenav/sp-sidenav-item.js";
+import "@spectrum-web-components/sidenav/sp-sidenav.js";
+import "@spectrum-web-components/split-view/sp-split-view.js";
+import "@spectrum-web-components/theme/scale-medium.js";
+import "@spectrum-web-components/theme/sp-theme.js";
+import "@spectrum-web-components/theme/sp-theme.js";
+import "@spectrum-web-components/theme/theme-darkest.js";
+import "@spectrum-web-components/theme/theme-light.js";
+
+import { LitElement, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
+
+import "./Login";
+import "./Router";
 import { Route } from "./Router";
 
 export const ROUTES = [

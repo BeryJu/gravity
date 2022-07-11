@@ -1,10 +1,10 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import cssimport from "rollup-plugin-cssimport";
+import resolve from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
 import copy from "rollup-plugin-copy";
+import cssimport from "rollup-plugin-cssimport";
 import minifyHTML from "rollup-plugin-minify-html-literals";
 import { terser } from "rollup-plugin-terser";
-import typescript from "@rollup/plugin-typescript";
 
 const resources = [
     { src: "src/style.css", dest: "./dist" },
@@ -36,5 +36,8 @@ module.exports = [
         watch: {
             clearScreen: false,
         },
+        preserveEntrySignatures: false,
+        cache: true,
+        context: "window",
     },
 ];

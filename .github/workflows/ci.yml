@@ -25,6 +25,7 @@ jobs:
         working-directory: web/
         run: |
           npm ci
+          make -C .. gen-client-web
           npm run build
       - run: go get -v -t -d ./...
       - name: Build
@@ -48,5 +49,6 @@ jobs:
             ghcr.io/beryju/gravity:latest
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/amd64,linux/arm64
+          context: .
           build-args: |
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}

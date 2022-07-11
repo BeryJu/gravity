@@ -14,5 +14,9 @@
     "tabWidth": 4,
     "trailingComma": "all",
     "useTabs": false,
-    "vueIndentScriptAndStyle": false
+    "vueIndentScriptAndStyle": false,
+    "importOrder": ["^(@?)lit(.*)$", "^@spectrum\\-$", "^gravity-api$", "^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy"]
 }

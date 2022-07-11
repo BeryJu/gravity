@@ -1,8 +1,9 @@
-import { css, CSSResult, html, LitElement, TemplateResult } from "lit";
 import SPTableIndexVars from "@spectrum-css/table/dist/index-vars.css";
 import SPTableVars from "@spectrum-css/table/dist/vars.css";
-import { customElement } from "lit/decorators.js";
 import "@spectrum-web-components/icons/sp-icons-medium.js";
+
+import { CSSResult, LitElement, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 @customElement("gravity-table")
 export class Table extends LitElement {

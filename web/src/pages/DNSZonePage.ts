@@ -1,10 +1,14 @@
-import { html, LitElement, TemplateResult } from "lit";
+import "@spectrum-web-components/divider/sp-divider.js";
+import { DEFAULT_CONFIG } from "src/api/Config";
+
+import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
-import { get } from "src/services/api";
-import "../elements/Table";
+
+import { DnsApi } from "gravity-api";
+
 import "../elements/Header";
-import "@spectrum-web-components/divider/sp-divider.js";
+import "../elements/Table";
 
 @customElement("gravity-dns-zones")
 export class DNSZonePage extends LitElement {
@@ -14,8 +18,8 @@ export class DNSZonePage extends LitElement {
             <sp-divider size="m"></sp-divider>
             <gravity-table></gravity-table>
             ${until(
-                get("/api/v0/dns/zones").then((res) => {
-                    return res.map((member: any) => {
+                new DnsApi(DEFAULT_CONFIG).rolesDnsDNSRoleApiHandlerZones().then((zones) => {
+                    return zones.zones?.map((member: any) => {
                         return html`${JSON.stringify(member)}`;
                     });
                 }),

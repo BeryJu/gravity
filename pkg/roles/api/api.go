@@ -51,7 +51,6 @@ func (r *APIRole) prepareOpenAPI() {
 	r.oapi.OpenAPI.Info.Title = "gravity"
 	r.oapi.OpenAPI.Info.Version = extconfig.Version
 	r.oapi.Use(nethttp.HTTPBasicSecurityMiddleware(r.oapi.OpenAPICollector, "Admin", "Admin access"))
-	// r.oapi.OpenAPICollector.Collect()
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()

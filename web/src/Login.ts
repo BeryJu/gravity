@@ -1,13 +1,12 @@
-import { css, html, LitElement, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import "@spectrum-web-components/theme/theme-light.js";
+import "@spectrum-web-components/button/sp-button.js";
+import "@spectrum-web-components/field-label/sp-field-label.js";
+import "@spectrum-web-components/textfield/sp-textfield.js";
 import "@spectrum-web-components/theme/scale-medium.js";
 import "@spectrum-web-components/theme/sp-theme.js";
-import "@spectrum-web-components/button/sp-button.js";
+import "@spectrum-web-components/theme/theme-light.js";
 
-import "@spectrum-web-components/textfield/sp-textfield.js";
-import "@spectrum-web-components/field-label/sp-field-label.js";
-import { login } from "src/services/api";
+import { LitElement, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 @customElement("gravity-login")
 export class Login extends LitElement {
@@ -37,7 +36,6 @@ export class Login extends LitElement {
         if (!username || !password) {
             return;
         }
-        login(username?.value, password?.value);
     }
 
     render(): TemplateResult {
