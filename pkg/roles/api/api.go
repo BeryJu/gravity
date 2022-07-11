@@ -39,7 +39,7 @@ func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	cfg := r.decodeAPIRoleConfig(config)
 	r.prepareOpenAPI()
 	listen := extconfig.Get().Listen(cfg.Port)
-	r.log.WithField("listen", listen).Info("Starting API Server")
+	r.log.WithField("listen", listen).Info("starting API Server")
 	return http.ListenAndServe(listen, r.m)
 }
 

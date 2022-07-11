@@ -33,7 +33,7 @@ func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 }
 
 func (s *Subnet) RunDiscovery() {
-	s.log.Trace("Starting scan for subnet")
+	s.log.Trace("starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(map[string]interface{}{
 		"subnet": s,
 	}))

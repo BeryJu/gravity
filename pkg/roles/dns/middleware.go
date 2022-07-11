@@ -24,9 +24,9 @@ func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
 			clientIP = addr.IP.String()
 		}
 		ro.log.WithFields(log.Fields{
-			"runtime_ms": fmt.Sprintf("%0.3f", duration),
-			"client":     clientIP,
-			"response":   dns.RcodeToString[fw.msg.Rcode],
+			"runtimeMS": fmt.Sprintf("%0.3f", duration),
+			"client":    clientIP,
+			"response":  dns.RcodeToString[fw.msg.Rcode],
 		}).Info("DNS request")
 	}
 }

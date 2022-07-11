@@ -1,7 +1,6 @@
 package dhcp
 
 import (
-	"fmt"
 	"net"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -10,7 +9,6 @@ import (
 
 func (r *DHCPRole) handler4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 	if r.cfg.ListenOnly || extconfig.Get().ListenOnlyMode {
-		fmt.Println(m.Summary())
 		return
 	}
 

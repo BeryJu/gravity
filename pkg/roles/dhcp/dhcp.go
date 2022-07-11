@@ -47,12 +47,12 @@ func (r *DHCPRole) startServer4() error {
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
 	}
-	server, err := server4.NewServer("", &laddr, r.handler4)
+	server, err := server4.NewServer("", &laddr, r.loggingHandler4(r.handler4))
 	if err != nil {
 		return err
 	}
 	r.s4 = server
-	r.log.WithField("port", r.cfg.Port).Info("Starting DHCP Server")
+	r.log.WithField("port", r.cfg.Port).Info("starting DHCP Server")
 	return r.s4.Serve()
 }
 

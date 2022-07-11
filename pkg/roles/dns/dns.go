@@ -63,7 +63,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 			Handler: dnsMux,
 		}
 		r.servers = append(r.servers, server)
-		r.log.WithField("listen", listen).WithField("proto", proto).Info("Starting DNS Server")
+		r.log.WithField("listen", listen).WithField("proto", proto).Info("starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
 			r.log.WithField("listen", listen).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
