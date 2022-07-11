@@ -132,6 +132,12 @@ func (i *Instance) bootstrap() {
 				rawConfig = config.Kvs[0].Value
 			}
 			role.Role.Start(role.Context, rawConfig)
+			go func() {
+				err := recover()
+				if err != nil {
+					i.log.WithField("roleId", id).WithError(err.(error)).Error("Panic in role")
+				}
+			}()
 			wg.Done()
 		}(roleId)
 	}
