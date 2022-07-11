@@ -14,6 +14,7 @@ import (
 )
 
 type BlockyForwarder struct {
+	*IPForwarderHandler
 	b   *server.Server
 	log *log.Entry
 }
@@ -46,6 +47,7 @@ func NewBlockyForwarder(z Zone, rawConfig map[string]string) (*BlockyForwarder, 
 			"default": upstreams,
 		},
 	}
+	// TODO: Blocky config
 	cfg.Blocking = config.BlockingConfig{
 		BlockType: "zeroIP",
 		BlackLists: map[string][]string{
@@ -69,8 +71,9 @@ func NewBlockyForwarder(z Zone, rawConfig map[string]string) (*BlockyForwarder, 
 		return nil, fmt.Errorf("can't start server: %w", err)
 	}
 	return &BlockyForwarder{
-		b:   srv,
-		log: log,
+		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
+		b:                  srv,
+		log:                log,
 	}, nil
 }
 
@@ -79,6 +82,11 @@ func (bfwd *BlockyForwarder) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	// fall to next handler when no record is found
 	if w.msg.Rcode == dns.RcodeNameError {
 		return nil
+	}
+	for _, query := range r.Question {
+		for _, ans := range w.msg.Answer {
+			go bfwd.cacheToEtcd(query, ans)
+		}
 	}
 	return w.msg
 }
