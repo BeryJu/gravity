@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/web"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
@@ -69,7 +70,11 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
-	ee.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, ee.eventHandlerAPIMux)
+	ee.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/etcd/members", ee.apiHandlerMembers())
+		svc.Post("/api/v1/etcd/join", ee.apiHandlerJoin())
+	})
 	return ee
 }
 

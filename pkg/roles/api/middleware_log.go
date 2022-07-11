@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -14,10 +15,9 @@ import (
 // responseLogger is wrapper of http.ResponseWriter that keeps track of its HTTP status
 // code and body size
 type responseLogger struct {
-	w        http.ResponseWriter
-	status   int
-	size     int
-	upstream string
+	w      http.ResponseWriter
+	status int
+	size   int
 }
 
 // Header returns the ResponseWriter's Header
@@ -99,13 +99,12 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	h.handler.ServeHTTP(responseLogger, req)
 	duration := float64(time.Since(t)) / float64(time.Millisecond)
 	h.afterHandler(h.logger.WithFields(log.Fields{
-		"remote":     req.RemoteAddr,
+		"remote":     strings.Split(req.RemoteAddr, ":")[0],
 		"runtime_ms": fmt.Sprintf("%0.3f", duration),
 		"method":     req.Method,
 		"scheme":     req.URL.Scheme,
 		"size":       responseLogger.Size(),
 		"status":     responseLogger.Status(),
-		"upstream":   responseLogger.upstream,
 		"user_agent": req.UserAgent(),
 	}), req).Info(url.RequestURI())
 }

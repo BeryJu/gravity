@@ -30,7 +30,6 @@ func (r *DiscoveryRole) startWatchSubnets() {
 		r.startDiscovery(subnet)
 	}
 
-	r.log.Trace(prefix)
 	watchChan := r.i.KV().Watch(
 		r.ctx,
 		prefix,

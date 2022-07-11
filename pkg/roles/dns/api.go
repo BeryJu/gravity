@@ -1,41 +1,89 @@
 package dns
 
 import (
-	"encoding/json"
-	"net/http"
+	"context"
+	"errors"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
-	"github.com/gorilla/mux"
+	"github.com/swaggest/rest/web"
+	"github.com/swaggest/usecase"
+	"github.com/swaggest/usecase/status"
 )
 
-func (ro *DNSRole) eventHandlerAPIMux(ev *roles.Event) {
-	m := ev.Payload.Data["mux"].(*mux.Router)
-	m.Path("/v0/dns/zones").Methods(http.MethodGet).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(ro.zones)
-	})
-	m.Path("/v0/dns/zones/{zone}/recods").Methods(http.MethodGet).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		zoneName := vars["zone"]
-		zone, ok := ro.zones[zoneName]
-		if !ok {
-			http.Error(w, "not found", http.StatusNotFound)
-			return
+func (ro *DNSRole) apiHandlerZones() usecase.Interactor {
+	type zone struct {
+		Name           string              `json:"name"`
+		Authoritative  bool                `json:"authoritative"`
+		HandlerConfigs []map[string]string `json:"handlerConfigs"`
+		DefaultTTL     uint32              `json:"defaultTTL"`
+	}
+	type zonesOutput struct {
+		Zones []zone `json:"zones"`
+	}
+	u := usecase.NewIOI(new(struct{}), new(zonesOutput), func(ctx context.Context, input, output interface{}) error {
+		var (
+			out = output.(*zonesOutput)
+		)
+		for name, _zone := range ro.zones {
+			out.Zones = append(out.Zones, zone{
+				Name:          name,
+				Authoritative: _zone.Authoritative,
+			})
 		}
-		rawRecords, err := ro.i.KV().Get(r.Context(), ro.i.KV().Key(
+		return nil
+	})
+	u.SetTitle("DNS Zones")
+	u.SetTags("dns")
+	u.SetDescription("List all DNS Zones.")
+	return u
+}
+
+func (ro *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
+	type zoneRecordsInput struct {
+		Zone string `path:"zone"`
+	}
+	type record struct {
+		FQDN string `json:"fqdn"`
+	}
+	type zoneRecordsOutput struct {
+		Records []record `json:"records"`
+	}
+	u := usecase.NewIOI(new(zoneRecordsInput), new(zoneRecordsOutput), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in  = input.(*zoneRecordsInput)
+			out = output.(*zoneRecordsOutput)
+		)
+		zone, ok := ro.zones[in.Zone]
+		if !ok {
+			return status.Wrap(errors.New("not found"), status.NotFound)
+		}
+		rawRecords, err := ro.i.KV().Get(ctx, ro.i.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
 			zone.Name,
 			"",
 		))
 		if err != nil {
-			http.Error(w, "failed to get records", http.StatusInternalServerError)
-			return
+			return status.Wrap(err, status.Internal)
 		}
-		records := make([]Record, len(rawRecords.Kvs))
-		for idx, rec := range rawRecords.Kvs {
-			records[idx] = *zone.recordFromKV(rec)
+		for _, rec := range rawRecords.Kvs {
+			r := zone.recordFromKV(rec)
+			out.Records = append(out.Records, record{
+				FQDN: r.Name,
+			})
 		}
-		json.NewEncoder(w).Encode(records)
+		return nil
 	})
+	u.SetTitle("DNS Records")
+	u.SetTags("dns")
+	u.SetDescription("List all DNS Records within a zone.")
+	u.SetExpectedErrors(status.InvalidArgument, status.NotFound, status.Internal)
+	return u
+}
+
+func (ro *DNSRole) eventHandlerAPIMux(ev *roles.Event) {
+	svc := ev.Payload.Data["svc"].(*web.Service)
+	svc.Get("/api/v1/dns/zones", ro.apiHandlerZones())
+	svc.Get("/api/v1/dns/zones/{zone}/records", ro.apiHandlerZoneRecords())
 }

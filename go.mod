@@ -89,9 +89,11 @@ require (
 	github.com/swaggest/jsonschema-go v0.3.35 // indirect
 	github.com/swaggest/openapi-go v0.2.18 // indirect
 	github.com/swaggest/refl v1.1.0 // indirect
+	github.com/swaggest/swgui v1.4.5 // indirect
 	github.com/swaggest/usecase v1.1.3 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect
+	github.com/vearutop/statigz v1.1.5 // indirect
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect

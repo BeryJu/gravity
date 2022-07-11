@@ -71,6 +71,10 @@ func (i *Instance) Start() {
 	}
 }
 
+func (i *Instance) Log() *log.Entry {
+	return i.log
+}
+
 func (i *Instance) getRoles() []string {
 	rr, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, i.identifier, "roles"))
 	roles := extconfig.Get().BootstrapRoles

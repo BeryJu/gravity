@@ -1,0 +1,297 @@
+openapi: 3.0.3
+info:
+  title: gravity
+  version: 0.0.1-dev
+paths:
+  /api/v1/discovery/devices:
+    get:
+      description: List all discovered devices.
+      operationId: roles/discovery.(*DiscoveryRole).apiHandlerDevices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryDevicesOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery devices
+      tags:
+      - discovery
+  /api/v1/discovery/devices/apply:
+    post:
+      description: Convert discovered device into DHCP lease/DNS record.
+      operationId: roles/discovery.(*DiscoveryRole).apiHandlerDeviceApply
+      parameters:
+      - in: query
+        name: relKey
+        schema:
+          type: string
+      - in: query
+        name: dhcpScope
+        schema:
+          type: string
+      - in: query
+        name: dnsZone
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Apply Discovered devices
+      tags:
+      - discovery
+  /api/v1/discovery/subnets:
+    get:
+      description: List all Discovery subnets.
+      operationId: roles/discovery.(*DiscoveryRole).apiHandlerSubnets
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoverySubnetsOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery subnets
+      tags:
+      - discovery
+  /api/v1/dns/zones:
+    get:
+      description: List all DNS Zones.
+      operationId: roles/dns.(*DNSRole).apiHandlerZones
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsZonesOutput'
+          description: OK
+      summary: DNS Zones
+      tags:
+      - dns
+  /api/v1/dns/zones/{zone}/records:
+    get:
+      description: List all DNS Records within a zone.
+      operationId: roles/dns.(*DNSRole).apiHandlerZoneRecords
+      parameters:
+      - in: path
+        name: zone
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsZoneRecordsOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Records
+      tags:
+      - dns
+  /api/v1/etcd/join:
+    post:
+      description: Join nodes to the cluster.
+      operationId: roles/etcd.(*EmbeddedEtcd).apiHandlerJoin
+      parameters:
+      - in: query
+        name: peer
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtcdEtcdJoinOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Etcd join
+      tags:
+      - etcd
+  /api/v1/etcd/members:
+    get:
+      description: List all cluster members.
+      operationId: roles/etcd.(*EmbeddedEtcd).apiHandlerMembers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtcdMembersOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Etcd members
+      tags:
+      - etcd
+components:
+  schemas:
+    DiscoveryDevice:
+      properties:
+        hostname:
+          type: string
+        ip:
+          type: string
+        mac:
+          type: string
+      type: object
+    DiscoveryDevicesOutput:
+      properties:
+        devices:
+          items:
+            $ref: '#/components/schemas/DiscoveryDevice'
+          nullable: true
+          type: array
+      type: object
+    DiscoverySubnet:
+      properties:
+        cidr:
+          type: string
+        discoveryTTL:
+          type: integer
+      type: object
+    DiscoverySubnetsOutput:
+      properties:
+        subnets:
+          items:
+            $ref: '#/components/schemas/DiscoverySubnet'
+          nullable: true
+          type: array
+      type: object
+    DnsRecord:
+      properties:
+        fqdn:
+          type: string
+      type: object
+    DnsZone:
+      properties:
+        authoritative:
+          type: boolean
+        defaultTTL:
+          minimum: 0
+          type: integer
+        handlerConfigs:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          nullable: true
+          type: array
+        name:
+          type: string
+      type: object
+    DnsZoneRecordsOutput:
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/DnsRecord'
+          nullable: true
+          type: array
+      type: object
+    DnsZonesOutput:
+      properties:
+        zones:
+          items:
+            $ref: '#/components/schemas/DnsZone'
+          nullable: true
+          type: array
+      type: object
+    EtcdEtcdJoinOutput:
+      properties:
+        env:
+          type: string
+      type: object
+    EtcdMember:
+      properties:
+        id:
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      type: object
+    EtcdMembersOutput:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/EtcdMember'
+          nullable: true
+          type: array
+      type: object
+    RestErrResponse:
+      properties:
+        code:
+          description: Application-specific error code.
+          type: integer
+        context:
+          additionalProperties: {}
+          description: Application context.
+          type: object
+        error:
+          description: Error message.
+          type: string
+        status:
+          description: Status text.
+          type: string
+      type: object
+  securitySchemes:
+    Admin:
+      description: Admin access
+      scheme: basic
+      type: http

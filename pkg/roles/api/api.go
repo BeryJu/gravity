@@ -2,25 +2,25 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
-	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/openapi-go/openapi3"
 	"github.com/swaggest/rest/nethttp"
 	"github.com/swaggest/rest/web"
-	"golang.org/x/crypto/bcrypt"
+	swgui "github.com/swaggest/swgui/v4emb"
 )
 
 type APIRole struct {
-	m   *mux.Router
-	log *log.Entry
-	i   roles.Instance
-	ctx context.Context
+	m    *mux.Router
+	oapi *web.Service
+	log  *log.Entry
+	i    roles.Instance
+	ctx  context.Context
 }
 
 func New(instance roles.Instance) *APIRole {
@@ -29,12 +29,7 @@ func New(instance roles.Instance) *APIRole {
 		i:   instance,
 		m:   mux.NewRouter(),
 	}
-	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		mux := ev.Payload.Data["mux"].(*mux.Router).Name("roles.api").Subrouter()
-		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodGet).HandlerFunc(r.apiHandlerDebugGet)
-		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodPost).HandlerFunc(r.apiHandlerDebugPost)
-		mux.Name("v0.debug").Path("/v0/debug").Methods(http.MethodDelete).HandlerFunc(r.apiHandlerDebugDel)
-	})
+	r.m.Use(NewLoggingHandler(r.log, nil))
 	r.setupUI()
 	return r
 }
@@ -42,83 +37,35 @@ func New(instance roles.Instance) *APIRole {
 func (r *APIRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	cfg := r.decodeAPIRoleConfig(config)
-
-	r.m.Use(NewLoggingHandler(r.log, nil))
-
-	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	apiRouter.Use(NewAuthMiddleware(r))
-	apiRouter.Use(func(h http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Accept", "application/json")
-			w.Header().Set("Content-Type", "application/json")
-			h.ServeHTTP(w, r)
-		})
-	})
-	// Auto-set some common headers
-	service := web.DefaultService()
-	service.OpenAPI.Info.Title = "ye"
-	service.OpenAPI.Info.Version = "v1.0.0"
-	adminSecuritySchema := nethttp.HTTPBasicSecurityMiddleware(service.OpenAPICollector, "Admin", "Admin access")
-	service.Use(adminSecuritySchema)
-	// apiRouter.Handle("/", service)
-	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
-		"mux": apiRouter,
-		"svc": service,
-	}))
-	r.log.Debug("Registered routes:")
-	r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-		fullName := []string{route.GetName()}
-		for _, anc := range ancestors {
-			fullName = append([]string{anc.GetName()}, fullName...)
-		}
-		var methods []string
-		var err error
-		if methods, err = route.GetMethods(); err != nil {
-			methods = []string{}
-		}
-		var path string
-		if path, err = route.GetPathTemplate(); err != nil {
-			return nil
-		}
-		r.log.WithFields(log.Fields{
-			"routeName": strings.Join(fullName, "."),
-			"method":    methods,
-		}).Debug(path)
-		return nil
-	})
-
+	r.prepareOpenAPI()
 	listen := extconfig.Get().Listen(cfg.Port)
 	r.log.WithField("listen", listen).Info("Starting API Server")
 	return http.ListenAndServe(listen, r.m)
 }
 
-func (r *APIRole) CreateUser(username, password string) error {
-	hashedPw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
+func (r *APIRole) prepareOpenAPI() {
+	if r.oapi != nil {
+		return
 	}
+	r.oapi = web.DefaultService()
+	r.oapi.OpenAPI.Info.Title = "gravity"
+	r.oapi.OpenAPI.Info.Version = extconfig.Version
+	r.oapi.Use(nethttp.HTTPBasicSecurityMiddleware(r.oapi.OpenAPICollector, "Admin", "Admin access"))
+	// r.oapi.OpenAPICollector.Collect()
+	r.oapi.Docs("/api/v1/docs", swgui.New)
 
-	user := User{
-		Password: string(hashedPw),
-	}
-	userJson, err := json.Marshal(user)
-	if err != nil {
-		return err
-	}
+	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
+	apiRouter.Use(NewAuthMiddleware(r))
+	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
-	_, err = r.i.KV().Put(
-		context.TODO(),
-		r.i.KV().Key(
-			types.KeyRole,
-			types.KeyUsers,
-			username,
-		),
-		string(userJson),
-	)
-	if err != nil {
-		return err
-	}
-	return nil
+	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{
+		"svc": r.oapi,
+	}))
+}
+
+func (r *APIRole) Schema() *openapi3.Spec {
+	r.prepareOpenAPI()
+	return r.oapi.OpenAPICollector.Reflector().Spec
 }
 
 func (r *APIRole) Stop() {

@@ -12,7 +12,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "gravity",
-	Short: "A brief description of your application",
+	Short: "Start gravity instance",
 	Run: func(cmd *cobra.Command, args []string) {
 		rand.Seed(time.Now().Unix())
 		inst := instance.NewInstance()

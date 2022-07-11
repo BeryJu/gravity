@@ -44,8 +44,6 @@ func Get() *ExtConfig {
 		log.WithError(err).Warning("failed to load external config")
 		return nil
 	}
-	cfg.defaults()
-	globalExtConfig = &cfg
 	if cfg.Debug {
 		log.SetLevel(log.TraceLevel)
 		log.SetFormatter(&log.TextFormatter{})
@@ -55,6 +53,8 @@ func Get() *ExtConfig {
 			DisableHTMLEscape: true,
 		})
 	}
+	cfg.defaults()
+	globalExtConfig = &cfg
 	return &cfg
 }
 

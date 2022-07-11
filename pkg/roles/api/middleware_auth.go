@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -66,4 +67,33 @@ func (am *AuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	am.inner.ServeHTTP(rw, r)
+}
+
+func (r *APIRole) CreateUser(username, password string) error {
+	hashedPw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	user := User{
+		Password: string(hashedPw),
+	}
+	userJson, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.i.KV().Put(
+		context.TODO(),
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyUsers,
+			username,
+		),
+		string(userJson),
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
