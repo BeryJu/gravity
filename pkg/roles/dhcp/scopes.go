@@ -97,7 +97,7 @@ func (r *DHCPRole) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dh
 	longestBits := 0
 	for _, scope := range r.scopes {
 		if subBits := scope.match(conn, peer, m); subBits > -1 {
-			if subBits < longestBits {
+			if subBits > longestBits {
 				r.log.WithField("name", scope.Name).Debug("selected scope based on cidr match")
 				match = scope
 				longestBits = subBits
