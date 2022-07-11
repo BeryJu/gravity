@@ -12,6 +12,7 @@ import (
 	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/web"
 
 	"github.com/miekg/dns"
 )
@@ -33,9 +34,13 @@ func New(instance roles.Instance) *DNSRole {
 		i:       instance,
 	}
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, r.eventHandlerAPIMux)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/dns/zones", r.apiHandlerZones())
+		svc.Get("/api/v1/dns/zones/{zone}/records", r.apiHandlerZoneRecords())
+	})
 	return r
 }
 
