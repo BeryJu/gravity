@@ -52,7 +52,7 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	if err != nil {
 		ipf.log.WithError(err).Warning("failed to forward")
 		m.SetRcode(r, dns.RcodeServerFailure)
-		return m
+		return nil
 	}
 	m.Answer = make([]dns.RR, len(ips))
 	for idx, rawIp := range ips {
@@ -83,6 +83,10 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 			}
 		}
 	}
-	m.SetRcode(r, dns.RcodeSuccess)
+	if len(m.Answer) < 1 {
+		m.SetRcode(r, dns.RcodeNameError)
+	} else {
+		m.SetRcode(r, dns.RcodeSuccess)
+	}
 	return m
 }

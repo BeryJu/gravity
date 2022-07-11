@@ -9,12 +9,12 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) {
+func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about scope-level updates, everything underneath doesn't matter
 	if strings.Contains(relKey, "/") {
-		return
+		return false
 	}
 	if t == mvccpb.DELETE {
 		r.log.WithField("name", r.scopes[relKey].Name).Trace("removed scope")
@@ -28,6 +28,7 @@ func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 			r.scopes[z.Name] = z
 		}
 	}
+	return true
 }
 
 func (r *DHCPRole) startWatchScopes() {
@@ -51,8 +52,9 @@ func (r *DHCPRole) startWatchScopes() {
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
-			r.handleScopeOp(event.Type, event.Kv)
-			r.log.WithField("key", string(event.Kv.Key)).Trace("scope watch update")
+			if r.handleScopeOp(event.Type, event.Kv) {
+				r.log.WithField("key", string(event.Kv.Key)).Trace("scope watch update")
+			}
 		}
 	}
 }

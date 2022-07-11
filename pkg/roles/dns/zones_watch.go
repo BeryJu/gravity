@@ -9,12 +9,12 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) {
+func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones, "")
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about zone-level updates, everything underneath doesn't matter
 	if strings.Contains(relKey, "/") {
-		return
+		return false
 	}
 	if t == mvccpb.DELETE {
 		r.log.WithField("name", r.zones[relKey].Name).Trace("removed zone")
@@ -28,6 +28,7 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) {
 			r.zones[z.Name] = z
 		}
 	}
+	return true
 }
 
 func (r *DNSRole) startWatchZones() {
@@ -51,8 +52,9 @@ func (r *DNSRole) startWatchZones() {
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
-			r.handleZoneOp(event.Type, event.Kv)
-			r.log.WithField("key", string(event.Kv.Key)).Trace("zone watch update")
+			if r.handleZoneOp(event.Type, event.Kv) {
+				r.log.WithField("key", string(event.Kv.Key)).Trace("zone watch update")
+			}
 		}
 	}
 }

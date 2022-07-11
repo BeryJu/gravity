@@ -28,7 +28,7 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
-		eh.log.WithField("key", fullRecordKey).Trace("tracing tested key")
+		eh.log.WithField("key", fullRecordKey).Trace("trying kv key")
 		// TODO: Optimise this
 		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey)
 		if err != nil || len(res.Kvs) < 1 {
@@ -43,7 +43,7 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 		}
 	}
 	if len(m.Answer) < 1 {
-		m.SetRcode(r, dns.RcodeNameError)
+		return nil
 	}
 	return m
 }
