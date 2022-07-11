@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/0xERR0R/blocky/config"
+	blockylog "github.com/0xERR0R/blocky/log"
 	"github.com/0xERR0R/blocky/server"
 	"github.com/miekg/dns"
 )
@@ -36,7 +37,7 @@ func NewBlockyForwarder(z Zone, rawConfig map[string]string) (*BlockyForwarder, 
 	if err != nil {
 		return nil, fmt.Errorf("failed to set config defaults: %w", err)
 	}
-
+	blockylog.Silence()
 	cfg.BootstrapDNS = config.BootstrapConfig{
 		IPs: []net.IP{
 			net.ParseIP("8.8.8.8"),

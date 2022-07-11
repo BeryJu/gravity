@@ -53,8 +53,19 @@ func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
-	if ipf.CacheTTL < 1 {
+	ansTtl := ans.Header().Ttl
+	// never cache if set to -1
+	if ipf.CacheTTL == -1 {
 		return
+	}
+	// Try to set cache expiry based on TTL of answer
+	// if no TTL set, default to CacheTTL, and if that's
+	// not set, then don't cache at all
+	if ansTtl < 1 {
+		ansTtl = uint32(ipf.CacheTTL)
+		if ansTtl < 1 {
+			return
+		}
 	}
 	name := strings.TrimSuffix(query.Name, ".")
 	record := ipf.z.newRecord(name, dns.TypeToString[ans.Header().Rrtype])
@@ -66,7 +77,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 	case *dns.PTR:
 		record.Data = v.Ptr
 	}
-	record.TTL = ans.Header().Ttl
+	record.TTL = ansTtl
 	err := record.put(int64(ipf.CacheTTL))
 	if err != nil {
 		ipf.log.WithError(err).Warning("failed to cache answer")
