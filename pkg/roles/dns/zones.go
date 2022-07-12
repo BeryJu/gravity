@@ -3,7 +3,6 @@ package dns
 import (
 	"context"
 	"encoding/json"
-	"reflect"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles"
@@ -29,15 +28,15 @@ type Zone struct {
 
 func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	for _, handler := range z.h {
-		ht := reflect.TypeOf(handler)
-		z.log.WithField("handler", ht).Trace("Sending request to handler")
+		handler.Log().Trace("sending request to handler")
 		handlerReply := handler.Handle(NewFakeDNSWriter(w), r)
 		if handlerReply != nil {
-			z.log.WithField("handler", ht).Trace("Handler has reply")
+			handler.Log().Trace("returning reply from handler")
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
 			return
 		}
+		handler.Log().Trace("no reply, trying next handler")
 	}
 	z.log.Debug("No handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)

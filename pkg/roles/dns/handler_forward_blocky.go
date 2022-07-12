@@ -78,6 +78,10 @@ func NewBlockyForwarder(z Zone, rawConfig map[string]string) (*BlockyForwarder, 
 	}, nil
 }
 
+func (bfwd *BlockyForwarder) Log() *log.Entry {
+	return bfwd.log
+}
+
 func (bfwd *BlockyForwarder) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	bfwd.b.OnRequest(w, r)
 	// fall to next handler when no record is found

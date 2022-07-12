@@ -21,6 +21,10 @@ func NewEtcdHandler(z Zone, config map[string]string) *EtcdHandler {
 	}
 }
 
+func (eh *EtcdHandler) Log() *log.Entry {
+	return eh.log
+}
+
 func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative

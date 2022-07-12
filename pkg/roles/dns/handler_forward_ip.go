@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 )
@@ -53,21 +54,28 @@ func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
-	ansTtl := ans.Header().Ttl
+	cacheTtl := ans.Header().Ttl
 	// never cache if set to -1
 	if ipf.CacheTTL == -1 {
 		return
 	}
-	// Try to set cache expiry based on TTL of answer
-	// if no TTL set, default to CacheTTL, and if that's
-	// not set, then don't cache at all
-	if ansTtl < 1 {
-		ansTtl = uint32(ipf.CacheTTL)
-		if ansTtl < 1 {
-			return
+	// If CacheTTL is set to -2 we don't expire the entry at all
+	// this can be used to forward a specific zone and import all the records
+	// on the fly
+	if ipf.CacheTTL == -2 {
+		cacheTtl = 0
+	} else {
+		// Try to set cache expiry based on TTL of answer
+		// if no TTL set, default to CacheTTL, and if that's
+		// not set, then don't cache at all
+		if cacheTtl < 1 {
+			cacheTtl = uint32(ipf.CacheTTL)
+			if cacheTtl < 1 {
+				return
+			}
 		}
 	}
-	name := strings.TrimSuffix(query.Name, ".")
+	name := strings.TrimSuffix(query.Name, utils.EnsureLeadingPeriod(ipf.z.Name))
 	record := ipf.z.newRecord(name, dns.TypeToString[ans.Header().Rrtype])
 	switch v := ans.(type) {
 	case *dns.A:
@@ -77,11 +85,15 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 	case *dns.PTR:
 		record.Data = v.Ptr
 	}
-	record.TTL = ansTtl
-	err := record.put(int64(ipf.CacheTTL))
+	record.TTL = ans.Header().Ttl
+	err := record.put(int64(cacheTtl))
 	if err != nil {
 		ipf.log.WithError(err).Warning("failed to cache answer")
 	}
+}
+
+func (ipf *IPForwarderHandler) Log() *log.Entry {
+	return ipf.log
 }
 
 func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
