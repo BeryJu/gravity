@@ -11,10 +11,9 @@ import (
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
-
-	"github.com/miekg/dns"
 )
 
 type DNSRole struct {

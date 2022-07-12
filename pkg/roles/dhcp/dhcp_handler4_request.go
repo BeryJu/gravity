@@ -22,7 +22,9 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 		r.log.Debug("creating new lease")
 	}
 
-	match.put(match.scope.TTL)
+	// Run the update in a go-routine since etcd might not be reachable and
+	// we don't want to timeout
+	go match.put(match.scope.TTL)
 	match.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 		return d

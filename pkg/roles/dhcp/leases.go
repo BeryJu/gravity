@@ -43,8 +43,6 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	}
 	prefix := r.i.KV().Key(
 		types.KeyRole,
-		types.KeyScopes,
-		// lr.Scope.Name,
 		types.KeyLeases,
 		"",
 	)

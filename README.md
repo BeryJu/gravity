@@ -36,4 +36,6 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [ ] Docs
 - [ ] Real world testing
 - [x] Replicated DNS caching
-- [ ] In-memory caching for clusters with even nodes (https://pkg.go.dev/github.com/tailscale/tailetc maybe?)
+- [x] In-memory caching for clusters with even nodes
+    - [x] Caching for DNS
+    - [x] Caching for DHCP

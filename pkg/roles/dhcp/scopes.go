@@ -88,7 +88,6 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 		return nil, fmt.Errorf("failed to create ipam: %w", err)
 	}
 	s.ipam = ipamInst
-
 	return s, nil
 }
 
