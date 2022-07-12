@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 	"sync"
+	"time"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
@@ -53,9 +54,11 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 
 func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	z := Zone{
-		DefaultTTL: 3600,
-		inst:       r.i,
-		h:          make([]Handler, 0),
+		DefaultTTL:  3600,
+		inst:        r.i,
+		h:           make([]Handler, 0),
+		records:     make(map[string]*Record),
+		recordsSync: sync.RWMutex{},
 	}
 	err := json.Unmarshal(raw.Value, &z)
 	if err != nil {
@@ -102,26 +105,44 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 }
 
 func (z *Zone) watchZoneRecords() {
+	evtHandler := func(ev *clientv3.Event) {
+		z.recordsSync.Lock()
+		defer z.recordsSync.Unlock()
+		if ev.Type == clientv3.EventTypeDelete {
+			delete(z.records, string(ev.Kv.Key))
+		} else {
+			rec := z.recordFromKV(ev.Kv)
+			z.records[string(ev.Kv.Key)] = rec
+		}
+	}
 	ctx, canc := context.WithCancel(context.Background())
 	z.recordsWatchCtx = canc
+
+	prefix := "/" + z.etcdKey + "/"
+
+	records, err := z.inst.KV().Get(ctx, prefix, clientv3.WithPrefix())
+	if err != nil {
+		z.log.WithError(err).Warning("failed to list initial records")
+		time.Sleep(5 * time.Second)
+		z.watchZoneRecords()
+		return
+	}
+	for _, record := range records.Kvs {
+		evtHandler(&clientv3.Event{
+			Type: mvccpb.PUT,
+			Kv:   record,
+		})
+	}
+
 	watchChan := z.inst.KV().Watch(
 		ctx,
-		z.etcdKey,
+		prefix,
 		clientv3.WithPrefix(),
 		clientv3.WithProgressNotify(),
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
-			go func(ev *clientv3.Event) {
-				z.recordsSync.Lock()
-				defer z.recordsSync.Unlock()
-				if ev.Type == clientv3.EventTypeDelete {
-					delete(z.records, string(ev.Kv.Key))
-				} else {
-					rec := z.recordFromKV(ev.Kv)
-					z.records[string(ev.Kv.Key)] = rec
-				}
-			}(event)
+			go evtHandler(event)
 		}
 	}
 }
