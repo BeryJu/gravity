@@ -24,9 +24,11 @@ type IPForwarderHandler struct {
 
 func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
 	l := z.log.WithField("handler", "forward_ip")
-	cacheTtl, err := strconv.Atoi(config["cache_ttl"])
-	if err != nil {
-		l.WithField("config", config).WithError(err).Info("failed to parse cache_ttl, defaulting to 0")
+
+	rawTtl := config["cache_ttl"]
+	cacheTtl, err := strconv.Atoi(rawTtl)
+	if err != nil && rawTtl != "" {
+		l.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
 		cacheTtl = 0
 	}
 
