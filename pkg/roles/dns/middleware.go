@@ -31,7 +31,7 @@ func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
 		for idx, q := range m.Question {
 			f[fmt.Sprintf("question[%d]", idx)] = q.Name
 		}
-		for idx, a := range m.Answer {
+		for idx, a := range fw.msg.Answer {
 			f[fmt.Sprintf("answer[%d]", idx)] = dns.TypeToRR[a.Header().Rrtype]
 		}
 		ro.log.WithFields(f).Info("DNS request")
