@@ -57,6 +57,7 @@ func NewInstance() *Instance {
 }
 
 func (i *Instance) Start() {
+	i.log.WithField("version", extconfig.FullVersion()).Info("Gravity starting")
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))

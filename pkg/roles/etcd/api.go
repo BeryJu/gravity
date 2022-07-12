@@ -57,7 +57,7 @@ func (r *EmbeddedEtcd) apiHandlerJoin() usecase.Interactor {
 			return status.Wrap(err, status.Internal)
 		}
 		env := fmt.Sprintf(
-			"ETCD_JOIN_CLUSTER='%s,%s'",
+			"ETCD_JOIN_CLUSTER='%s;%s'",
 			extconfig.Get().Instance.Identifier,
 			extconfig.Get().Instance.IP,
 		)

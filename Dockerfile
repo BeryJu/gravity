@@ -5,10 +5,15 @@ COPY ./web /work/web/
 
 ENV NODE_ENV=production
 WORKDIR /work/web
-RUN npm ci && npm run build
+RUN npm i && npm run build
 
 # Stage 2: Build
 FROM golang:1.18 as builder
+
+ARG GIT_BUILD_HASH
+ENV GIT_BUILD_HASH=$GIT_BUILD_HASH
+ENV CGO_ENABLED=0
+ENV GOOS=linux
 
 WORKDIR /workspace
 COPY go.mod go.mod
@@ -19,7 +24,9 @@ RUN go mod download
 COPY . .
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
-RUN CGO_ENABLED=0 GOOS=linux go build -v -a -o gravity .
+RUN go build \
+    -ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=$GIT_BUILD_HASH" \
+    -v -a -o gravity .
 
 # Stage 3: Run
 FROM docker.io/library/debian:stable-slim

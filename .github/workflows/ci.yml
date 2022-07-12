@@ -42,6 +42,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - id: vars
+        run: |
+          set -x
+          echo "##[set-output name=sha]$GITHUB_SHA"
+          echo "##[set-output name=build]$GITHUB_RUN_ID"
+          echo "##[set-output name=timestamp]$(date +%s)"
       - name: Build and push Docker images
         uses: docker/build-push-action@v3.0.0
         with:
@@ -51,4 +57,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           context: .
           build-args: |
+            BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
