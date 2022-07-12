@@ -18,11 +18,11 @@ type IPForwarderHandler struct {
 	CacheTTL int
 
 	r   *net.Resolver
-	z   Zone
+	z   *Zone
 	log *log.Entry
 }
 
-func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler {
+func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
 	l := z.log.WithField("handler", "forward_ip")
 	cacheTtl, err := strconv.Atoi(config["cache_ttl"])
 	if err != nil {

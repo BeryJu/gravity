@@ -11,10 +11,10 @@ import (
 
 type EtcdHandler struct {
 	log *log.Entry
-	z   Zone
+	z   *Zone
 }
 
-func NewEtcdHandler(z Zone, config map[string]string) *EtcdHandler {
+func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
 	return &EtcdHandler{
 		log: z.log.WithField("handler", "etcd"),
 		z:   z,
@@ -32,8 +32,15 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
-		eh.log.WithField("key", fullRecordKey).Trace("trying kv key")
-		// TODO: Optimise this
+		if rec, ok := eh.z.records[fullRecordKey]; ok {
+			eh.log.WithField("key", fullRecordKey).Trace("got record in in-memory cache")
+			ans := rec.ToDNS(question.Name, question.Qtype)
+			if ans != nil {
+				m.Answer = append(m.Answer, ans)
+			}
+			continue
+		}
+		eh.log.WithField("key", fullRecordKey).Trace("fetching kv key")
 		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey)
 		if err != nil || len(res.Kvs) < 1 {
 			continue

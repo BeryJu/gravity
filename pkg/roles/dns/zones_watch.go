@@ -18,6 +18,7 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 	}
 	if t == mvccpb.DELETE {
 		r.log.WithField("name", r.zones[relKey].Name).Trace("removed zone")
+		r.zones[relKey].StopWatchingRecords()
 		delete(r.zones, relKey)
 	} else if t == mvccpb.PUT {
 		z, err := r.zoneFromKV(kv)

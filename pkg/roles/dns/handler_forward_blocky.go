@@ -20,7 +20,7 @@ type BlockyForwarder struct {
 	log *log.Entry
 }
 
-func NewBlockyForwarder(z Zone, rawConfig map[string]string) (*BlockyForwarder, error) {
+func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder, error) {
 	log := z.log.WithField("handler", "forward_blocky")
 	forwarders := strings.Split(rawConfig["to"], ";")
 	upstreams := make([]config.Upstream, len(forwarders))

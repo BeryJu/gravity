@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"strings"
+	"sync"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Zone struct {
@@ -20,6 +22,10 @@ type Zone struct {
 	DefaultTTL     uint32              `json:"defaultTTL"`
 
 	h []Handler
+
+	records         map[string]*Record
+	recordsSync     sync.RWMutex
+	recordsWatchCtx context.CancelFunc
 
 	etcdKey string
 	inst    roles.Instance
@@ -74,11 +80,11 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		var err error
 		switch t {
 		case "forward_blocky":
-			handler, err = NewBlockyForwarder(z, handlerCfg)
+			handler, err = NewBlockyForwarder(&z, handlerCfg)
 		case "forward_ip":
-			handler = NewIPForwarderHandler(z, handlerCfg)
+			handler = NewIPForwarderHandler(&z, handlerCfg)
 		case "etcd":
-			handler = NewEtcdHandler(z, handlerCfg)
+			handler = NewEtcdHandler(&z, handlerCfg)
 		default:
 			r.log.WithField("type", t).Warning("invalid forwarder type")
 		}
@@ -88,12 +94,42 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		}
 		z.h = append(z.h, handler)
 	}
+
+	// start watching all records in this zone, in case etcd goes down
+	go z.watchZoneRecords()
+
 	return &z, nil
 }
 
-func (z *Zone) Record() *Record {
-	r := &Record{}
-	return r
+func (z *Zone) watchZoneRecords() {
+	ctx, canc := context.WithCancel(context.Background())
+	z.recordsWatchCtx = canc
+	watchChan := z.inst.KV().Watch(
+		ctx,
+		z.etcdKey,
+		clientv3.WithPrefix(),
+		clientv3.WithProgressNotify(),
+	)
+	for watchResp := range watchChan {
+		for _, event := range watchResp.Events {
+			go func(ev *clientv3.Event) {
+				z.recordsSync.Lock()
+				defer z.recordsSync.Unlock()
+				if ev.Type == clientv3.EventTypeDelete {
+					delete(z.records, string(ev.Kv.Key))
+				} else {
+					rec := z.recordFromKV(ev.Kv)
+					z.records[string(ev.Kv.Key)] = rec
+				}
+			}(event)
+		}
+	}
+}
+
+func (z *Zone) StopWatchingRecords() {
+	if z.recordsWatchCtx != nil {
+		z.recordsWatchCtx()
+	}
 }
 
 func (z *Zone) put() error {
