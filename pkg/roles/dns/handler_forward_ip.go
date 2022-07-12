@@ -26,7 +26,7 @@ func NewIPForwarderHandler(z Zone, config map[string]string) *IPForwarderHandler
 	l := z.log.WithField("handler", "forward_ip")
 	cacheTtl, err := strconv.Atoi(config["cache_ttl"])
 	if err != nil {
-		l.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
+		l.WithField("config", config).WithError(err).Info("failed to parse cache_ttl, defaulting to 0")
 		cacheTtl = 0
 	}
 
@@ -84,6 +84,8 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 		record.Data = v.AAAA.String()
 	case *dns.PTR:
 		record.Data = v.Ptr
+	case *dns.CNAME:
+		record.Data = v.Target
 	}
 	record.TTL = ans.Header().Ttl
 	err := record.put(int64(cacheTtl))

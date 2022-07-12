@@ -23,10 +23,17 @@ func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
 		case *net.TCPAddr:
 			clientIP = addr.IP.String()
 		}
-		ro.log.WithFields(log.Fields{
+		f := log.Fields{
 			"runtimeMS": fmt.Sprintf("%0.3f", duration),
 			"client":    clientIP,
 			"response":  dns.RcodeToString[fw.msg.Rcode],
-		}).Info("DNS request")
+		}
+		for idx, q := range m.Question {
+			f[fmt.Sprintf("question[%d]", idx)] = q.Name
+		}
+		for idx, a := range m.Answer {
+			f[fmt.Sprintf("answer[%d]", idx)] = dns.TypeToRR[a.Header().Rrtype]
+		}
+		ro.log.WithFields(f).Info("DNS request")
 	}
 }

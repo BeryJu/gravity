@@ -67,6 +67,10 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 		rr = &dns.SRV{}
 		rr.(*dns.SRV).Hdr = hdr
 		rr.(*dns.SRV).Target = r.Data
+	case dns.TypeCNAME:
+		rr = &dns.CNAME{}
+		rr.(*dns.CNAME).Hdr = hdr
+		rr.(*dns.CNAME).Target = r.Data
 	}
 	return rr
 }
