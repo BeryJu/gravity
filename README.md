@@ -22,13 +22,9 @@ The following environment variables can be set:
 - `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but can be set to override that (set to 0.0.0.0 in docker)
 - `LISTEN_ONLY`: Enable listen-only mode which will not reply to any DHCP packets and not run discovery
 
-### Joining a cluster
-
-TODO
-
 ### API
 
-TODO
+Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 
 ### Things missing
 
@@ -39,4 +35,5 @@ TODO
 - [ ] Testing
 - [ ] Docs
 - [ ] Real world testing
-- [ ] Replicated DNS caching
+- [x] Replicated DNS caching
+- [ ] In-memory caching for clusters with even nodes (https://pkg.go.dev/github.com/tailscale/tailetc maybe?)

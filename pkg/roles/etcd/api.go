@@ -52,7 +52,7 @@ func (r *EmbeddedEtcd) apiHandlerJoin() usecase.Interactor {
 			in  = input.(*etcdJoinInput)
 			out = output.(*etcdJoinOutput)
 		)
-		_, err := r.i.KV().MemberAddAsLearner(ctx, []string{in.Peer})
+		_, err := r.i.KV().MemberAdd(ctx, []string{in.Peer})
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
