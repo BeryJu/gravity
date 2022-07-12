@@ -7,10 +7,10 @@ services:
     hostname: gravity1
     image: ghcr.io/beryju/gravity:latest
     restart: unless-stopped
+    network_mode: host
+    user: root
     volumes:
       - data:/data
-    environment:
-      LISTEN_ONLY: "true"
 
 volumes:
   data:

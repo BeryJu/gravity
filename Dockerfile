@@ -46,6 +46,4 @@ COPY --from=quay.io/coreos/etcd:v3.5.4 /usr/local/bin/etcdctl /usr/bin/etcdctl
 
 USER 65532:65532
 
-ENV INSTANCE_LISTEN=0.0.0.0
-
 ENTRYPOINT ["/app/gravity"]
