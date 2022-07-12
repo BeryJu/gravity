@@ -17,12 +17,15 @@ type Client struct {
 }
 
 func NewClient(endpoint string, prefix string) *Client {
+	l := log.WithField("component", "etcd-client")
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{endpoint},
-		DialTimeout: 5 * time.Second,
+		Endpoints:            []string{endpoint},
+		DialTimeout:          2 * time.Second,
+		DialKeepAliveTime:    2 * time.Second,
+		DialKeepAliveTimeout: 2 * time.Second,
 	})
 	if err != nil {
-		panic(err)
+		l.Panic(err)
 	}
 	cli.KV = namespace.NewKV(cli.KV, prefix)
 	cli.Watcher = namespace.NewWatcher(cli.Watcher, prefix)
@@ -30,7 +33,7 @@ func NewClient(endpoint string, prefix string) *Client {
 
 	return &Client{
 		Client: cli,
-		log:    log.WithField("component", "etcd-client"),
+		log:    l,
 		prefix: prefix,
 	}
 }
