@@ -12,7 +12,7 @@ func (r *DHCPRole) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dh
 		r.log.Debug("no lease found, creating new")
 		scope := r.findScopeForRequest(conn, peer, m)
 		if scope == nil {
-			r.log.Warning("no scope found")
+			r.log.Info("no scope found")
 			return
 		}
 		r.log.Debug("found scope for new lease")
