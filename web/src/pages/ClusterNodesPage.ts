@@ -5,15 +5,15 @@ import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
-import { EtcdApi } from "gravity-api";
+import { RolesEtcdApi } from "gravity-api";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends LitElement {
     render(): TemplateResult {
         return html`
             ${until(
-                new EtcdApi(DEFAULT_CONFIG)
-                    .rolesEtcdEmbeddedEtcdApiHandlerMembers()
+                new RolesEtcdApi(DEFAULT_CONFIG)
+                    .etcdGetMembers()
                     .then((members) => {
                         return members.members?.map((member: any) => {
                             return html`<sp-status-light size="m" variant="positive"

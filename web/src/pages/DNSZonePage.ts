@@ -5,7 +5,7 @@ import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
-import { DnsApi } from "gravity-api";
+import { RolesDnsApi } from "gravity-api";
 
 import "../elements/Header";
 import "../elements/Table";
@@ -18,7 +18,7 @@ export class DNSZonePage extends LitElement {
             <sp-divider size="m"></sp-divider>
             <gravity-table></gravity-table>
             ${until(
-                new DnsApi(DEFAULT_CONFIG).rolesDnsDNSRoleApiHandlerZones().then((zones) => {
+                new RolesDnsApi(DEFAULT_CONFIG).dnsZones().then((zones) => {
                     return zones.zones?.map((member: any) => {
                         return html`${JSON.stringify(member)}`;
                     });
