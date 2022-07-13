@@ -42,3 +42,4 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [ ] Support for different DNS handlerConfigs per instance (forward to different IP per instance)
 - [ ] Full support for SRV and MX
 - [x] Support for multiple records per FQDN
+- [ ] Watch role config and restart roles if it changes?
