@@ -53,6 +53,7 @@ jobs:
         with:
           tags: |
             ghcr.io/beryju/gravity:latest
+            ghcr.io/beryju/gravity:dev
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/amd64
           context: .
