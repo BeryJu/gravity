@@ -54,7 +54,7 @@ jobs:
           tags: |
             ghcr.io/beryju/gravity:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           context: .
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
