@@ -19,6 +19,11 @@ type Record struct {
 	Data string `json:"data"`
 	TTL  uint32 `json:"ttl"`
 
+	MXPreference uint16 `json:"mxPreference"`
+	SRVPort      uint16 `json:"srvPort,omitempty"`
+	SRVPriority  uint16 `json:"srvPriority,omitempty"`
+	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
 	inst roles.Instance
 	zone *Zone
 }
@@ -67,6 +72,14 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 		rr = &dns.SRV{}
 		rr.(*dns.SRV).Hdr = hdr
 		rr.(*dns.SRV).Target = r.Data
+		rr.(*dns.SRV).Port = r.SRVPort
+		rr.(*dns.SRV).Priority = r.SRVPriority
+		rr.(*dns.SRV).Weight = r.SRVWeight
+	case dns.TypeMX:
+		rr = &dns.MX{}
+		rr.(*dns.MX).Hdr = hdr
+		rr.(*dns.MX).Mx = r.Data
+		rr.(*dns.MX).Preference = r.MXPreference
 	case dns.TypeCNAME:
 		rr = &dns.CNAME{}
 		rr.(*dns.CNAME).Hdr = hdr

@@ -86,6 +86,14 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 		record.Data = v.Ptr
 	case *dns.CNAME:
 		record.Data = v.Target
+	case *dns.MX:
+		record.Data = v.Mx
+		record.MXPreference = v.Preference
+	case *dns.SRV:
+		record.Data = v.Target
+		record.SRVPort = v.Port
+		record.SRVPriority = v.Priority
+		record.SRVWeight = v.Weight
 	}
 	record.TTL = ans.Header().Ttl
 	err := record.put(int64(cacheTtl))
