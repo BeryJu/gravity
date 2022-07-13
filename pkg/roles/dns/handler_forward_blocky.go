@@ -5,6 +5,7 @@ import (
 	"net"
 	"strings"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"github.com/creasty/defaults"
 	log "github.com/sirupsen/logrus"
 
@@ -43,7 +44,7 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 	blockylog.Silence()
 	cfg.BootstrapDNS = config.BootstrapConfig{
 		IPs: []net.IP{
-			net.ParseIP("8.8.8.8"),
+			net.ParseIP(extconfig.Get().FallbackDNS),
 		},
 	}
 	cfg.Upstream = config.UpstreamConfig{

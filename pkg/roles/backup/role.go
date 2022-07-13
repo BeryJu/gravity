@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/minio/minio-go/v7"
@@ -51,7 +52,8 @@ func (r *BackupRole) Start(ctx context.Context, config []byte) error {
 		return err
 	}
 	opts := &minio.Options{
-		Secure: strings.EqualFold(endpoint.Scheme, "https"),
+		Secure:    strings.EqualFold(endpoint.Scheme, "https"),
+		Transport: extconfig.Transport(),
 	}
 	if r.cfg.AccessKey != "" {
 		opts.Creds = credentials.NewStaticV4(r.cfg.AccessKey, r.cfg.SecretKey, "")

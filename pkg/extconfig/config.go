@@ -23,7 +23,8 @@ type ExtConfig struct {
 		IP         string `env:"INSTANCE_IP"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
-	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
+	ListenOnlyMode bool   `env:"LISTEN_ONLY,default=false"`
+	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 }
 
 type ExtConfigDirs struct {

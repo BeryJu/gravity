@@ -42,7 +42,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 			d := net.Dialer{
-				Timeout: time.Millisecond * time.Duration(10000),
+				Timeout: time.Millisecond * 5,
 			}
 			resolver := forwarders[rand.Intn(len(forwarders))]
 			if !strings.Contains(resolver, ":") {
