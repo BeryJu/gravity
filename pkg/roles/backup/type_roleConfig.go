@@ -3,12 +3,12 @@ package backup
 import "encoding/json"
 
 type BackupRoleConfig struct {
-	Enabled   bool
-	AccessKey string
-	SecretKey string
-	Endpoint  string
-	Bucket    string
-	CronExpr  string
+	Enabled   bool   `json:"enabled"`
+	AccessKey string `json:"accessKey"`
+	SecretKey string `json:"secretKey"`
+	Endpoint  string `json:"endpoint"`
+	Bucket    string `json:"bucket"`
+	CronExpr  string `json:"cronExpr"`
 }
 
 func (r *BackupRole) decodeBackupRoleConfig(raw []byte) *BackupRoleConfig {
