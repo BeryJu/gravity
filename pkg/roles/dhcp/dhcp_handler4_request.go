@@ -35,7 +35,7 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 }
 
 func (r *DHCPRole) findLease(m *dhcpv4.DHCPv4) *Lease {
-	match, err := r.i.KV().KV.Get(context.TODO(), r.i.KV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()))
+	match, err := r.i.KV().KV.Get(context.TODO(), r.i.KV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()).String())
 	var lease *Lease
 	if err != nil {
 		r.log.WithError(err).Trace("no lease")

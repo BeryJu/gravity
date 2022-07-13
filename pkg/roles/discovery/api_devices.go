@@ -27,8 +27,7 @@ func (r *DiscoveryRole) apiHandlerDevices() usecase.Interactor {
 		rawDevices, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
-			"",
-		), clientv3.WithPrefix())
+		).Prefix(true).String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
@@ -68,7 +67,7 @@ func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 			types.KeyRole,
 			types.KeyDevices,
 			in.RelKey,
-		))
+		).String())
 		if err != nil {
 			return status.Wrap(errors.New("invalid key"), status.InvalidArgument)
 		}

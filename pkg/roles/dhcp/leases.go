@@ -44,11 +44,9 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	prefix := r.i.KV().Key(
 		types.KeyRole,
 		types.KeyLeases,
-		"",
-	)
+	).Prefix(true).String()
 	s.Identifier = strings.TrimPrefix(string(raw.Key), prefix)
-	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
-	s.etcdKey = string(raw.Key)[1:]
+	s.etcdKey = string(raw.Key)
 
 	s.log = r.log.WithField("lease", prefix)
 	return s, nil
@@ -75,7 +73,7 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	)
 	_, err = l.inst.KV().Put(
 		context.TODO(),
-		leaseKey,
+		leaseKey.String(),
 		string(raw),
 		opts...,
 	)

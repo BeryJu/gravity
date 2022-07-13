@@ -74,10 +74,9 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	}
 	s.cidr = cidr
 
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 	s.Name = strings.TrimPrefix(string(raw.Key), prefix)
-	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
-	s.etcdKey = string(raw.Key)[1:]
+	s.etcdKey = string(raw.Key)
 
 	s.log = r.log.WithField("scope", s.Name)
 

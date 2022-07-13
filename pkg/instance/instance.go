@@ -94,7 +94,7 @@ func (i *Instance) Log() *log.Entry {
 }
 
 func (i *Instance) getRoles() []string {
-	rr, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, i.identifier, "roles"))
+	rr, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, i.identifier, "roles").String())
 	roles := extconfig.Get().BootstrapRoles
 	if err == nil && len(rr.Kvs) > 0 {
 		roles = rr.Kvs[0].String()
@@ -153,7 +153,7 @@ func (i *Instance) bootstrap() {
 			}()
 			i.log.WithField("roleId", id).Info("starting role")
 			role := i.roles[id]
-			config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id))
+			config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id).String())
 			rawConfig := []byte{}
 			if err == nil && len(config.Kvs) > 0 {
 				rawConfig = config.Kvs[0].Value

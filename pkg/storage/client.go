@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -36,16 +35,4 @@ func NewClient(endpoint string, prefix string) *Client {
 		log:    l,
 		prefix: prefix,
 	}
-}
-
-func (c *Client) Key(parts ...string) string {
-	b := strings.Builder{}
-	b.WriteString("/")
-	for idx, part := range parts {
-		b.WriteString(part)
-		if idx != len(parts)-1 {
-			b.WriteString("/")
-		}
-	}
-	return b.String()
 }

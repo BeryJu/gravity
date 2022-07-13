@@ -10,7 +10,7 @@ import (
 )
 
 func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about zone-level updates, everything underneath doesn't matter
 	if strings.Contains(relKey, "/") {
@@ -36,7 +36,7 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 }
 
 func (r *DNSRole) startWatchZones() {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	zones, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")

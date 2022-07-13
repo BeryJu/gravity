@@ -21,7 +21,7 @@ func (r *DiscoveryRole) apiHandlerSubnets() usecase.Interactor {
 		var (
 			out = output.(*subnetsOutput)
 		)
-		prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets, "")
+		prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 		subnets, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)

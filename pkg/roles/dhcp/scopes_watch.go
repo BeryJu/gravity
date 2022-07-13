@@ -10,8 +10,8 @@ import (
 )
 
 func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
-	relKey := strings.TrimPrefix(string(kv.Key), prefix)
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true)
+	relKey := strings.TrimPrefix(string(kv.Key), prefix.String())
 	// we only care about scope-level updates, everything underneath doesn't matter
 	if strings.Contains(relKey, "/") {
 		return false
@@ -32,7 +32,7 @@ func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 }
 
 func (r *DHCPRole) startWatchScopes() {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 	scopes, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")

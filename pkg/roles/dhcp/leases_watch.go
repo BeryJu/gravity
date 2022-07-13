@@ -27,8 +27,7 @@ func (r *DHCPRole) startWatchLeases() {
 	prefix := r.i.KV().Key(
 		types.KeyRole,
 		types.KeyLeases,
-		"",
-	)
+	).Prefix(true).String()
 
 	leases, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {

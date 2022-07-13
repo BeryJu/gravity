@@ -70,7 +70,7 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	}
 	_, err = d.inst.KV().Put(
 		context.Background(),
-		key,
+		key.String(),
 		string(raw),
 		opts...,
 	)

@@ -29,7 +29,7 @@ func (ev *Event) String() string {
 
 type EventPayload struct {
 	Data                 map[string]interface{}
-	RelatedObjectKey     string
+	RelatedObjectKey     *storage.Key
 	RelatedObjectOptions []clientv3.OpOption
 }
 

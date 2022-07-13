@@ -44,12 +44,17 @@ func (am *AuthMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			types.KeyRole,
 			types.KeyUsers,
 			username,
-		),
+		).String(),
 	)
-	if len(rawUsers.Kvs) < 1 || err != nil {
+	if err != nil {
 		bcrypt.CompareHashAndPassword([]byte{}, []byte(password))
-		am.log.WithField("user", username).WithError(err).Warning("failed to get users")
+		am.log.WithError(err).Warning("failed to get users")
 		rw.WriteHeader(500)
+		return
+	}
+	if len(rawUsers.Kvs) < 1 {
+		bcrypt.CompareHashAndPassword([]byte{}, []byte(password))
+		http.Error(rw, "invalid http basic authentication", http.StatusUnauthorized)
 		return
 	}
 	user := User{}
@@ -89,7 +94,7 @@ func (r *APIRole) CreateUser(username, password string) error {
 			types.KeyRole,
 			types.KeyUsers,
 			username,
-		),
+		).String(),
 		string(userJson),
 	)
 	if err != nil {

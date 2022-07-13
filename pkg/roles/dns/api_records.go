@@ -32,8 +32,7 @@ func (r *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
 			types.KeyRole,
 			types.KeyZones,
 			zone.Name,
-			"",
-		))
+		).Prefix(true).String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

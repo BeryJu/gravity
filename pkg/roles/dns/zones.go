@@ -82,10 +82,9 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	if err != nil {
 		return nil, err
 	}
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones, "")
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	z.Name = strings.TrimPrefix(string(raw.Key), prefix)
-	// Get full etcd key without leading slash since this usually gets passed to Instance Key()
-	z.etcdKey = string(raw.Key)[1:]
+	z.etcdKey = string(raw.Key)
 	z.log = r.log.WithField("zone", z.Name)
 
 	if len(z.HandlerConfigs) < 1 {
@@ -151,7 +150,7 @@ func (z *Zone) watchZoneRecords() {
 	ctx, canc := context.WithCancel(context.Background())
 	z.recordsWatchCtx = canc
 
-	prefix := "/" + z.etcdKey + "/"
+	prefix := z.inst.KV().Key(z.etcdKey).Prefix(true).String()
 
 	records, err := z.inst.KV().Get(ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
@@ -198,7 +197,7 @@ func (z *Zone) put() error {
 			types.KeyRole,
 			types.KeyZones,
 			z.Name,
-		),
+		).String(),
 		string(raw),
 	)
 	if err != nil {
