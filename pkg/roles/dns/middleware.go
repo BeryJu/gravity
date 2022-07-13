@@ -28,12 +28,13 @@ func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
 			"client":    clientIP,
 			"response":  dns.RcodeToString[fw.msg.Rcode],
 		}
-		for idx, q := range m.Question {
-			f[fmt.Sprintf("question[%d]", idx)] = q.Name
+		msg := "DNS Request"
+		if len(m.Question) > 0 {
+			msg = m.Question[0].Name
 		}
 		for idx, a := range fw.msg.Answer {
 			f[fmt.Sprintf("answer[%d]", idx)] = dns.TypeToString[a.Header().Rrtype]
 		}
-		ro.log.WithFields(f).Info("DNS request")
+		ro.log.WithFields(f).Info(msg)
 	}
 }

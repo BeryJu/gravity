@@ -7,7 +7,6 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -28,11 +27,4 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
-}
-
-func init() {
-	log.SetLevel(log.TraceLevel)
-	log.SetFormatter(&log.JSONFormatter{
-		DisableHTMLEscape: true,
-	})
 }

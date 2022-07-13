@@ -15,6 +15,7 @@ import (
 	"beryju.io/gravity/pkg/roles/discovery"
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/etcd"
+	"beryju.io/gravity/pkg/roles/monitoring"
 	"beryju.io/gravity/pkg/storage"
 )
 
@@ -94,6 +95,7 @@ func (i *Instance) bootstrap() {
 		extconfig.Get().Etcd.Prefix,
 	)
 	for _, roleId := range i.getRoles() {
+		instanceRoles.WithLabelValues(roleId).Add(1)
 		ctx, cancel := context.WithCancel(context.Background())
 		rc := RoleContext{
 			Context:           ctx,
@@ -111,6 +113,8 @@ func (i *Instance) bootstrap() {
 			rc.Role = discovery.New(roleInst)
 		case "backup":
 			rc.Role = backup.New(roleInst)
+		case "monitoring":
+			rc.Role = monitoring.New(roleInst)
 		case "etcd":
 			// Special case
 			continue

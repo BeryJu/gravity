@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net"
-	"strings"
 	"time"
 
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -15,6 +14,7 @@ import (
 func (ro *DHCPRole) loggingHandler4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 		f := log.Fields{
+			"msgType":          m.MessageType(),
 			"client":           peer.String(),
 			"localAddr":        conn.LocalAddr().String(),
 			"opCode":           m.OpCode.String(),
@@ -26,7 +26,6 @@ func (ro *DHCPRole) loggingHandler4(inner server4.Handler) server4.Handler {
 			"yourIPAddr":       m.YourIPAddr.String(),
 			"serverIPAddr":     m.ServerIPAddr.String(),
 			"gatewayIPAddr":    m.GatewayIPAddr.String(),
-			"clientHWAddr":     m.ClientHWAddr.String(),
 			"serverHostName":   m.ServerHostName,
 			"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
 		}
@@ -34,6 +33,6 @@ func (ro *DHCPRole) loggingHandler4(inner server4.Handler) server4.Handler {
 		inner(conn, peer, m)
 		duration := float64(time.Since(start)) / float64(time.Millisecond)
 		f["runtimeMS"] = fmt.Sprintf("%0.3f", duration)
-		ro.log.WithFields(f).Infof("DHCPv4 %s", strings.ToTitle(m.MessageType().String()))
+		ro.log.WithFields(f).Info(m.ClientHWAddr.String())
 	}
 }

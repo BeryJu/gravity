@@ -17,7 +17,7 @@ type ExtConfig struct {
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring"`
 	Instance       struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
@@ -44,15 +44,6 @@ func Get() *ExtConfig {
 		log.WithError(err).Warning("failed to load external config")
 		return nil
 	}
-	if cfg.Debug {
-		log.SetLevel(log.TraceLevel)
-		log.SetFormatter(&log.TextFormatter{})
-	} else {
-		log.SetLevel(log.DebugLevel)
-		log.SetFormatter(&log.JSONFormatter{
-			DisableHTMLEscape: true,
-		})
-	}
 	cfg.defaults()
 	globalExtConfig = &cfg
 	return &cfg
@@ -75,6 +66,15 @@ func (e *ExtConfig) Listen(port int32) string {
 }
 
 func (e *ExtConfig) defaults() {
+	if e.Debug {
+		log.SetLevel(log.TraceLevel)
+		log.SetFormatter(&log.TextFormatter{})
+	} else {
+		log.SetLevel(log.DebugLevel)
+		log.SetFormatter(&log.JSONFormatter{
+			DisableHTMLEscape: true,
+		})
+	}
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
 		if err != nil {

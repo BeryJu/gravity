@@ -21,7 +21,10 @@ type BlockyForwarder struct {
 }
 
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder, error) {
-	log := z.log.WithField("handler", "forward_blocky")
+	bfwd := &BlockyForwarder{
+		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
+	}
+	bfwd.log = z.log.WithField("handler", bfwd.Identifier())
 	forwarders := strings.Split(rawConfig["to"], ";")
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
@@ -71,15 +74,12 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 	if err != nil {
 		return nil, fmt.Errorf("can't start server: %w", err)
 	}
-	return &BlockyForwarder{
-		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
-		b:                  srv,
-		log:                log,
-	}, nil
+	bfwd.b = srv
+	return bfwd, err
 }
 
-func (bfwd *BlockyForwarder) Log() *log.Entry {
-	return bfwd.log
+func (bfwd *BlockyForwarder) Identifier() string {
+	return "forward_blocky"
 }
 
 func (bfwd *BlockyForwarder) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {

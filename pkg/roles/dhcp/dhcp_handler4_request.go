@@ -25,6 +25,9 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 	// Run the update in a go-routine since etcd might not be reachable and
 	// we don't want to timeout
 	go match.put(match.scope.TTL)
+
+	dhcpRequests.WithLabelValues(m.MessageType().String(), match.scope.Name).Inc()
+
 	match.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 		return d

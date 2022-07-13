@@ -31,7 +31,7 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [ ] Web UI that supports doing things
 - [ ] API that supports doing things
 - [ ] Maybe sending WOL to DHCP leases
-- [ ] Metrics
+- [x] Metrics
 - [ ] Testing
 - [ ] Docs
 - [ ] Real world testing
@@ -39,3 +39,6 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [x] In-memory caching for clusters with even nodes
     - [x] Caching for DNS
     - [x] Caching for DHCP
+- [ ] Support for different DNS handlerConfigs per instance (forward to different IP per instance)
+- [ ] Full support for SRV and MX
+- [ ] Support for multiple records per FQDN

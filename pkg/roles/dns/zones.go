@@ -33,17 +33,35 @@ type Zone struct {
 	log     *log.Entry
 }
 
+func (z *Zone) metrics(dur time.Duration, q *dns.Msg, h Handler, rep *dns.Msg) {
+	for _, question := range q.Question {
+		dnsQueries.WithLabelValues(
+			dns.TypeToString[question.Qtype],
+			h.Identifier(),
+			z.Name,
+		).Inc()
+		dnsQueryDuration.WithLabelValues(
+			dns.TypeToString[question.Qtype],
+			h.Identifier(),
+			z.Name,
+		).Observe(float64(dur.Milliseconds()))
+	}
+}
+
 func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	for _, handler := range z.h {
-		handler.Log().Trace("sending request to handler")
+		z.log.WithField("handler", handler.Identifier()).Trace("sending request to handler")
+		start := time.Now()
 		handlerReply := handler.Handle(NewFakeDNSWriter(w), r)
+		finish := time.Since(start)
 		if handlerReply != nil {
-			handler.Log().Trace("returning reply from handler")
+			z.log.WithField("handler", handler.Identifier()).Trace("returning reply from handler")
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
+			z.metrics(finish, r, handler, handlerReply)
 			return
 		}
-		handler.Log().Trace("no reply, trying next handler")
+		z.log.WithField("handler", handler.Identifier()).Trace("no reply, trying next handler")
 	}
 	z.log.Debug("No handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
@@ -88,6 +106,8 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 			handler = NewIPForwarderHandler(&z, handlerCfg)
 		case "etcd":
 			handler = NewEtcdHandler(&z, handlerCfg)
+		case "memory":
+			handler = NewMemoryHandler(&z, handlerCfg)
 		default:
 			r.log.WithField("type", t).Warning("invalid forwarder type")
 		}
@@ -108,11 +128,16 @@ func (z *Zone) watchZoneRecords() {
 	evtHandler := func(ev *clientv3.Event) {
 		z.recordsSync.Lock()
 		defer z.recordsSync.Unlock()
+		fullKey := string(ev.Kv.Key)
 		if ev.Type == clientv3.EventTypeDelete {
-			delete(z.records, string(ev.Kv.Key))
+			delete(z.records, fullKey)
+			dnsRecordsMetric.WithLabelValues(z.Name).Dec()
 		} else {
 			rec := z.recordFromKV(ev.Kv)
-			z.records[string(ev.Kv.Key)] = rec
+			if _, ok := z.records[fullKey]; !ok {
+				dnsRecordsMetric.WithLabelValues(z.Name).Inc()
+			}
+			z.records[fullKey] = rec
 		}
 	}
 	ctx, canc := context.WithCancel(context.Background())

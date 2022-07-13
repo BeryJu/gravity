@@ -23,17 +23,21 @@ type IPForwarderHandler struct {
 }
 
 func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
-	l := z.log.WithField("handler", "forward_ip")
+	ipf := &IPForwarderHandler{
+		z: z,
+	}
+	ipf.log = z.log.WithField("handler", ipf.Identifier())
 
 	rawTtl := config["cache_ttl"]
 	cacheTtl, err := strconv.Atoi(rawTtl)
 	if err != nil && rawTtl != "" {
-		l.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
+		ipf.log.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
 		cacheTtl = 0
 	}
+	ipf.CacheTTL = cacheTtl
 
 	forwarders := strings.Split(config["to"], ";")
-	r := &net.Resolver{
+	ipf.r = &net.Resolver{
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 			d := net.Dialer{
@@ -46,13 +50,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 			return d.DialContext(ctx, network, resolver)
 		},
 	}
-
-	return &IPForwarderHandler{
-		CacheTTL: cacheTtl,
-		r:        r,
-		z:        z,
-		log:      l,
-	}
+	return ipf
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
@@ -96,8 +94,8 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 	}
 }
 
-func (ipf *IPForwarderHandler) Log() *log.Entry {
-	return ipf.log
+func (ipf *IPForwarderHandler) Identifier() string {
+	return "forward_ip"
 }
 
 func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
