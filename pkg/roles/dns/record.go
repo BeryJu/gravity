@@ -18,9 +18,9 @@ type Record struct {
 	Type string `json:"-"`
 
 	Data string `json:"data"`
-	TTL  uint32 `json:"ttl"`
+	TTL  uint32 `json:"ttl,omitempty"`
 
-	MXPreference uint16 `json:"mxPreference"`
+	MXPreference uint16 `json:"mxPreference,omitempty"`
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
