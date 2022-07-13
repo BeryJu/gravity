@@ -2,9 +2,12 @@ package instance
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
+	"time"
 
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -59,6 +62,19 @@ func NewInstance() *Instance {
 
 func (i *Instance) Start() {
 	i.log.WithField("version", extconfig.FullVersion()).Info("Gravity starting")
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              "https://a6690a50e8924263bd6f82fe3a1a2386@sentry.beryju.org/17",
+		Environment:      "",
+		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
+		TracesSampleRate: 1.0,
+		// TODO: Ensure Sentry is resolved before startup
+	})
+	if err != nil {
+		i.log.WithError(err).Warning("failed to init sentry")
+	}
+	defer sentry.Flush(2 * time.Second)
+
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))
