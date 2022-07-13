@@ -66,11 +66,10 @@ func (e *ExtConfig) Listen(port int32) string {
 }
 
 func (e *ExtConfig) defaults() {
+	log.SetLevel(log.TraceLevel)
 	if e.Debug {
-		log.SetLevel(log.TraceLevel)
 		log.SetFormatter(&log.TextFormatter{})
 	} else {
-		log.SetLevel(log.DebugLevel)
 		log.SetFormatter(&log.JSONFormatter{
 			DisableHTMLEscape: true,
 		})
