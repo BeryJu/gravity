@@ -36,7 +36,7 @@ WORKDIR /
 COPY --from=builder /workspace/gravity /app/gravity
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends nmap bash && \
+    apt-get install -y --no-install-recommends nmap bash ca-certificates && \
     rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/ && \
     mkdir /data && \
     chown 65532:65532 /data
