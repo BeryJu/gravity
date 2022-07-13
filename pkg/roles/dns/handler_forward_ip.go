@@ -2,6 +2,7 @@ package dns
 
 import (
 	"context"
+	"errors"
 	"math/rand"
 	"net"
 	"net/netip"
@@ -120,10 +121,14 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	m := new(dns.Msg)
 	m.SetReply(r)
 
-	if err != nil {
+	var dnsErr *net.DNSError
+	if errors.As(err, &dnsErr) {
+		m.SetRcode(r, dns.RcodeNameError)
+		return m
+	} else if err != nil {
 		ipf.log.WithError(err).Warning("failed to forward")
 		m.SetRcode(r, dns.RcodeServerFailure)
-		return nil
+		return m
 	}
 	m.Answer = make([]dns.RR, 0)
 	for idx, rawIp := range ips {
