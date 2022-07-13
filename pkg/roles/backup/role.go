@@ -2,13 +2,9 @@ package backup
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/minio/minio-go/v7"
@@ -86,51 +82,6 @@ func (r *BackupRole) Start(ctx context.Context, config []byte) error {
 	r.c.Start()
 	go r.saveSnapshot()
 	return nil
-}
-
-type BackupStatus struct {
-	Status   string `json:"status,omitempty"`
-	Error    error  `json:"error,omitempty"`
-	Filename string `json:"filename,omitempty"`
-	Size     int64  `json:"size,omitempty"`
-}
-
-const BackupStatusSuccess = "success"
-const BackupStatusStarted = "started"
-const BackupStatusFailed = "failed"
-
-func (r *BackupRole) saveSnapshot() *BackupStatus {
-	if r.mc == nil {
-		return &BackupStatus{
-			Status: BackupStatusFailed,
-			Error:  errors.New("Backup not configured"),
-		}
-	}
-	// TODO: Only let the master do backups to prevent duplicates
-	read, err := r.i.KV().Snapshot(r.ctx)
-	if err != nil {
-		r.log.WithError(err).Warning("failed to snapshot")
-		return &BackupStatus{
-			Status: BackupStatusFailed,
-			Error:  err,
-		}
-	}
-	now := time.Now()
-	fileName := fmt.Sprintf("gravity-snapshot-%s-%d_%d_%d", extconfig.FullVersion(), now.Year(), now.Month(), now.Day())
-	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
-	if err != nil {
-		r.log.WithError(err).Warning("failed to upload snapshot")
-		return &BackupStatus{
-			Status: BackupStatusFailed,
-			Error:  err,
-		}
-	}
-	r.log.WithField("size", i.Size).Info("Uploaded snapshot")
-	return &BackupStatus{
-		Status:   BackupStatusSuccess,
-		Filename: fileName,
-		Size:     i.Size,
-	}
 }
 
 func (r *BackupRole) Stop() {
