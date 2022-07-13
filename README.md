@@ -41,4 +41,4 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
     - [x] Caching for DHCP
 - [ ] Support for different DNS handlerConfigs per instance (forward to different IP per instance)
 - [ ] Full support for SRV and MX
-- [ ] Support for multiple records per FQDN
+- [x] Support for multiple records per FQDN

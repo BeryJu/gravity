@@ -31,7 +31,10 @@ func (eh *MemoryHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String()
-		if recs, ok := eh.z.records[fullRecordKey]; ok {
+		eh.z.recordsSync.RLock()
+		recs, ok := eh.z.records[fullRecordKey]
+		eh.z.recordsSync.RUnlock()
+		if ok {
 			if len(recs) < 1 {
 				continue
 			}
