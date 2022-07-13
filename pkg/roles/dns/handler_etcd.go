@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type EtcdHandler struct {
@@ -34,7 +35,7 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
 		eh.log.WithField("key", fullRecordKey).Trace("fetching kv key")
-		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey)
+		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey, clientv3.WithPrefix())
 		if err != nil || len(res.Kvs) < 1 {
 			continue
 		}
