@@ -3,6 +3,7 @@ package dns
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -13,6 +14,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+)
+
+const (
+	DefaultTTL = 3600
 )
 
 type Zone struct {
@@ -33,7 +38,30 @@ type Zone struct {
 	log     *log.Entry
 }
 
-func (z *Zone) metrics(dur time.Duration, q *dns.Msg, h Handler, rep *dns.Msg) {
+func (z *Zone) soa() *dns.Msg {
+	m := new(dns.Msg)
+	m.Authoritative = z.Authoritative
+	m.Ns = []dns.RR{
+		&dns.SOA{
+			Hdr: dns.RR_Header{
+				Name:   z.Name,
+				Rrtype: dns.TypeSOA,
+				Class:  dns.ClassINET,
+				Ttl:    z.DefaultTTL,
+			},
+			Ns:      z.Name,
+			Mbox:    fmt.Sprintf("root.%s", z.Name),
+			Serial:  1337,
+			Refresh: 600,
+			Retry:   15,
+			Expire:  5,
+			Minttl:  z.DefaultTTL,
+		},
+	}
+	return m
+}
+
+func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, rep *dns.Msg) {
 	for _, question := range q.Question {
 		dnsQueries.WithLabelValues(
 			dns.TypeToString[question.Qtype],
@@ -58,12 +86,18 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 			z.log.WithField("handler", handler.Identifier()).Trace("returning reply from handler")
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
-			z.metrics(finish, r, handler, handlerReply)
+			z.resolveUpdateMetrics(finish, r, handler, handlerReply)
 			return
 		}
 		z.log.WithField("handler", handler.Identifier()).Trace("no reply, trying next handler")
 	}
-	z.log.Debug("No handler has a reply, fallback back to NX")
+	if z.Authoritative {
+		soa := z.soa()
+		soa.SetReply(r)
+		w.WriteMsg(soa)
+		return
+	}
+	z.log.Trace("No handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
 	fallback.SetReply(r)
 	fallback.SetRcode(r, dns.RcodeNameError)
@@ -72,7 +106,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 
 func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	z := Zone{
-		DefaultTTL:  3600,
+		DefaultTTL:  DefaultTTL,
 		inst:        r.i,
 		h:           make([]Handler, 0),
 		records:     make(map[string]map[string]*Record),
