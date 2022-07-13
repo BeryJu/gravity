@@ -50,7 +50,14 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	go r.startWatchZones()
 
 	dnsMux := dns.NewServeMux()
-	dnsMux.HandleFunc(".", r.loggingHandler(r.handler))
+	dnsMux.HandleFunc(
+		".",
+		r.recoverMiddleware(
+			r.loggingMiddleware(
+				r.handler,
+			),
+		),
+	)
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 

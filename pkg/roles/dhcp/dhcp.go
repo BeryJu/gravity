@@ -54,7 +54,15 @@ func (r *DHCPRole) startServer4() error {
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
 	}
-	server, err := server4.NewServer("", &laddr, r.loggingHandler4(r.handler4))
+	server, err := server4.NewServer(
+		"", // TODO: specify interface to DHCP?
+		&laddr,
+		r.recoverMiddleware4(
+			r.loggingMiddleware4(
+				r.handler4,
+			),
+		),
+	)
 	if err != nil {
 		return err
 	}

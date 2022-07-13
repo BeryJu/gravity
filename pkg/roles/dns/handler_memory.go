@@ -31,13 +31,17 @@ func (eh *MemoryHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
-		if rec, ok := eh.z.records[fullRecordKey]; ok {
-			eh.log.WithField("key", fullRecordKey).Trace("got record in in-memory cache")
-			ans := rec.ToDNS(question.Name, question.Qtype)
-			if ans != nil {
-				m.Answer = append(m.Answer, ans)
+		if recs, ok := eh.z.records[fullRecordKey]; ok {
+			if len(recs) < 1 {
+				continue
 			}
-			continue
+			eh.log.WithField("key", fullRecordKey).Trace("got record in in-memory cache")
+			for _, rec := range recs {
+				ans := rec.ToDNS(question.Name, question.Qtype)
+				if ans != nil {
+					m.Answer = append(m.Answer, ans)
+				}
+			}
 		}
 	}
 	if len(m.Answer) < 1 {

@@ -40,7 +40,10 @@ func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 			continue
 		}
 		for _, kv := range res.Kvs {
-			rec := eh.z.recordFromKV(kv)
+			rec, err := eh.z.recordFromKV(kv)
+			if err != nil {
+				continue
+			}
 			ans := rec.ToDNS(question.Name, question.Qtype)
 			if ans != nil {
 				m.Answer = append(m.Answer, ans)

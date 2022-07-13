@@ -24,7 +24,7 @@ type Zone struct {
 
 	h []Handler
 
-	records         map[string]*Record
+	records         map[string]map[string]*Record
 	recordsSync     sync.RWMutex
 	recordsWatchCtx context.CancelFunc
 
@@ -75,7 +75,7 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		DefaultTTL:  3600,
 		inst:        r.i,
 		h:           make([]Handler, 0),
-		records:     make(map[string]*Record),
+		records:     make(map[string]map[string]*Record),
 		recordsSync: sync.RWMutex{},
 	}
 	err := json.Unmarshal(raw.Value, &z)
@@ -128,16 +128,24 @@ func (z *Zone) watchZoneRecords() {
 	evtHandler := func(ev *clientv3.Event) {
 		z.recordsSync.Lock()
 		defer z.recordsSync.Unlock()
-		fullKey := string(ev.Kv.Key)
+		rec, err := z.recordFromKV(ev.Kv)
+		if _, ok := z.records[rec.recordKey]; !ok {
+			z.records[rec.recordKey] = make(map[string]*Record)
+		}
 		if ev.Type == clientv3.EventTypeDelete {
-			delete(z.records, fullKey)
+			delete(z.records[rec.recordKey], rec.uid)
 			dnsRecordsMetric.WithLabelValues(z.Name).Dec()
 		} else {
-			rec := z.recordFromKV(ev.Kv)
-			if _, ok := z.records[fullKey]; !ok {
+			// Check if the record parsed above actually was parsed correctly,
+			// we don't care for that when removing, but prevent adding
+			// empty records
+			if err != nil {
+				return
+			}
+			if _, ok := z.records[rec.recordKey][rec.uid]; !ok {
 				dnsRecordsMetric.WithLabelValues(z.Name).Inc()
 			}
-			z.records[fullKey] = rec
+			z.records[rec.recordKey][rec.uid] = rec
 		}
 	}
 	ctx, canc := context.WithCancel(context.Background())

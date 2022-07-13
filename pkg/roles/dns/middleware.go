@@ -9,7 +9,30 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
+func (r *DNSRole) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
+	return func(w dns.ResponseWriter, m *dns.Msg) {
+		defer func() {
+			err := recover()
+			if err == nil {
+				return
+			}
+			if e, ok := err.(error); ok {
+				r.log.WithError(e).Warning("recover in dns handler")
+			} else {
+				r.log.WithField("panic", err).Warning("recover in dns handler")
+			}
+			// ensure DNS query gets some sort of response to prevent
+			// clients hanging
+			fallback := new(dns.Msg)
+			fallback.SetReply(m)
+			fallback.SetRcode(m, dns.RcodeServerFailure)
+			w.WriteMsg(fallback)
+		}()
+		inner(w, m)
+	}
+}
+
+func (r *DNSRole) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		start := time.Now()
 		fw := NewFakeDNSWriter(w)
@@ -35,6 +58,6 @@ func (ro *DNSRole) loggingHandler(inner dns.HandlerFunc) dns.HandlerFunc {
 		for idx, a := range fw.msg.Answer {
 			f[fmt.Sprintf("answer[%d]", idx)] = dns.TypeToString[a.Header().Rrtype]
 		}
-		ro.log.WithFields(f).Info(msg)
+		r.log.WithFields(f).Info(msg)
 	}
 }

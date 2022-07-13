@@ -11,7 +11,24 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (ro *DHCPRole) loggingHandler4(inner server4.Handler) server4.Handler {
+func (r *DHCPRole) recoverMiddleware4(inner server4.Handler) server4.Handler {
+	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
+		defer func() {
+			err := recover()
+			if err == nil {
+				return
+			}
+			if e, ok := err.(error); ok {
+				r.log.WithError(e).Warning("recover in dhcp handler")
+			} else {
+				r.log.WithField("panic", err).Warning("recover in dhcp handler")
+			}
+		}()
+		inner(conn, peer, m)
+	}
+}
+
+func (r *DHCPRole) loggingMiddleware4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 		f := log.Fields{
 			"msgType":          m.MessageType(),
@@ -33,6 +50,6 @@ func (ro *DHCPRole) loggingHandler4(inner server4.Handler) server4.Handler {
 		inner(conn, peer, m)
 		duration := float64(time.Since(start)) / float64(time.Millisecond)
 		f["runtimeMS"] = fmt.Sprintf("%0.3f", duration)
-		ro.log.WithFields(f).Info(m.ClientHWAddr.String())
+		r.log.WithFields(f).Info(m.ClientHWAddr.String())
 	}
 }

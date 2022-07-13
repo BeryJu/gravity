@@ -9,7 +9,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (ro *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
+func (r *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
 	type zoneRecordsInput struct {
 		Zone string `path:"zone"`
 	}
@@ -24,11 +24,11 @@ func (ro *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
 			in  = input.(*zoneRecordsInput)
 			out = output.(*zoneRecordsOutput)
 		)
-		zone, ok := ro.zones[in.Zone]
+		zone, ok := r.zones[in.Zone]
 		if !ok {
 			return status.Wrap(errors.New("not found"), status.NotFound)
 		}
-		rawRecords, err := ro.i.KV().Get(ctx, ro.i.KV().Key(
+		rawRecords, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
 			zone.Name,
@@ -38,9 +38,13 @@ func (ro *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, rec := range rawRecords.Kvs {
-			r := zone.recordFromKV(rec)
+			rec, err := zone.recordFromKV(rec)
+			if err != nil {
+				r.log.WithError(err).Warning("failed to parse record")
+				continue
+			}
 			out.Records = append(out.Records, record{
-				FQDN: r.Name,
+				FQDN: rec.Name,
 			})
 		}
 		return nil

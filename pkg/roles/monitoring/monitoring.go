@@ -26,7 +26,8 @@ func New(instance roles.Instance) *MonitoringRole {
 		i:   instance,
 		m:   mux.NewRouter(),
 	}
-	r.m.Use(api.NewLoggingHandler(r.log, nil))
+	r.m.Use(api.NewRecoverMiddleware(r.log))
+	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
 	r.m.Path("/healthz/live").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	})

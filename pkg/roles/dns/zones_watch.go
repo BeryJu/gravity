@@ -25,6 +25,9 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 		if err != nil {
 			r.log.WithError(err).Warning("failed to convert zone from event")
 		} else {
+			if oldZone, ok := r.zones[z.Name]; ok {
+				oldZone.StopWatchingRecords()
+			}
 			r.log.WithField("name", z.Name).Debug("added zone")
 			r.zones[z.Name] = z
 		}

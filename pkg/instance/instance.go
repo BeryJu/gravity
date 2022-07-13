@@ -129,6 +129,12 @@ func (i *Instance) bootstrap() {
 	for roleId := range i.roles {
 		wg.Add(1)
 		go func(id string) {
+			defer func() {
+				err := recover()
+				if err != nil {
+					i.log.WithField("roleId", id).WithError(err.(error)).Error("Panic in role")
+				}
+			}()
 			i.log.WithField("roleId", id).Info("starting role")
 			role := i.roles[id]
 			config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id))
@@ -137,12 +143,6 @@ func (i *Instance) bootstrap() {
 				rawConfig = config.Kvs[0].Value
 			}
 			role.Role.Start(role.Context, rawConfig)
-			go func() {
-				err := recover()
-				if err != nil {
-					i.log.WithField("roleId", id).WithError(err.(error)).Error("Panic in role")
-				}
-			}()
 			wg.Done()
 		}(roleId)
 	}

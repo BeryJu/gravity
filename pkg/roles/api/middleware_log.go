@@ -76,8 +76,8 @@ type loggingHandler struct {
 
 type afterHandler func(l *log.Entry, r *http.Request) *log.Entry
 
-// NewLoggingHandler provides an http.Handler which logs requests to the HTTP server
-func NewLoggingHandler(logger *log.Entry, after afterHandler) func(h http.Handler) http.Handler {
+// NewLoggingMiddleware provides an http.Handler which logs requests to the HTTP server
+func NewLoggingMiddleware(logger *log.Entry, after afterHandler) func(h http.Handler) http.Handler {
 	if after == nil {
 		after = func(l *log.Entry, r *http.Request) *log.Entry {
 			return l

@@ -29,7 +29,8 @@ func New(instance roles.Instance) *APIRole {
 		i:   instance,
 		m:   mux.NewRouter(),
 	}
-	r.m.Use(NewLoggingHandler(r.log, nil))
+	r.m.Use(NewRecoverMiddleware(r.log))
+	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.setupUI()
 	return r
 }

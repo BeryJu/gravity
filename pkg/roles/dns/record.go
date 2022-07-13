@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net"
+	"strings"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
@@ -24,18 +25,30 @@ type Record struct {
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
 
-	inst roles.Instance
-	zone *Zone
+	inst      roles.Instance
+	zone      *Zone
+	uid       string
+	recordKey string
 }
 
-func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) *Record {
+func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	rec := Record{}
+	fk := string(kv.Key)
+	// Relative key compared to zone, format of
+	// host/A[/...]
+	relKey := strings.TrimPrefix(fk, z.inst.KV().Key(z.etcdKey, ""))
+	// parts[0] is the hostname, parts[1] is the type
+	// parts[2] is the remaindar
+	parts := strings.SplitN(relKey, "/", 3)
+	if len(parts) > 2 {
+		rec.uid = parts[2]
+	}
+	rec.recordKey = strings.TrimSuffix(fk, "/"+rec.uid)
 	err := json.Unmarshal(kv.Value, &rec)
 	if err != nil {
-		z.log.WithError(err).Warning("failed to parse record")
-		return nil
+		return &rec, err
 	}
-	return &rec
+	return &rec, nil
 }
 
 func (z *Zone) newRecord(name string, t string) *Record {
