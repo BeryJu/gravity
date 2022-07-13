@@ -1,11 +1,13 @@
-# Stage 1: Build website
+# Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/node:18 as web-builder
 
 COPY ./web /work/web/
 
 ENV NODE_ENV=production
 WORKDIR /work/web
-RUN npm i && npm run build
+RUN npm ci
+COPY ./gen-ts-api/ /work/web/node_modules/gravity-api/
+RUN npm run build
 
 # Stage 2: Build
 FROM golang:1.18 as builder
