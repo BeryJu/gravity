@@ -31,9 +31,8 @@ func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 	return true
 }
 
-func (r *DHCPRole) startWatchScopes() {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
-	scopes, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
+func (r *DHCPRole) loadInitialScopes() {
+	scopes, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String(), clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")
 		time.Sleep(5 * time.Second)
@@ -43,10 +42,13 @@ func (r *DHCPRole) startWatchScopes() {
 	for _, scope := range scopes.Kvs {
 		r.handleScopeOp(mvccpb.PUT, scope)
 	}
+}
+
+func (r *DHCPRole) startWatchScopes() {
 
 	watchChan := r.i.KV().Watch(
 		r.ctx,
-		prefix,
+		r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String(),
 		clientv3.WithPrefix(),
 		clientv3.WithProgressNotify(),
 	)

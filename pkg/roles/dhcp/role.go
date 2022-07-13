@@ -43,6 +43,9 @@ func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeDHCPRoleConfig(config)
 
+	r.loadInitialScopes()
+	r.loadInitialScopes()
+
 	go r.startWatchScopes()
 	go r.startWatchLeases()
 

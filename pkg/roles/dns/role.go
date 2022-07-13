@@ -47,6 +47,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	cfg := r.decodeDNSRoleConfig(config)
 
+	r.loadInitialZones()
 	go r.startWatchZones()
 
 	dnsMux := dns.NewServeMux()
@@ -80,6 +81,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 			r.log.WithField("listen", listen).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
 		}
 	}
+
 	go srv("udp")
 	go srv("tcp")
 	wg.Wait()

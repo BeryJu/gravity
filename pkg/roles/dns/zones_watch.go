@@ -35,9 +35,8 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 	return true
 }
 
-func (r *DNSRole) startWatchZones() {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
-	zones, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
+func (r *DNSRole) loadInitialZones() {
+	zones, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(), clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")
 		time.Sleep(5 * time.Second)
@@ -47,10 +46,12 @@ func (r *DNSRole) startWatchZones() {
 	for _, zone := range zones.Kvs {
 		r.handleZoneOp(mvccpb.PUT, zone)
 	}
+}
 
+func (r *DNSRole) startWatchZones() {
 	watchChan := r.i.KV().Watch(
 		r.ctx,
-		prefix,
+		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(),
 		clientv3.WithPrefix(),
 		clientv3.WithProgressNotify(),
 	)
