@@ -1,12 +1,26 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.0.1-dev
+  version: 0.0.1
 paths:
+  /api/v1/backup/start:
+    post:
+      description: Start a backup.
+      operationId: backup.start
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupBackupStatus'
+          description: OK
+      summary: Backup start
+      tags:
+      - roles/backup
   /api/v1/discovery/devices:
     get:
       description: List all discovered devices.
-      operationId: roles/discovery.(*DiscoveryRole).apiHandlerDevices
+      operationId: discovery.get_devices
       responses:
         "200":
           content:
@@ -22,11 +36,11 @@ paths:
           description: Internal Server Error
       summary: Discovery devices
       tags:
-      - discovery
+      - roles/discovery
   /api/v1/discovery/devices/apply:
     post:
       description: Convert discovered device into DHCP lease/DNS record.
-      operationId: roles/discovery.(*DiscoveryRole).apiHandlerDeviceApply
+      operationId: discovery.apply_device
       parameters:
       - in: query
         name: relKey
@@ -63,11 +77,11 @@ paths:
           description: Internal Server Error
       summary: Apply Discovered devices
       tags:
-      - discovery
+      - roles/discovery
   /api/v1/discovery/subnets:
     get:
       description: List all Discovery subnets.
-      operationId: roles/discovery.(*DiscoveryRole).apiHandlerSubnets
+      operationId: discovery.get_subnets
       responses:
         "200":
           content:
@@ -83,11 +97,11 @@ paths:
           description: Internal Server Error
       summary: Discovery subnets
       tags:
-      - discovery
+      - roles/discovery
   /api/v1/dns/zones:
     get:
       description: List all DNS Zones.
-      operationId: roles/dns.(*DNSRole).apiHandlerZones
+      operationId: dns.zones
       responses:
         "200":
           content:
@@ -97,11 +111,11 @@ paths:
           description: OK
       summary: DNS Zones
       tags:
-      - dns
+      - roles/dns
   /api/v1/dns/zones/{zone}/records:
     get:
       description: List all DNS Records within a zone.
-      operationId: roles/dns.(*DNSRole).apiHandlerZoneRecords
+      operationId: dns.get_records
       parameters:
       - in: path
         name: zone
@@ -135,11 +149,11 @@ paths:
           description: Internal Server Error
       summary: DNS Records
       tags:
-      - dns
+      - roles/dns
   /api/v1/etcd/join:
     post:
       description: Join nodes to the cluster.
-      operationId: roles/etcd.(*EmbeddedEtcd).apiHandlerJoin
+      operationId: etcd.join_member
       parameters:
       - in: query
         name: peer
@@ -160,11 +174,11 @@ paths:
           description: Internal Server Error
       summary: Etcd join
       tags:
-      - etcd
+      - roles/etcd
   /api/v1/etcd/members:
     get:
       description: List all cluster members.
-      operationId: roles/etcd.(*EmbeddedEtcd).apiHandlerMembers
+      operationId: etcd.get_members
       responses:
         "200":
           content:
@@ -180,9 +194,19 @@ paths:
           description: Internal Server Error
       summary: Etcd members
       tags:
-      - etcd
+      - roles/etcd
 components:
   schemas:
+    BackupBackupStatus:
+      properties:
+        error: {}
+        filename:
+          type: string
+        size:
+          type: integer
+        status:
+          type: string
+      type: object
     DiscoveryDevice:
       properties:
         hostname:

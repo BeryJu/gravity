@@ -28,8 +28,9 @@ func (ro *DNSRole) apiHandlerZones() usecase.Interactor {
 		}
 		return nil
 	})
+	u.SetName("dns.zones")
 	u.SetTitle("DNS Zones")
-	u.SetTags("dns")
+	u.SetTags("roles/dns")
 	u.SetDescription("List all DNS Zones.")
 	return u
 }

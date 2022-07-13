@@ -33,8 +33,9 @@ func (r *EmbeddedEtcd) apiHandlerMembers() usecase.Interactor {
 		}
 		return nil
 	})
+	u.SetName("etcd.get_members")
 	u.SetTitle("Etcd members")
-	u.SetTags("etcd")
+	u.SetTags("roles/etcd")
 	u.SetDescription("List all cluster members.")
 	u.SetExpectedErrors(status.Internal)
 	return u
@@ -64,8 +65,9 @@ func (r *EmbeddedEtcd) apiHandlerJoin() usecase.Interactor {
 		out.Env = env
 		return nil
 	})
+	u.SetName("etcd.join_member")
 	u.SetTitle("Etcd join")
-	u.SetTags("etcd")
+	u.SetTags("roles/etcd")
 	u.SetDescription("Join nodes to the cluster.")
 	u.SetExpectedErrors(status.Internal)
 	return u

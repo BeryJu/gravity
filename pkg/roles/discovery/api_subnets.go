@@ -39,8 +39,9 @@ func (r *DiscoveryRole) apiHandlerSubnets() usecase.Interactor {
 		}
 		return nil
 	})
+	u.SetName("discovery.get_subnets")
 	u.SetTitle("Discovery subnets")
-	u.SetTags("discovery")
+	u.SetTags("roles/discovery")
 	u.SetDescription("List all Discovery subnets.")
 	u.SetExpectedErrors(status.Internal)
 	return u
