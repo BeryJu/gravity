@@ -7,6 +7,11 @@ paths:
     post:
       description: Start a backup.
       operationId: backup.start
+      parameters:
+      - in: query
+        name: wait
+        schema:
+          type: boolean
       responses:
         "200":
           content:
@@ -199,6 +204,8 @@ components:
   schemas:
     BackupBackupStatus:
       properties:
+        duration:
+          type: integer
         error: {}
         filename:
           type: string

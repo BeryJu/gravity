@@ -8,14 +8,14 @@ import (
 
 func (r *BackupRole) apiHandlerBackupStart() usecase.Interactor {
 	type backupStartInput struct {
-		wait bool `query:"wait"`
+		Wait bool `query:"wait"`
 	}
 	u := usecase.NewIOI(new(backupStartInput), new(BackupStatus), func(ctx context.Context, input, output interface{}) error {
 		var (
 			in  = input.(*backupStartInput)
 			out = output.(*BackupStatus)
 		)
-		if in.wait {
+		if in.Wait {
 			out = r.saveSnapshot()
 		} else {
 			go r.saveSnapshot()
