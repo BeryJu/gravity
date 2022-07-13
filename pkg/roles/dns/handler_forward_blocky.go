@@ -89,8 +89,8 @@ func (bfwd *BlockyForwarder) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 		return nil
 	}
 	for _, query := range r.Question {
-		for _, ans := range w.msg.Answer {
-			go bfwd.cacheToEtcd(query, ans)
+		for idx, ans := range w.msg.Answer {
+			go bfwd.cacheToEtcd(query, ans, idx)
 		}
 	}
 	return w.msg

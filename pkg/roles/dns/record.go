@@ -122,6 +122,9 @@ func (r *Record) put(expiry int64, opts ...clientv3.OpOption) error {
 		r.Name,
 		r.Type,
 	)
+	if r.uid != "" {
+		leaseKey += "/" + r.uid
+	}
 	_, err = r.inst.KV().Put(
 		context.TODO(),
 		leaseKey,

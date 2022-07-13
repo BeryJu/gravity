@@ -53,7 +53,10 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 	return ipf
 }
 
-func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
+func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx int) {
+	if ans == nil {
+		return
+	}
 	cacheTtl := ans.Header().Ttl
 	// never cache if set to -1
 	if ipf.CacheTTL == -1 {
@@ -96,6 +99,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR) {
 		record.SRVWeight = v.Weight
 	}
 	record.TTL = ans.Header().Ttl
+	record.uid = strconv.Itoa(idx)
 	err := record.put(int64(cacheTtl))
 	if err != nil {
 		ipf.log.WithError(err).Warning("failed to cache answer")
@@ -121,15 +125,16 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 		m.SetRcode(r, dns.RcodeServerFailure)
 		return nil
 	}
-	m.Answer = make([]dns.RR, len(ips))
+	m.Answer = make([]dns.RR, 0)
 	for idx, rawIp := range ips {
 		ip, err := netip.ParseAddr(rawIp)
 		if err != nil {
 			ipf.log.WithError(err).Warning("failed to parse response IP")
 			continue
 		}
-		if ip.Is6() {
-			m.Answer[idx] = &dns.AAAA{
+		var ans dns.RR
+		if ip.Is6() && question.Qtype == dns.TypeAAAA {
+			ans = &dns.AAAA{
 				Hdr: dns.RR_Header{
 					Name:   question.Name,
 					Rrtype: dns.TypeAAAA,
@@ -138,8 +143,8 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 				},
 				AAAA: net.ParseIP(ip.String()),
 			}
-		} else {
-			m.Answer[idx] = &dns.A{
+		} else if ip.Is4() && question.Qtype == dns.TypeA {
+			ans = &dns.A{
 				Hdr: dns.RR_Header{
 					Name:   question.Name,
 					Rrtype: dns.TypeA,
@@ -149,8 +154,13 @@ func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
 				A: net.ParseIP(ip.String()),
 			}
 		}
-		go ipf.cacheToEtcd(question, m.Answer[idx])
+		if ans == nil {
+			continue
+		}
+		m.Answer = append(m.Answer, ans)
+		go ipf.cacheToEtcd(question, ans, idx)
 	}
+	m.RecursionAvailable = true
 	if len(m.Answer) < 1 {
 		m.SetRcode(r, dns.RcodeNameError)
 	} else {
