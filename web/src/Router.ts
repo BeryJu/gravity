@@ -49,8 +49,11 @@ export class Router extends LitElement {
     navigate(): void {
         const name = window.location.hash.substring(1, Infinity);
         const route = this.routes.filter((route) => route.name == name)[0];
-        console.debug(route);
         this.activeRoute = route;
+        if (!this.activeRoute) {
+            window.location.hash = `#${this.routes[0].name}`;
+            return;
+        }
         this.requestUpdate();
     }
 
