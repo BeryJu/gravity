@@ -14,7 +14,7 @@ export class LoggingMiddleware implements Middleware {
 }
 
 export const DEFAULT_CONFIG = new Configuration({
-    basePath: "/api/v1",
+    basePath: "",
     middleware: [
         new LoggingMiddleware(),
     ],
