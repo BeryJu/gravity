@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net"
 	"strings"
 	"time"
@@ -34,10 +35,10 @@ type Lease struct {
 }
 
 func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
-	s := &Lease{
+	l := &Lease{
 		inst: r.i,
 	}
-	err := json.Unmarshal(raw.Value, &s)
+	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
 		return nil, err
 	}
@@ -45,11 +46,15 @@ func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 		types.KeyRole,
 		types.KeyLeases,
 	).Prefix(true).String()
-	s.Identifier = strings.TrimPrefix(string(raw.Key), prefix)
-	s.etcdKey = string(raw.Key)
-
-	s.log = r.log.WithField("lease", prefix)
-	return s, nil
+	l.Identifier = strings.TrimPrefix(string(raw.Key), prefix)
+	l.etcdKey = string(raw.Key)
+	l.log = r.log.WithField("lease", prefix)
+	scope, ok := r.scopes[l.ScopeKey]
+	if !ok {
+		return nil, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
+	}
+	l.scope = scope
+	return l, nil
 }
 
 func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {

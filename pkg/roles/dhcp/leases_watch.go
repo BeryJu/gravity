@@ -21,7 +21,6 @@ func (r *DHCPRole) handleLeaseOp(ev *clientv3.Event) {
 		}
 		r.leases[string(ev.Kv.Key)] = rec
 	}
-
 }
 
 func (r *DHCPRole) loadInitialLeases() {
