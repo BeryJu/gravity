@@ -28,6 +28,9 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 			if oldZone, ok := r.zones[z.Name]; ok {
 				oldZone.StopWatchingRecords()
 			}
+			if !strings.HasSuffix(z.Name, ".") {
+				r.log.WithField("name", z.Name).Warning("Zone is missing trailing preiod, most likely configured incorrectly")
+			}
 			r.log.WithField("name", z.Name).Debug("added zone")
 			r.zones[z.Name] = z
 		}

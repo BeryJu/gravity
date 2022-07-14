@@ -2,7 +2,7 @@ package dns
 
 import (
 	"fmt"
-	"net"
+	"net/netip"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -41,10 +41,20 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 	if err != nil {
 		return nil, fmt.Errorf("failed to set config defaults: %w", err)
 	}
-	blockylog.Silence()
+	// Blocky uses a custom registry, so this doesn't work as expected
+	// cfg.Prometheus.Enable = true
+	if !extconfig.Get().Debug {
+		cfg.LogFormat = blockylog.FormatTypeJson
+	}
+	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
+	if err != nil {
+		return nil, err
+	}
 	cfg.BootstrapDNS = config.BootstrapConfig{
-		IPs: []net.IP{
-			net.ParseIP(extconfig.Get().FallbackDNS),
+		Upstream: config.Upstream{
+			Net:  config.NetProtocolTcpUdp,
+			Host: bootstrap.Addr().String(),
+			Port: bootstrap.Port(),
 		},
 	}
 	cfg.Upstream = config.UpstreamConfig{
