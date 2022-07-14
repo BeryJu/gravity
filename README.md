@@ -41,8 +41,8 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
     - [ ] DHCP
         - Lease
             - [x] Read
-            - [ ] Put
-            - [ ] Delete
+            - [x] Put
+            - [x] Delete
         - Scope
             - [x] Read
             - [ ] Put

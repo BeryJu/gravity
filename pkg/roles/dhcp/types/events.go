@@ -5,5 +5,5 @@ const (
 )
 
 const (
-	EventTopicDHCPLeaseGiven = "roles.dhcp.lease.given"
+	EventTopicDHCPLeasePut = "roles.dhcp.lease.put"
 )

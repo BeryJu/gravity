@@ -51,7 +51,6 @@ func (r *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
 	u.SetName("dns.get_records")
 	u.SetTitle("DNS Records")
 	u.SetTags("roles/dns")
-	u.SetDescription("List all DNS Records within a zone.")
 	u.SetExpectedErrors(status.InvalidArgument, status.NotFound, status.Internal)
 	return u
 }

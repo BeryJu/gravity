@@ -32,7 +32,7 @@ func New(instance roles.Instance) *DNSRole {
 		log:     instance.GetLogger(),
 		i:       instance,
 	}
-	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeaseGiven, r.eventHandlerDHCPLeaseGiven)
+	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

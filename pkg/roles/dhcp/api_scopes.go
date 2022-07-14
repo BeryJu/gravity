@@ -22,6 +22,5 @@ func (r *DHCPRole) apiHandlerScopes() usecase.Interactor {
 	u.SetName("dhcp.get_scopes")
 	u.SetTitle("DHCP Scopes")
 	u.SetTags("roles/dhcp")
-	u.SetDescription("List all DHCP scopes.")
 	return u
 }

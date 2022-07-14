@@ -45,7 +45,6 @@ func (r *DiscoveryRole) apiHandlerDevices() usecase.Interactor {
 	u.SetName("discovery.get_devices")
 	u.SetTitle("Discovery devices")
 	u.SetTags("roles/discovery")
-	u.SetDescription("List all discovered devices.")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
@@ -90,7 +89,6 @@ func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 	u.SetName("discovery.apply_device")
 	u.SetTitle("Apply Discovered devices")
 	u.SetTags("roles/discovery")
-	u.SetDescription("Convert discovered device into DHCP lease/DNS record.")
 	u.SetExpectedErrors(status.InvalidArgument, status.NotFound, status.Internal)
 	return u
 }

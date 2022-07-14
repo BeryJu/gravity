@@ -26,6 +26,5 @@ func (r *BackupRole) apiHandlerBackupStart() usecase.Interactor {
 	u.SetName("backup.start")
 	u.SetTitle("Backup start")
 	u.SetTags("roles/backup")
-	u.SetDescription("Start a backup.")
 	return u
 }

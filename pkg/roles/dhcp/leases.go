@@ -34,10 +34,14 @@ type Lease struct {
 	log     *log.Entry
 }
 
-func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
-	l := &Lease{
+func (r *DHCPRole) newLease() *Lease {
+	return &Lease{
 		inst: r.i,
 	}
+}
+
+func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
+	l := r.newLease()
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
 		return nil, err
@@ -94,7 +98,7 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	)
 	ev.Payload.RelatedObjectKey = leaseKey
 	ev.Payload.RelatedObjectOptions = opts
-	l.inst.DispatchEvent(types.EventTopicDHCPLeaseGiven, ev)
+	l.inst.DispatchEvent(types.EventTopicDHCPLeasePut, ev)
 
 	l.log.WithField("expiry", expiry).Debug("put lease")
 	return nil
