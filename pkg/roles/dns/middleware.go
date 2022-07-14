@@ -5,6 +5,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 )
@@ -18,6 +19,7 @@ func (r *DNSRole) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			}
 			if e, ok := err.(error); ok {
 				r.log.WithError(e).Warning("recover in dns handler")
+				sentry.CaptureException(e)
 			} else {
 				r.log.WithField("panic", err).Warning("recover in dns handler")
 			}

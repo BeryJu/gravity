@@ -152,8 +152,14 @@ func (i *Instance) bootstrap() {
 		go func(id string) {
 			defer func() {
 				err := recover()
-				if err != nil {
-					i.log.WithField("roleId", id).WithError(err.(error)).Error("Panic in role")
+				if err == nil {
+					return
+				}
+				if e, ok := err.(error); ok {
+					i.log.WithError(e).Warning("recover in role")
+					sentry.CaptureException(e)
+				} else {
+					i.log.WithField("panic", err).Warning("recover in role")
 				}
 			}()
 			i.log.WithField("roleId", id).Info("starting role")

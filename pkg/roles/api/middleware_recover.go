@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -16,6 +17,7 @@ func NewRecoverMiddleware(l *log.Entry) func(h http.Handler) http.Handler {
 				}
 				if e, ok := err.(error); ok {
 					l.WithError(e).Warning("recover in API handler")
+					sentry.CaptureException(e)
 				} else {
 					l.WithField("panic", err).Warning("recover in API handler")
 				}

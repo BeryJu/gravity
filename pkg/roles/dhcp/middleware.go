@@ -6,6 +6,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/insomniacslk/dhcp/dhcpv4/server4"
 	log "github.com/sirupsen/logrus"
@@ -20,6 +21,7 @@ func (r *DHCPRole) recoverMiddleware4(inner server4.Handler) server4.Handler {
 			}
 			if e, ok := err.(error); ok {
 				r.log.WithError(e).Warning("recover in dhcp handler")
+				sentry.CaptureException(e)
 			} else {
 				r.log.WithField("panic", err).Warning("recover in dhcp handler")
 			}
