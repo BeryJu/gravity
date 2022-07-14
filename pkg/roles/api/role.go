@@ -25,7 +25,7 @@ type APIRole struct {
 
 func New(instance roles.Instance) *APIRole {
 	r := &APIRole{
-		log: instance.GetLogger().WithField("role", types.KeyRole),
+		log: instance.GetLogger(),
 		i:   instance,
 		m:   mux.NewRouter(),
 	}

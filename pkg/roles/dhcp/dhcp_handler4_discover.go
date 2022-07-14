@@ -9,7 +9,6 @@ import (
 func (r *DHCPRole) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 	match := r.findLease(m)
 	if match == nil {
-		r.log.Debug("no lease found, creating new")
 		scope := r.findScopeForRequest(conn, peer, m)
 		if scope == nil {
 			r.log.Info("no scope found")

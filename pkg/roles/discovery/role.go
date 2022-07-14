@@ -6,7 +6,6 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
-	"beryju.io/gravity/pkg/roles/discovery/types"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
@@ -21,7 +20,7 @@ type DiscoveryRole struct {
 
 func New(instance roles.Instance) *DiscoveryRole {
 	r := &DiscoveryRole{
-		log: instance.GetLogger().WithField("role", types.KeyRole),
+		log: instance.GetLogger(),
 		i:   instance,
 	}
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

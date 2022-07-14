@@ -7,7 +7,6 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
-	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
@@ -22,7 +21,7 @@ type MonitoringRole struct {
 
 func New(instance roles.Instance) *MonitoringRole {
 	r := &MonitoringRole{
-		log: instance.GetLogger().WithField("role", types.KeyRole),
+		log: instance.GetLogger(),
 		i:   instance,
 		m:   mux.NewRouter(),
 	}

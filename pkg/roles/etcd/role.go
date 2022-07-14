@@ -48,7 +48,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	cfg.InitialCluster = ""
 	ee := &EmbeddedEtcd{
 		cfg:     cfg,
-		log:     instance.GetLogger().WithField("role", "embedded-etcd"),
+		log:     instance.GetLogger(),
 		i:       instance,
 		etcdDir: dirs.EtcdDir,
 		certDir: dirs.CertDir,

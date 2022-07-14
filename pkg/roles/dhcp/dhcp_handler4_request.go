@@ -12,14 +12,12 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 	match := r.findLease(m)
 
 	if match == nil {
-		r.log.Debug("no lease found, creating new")
 		scope := r.findScopeForRequest(conn, peer, m)
 		if scope == nil {
 			return
 		}
 		r.log.Debug("found scope for new lease")
 		match = scope.createLeaseFor(conn, peer, m)
-		r.log.Debug("creating new lease")
 	}
 
 	// Run the update in a go-routine since etcd might not be reachable and
