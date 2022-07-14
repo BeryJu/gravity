@@ -6,7 +6,7 @@ var Version = "0.0.1"
 var BuildHash = ""
 
 func FullVersion() string {
-	return fmt.Sprintf("%s-%s", Version, BuildHash)
+	return fmt.Sprintf("%s-%s", Version, BuildHash[:8])
 }
 
 func init() {
