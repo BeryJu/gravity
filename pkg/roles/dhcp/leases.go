@@ -114,9 +114,9 @@ func (l *Lease) reply(
 	rep = modifyResponse(rep)
 
 	ipLeaseDuration, err := time.ParseDuration(l.AddressLeaseTime)
-	if err != nil {
+	if l.AddressLeaseTime != "" && err != nil {
 		l.log.WithField("default", "24h").WithError(err).Warning("failed to parse address lease duration, defaulting")
-		ipLeaseDuration = time.Hour * 24
+		ipLeaseDuration = time.Duration(l.scope.TTL * int64(time.Millisecond))
 	}
 	rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(ipLeaseDuration))
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
