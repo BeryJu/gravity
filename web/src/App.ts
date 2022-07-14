@@ -28,6 +28,10 @@ export const ROUTES = [
         await import("./pages/DNSZonePage");
         return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
+    new Route("/dhcp/subnets", async () => {
+        await import("./pages/DHCPScopePage");
+        return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
+    }),
 ];
 
 @customElement("gravity-app")

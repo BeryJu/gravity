@@ -3,10 +3,24 @@ import SPTableVars from "@spectrum-css/table/dist/vars.css";
 import "@spectrum-web-components/icons/sp-icons-medium.js";
 
 import { CSSResult, LitElement, TemplateResult, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
 
 @customElement("gravity-table")
-export class Table extends LitElement {
+export class Table<T> extends LitElement {
+    @property({ attribute: false })
+    columns: string[] = [];
+
+    @property({ attribute: false })
+    rowRender: (item: T) => TemplateResult[] = (item: T): TemplateResult[] => {
+        return [html`${item}`];
+    };
+
+    @property({ attribute: false })
+    data: () => Promise<T[]> = (): Promise<T[]> => {
+        return Promise.resolve([] as T[]);
+    };
+
     static get styles(): CSSResult[] {
         return [
             SPTableIndexVars,
@@ -25,47 +39,24 @@ export class Table extends LitElement {
             <table class="spectrum-Table spectrum-Table--sizeM">
                 <thead class="spectrum-Table-head">
                     <tr>
-                        <th
-                            class="spectrum-Table-headCell is-sortable is-sorted-desc"
-                            aria-sort="descending"
-                            tabindex="0"
-                        >
-                            Column Title
-                            <sp-icon name="ui:Arrow100"></sp-icon>
-                        </th>
-                        <th class="spectrum-Table-headCell is-sortable" aria-sort="none">
-                            Column Title
-                            <sp-icon name="ui:Arrow100"></sp-icon>
-                        </th>
-                        <th class="spectrum-Table-headCell">Column Title</th>
+                        ${this.columns.map((col) => {
+                            return html`<th class="spectrum-Table-headCell">${col}</th>`;
+                        })}
                     </tr>
                 </thead>
                 <tbody class="spectrum-Table-body">
-                    <tr class="spectrum-Table-row">
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Alpha</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Alpha</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Alpha</td>
-                    </tr>
-                    <tr class="spectrum-Table-row">
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Bravo</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Bravo</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Bravo</td>
-                    </tr>
-                    <tr class="spectrum-Table-row">
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Charlie</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Charlie</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Charlie</td>
-                    </tr>
-                    <tr class="spectrum-Table-row">
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Delta</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Delta</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Delta</td>
-                    </tr>
-                    <tr class="spectrum-Table-row">
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Echo</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Echo</td>
-                        <td class="spectrum-Table-cell" tabindex="0">Row Item Echo</td>
-                    </tr>
+                    ${until(
+                        this.data().then((data) => {
+                            return data.map((item) => {
+                                return html`<tr class="spectrum-Table-row">
+                                    ${this.rowRender(item).map((col) => {
+                                        return html`<td class="spectrum-Table-cell">${col}</td>`;
+                                    })}
+                                </tr>`;
+                            });
+                        }),
+                        html`Loading...`,
+                    )}
                 </tbody>
             </table>
         `;

@@ -3,25 +3,33 @@ import { DEFAULT_CONFIG } from "src/api/Config";
 
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
 
-import { RolesEtcdApi } from "gravity-api";
+import { EtcdMember, RolesEtcdApi } from "gravity-api";
+
+import "../elements/Table";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends LitElement {
     render(): TemplateResult {
         return html`
-            ${until(
-                new RolesEtcdApi(DEFAULT_CONFIG)
-                    .etcdGetMembers()
-                    .then((members) => {
-                        return members.members?.map((member: any) => {
-                            return html`<sp-status-light size="m" variant="positive"
-                                >${member.ID}: ${member.name}</sp-status-light
-                            > `;
-                        });
-                    }),
-            )}
+            <gravity-header>Cluster nodes</gravity-header>
+            <sp-divider size="m"></sp-divider>
+            <gravity-table
+                .columns=${["Status", "ID", "Name"]}
+                .data=${() => {
+                    return new RolesEtcdApi(DEFAULT_CONFIG)
+                        .etcdGetMembers()
+                        .then((members) => members.members || []);
+                }}
+                .rowRender=${(item: EtcdMember) => {
+                    return [
+                        html`<sp-status-light size="m" variant="positive"></sp-status-light>`,
+                        html`${item.id}`,
+                        html`${item.name}`,
+                    ];
+                }}
+            >
+            </gravity-table>
         `;
     }
 }

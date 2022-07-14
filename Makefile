@@ -7,7 +7,7 @@ run-debug:
 	DEBUG=true go run -v .
 
 gen-build:
-	DEBUG=true go run -v . generateSchema > schema.yml
+	DEBUG=true go run -v . generateSchema schema.yml
 
 gen-clean:
 	rm -rf gen-ts-api/

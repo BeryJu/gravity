@@ -36,7 +36,14 @@ var generateSchemaCmd = &cobra.Command{
 				rootInst.Log().WithError(err).Warning("failed to generate schema")
 				return
 			}
-			os.Stdout.Write(out)
+			if len(args) > 0 {
+				err := os.WriteFile(args[0], out, 0644)
+				if err != nil {
+					rootInst.Log().WithError(err).Warning("failed to write schema")
+				}
+			} else {
+				os.Stdout.Write(out)
+			}
 		})
 		rootInst.Start()
 	},

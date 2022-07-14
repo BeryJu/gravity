@@ -521,6 +521,8 @@ components:
             start:
               type: string
           type: object
+        scope:
+          type: string
         subnetCidr:
           type: string
         ttl:
