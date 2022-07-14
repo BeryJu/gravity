@@ -8,6 +8,7 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/api/auth"
 )
 
 func TestMain(m *testing.M) {
@@ -16,18 +17,20 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 	extconfig.Get().DataPath = tmpDir
-	inst := instance.NewInstance()
-	inst.ForRole("tests").AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
-		api := api.New(inst.ForRole("api"))
-		err = api.CreateUser("foo", string("bar"))
+	rootInst := instance.NewInstance()
+	inst := rootInst.ForRole("tests")
+	inst.AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+		api := api.New(inst)
+		am := auth.NewAuthProvider(api, inst)
+		err = am.CreateUser("foo", string("bar"))
 		if err != nil {
 			panic(err)
 		}
 		m.Run()
 		defer func() {
-			inst.Stop()
+			rootInst.Stop()
 			os.RemoveAll(tmpDir)
 		}()
 	})
-	inst.Start()
+	rootInst.Start()
 }

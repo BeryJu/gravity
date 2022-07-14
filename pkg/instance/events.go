@@ -3,8 +3,6 @@ package instance
 import "beryju.io/gravity/pkg/roles"
 
 func (i *Instance) dispatchEvent(topic string, ev *roles.Event) {
-	i.eventHandlersM.RLock()
-	defer i.eventHandlersM.RUnlock()
 	handlers, ok := i.eventHandlers[topic]
 	if !ok {
 		return

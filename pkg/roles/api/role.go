@@ -6,6 +6,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -55,7 +56,7 @@ func (r *APIRole) prepareOpenAPI() {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	apiRouter.Use(NewAuthMiddleware(r))
+	apiRouter.Use(auth.NewAuthProvider(r, r.i).AsMiddleware())
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(map[string]interface{}{

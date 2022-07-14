@@ -17,10 +17,11 @@ var generateSchemaCmd = &cobra.Command{
 	Use:   "generateSchema",
 	Short: "Generate OpenAPI Schema",
 	Run: func(cmd *cobra.Command, args []string) {
-		inst := instance.NewInstance()
-		inst.ForRole("api").AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
-			defer inst.Stop()
-			api := api.New(inst.ForRole("api"))
+		rootInst := instance.NewInstance()
+		inst := rootInst.ForRole("api")
+		inst.AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+			defer rootInst.Stop()
+			api := api.New(inst)
 			schema := api.Schema()
 			var out []byte
 			var err error
@@ -32,12 +33,12 @@ var generateSchemaCmd = &cobra.Command{
 				out, err = schema.MarshalJSON()
 			}
 			if err != nil {
-				inst.Log().WithError(err).Warning("failed to generate schema")
+				rootInst.Log().WithError(err).Warning("failed to generate schema")
 				return
 			}
 			os.Stdout.Write(out)
 		})
-		inst.Start()
+		rootInst.Start()
 	},
 }
 

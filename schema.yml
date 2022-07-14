@@ -3,6 +3,71 @@ info:
   title: gravity
   version: 0.0.1
 paths:
+  /api/v1/auth/users:
+    get:
+      operationId: api.get_users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAuthUsersOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/users/{username}:
+    delete:
+      operationId: api.delete_users
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_users
+      parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthAuthUsersPut'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
   /api/v1/backup/start:
     post:
       description: Start a backup.
@@ -236,6 +301,24 @@ paths:
       - roles/etcd
 components:
   schemas:
+    AuthAuthUsersOutput:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/AuthUser'
+          nullable: true
+          type: array
+      type: object
+    AuthAuthUsersPut:
+      properties:
+        password:
+          type: string
+      type: object
+    AuthUser:
+      properties:
+        username:
+          type: string
+      type: object
     BackupBackupStatus:
       properties:
         duration:

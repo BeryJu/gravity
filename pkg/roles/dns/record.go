@@ -131,8 +131,5 @@ func (r *Record) put(expiry int64, opts ...clientv3.OpOption) error {
 		string(raw),
 		opts...,
 	)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

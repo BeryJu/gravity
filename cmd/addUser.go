@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/api/auth"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
@@ -20,22 +21,24 @@ var addUserCmd = &cobra.Command{
 		if username == "" {
 			panic("Must set -u")
 		}
-		inst := instance.NewInstance()
-		inst.ForRole("api").AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+		rootInst := instance.NewInstance()
+		inst := rootInst.ForRole("tests")
+		inst.AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+			api := api.New(inst)
+			am := auth.NewAuthProvider(api, inst)
 			fmt.Printf("Enter the password for %s: ", username)
 			bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 			if err != nil {
 				panic(err)
 			}
 			fmt.Println("")
-			api := api.New(inst.ForRole("api"))
-			err = api.CreateUser(username, string(bytePassword))
+			err = am.CreateUser(username, string(bytePassword))
 			if err != nil {
 				panic(err)
 			}
-			inst.Stop()
+			rootInst.Stop()
 		})
-		inst.Start()
+		rootInst.Start()
 	},
 }
 

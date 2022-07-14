@@ -34,27 +34,23 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [ ] API that supports doing things
     - [ ] API
         - Auth user
-            - [ ] Create
-            - [ ] Read
-            - [ ] Update
-            - [ ] Delete
+            - [x] Read
+            - [x] Put
+            - [x] Delete
     - [x] Backup
     - [ ] DHCP
         - Lease
-            - [ ] Create
             - [x] Read
-            - [ ] Update
+            - [ ] Put
             - [ ] Delete
         - Scope
-            - [ ] Create
             - [x] Read
-            - [ ] Update
+            - [ ] Put
             - [ ] Delete
     - [ ] Discovery
         - Subnet
-            - [ ] Create
             - [ ] Read
-            - [ ] Update
+            - [ ] Put
             - [ ] Delete
         - Discovery
             - [ ] Read
@@ -62,14 +58,12 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
             - [x] Apply
     - [ ] DNS
         - Zone
-            - [ ] Create
             - [x] Read
-            - [ ] Update
+            - [ ] Put
             - [ ] Delete
         - Record
-            - [ ] Create
             - [x] Read
-            - [ ] Update
+            - [ ] Put
             - [ ] Delete
     - [ ] Etcd
     - [ ] Monitoring
