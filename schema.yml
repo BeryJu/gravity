@@ -22,6 +22,40 @@ paths:
       summary: Backup start
       tags:
       - roles/backup
+  /api/v1/dhcp/scopes:
+    get:
+      description: List all DHCP scopes.
+      operationId: dhcp.get_scopes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpScopesOutput'
+          description: OK
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+  /api/v1/dhcp/scopes/{scope}/leases:
+    get:
+      description: List all DHCP leases.
+      operationId: dhcp.get_leases
+      parameters:
+      - in: path
+        name: scope
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpLeasesOutput'
+          description: OK
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
   /api/v1/discovery/devices:
     get:
       description: List all discovered devices.
@@ -213,6 +247,84 @@ components:
           type: integer
         status:
           type: string
+      type: object
+    DhcpLease:
+      properties:
+        address:
+          type: string
+        addressLeaseTime:
+          type: string
+        hostname:
+          type: string
+        scopeKey:
+          type: string
+      type: object
+    DhcpLeasesOutput:
+      properties:
+        leases:
+          items:
+            $ref: '#/components/schemas/DhcpLease'
+          nullable: true
+          type: array
+      type: object
+    DhcpOption:
+      properties:
+        tag:
+          minimum: 0
+          nullable: true
+          type: integer
+        tagName:
+          nullable: true
+          type: string
+        value:
+          nullable: true
+          type: string
+        value64:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    DhcpScope:
+      properties:
+        default:
+          type: boolean
+        dns:
+          properties:
+            addZoneInHostname:
+              type: boolean
+            search:
+              items:
+                type: string
+              nullable: true
+              type: array
+            zone:
+              type: string
+          type: object
+        options:
+          items:
+            $ref: '#/components/schemas/DhcpOption'
+          nullable: true
+          type: array
+        range:
+          properties:
+            end:
+              type: string
+            start:
+              type: string
+          type: object
+        subnetCidr:
+          type: string
+        ttl:
+          type: integer
+      type: object
+    DhcpScopesOutput:
+      properties:
+        scopes:
+          items:
+            $ref: '#/components/schemas/DhcpScope'
+          nullable: true
+          type: array
       type: object
     DiscoveryDevice:
       properties:

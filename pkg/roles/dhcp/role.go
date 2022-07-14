@@ -6,8 +6,10 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/roles"
+	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/web"
 
 	"github.com/insomniacslk/dhcp/dhcpv4/server4"
 	"github.com/insomniacslk/dhcp/dhcpv6/server6"
@@ -36,6 +38,11 @@ func New(instance roles.Instance) *DHCPRole {
 		leasesSync: sync.RWMutex{},
 	}
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/dhcp/scopes", r.apiHandlerScopes())
+		svc.Get("/api/v1/dhcp/scopes/{scope}/leases", r.apiHandlerLeases())
+	})
 	return r
 }
 

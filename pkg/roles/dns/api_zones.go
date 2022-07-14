@@ -6,7 +6,7 @@ import (
 	"github.com/swaggest/usecase"
 )
 
-func (ro *DNSRole) apiHandlerZones() usecase.Interactor {
+func (r *DNSRole) apiHandlerZones() usecase.Interactor {
 	type zone struct {
 		Name           string              `json:"name"`
 		Authoritative  bool                `json:"authoritative"`
@@ -20,7 +20,7 @@ func (ro *DNSRole) apiHandlerZones() usecase.Interactor {
 		var (
 			out = output.(*zonesOutput)
 		)
-		for name, _zone := range ro.zones {
+		for name, _zone := range r.zones {
 			out.Zones = append(out.Zones, zone{
 				Name:          name,
 				Authoritative: _zone.Authoritative,

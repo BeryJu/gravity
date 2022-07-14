@@ -32,6 +32,47 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 
 - [ ] Web UI that supports doing things
 - [ ] API that supports doing things
+    - [ ] API
+        - Auth user
+            - [ ] Create
+            - [ ] Read
+            - [ ] Update
+            - [ ] Delete
+    - [x] Backup
+    - [ ] DHCP
+        - Lease
+            - [ ] Create
+            - [x] Read
+            - [ ] Update
+            - [ ] Delete
+        - Scope
+            - [ ] Create
+            - [x] Read
+            - [ ] Update
+            - [ ] Delete
+    - [ ] Discovery
+        - Subnet
+            - [ ] Create
+            - [ ] Read
+            - [ ] Update
+            - [ ] Delete
+        - Discovery
+            - [ ] Read
+            - [ ] Delete
+            - [x] Apply
+    - [ ] DNS
+        - Zone
+            - [ ] Create
+            - [x] Read
+            - [ ] Update
+            - [ ] Delete
+        - Record
+            - [ ] Create
+            - [x] Read
+            - [ ] Update
+            - [ ] Delete
+    - [ ] Etcd
+    - [ ] Monitoring
 - [ ] Maybe sending WOL to DHCP leases
 - [x] Metrics
 - [ ] Testing
