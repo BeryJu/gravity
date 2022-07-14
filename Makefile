@@ -26,3 +26,6 @@ gen-client-web:
 	\cp -rfv gen-ts-api/* web/node_modules/gravity-api
 
 gen: gen-build gen-clean gen-client-web
+
+test:
+	go test -v -cover -coverprofile .coverage ./...
