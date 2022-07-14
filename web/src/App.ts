@@ -6,7 +6,7 @@ import "@spectrum-web-components/theme/scale-medium.js";
 import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/theme/theme-darkest.js";
-import "@spectrum-web-components/theme/theme-light.js";
+import "@spectrum-web-components/theme/theme-lightest.js";
 
 import { LitElement, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -105,8 +105,12 @@ export class App extends LitElement {
     }
 
     render() {
+        let theme = "lightest";
+        if (window.location.search.includes("dark")) {
+            theme = "darkest";
+        }
         return html`
-            <sp-theme theme="classic" scale="medium" color="darkest">
+            <sp-theme theme="classic" scale="medium" color=${theme}>
                 <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
                     ${this.renderSidebar()}
                     <gravity-router .routes=${ROUTES}> </gravity-router>
