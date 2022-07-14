@@ -41,5 +41,5 @@ var addUserCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(addUserCmd)
-	addUserCmd.PersistentFlags().StringVarP(&username, "usernane", "u", "", "set Username")
+	addUserCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "set Username")
 }
