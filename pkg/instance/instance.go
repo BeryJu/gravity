@@ -62,19 +62,7 @@ func NewInstance() *Instance {
 
 func (i *Instance) Start() {
 	i.log.WithField("version", extconfig.FullVersion()).Info("Gravity starting")
-
-	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              "https://a6690a50e8924263bd6f82fe3a1a2386@sentry.beryju.org/17",
-		Environment:      "",
-		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
-		TracesSampleRate: 1.0,
-		// TODO: Ensure Sentry is resolved before startup
-	})
-	if err != nil {
-		i.log.WithError(err).Warning("failed to init sentry")
-	}
-	defer sentry.Flush(2 * time.Second)
-
+	go i.startSentry()
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))
@@ -86,6 +74,23 @@ func (i *Instance) Start() {
 		}
 	} else {
 		i.bootstrap()
+	}
+}
+
+func (i *Instance) startSentry() {
+	transport := sentry.NewHTTPTransport()
+	transport.Configure(sentry.ClientOptions{
+		HTTPTransport: extconfig.Transport(),
+	})
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              "https://a6690a50e8924263bd6f82fe3a1a2386@sentry.beryju.org/17",
+		Environment:      "",
+		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
+		TracesSampleRate: 1.0,
+		Transport:        transport,
+	})
+	if err != nil {
+		i.log.WithError(err).Warning("failed to init sentry")
 	}
 }
 
@@ -174,4 +179,5 @@ func (i *Instance) Stop() {
 	if i.etcd != nil {
 		i.etcd.Stop()
 	}
+	sentry.Flush(2 * time.Second)
 }
