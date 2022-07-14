@@ -68,7 +68,7 @@ func (r *DHCPRole) apiHandlerLeasesPut() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerLeasesDeltete() usecase.Interactor {
+func (r *DHCPRole) apiHandlerLeasesDelete() usecase.Interactor {
 	type leasesInput struct {
 		Identifier string `path:"identifier"`
 		Scope      string `path:"scope"`
@@ -87,7 +87,7 @@ func (r *DHCPRole) apiHandlerLeasesDeltete() usecase.Interactor {
 		}
 		return nil
 	})
-	u.SetName("dhcp.put_leases")
+	u.SetName("dhcp.delete_leases")
 	u.SetTitle("DHCP Leases")
 	u.SetTags("roles/dhcp")
 	u.SetExpectedErrors(status.Internal, status.InvalidArgument)

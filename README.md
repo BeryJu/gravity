@@ -45,8 +45,8 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
             - [x] Delete
         - Scope
             - [x] Read
-            - [ ] Put
-            - [ ] Delete
+            - [x] Put
+            - [x] Delete
     - [ ] Discovery
         - Subnet
             - [ ] Read

@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -14,6 +15,7 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Option struct {
@@ -58,12 +60,21 @@ type Scope struct {
 	log     *log.Entry
 }
 
-func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
-	s := &Scope{
+func (r *DHCPRole) newScope(name string) *Scope {
+	return &Scope{
+		Name: name,
 		inst: r.i,
 		role: r,
 		TTL:  int64((7 * 24 * time.Hour).Seconds()),
+		log:  r.log.WithField("scope", name),
 	}
+}
+
+func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
+	name := strings.TrimPrefix(string(raw.Key), prefix)
+
+	s := r.newScope(name)
 	err := json.Unmarshal(raw.Value, &s)
 	if err != nil {
 		return nil, err
@@ -74,11 +85,7 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	}
 	s.cidr = cidr
 
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
-	s.Name = strings.TrimPrefix(string(raw.Key), prefix)
 	s.etcdKey = string(raw.Key)
-
-	s.log = r.log.WithField("scope", s.Name)
 
 	// TODO: other IPAMs
 	var ipamInst ipam.IPAM
@@ -146,4 +153,35 @@ func (s *Scope) createLeaseFor(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHC
 		}
 	}
 	return lease
+}
+
+func (s *Scope) put(expiry int64, opts ...clientv3.OpOption) error {
+	raw, err := json.Marshal(&s)
+	if err != nil {
+		return err
+	}
+
+	if expiry > 0 {
+		exp, err := s.inst.KV().Lease.Grant(context.TODO(), expiry)
+		if err != nil {
+			return err
+		}
+		opts = append(opts, clientv3.WithLease(exp.ID))
+	}
+
+	leaseKey := s.inst.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		s.Name,
+	)
+	_, err = s.inst.KV().Put(
+		context.TODO(),
+		leaseKey.String(),
+		string(raw),
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

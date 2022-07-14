@@ -99,6 +99,64 @@ paths:
       summary: DHCP Scopes
       tags:
       - roles/dhcp
+  /api/v1/dhcp/scopes/{scope}:
+    delete:
+      operationId: dhcp.delete_scopes
+      parameters:
+      - in: path
+        name: scope
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+    post:
+      operationId: dhcp.put_scope
+      parameters:
+      - in: path
+        name: scope
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpScopesInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
   /api/v1/dhcp/scopes/{scope}/leases:
     get:
       operationId: dhcp.get_leases
@@ -120,7 +178,7 @@ paths:
       - roles/dhcp
   /api/v1/dhcp/scopes/{scope}/leases/{identifier}:
     delete:
-      operationId: dhcp.put_leases2
+      operationId: dhcp.delete_leases
       parameters:
       - in: path
         name: identifier
@@ -266,7 +324,7 @@ paths:
       - roles/discovery
   /api/v1/dns/zones:
     get:
-      operationId: dns.zones
+      operationId: dns.get_zones
       responses:
         "200":
           content:
@@ -436,6 +494,39 @@ components:
           type: array
       type: object
     DhcpScope:
+      properties:
+        default:
+          type: boolean
+        dns:
+          properties:
+            addZoneInHostname:
+              type: boolean
+            search:
+              items:
+                type: string
+              nullable: true
+              type: array
+            zone:
+              type: string
+          type: object
+        options:
+          items:
+            $ref: '#/components/schemas/DhcpOption'
+          nullable: true
+          type: array
+        range:
+          properties:
+            end:
+              type: string
+            start:
+              type: string
+          type: object
+        subnetCidr:
+          type: string
+        ttl:
+          type: integer
+      type: object
+    DhcpScopesInput:
       properties:
         default:
           type: boolean
