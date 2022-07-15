@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"net"
+	"time"
 
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
@@ -23,6 +24,7 @@ func (r *Role) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4
 
 	match.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeOffer))
+		d.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(int64(r.cfg.LeaseNegotiateTimeout) * int64(time.Second))))
 		return d
 	})
 }

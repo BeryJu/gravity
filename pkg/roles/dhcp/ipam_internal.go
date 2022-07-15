@@ -34,7 +34,7 @@ func NewInternalIPAM(role *Role, cidr string, rangeStart string, rangeEnd string
 		SubnetCIDR: sub,
 		Start:      start,
 		End:        end,
-		log:        log.WithField("component", "ipam"),
+		log:        role.log.WithField("ipam", "internal"),
 		role:       role,
 	}, nil
 }

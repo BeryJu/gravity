@@ -45,7 +45,7 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		var (
 			in = input.(*leasesInput)
 		)
-		l := r.newLease()
+		l := r.newLease(in.Identifier)
 		l.Address = in.Address
 		l.Hostname = in.Hostname
 		l.AddressLeaseTime = in.AddressLeaseTime

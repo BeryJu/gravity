@@ -34,25 +34,27 @@ type Lease struct {
 	log     *log.Entry
 }
 
-func (r *Role) newLease() *Lease {
+func (r *Role) newLease(identifier string) *Lease {
 	return &Lease{
-		inst: r.i,
+		inst:       r.i,
+		Identifier: identifier,
+		log:        r.log.WithField("identifier", identifier),
 	}
 }
 
 func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
-	l := r.newLease()
-	err := json.Unmarshal(raw.Value, &l)
-	if err != nil {
-		return nil, err
-	}
 	prefix := r.i.KV().Key(
 		types.KeyRole,
 		types.KeyLeases,
 	).Prefix(true).String()
-	l.Identifier = strings.TrimPrefix(string(raw.Key), prefix)
+	identifier := strings.TrimPrefix(string(raw.Key), prefix)
+	l := r.newLease(identifier)
+	err := json.Unmarshal(raw.Value, &l)
+	if err != nil {
+		return nil, err
+	}
 	l.etcdKey = string(raw.Key)
-	l.log = r.log.WithField("lease", prefix)
+
 	scope, ok := r.scopes[l.ScopeKey]
 	if !ok {
 		return nil, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
@@ -100,7 +102,7 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	ev.Payload.RelatedObjectOptions = opts
 	l.inst.DispatchEvent(types.EventTopicDHCPLeasePut, ev)
 
-	l.log.WithField("expiry", expiry).Debug("put lease")
+	l.log.WithField("expiry", expiry).WithField("identifier", l.Identifier).Debug("put lease")
 	return nil
 }
 
@@ -115,7 +117,6 @@ func (l *Lease) reply(
 		l.log.WithError(err).Warning("failed to create reply")
 		return
 	}
-	rep = modifyResponse(rep)
 
 	if l.AddressLeaseTime != "" {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
@@ -127,6 +128,8 @@ func (l *Lease) reply(
 	} else {
 		rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(l.scope.TTL * int64(time.Second))))
 	}
+	rep = modifyResponse(rep)
+
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
 
 	// DNS Options
