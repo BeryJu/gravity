@@ -3,7 +3,6 @@ package dhcp
 import (
 	"context"
 	"net"
-	"sync"
 
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
@@ -17,9 +16,8 @@ import (
 )
 
 type Role struct {
-	scopes     map[string]*Scope
-	leases     map[string]*Lease
-	leasesSync sync.RWMutex
+	scopes map[string]*Scope
+	leases map[string]*Lease
 
 	cfg *RoleConfig
 
@@ -32,11 +30,10 @@ type Role struct {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log:        instance.Log(),
-		i:          instance,
-		scopes:     make(map[string]*Scope),
-		leases:     make(map[string]*Lease),
-		leasesSync: sync.RWMutex{},
+		log:    instance.Log(),
+		i:      instance,
+		scopes: make(map[string]*Scope),
+		leases: make(map[string]*Lease),
 	}
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

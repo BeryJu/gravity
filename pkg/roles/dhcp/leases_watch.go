@@ -9,17 +9,18 @@ import (
 )
 
 func (r *Role) handleLeaseOp(ev *clientv3.Event) {
-	r.leasesSync.Lock()
-	defer r.leasesSync.Unlock()
+	rec, err := r.leaseFromKV(ev.Kv)
 	if ev.Type == clientv3.EventTypeDelete {
-		delete(r.leases, string(ev.Kv.Key))
+		delete(r.leases, rec.Identifier)
 	} else {
-		rec, err := r.leaseFromKV(ev.Kv)
+		// Check if the lease parsed above actually was parsed correctly,
+		// we don't care for that when removing, but prevent adding
+		// empty leases
 		if err != nil {
 			r.log.WithError(err).Warning("failed to parse lease")
 			return
 		}
-		r.leases[string(ev.Kv.Key)] = rec
+		r.leases[rec.Identifier] = rec
 	}
 }
 
