@@ -4,10 +4,10 @@ UID = $(shell id -u)
 GID = $(shell id -g)
 
 run-debug:
-	DEBUG=true go run -v .
+	DEBUG=true go run -v . server
 
 gen-build:
-	DEBUG=true go run -v . generateSchema schema.yml
+	DEBUG=true go run -v . cli generateSchema schema.yml
 
 gen-clean:
 	rm -rf gen-ts-api/

@@ -14,7 +14,7 @@ var schemaFormat = ""
 
 // generateSchemaCmd represents the generateSchema command
 var generateSchemaCmd = &cobra.Command{
-	Use:   "generateSchema",
+	Use:   "generateSchema [output_file]",
 	Short: "Generate OpenAPI Schema",
 	Run: func(cmd *cobra.Command, args []string) {
 		rootInst := instance.NewInstance()
@@ -41,8 +41,10 @@ var generateSchemaCmd = &cobra.Command{
 				if err != nil {
 					rootInst.Log().WithError(err).Warning("failed to write schema")
 				}
+				rootInst.Log().Infof("Successfully wrote schema to %s", args[0])
 			} else {
 				os.Stdout.Write(out)
+				rootInst.Log().Info("Successfully wrote schema to stdout")
 			}
 		})
 		rootInst.Start()
@@ -50,6 +52,6 @@ var generateSchemaCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(generateSchemaCmd)
+	cliCmd.AddCommand(generateSchemaCmd)
 	addUserCmd.PersistentFlags().StringVarP(&schemaFormat, "format", "f", "yaml", "Output format (yaml/json)")
 }

@@ -35,17 +35,19 @@ FROM docker.io/library/debian:stable-slim
 
 WORKDIR /
 
-COPY --from=builder /workspace/gravity /app/gravity
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends nmap bash ca-certificates && \
-    rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/ && \
-    mkdir /data && \
-    chown 65532:65532 /data
-
+COPY --from=builder /workspace/gravity /bin/gravity
 # For debugging purposes
 COPY --from=quay.io/coreos/etcd:v3.5.4 /usr/local/bin/etcdctl /usr/bin/etcdctl
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends nmap bash-completion bash ca-certificates && \
+    mkdir -p /etc/bash_completion.d/ && \
+    rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/ && \
+    mkdir /data && \
+    chown 65532:65532 /data && \
+    bash -c "/bin/gravity completion bash > /etc/bash_completion.d/gravity"
+
 USER 65532:65532
 
-ENTRYPOINT ["/app/gravity"]
+ENTRYPOINT ["/bin/gravity"]
+CMD [ "server" ]
