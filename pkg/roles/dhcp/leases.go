@@ -145,8 +145,16 @@ func (l *Lease) reply(
 
 	for _, opt := range l.scope.Options {
 		finalVal := make([]byte, 0)
-		if opt.Tag == nil {
+		if opt.Tag == nil && opt.TagName == "" {
 			continue
+		}
+		if opt.TagName != "" {
+			tag, ok := TagMap[opt.TagName]
+			if !ok {
+				l.log.WithError(err).Warningf("invalid tag name %s", opt.TagName)
+				continue
+			}
+			opt.Tag = &tag
 		}
 
 		// Values which are directly converted from string to byte

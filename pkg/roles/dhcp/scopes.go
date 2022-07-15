@@ -20,7 +20,7 @@ import (
 
 type Option struct {
 	Tag     *uint8   `json:"tag"`
-	TagName *string  `json:"tagName"`
+	TagName string   `json:"tagName"`
 	Value   *string  `json:"value"`
 	Value64 []string `json:"value64"`
 }
