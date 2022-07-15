@@ -2,9 +2,7 @@ package dhcp
 
 import (
 	"encoding/hex"
-	"fmt"
 	"net"
-	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -49,14 +47,11 @@ func (r *Role) logDHCPMessage(m *dhcpv4.DHCPv4, fields log.Fields) {
 
 func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
-		start := time.Now()
-		inner(conn, peer, m)
-		duration := float64(time.Since(start)) / float64(time.Millisecond)
 		f := log.Fields{
 			"client":    peer.String(),
 			"localAddr": conn.LocalAddr().String(),
-			"runtimeMS": fmt.Sprintf("%0.3f", duration),
 		}
 		r.logDHCPMessage(m, f)
+		inner(conn, peer, m)
 	}
 }
