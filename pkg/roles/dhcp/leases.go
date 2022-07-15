@@ -157,11 +157,12 @@ func (l *Lease) reply(
 	if l.scope.DNS.AddZoneInHostname {
 		fqdn := strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")
 		rep.UpdateOption(dhcpv4.OptHostName(fqdn))
+	} else {
+		rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
 	}
 
 	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)
 	rep.YourIPAddr = net.ParseIP(l.Address)
-	rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
 
 	for _, opt := range l.scope.Options {
 		finalVal := make([]byte, 0)
