@@ -105,21 +105,26 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(fallback)
 }
 
-func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
-	z := Zone{
+func (r *DNSRole) newZone(name string) *Zone {
+	return &Zone{
+		Name:        name,
 		DefaultTTL:  DefaultTTL,
 		inst:        r.i,
 		h:           make([]Handler, 0),
 		records:     make(map[string]map[string]*Record),
 		recordsSync: sync.RWMutex{},
 	}
+}
+
+func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
+	name := strings.TrimPrefix(string(raw.Key), prefix)
+	z := r.newZone(name)
+	z.etcdKey = string(raw.Key)
 	err := json.Unmarshal(raw.Value, &z)
 	if err != nil {
 		return nil, err
 	}
-	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
-	z.Name = strings.TrimPrefix(string(raw.Key), prefix)
-	z.etcdKey = string(raw.Key)
 	z.log = r.log.WithField("zone", z.Name)
 
 	if len(z.HandlerConfigs) < 1 {
@@ -135,13 +140,13 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		var err error
 		switch t {
 		case "forward_blocky":
-			handler, err = NewBlockyForwarder(&z, handlerCfg)
+			handler, err = NewBlockyForwarder(z, handlerCfg)
 		case "forward_ip":
-			handler = NewIPForwarderHandler(&z, handlerCfg)
+			handler = NewIPForwarderHandler(z, handlerCfg)
 		case "etcd":
-			handler = NewEtcdHandler(&z, handlerCfg)
+			handler = NewEtcdHandler(z, handlerCfg)
 		case "memory":
-			handler = NewMemoryHandler(&z, handlerCfg)
+			handler = NewMemoryHandler(z, handlerCfg)
 		default:
 			r.log.WithField("type", t).Warning("invalid forwarder type")
 		}
@@ -155,7 +160,7 @@ func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	// start watching all records in this zone, in case etcd goes down
 	go z.watchZoneRecords()
 
-	return &z, nil
+	return z, nil
 }
 
 func (z *Zone) watchZoneRecords() {

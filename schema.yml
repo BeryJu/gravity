@@ -127,7 +127,7 @@ paths:
       tags:
       - roles/dhcp
     post:
-      operationId: dhcp.put_scope
+      operationId: dhcp.put_scopes
       parameters:
       - in: path
         name: scope
@@ -263,22 +263,20 @@ paths:
       summary: Discovery devices
       tags:
       - roles/discovery
-  /api/v1/discovery/devices/apply:
+  /api/v1/discovery/devices/{identifier}/apply:
     post:
       operationId: discovery.apply_device
       parameters:
-      - in: query
-        name: relKey
+      - in: path
+        name: identifier
+        required: true
         schema:
           type: string
-      - in: query
-        name: dhcpScope
-        schema:
-          type: string
-      - in: query
-        name: dnsZone
-        schema:
-          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryDeviceApplyInput'
       responses:
         "204":
           description: No Content
@@ -303,6 +301,33 @@ paths:
       summary: Apply Discovered devices
       tags:
       - roles/discovery
+  /api/v1/discovery/devices/{identifier}/delete:
+    delete:
+      operationId: discovery.delete_devices
+      parameters:
+      - in: path
+        name: identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery devices
+      tags:
+      - roles/discovery
   /api/v1/discovery/subnets:
     get:
       operationId: discovery.get_subnets
@@ -320,6 +345,64 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
       summary: Discovery subnets
+      tags:
+      - roles/discovery
+  /api/v1/discovery/subnets/{identifier}:
+    delete:
+      operationId: discovery.delete_subnets
+      parameters:
+      - in: path
+        name: identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery Subnets
+      tags:
+      - roles/discovery
+    post:
+      operationId: discovery.put_subnets
+      parameters:
+      - in: path
+        name: identifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoverySubnetsInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery Subnets
       tags:
       - roles/discovery
   /api/v1/dns/zones:
@@ -578,6 +661,18 @@ components:
         mac:
           type: string
       type: object
+    DiscoveryDeviceApplyInput:
+      properties:
+        dhcpScope:
+          type: string
+        dnsZone:
+          type: string
+        to:
+          enum:
+          - dhcp
+          - dns
+          type: string
+      type: object
     DiscoveryDevicesOutput:
       properties:
         devices:
@@ -592,6 +687,13 @@ components:
           type: string
         discoveryTTL:
           type: integer
+      type: object
+    DiscoverySubnetsInput:
+      properties:
+        discoveryTTL:
+          type: integer
+        subnetCidr:
+          type: string
       type: object
     DiscoverySubnetsOutput:
       properties:

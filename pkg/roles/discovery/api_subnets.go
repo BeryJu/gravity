@@ -45,3 +45,55 @@ func (r *DiscoveryRole) apiHandlerSubnets() usecase.Interactor {
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
+
+func (r *DiscoveryRole) apiHandlerSubnetsPut() usecase.Interactor {
+	type subnetsInput struct {
+		Name string `path:"identifier"`
+
+		SubnetCIDR   string `json:"subnetCidr"`
+		DiscoveryTTL int    `json:"discoveryTTL"`
+	}
+	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*subnetsInput)
+		)
+		s := r.newSubnet(in.Name)
+		s.CIDR = in.SubnetCIDR
+		s.DiscoveryTTL = in.DiscoveryTTL
+		err := s.put()
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("discovery.put_subnets")
+	u.SetTitle("Discovery Subnets")
+	u.SetTags("roles/discovery")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}
+
+func (r *DiscoveryRole) apiHandlerSubnetsDelete() usecase.Interactor {
+	type subnetsInput struct {
+		Name string `path:"identifier"`
+	}
+	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*subnetsInput)
+		)
+		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeySubnets,
+			in.Name,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("discovery.delete_subnets")
+	u.SetTitle("Discovery Subnets")
+	u.SetTags("roles/discovery")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}

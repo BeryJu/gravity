@@ -49,12 +49,12 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
             - [x] Delete
     - [ ] Discovery
         - Subnet
-            - [ ] Read
-            - [ ] Put
-            - [ ] Delete
+            - [x] Read
+            - [x] Put
+            - [x] Delete
         - Discovery
-            - [ ] Read
-            - [ ] Delete
+            - [x] Read
+            - [x] Delete
             - [x] Apply
     - [ ] DNS
         - Zone

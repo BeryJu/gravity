@@ -93,7 +93,7 @@ func (r *DHCPRole) apiHandlerScopesPut() usecase.Interactor {
 		}
 		return nil
 	})
-	u.SetName("dhcp.put_scope")
+	u.SetName("dhcp.put_scopes")
 	u.SetTitle("DHCP Scopes")
 	u.SetTags("roles/dhcp")
 	u.SetExpectedErrors(status.Internal, status.InvalidArgument)

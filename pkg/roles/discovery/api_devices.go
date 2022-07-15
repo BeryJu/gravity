@@ -3,7 +3,6 @@ package discovery
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/swaggest/usecase"
@@ -51,22 +50,19 @@ func (r *DiscoveryRole) apiHandlerDevices() usecase.Interactor {
 
 func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 	type deviceApplyInput struct {
-		RelKey    string `query:"relKey"`
-		DHCPScope string `query:"dhcpScope"`
-		DNSZone   string `query:"dnsZone"`
+		Identifier string `path:"identifier"`
+		To         string `json:"to" enum:"dhcp,dns"`
+		DHCPScope  string `json:"dhcpScope"`
+		DNSZone    string `json:"dnsZone"`
 	}
 	u := usecase.NewIOI(new(deviceApplyInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (
 			in = input.(*deviceApplyInput)
 		)
-		by := strings.SplitN(in.RelKey, "/", 1)[0]
-		if by != types.KeyDevicesByMAC && by != types.KeyDevicesByIP {
-			return status.Wrap(errors.New("invalid key"), status.InvalidArgument)
-		}
 		rawDevice, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
-			in.RelKey,
+			in.Identifier,
 		).String())
 		if err != nil {
 			return status.Wrap(errors.New("invalid key"), status.InvalidArgument)
@@ -76,7 +72,7 @@ func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 		}
 
 		device := r.deviceFromKV(rawDevice.Kvs[0])
-		if by == types.KeyDevicesByIP {
+		if in.To == "dhcp" {
 			err = device.toDHCP(in.DHCPScope)
 		} else {
 			err = device.toDNS(in.DNSZone)
@@ -90,5 +86,30 @@ func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 	u.SetTitle("Apply Discovered devices")
 	u.SetTags("roles/discovery")
 	u.SetExpectedErrors(status.InvalidArgument, status.NotFound, status.Internal)
+	return u
+}
+
+func (r *DiscoveryRole) apiHandlerDevicesDelete() usecase.Interactor {
+	type devicesInput struct {
+		Name string `path:"identifier"`
+	}
+	u := usecase.NewIOI(new(devicesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*devicesInput)
+		)
+		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeySubnets,
+			in.Name,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("discovery.delete_devices")
+	u.SetTitle("Discovery devices")
+	u.SetTags("roles/discovery")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
 	return u
 }

@@ -1,7 +1,9 @@
 package discovery
 
 import (
+	"context"
 	"encoding/json"
+	"strings"
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
@@ -9,26 +11,41 @@ import (
 	"github.com/Ullaakut/nmap/v2"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Subnet struct {
+	Identifier string `json:"-"`
+
 	CIDR         string `json:"cidr"`
 	DiscoveryTTL int    `json:"discoveryTTL"`
 
-	inst roles.Instance
-	log  *log.Entry
+	etcdKey string
+	inst    roles.Instance
+	log     *log.Entry
+	role    *DiscoveryRole
+}
+
+func (r *DiscoveryRole) newSubnet(name string) *Subnet {
+	return &Subnet{
+		DiscoveryTTL: int((24 * time.Hour).Seconds()),
+		inst:         r.i,
+		Identifier:   name,
+		log:          r.log.WithField("subnet", name),
+		role:         r,
+	}
 }
 
 func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
-	sub := &Subnet{
-		DiscoveryTTL: int((24 * time.Hour).Seconds()),
-		inst:         r.i,
-	}
+	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
+	name := strings.TrimPrefix(string(raw.Key), prefix)
+
+	sub := r.newSubnet(name)
 	err := json.Unmarshal(raw.Value, &sub)
 	if err != nil {
 		return nil, err
 	}
-	sub.log = r.log.WithField("subnet", sub.CIDR)
+	sub.etcdKey = string(raw.Key)
 	return sub, nil
 }
 
@@ -73,7 +90,7 @@ func (s *Subnet) RunDiscovery() {
 
 	// Use the results to print an example output
 	for _, host := range result.Hosts {
-		dev := NewDevice(s.inst)
+		dev := s.role.newDevice()
 		if len(host.Hostnames) > 0 {
 			dev.Hostname = host.Hostnames[0].String()
 		}
@@ -89,4 +106,22 @@ func (s *Subnet) RunDiscovery() {
 			s.log.WithError(err).Warning("ignoring device")
 		}
 	}
+}
+
+func (s *Subnet) put(opts ...clientv3.OpOption) error {
+	key := s.inst.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier)
+	raw, err := json.Marshal(&s)
+	if err != nil {
+		return err
+	}
+	_, err = s.inst.KV().Put(
+		context.Background(),
+		key.String(),
+		string(raw),
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
