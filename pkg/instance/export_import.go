@@ -19,7 +19,7 @@ func (i *Instance) Export() ([]ExportEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	entries := []ExportEntry{}
+	entries := make([]ExportEntry, len(exps.Kvs))
 	for idx, exp := range exps.Kvs {
 		entries[idx] = ExportEntry{
 			Key:   strings.TrimPrefix(string(exp.Key), extconfig.Get().Etcd.Prefix),
