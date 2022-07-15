@@ -40,9 +40,8 @@ func NewInternalIPAM(role *Role, cidr string, rangeStart string, rangeEnd string
 }
 
 func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
-	initialIp := i.SubnetCIDR.Addr()
+	initialIp := i.Start
 	for {
-		initialIp = initialIp.Next()
 		i.log.WithField("ip", initialIp.String()).Debug("checking for free ip")
 		// Check if IP is in the correct subnet
 		if !i.SubnetCIDR.Contains(initialIp) {
@@ -51,6 +50,7 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 		if i.IsIPFree(initialIp) {
 			return &initialIp
 		}
+		initialIp = initialIp.Next()
 	}
 }
 
