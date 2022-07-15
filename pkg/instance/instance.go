@@ -57,6 +57,7 @@ func NewInstance() *Instance {
 		identifier:     extCfg.Instance.Identifier,
 		eventHandlersM: sync.RWMutex{},
 		eventHandlers:  make(map[string]map[string][]roles.EventHandler),
+		kv:             extCfg.EtcdClient(),
 	}
 }
 
@@ -111,10 +112,6 @@ func (i *Instance) getRoles() []string {
 
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
-	i.kv = storage.NewClient(
-		extconfig.Get().Etcd.Prefix,
-		extconfig.Get().Etcd.Endpoint,
-	)
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)
 		ctx, cancel := context.WithCancel(context.Background())

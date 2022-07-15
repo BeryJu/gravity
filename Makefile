@@ -32,12 +32,17 @@ test-etcd-start:
 		-d --rm \
 		-p 2379:2379 \
 		--name gravity-test-etcd \
-		quay.io/coreos/etcd:v3.5.4
+		quay.io/coreos/etcd:v3.5.4 \
+		/usr/local/bin/etcd \
+		--listen-client-urls http://0.0.0.0:2379 \
+		--advertise-client-urls http://127.0.0.1:2379
 
 test-etcd-stop:
-	docker stop gravity-test-etcd
+	docker stop gravity-test-etcd || true
+	docker kill gravity-test-etcd || true
+	docker rm gravity-test-etcd || true
 
 test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup"
 	export ETCD_ENDPOINT="localhost:2379"
-	go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...

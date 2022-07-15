@@ -40,6 +40,7 @@ func New(instance roles.Instance) *DNSRole {
 		svc.Get("/api/v1/dns/zones", r.apiHandlerZones())
 		svc.Get("/api/v1/dns/zones/{zone}/records", r.apiHandlerZoneRecords())
 	})
+	r.loadInitialZones()
 	return r
 }
 
@@ -47,7 +48,6 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	cfg := r.decodeDNSRoleConfig(config)
 
-	r.loadInitialZones()
 	go r.startWatchZones()
 
 	dnsMux := dns.NewServeMux()
@@ -55,7 +55,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 		".",
 		r.recoverMiddleware(
 			r.loggingMiddleware(
-				r.handler,
+				r.Handler,
 			),
 		),
 	)

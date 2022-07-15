@@ -25,7 +25,7 @@ func (eh *MemoryHandler) Identifier() string {
 	return "memory"
 }
 
-func (eh *MemoryHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
 	for _, question := range r.Question {

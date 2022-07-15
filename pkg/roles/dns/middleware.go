@@ -5,6 +5,7 @@ import (
 	"net"
 	"time"
 
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
@@ -37,9 +38,9 @@ func (r *DNSRole) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 func (r *DNSRole) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		start := time.Now()
-		fw := NewFakeDNSWriter(w)
+		fw := utils.NewFakeDNSWriter(w)
 		inner(fw, m)
-		w.WriteMsg(fw.msg)
+		w.WriteMsg(fw.Msg())
 		duration := float64(time.Since(start)) / float64(time.Millisecond)
 		var clientIP = ""
 		switch addr := w.RemoteAddr().(type) {
@@ -51,13 +52,13 @@ func (r *DNSRole) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 		f := log.Fields{
 			"runtimeMS": fmt.Sprintf("%0.3f", duration),
 			"client":    clientIP,
-			"response":  dns.RcodeToString[fw.msg.Rcode],
+			"response":  dns.RcodeToString[fw.Msg().Rcode],
 		}
 		msg := "DNS Request"
 		if len(m.Question) > 0 {
 			msg = m.Question[0].Name
 		}
-		for idx, a := range fw.msg.Answer {
+		for idx, a := range fw.Msg().Answer {
 			f[fmt.Sprintf("answer[%d]", idx)] = dns.TypeToString[a.Header().Rrtype]
 		}
 		r.log.WithFields(f).Info(msg)

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"beryju.io/gravity/pkg/storage"
 	env "github.com/Netflix/go-env"
 	log "github.com/sirupsen/logrus"
 )
@@ -56,6 +57,10 @@ func (e *ExtConfig) Dirs() *ExtConfigDirs {
 		CertDir:   path.Join(e.DataPath, "cert/"),
 		BackupDir: path.Join(e.DataPath, "backup/"),
 	}
+}
+
+func (e *ExtConfig) EtcdClient() *storage.Client {
+	return storage.NewClient(e.Etcd.Prefix, e.Etcd.Endpoint)
 }
 
 func (e *ExtConfig) Listen(port int32) string {

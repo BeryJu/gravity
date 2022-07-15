@@ -111,7 +111,7 @@ func (ipf *IPForwarderHandler) Identifier() string {
 	return "forward_ip"
 }
 
-func (ipf *IPForwarderHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 	if len(r.Question) < 1 {
 		ipf.log.Error("No question")
 		return nil

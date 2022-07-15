@@ -23,7 +23,7 @@ func (r *DNSRole) eventHandlerDHCPLeaseGiven(ev *roles.Event) {
 func (r *DNSRole) eventCreateForward(ev *roles.Event) {
 	hostname := ev.Payload.Data["hostname"].(string)
 	fqdn := ev.Payload.Data["fqdn"].(string)
-	forwardZone := r.findZone(fqdn)
+	forwardZone := r.FindZone(fqdn)
 	if forwardZone == nil {
 		r.log.WithField("event", ev).WithField("fqdn", fqdn).Debug("No zone found for hostname")
 		return
@@ -64,7 +64,7 @@ func (r *DNSRole) eventCreateReverse(ev *roles.Event) {
 		return
 	}
 
-	forwardZone := r.findZone(rev)
+	forwardZone := r.FindZone(rev)
 	if forwardZone == nil {
 		r.log.WithField("event", ev).WithField("fqdn", fqdn).Debug("No zone found for hostname")
 		return

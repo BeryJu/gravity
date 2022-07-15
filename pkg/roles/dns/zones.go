@@ -10,6 +10,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -80,7 +81,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	for _, handler := range z.h {
 		z.log.WithField("handler", handler.Identifier()).Trace("sending request to handler")
 		start := time.Now()
-		handlerReply := handler.Handle(NewFakeDNSWriter(w), r)
+		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), r)
 		finish := time.Since(start)
 		if handlerReply != nil {
 			z.log.WithField("handler", handler.Identifier()).Trace("returning reply from handler")

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
 	log "github.com/sirupsen/logrus"
 
@@ -93,16 +94,16 @@ func (bfwd *BlockyForwarder) Identifier() string {
 	return "forward_blocky"
 }
 
-func (bfwd *BlockyForwarder) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 	bfwd.b.OnRequest(w, r)
 	// fall to next handler when no record is found
-	if w.msg.Rcode == dns.RcodeNameError {
+	if w.Msg().Rcode == dns.RcodeNameError {
 		return nil
 	}
 	for _, query := range r.Question {
-		for idx, ans := range w.msg.Answer {
+		for idx, ans := range w.Msg().Answer {
 			go bfwd.cacheToEtcd(query, ans, idx)
 		}
 	}
-	return w.msg
+	return w.Msg()
 }

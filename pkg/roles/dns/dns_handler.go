@@ -6,7 +6,8 @@ import (
 	"github.com/miekg/dns"
 )
 
-func (r *DNSRole) findZone(fqdn string) *Zone {
+// Find a zone for the given fqdn
+func (r *DNSRole) FindZone(fqdn string) *Zone {
 	lastLongest := 0
 	var longestZone *Zone
 	for name, zone := range r.zones {
@@ -22,7 +23,7 @@ func (r *DNSRole) findZone(fqdn string) *Zone {
 	return longestZone
 }
 
-func (ro *DNSRole) handler(w dns.ResponseWriter, r *dns.Msg) {
+func (ro *DNSRole) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
 	var longestZone *Zone
 

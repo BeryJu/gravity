@@ -27,7 +27,7 @@ func (eh *EtcdHandler) Identifier() string {
 	return "etcd"
 }
 
-func (eh *EtcdHandler) Handle(w *fakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
 	ctx := context.Background()
