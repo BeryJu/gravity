@@ -118,6 +118,9 @@ func (l *Lease) reply(
 		return
 	}
 
+	rep = modifyResponse(rep)
+	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
+
 	if l.AddressLeaseTime != "" {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
 		if err != nil {
@@ -128,9 +131,6 @@ func (l *Lease) reply(
 	} else {
 		rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(l.scope.TTL * int64(time.Second))))
 	}
-	rep = modifyResponse(rep)
-
-	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
 
 	// DNS Options
 	rep.UpdateOption(dhcpv4.OptDNS(net.ParseIP(extconfig.Get().Instance.IP)))

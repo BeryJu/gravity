@@ -2,7 +2,6 @@ package dhcp
 
 import (
 	"net"
-	"time"
 
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
@@ -17,14 +16,15 @@ func (r *Role) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4
 		}
 		r.log.Debug("found scope for new lease")
 		match = scope.createLeaseFor(conn, peer, m)
+		match.put(int64(r.cfg.LeaseNegotiateTimeout))
+	} else {
+		go match.put(match.scope.TTL)
 	}
-	match.put(int64(r.cfg.LeaseNegotiateTimeout))
 
 	dhcpRequests.WithLabelValues(m.MessageType().String(), match.scope.Name).Inc()
 
 	match.reply(conn, peer, m, func(d *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		d.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeOffer))
-		d.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(int64(r.cfg.LeaseNegotiateTimeout) * int64(time.Second))))
 		return d
 	})
 }
