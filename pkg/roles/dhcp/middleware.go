@@ -37,7 +37,6 @@ func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 			"client":           peer.String(),
 			"localAddr":        conn.LocalAddr().String(),
 			"opCode":           m.OpCode.String(),
-			"hwType":           m.HWType.String(),
 			"hopCount":         m.HopCount,
 			"transactionID":    m.TransactionID.String(),
 			"flagsToString":    m.FlagsToString(),
@@ -45,7 +44,7 @@ func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 			"yourIPAddr":       m.YourIPAddr.String(),
 			"serverIPAddr":     m.ServerIPAddr.String(),
 			"gatewayIPAddr":    m.GatewayIPAddr.String(),
-			"serverHostName":   m.ServerHostName,
+			"hostname":         m.HostName(),
 			"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
 		}
 		start := time.Now()
