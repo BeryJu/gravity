@@ -68,6 +68,32 @@ func (r *DHCPRole) apiHandlerLeasesPut() usecase.Interactor {
 	return u
 }
 
+func (r *DHCPRole) apiHandlerLeasesWOL() usecase.Interactor {
+	type leasesInput struct {
+		Identifier string `path:"identifier"`
+		Scope      string `path:"scope"`
+	}
+	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*leasesInput)
+		)
+		l, ok := r.leases[in.Identifier]
+		if !ok {
+			return status.InvalidArgument
+		}
+		err := l.sendWOL()
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("dhcp.wol_leases")
+	u.SetTitle("DHCP Leases")
+	u.SetTags("roles/dhcp")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}
+
 func (r *DHCPRole) apiHandlerLeasesDelete() usecase.Interactor {
 	type leasesInput struct {
 		Identifier string `path:"identifier"`

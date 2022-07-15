@@ -67,7 +67,7 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
             - [ ] Delete
     - [ ] Etcd
     - [ ] Monitoring
-- [ ] Maybe sending WOL to DHCP leases
+- [x] Maybe sending WOL to DHCP leases
 - [x] Metrics
 - [ ] Testing
 - [ ] Docs
@@ -81,3 +81,4 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [x] Support for multiple records per FQDN
 - [ ] Watch role config and restart roles if it changes?
 - [ ] Blocky metrics support
+- [ ] Make backup be tgz of snapshot and raw key:value etcd export
