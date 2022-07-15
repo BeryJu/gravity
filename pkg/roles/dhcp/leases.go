@@ -54,13 +54,13 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	l := r.newLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
-		return nil, err
+		return l, err
 	}
 	l.etcdKey = string(raw.Key)
 
 	scope, ok := r.scopes[l.ScopeKey]
 	if !ok {
-		return nil, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
+		return l, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
 	}
 	l.scope = scope
 	return l, nil
