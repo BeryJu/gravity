@@ -45,7 +45,8 @@ RUN apt-get update && \
     rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/ && \
     mkdir /data && \
     chown 65532:65532 /data && \
-    bash -c "/bin/gravity completion bash > /etc/bash_completion.d/gravity"
+    /bin/gravity completion bash > /etc/bash_completion.d/gravity && \
+    echo ". /etc/bash_completion" >> /etc/bash.bashrc
 
 USER 65532:65532
 
