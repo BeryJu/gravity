@@ -18,7 +18,7 @@ func (r *Role) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4
 		match = scope.createLeaseFor(conn, peer, m)
 		match.put(int64(r.cfg.LeaseNegotiateTimeout))
 	} else {
-		go match.put(match.scope.TTL)
+		match.put(match.scope.TTL)
 	}
 
 	dhcpRequests.WithLabelValues(m.MessageType().String(), match.scope.Name).Inc()

@@ -11,17 +11,28 @@ func (r *Role) apiHandlerLeases() usecase.Interactor {
 	type leasesInput struct {
 		ScopeName string `path:"scope"`
 	}
+	type lease struct {
+		Identifier       string `json:"identifier"`
+		Address          string `json:"address"`
+		Hostname         string `json:"hostname"`
+		AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
+	}
 	type leasesOutput struct {
-		Leases []*Lease `json:"leases"`
+		Leases []*lease `json:"leases"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(leasesOutput), func(ctx context.Context, input, output interface{}) error {
 		var (
 			in  = input.(*leasesInput)
 			out = output.(*leasesOutput)
 		)
-		for _, lease := range r.leases {
-			if lease.ScopeKey == in.ScopeName {
-				out.Leases = append(out.Leases, lease)
+		for _, l := range r.leases {
+			if l.ScopeKey == in.ScopeName {
+				out.Leases = append(out.Leases, &lease{
+					Identifier:       l.Identifier,
+					Address:          l.Address,
+					Hostname:         l.Hostname,
+					AddressLeaseTime: l.AddressLeaseTime,
+				})
 			}
 		}
 		return nil

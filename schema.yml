@@ -538,7 +538,7 @@ components:
           type: string
         hostname:
           type: string
-        scopeKey:
+        identifier:
           type: string
       type: object
     DhcpLeasesInputType2:
@@ -565,7 +565,6 @@ components:
           nullable: true
           type: integer
         tagName:
-          nullable: true
           type: string
         value:
           nullable: true
