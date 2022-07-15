@@ -188,7 +188,7 @@ func (l *Lease) reply(
 		rep.UpdateOption(dopt)
 	}
 
-	l.log.Trace(rep.Summary())
+	l.scope.role.logDHCPMessage(rep, log.Fields{})
 	if _, err := conn.WriteTo(rep.ToBytes(), peer); err != nil {
 		l.log.WithError(err).Warning("failed to write reply")
 	}

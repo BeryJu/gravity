@@ -30,27 +30,33 @@ func (r *Role) recoverMiddleware4(inner server4.Handler) server4.Handler {
 	}
 }
 
+func (r *Role) logDHCPMessage(m *dhcpv4.DHCPv4, fields log.Fields) {
+	f := log.Fields{
+		"deviceIdentifier": r.DeviceIdentifier(m),
+		"opCode":           m.OpCode.String(),
+		"hopCount":         m.HopCount,
+		"transactionID":    m.TransactionID.String(),
+		"flagsToString":    m.FlagsToString(),
+		"clientIPAddr":     m.ClientIPAddr.String(),
+		"yourIPAddr":       m.YourIPAddr.String(),
+		"serverIPAddr":     m.ServerIPAddr.String(),
+		"gatewayIPAddr":    m.GatewayIPAddr.String(),
+		"hostname":         m.HostName(),
+		"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
+	}
+	r.log.WithFields(f).WithFields(fields).Info(m.MessageType().String())
+}
+
 func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
-		f := log.Fields{
-			"msgType":          m.MessageType(),
-			"client":           peer.String(),
-			"localAddr":        conn.LocalAddr().String(),
-			"opCode":           m.OpCode.String(),
-			"hopCount":         m.HopCount,
-			"transactionID":    m.TransactionID.String(),
-			"flagsToString":    m.FlagsToString(),
-			"clientIPAddr":     m.ClientIPAddr.String(),
-			"yourIPAddr":       m.YourIPAddr.String(),
-			"serverIPAddr":     m.ServerIPAddr.String(),
-			"gatewayIPAddr":    m.GatewayIPAddr.String(),
-			"hostname":         m.HostName(),
-			"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
-		}
 		start := time.Now()
 		inner(conn, peer, m)
 		duration := float64(time.Since(start)) / float64(time.Millisecond)
-		f["runtimeMS"] = fmt.Sprintf("%0.3f", duration)
-		r.log.WithFields(f).Info(r.DeviceIdentifier(m))
+		f := log.Fields{
+			"client":    peer.String(),
+			"localAddr": conn.LocalAddr().String(),
+			"runtimeMS": fmt.Sprintf("%0.3f", duration),
+		}
+		r.logDHCPMessage(m, f)
 	}
 }
