@@ -18,16 +18,32 @@ import (
 
 type BlockyForwarder struct {
 	*IPForwarderHandler
+	c   map[string]string
 	b   *server.Server
 	log *log.Entry
 }
 
-func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder, error) {
+func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
+		c:                  rawConfig,
 	}
 	bfwd.log = z.log.WithField("handler", bfwd.Identifier())
-	forwarders := strings.Split(rawConfig["to"], ";")
+	go func() {
+		err := bfwd.setup()
+		if err != nil {
+			bfwd.log.WithError(err).Warning("failed to setup blocky, queries will fallthrough")
+		}
+	}()
+	return bfwd
+}
+
+func (bfwd *BlockyForwarder) Identifier() string {
+	return "forward_blocky"
+}
+
+func (bfwd *BlockyForwarder) setup() error {
+	forwarders := strings.Split(bfwd.c["to"], ";")
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
@@ -40,7 +56,7 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 	cfg := config.Config{}
 	err := defaults.Set(&cfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to set config defaults: %w", err)
+		return fmt.Errorf("failed to set config defaults: %w", err)
 	}
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
@@ -49,7 +65,7 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	cfg.BootstrapDNS = config.BootstrapConfig{
 		Upstream: config.Upstream{
@@ -85,17 +101,17 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) (*BlockyForwarder,
 
 	srv, err := server.NewServer(&cfg)
 	if err != nil {
-		return nil, fmt.Errorf("can't start server: %w", err)
+		return fmt.Errorf("can't start server: %w", err)
 	}
 	bfwd.b = srv
-	return bfwd, err
-}
-
-func (bfwd *BlockyForwarder) Identifier() string {
-	return "forward_blocky"
+	return nil
 }
 
 func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+	if bfwd.b == nil {
+		bfwd.log.Info("Blocky not started/setup yet, falling through to next handler")
+		return nil
+	}
 	bfwd.b.OnRequest(w, r)
 	// fall to next handler when no record is found
 	if w.Msg().Rcode == dns.RcodeNameError {

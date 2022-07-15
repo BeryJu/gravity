@@ -137,10 +137,9 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"]
 		var handler Handler
-		var err error
 		switch t {
 		case "forward_blocky":
-			handler, err = NewBlockyForwarder(z, handlerCfg)
+			handler = NewBlockyForwarder(z, handlerCfg)
 		case "forward_ip":
 			handler = NewIPForwarderHandler(z, handlerCfg)
 		case "etcd":
