@@ -29,7 +29,7 @@ jobs:
           npm run build
       - run: go get -v -t -d ./...
       - name: Run coverage
-        run: make test
+        run: make test-etcd-start test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
   build:

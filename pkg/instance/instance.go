@@ -112,8 +112,8 @@ func (i *Instance) getRoles() []string {
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
 	i.kv = storage.NewClient(
-		extconfig.Get().Etcd.Endpoint,
 		extconfig.Get().Etcd.Prefix,
+		extconfig.Get().Etcd.Endpoint,
 	)
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)

@@ -27,5 +27,17 @@ gen-client-web:
 
 gen: gen-build gen-clean gen-client-web
 
+test-etcd-start:
+	docker run \
+		-d --rm \
+		-p 2379:2379 \
+		--name gravity-test-etcd \
+		quay.io/coreos/etcd:v3.5.4
+
+test-etcd-stop:
+	docker stop gravity-test-etcd
+
 test:
+	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup"
+	export ETCD_ENDPOINT="localhost:2379"
 	go test -race -coverprofile=coverage.txt -covermode=atomic ./...

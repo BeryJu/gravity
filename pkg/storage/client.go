@@ -15,10 +15,10 @@ type Client struct {
 	log    *log.Entry
 }
 
-func NewClient(endpoint string, prefix string) *Client {
+func NewClient(prefix string, endpoints ...string) *Client {
 	l := log.WithField("component", "etcd-client")
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:            []string{endpoint},
+		Endpoints:            endpoints,
 		DialTimeout:          2 * time.Second,
 		DialKeepAliveTime:    2 * time.Second,
 		DialKeepAliveTimeout: 2 * time.Second,
