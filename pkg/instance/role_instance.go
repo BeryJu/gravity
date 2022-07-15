@@ -25,7 +25,7 @@ func (ri *RoleInstance) KV() *storage.Client {
 	return ri.parent.kv
 }
 
-func (ri *RoleInstance) GetLogger() *log.Entry {
+func (ri *RoleInstance) Log() *log.Entry {
 	return ri.log
 }
 

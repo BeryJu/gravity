@@ -21,7 +21,7 @@ type MonitoringRole struct {
 
 func New(instance roles.Instance) *MonitoringRole {
 	r := &MonitoringRole{
-		log: instance.GetLogger(),
+		log: instance.Log(),
 		i:   instance,
 		m:   mux.NewRouter(),
 	}

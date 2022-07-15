@@ -29,7 +29,7 @@ func New(instance roles.Instance) *DNSRole {
 	r := &DNSRole{
 		servers: make([]*dns.Server, 0),
 		zones:   make(map[string]*Zone, 0),
-		log:     instance.GetLogger(),
+		log:     instance.Log(),
 		i:       instance,
 	}
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)

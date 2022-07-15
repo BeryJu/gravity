@@ -46,7 +46,7 @@ type EventHandler func(ev *Event)
 
 type Instance interface {
 	KV() *storage.Client
-	GetLogger() *log.Entry
+	Log() *log.Entry
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 }

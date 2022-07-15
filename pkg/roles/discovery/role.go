@@ -20,7 +20,7 @@ type DiscoveryRole struct {
 
 func New(instance roles.Instance) *DiscoveryRole {
 	r := &DiscoveryRole{
-		log: instance.GetLogger(),
+		log: instance.Log(),
 		i:   instance,
 	}
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

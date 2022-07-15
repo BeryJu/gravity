@@ -23,7 +23,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	ap := &AuthProvider{
 		role: r,
 		inst: inst,
-		log:  inst.GetLogger().WithField("mw", "auth"),
+		log:  inst.Log().WithField("mw", "auth"),
 	}
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)

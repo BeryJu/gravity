@@ -21,7 +21,7 @@ var addUserCmd = &cobra.Command{
 			panic("Must set -u")
 		}
 		rootInst := instance.NewInstance()
-		inst := rootInst.ForRole("tests")
+		inst := rootInst.ForRole("cli")
 		api := api.New(inst)
 		am := auth.NewAuthProvider(api, inst)
 		fmt.Printf("Enter the password for %s: ", username)

@@ -31,7 +31,7 @@ type BackupRole struct {
 
 func New(instance roles.Instance) *BackupRole {
 	r := &BackupRole{
-		log: instance.GetLogger(),
+		log: instance.Log(),
 		i:   instance,
 	}
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {

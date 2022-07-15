@@ -31,7 +31,7 @@ type DHCPRole struct {
 
 func New(instance roles.Instance) *DHCPRole {
 	r := &DHCPRole{
-		log:        instance.GetLogger(),
+		log:        instance.Log(),
 		i:          instance,
 		scopes:     make(map[string]*Scope),
 		leases:     make(map[string]*Lease),
