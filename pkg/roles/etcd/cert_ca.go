@@ -12,12 +12,12 @@ import (
 	"time"
 )
 
-func (ee *EmbeddedEtcd) loadCA() (*x509.Certificate, *rsa.PrivateKey, error) {
+func (ee *Role) loadCA() (*x509.Certificate, *rsa.PrivateKey, error) {
 	// TODO: Stub method
 	return nil, nil, nil
 }
 
-func (ee *EmbeddedEtcd) generateCA() error {
+func (ee *Role) generateCA() error {
 	ca := &x509.Certificate{
 		SerialNumber: big.NewInt(0),
 		Subject: pkix.Name{

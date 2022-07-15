@@ -9,7 +9,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *EmbeddedEtcd) apiHandlerMembers() usecase.Interactor {
+func (r *Role) apiHandlerMembers() usecase.Interactor {
 	type member struct {
 		ID   uint64 `json:"id"`
 		Name string `json:"name"`
@@ -40,7 +40,7 @@ func (r *EmbeddedEtcd) apiHandlerMembers() usecase.Interactor {
 	return u
 }
 
-func (r *EmbeddedEtcd) apiHandlerJoin() usecase.Interactor {
+func (r *Role) apiHandlerJoin() usecase.Interactor {
 	type etcdJoinInput struct {
 		Peer string `query:"peer"`
 	}

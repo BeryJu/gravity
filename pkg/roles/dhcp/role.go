@@ -15,12 +15,12 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv6/server6"
 )
 
-type DHCPRole struct {
+type Role struct {
 	scopes     map[string]*Scope
 	leases     map[string]*Lease
 	leasesSync sync.RWMutex
 
-	cfg *DHCPRoleConfig
+	cfg *RoleConfig
 
 	s4  *server4.Server
 	s6  *server6.Server
@@ -29,8 +29,8 @@ type DHCPRole struct {
 	ctx context.Context
 }
 
-func New(instance roles.Instance) *DHCPRole {
-	r := &DHCPRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		log:        instance.Log(),
 		i:          instance,
 		scopes:     make(map[string]*Scope),
@@ -50,9 +50,9 @@ func New(instance roles.Instance) *DHCPRole {
 	return r
 }
 
-func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	r.cfg = r.decodeDHCPRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(config)
 
 	r.loadInitialScopes()
 	r.loadInitialScopes()
@@ -63,7 +63,7 @@ func (r *DHCPRole) Start(ctx context.Context, config []byte) error {
 	return r.startServer4()
 }
 
-func (r *DHCPRole) startServer4() error {
+func (r *Role) startServer4() error {
 	laddr := net.UDPAddr{
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
@@ -85,7 +85,7 @@ func (r *DHCPRole) startServer4() error {
 	return r.s4.Serve()
 }
 
-func (r *DHCPRole) Stop() {
+func (r *Role) Stop() {
 	if r.s4 != nil {
 		r.s4.Close()
 	}

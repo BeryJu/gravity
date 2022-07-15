@@ -15,7 +15,7 @@ import (
 	"go.etcd.io/etcd/server/v3/embed"
 )
 
-type EmbeddedEtcd struct {
+type Role struct {
 	etcdDir string
 	certDir string
 
@@ -33,7 +33,7 @@ func urlMustParse(raw string) *url.URL {
 	return u
 }
 
-func New(instance roles.Instance) *EmbeddedEtcd {
+func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
 	cfg.Dir = dirs.EtcdDir
@@ -46,7 +46,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
 	cfg.InitialCluster = ""
-	ee := &EmbeddedEtcd{
+	ee := &Role{
 		cfg:     cfg,
 		log:     instance.Log(),
 		i:       instance,
@@ -78,7 +78,7 @@ func New(instance roles.Instance) *EmbeddedEtcd {
 	return ee
 }
 
-func (ee *EmbeddedEtcd) Start(ready func()) error {
+func (ee *Role) Start(ready func()) error {
 	e, err := embed.StartEtcd(ee.cfg)
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func (ee *EmbeddedEtcd) Start(ready func()) error {
 	return <-e.Err()
 }
 
-func (ee *EmbeddedEtcd) Stop() {
+func (ee *Role) Stop() {
 	if ee.e == nil {
 		return
 	}

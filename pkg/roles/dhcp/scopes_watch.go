@@ -9,7 +9,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
+func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true)
 	relKey := strings.TrimPrefix(string(kv.Key), prefix.String())
 	// we only care about scope-level updates, everything underneath doesn't matter
@@ -31,7 +31,7 @@ func (r *DHCPRole) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 	return true
 }
 
-func (r *DHCPRole) loadInitialScopes() {
+func (r *Role) loadInitialScopes() {
 	scopes, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String(), clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")
@@ -44,7 +44,7 @@ func (r *DHCPRole) loadInitialScopes() {
 	}
 }
 
-func (r *DHCPRole) startWatchScopes() {
+func (r *Role) startWatchScopes() {
 
 	watchChan := r.i.KV().Watch(
 		r.ctx,

@@ -6,7 +6,7 @@ import (
 	"github.com/swaggest/usecase"
 )
 
-func (r *DNSRole) apiHandlerZones() usecase.Interactor {
+func (r *Role) apiHandlerZones() usecase.Interactor {
 	type zone struct {
 		Name           string              `json:"name"`
 		Authoritative  bool                `json:"authoritative"`

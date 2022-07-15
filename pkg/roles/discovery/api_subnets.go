@@ -9,7 +9,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DiscoveryRole) apiHandlerSubnets() usecase.Interactor {
+func (r *Role) apiHandlerSubnets() usecase.Interactor {
 	type subnet struct {
 		CIDR         string `json:"cidr"`
 		DiscoveryTTL int    `json:"discoveryTTL"`
@@ -46,7 +46,7 @@ func (r *DiscoveryRole) apiHandlerSubnets() usecase.Interactor {
 	return u
 }
 
-func (r *DiscoveryRole) apiHandlerSubnetsPut() usecase.Interactor {
+func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	type subnetsInput struct {
 		Name string `path:"identifier"`
 
@@ -73,7 +73,7 @@ func (r *DiscoveryRole) apiHandlerSubnetsPut() usecase.Interactor {
 	return u
 }
 
-func (r *DiscoveryRole) apiHandlerSubnetsDelete() usecase.Interactor {
+func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
 	type subnetsInput struct {
 		Name string `path:"identifier"`
 	}

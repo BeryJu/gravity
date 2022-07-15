@@ -12,15 +12,15 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type MonitoringRole struct {
+type Role struct {
 	m   *mux.Router
 	log *log.Entry
 	i   roles.Instance
 	ctx context.Context
 }
 
-func New(instance roles.Instance) *MonitoringRole {
-	r := &MonitoringRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		log: instance.Log(),
 		i:   instance,
 		m:   mux.NewRouter(),
@@ -34,13 +34,13 @@ func New(instance roles.Instance) *MonitoringRole {
 	return r
 }
 
-func (r *MonitoringRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeMonitoringRoleConfig(config)
+	cfg := r.decodeRoleConfig(config)
 	listen := extconfig.Get().Listen(cfg.Port)
 	r.log.WithField("listen", listen).Info("starting monitoring Server")
 	return http.ListenAndServe(listen, r.m)
 }
 
-func (r *MonitoringRole) Stop() {
+func (r *Role) Stop() {
 }

@@ -13,12 +13,12 @@ import (
 	"time"
 )
 
-func (ee *EmbeddedEtcd) loadInstance() (*x509.Certificate, *rsa.PrivateKey, error) {
+func (ee *Role) loadInstance() (*x509.Certificate, *rsa.PrivateKey, error) {
 	// TODO: Stub method
 	return nil, nil, nil
 }
 
-func (ee *EmbeddedEtcd) generateInstance() error {
+func (ee *Role) generateInstance() error {
 	caCert, caKey, err := ee.loadCA()
 	if err != nil {
 		return err

@@ -46,7 +46,7 @@ type Instance struct {
 	eventHandlersM sync.RWMutex
 	eventHandlers  map[string]map[string][]roles.EventHandler
 
-	etcd *etcd.EmbeddedEtcd
+	etcd *etcd.Role
 }
 
 func NewInstance() *Instance {

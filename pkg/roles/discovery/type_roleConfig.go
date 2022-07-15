@@ -2,12 +2,12 @@ package discovery
 
 import "encoding/json"
 
-type DiscoveryRoleConfig struct {
+type RoleConfig struct {
 	Enabled bool `json:"enabled"`
 }
 
-func (r *DiscoveryRole) decodeDiscoveryRoleConfig(raw []byte) *DiscoveryRoleConfig {
-	def := DiscoveryRoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+	def := RoleConfig{
 		Enabled: true,
 	}
 	if len(raw) < 1 {

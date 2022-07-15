@@ -7,7 +7,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *DHCPRole) apiHandlerLeases() usecase.Interactor {
+func (r *Role) apiHandlerLeases() usecase.Interactor {
 	type leasesInput struct {
 		ScopeName string `path:"scope"`
 	}
@@ -32,7 +32,7 @@ func (r *DHCPRole) apiHandlerLeases() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerLeasesPut() usecase.Interactor {
+func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 	type leasesInput struct {
 		Identifier string `path:"identifier"`
 		Scope      string `path:"scope"`
@@ -68,7 +68,7 @@ func (r *DHCPRole) apiHandlerLeasesPut() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerLeasesWOL() usecase.Interactor {
+func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 	type leasesInput struct {
 		Identifier string `path:"identifier"`
 		Scope      string `path:"scope"`
@@ -94,7 +94,7 @@ func (r *DHCPRole) apiHandlerLeasesWOL() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerLeasesDelete() usecase.Interactor {
+func (r *Role) apiHandlerLeasesDelete() usecase.Interactor {
 	type leasesInput struct {
 		Identifier string `path:"identifier"`
 		Scope      string `path:"scope"`

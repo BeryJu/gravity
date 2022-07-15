@@ -23,10 +23,10 @@ type Subnet struct {
 	etcdKey string
 	inst    roles.Instance
 	log     *log.Entry
-	role    *DiscoveryRole
+	role    *Role
 }
 
-func (r *DiscoveryRole) newSubnet(name string) *Subnet {
+func (r *Role) newSubnet(name string) *Subnet {
 	return &Subnet{
 		DiscoveryTTL: int((24 * time.Hour).Seconds()),
 		inst:         r.i,
@@ -36,7 +36,7 @@ func (r *DiscoveryRole) newSubnet(name string) *Subnet {
 	}
 }
 
-func (r *DiscoveryRole) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
+func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 

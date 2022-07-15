@@ -13,7 +13,7 @@ import (
 //go:embed ui/index.html
 var IndexTemplate string
 
-func (r *APIRole) setupUI() {
+func (r *Role) setupUI() {
 	t, err := template.New("gravity.ui").Parse(IndexTemplate)
 	if err != nil {
 		panic(err)

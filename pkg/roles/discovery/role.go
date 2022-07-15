@@ -11,15 +11,15 @@ import (
 	"github.com/swaggest/rest/web"
 )
 
-type DiscoveryRole struct {
+type Role struct {
 	log *log.Entry
 	i   roles.Instance
-	cfg *DiscoveryRoleConfig
+	cfg *RoleConfig
 	ctx context.Context
 }
 
-func New(instance roles.Instance) *DiscoveryRole {
-	r := &DiscoveryRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		log: instance.Log(),
 		i:   instance,
 	}
@@ -35,9 +35,9 @@ func New(instance roles.Instance) *DiscoveryRole {
 	return r
 }
 
-func (r *DiscoveryRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	r.cfg = r.decodeDiscoveryRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(config)
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		r.log.Info("Not enabling discovery")
 		return nil
@@ -46,5 +46,5 @@ func (r *DiscoveryRole) Start(ctx context.Context, config []byte) error {
 	return nil
 }
 
-func (r *DiscoveryRole) Stop() {
+func (r *Role) Stop() {
 }

@@ -46,7 +46,7 @@ func CreateSomeRecords(t *testing.T) {
 	)
 }
 
-func Role() (*instance.Instance, *dns.DNSRole) {
+func Role() (*instance.Instance, *dns.Role) {
 	rootInst := instance.NewInstance()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)

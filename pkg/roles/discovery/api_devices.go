@@ -10,7 +10,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DiscoveryRole) apiHandlerDevices() usecase.Interactor {
+func (r *Role) apiHandlerDevices() usecase.Interactor {
 	type device struct {
 		Hostname string `json:"hostname"`
 		IP       string `json:"ip"`
@@ -48,7 +48,7 @@ func (r *DiscoveryRole) apiHandlerDevices() usecase.Interactor {
 	return u
 }
 
-func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
+func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 	type deviceApplyInput struct {
 		Identifier string `path:"identifier"`
 		To         string `json:"to" enum:"dhcp,dns"`
@@ -89,7 +89,7 @@ func (r *DiscoveryRole) apiHandlerDeviceApply() usecase.Interactor {
 	return u
 }
 
-func (r *DiscoveryRole) apiHandlerDevicesDelete() usecase.Interactor {
+func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
 	type devicesInput struct {
 		Name string `path:"identifier"`
 	}

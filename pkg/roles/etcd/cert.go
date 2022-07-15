@@ -14,7 +14,7 @@ const (
 	relInstKeyPath  = "/instance_key.pem"
 )
 
-func (ee *EmbeddedEtcd) configureCertificates() {
+func (ee *Role) configureCertificates() {
 	// Always check for CA public key, if we don't have one
 	// assume new install and generate a CA
 	if _, err := os.Stat(path.Join(ee.certDir, relCACertPath)); errors.Is(err, os.ErrNotExist) {

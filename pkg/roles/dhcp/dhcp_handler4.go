@@ -7,7 +7,7 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
-func (r *DHCPRole) handler4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
+func (r *Role) handler4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 	if r.cfg.ListenOnly || extconfig.Get().ListenOnlyMode {
 		return
 	}

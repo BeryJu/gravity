@@ -10,7 +10,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
+func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about zone-level updates, everything underneath doesn't matter
@@ -39,7 +39,7 @@ func (r *DNSRole) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bo
 	return true
 }
 
-func (r *DNSRole) loadInitialZones() {
+func (r *Role) loadInitialZones() {
 	zones, err := r.i.KV().Get(context.Background(), r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(), clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")
@@ -52,7 +52,7 @@ func (r *DNSRole) loadInitialZones() {
 	}
 }
 
-func (r *DNSRole) startWatchZones() {
+func (r *Role) startWatchZones() {
 	watchChan := r.i.KV().Watch(
 		r.ctx,
 		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(),

@@ -105,7 +105,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(fallback)
 }
 
-func (r *DNSRole) newZone(name string) *Zone {
+func (r *Role) newZone(name string) *Zone {
 	return &Zone{
 		Name:        name,
 		DefaultTTL:  DefaultTTL,
@@ -116,7 +116,7 @@ func (r *DNSRole) newZone(name string) *Zone {
 	}
 }
 
-func (r *DNSRole) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
+func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 	z := r.newZone(name)

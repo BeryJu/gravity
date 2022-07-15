@@ -8,7 +8,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DiscoveryRole) startDiscovery(raw *mvccpb.KeyValue) {
+func (r *Role) startDiscovery(raw *mvccpb.KeyValue) {
 	sub, err := r.subnetFromKV(raw)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to parse subnet")
@@ -17,7 +17,7 @@ func (r *DiscoveryRole) startDiscovery(raw *mvccpb.KeyValue) {
 	go sub.RunDiscovery()
 }
 
-func (r *DiscoveryRole) startWatchSubnets() {
+func (r *Role) startWatchSubnets() {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 	subnets, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {

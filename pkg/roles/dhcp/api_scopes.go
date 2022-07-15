@@ -8,7 +8,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *DHCPRole) apiHandlerScopes() usecase.Interactor {
+func (r *Role) apiHandlerScopes() usecase.Interactor {
 	type scope struct {
 		Name       string    `json:"scope"`
 		SubnetCIDR string    `json:"subnetCidr"`
@@ -51,7 +51,7 @@ func (r *DHCPRole) apiHandlerScopes() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerScopesPut() usecase.Interactor {
+func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 	type scopesInput struct {
 		Name string `path:"scope"`
 
@@ -100,7 +100,7 @@ func (r *DHCPRole) apiHandlerScopesPut() usecase.Interactor {
 	return u
 }
 
-func (r *DHCPRole) apiHandlerScopesDelete() usecase.Interactor {
+func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 	type scopesInput struct {
 		Scope string `path:"scope"`
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
-func (r *DHCPRole) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
+func (r *Role) handleDHCPDiscover4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 	match := r.findLease(m)
 	if match == nil {
 		scope := r.findScopeForRequest(conn, peer, m)

@@ -16,7 +16,7 @@ import (
 	swgui "github.com/swaggest/swgui/v4emb"
 )
 
-type APIRole struct {
+type Role struct {
 	m    *mux.Router
 	oapi *web.Service
 	log  *log.Entry
@@ -24,8 +24,8 @@ type APIRole struct {
 	ctx  context.Context
 }
 
-func New(instance roles.Instance) *APIRole {
-	r := &APIRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		log: instance.Log(),
 		i:   instance,
 		m:   mux.NewRouter(),
@@ -36,16 +36,16 @@ func New(instance roles.Instance) *APIRole {
 	return r
 }
 
-func (r *APIRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeAPIRoleConfig(config)
+	cfg := r.decodeRoleConfig(config)
 	r.prepareOpenAPI()
 	listen := extconfig.Get().Listen(cfg.Port)
 	r.log.WithField("listen", listen).Info("starting API Server")
 	return http.ListenAndServe(listen, r.m)
 }
 
-func (r *APIRole) prepareOpenAPI() {
+func (r *Role) prepareOpenAPI() {
 	if r.oapi != nil {
 		return
 	}
@@ -64,10 +64,10 @@ func (r *APIRole) prepareOpenAPI() {
 	}))
 }
 
-func (r *APIRole) Schema() *openapi3.Spec {
+func (r *Role) Schema() *openapi3.Spec {
 	r.prepareOpenAPI()
 	return r.oapi.OpenAPICollector.Reflector().Spec
 }
 
-func (r *APIRole) Stop() {
+func (r *Role) Stop() {
 }

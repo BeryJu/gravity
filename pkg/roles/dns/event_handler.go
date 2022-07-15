@@ -10,7 +10,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-func (r *DNSRole) eventHandlerDHCPLeaseGiven(ev *roles.Event) {
+func (r *Role) eventHandlerDHCPLeaseGiven(ev *roles.Event) {
 	if ev.Payload.Data["hostname"] == "" {
 		return
 	}
@@ -20,7 +20,7 @@ func (r *DNSRole) eventHandlerDHCPLeaseGiven(ev *roles.Event) {
 	r.eventCreateReverse(ev)
 }
 
-func (r *DNSRole) eventCreateForward(ev *roles.Event) {
+func (r *Role) eventCreateForward(ev *roles.Event) {
 	hostname := ev.Payload.Data["hostname"].(string)
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	forwardZone := r.FindZone(fqdn)
@@ -49,7 +49,7 @@ func (r *DNSRole) eventCreateForward(ev *roles.Event) {
 	}
 }
 
-func (r *DNSRole) eventCreateReverse(ev *roles.Event) {
+func (r *Role) eventCreateReverse(ev *roles.Event) {
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	rawAddr := ev.Payload.Data["address"].(string)
 	ip, err := netip.ParseAddr(rawAddr)

@@ -2,12 +2,12 @@ package api
 
 import "encoding/json"
 
-type APIRoleConfig struct {
+type RoleConfig struct {
 	Port int32 `json:"port"`
 }
 
-func (r *APIRole) decodeAPIRoleConfig(raw []byte) *APIRoleConfig {
-	def := APIRoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+	def := RoleConfig{
 		Port: 8008,
 	}
 	if len(raw) < 1 {

@@ -2,12 +2,12 @@ package dns
 
 import "encoding/json"
 
-type DNSRoleConfig struct {
+type RoleConfig struct {
 	Port int32 `json:"port"`
 }
 
-func (r *DNSRole) decodeDNSRoleConfig(raw []byte) *DNSRoleConfig {
-	def := DNSRoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+	def := RoleConfig{
 		Port: 53,
 	}
 	if len(raw) < 1 {

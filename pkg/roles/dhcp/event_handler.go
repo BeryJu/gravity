@@ -4,7 +4,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 )
 
-func (r *DHCPRole) eventCreateLease(ev *roles.Event) {
+func (r *Role) eventCreateLease(ev *roles.Event) {
 	ident := ev.Payload.Data["mac"].(string)
 	hostname := ev.Payload.Data["hostname"].(string)
 	address := ev.Payload.Data["address"].(string)

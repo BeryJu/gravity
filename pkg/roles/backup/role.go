@@ -19,9 +19,9 @@ const (
 	KeyRole = "backup"
 )
 
-type BackupRole struct {
+type Role struct {
 	mc  *minio.Client
-	cfg *BackupRoleConfig
+	cfg *RoleConfig
 	c   *cron.Cron
 
 	log *log.Entry
@@ -29,8 +29,8 @@ type BackupRole struct {
 	ctx context.Context
 }
 
-func New(instance roles.Instance) *BackupRole {
-	r := &BackupRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		log: instance.Log(),
 		i:   instance,
 	}
@@ -41,9 +41,9 @@ func New(instance roles.Instance) *BackupRole {
 	return r
 }
 
-func (r *BackupRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	r.cfg = r.decodeBackupRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(config)
 	if !r.cfg.Enabled {
 		return nil
 	}
@@ -86,7 +86,7 @@ func (r *BackupRole) Start(ctx context.Context, config []byte) error {
 	return nil
 }
 
-func (r *BackupRole) Stop() {
+func (r *Role) Stop() {
 	if r.c != nil {
 		<-r.c.Stop().Done()
 	}

@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (r *DHCPRole) recoverMiddleware4(inner server4.Handler) server4.Handler {
+func (r *Role) recoverMiddleware4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 		defer func() {
 			err := recover()
@@ -30,7 +30,7 @@ func (r *DHCPRole) recoverMiddleware4(inner server4.Handler) server4.Handler {
 	}
 }
 
-func (r *DHCPRole) loggingMiddleware4(inner server4.Handler) server4.Handler {
+func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 	return func(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 		f := log.Fields{
 			"msgType":          m.MessageType(),

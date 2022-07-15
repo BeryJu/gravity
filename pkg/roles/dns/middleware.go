@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (r *DNSRole) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
+func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		defer func() {
 			err := recover()
@@ -35,7 +35,7 @@ func (r *DNSRole) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	}
 }
 
-func (r *DNSRole) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
+func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		start := time.Now()
 		fw := utils.NewFakeDNSWriter(w)

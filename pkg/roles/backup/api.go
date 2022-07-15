@@ -6,7 +6,7 @@ import (
 	"github.com/swaggest/usecase"
 )
 
-func (r *BackupRole) apiHandlerBackupStart() usecase.Interactor {
+func (r *Role) apiHandlerBackupStart() usecase.Interactor {
 	type backupStartInput struct {
 		Wait bool `query:"wait"`
 	}

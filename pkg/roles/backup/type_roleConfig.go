@@ -2,7 +2,7 @@ package backup
 
 import "encoding/json"
 
-type BackupRoleConfig struct {
+type RoleConfig struct {
 	Enabled   bool   `json:"enabled"`
 	AccessKey string `json:"accessKey"`
 	SecretKey string `json:"secretKey"`
@@ -11,8 +11,8 @@ type BackupRoleConfig struct {
 	CronExpr  string `json:"cronExpr"`
 }
 
-func (r *BackupRole) decodeBackupRoleConfig(raw []byte) *BackupRoleConfig {
-	def := BackupRoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+	def := RoleConfig{
 		Enabled:  true,
 		CronExpr: "0 */24 * * *",
 	}

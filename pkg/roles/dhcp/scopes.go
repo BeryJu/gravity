@@ -56,11 +56,11 @@ type Scope struct {
 	etcdKey string
 	ipam    ipam.IPAM
 	inst    roles.Instance
-	role    *DHCPRole
+	role    *Role
 	log     *log.Entry
 }
 
-func (r *DHCPRole) newScope(name string) *Scope {
+func (r *Role) newScope(name string) *Scope {
 	return &Scope{
 		Name: name,
 		inst: r.i,
@@ -70,7 +70,7 @@ func (r *DHCPRole) newScope(name string) *Scope {
 	}
 }
 
-func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
+func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 
@@ -97,7 +97,7 @@ func (r *DHCPRole) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	return s, nil
 }
 
-func (r *DHCPRole) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
+func (r *Role) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
 	var match *Scope
 	longestBits := 0
 	for _, scope := range r.scopes {

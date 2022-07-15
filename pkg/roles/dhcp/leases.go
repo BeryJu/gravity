@@ -34,13 +34,13 @@ type Lease struct {
 	log     *log.Entry
 }
 
-func (r *DHCPRole) newLease() *Lease {
+func (r *Role) newLease() *Lease {
 	return &Lease{
 		inst: r.i,
 	}
 }
 
-func (r *DHCPRole) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
+func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	l := r.newLease()
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {

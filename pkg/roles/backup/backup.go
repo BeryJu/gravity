@@ -21,7 +21,7 @@ const BackupStatusSuccess = "success"
 const BackupStatusStarted = "started"
 const BackupStatusFailed = "failed"
 
-func (r *BackupRole) setStatus(status *BackupStatus) *BackupStatus {
+func (r *Role) setStatus(status *BackupStatus) *BackupStatus {
 	backupStatus.WithLabelValues(status.Status).SetToCurrentTime()
 	if status.Status == BackupStatusSuccess {
 		backupSize.Set(float64(status.Size))
@@ -30,7 +30,7 @@ func (r *BackupRole) setStatus(status *BackupStatus) *BackupStatus {
 	return status
 }
 
-func (r *BackupRole) saveSnapshot() *BackupStatus {
+func (r *Role) saveSnapshot() *BackupStatus {
 	start := time.Now()
 	if r.mc == nil {
 		return r.setStatus(&BackupStatus{

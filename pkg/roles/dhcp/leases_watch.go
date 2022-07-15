@@ -8,7 +8,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *DHCPRole) handleLeaseOp(ev *clientv3.Event) {
+func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 	r.leasesSync.Lock()
 	defer r.leasesSync.Unlock()
 	if ev.Type == clientv3.EventTypeDelete {
@@ -23,7 +23,7 @@ func (r *DHCPRole) handleLeaseOp(ev *clientv3.Event) {
 	}
 }
 
-func (r *DHCPRole) loadInitialLeases() {
+func (r *Role) loadInitialLeases() {
 	leases, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyLeases).Prefix(true).String(), clientv3.WithPrefix())
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial leases")
@@ -39,7 +39,7 @@ func (r *DHCPRole) loadInitialLeases() {
 	}
 }
 
-func (r *DHCPRole) startWatchLeases() {
+func (r *Role) startWatchLeases() {
 	watchChan := r.i.KV().Watch(
 		r.ctx,
 		r.i.KV().Key(types.KeyRole, types.KeyLeases).Prefix(true).String(),

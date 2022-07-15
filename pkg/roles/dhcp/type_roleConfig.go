@@ -2,14 +2,14 @@ package dhcp
 
 import "encoding/json"
 
-type DHCPRoleConfig struct {
+type RoleConfig struct {
 	ListenOnly            bool `json:"listenOnly"`
 	Port                  int  `json:"port"`
 	LeaseNegotiateTimeout int  `json:"leaseNegotiateTimeout"`
 }
 
-func (r *DHCPRole) decodeDHCPRoleConfig(raw []byte) *DHCPRoleConfig {
-	def := DHCPRoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+	def := RoleConfig{
 		ListenOnly:            false,
 		Port:                  67,
 		LeaseNegotiateTimeout: 30,

@@ -8,7 +8,7 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
-func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
+func (r *Role) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) {
 	match := r.findLease(m)
 
 	if match == nil {
@@ -32,7 +32,7 @@ func (r *DHCPRole) handleDHCPRequest4(conn net.PacketConn, peer net.Addr, m *dhc
 	})
 }
 
-func (r *DHCPRole) findLease(m *dhcpv4.DHCPv4) *Lease {
+func (r *Role) findLease(m *dhcpv4.DHCPv4) *Lease {
 	match, err := r.i.KV().KV.Get(context.TODO(), r.i.KV().Key(types.KeyRole, types.KeyLeases, m.ClientHWAddr.String()).String())
 	var lease *Lease
 	if err != nil {

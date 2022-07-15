@@ -25,14 +25,14 @@ type Device struct {
 	inst roles.Instance
 }
 
-func (r *DiscoveryRole) newDevice() *Device {
+func (r *Role) newDevice() *Device {
 	return &Device{
 		Identifier: uuid.New().String(),
 		inst:       r.i,
 	}
 }
 
-func (r *DiscoveryRole) deviceFromKV(kv *mvccpb.KeyValue) *Device {
+func (r *Role) deviceFromKV(kv *mvccpb.KeyValue) *Device {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 	identifier := strings.TrimPrefix(string(kv.Key), prefix)
 	rec := r.newDevice()

@@ -9,7 +9,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *DNSRole) apiHandlerZoneRecords() usecase.Interactor {
+func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 	type zoneRecordsInput struct {
 		Zone string `path:"zone"`
 	}

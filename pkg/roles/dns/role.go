@@ -16,7 +16,7 @@ import (
 	"github.com/swaggest/rest/web"
 )
 
-type DNSRole struct {
+type Role struct {
 	servers []*dns.Server
 	zones   map[string]*Zone
 
@@ -25,8 +25,8 @@ type DNSRole struct {
 	ctx context.Context
 }
 
-func New(instance roles.Instance) *DNSRole {
-	r := &DNSRole{
+func New(instance roles.Instance) *Role {
+	r := &Role{
 		servers: make([]*dns.Server, 0),
 		zones:   make(map[string]*Zone, 0),
 		log:     instance.Log(),
@@ -44,9 +44,9 @@ func New(instance roles.Instance) *DNSRole {
 	return r
 }
 
-func (r *DNSRole) Start(ctx context.Context, config []byte) error {
+func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeDNSRoleConfig(config)
+	cfg := r.decodeRoleConfig(config)
 
 	go r.startWatchZones()
 
@@ -88,7 +88,7 @@ func (r *DNSRole) Start(ctx context.Context, config []byte) error {
 	return nil
 }
 
-func (r *DNSRole) Stop() {
+func (r *Role) Stop() {
 	for _, server := range r.servers {
 		server.Shutdown()
 	}
