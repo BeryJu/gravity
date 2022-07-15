@@ -35,6 +35,7 @@ func NewInternalIPAM(role *Role, cidr string, rangeStart string, rangeEnd string
 		Start:      start,
 		End:        end,
 		log:        log.WithField("component", "ipam"),
+		role:       role,
 	}, nil
 }
 

@@ -87,7 +87,6 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 
 	s.etcdKey = string(raw.Key)
 
-	// TODO: other IPAMs
 	var ipamInst IPAM
 	ipamInst, err = NewInternalIPAM(r, s.SubnetCIDR, s.Range.Start, s.Range.End)
 	if err != nil {
