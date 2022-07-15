@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
 
+	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/insomniacslk/dhcp/dhcpv4/server4"
 	"github.com/insomniacslk/dhcp/dhcpv6/server6"
 )
@@ -89,4 +90,8 @@ func (r *Role) Stop() {
 	if r.s4 != nil {
 		r.s4.Close()
 	}
+}
+
+func (r *Role) DeviceIdentifier(m *dhcpv4.DHCPv4) string {
+	return m.ClientHWAddr.String()
 }

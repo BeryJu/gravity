@@ -133,7 +133,7 @@ func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) int 
 }
 
 func (s *Scope) createLeaseFor(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Lease {
-	ident := m.ClientHWAddr.String()
+	ident := s.role.DeviceIdentifier(m)
 	lease := &Lease{
 		Identifier: ident,
 

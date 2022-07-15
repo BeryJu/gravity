@@ -52,6 +52,6 @@ func (r *Role) loggingMiddleware4(inner server4.Handler) server4.Handler {
 		inner(conn, peer, m)
 		duration := float64(time.Since(start)) / float64(time.Millisecond)
 		f["runtimeMS"] = fmt.Sprintf("%0.3f", duration)
-		r.log.WithFields(f).Info(m.ClientHWAddr.String())
+		r.log.WithFields(f).Info(r.DeviceIdentifier(m))
 	}
 }

@@ -32,30 +32,6 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 
 - [ ] Web UI that supports doing things
 - [ ] API that supports doing things
-    - [ ] API
-        - Auth user
-            - [x] Read
-            - [x] Put
-            - [x] Delete
-    - [x] Backup
-    - [ ] DHCP
-        - Lease
-            - [x] Read
-            - [x] Put
-            - [x] Delete
-        - Scope
-            - [x] Read
-            - [x] Put
-            - [x] Delete
-    - [ ] Discovery
-        - Subnet
-            - [x] Read
-            - [x] Put
-            - [x] Delete
-        - Discovery
-            - [x] Read
-            - [x] Delete
-            - [x] Apply
     - [ ] DNS
         - Zone
             - [x] Read
@@ -72,6 +48,9 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [ ] Testing
 - [ ] Docs
 - [ ] Real world testing
+    - [ ] DHCP
+    - [ ] DNS
+    - [ ] Backup & Restore
 - [x] Replicated DNS caching
 - [x] In-memory caching for clusters with even nodes
     - [x] Caching for DNS
