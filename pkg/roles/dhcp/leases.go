@@ -25,7 +25,7 @@ type Lease struct {
 
 	Address          string `json:"address"`
 	Hostname         string `json:"hostname"`
-	AddressLeaseTime string `json:"addressLeaseTime"`
+	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
 
 	scope   *Scope
@@ -117,12 +117,16 @@ func (l *Lease) reply(
 	}
 	rep = modifyResponse(rep)
 
-	ipLeaseDuration, err := time.ParseDuration(l.AddressLeaseTime)
-	if l.AddressLeaseTime != "" && err != nil {
-		l.log.WithField("default", "24h").WithError(err).Warning("failed to parse address lease duration, defaulting")
-		ipLeaseDuration = time.Duration(l.scope.TTL * int64(time.Millisecond))
+	if l.AddressLeaseTime != "" {
+		pl, err := time.ParseDuration(l.AddressLeaseTime)
+		if err != nil {
+			l.log.WithField("default", pl.String()).WithError(err).Warning("failed to parse address lease duration, defaulting")
+		} else {
+			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
+		}
+	} else {
+		rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(l.scope.TTL * int64(time.Second))))
 	}
-	rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(ipLeaseDuration))
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
 
 	// DNS Options
@@ -172,7 +176,7 @@ func (l *Lease) reply(
 		rep.UpdateOption(dopt)
 	}
 
-	l.log.Trace(rep.Summary(), "peer", peer.String())
+	l.log.Trace(rep.Summary())
 	if _, err := conn.WriteTo(rep.ToBytes(), peer); err != nil {
 		l.log.WithError(err).Warning("failed to write reply")
 	}
