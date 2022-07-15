@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: Build
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,10 +28,15 @@ jobs:
           make -C .. gen-client-web
           npm run build
       - run: go get -v -t -d ./...
-      - name: Build
-        run: go build -v .
-      - name: Test
-        run: go test -v .
+      - name: Run coverage
+        run: make test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -48,6 +53,18 @@ jobs:
           echo "##[set-output name=sha]$GITHUB_SHA"
           echo "##[set-output name=build]$GITHUB_RUN_ID"
           echo "##[set-output name=timestamp]$(date +%s)"
+      - name: Setup node
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+      - name: Build web
+        working-directory: web/
+        run: |
+          npm ci
+          make -C .. gen-client-web
+          npm run build
       - name: Build and push Docker images
         uses: docker/build-push-action@v3.0.0
         with:
