@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-	"strconv"
 	"strings"
 	"time"
 
@@ -28,8 +27,6 @@ type Lease struct {
 	Hostname         string `json:"hostname"`
 	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
-
-	EtcdLeaseID string `json:"etcdLeaseID"`
 
 	scope   *Scope
 	etcdKey string
@@ -72,24 +69,11 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 		return err
 	}
 
-	if l.EtcdLeaseID != "" {
-		id, err := strconv.Atoi(l.EtcdLeaseID)
-		if err != nil {
-			l.log.WithError(err).Warning("failed to convert etcd lease id to revoke")
-		} else {
-			_, err := l.inst.KV().Lease.Revoke(context.TODO(), clientv3.LeaseID(id))
-			if err != nil {
-				l.log.WithError(err).Warning("failed to revoke old lease")
-			}
-		}
-	}
-
 	if expiry > 0 {
 		exp, err := l.inst.KV().Lease.Grant(context.TODO(), expiry)
 		if err != nil {
 			return err
 		}
-		l.EtcdLeaseID = strconv.Itoa(int(exp.ID))
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
