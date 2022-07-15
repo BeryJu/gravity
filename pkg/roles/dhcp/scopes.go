@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/ipam"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -101,13 +102,24 @@ func (r *Role) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4
 	var match *Scope
 	longestBits := 0
 	for _, scope := range r.scopes {
-		if subBits := scope.match(conn, peer, m); subBits > -1 {
-			if subBits > longestBits {
-				r.log.WithField("name", scope.Name).Debug("selected scope based on cidr match")
+		ip := peer.(*net.UDPAddr).IP
+		// Handle cases where peer is an actual IP (most likely relay)
+		subBits := scope.match(conn, ip, m)
+		if subBits > -1 && subBits > longestBits {
+			r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (peer IP)")
+			match = scope
+			longestBits = subBits
+		}
+		// Handle local broadcast, check with the instance's listening IP
+		if match == nil && peer.(*net.UDPAddr).IP.Equal(net.ParseIP("255.255.255.255")) {
+			subBits := scope.match(conn, net.ParseIP(extconfig.Get().Instance.IP), m)
+			if subBits > -1 && subBits > longestBits {
+				r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
 				match = scope
 				longestBits = subBits
 			}
 		}
+		// Handle default scope
 		if match == nil && scope.Default {
 			r.log.WithField("name", scope.Name).Debug("selected scope based on default state")
 			match = scope
@@ -119,9 +131,8 @@ func (r *Role) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4
 	return match
 }
 
-func (s *Scope) match(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) int {
-	clientIP := strings.Split(peer.String(), ":")[0]
-	ip, err := netip.ParseAddr(clientIP)
+func (s *Scope) match(conn net.PacketConn, peer net.IP, m *dhcpv4.DHCPv4) int {
+	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
 		s.log.WithError(err).Warning("failed to parse client ip")
 		return -1
