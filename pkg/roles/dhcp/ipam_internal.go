@@ -1,4 +1,4 @@
-package ipam
+package dhcp
 
 import (
 	"net"
@@ -13,10 +13,11 @@ type InternalIPAM struct {
 	Start netip.Addr
 	End   netip.Addr
 
-	log *log.Entry
+	log  *log.Entry
+	role *Role
 }
 
-func NewInternalIPAM(cidr string, rangeStart string, rangeEnd string) (*InternalIPAM, error) {
+func NewInternalIPAM(role *Role, cidr string, rangeStart string, rangeEnd string) (*InternalIPAM, error) {
 	sub, err := netip.ParsePrefix(cidr)
 	if err != nil {
 		return nil, err
@@ -53,28 +54,23 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
-	// free := false
-	// get all leases to check
-
 	// Ip is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
-		i.log.Debug("discarding because before start")
+		i.log.Trace("discarding because before start")
 		return false
 	}
 	// Ip is more than the end of the range
 	if i.End.Compare(ip) == -1 {
-		i.log.Debug("discarding because after end")
+		i.log.Trace("discarding because after end")
 		return false
 	}
 	// check for existing leases
-	// for _, l := range leasei.Items {
-	// 	if l.Spec.Address == ip.String() {
-	// 		r.l.V(1).Info("discarding because existing lease")
-	// 		free = false
-	// 		break
-	// 	}
-	// }
-	// free = true
+	for _, l := range i.role.leases {
+		if l.Address == ip.String() {
+			i.log.Debug("discarding because existing lease")
+			return false
+		}
+	}
 	return true
 }
 

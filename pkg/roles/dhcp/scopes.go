@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
-	"beryju.io/gravity/pkg/ipam"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -55,7 +54,7 @@ type Scope struct {
 
 	cidr    netip.Prefix
 	etcdKey string
-	ipam    ipam.IPAM
+	ipam    IPAM
 	inst    roles.Instance
 	role    *Role
 	log     *log.Entry
@@ -89,8 +88,8 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	s.etcdKey = string(raw.Key)
 
 	// TODO: other IPAMs
-	var ipamInst ipam.IPAM
-	ipamInst, err = ipam.NewInternalIPAM(s.SubnetCIDR, s.Range.Start, s.Range.End)
+	var ipamInst IPAM
+	ipamInst, err = NewInternalIPAM(r, s.SubnetCIDR, s.Range.Start, s.Range.End)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create ipam: %w", err)
 	}
