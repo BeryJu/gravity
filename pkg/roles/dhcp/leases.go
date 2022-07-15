@@ -143,6 +143,7 @@ func (l *Lease) reply(
 		rep.UpdateOption(dhcpv4.OptHostName(fqdn))
 	}
 
+	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)
 	rep.YourIPAddr = net.ParseIP(l.Address)
 	rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
 
