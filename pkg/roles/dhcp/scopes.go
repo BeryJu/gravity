@@ -85,7 +85,11 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	s.etcdKey = string(raw.Key)
 
 	var ipamInst IPAM
-	ipamInst, err = NewInternalIPAM(r, s)
+	switch s.IPAM["type"] {
+	case "internal":
+	default:
+		ipamInst, err = NewInternalIPAM(r, s)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to create ipam: %w", err)
 	}
