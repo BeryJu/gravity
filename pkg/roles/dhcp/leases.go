@@ -113,6 +113,7 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 		return nil
 	}
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
+	rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(l.scope.TTL * int64(time.Second))))
 
 	if l.AddressLeaseTime != "" {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
@@ -121,8 +122,6 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 		} else {
 			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
 		}
-	} else {
-		rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(time.Duration(l.scope.TTL * int64(time.Second))))
 	}
 
 	// DNS Options
