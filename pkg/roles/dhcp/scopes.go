@@ -127,7 +127,7 @@ func (r *Role) findScopeForRequest(req *Request) *Scope {
 }
 
 func (s *Scope) match(peer net.IP, req *Request) int {
-	ip, err := netip.ParseAddr(req.peer.String())
+	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
 		s.log.WithError(err).Warning("failed to parse client ip")
 		return -1
