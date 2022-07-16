@@ -30,11 +30,11 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 	if err != nil {
 		return nil, err
 	}
-	start, err := netip.ParseAddr(s.IPAM["start"])
+	start, err := netip.ParseAddr(s.IPAM["range_start"])
 	if err != nil {
 		return nil, err
 	}
-	end, err := netip.ParseAddr(s.IPAM["end"])
+	end, err := netip.ParseAddr(s.IPAM["range_end"])
 	if err != nil {
 		return nil, err
 	}

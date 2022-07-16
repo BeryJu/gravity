@@ -46,7 +46,7 @@ func sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
 
 	err := udp.SetNetworkLayerForChecksum(&ip)
 	if err != nil {
-		return fmt.Errorf("Send Ethernet: Couldn't set network layer: %v", err)
+		return fmt.Errorf("send Ethernet: Couldn't set network layer: %v", err)
 	}
 
 	buf := gopacket.NewSerializeBuffer()
@@ -60,17 +60,17 @@ func sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
 	dhcpLayer := packet.Layer(layers.LayerTypeDHCPv4)
 	dhcp, ok := dhcpLayer.(gopacket.SerializableLayer)
 	if !ok {
-		return fmt.Errorf("Layer %s is not serializable", dhcpLayer.LayerType().String())
+		return fmt.Errorf("layer %s is not serializable", dhcpLayer.LayerType().String())
 	}
 	err = gopacket.SerializeLayers(buf, opts, &eth, &ip, &udp, dhcp)
 	if err != nil {
-		return fmt.Errorf("Cannot serialize layer: %v", err)
+		return fmt.Errorf("cannot serialize layer: %v", err)
 	}
 	data := buf.Bytes()
 
 	fd, err := syscall.Socket(syscall.AF_PACKET, syscall.SOCK_RAW, 0)
 	if err != nil {
-		return fmt.Errorf("Send Ethernet: Cannot open socket: %v", err)
+		return fmt.Errorf("send Ethernet: Cannot open socket: %v", err)
 	}
 	defer func() {
 		err = syscall.Close(fd)
@@ -94,7 +94,7 @@ func sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
 	}
 	err = syscall.Sendto(fd, data, 0, &ethAddr)
 	if err != nil {
-		return fmt.Errorf("Cannot send frame via socket: %v", err)
+		return fmt.Errorf("cannot send frame via socket: %v", err)
 	}
 	return nil
 }
