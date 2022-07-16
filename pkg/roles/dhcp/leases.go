@@ -106,19 +106,12 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	return nil
 }
 
-func (l *Lease) reply(
-	conn net.PacketConn,
-	peer net.Addr,
-	m *dhcpv4.DHCPv4,
-	modifyResponse func(*dhcpv4.DHCPv4) *dhcpv4.DHCPv4,
-) {
+func (l *Lease) createReply(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 	rep, err := dhcpv4.NewReplyFromRequest(m)
 	if err != nil {
 		l.log.WithError(err).Warning("failed to create reply")
-		return
+		return nil
 	}
-
-	rep = modifyResponse(rep)
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
 
 	if l.AddressLeaseTime != "" {
@@ -138,11 +131,13 @@ func (l *Lease) reply(
 	if len(l.scope.DNS.Search) > 0 {
 		rep.UpdateOption(dhcpv4.OptDomainSearch(&rfc1035label.Labels{Labels: l.scope.DNS.Search}))
 	}
-	if l.scope.DNS.AddZoneInHostname {
-		fqdn := strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")
-		rep.UpdateOption(dhcpv4.OptHostName(fqdn))
-	} else {
-		rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
+	if l.Hostname != "" {
+		if l.scope.DNS.AddZoneInHostname {
+			fqdn := strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")
+			rep.UpdateOption(dhcpv4.OptHostName(fqdn))
+		} else {
+			rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
+		}
 	}
 
 	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)
@@ -188,9 +183,5 @@ func (l *Lease) reply(
 		dopt := dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(*opt.Tag), finalVal)
 		rep.UpdateOption(dopt)
 	}
-
-	l.scope.role.logDHCPMessage(rep, log.Fields{})
-	if _, err := conn.WriteTo(rep.ToBytes(), peer); err != nil {
-		l.log.WithError(err).Warning("failed to write reply")
-	}
+	return rep
 }

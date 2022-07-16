@@ -96,21 +96,21 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	return s, nil
 }
 
-func (r *Role) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
+func (r *Role) findScopeForRequest(peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
 	var match *Scope
 	longestBits := 0
 	for _, scope := range r.scopes {
 		ip := peer.(*net.UDPAddr).IP
 		// Handle cases where peer is an actual IP (most likely relay)
-		subBits := scope.match(conn, ip, m)
+		subBits := scope.match(ip, m)
 		if subBits > -1 && subBits > longestBits {
 			r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (peer IP)")
 			match = scope
 			longestBits = subBits
 		}
 		// Handle local broadcast, check with the instance's listening IP
-		if match == nil && peer.(*net.UDPAddr).IP.Equal(net.ParseIP("255.255.255.255")) {
-			subBits := scope.match(conn, net.ParseIP(extconfig.Get().Instance.IP), m)
+		if match == nil && m.IsBroadcast() {
+			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), m)
 			if subBits > -1 && subBits > longestBits {
 				r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
 				match = scope
@@ -123,13 +123,10 @@ func (r *Role) findScopeForRequest(conn net.PacketConn, peer net.Addr, m *dhcpv4
 			match = scope
 		}
 	}
-	if match != nil {
-		r.log.Trace("found scope for request")
-	}
 	return match
 }
 
-func (s *Scope) match(conn net.PacketConn, peer net.IP, m *dhcpv4.DHCPv4) int {
+func (s *Scope) match(peer net.IP, m *dhcpv4.DHCPv4) int {
 	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
 		s.log.WithError(err).Warning("failed to parse client ip")
@@ -141,7 +138,7 @@ func (s *Scope) match(conn net.PacketConn, peer net.IP, m *dhcpv4.DHCPv4) int {
 	return -1
 }
 
-func (s *Scope) createLeaseFor(conn net.PacketConn, peer net.Addr, m *dhcpv4.DHCPv4) *Lease {
+func (s *Scope) createLeaseFor(peer net.Addr, m *dhcpv4.DHCPv4) *Lease {
 	ident := s.role.DeviceIdentifier(m)
 	lease := &Lease{
 		Identifier: ident,

@@ -8,6 +8,7 @@ require (
 	github.com/Ullaakut/nmap/v2 v2.2.0
 	github.com/creasty/defaults v1.6.0
 	github.com/getsentry/sentry-go v0.13.0
+	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
