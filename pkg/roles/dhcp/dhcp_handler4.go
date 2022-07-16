@@ -66,7 +66,6 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		peer:   _peer,
 		log:    log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
 	}
-	req.log.Trace(req.DHCPv4.Summary())
 
 	if m.OpCode != dhcpv4.OpcodeBootRequest {
 		h.role.log.WithField("opcode", m.OpCode.String()).Info("handler4: unsupported opcode")
@@ -88,7 +87,6 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 			handler,
 		),
 	)(req)
-	req.log.Trace(resp.Summary())
 
 	if resp != nil {
 		h.role.logDHCPMessage(req, resp, log.Fields{})
