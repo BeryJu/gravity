@@ -152,7 +152,7 @@ func (s *Scope) createLeaseFor(req *Request) *Lease {
 		scope: s,
 	}
 	requestedIP := req.RequestedIPAddress()
-	if !requestedIP.IsUnspecified() {
+	if requestedIP != nil {
 		s.log.WithField("ip", requestedIP).Debug("checking requested IP")
 		ip, err := netip.ParseAddr(requestedIP.String())
 		if err != nil {
