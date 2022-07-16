@@ -109,7 +109,7 @@ func (r *Role) findScopeForRequest(peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
 			longestBits = subBits
 		}
 		// Handle local broadcast, check with the instance's listening IP
-		if match == nil && m.IsBroadcast() {
+		if match == nil {
 			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), m)
 			if subBits > -1 && subBits > longestBits {
 				r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
