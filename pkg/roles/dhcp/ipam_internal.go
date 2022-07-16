@@ -3,7 +3,9 @@ package dhcp
 import (
 	"net"
 	"net/netip"
+	"time"
 
+	"github.com/go-ping/ping"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -71,6 +73,18 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
 			i.log.Debug("discarding because existing lease")
 			return false
 		}
+	}
+	pinger, err := ping.NewPinger(ip.String())
+	if err != nil {
+		i.log.WithError(err).Warning("failed to ping IP")
+		return true
+	}
+	pinger.Count = 1
+	pinger.Timeout = 1 * time.Second
+	err = pinger.Run()
+	if err == nil {
+		// IP pings, so it's not usable
+		return false
 	}
 	return true
 }

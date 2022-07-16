@@ -8,6 +8,7 @@ require (
 	github.com/Ullaakut/nmap/v2 v2.2.0
 	github.com/creasty/defaults v1.6.0
 	github.com/getsentry/sentry-go v0.13.0
+	github.com/go-ping/ping v1.1.0
 	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
@@ -28,6 +29,7 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.4
 	go.etcd.io/etcd/server/v3 v3.5.4
 	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
+	golang.org/x/net v0.0.0-20220630215102-69896b714898
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 )
 
@@ -118,7 +120,6 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220630215102-69896b714898 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
