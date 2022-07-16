@@ -140,6 +140,7 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 	}
 
 	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)
+	rep.UpdateOption(dhcpv4.OptServerIdentifier(rep.ServerIPAddr))
 	rep.YourIPAddr = net.ParseIP(l.Address)
 
 	for _, opt := range l.scope.Options {
