@@ -14,6 +14,9 @@ func (r *Role) handleDHCPDiscover4(req *Request) *dhcpv4.DHCPv4 {
 		}
 		req.log.WithField("scope", scope.Name).Debug("found scope for new lease")
 		match = scope.createLeaseFor(req)
+		if match == nil {
+			return nil
+		}
 		match.put(int64(r.cfg.LeaseNegotiateTimeout))
 	} else {
 		match.put(match.scope.TTL)

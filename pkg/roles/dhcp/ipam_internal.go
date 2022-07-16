@@ -62,6 +62,11 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 	initialIp := i.Start
 	for {
+		// Since we start checking at the beginning of the range, check in the loop if we've
+		// hit the end and just give up, as the range is full
+		if i.End.Compare(initialIp) == -1 {
+			break
+		}
 		i.log.WithField("ip", initialIp.String()).Debug("checking for free ip")
 		// Check if IP is in the correct subnet
 		if !i.SubnetCIDR.Contains(initialIp) {
@@ -76,6 +81,7 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 		}
 		initialIp = initialIp.Next()
 	}
+	return nil
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {

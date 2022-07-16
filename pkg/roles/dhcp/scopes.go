@@ -145,19 +145,29 @@ func (s *Scope) createLeaseFor(req *Request) *Lease {
 		Identifier: ident,
 
 		Hostname: req.HostName(),
-		Address:  s.ipam.NextFreeAddress().String(),
 		ScopeKey: s.Name,
 
 		inst:  s.inst,
 		log:   req.log.WithField("lease", ident),
 		scope: s,
 	}
-	if requestIp, ok := netip.AddrFromSlice(req.Options.Get(dhcpv4.OptionRequestedIPAddress)); ok {
-		s.log.WithField("ip", requestIp).Debug("checking requested IP")
-		if s.ipam.IsIPFree(requestIp) {
-			s.log.WithField("ip", requestIp).Debug("requested IP is free")
-			lease.Address = requestIp.String()
+	requestedIP := req.RequestedIPAddress()
+	if !requestedIP.IsUnspecified() {
+		s.log.WithField("ip", requestedIP).Debug("checking requested IP")
+		ip, err := netip.ParseAddr(requestedIP.String())
+		if err != nil {
+			s.log.WithError(err).Warning("failed to parse requested ip")
+		} else if s.ipam.IsIPFree(ip) {
+			s.log.WithField("ip", requestedIP).Debug("requested IP is free")
+			lease.Address = requestedIP.String()
 		}
+	}
+	if lease.Address == "" {
+		ip := s.ipam.NextFreeAddress()
+		if ip == nil {
+			return nil
+		}
+		lease.Address = s.ipam.NextFreeAddress().String()
 	}
 	return lease
 }
