@@ -108,7 +108,7 @@ func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 		var (
 			in = input.(*scopesInput)
 		)
-		s, ok := r.leases[in.Scope]
+		s, ok := r.scopes[in.Scope]
 		if !ok {
 			return status.InvalidArgument
 		}
