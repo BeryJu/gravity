@@ -53,7 +53,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
 	r.loadInitialScopes()
-	r.loadInitialScopes()
+	r.loadInitialLeases()
 
 	go r.startWatchScopes()
 	go r.startWatchLeases()

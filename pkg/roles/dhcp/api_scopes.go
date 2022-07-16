@@ -10,16 +10,13 @@ import (
 
 func (r *Role) apiHandlerScopes() usecase.Interactor {
 	type scope struct {
-		Name       string    `json:"scope"`
-		SubnetCIDR string    `json:"subnetCidr"`
-		Default    bool      `json:"default"`
-		Options    []*Option `json:"options"`
-		TTL        int64     `json:"ttl"`
-		Range      struct {
-			Start string `json:"start"`
-			End   string `json:"end"`
-		} `json:"range"`
-		DNS struct {
+		Name       string            `json:"scope"`
+		SubnetCIDR string            `json:"subnetCidr"`
+		Default    bool              `json:"default"`
+		Options    []*Option         `json:"options"`
+		TTL        int64             `json:"ttl"`
+		IPAM       map[string]string `json:"ipam"`
+		DNS        struct {
 			Zone              string   `json:"zone"`
 			Search            []string `json:"search"`
 			AddZoneInHostname bool     `json:"addZoneInHostname"`
@@ -39,7 +36,7 @@ func (r *Role) apiHandlerScopes() usecase.Interactor {
 				Default:    sc.Default,
 				Options:    sc.Options,
 				TTL:        sc.TTL,
-				Range:      sc.Range,
+				IPAM:       sc.IPAM,
 				DNS:        sc.DNS,
 			})
 		}
@@ -55,15 +52,12 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 	type scopesInput struct {
 		Name string `path:"scope"`
 
-		SubnetCIDR string    `json:"subnetCidr"`
-		Default    bool      `json:"default"`
-		Options    []*Option `json:"options"`
-		TTL        int64     `json:"ttl"`
-		Range      struct {
-			Start string `json:"start"`
-			End   string `json:"end"`
-		} `json:"range"`
-		DNS struct {
+		SubnetCIDR string            `json:"subnetCidr"`
+		Default    bool              `json:"default"`
+		Options    []*Option         `json:"options"`
+		TTL        int64             `json:"ttl"`
+		IPAM       map[string]string `json:"ipam"`
+		DNS        struct {
 			Zone              string   `json:"zone"`
 			Search            []string `json:"search"`
 			AddZoneInHostname bool     `json:"addZoneInHostname"`
@@ -78,7 +72,7 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 		s.Default = in.Default
 		s.Options = in.Options
 		s.TTL = in.TTL
-		s.Range = in.Range
+		s.IPAM = in.IPAM
 		s.DNS = in.DNS
 
 		cidr, err := netip.ParsePrefix(s.SubnetCIDR)

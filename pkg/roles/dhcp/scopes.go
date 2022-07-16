@@ -38,15 +38,12 @@ var TagMap map[string]uint8 = map[string]uint8{
 type Scope struct {
 	Name string `json:"-"`
 
-	SubnetCIDR string    `json:"subnetCidr"`
-	Default    bool      `json:"default"`
-	Options    []*Option `json:"options"`
-	TTL        int64     `json:"ttl"`
-	Range      struct {
-		Start string `json:"start"`
-		End   string `json:"end"`
-	} `json:"range"`
-	DNS struct {
+	SubnetCIDR string            `json:"subnetCidr"`
+	Default    bool              `json:"default"`
+	Options    []*Option         `json:"options"`
+	TTL        int64             `json:"ttl"`
+	IPAM       map[string]string `json:"ipam"`
+	DNS        struct {
 		Zone              string   `json:"zone"`
 		Search            []string `json:"search"`
 		AddZoneInHostname bool     `json:"addZoneInHostname"`
@@ -88,7 +85,7 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	s.etcdKey = string(raw.Key)
 
 	var ipamInst IPAM
-	ipamInst, err = NewInternalIPAM(r, s.SubnetCIDR, s.Range.Start, s.Range.End)
+	ipamInst, err = NewInternalIPAM(r, s)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create ipam: %w", err)
 	}

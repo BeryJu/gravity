@@ -26,6 +26,7 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 		} else {
 			r.log.WithField("name", z.Name).Debug("added scope")
 			r.scopes[z.Name] = z
+			go r.loadInitialLeases()
 		}
 	}
 	return true

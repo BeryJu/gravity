@@ -3,6 +3,8 @@ package dhcp
 import (
 	"net"
 	"net/netip"
+	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-ping/ping"
@@ -15,30 +17,46 @@ type InternalIPAM struct {
 	Start netip.Addr
 	End   netip.Addr
 
-	log  *log.Entry
-	role *Role
+	shouldPing bool
+	log        *log.Entry
+	role       *Role
+	scope      *Scope
+	ips        map[string]bool
+	ipsy       sync.RWMutex
 }
 
-func NewInternalIPAM(role *Role, cidr string, rangeStart string, rangeEnd string) (*InternalIPAM, error) {
-	sub, err := netip.ParsePrefix(cidr)
+func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
+	sub, err := netip.ParsePrefix(s.SubnetCIDR)
 	if err != nil {
 		return nil, err
 	}
-	start, err := netip.ParseAddr(rangeStart)
+	start, err := netip.ParseAddr(s.IPAM["start"])
 	if err != nil {
 		return nil, err
 	}
-	end, err := netip.ParseAddr(rangeEnd)
+	end, err := netip.ParseAddr(s.IPAM["end"])
 	if err != nil {
 		return nil, err
 	}
-	return &InternalIPAM{
+	ipam := &InternalIPAM{
 		SubnetCIDR: sub,
 		Start:      start,
 		End:        end,
 		log:        role.log.WithField("ipam", "internal"),
 		role:       role,
-	}, nil
+		scope:      s,
+		ips:        make(map[string]bool),
+		ipsy:       sync.RWMutex{},
+	}
+	sp := s.IPAM["should_ping"]
+	if sp != "" {
+		shouldPing, err := strconv.ParseBool(sp)
+		if err != nil {
+			return nil, err
+		}
+		ipam.shouldPing = shouldPing
+	}
+	return ipam, nil
 }
 
 func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
@@ -51,28 +69,45 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 		}
 		if i.IsIPFree(initialIp) {
 			return &initialIp
+		} else {
+			i.ipsy.Lock()
+			i.ips[initialIp.String()] = true
+			i.ipsy.Unlock()
 		}
 		initialIp = initialIp.Next()
 	}
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
+	if i.ips[ip.String()] {
+		i.log.WithField("reason", "used (in memory)").Trace("discarding")
+		return false
+	}
 	// Ip is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
-		i.log.Trace("discarding because before start")
+		i.log.WithField("reason", "before started").Trace("discarding")
 		return false
 	}
 	// Ip is more than the end of the range
 	if i.End.Compare(ip) == -1 {
-		i.log.Trace("discarding because after end")
+		i.log.WithField("reason", "after end").Trace("discarding")
 		return false
 	}
 	// check for existing leases
 	for _, l := range i.role.leases {
+		// Ignore leases from other scopes
+		if l.ScopeKey != i.scope.Name {
+			continue
+		}
 		if l.Address == ip.String() {
-			i.log.Debug("discarding because existing lease")
+			i.log.WithField("reason", "existing lease").Trace("discarding")
 			return false
 		}
+	}
+	// By default, we dont try to ping the "free" IP
+	// and at this point we're confident that it's free
+	if !i.shouldPing {
+		return true
 	}
 	pinger, err := ping.NewPinger(ip.String())
 	if err != nil {
@@ -81,12 +116,17 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
 	}
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
+	pings := false
+	pinger.OnRecv = func(pkt *ping.Packet) {
+		i.log.WithField("reason", "pings").Trace("discarding")
+		pings = true
+	}
 	err = pinger.Run()
-	if err == nil {
-		// IP pings, so it's not usable
+	if err != nil {
+		i.log.WithError(err).Trace("failed to ping ip")
 		return false
 	}
-	return true
+	return !pings
 }
 
 func (i *InternalIPAM) GetSubnetMask() net.IPMask {
