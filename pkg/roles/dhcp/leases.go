@@ -132,12 +132,12 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 		rep.UpdateOption(dhcpv4.OptDomainSearch(&rfc1035label.Labels{Labels: l.scope.DNS.Search}))
 	}
 	if l.Hostname != "" {
+		hostname := l.Hostname
 		if l.scope.DNS.AddZoneInHostname {
 			fqdn := strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")
-			rep.UpdateOption(dhcpv4.OptHostName(fqdn))
-		} else {
-			rep.UpdateOption(dhcpv4.OptHostName(l.Hostname))
+			hostname = fqdn
 		}
+		rep.UpdateOption(dhcpv4.OptHostName(strings.TrimSuffix(hostname, ".")))
 	}
 
 	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)

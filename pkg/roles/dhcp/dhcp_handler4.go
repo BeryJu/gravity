@@ -1,7 +1,6 @@
 package dhcp
 
 import (
-	"fmt"
 	"net"
 	"sync"
 
@@ -54,40 +53,44 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	if h.role.cfg.ListenOnly || extconfig.Get().ListenOnlyMode {
 		return
 	}
-	req, err := dhcpv4.FromBytes(buf)
+	m, err := dhcpv4.FromBytes(buf)
 	bufpool.Put(&buf)
 	if err != nil {
 		h.role.log.WithError(err).Info("Error parsing DHCPv4 request")
 		return
 	}
 
-	if req.OpCode != dhcpv4.OpcodeBootRequest {
-		h.role.log.WithField("opcode", req.OpCode.String()).Info("handler4: unsupported opcode")
+	req := &Request{
+		DHCPv4: m,
+		peer:   _peer,
+		log:    log.WithField("request", uuid.New().String()),
+	}
+	req.log.Trace(req.DHCPv4.Summary())
+
+	if m.OpCode != dhcpv4.OpcodeBootRequest {
+		h.role.log.WithField("opcode", m.OpCode.String()).Info("handler4: unsupported opcode")
 		return
 	}
 	var handler Handler4
-	switch mt := req.MessageType(); mt {
+	switch mt := m.MessageType(); mt {
 	case dhcpv4.MessageTypeDiscover:
 		handler = h.role.handleDHCPDiscover4
 	case dhcpv4.MessageTypeRequest:
 		handler = h.role.handleDHCPRequest4
 	default:
+		req.log.WithField("msg", mt.String()).Info("Unsupported message type")
 		return
 	}
 
-	reqO := &Request{
-		DHCPv4: req,
-		peer:   _peer,
-		log:    log.WithField("request", uuid.New().String()),
-	}
 	resp := h.role.recoverMiddleware4(
 		h.role.loggingMiddleware4(
 			handler,
 		),
-	)(reqO)
+	)(req)
+	req.log.Trace(resp.Summary())
 
 	if resp != nil {
-		h.role.logDHCPMessage(reqO, resp, log.Fields{})
+		h.role.logDHCPMessage(req, resp, log.Fields{})
 		useEthernet := false
 		var peer *net.UDPAddr
 		if !req.GatewayIPAddr.IsUnspecified() {
@@ -104,7 +107,6 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 			peer = &net.UDPAddr{IP: resp.YourIPAddr, Port: dhcpv4.ClientPort}
 			useEthernet = true
 		}
-		fmt.Println(peer)
 
 		var woob *ipv4.ControlMessage
 		if peer.IP.Equal(net.IPv4bcast) || peer.IP.IsLinkLocalUnicast() || useEthernet {
@@ -117,27 +119,27 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 			case oob != nil && oob.IfIndex != 0:
 				woob = &ipv4.ControlMessage{IfIndex: oob.IfIndex}
 			default:
-				h.role.log.Error("HandleMsg4: Did not receive interface information")
+				req.log.Error("HandleMsg4: Did not receive interface information")
 			}
 		}
 
 		if useEthernet {
-			h.role.log.Trace("sending via ethernet")
+			req.log.Trace("sending via ethernet")
 			intf, err := net.InterfaceByIndex(woob.IfIndex)
 			if err != nil {
-				h.role.log.WithError(err).WithField("index", woob.IfIndex).Error("handler4: Can not get Interface for index")
+				req.log.WithError(err).WithField("index", woob.IfIndex).Error("handler4: Can not get Interface for index")
 				return
 			}
 			err = sendEthernet(*intf, resp)
 			if err != nil {
-				h.role.log.WithError(err).Error("handler4: Cannot send Ethernet packet")
+				req.log.WithError(err).Error("handler4: Cannot send Ethernet packet")
 			}
 		} else {
 			if _, err := h.pc.WriteTo(resp.ToBytes(), woob, peer); err != nil {
-				h.role.log.WithField("peer", peer).WithError(err).Error("handler4: conn.Write failed")
+				req.log.WithField("peer", peer).WithError(err).Error("handler4: conn.Write failed")
 			}
 		}
 	} else {
-		h.role.log.Debug("handler4: dropping request because response is nil")
+		req.log.Debug("handler4: dropping request because response is nil")
 	}
 }
