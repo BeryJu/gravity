@@ -96,38 +96,38 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	return s, nil
 }
 
-func (r *Role) findScopeForRequest(peer net.Addr, m *dhcpv4.DHCPv4) *Scope {
+func (r *Role) findScopeForRequest(req *Request) *Scope {
 	var match *Scope
 	longestBits := 0
 	for _, scope := range r.scopes {
-		ip := peer.(*net.UDPAddr).IP
+		ip := req.peer.(*net.UDPAddr).IP
 		// Handle cases where peer is an actual IP (most likely relay)
-		subBits := scope.match(ip, m)
+		subBits := scope.match(ip, req)
 		if subBits > -1 && subBits > longestBits {
-			r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (peer IP)")
+			req.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (peer IP)")
 			match = scope
 			longestBits = subBits
 		}
 		// Handle local broadcast, check with the instance's listening IP
 		if match == nil {
-			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), m)
+			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), req)
 			if subBits > -1 && subBits > longestBits {
-				r.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
+				req.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
 				match = scope
 				longestBits = subBits
 			}
 		}
 		// Handle default scope
 		if match == nil && scope.Default {
-			r.log.WithField("name", scope.Name).Debug("selected scope based on default state")
+			req.log.WithField("name", scope.Name).Debug("selected scope based on default state")
 			match = scope
 		}
 	}
 	return match
 }
 
-func (s *Scope) match(peer net.IP, m *dhcpv4.DHCPv4) int {
-	ip, err := netip.ParseAddr(peer.String())
+func (s *Scope) match(peer net.IP, req *Request) int {
+	ip, err := netip.ParseAddr(req.peer.String())
 	if err != nil {
 		s.log.WithError(err).Warning("failed to parse client ip")
 		return -1
@@ -138,20 +138,20 @@ func (s *Scope) match(peer net.IP, m *dhcpv4.DHCPv4) int {
 	return -1
 }
 
-func (s *Scope) createLeaseFor(peer net.Addr, m *dhcpv4.DHCPv4) *Lease {
-	ident := s.role.DeviceIdentifier(m)
+func (s *Scope) createLeaseFor(req *Request) *Lease {
+	ident := s.role.DeviceIdentifier(req.DHCPv4)
 	lease := &Lease{
 		Identifier: ident,
 
-		Hostname: m.HostName(),
+		Hostname: req.HostName(),
 		Address:  s.ipam.NextFreeAddress().String(),
 		ScopeKey: s.Name,
 
 		inst:  s.inst,
-		log:   s.log.WithField("lease", ident),
+		log:   req.log.WithField("lease", ident),
 		scope: s,
 	}
-	if requestIp, ok := netip.AddrFromSlice(m.Options.Get(dhcpv4.OptionRequestedIPAddress)); ok {
+	if requestIp, ok := netip.AddrFromSlice(req.Options.Get(dhcpv4.OptionRequestedIPAddress)); ok {
 		s.log.WithField("ip", requestIp).Debug("checking requested IP")
 		if s.ipam.IsIPFree(requestIp) {
 			s.log.WithField("ip", requestIp).Debug("requested IP is free")

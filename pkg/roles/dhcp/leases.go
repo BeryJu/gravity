@@ -106,10 +106,10 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 	return nil
 }
 
-func (l *Lease) createReply(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
-	rep, err := dhcpv4.NewReplyFromRequest(m)
+func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
+	rep, err := dhcpv4.NewReplyFromRequest(req.DHCPv4)
 	if err != nil {
-		l.log.WithError(err).Warning("failed to create reply")
+		req.log.WithError(err).Warning("failed to create reply")
 		return nil
 	}
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
@@ -117,7 +117,7 @@ func (l *Lease) createReply(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 	if l.AddressLeaseTime != "" {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
 		if err != nil {
-			l.log.WithField("default", pl.String()).WithError(err).Warning("failed to parse address lease duration, defaulting")
+			req.log.WithField("default", pl.String()).WithError(err).Warning("failed to parse address lease duration, defaulting")
 		} else {
 			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
 		}
@@ -151,7 +151,7 @@ func (l *Lease) createReply(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 		if opt.TagName != "" {
 			tag, ok := TagMap[opt.TagName]
 			if !ok {
-				l.log.WithError(err).Warningf("invalid tag name %s", opt.TagName)
+				req.log.WithError(err).Warningf("invalid tag name %s", opt.TagName)
 				continue
 			}
 			opt.Tag = &tag
@@ -173,7 +173,7 @@ func (l *Lease) createReply(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
 			for _, v := range opt.Value64 {
 				va, err := base64.StdEncoding.DecodeString(v)
 				if err != nil {
-					l.log.WithError(err).Warning("failed to convert base64 value to byte")
+					req.log.WithError(err).Warning("failed to convert base64 value to byte")
 				} else {
 					values64 = append(values64, va...)
 				}

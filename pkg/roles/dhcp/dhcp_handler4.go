@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/ipv4"
@@ -27,7 +28,13 @@ var bufpool = sync.Pool{New: func() interface{} { r := make([]byte, MaxDatagram)
 // MaxDatagram is the maximum length of message that can be received.
 const MaxDatagram = 1 << 16
 
-type Handler4 func(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4
+type Handler4 func(req *Request) *dhcpv4.DHCPv4
+
+type Request struct {
+	*dhcpv4.DHCPv4
+	peer net.Addr
+	log  *log.Entry
+}
 
 func (h *handler4) Serve() error {
 	for {
@@ -68,14 +75,19 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		return
 	}
 
+	reqO := &Request{
+		DHCPv4: req,
+		peer:   _peer,
+		log:    log.WithField("request", uuid.New().String()),
+	}
 	resp := h.role.recoverMiddleware4(
 		h.role.loggingMiddleware4(
 			handler,
 		),
-	)(_peer, req)
+	)(reqO)
 
 	if resp != nil {
-		h.role.logDHCPMessage(resp, log.Fields{})
+		h.role.logDHCPMessage(reqO, resp, log.Fields{})
 		useEthernet := false
 		var peer *net.UDPAddr
 		if !req.GatewayIPAddr.IsUnspecified() {

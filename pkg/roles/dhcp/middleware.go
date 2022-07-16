@@ -2,7 +2,6 @@ package dhcp
 
 import (
 	"encoding/hex"
-	"net"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -10,7 +9,7 @@ import (
 )
 
 func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
-	return func(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
+	return func(req *Request) *dhcpv4.DHCPv4 {
 		defer func() {
 			err := recover()
 			if err == nil {
@@ -23,11 +22,11 @@ func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 				r.log.WithField("panic", err).Warning("recover in dhcp handler")
 			}
 		}()
-		return inner(peer, m)
+		return inner(req)
 	}
 }
 
-func (r *Role) logDHCPMessage(m *dhcpv4.DHCPv4, fields log.Fields) {
+func (r *Role) logDHCPMessage(req *Request, m *dhcpv4.DHCPv4, fields log.Fields) {
 	f := log.Fields{
 		"deviceIdentifier": r.DeviceIdentifier(m),
 		"opCode":           m.OpCode.String(),
@@ -41,15 +40,15 @@ func (r *Role) logDHCPMessage(m *dhcpv4.DHCPv4, fields log.Fields) {
 		"hostname":         m.HostName(),
 		"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
 	}
-	r.log.WithFields(f).WithFields(fields).Info(m.MessageType().String())
+	req.log.WithFields(f).WithFields(fields).Info(m.MessageType().String())
 }
 
 func (r *Role) loggingMiddleware4(inner Handler4) Handler4 {
-	return func(peer net.Addr, m *dhcpv4.DHCPv4) *dhcpv4.DHCPv4 {
+	return func(req *Request) *dhcpv4.DHCPv4 {
 		f := log.Fields{
-			"client": peer.String(),
+			"client": req.peer.String(),
 		}
-		r.logDHCPMessage(m, f)
-		return inner(peer, m)
+		r.logDHCPMessage(req, req.DHCPv4, f)
+		return inner(req)
 	}
 }
