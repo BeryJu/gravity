@@ -18,7 +18,7 @@ export class DNSRecordsPage extends LitElement {
             <gravity-header>DNS Records for ${this.zone}</gravity-header>
             <sp-divider size="m"></sp-divider>
             <gravity-table
-                .columns=${["FQDN"]}
+                .columns=${["Hostname", "Type", "Data"]}
                 .data=${() => {
                     return new RolesDnsApi(DEFAULT_CONFIG)
                         .dnsGetRecords({
@@ -26,11 +26,12 @@ export class DNSRecordsPage extends LitElement {
                         })
                         .then((records) => records.records || []);
                 }}
-                .rowLink=${(item: DnsRecord) => {
-                    return `#/dns/zones/${item.fqdn}`;
-                }}
                 .rowRender=${(item: DnsRecord) => {
-                    return [html`${item.fqdn}`];
+                    return [
+                        html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
+                        html`${item.type}`,
+                        html`${item.data}`,
+                    ];
                 }}
             >
             </gravity-table>

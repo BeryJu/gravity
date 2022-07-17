@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
@@ -14,6 +15,7 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 		Zone string `path:"zone"`
 	}
 	type record struct {
+		UID      string `json:"uid"`
 		FQDN     string `json:"fqdn"`
 		Hostname string `json:"hostname"`
 		Type     string `json:"type"`
@@ -40,7 +42,7 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 			types.KeyRole,
 			types.KeyZones,
 			zone.Name,
-		).Prefix(true).String())
+		).Prefix(true).String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
@@ -51,6 +53,7 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 				continue
 			}
 			out.Records = append(out.Records, record{
+				UID:          rec.uid,
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + "." + zone.Name,
 				Type:         rec.Type,

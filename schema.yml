@@ -752,6 +752,8 @@ components:
           type: integer
         type:
           type: string
+        uid:
+          type: string
       type: object
     DnsZone:
       properties:

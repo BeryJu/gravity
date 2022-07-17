@@ -35,6 +35,9 @@ export class Table<T> extends LitElement {
                 table {
                     width: 100%;
                 }
+                .spectrum-Table-headCell {
+                    text-align: left;
+                }
             `,
         ];
     }
