@@ -22,6 +22,7 @@ type Role struct {
 	log  *log.Entry
 	i    roles.Instance
 	ctx  context.Context
+	cfg  *RoleConfig
 }
 
 func New(instance roles.Instance) *Role {
@@ -33,14 +34,19 @@ func New(instance roles.Instance) *Role {
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.setupUI()
+	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/roles/api", r.apiHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/api", r.apiHandlerRoleConfigPut())
+	})
 	return r
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(config)
 	r.prepareOpenAPI(ctx)
-	listen := extconfig.Get().Listen(cfg.Port)
+	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.WithField("listen", listen).Info("starting API Server")
 	return http.ListenAndServe(listen, r.m)
 }

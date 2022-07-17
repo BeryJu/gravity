@@ -695,6 +695,60 @@ paths:
       summary: Instances
       tags:
       - instances
+  /api/v1/roles/api:
+    get:
+      operationId: api.get_role_config2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiRoleAPIConfigOutput'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Unauthorized
+      security:
+      - Admin: []
+      summary: API role config
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_role_config2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiRoleAPIConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      security:
+      - Admin: []
+      summary: API role config
+      tags:
+      - roles/api
   /api/v1/roles/backup:
     get:
       operationId: backup.get_role_config
@@ -887,6 +941,22 @@ paths:
       - roles/monitoring
 components:
   schemas:
+    ApiRoleAPIConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/ApiRoleConfig'
+      type: object
+    ApiRoleAPIConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/ApiRoleConfig'
+      type: object
+    ApiRoleConfig:
+      nullable: true
+      properties:
+        port:
+          type: integer
+      type: object
     AuthAuthUsersOutput:
       properties:
         users:
