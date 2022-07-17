@@ -10,6 +10,7 @@
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "node",
+        "inlineSources": true,
         "lib": [
             "ES5",
             "ES2015",

@@ -16,18 +16,17 @@ export class DNSZonePage extends LitElement {
             <gravity-header>DNS Zones</gravity-header>
             <sp-divider size="m"></sp-divider>
             <gravity-table
-                .columns=${["Zone", "Authoritative", ""]}
+                .columns=${["Zone", "Authoritative"]}
                 .data=${() => {
                     return new RolesDnsApi(DEFAULT_CONFIG)
                         .dnsGetZones()
                         .then((zones) => zones.zones || []);
                 }}
+                .rowLink=${(item: DnsZone) => {
+                    return `#/dns/zones/${item.name}`;
+                }}
                 .rowRender=${(item: DnsZone) => {
-                    return [
-                        html`${item.name}`,
-                        html`${item.authoritative}`,
-                        html`<a href="foo">Edit</a>`,
-                    ];
+                    return [html`${item.name}`, html`${item.authoritative}`];
                 }}
             >
             </gravity-table>

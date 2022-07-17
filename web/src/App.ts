@@ -11,24 +11,25 @@ import "@spectrum-web-components/theme/theme-lightest.js";
 import { LitElement, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import "./Login";
-import "./Router";
-import { Route } from "./Router";
+import { Route } from "./elements/router/Route";
+import "./elements/router/RouterOutlet";
+import "./pages/OverviewPage";
 
 export const ROUTES = [
-    new Route("/overview", async () => {
+    new Route(new RegExp("^/$")).redirect("/overview"),
+    new Route(new RegExp("^/overview$"), async () => {
         await import("./pages/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
     }),
-    new Route("/cluster/nodes", async () => {
+    new Route(new RegExp("^/cluster/nodes$"), async () => {
         await import("./pages/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
-    new Route("/dns/zones", async () => {
+    new Route(new RegExp("^/dns/zones$"), async () => {
         await import("./pages/DNSZonePage");
         return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
-    new Route("/dhcp/subnets", async () => {
+    new Route(new RegExp("^/dhcp/subnets$"), async () => {
         await import("./pages/DHCPScopePage");
         return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
     }),
@@ -117,7 +118,7 @@ export class App extends LitElement {
             <sp-theme theme="classic" scale="medium" color=${theme}>
                 <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
                     ${this.renderSidebar()}
-                    <gravity-router .routes=${ROUTES}> </gravity-router>
+                    <gravity-router-outlet .routes=${ROUTES}> </gravity-router-outlet>
                 </sp-split-view>
             </sp-theme>
         `;
