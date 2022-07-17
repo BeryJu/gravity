@@ -183,7 +183,6 @@ func (z *Zone) watchZoneRecords() {
 			if _, ok := z.records[rec.recordKey][rec.uid]; !ok {
 				dnsRecordsMetric.WithLabelValues(z.Name).Inc()
 			}
-			fmt.Println(rec.recordKey)
 			z.records[rec.recordKey][rec.uid] = rec
 		}
 	}

@@ -153,6 +153,7 @@ func (i *Instance) bootstrap() {
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
 	wg := sync.WaitGroup{}
+	go i.writeInstanceInfo()
 	for roleId := range i.roles {
 		wg.Add(1)
 		go func(id string) {
