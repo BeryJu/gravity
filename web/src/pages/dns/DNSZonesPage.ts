@@ -1,16 +1,15 @@
 import "@spectrum-web-components/divider/sp-divider.js";
 import { DEFAULT_CONFIG } from "src/api/Config";
+import "src/elements/Header";
+import "src/elements/Table";
 
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DnsZone, RolesDnsApi } from "gravity-api";
 
-import "../elements/Header";
-import "../elements/Table";
-
 @customElement("gravity-dns-zones")
-export class DNSZonePage extends LitElement {
+export class DNSZonesPage extends LitElement {
     render(): TemplateResult {
         return html`
             <gravity-header>DNS Zones</gravity-header>

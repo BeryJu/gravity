@@ -1,13 +1,12 @@
 import "@spectrum-web-components/divider/sp-divider.js";
 import { DEFAULT_CONFIG } from "src/api/Config";
+import "src/elements/Header";
+import "src/elements/Table";
 
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DhcpScope, RolesDhcpApi } from "gravity-api";
-
-import "../elements/Header";
-import "../elements/Table";
 
 @customElement("gravity-dhcp-scopes")
 export class DHCPScopesPage extends LitElement {
@@ -21,6 +20,9 @@ export class DHCPScopesPage extends LitElement {
                     return new RolesDhcpApi(DEFAULT_CONFIG)
                         .dhcpGetScopes()
                         .then((scopes) => scopes.scopes || []);
+                }}
+                .rowLink=${(item: DhcpScope) => {
+                    return `#/dhcp/scopes/${item.scope}`;
                 }}
                 .rowRender=${(item: DhcpScope) => {
                     return [

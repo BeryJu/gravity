@@ -7,31 +7,38 @@ import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/theme/theme-darkest.js";
 import "@spectrum-web-components/theme/theme-lightest.js";
+import { Route } from "src/elements/router/Route";
+import "src/elements/router/RouterOutlet";
+import "src/pages/OverviewPage";
 
 import { LitElement, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { Route } from "./elements/router/Route";
-import "./elements/router/RouterOutlet";
-import "./pages/OverviewPage";
-
 export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
     new Route(new RegExp("^/overview$"), async () => {
-        await import("./pages/OverviewPage");
+        await import("src/pages/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
     }),
     new Route(new RegExp("^/cluster/nodes$"), async () => {
-        await import("./pages/ClusterNodesPage");
+        await import("src/pages/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route(new RegExp("^/dns/zones$"), async () => {
-        await import("./pages/DNSZonePage");
+        await import("src/pages/dns/DNSZonesPage");
         return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
+    new Route(new RegExp("^/dns/zones/(?<zone>.*)$"), async (args) => {
+        await import("src/pages/dns/DNSRecordsPage");
+        return html`<gravity-dns-records zone=${args.zone}></gravity-dns-records>`;
+    }),
     new Route(new RegExp("^/dhcp/subnets$"), async () => {
-        await import("./pages/DHCPScopePage");
+        await import("src/pages/dhcp/DHCPScopesPage");
         return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
+    }),
+    new Route(new RegExp("^/dhcp/subnets/(?<scope>.*)$"), async (args) => {
+        await import("src/pages/dhcp/DHCPLeasesPage");
+        return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
     }),
 ];
 
@@ -61,11 +68,6 @@ export class App extends LitElement {
                     value="#/dns/zones"
                     label="Zones"
                     href="#/dns/zones"
-                ></sp-sidenav-item>
-                <sp-sidenav-item
-                    value="#/dns/records"
-                    label="Records"
-                    href="#/dns/records"
                 ></sp-sidenav-item>
             </sp-sidenav-heading>
             <sp-sidenav-heading label="DHCP">

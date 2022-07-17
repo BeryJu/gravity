@@ -97,8 +97,6 @@ export class RouterOutlet extends LitElement {
     }
 
     render(): TemplateResult | undefined {
-        console.log("test");
-        console.log(this.current);
         return this.current?.render();
     }
 }
