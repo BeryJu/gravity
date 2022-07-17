@@ -39,9 +39,10 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 		var (
 			out = output.(*instancesOutput)
 		)
+		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()
 		instances, err := i.kv.Get(
 			ctx,
-			i.kv.Key(types.KeyInstance).Prefix(true).String(),
+			prefix,
 			clientv3.WithPrefix(),
 		)
 		if err != nil {
@@ -49,7 +50,8 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 		}
 		for _, ri := range instances.Kvs {
 			// We only want one level
-			if strings.Contains(string(ri.Key), "/") {
+			relKey := strings.TrimPrefix(string(ri.Key), prefix)
+			if strings.Contains(relKey, "/") {
 				continue
 			}
 			var inst InstanceInfo
