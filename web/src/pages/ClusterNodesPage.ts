@@ -1,10 +1,9 @@
-import "@spectrum-web-components/status-light/sp-status-light.js";
 import { DEFAULT_CONFIG } from "src/api/Config";
 
 import { LitElement, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { EtcdMember, RolesEtcdApi } from "gravity-api";
+import { InstanceInstanceInfo, InstancesApi } from "gravity-api";
 
 import "../elements/Table";
 
@@ -15,17 +14,18 @@ export class ClusterNodePage extends LitElement {
             <gravity-header>Cluster nodes</gravity-header>
             <sp-divider size="m"></sp-divider>
             <gravity-table
-                .columns=${["Status", "ID", "Name"]}
+                .columns=${["Identifier", "Roles", "IP", "Version"]}
                 .data=${() => {
-                    return new RolesEtcdApi(DEFAULT_CONFIG)
-                        .etcdGetMembers()
-                        .then((members) => members.members || []);
+                    return new InstancesApi(DEFAULT_CONFIG)
+                        .rootGetInstances()
+                        .then((instances) => instances.instances || []);
                 }}
-                .rowRender=${(item: EtcdMember) => {
+                .rowRender=${(item: InstanceInstanceInfo) => {
                     return [
-                        html`<sp-status-light size="m" variant="positive"></sp-status-light>`,
-                        html`${item.id}`,
-                        html`${item.name}`,
+                        html`${item.identifier}`,
+                        html`${item.roles}`,
+                        html`${item.ip}`,
+                        html`${item.version}`,
                     ];
                 }}
             >
