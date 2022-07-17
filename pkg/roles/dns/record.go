@@ -32,7 +32,6 @@ type Record struct {
 }
 
 func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
-	rec := Record{}
 	fullRecordKey := string(kv.Key)
 	// Relative key compared to zone, format of
 	// host/A[/...]
@@ -40,15 +39,19 @@ func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	// parts[0] is the hostname, parts[1] is the type
 	// parts[2] is the remaindar
 	parts := strings.SplitN(relKey, "/", 3)
+	if len(parts) < 2 {
+		parts = []string{"", ""}
+	}
+	rec := z.newRecord(parts[0], parts[1])
 	if len(parts) > 2 {
 		rec.uid = parts[2]
 	}
 	rec.recordKey = strings.TrimSuffix(fullRecordKey, "/"+rec.uid)
 	err := json.Unmarshal(kv.Value, &rec)
 	if err != nil {
-		return &rec, err
+		return rec, err
 	}
-	return &rec, nil
+	return rec, nil
 }
 
 func (z *Zone) newRecord(name string, t string) *Record {

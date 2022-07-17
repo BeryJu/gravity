@@ -732,7 +732,25 @@ components:
       type: object
     DnsRecord:
       properties:
+        data:
+          type: string
         fqdn:
+          type: string
+        hostname:
+          type: string
+        mxPreference:
+          minimum: 0
+          type: integer
+        srvPort:
+          minimum: 0
+          type: integer
+        srvPriority:
+          minimum: 0
+          type: integer
+        srvWeight:
+          minimum: 0
+          type: integer
+        type:
           type: string
       type: object
     DnsZone:

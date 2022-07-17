@@ -14,7 +14,15 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 		Zone string `path:"zone"`
 	}
 	type record struct {
-		FQDN string `json:"fqdn"`
+		FQDN     string `json:"fqdn"`
+		Hostname string `json:"hostname"`
+		Type     string `json:"type"`
+		Data     string `json:"data"`
+
+		MXPreference uint16 `json:"mxPreference,omitempty"`
+		SRVPort      uint16 `json:"srvPort,omitempty"`
+		SRVPriority  uint16 `json:"srvPriority,omitempty"`
+		SRVWeight    uint16 `json:"srvWeight,omitempty"`
 	}
 	type zoneRecordsOutput struct {
 		Records []record `json:"records"`
@@ -43,7 +51,14 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 				continue
 			}
 			out.Records = append(out.Records, record{
-				FQDN: rec.Name,
+				Hostname:     rec.Name,
+				FQDN:         rec.Name + "." + zone.Name,
+				Type:         rec.Type,
+				Data:         rec.Data,
+				MXPreference: rec.MXPreference,
+				SRVPort:      rec.SRVPort,
+				SRVPriority:  rec.SRVPriority,
+				SRVWeight:    rec.SRVWeight,
 			})
 		}
 		return nil
