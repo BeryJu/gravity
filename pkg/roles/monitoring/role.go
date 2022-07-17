@@ -42,9 +42,9 @@ func New(instance roles.Instance) *Role {
 		promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
 			DisableCompression: true,
 		})).ServeHTTP(w, r)
-		promhttp.InstrumentMetricHandler(blockyReg, promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
+		promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
 			DisableCompression: true,
-		})).ServeHTTP(w, r)
+		}).ServeHTTP(w, r)
 	})
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
