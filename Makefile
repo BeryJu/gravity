@@ -3,8 +3,8 @@ PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-run-debug:
-	DEBUG=true go run -v . server
+run:
+	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run -v . server
 
 gen-build:
 	DEBUG=true go run -v . cli generateSchema schema.yml

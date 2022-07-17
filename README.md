@@ -31,9 +31,7 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 ### Things missing
 
 - [ ] Web UI that supports doing things
-- [ ] API that supports doing things
-    - [ ] Etcd
-    - [ ] Monitoring
+- [x] API that supports doing things
 - [x] Maybe sending WOL to DHCP leases
 - [x] Metrics
 - [ ] Testing

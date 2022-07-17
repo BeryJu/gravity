@@ -676,6 +676,25 @@ paths:
       summary: Etcd members
       tags:
       - roles/etcd
+  /api/v1/instances:
+    get:
+      operationId: root.get_instances
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceInstancesOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instances
+      tags:
+      - instances
 components:
   schemas:
     AuthAuthUsersOutput:
@@ -992,6 +1011,25 @@ components:
         members:
           items:
             $ref: '#/components/schemas/EtcdMember'
+          nullable: true
+          type: array
+      type: object
+    InstanceInstanceInfo:
+      properties:
+        identifier:
+          type: string
+        ip:
+          type: string
+        roles:
+          type: string
+        version:
+          type: string
+      type: object
+    InstanceInstancesOutput:
+      properties:
+        instances:
+          items:
+            $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
       type: object

@@ -93,7 +93,7 @@ func (i *Instance) startSentry() {
 		Dsn:              "https://a6690a50e8924263bd6f82fe3a1a2386@sentry.beryju.org/17",
 		Environment:      "",
 		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
-		TracesSampleRate: 1.0,
+		TracesSampleRate: 0.5,
 		Transport:        transport,
 	})
 	if err != nil {
@@ -118,6 +118,7 @@ func (i *Instance) getRoles() []string {
 
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
+	i.writeInstanceInfo()
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)
 		ctx, cancel := context.WithCancel(i.rootContext)
@@ -153,7 +154,6 @@ func (i *Instance) bootstrap() {
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
 	wg := sync.WaitGroup{}
-	go i.writeInstanceInfo()
 	for roleId := range i.roles {
 		wg.Add(1)
 		go func(id string) {
