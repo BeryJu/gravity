@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
 	"beryju.io/gravity/pkg/roles/backup"
@@ -20,15 +21,6 @@ import (
 	"beryju.io/gravity/pkg/roles/etcd"
 	"beryju.io/gravity/pkg/roles/monitoring"
 	"beryju.io/gravity/pkg/storage"
-)
-
-const (
-	KeyInstance = "instance"
-	KeyRole     = "role"
-)
-
-const (
-	EventTopicInstanceBootstrapped = "instance.root.bootstrapped"
 )
 
 type RoleContext struct {
@@ -106,7 +98,14 @@ func (i *Instance) Log() *log.Entry {
 }
 
 func (i *Instance) getRoles() []string {
-	rr, err := i.kv.Get(i.rootContext, i.kv.Key(KeyInstance, i.identifier, "roles").String())
+	rr, err := i.kv.Get(
+		i.rootContext,
+		i.kv.Key(
+			types.KeyInstance,
+			i.identifier,
+			"roles",
+		).String(),
+	)
 	roles := extconfig.Get().BootstrapRoles
 	if err == nil && len(rr.Kvs) > 0 {
 		roles = rr.Kvs[0].String()
@@ -150,7 +149,7 @@ func (i *Instance) bootstrap() {
 		i.roles[roleId] = rc
 	}
 	i.ForRole("root").DispatchEvent(
-		EventTopicInstanceBootstrapped,
+		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
 	wg := sync.WaitGroup{}
@@ -171,7 +170,14 @@ func (i *Instance) bootstrap() {
 			}()
 			i.log.WithField("roleId", id).Info("starting role")
 			role := i.roles[id]
-			config, err := i.kv.Get(role.Context, i.kv.Key(KeyInstance, KeyRole, id).String())
+			config, err := i.kv.Get(
+				role.Context,
+				i.kv.Key(
+					types.KeyInstance,
+					types.KeyRole,
+					id,
+				).String(),
+			)
 			rawConfig := []byte{}
 			if err == nil && len(config.Kvs) > 0 {
 				rawConfig = config.Kvs[0].Value

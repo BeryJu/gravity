@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
-	"beryju.io/gravity/pkg/roles/api/types"
+	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -39,7 +40,7 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 		)
 		instances, err := i.kv.Get(
 			ctx,
-			i.kv.Key(KeyInstance).Prefix(true).String(),
+			i.kv.Key(types.KeyInstance).Prefix(true).String(),
 			clientv3.WithPrefix(),
 		)
 		if err != nil {
@@ -64,7 +65,7 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 }
 
 func (i *Instance) writeInstanceInfo() {
-	i.ForRole("instance_info").AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+	i.ForRole("instance_info").AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/instances", i.apiHandlerInstances())
 	})
@@ -81,7 +82,7 @@ func (i *Instance) writeInstanceInfo() {
 	i.kv.Put(
 		i.rootContext,
 		i.kv.Key(
-			KeyInstance,
+			types.KeyInstance,
 			extconfig.Get().Instance.Identifier,
 		).String(),
 		string(ji),

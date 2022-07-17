@@ -695,6 +695,196 @@ paths:
       summary: Instances
       tags:
       - instances
+  /api/v1/roles/backup:
+    get:
+      operationId: backup.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupRoleBackupConfigOutput'
+          description: OK
+      summary: Backup role config
+      tags:
+      - roles/backup
+    post:
+      operationId: backup.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackupRoleBackupConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Backup role config
+      tags:
+      - roles/backup
+  /api/v1/roles/dhcp:
+    get:
+      operationId: dhcp.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpRoleDHCPConfigOutput'
+          description: OK
+      summary: DHCP role config
+      tags:
+      - roles/dhcp
+    post:
+      operationId: dhcp.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpRoleDHCPConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP role config
+      tags:
+      - roles/dhcp
+  /api/v1/roles/discovery:
+    get:
+      operationId: discovery.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryRoleDiscoveryConfigOutput'
+          description: OK
+      summary: Discovery role config
+      tags:
+      - roles/discovery
+    post:
+      operationId: discovery.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryRoleDiscoveryConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery role config
+      tags:
+      - roles/discovery
+  /api/v1/roles/dns:
+    get:
+      operationId: dns.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsRoleDNSConfigOutput'
+          description: OK
+      summary: DNS role config
+      tags:
+      - roles/dns
+    post:
+      operationId: dns.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnsRoleDNSConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS role config
+      tags:
+      - roles/dns
+  /api/v1/roles/monitoring:
+    get:
+      operationId: monitoring.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringRoleMonitoringConfigOutput'
+          description: OK
+      summary: Monitoring role config
+      tags:
+      - roles/monitoring
+    post:
+      operationId: monitoring.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitoringRoleMonitoringConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Monitoring role config
+      tags:
+      - roles/monitoring
 components:
   schemas:
     AuthAuthUsersOutput:
@@ -725,6 +915,32 @@ components:
         size:
           type: integer
         status:
+          type: string
+      type: object
+    BackupRoleBackupConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      type: object
+    BackupRoleBackupConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      type: object
+    BackupRoleConfig:
+      nullable: true
+      properties:
+        accessKey:
+          type: string
+        bucket:
+          type: string
+        cronExpr:
+          type: string
+        enabled:
+          type: boolean
+        endpoint:
+          type: string
+        secretKey:
           type: string
       type: object
     DhcpLease:
@@ -777,6 +993,24 @@ components:
             type: string
           nullable: true
           type: array
+      type: object
+    DhcpRoleConfig:
+      nullable: true
+      properties:
+        leaseNegotiateTimeout:
+          type: integer
+        port:
+          type: integer
+      type: object
+    DhcpRoleDHCPConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DhcpRoleConfig'
+      type: object
+    DhcpRoleDHCPConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DhcpRoleConfig'
       type: object
     DhcpScope:
       properties:
@@ -879,6 +1113,22 @@ components:
           nullable: true
           type: array
       type: object
+    DiscoveryRoleConfig:
+      nullable: true
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    DiscoveryRoleDiscoveryConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
+      type: object
+    DiscoveryRoleDiscoveryConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
+      type: object
     DiscoverySubnet:
       properties:
         cidr:
@@ -952,6 +1202,22 @@ components:
             $ref: '#/components/schemas/DnsRecord'
           nullable: true
           type: array
+      type: object
+    DnsRoleConfig:
+      nullable: true
+      properties:
+        port:
+          type: integer
+      type: object
+    DnsRoleDNSConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DnsRoleConfig'
+      type: object
+    DnsRoleDNSConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DnsRoleConfig'
       type: object
     DnsZone:
       properties:
@@ -1032,6 +1298,22 @@ components:
             $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
+      type: object
+    MonitoringRoleConfig:
+      nullable: true
+      properties:
+        port:
+          type: integer
+      type: object
+    MonitoringRoleMonitoringConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
+      type: object
+    MonitoringRoleMonitoringConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
       type: object
     RestErrResponse:
       properties:

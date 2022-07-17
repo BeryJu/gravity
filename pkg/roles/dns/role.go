@@ -20,6 +20,7 @@ type Role struct {
 	servers []*dns.Server
 	zones   map[string]*Zone
 
+	cfg *RoleConfig
 	log *log.Entry
 	i   roles.Instance
 	ctx context.Context
@@ -43,6 +44,8 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/dns/zones/{zone}/records", r.apiHandlerZoneRecordsGet())
 		svc.Post("/api/v1/dns/zones/{zone}/records/{hostname}", r.apiHandlerZoneRecordsPut())
 		svc.Delete("/api/v1/dns/zones/{zone}/records/{hostname}", r.apiHandlerZoneRecordsDelete())
+		svc.Get("/api/v1/roles/dns", r.apiHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/dns", r.apiHandlerRoleConfigPut())
 	})
 	r.loadInitialZones()
 	return r
@@ -50,7 +53,7 @@ func New(instance roles.Instance) *Role {
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(config)
 
 	go r.startWatchZones()
 
@@ -66,9 +69,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
-	listen := extconfig.Get().Listen(cfg.Port)
+	listen := extconfig.Get().Listen(r.cfg.Port)
 	if runtime.GOOS == "darwin" {
-		listen = fmt.Sprintf(":%d", cfg.Port)
+		listen = fmt.Sprintf(":%d", r.cfg.Port)
 	}
 
 	srv := func(proto string) {

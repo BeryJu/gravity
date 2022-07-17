@@ -45,6 +45,8 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/dhcp/scopes/{scope}/leases/{identifier}", r.apiHandlerLeasesPut())
 		svc.Post("/api/v1/dhcp/scopes/{scope}/leases/{identifier}/wol", r.apiHandlerLeasesWOL())
 		svc.Delete("/api/v1/dhcp/scopes/{scope}/leases/{identifier}", r.apiHandlerLeasesDelete())
+		svc.Get("/api/v1/roles/dhcp", r.apiHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/dhcp", r.apiHandlerRoleConfigPut())
 	})
 	return r
 }

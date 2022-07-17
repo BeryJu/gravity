@@ -8,10 +8,12 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
+	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/web"
 )
 
 type Role struct {
@@ -19,6 +21,7 @@ type Role struct {
 	log *log.Entry
 	i   roles.Instance
 	ctx context.Context
+	cfg *RoleConfig
 }
 
 //go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
@@ -43,13 +46,18 @@ func New(instance roles.Instance) *Role {
 			DisableCompression: true,
 		})).ServeHTTP(w, r)
 	})
+	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/roles/monitoring", r.apiHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/monitoring", r.apiHandlerRoleConfigPut())
+	})
 	return r
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
-	cfg := r.decodeRoleConfig(config)
-	listen := extconfig.Get().Listen(cfg.Port)
+	r.cfg = r.decodeRoleConfig(config)
+	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.WithField("listen", listen).Info("starting monitoring Server")
 	return http.ListenAndServe(listen, r.m)
 }

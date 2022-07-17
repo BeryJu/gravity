@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/instance"
+	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
 	"github.com/spf13/cobra"
@@ -19,7 +20,7 @@ var generateSchemaCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		rootInst := instance.NewInstance()
 		inst := rootInst.ForRole("api")
-		inst.AddEventListener(instance.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
+		inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 			defer rootInst.Stop()
 			api := api.New(inst)
 			schema := api.Schema()

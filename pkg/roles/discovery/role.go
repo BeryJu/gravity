@@ -31,6 +31,8 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/discovery/devices", r.apiHandlerDevices())
 		svc.Post("/api/v1/discovery/devices/{identifier}/apply", r.apiHandlerDeviceApply())
 		svc.Delete("/api/v1/discovery/devices/{identifier}/delete", r.apiHandlerDevicesDelete())
+		svc.Get("/api/v1/roles/discovery", r.apiHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/discovery", r.apiHandlerRoleConfigPut())
 	})
 	return r
 }
