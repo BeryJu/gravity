@@ -53,7 +53,7 @@ func (h *handler4) Serve() error {
 }
 
 func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) {
-	if h.role.cfg.ListenOnly || extconfig.Get().ListenOnlyMode {
+	if extconfig.Get().ListenOnlyMode {
 		return
 	}
 	context, canc := context.WithCancel(context.Background())
