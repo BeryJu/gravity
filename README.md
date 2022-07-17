@@ -32,15 +32,6 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 
 - [ ] Web UI that supports doing things
 - [ ] API that supports doing things
-    - [ ] DNS
-        - Zone
-            - [x] Read
-            - [ ] Put
-            - [ ] Delete
-        - Record
-            - [x] Read
-            - [ ] Put
-            - [ ] Delete
     - [ ] Etcd
     - [ ] Monitoring
 - [x] Maybe sending WOL to DHCP leases

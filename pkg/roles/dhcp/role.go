@@ -38,10 +38,10 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/dhcp/scopes", r.apiHandlerScopes())
+		svc.Get("/api/v1/dhcp/scopes", r.apiHandlerScopesGet())
 		svc.Post("/api/v1/dhcp/scopes/{scope}", r.apiHandlerScopesPut())
 		svc.Delete("/api/v1/dhcp/scopes/{scope}", r.apiHandlerScopesDelete())
-		svc.Get("/api/v1/dhcp/scopes/{scope}/leases", r.apiHandlerLeases())
+		svc.Get("/api/v1/dhcp/scopes/{scope}/leases", r.apiHandlerLeasesGet())
 		svc.Post("/api/v1/dhcp/scopes/{scope}/leases/{identifier}", r.apiHandlerLeasesPut())
 		svc.Post("/api/v1/dhcp/scopes/{scope}/leases/{identifier}/wol", r.apiHandlerLeasesWOL())
 		svc.Delete("/api/v1/dhcp/scopes/{scope}/leases/{identifier}", r.apiHandlerLeasesDelete())

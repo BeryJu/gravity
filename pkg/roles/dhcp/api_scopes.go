@@ -8,7 +8,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *Role) apiHandlerScopes() usecase.Interactor {
+func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 	type scope struct {
 		Name       string            `json:"scope"`
 		SubnetCIDR string            `json:"subnetCidr"`

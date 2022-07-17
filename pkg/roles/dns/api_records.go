@@ -10,8 +10,8 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
-	type zoneRecordsInput struct {
+func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
+	type recordsInput struct {
 		Zone string `path:"zone"`
 	}
 	type record struct {
@@ -19,20 +19,20 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 		FQDN     string `json:"fqdn"`
 		Hostname string `json:"hostname"`
 		Type     string `json:"type"`
-		Data     string `json:"data"`
 
+		Data         string `json:"data"`
 		MXPreference uint16 `json:"mxPreference,omitempty"`
 		SRVPort      uint16 `json:"srvPort,omitempty"`
 		SRVPriority  uint16 `json:"srvPriority,omitempty"`
 		SRVWeight    uint16 `json:"srvWeight,omitempty"`
 	}
-	type zoneRecordsOutput struct {
+	type recordsOutput struct {
 		Records []record `json:"records"`
 	}
-	u := usecase.NewIOI(new(zoneRecordsInput), new(zoneRecordsOutput), func(ctx context.Context, input, output interface{}) error {
+	u := usecase.NewIOI(new(recordsInput), new(recordsOutput), func(ctx context.Context, input, output interface{}) error {
 		var (
-			in  = input.(*zoneRecordsInput)
-			out = output.(*zoneRecordsOutput)
+			in  = input.(*recordsInput)
+			out = output.(*recordsOutput)
 		)
 		zone, ok := r.zones[in.Zone]
 		if !ok {
@@ -70,5 +70,83 @@ func (r *Role) apiHandlerZoneRecords() usecase.Interactor {
 	u.SetTitle("DNS Records")
 	u.SetTags("roles/dns")
 	u.SetExpectedErrors(status.InvalidArgument, status.NotFound, status.Internal)
+	return u
+}
+
+func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
+	type recordsInput struct {
+		Zone     string `path:"zone"`
+		Hostname string `path:"hostname"`
+		UID      string `query:"uid"`
+
+		Type string `json:"type"`
+
+		Data         string `json:"data"`
+		MXPreference uint16 `json:"mxPreference,omitempty"`
+		SRVPort      uint16 `json:"srvPort,omitempty"`
+		SRVPriority  uint16 `json:"srvPriority,omitempty"`
+		SRVWeight    uint16 `json:"srvWeight,omitempty"`
+	}
+	u := usecase.NewIOI(new(recordsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*recordsInput)
+		)
+		zone, ok := r.zones[in.Zone]
+		if !ok {
+			return status.Wrap(errors.New("zone not found"), status.NotFound)
+		}
+		rec := zone.newRecord(in.Hostname, in.Type)
+		rec.uid = in.UID
+		rec.Data = in.Data
+		rec.MXPreference = in.MXPreference
+		rec.SRVPort = in.SRVPort
+		rec.SRVPriority = in.SRVPriority
+		rec.SRVWeight = in.SRVWeight
+		err := rec.put(ctx, -1)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("dns.put_records")
+	u.SetTitle("DNS Records")
+	u.SetTags("roles/dns")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument, status.NotFound)
+	return u
+}
+
+func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
+	type recordsInput struct {
+		Zone     string `path:"zone"`
+		Hostname string `path:"hostname"`
+		UID      string `query:"uid"`
+	}
+	u := usecase.NewIOI(new(recordsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
+		var (
+			in = input.(*recordsInput)
+		)
+		zone, ok := r.zones[in.Zone]
+		if !ok {
+			return status.Wrap(errors.New("zone not found"), status.NotFound)
+		}
+		key := r.i.KV().Key(types.KeyRole, types.KeyZones, in.Zone, in.Hostname)
+		recs, ok := zone.records[key.String()]
+		if !ok {
+			return status.Wrap(errors.New("record not found"), status.NotFound)
+		}
+		rec, ok := recs[in.UID]
+		if !ok {
+			return status.Wrap(errors.New("record uid not found"), status.NotFound)
+		}
+		_, err := r.i.KV().Delete(ctx, rec.recordKey)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("dns.delete_records")
+	u.SetTitle("DNS Records")
+	u.SetTags("roles/dns")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument, status.NotFound)
 	return u
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *Role) apiHandlerLeases() usecase.Interactor {
+func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 	type leasesInput struct {
 		ScopeName string `path:"scope"`
 	}
