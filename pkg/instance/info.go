@@ -3,6 +3,7 @@ package instance
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
@@ -47,6 +48,10 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, ri := range instances.Kvs {
+			// We only want one level
+			if strings.Contains(string(ri.Key), "/") {
+				continue
+			}
 			var inst InstanceInfo
 			err := json.Unmarshal(ri.Value, &inst)
 			if err != nil {
