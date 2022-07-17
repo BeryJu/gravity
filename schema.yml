@@ -587,8 +587,6 @@ components:
           type: string
         hostname:
           type: string
-        scopeKey:
-          type: string
       type: object
     DhcpLeasesOutput:
       properties:

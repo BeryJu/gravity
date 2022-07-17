@@ -34,6 +34,8 @@ func (r *Role) apiHandlerLeases() usecase.Interactor {
 					Address:          l.Address,
 					Hostname:         l.Hostname,
 					AddressLeaseTime: l.AddressLeaseTime,
+					ScopeKey:         l.ScopeKey,
+					DNSZone:          l.DNSZone,
 				})
 			}
 		}
@@ -53,7 +55,6 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		Address          string `json:"address"`
 		Hostname         string `json:"hostname"`
 		AddressLeaseTime string `json:"addressLeaseTime"`
-		ScopeKey         string `json:"scopeKey"`
 		DNSZone          string `json:"dnsZone"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
@@ -65,6 +66,7 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		l.Hostname = in.Hostname
 		l.AddressLeaseTime = in.AddressLeaseTime
 		l.ScopeKey = in.Scope
+		l.DNSZone = in.DNSZone
 		scope, ok := r.scopes[in.Scope]
 		if !ok {
 			return status.InvalidArgument

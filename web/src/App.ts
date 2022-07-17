@@ -32,11 +32,11 @@ export const ROUTES = [
         await import("src/pages/dns/DNSRecordsPage");
         return html`<gravity-dns-records zone=${args.zone}></gravity-dns-records>`;
     }),
-    new Route(new RegExp("^/dhcp/subnets$"), async () => {
+    new Route(new RegExp("^/dhcp/scopes$"), async () => {
         await import("src/pages/dhcp/DHCPScopesPage");
         return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
     }),
-    new Route(new RegExp("^/dhcp/subnets/(?<scope>.*)$"), async (args) => {
+    new Route(new RegExp("^/dhcp/scopes/(?<scope>.*)$"), async (args) => {
         await import("src/pages/dhcp/DHCPLeasesPage");
         return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
     }),
@@ -72,9 +72,9 @@ export class App extends LitElement {
             </sp-sidenav-heading>
             <sp-sidenav-heading label="DHCP">
                 <sp-sidenav-item
-                    value="#/dhcp/subnets"
+                    value="#/dhcp/scopes"
                     label="Subnets"
-                    href="#/dhcp/subnets"
+                    href="#/dhcp/scopes"
                 ></sp-sidenav-item>
             </sp-sidenav-heading>
             <sp-sidenav-heading label="Discovery">
