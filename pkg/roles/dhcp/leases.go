@@ -63,14 +63,14 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	return l, nil
 }
 
-func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
+func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&l)
 	if err != nil {
 		return err
 	}
 
 	if expiry > 0 {
-		exp, err := l.inst.KV().Lease.Grant(context.TODO(), expiry)
+		exp, err := l.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 		l.Identifier,
 	)
 	_, err = l.inst.KV().Put(
-		context.TODO(),
+		ctx,
 		leaseKey.String(),
 		string(raw),
 		opts...,
@@ -92,6 +92,7 @@ func (l *Lease) put(expiry int64, opts ...clientv3.OpOption) error {
 		return err
 	}
 	ev := roles.NewEvent(
+		ctx,
 		map[string]interface{}{
 			"hostname": l.Hostname,
 			"address":  l.Address,

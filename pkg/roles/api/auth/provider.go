@@ -41,7 +41,7 @@ func (ap *AuthProvider) AsMiddleware() func(http.Handler) http.Handler {
 	}
 }
 
-func (ap *AuthProvider) CreateUser(username, password string) error {
+func (ap *AuthProvider) CreateUser(ctx context.Context, username, password string) error {
 	hashedPw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -56,7 +56,7 @@ func (ap *AuthProvider) CreateUser(username, password string) error {
 	}
 
 	_, err = ap.inst.KV().Put(
-		context.TODO(),
+		ctx,
 		ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,

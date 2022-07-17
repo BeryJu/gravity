@@ -81,7 +81,7 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 		}
 		s.cidr = cidr
 
-		err = s.put(-1)
+		err = s.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

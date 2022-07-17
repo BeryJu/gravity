@@ -28,7 +28,7 @@ func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
 			Password: string(hash),
 			ap:       ap,
 		}
-		err = user.put()
+		err = user.put(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

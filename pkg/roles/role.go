@@ -15,6 +15,7 @@ type Role interface {
 
 type Event struct {
 	Payload EventPayload
+	Context context.Context
 	topic   string
 }
 
@@ -33,8 +34,9 @@ type EventPayload struct {
 	RelatedObjectOptions []clientv3.OpOption
 }
 
-func NewEvent(data map[string]interface{}) *Event {
+func NewEvent(ctx context.Context, data map[string]interface{}) *Event {
 	return &Event{
+		Context: ctx,
 		Payload: EventPayload{
 			Data:                 data,
 			RelatedObjectOptions: make([]clientv3.OpOption, 0),

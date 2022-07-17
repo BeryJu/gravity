@@ -66,7 +66,7 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 			return status.InvalidArgument
 		}
 		l.scope = scope
-		err := l.put(-1)
+		err := l.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

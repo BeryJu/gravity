@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"sync"
@@ -32,8 +33,9 @@ type Handler4 func(req *Request) *dhcpv4.DHCPv4
 
 type Request struct {
 	*dhcpv4.DHCPv4
-	peer net.Addr
-	log  *log.Entry
+	peer    net.Addr
+	log     *log.Entry
+	Context context.Context
 }
 
 func (h *handler4) Serve() error {
@@ -54,6 +56,8 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	if h.role.cfg.ListenOnly || extconfig.Get().ListenOnlyMode {
 		return
 	}
+	context, canc := context.WithCancel(context.Background())
+	defer canc()
 	m, err := dhcpv4.FromBytes(buf)
 	bufpool.Put(&buf)
 	if err != nil {
@@ -62,9 +66,10 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	}
 
 	req := &Request{
-		DHCPv4: m,
-		peer:   _peer,
-		log:    h.role.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
+		DHCPv4:  m,
+		peer:    _peer,
+		log:     h.role.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
+		Context: context,
 	}
 
 	if m.OpCode != dhcpv4.OpcodeBootRequest {
@@ -77,6 +82,8 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		handler = h.role.handleDHCPDiscover4
 	case dhcpv4.MessageTypeRequest:
 		handler = h.role.handleDHCPRequest4
+	case dhcpv4.MessageTypeDecline:
+		handler = h.role.handleDHCPDecline4
 	default:
 		req.log.WithField("msg", mt.String()).Info("Unsupported message type")
 		return

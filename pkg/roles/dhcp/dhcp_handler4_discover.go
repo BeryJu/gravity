@@ -17,9 +17,9 @@ func (r *Role) handleDHCPDiscover4(req *Request) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
-		match.put(int64(r.cfg.LeaseNegotiateTimeout))
+		match.put(req.Context, int64(r.cfg.LeaseNegotiateTimeout))
 	} else {
-		match.put(match.scope.TTL)
+		match.put(req.Context, match.scope.TTL)
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()

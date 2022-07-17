@@ -47,10 +47,10 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [x] Metrics
 - [ ] Testing
 - [ ] Docs
-- [ ] Real world testing
-    - [ ] DHCP
-    - [ ] DNS
-    - [ ] Backup & Restore
+- [x] Real world testing
+    - [x] DHCP
+    - [x] DNS
+    - [x] Backup & Restore
 - [x] Replicated DNS caching
 - [x] In-memory caching for clusters with even nodes
     - [x] Caching for DNS

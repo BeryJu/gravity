@@ -101,14 +101,14 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 	return rr
 }
 
-func (r *Record) put(expiry int64, opts ...clientv3.OpOption) error {
+func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&r)
 	if err != nil {
 		return err
 	}
 
 	if expiry > 0 {
-		exp, err := r.inst.KV().Lease.Grant(context.TODO(), expiry)
+		exp, err := r.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}
@@ -126,7 +126,7 @@ func (r *Record) put(expiry int64, opts ...clientv3.OpOption) error {
 		leaseKey.Add(r.uid)
 	}
 	_, err = r.inst.KV().Put(
-		context.TODO(),
+		ctx,
 		leaseKey.String(),
 		string(raw),
 		opts...,

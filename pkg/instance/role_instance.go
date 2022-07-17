@@ -1,6 +1,8 @@
 package instance
 
 import (
+	"context"
+
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
 	log "github.com/sirupsen/logrus"
@@ -31,6 +33,9 @@ func (ri *RoleInstance) Log() *log.Entry {
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
 	ri.log.WithField("topic", topic).Debug("dispatching event")
+	if ev.Context == nil {
+		ev.Context = context.Background()
+	}
 	ri.parent.dispatchEvent(topic, ev.WithTopic(topic))
 }
 

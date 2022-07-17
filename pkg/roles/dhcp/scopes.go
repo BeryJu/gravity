@@ -172,14 +172,14 @@ func (s *Scope) createLeaseFor(req *Request) *Lease {
 	return lease
 }
 
-func (s *Scope) put(expiry int64, opts ...clientv3.OpOption) error {
+func (s *Scope) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&s)
 	if err != nil {
 		return err
 	}
 
 	if expiry > 0 {
-		exp, err := s.inst.KV().Lease.Grant(context.TODO(), expiry)
+		exp, err := s.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}
@@ -192,7 +192,7 @@ func (s *Scope) put(expiry int64, opts ...clientv3.OpOption) error {
 		s.Name,
 	)
 	_, err = s.inst.KV().Put(
-		context.TODO(),
+		ctx,
 		leaseKey.String(),
 		string(raw),
 		opts...,

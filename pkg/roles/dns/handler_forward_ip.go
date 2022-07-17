@@ -101,7 +101,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx i
 	}
 	record.TTL = ans.Header().Ttl
 	record.uid = strconv.Itoa(idx)
-	err := record.put(int64(cacheTtl))
+	err := record.put(context.Background(), int64(cacheTtl))
 	if err != nil {
 		ipf.log.WithError(err).Warning("failed to cache answer")
 	}

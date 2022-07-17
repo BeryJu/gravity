@@ -73,9 +73,9 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 
 		device := r.deviceFromKV(rawDevice.Kvs[0])
 		if in.To == "dhcp" {
-			err = device.toDHCP(in.DHCPScope)
+			err = device.toDHCP(ctx, in.DHCPScope)
 		} else {
-			err = device.toDNS(in.DNSZone)
+			err = device.toDNS(ctx, in.DNSZone)
 		}
 		if err != nil {
 			return status.Wrap(err, status.Internal)

@@ -51,10 +51,10 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 
 func (s *Subnet) RunDiscovery() {
 	s.log.Trace("starting scan for subnet")
-	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(map[string]interface{}{
+	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
 		"subnet": s,
 	}))
-	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(map[string]interface{}{
+	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(s.role.ctx, map[string]interface{}{
 		"subnet": s,
 	}))
 
@@ -101,7 +101,7 @@ func (s *Subnet) RunDiscovery() {
 				dev.IP = addr.Addr
 			}
 		}
-		err := dev.put(int64(s.DiscoveryTTL))
+		err := dev.put(s.role.ctx, int64(s.DiscoveryTTL))
 		if err != nil {
 			s.log.WithError(err).Warning("ignoring device")
 		}

@@ -47,17 +47,23 @@ type Instance struct {
 	eventHandlers  map[string]map[string][]roles.EventHandler
 
 	etcd *etcd.Role
+
+	rootContext       context.Context
+	rootContextCancel context.CancelFunc
 }
 
 func NewInstance() *Instance {
 	extCfg := extconfig.Get()
+	ctx, canc := context.WithCancel(context.Background())
 	return &Instance{
-		log:            log.WithField("instance", extCfg.Instance.Identifier),
-		roles:          make(map[string]RoleContext),
-		identifier:     extCfg.Instance.Identifier,
-		eventHandlersM: sync.RWMutex{},
-		eventHandlers:  make(map[string]map[string][]roles.EventHandler),
-		kv:             extCfg.EtcdClient(),
+		log:               log.WithField("instance", extCfg.Instance.Identifier),
+		roles:             make(map[string]RoleContext),
+		identifier:        extCfg.Instance.Identifier,
+		eventHandlersM:    sync.RWMutex{},
+		eventHandlers:     make(map[string]map[string][]roles.EventHandler),
+		kv:                extCfg.EtcdClient(),
+		rootContext:       ctx,
+		rootContextCancel: canc,
 	}
 }
 
@@ -100,7 +106,7 @@ func (i *Instance) Log() *log.Entry {
 }
 
 func (i *Instance) getRoles() []string {
-	rr, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, i.identifier, "roles").String())
+	rr, err := i.kv.Get(i.rootContext, i.kv.Key(KeyInstance, i.identifier, "roles").String())
 	roles := extconfig.Get().BootstrapRoles
 	if err == nil && len(rr.Kvs) > 0 {
 		roles = rr.Kvs[0].String()
@@ -114,7 +120,7 @@ func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)
-		ctx, cancel := context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(i.rootContext)
 		rc := RoleContext{
 			Context:           ctx,
 			ContextCancelFunc: cancel,
@@ -142,7 +148,10 @@ func (i *Instance) bootstrap() {
 		}
 		i.roles[roleId] = rc
 	}
-	i.ForRole("root").DispatchEvent(EventTopicInstanceBootstrapped, roles.NewEvent(map[string]interface{}{}))
+	i.ForRole("root").DispatchEvent(
+		EventTopicInstanceBootstrapped,
+		roles.NewEvent(i.rootContext, map[string]interface{}{}),
+	)
 	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
 		wg.Add(1)
@@ -161,7 +170,7 @@ func (i *Instance) bootstrap() {
 			}()
 			i.log.WithField("roleId", id).Info("starting role")
 			role := i.roles[id]
-			config, err := i.kv.Get(context.TODO(), i.kv.Key(KeyInstance, KeyRole, id).String())
+			config, err := i.kv.Get(role.Context, i.kv.Key(KeyInstance, KeyRole, id).String())
 			rawConfig := []byte{}
 			if err == nil && len(config.Kvs) > 0 {
 				rawConfig = config.Kvs[0].Value
@@ -182,5 +191,6 @@ func (i *Instance) Stop() {
 	if i.etcd != nil {
 		i.etcd.Stop()
 	}
+	i.rootContextCancel()
 	sentry.Flush(2 * time.Second)
 }

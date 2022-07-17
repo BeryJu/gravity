@@ -31,7 +31,7 @@ func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*User, error) {
 	return user, nil
 }
 
-func (u *User) put(opts ...clientv3.OpOption) error {
+func (u *User) put(ctx context.Context, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&u)
 	if err != nil {
 		return err
@@ -41,6 +41,6 @@ func (u *User) put(opts ...clientv3.OpOption) error {
 		types.KeyUsers,
 		u.Username,
 	).String()
-	_, err = u.ap.inst.KV().Put(context.TODO(), fullKey, string(raw), opts...)
+	_, err = u.ap.inst.KV().Put(ctx, fullKey, string(raw), opts...)
 	return err
 }

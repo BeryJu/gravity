@@ -23,5 +23,5 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 		log:   scope.log.WithField("lease", ident),
 		scope: scope,
 	}
-	lease.put(-1)
+	lease.put(ev.Context, -1)
 }

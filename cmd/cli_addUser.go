@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"syscall"
 
@@ -30,7 +31,7 @@ var addUserCmd = &cobra.Command{
 			panic(err)
 		}
 		fmt.Println("")
-		err = am.CreateUser(username, string(bytePassword))
+		err = am.CreateUser(context.Background(), username, string(bytePassword))
 		if err != nil {
 			panic(err)
 		}

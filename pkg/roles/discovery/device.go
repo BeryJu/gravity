@@ -46,13 +46,13 @@ func (r *Role) deviceFromKV(kv *mvccpb.KeyValue) *Device {
 	return rec
 }
 
-func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
+func (d *Device) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	if d.IP == "" && d.MAC == "" {
 		return errors.New("device without IP and MAC")
 	}
 
 	if expiry > 0 {
-		exp, err := d.inst.KV().Lease.Grant(context.TODO(), expiry)
+		exp, err := d.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}
@@ -65,7 +65,7 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 		return err
 	}
 	_, err = d.inst.KV().Put(
-		context.Background(),
+		ctx,
 		key.String(),
 		string(raw),
 		opts...,
@@ -75,6 +75,7 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	}
 
 	ev := roles.NewEvent(
+		ctx,
 		map[string]interface{}{
 			"device": d,
 		},
@@ -86,7 +87,7 @@ func (d *Device) put(expiry int64, opts ...clientv3.OpOption) error {
 	return nil
 }
 
-func (d *Device) toDNS(zone string) error {
+func (d *Device) toDNS(ctx context.Context, zone string) error {
 	hostname := strings.Split(d.Hostname, ".")
 	fqdn := d.Hostname
 	if zone != "" {
@@ -95,12 +96,12 @@ func (d *Device) toDNS(zone string) error {
 	if zone == "" && len(hostname) == 1 {
 		return errors.New("device hostname has no domain and no zone given")
 	}
-	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateForward, roles.NewEvent(map[string]interface{}{
+	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateForward, roles.NewEvent(ctx, map[string]interface{}{
 		"fqdn":     fqdn,
 		"hostname": hostname[0],
 		"address":  d.IP,
 	}))
-	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateReverse, roles.NewEvent(map[string]interface{}{
+	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateReverse, roles.NewEvent(ctx, map[string]interface{}{
 		"fqdn":    fqdn,
 		"address": d.IP,
 	}))
@@ -108,7 +109,7 @@ func (d *Device) toDNS(zone string) error {
 	return nil
 }
 
-func (d *Device) toDHCP(scope string) error {
+func (d *Device) toDHCP(ctx context.Context, scope string) error {
 	if scope == "" {
 		return errors.New("blank scope")
 	}
@@ -116,7 +117,7 @@ func (d *Device) toDHCP(scope string) error {
 		return errors.New("mac address blank")
 	}
 	hostname := strings.Split(d.Hostname, ".")[0]
-	d.inst.DispatchEvent(dhcptypes.EventTopicDHCPCreateLease, roles.NewEvent(map[string]interface{}{
+	d.inst.DispatchEvent(dhcptypes.EventTopicDHCPCreateLease, roles.NewEvent(ctx, map[string]interface{}{
 		"mac":      d.MAC,
 		"hostname": hostname,
 		"address":  d.IP,

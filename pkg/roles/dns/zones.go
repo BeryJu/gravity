@@ -224,14 +224,14 @@ func (z *Zone) StopWatchingRecords() {
 	}
 }
 
-func (z *Zone) put() error {
+func (z *Zone) put(ctx context.Context) error {
 	raw, err := json.Marshal(&z)
 	if err != nil {
 		return err
 	}
 
 	_, err = z.inst.KV().Put(
-		context.TODO(),
+		ctx,
 		z.inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
