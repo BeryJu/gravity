@@ -3,11 +3,13 @@ package monitoring
 import (
 	"context"
 	"net/http"
+	_ "unsafe"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 )
@@ -18,6 +20,9 @@ type Role struct {
 	i   roles.Instance
 	ctx context.Context
 }
+
+//go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
+var blockyReg = prometheus.NewRegistry()
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
@@ -30,7 +35,14 @@ func New(instance roles.Instance) *Role {
 	r.m.Path("/healthz/live").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	})
-	r.m.Path("/metrics").Handler(promhttp.Handler())
+	r.m.Path("/metrics").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
+			DisableCompression: true,
+		})).ServeHTTP(w, r)
+		promhttp.InstrumentMetricHandler(blockyReg, promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
+			DisableCompression: true,
+		})).ServeHTTP(w, r)
+	})
 	return r
 }
 

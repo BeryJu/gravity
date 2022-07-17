@@ -59,6 +59,6 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [x] Full support for SRV and MX
 - [x] Support for multiple records per FQDN
 - [ ] Watch role config and restart roles if it changes?
-- [ ] Blocky metrics support
+- [x] Blocky metrics support
 - [ ] Make backup be tgz of snapshot and raw key:value etcd export
-- [ ] Ping IP before internal IPAM considers it free
+- [x] Ping IP before internal IPAM considers it free
