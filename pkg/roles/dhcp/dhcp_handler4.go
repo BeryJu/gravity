@@ -64,7 +64,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	req := &Request{
 		DHCPv4: m,
 		peer:   _peer,
-		log:    log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
+		log:    h.role.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
 	}
 
 	if m.OpCode != dhcpv4.OpcodeBootRequest {
