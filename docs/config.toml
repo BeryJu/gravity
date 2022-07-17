@@ -1,0 +1,11 @@
+baseURL = 'https://gravity.beryju.io/'
+languageCode = 'en-us'
+title = 'Gravity'
+theme = "hugo-theme-learn"
+
+# For search functionality
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+[params]
+themeVariant = "red"
