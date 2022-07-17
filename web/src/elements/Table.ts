@@ -1,6 +1,7 @@
 import SPTableIndexVars from "@spectrum-css/table/dist/index-vars.css";
 import SPTableVars from "@spectrum-css/table/dist/vars.css";
 import "@spectrum-web-components/icons/sp-icons-medium.js";
+import "@spectrum-web-components/progress-circle/sp-progress-circle.js";
 
 import { CSSResult, LitElement, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -71,7 +72,7 @@ export class Table<T> extends LitElement {
                                 </tr>`;
                             });
                         }),
-                        html`Loading...`,
+                        html`<sp-progress-circle indeterminate size="l"></sp-progress-circle>`,
                     )}
                 </tbody>
             </table>

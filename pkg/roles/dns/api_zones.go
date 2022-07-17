@@ -2,6 +2,7 @@ package dns
 
 import (
 	"context"
+	"strings"
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -47,7 +48,7 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 			in = input.(*zoneInput)
 		)
 		z := r.newZone(in.Name)
-		z.Name = in.Name
+		z.Name = strings.ReplaceAll(in.Name, ".", "_")
 		z.Authoritative = in.Authoritative
 		z.HandlerConfigs = in.HandlerConfigs
 		z.DefaultTTL = in.DefaultTTL
@@ -72,7 +73,7 @@ func (r *Role) apiHandlerZonesDelete() usecase.Interactor {
 		var (
 			in = input.(*zoneInput)
 		)
-		z, ok := r.zones[in.Zone]
+		z, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
 		if !ok {
 			return status.InvalidArgument
 		}

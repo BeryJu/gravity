@@ -3,6 +3,7 @@ package dns
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
@@ -34,7 +35,7 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 			in  = input.(*recordsInput)
 			out = output.(*recordsOutput)
 		)
-		zone, ok := r.zones[in.Zone]
+		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
 		if !ok {
 			return status.Wrap(errors.New("not found"), status.NotFound)
 		}
@@ -91,7 +92,7 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 		var (
 			in = input.(*recordsInput)
 		)
-		zone, ok := r.zones[in.Zone]
+		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
@@ -125,7 +126,7 @@ func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
 		var (
 			in = input.(*recordsInput)
 		)
-		zone, ok := r.zones[in.Zone]
+		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
