@@ -16,6 +16,8 @@ func (r *Role) apiHandlerLeases() usecase.Interactor {
 		Address          string `json:"address"`
 		Hostname         string `json:"hostname"`
 		AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
+		ScopeKey         string `json:"scopeKey"`
+		DNSZone          string `json:"dnsZone"`
 	}
 	type leasesOutput struct {
 		Leases []*lease `json:"leases"`
@@ -51,6 +53,8 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		Address          string `json:"address"`
 		Hostname         string `json:"hostname"`
 		AddressLeaseTime string `json:"addressLeaseTime"`
+		ScopeKey         string `json:"scopeKey"`
+		DNSZone          string `json:"dnsZone"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

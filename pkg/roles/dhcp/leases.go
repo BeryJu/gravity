@@ -27,6 +27,7 @@ type Lease struct {
 	Hostname         string `json:"hostname"`
 	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
+	DNSZone          string `json:"dnsZone,omitempty"`
 
 	scope   *Scope
 	etcdKey string
@@ -91,12 +92,17 @@ func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	if err != nil {
 		return err
 	}
+
+	zone := l.scope.DNS.Zone
+	if l.DNSZone != "" {
+		zone = l.DNSZone
+	}
 	ev := roles.NewEvent(
 		ctx,
 		map[string]interface{}{
 			"hostname": l.Hostname,
 			"address":  l.Address,
-			"fqdn":     utils.EnsureTrailingPeriod(strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")),
+			"fqdn":     utils.EnsureTrailingPeriod(strings.Join([]string{l.Hostname, zone}, ".")),
 		},
 	)
 	ev.Payload.RelatedObjectKey = leaseKey

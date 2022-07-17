@@ -568,9 +568,13 @@ components:
           type: string
         addressLeaseTime:
           type: string
+        dnsZone:
+          type: string
         hostname:
           type: string
         identifier:
+          type: string
+        scopeKey:
           type: string
       type: object
     DhcpLeasesInputType2:
@@ -579,7 +583,11 @@ components:
           type: string
         addressLeaseTime:
           type: string
+        dnsZone:
+          type: string
         hostname:
+          type: string
+        scopeKey:
           type: string
       type: object
     DhcpLeasesOutput:
