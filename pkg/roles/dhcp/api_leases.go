@@ -100,6 +100,7 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 		}
 		err := l.sendWOL()
 		if err != nil {
+			r.log.WithError(err).Warning("failed to WOL")
 			return status.Wrap(err, status.Internal)
 		}
 		return nil
