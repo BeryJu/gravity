@@ -38,6 +38,8 @@ func New(instance roles.Instance) *Role {
 	cfg := embed.NewConfig()
 	cfg.Dir = dirs.EtcdDir
 	cfg.LogLevel = "warn"
+	cfg.AutoCompactionMode = "periodic"
+	cfg.AutoCompactionRetention = "60m"
 	cfg.LPUrls = []url.URL{
 		*urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
 	}
