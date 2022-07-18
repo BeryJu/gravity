@@ -11,7 +11,7 @@ import (
 
 func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
 	type authUsersPut struct {
-		Username string `path:"username"`
+		Username string `query:"username"`
 
 		Password string `json:"password"`
 	}
@@ -83,7 +83,7 @@ func (ap *AuthProvider) apiHandlerAuthUserRead() usecase.Interactor {
 
 func (ap *AuthProvider) apiHandlerAuthUserDelete() usecase.Interactor {
 	type authUserDeleteInput struct {
-		Username string `path:"username"`
+		Username string `query:"username"`
 	}
 	u := usecase.NewIOI(new(authUserDeleteInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

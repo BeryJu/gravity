@@ -4,6 +4,25 @@ info:
   version: 0.0.1
 paths:
   /api/v1/auth/users:
+    delete:
+      operationId: api.delete_users
+      parameters:
+      - in: query
+        name: username
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
     get:
       operationId: api.get_users
       responses:
@@ -22,33 +41,11 @@ paths:
       summary: API Users
       tags:
       - roles/api
-  /api/v1/auth/users/{username}:
-    delete:
-      operationId: api.delete_users
-      parameters:
-      - in: path
-        name: username
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: No Content
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: API Users
-      tags:
-      - roles/api
     post:
       operationId: api.put_users
       parameters:
-      - in: path
+      - in: query
         name: username
-        required: true
         schema:
           type: string
       requestBody:
@@ -87,25 +84,11 @@ paths:
       tags:
       - roles/backup
   /api/v1/dhcp/scopes:
-    get:
-      operationId: dhcp.get_scopes
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DhcpScopesOutput'
-          description: OK
-      summary: DHCP Scopes
-      tags:
-      - roles/dhcp
-  /api/v1/dhcp/scopes/{scope}:
     delete:
       operationId: dhcp.delete_scopes
       parameters:
-      - in: path
+      - in: query
         name: scope
-        required: true
         schema:
           type: string
       responses:
@@ -126,12 +109,23 @@ paths:
       summary: DHCP Scopes
       tags:
       - roles/dhcp
+    get:
+      operationId: dhcp.get_scopes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpScopesOutput'
+          description: OK
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
     post:
       operationId: dhcp.put_scopes
       parameters:
-      - in: path
+      - in: query
         name: scope
-        required: true
         schema:
           type: string
       requestBody:
@@ -157,37 +151,16 @@ paths:
       summary: DHCP Scopes
       tags:
       - roles/dhcp
-  /api/v1/dhcp/scopes/{scope}/leases:
-    get:
-      operationId: dhcp.get_leases
-      parameters:
-      - in: path
-        name: scope
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DhcpLeasesOutput'
-          description: OK
-      summary: DHCP Leases
-      tags:
-      - roles/dhcp
-  /api/v1/dhcp/scopes/{scope}/leases/{identifier}:
+  /api/v1/dhcp/scopes/leases:
     delete:
       operationId: dhcp.delete_leases
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
-      - in: path
+      - in: query
         name: scope
-        required: true
         schema:
           type: string
       responses:
@@ -208,17 +181,32 @@ paths:
       summary: DHCP Leases
       tags:
       - roles/dhcp
+    get:
+      operationId: dhcp.get_leases
+      parameters:
+      - in: query
+        name: scope
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpLeasesOutput'
+          description: OK
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
     post:
       operationId: dhcp.put_leases
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
-      - in: path
+      - in: query
         name: scope
-        required: true
         schema:
           type: string
       requestBody:
@@ -244,18 +232,16 @@ paths:
       summary: DHCP Leases
       tags:
       - roles/dhcp
-  /api/v1/dhcp/scopes/{scope}/leases/{identifier}/wol:
+  /api/v1/dhcp/scopes/leases/wol:
     post:
       operationId: dhcp.wol_leases
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
-      - in: path
+      - in: query
         name: scope
-        required: true
         schema:
           type: string
       responses:
@@ -295,13 +281,12 @@ paths:
       summary: Discovery devices
       tags:
       - roles/discovery
-  /api/v1/discovery/devices/{identifier}/apply:
+  /api/v1/discovery/devices/apply:
     post:
       operationId: discovery.apply_device
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
       requestBody:
@@ -333,13 +318,12 @@ paths:
       summary: Apply Discovered devices
       tags:
       - roles/discovery
-  /api/v1/discovery/devices/{identifier}/delete:
+  /api/v1/discovery/devices/delete:
     delete:
       operationId: discovery.delete_devices
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
       responses:
@@ -361,31 +345,11 @@ paths:
       tags:
       - roles/discovery
   /api/v1/discovery/subnets:
-    get:
-      operationId: discovery.get_subnets
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DiscoverySubnetsOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: Discovery subnets
-      tags:
-      - roles/discovery
-  /api/v1/discovery/subnets/{identifier}:
     delete:
       operationId: discovery.delete_subnets
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
       responses:
@@ -406,12 +370,29 @@ paths:
       summary: Discovery Subnets
       tags:
       - roles/discovery
+    get:
+      operationId: discovery.get_subnets
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoverySubnetsOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery subnets
+      tags:
+      - roles/discovery
     post:
       operationId: discovery.put_subnets
       parameters:
-      - in: path
+      - in: query
         name: identifier
-        required: true
         schema:
           type: string
       requestBody:
@@ -438,25 +419,11 @@ paths:
       tags:
       - roles/discovery
   /api/v1/dns/zones:
-    get:
-      operationId: dns.get_zones
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DnsZonesOutput'
-          description: OK
-      summary: DNS Zones
-      tags:
-      - roles/dns
-  /api/v1/dns/zones/{zone}:
     delete:
       operationId: dns.delete_zones
       parameters:
-      - in: path
+      - in: query
         name: zone
-        required: true
         schema:
           type: string
       responses:
@@ -477,12 +444,23 @@ paths:
       summary: DNS Zones
       tags:
       - roles/dns
+    get:
+      operationId: dns.get_zones
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsZonesOutput'
+          description: OK
+      summary: DNS Zones
+      tags:
+      - roles/dns
     post:
       operationId: dns.put_zones
       parameters:
-      - in: path
+      - in: query
         name: zone
-        required: true
         schema:
           type: string
       requestBody:
@@ -508,13 +486,51 @@ paths:
       summary: DNS Zones
       tags:
       - roles/dns
-  /api/v1/dns/zones/{zone}/records:
+  /api/v1/dns/zones/records:
+    delete:
+      operationId: dns.delete_records
+      parameters:
+      - in: query
+        name: zone
+        schema:
+          type: string
+      - in: query
+        name: hostname
+        schema:
+          type: string
+      - in: query
+        name: uid
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Records
+      tags:
+      - roles/dns
     get:
       operationId: dns.get_records
       parameters:
-      - in: path
+      - in: query
         name: zone
-        required: true
         schema:
           type: string
       responses:
@@ -545,63 +561,19 @@ paths:
       summary: DNS Records
       tags:
       - roles/dns
-  /api/v1/dns/zones/{zone}/records/{hostname}:
-    delete:
-      operationId: dns.delete_records
-      parameters:
-      - in: query
-        name: uid
-        schema:
-          type: string
-      - in: path
-        name: zone
-        required: true
-        schema:
-          type: string
-      - in: path
-        name: hostname
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Bad Request
-        "404":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Not Found
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: DNS Records
-      tags:
-      - roles/dns
     post:
       operationId: dns.put_records
       parameters:
       - in: query
-        name: uid
-        schema:
-          type: string
-      - in: path
         name: zone
-        required: true
         schema:
           type: string
-      - in: path
+      - in: query
         name: hostname
-        required: true
+        schema:
+          type: string
+      - in: query
+        name: uid
         schema:
           type: string
       requestBody:

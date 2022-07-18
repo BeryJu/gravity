@@ -48,7 +48,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 
 func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	type subnetsInput struct {
-		Name string `path:"identifier"`
+		Name string `query:"identifier"`
 
 		SubnetCIDR   string `json:"subnetCidr"`
 		DiscoveryTTL int    `json:"discoveryTTL"`
@@ -75,7 +75,7 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 
 func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
 	type subnetsInput struct {
-		Name string `path:"identifier"`
+		Name string `query:"identifier"`
 	}
 	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

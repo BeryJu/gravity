@@ -9,7 +9,7 @@ import (
 
 func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 	type leasesInput struct {
-		ScopeName string `path:"scope"`
+		ScopeName string `query:"scope"`
 	}
 	type lease struct {
 		Identifier       string `json:"identifier"`
@@ -49,8 +49,8 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `path:"identifier"`
-		Scope      string `path:"scope"`
+		Identifier string `query:"identifier"`
+		Scope      string `query:"scope"`
 
 		Address          string `json:"address"`
 		Hostname         string `json:"hostname"`
@@ -87,8 +87,8 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `path:"identifier"`
-		Scope      string `path:"scope"`
+		Identifier string `query:"identifier"`
+		Scope      string `query:"scope"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (
@@ -100,7 +100,6 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 		}
 		err := l.sendWOL()
 		if err != nil {
-			r.log.WithError(err).Warning("failed to WOL")
 			return status.Wrap(err, status.Internal)
 		}
 		return nil
@@ -114,8 +113,8 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesDelete() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `path:"identifier"`
-		Scope      string `path:"scope"`
+		Identifier string `query:"identifier"`
+		Scope      string `query:"scope"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

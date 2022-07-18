@@ -28,8 +28,8 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/auth/users", ap.apiHandlerAuthUserRead())
-		svc.Post("/api/v1/auth/users/{username}", ap.apiHandlerAuthUserPut())
-		svc.Delete("/api/v1/auth/users/{username}", ap.apiHandlerAuthUserDelete())
+		svc.Post("/api/v1/auth/users", ap.apiHandlerAuthUserPut())
+		svc.Delete("/api/v1/auth/users", ap.apiHandlerAuthUserDelete())
 	})
 	return ap
 }

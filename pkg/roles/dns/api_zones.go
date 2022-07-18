@@ -2,7 +2,6 @@ package dns
 
 import (
 	"context"
-	"strings"
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -38,7 +37,7 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 	type zoneInput struct {
-		Name           string              `path:"zone"`
+		Name           string              `query:"zone"`
 		Authoritative  bool                `json:"authoritative"`
 		HandlerConfigs []map[string]string `json:"handlerConfigs"`
 		DefaultTTL     uint32              `json:"defaultTTL"`
@@ -48,7 +47,7 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 			in = input.(*zoneInput)
 		)
 		z := r.newZone(in.Name)
-		z.Name = strings.ReplaceAll(in.Name, ".", "_")
+		z.Name = in.Name
 		z.Authoritative = in.Authoritative
 		z.HandlerConfigs = in.HandlerConfigs
 		z.DefaultTTL = in.DefaultTTL
@@ -67,13 +66,13 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 
 func (r *Role) apiHandlerZonesDelete() usecase.Interactor {
 	type zoneInput struct {
-		Zone string `path:"zone"`
+		Zone string `query:"zone"`
 	}
 	u := usecase.NewIOI(new(zoneInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (
 			in = input.(*zoneInput)
 		)
-		z, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
+		z, ok := r.zones[in.Zone]
 		if !ok {
 			return status.InvalidArgument
 		}

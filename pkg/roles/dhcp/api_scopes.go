@@ -50,7 +50,7 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 	type scopesInput struct {
-		Name string `path:"scope"`
+		Name string `query:"scope"`
 
 		SubnetCIDR string            `json:"subnetCidr"`
 		Default    bool              `json:"default"`
@@ -96,7 +96,7 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 
 func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 	type scopesInput struct {
-		Scope string `path:"scope"`
+		Scope string `query:"scope"`
 	}
 	u := usecase.NewIOI(new(scopesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

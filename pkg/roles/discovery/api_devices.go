@@ -50,7 +50,7 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 
 func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 	type deviceApplyInput struct {
-		Identifier string `path:"identifier"`
+		Identifier string `query:"identifier"`
 		To         string `json:"to" enum:"dhcp,dns"`
 		DHCPScope  string `json:"dhcpScope"`
 		DNSZone    string `json:"dnsZone"`
@@ -91,7 +91,7 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 
 func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
 	type devicesInput struct {
-		Name string `path:"identifier"`
+		Name string `query:"identifier"`
 	}
 	u := usecase.NewIOI(new(devicesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

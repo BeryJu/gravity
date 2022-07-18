@@ -26,7 +26,7 @@ export class DNSRecordsPage extends LitElement {
                 .data=${() => {
                     return new RolesDnsApi(DEFAULT_CONFIG)
                         .dnsGetRecords({
-                            zone: (this.zone || "_").replaceAll(".", "_"),
+                            zone: this.zone || ".",
                         })
                         .then((records) => records.records || []);
                 }}

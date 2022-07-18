@@ -3,7 +3,6 @@ package dns
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
@@ -13,7 +12,7 @@ import (
 
 func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 	type recordsInput struct {
-		Zone string `path:"zone"`
+		Zone string `query:"zone"`
 	}
 	type record struct {
 		UID      string `json:"uid"`
@@ -35,7 +34,7 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 			in  = input.(*recordsInput)
 			out = output.(*recordsOutput)
 		)
-		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
+		zone, ok := r.zones[in.Zone]
 		if !ok {
 			return status.Wrap(errors.New("not found"), status.NotFound)
 		}
@@ -76,8 +75,8 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 	type recordsInput struct {
-		Zone     string `path:"zone"`
-		Hostname string `path:"hostname"`
+		Zone     string `query:"zone"`
+		Hostname string `query:"hostname"`
 		UID      string `query:"uid"`
 
 		Type string `json:"type"`
@@ -92,7 +91,7 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 		var (
 			in = input.(*recordsInput)
 		)
-		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
+		zone, ok := r.zones[in.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
@@ -118,15 +117,15 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 
 func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
 	type recordsInput struct {
-		Zone     string `path:"zone"`
-		Hostname string `path:"hostname"`
+		Zone     string `query:"zone"`
+		Hostname string `query:"hostname"`
 		UID      string `query:"uid"`
 	}
 	u := usecase.NewIOI(new(recordsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (
 			in = input.(*recordsInput)
 		)
-		zone, ok := r.zones[strings.ReplaceAll(in.Zone, "_", ".")]
+		zone, ok := r.zones[in.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
