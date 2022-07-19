@@ -13,7 +13,7 @@
         "@rollup/plugin-typescript": "^8.3.3",
         "@spectrum-css/table": "^4.0.19",
         "@spectrum-css/typography": "^4.0.20",
-        "@spectrum-web-components/bundle": "^0.26.0",
+        "@spectrum-web-components/bundle": "^0.26.1",
         "@spectrum-web-components/sidenav": "^0.12.13",
         "@trivago/prettier-plugin-sort-imports": "^3.2.0",
         "construct-style-sheets-polyfill": "^3.1.0",
