@@ -90,7 +90,6 @@ func (bfwd *BlockyForwarder) setup() error {
 				"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
 				"https://v.firebog.net/hosts/AdguardDNS.txt",
 				"https://v.firebog.net/hosts/Easylist.txt",
-				"https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt",
 				"https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
 			},
 		},
