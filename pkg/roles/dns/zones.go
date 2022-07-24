@@ -142,6 +142,8 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 			handler = NewBlockyForwarder(z, handlerCfg)
 		case "forward_ip":
 			handler = NewIPForwarderHandler(z, handlerCfg)
+		case "k8s_gateway":
+			handler = NewK8sGateway(z, handlerCfg)
 		case "etcd":
 			handler = NewEtcdHandler(z, handlerCfg)
 		case "memory":
