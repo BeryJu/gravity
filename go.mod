@@ -15,6 +15,7 @@ require (
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
 	github.com/miekg/dns v1.1.50
 	github.com/minio/minio-go/v7 v7.0.31
+	github.com/ori-edge/k8s_gateway v0.3.0
 	github.com/prometheus/client_golang v1.12.2
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
@@ -22,7 +23,7 @@ require (
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
 	github.com/swaggest/openapi-go v0.2.18
-	github.com/swaggest/rest v0.2.29
+	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.4.5
 	github.com/swaggest/usecase v1.1.3
 	go.etcd.io/etcd/api/v3 v3.5.4
@@ -95,7 +96,6 @@ require (
 	github.com/mroth/weightedrand v0.4.1 // indirect
 	github.com/nginxinc/kubernetes-ingress v1.12.3 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
-	github.com/ori-edge/k8s_gateway v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
