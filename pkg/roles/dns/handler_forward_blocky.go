@@ -53,6 +53,21 @@ func (bfwd *BlockyForwarder) setup() error {
 		}
 		upstreams[idx] = us
 	}
+
+	blockLists := []string{
+		"https://adaway.org/hosts.txt",
+		"https://dbl.oisd.nl/",
+		"https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
+		"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+		"https://v.firebog.net/hosts/AdguardDNS.txt",
+		"https://v.firebog.net/hosts/Easylist.txt",
+		"https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
+	}
+	if bll, ok := bfwd.c["blocklists"]; ok {
+		lists := strings.Split(bll, ";")
+		blockLists = lists
+	}
+
 	cfg := config.Config{}
 	err := defaults.Set(&cfg)
 	if err != nil {
@@ -83,15 +98,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	cfg.Blocking = config.BlockingConfig{
 		BlockType: "zeroIP",
 		BlackLists: map[string][]string{
-			"block": {
-				"https://adaway.org/hosts.txt",
-				"https://dbl.oisd.nl/",
-				"https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
-				"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-				"https://v.firebog.net/hosts/AdguardDNS.txt",
-				"https://v.firebog.net/hosts/Easylist.txt",
-				"https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
-			},
+			"block": blockLists,
 		},
 		ClientGroupsBlock: map[string][]string{
 			"default": {"block"},
