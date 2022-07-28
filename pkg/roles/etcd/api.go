@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/backup"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 )
@@ -52,6 +54,9 @@ func (r *Role) apiHandlerJoin() usecase.Interactor {
 			in  = input.(*etcdJoinInput)
 			out = output.(*etcdJoinOutput)
 		)
+
+		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
+
 		_, err := r.i.KV().MemberAdd(ctx, []string{in.Peer})
 		if err != nil {
 			return status.Wrap(err, status.Internal)

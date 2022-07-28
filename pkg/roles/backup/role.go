@@ -19,6 +19,10 @@ const (
 	KeyRole = "backup"
 )
 
+const (
+	EventTopicBackupRun = "roles.backup.run"
+)
+
 type Role struct {
 	mc  *minio.Client
 	cfg *RoleConfig
@@ -39,6 +43,9 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/backup/start", r.apiHandlerBackupStart())
 		svc.Get("/api/v1/roles/backup", r.apiHandlerRoleConfigGet())
 		svc.Post("/api/v1/roles/backup", r.apiHandlerRoleConfigPut())
+	})
+	r.i.AddEventListener(EventTopicBackupRun, func(ev *roles.Event) {
+		r.saveSnapshot()
 	})
 	return r
 }

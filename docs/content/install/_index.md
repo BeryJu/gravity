@@ -1,6 +1,5 @@
 +++
 title = "Installation"
-date = 2022-07-17T21:08:57+02:00
 weight = 5
 chapter = true
 pre = "<b>X. </b>"

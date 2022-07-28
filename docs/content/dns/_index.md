@@ -5,8 +5,6 @@ weight = 6
 pre = "<b>X. </b>"
 +++
 
-# DNS
-
 Gravity's DNS Server supports
 
 - resolving static hosts defined in the etcd database
@@ -29,3 +27,20 @@ The root zone, which is a zone for `.`, is used as fallback for any records for 
 Each zone has it's individual configuration for how to handle queries, see [Handlers](./handlers) for more.
 
 ##### Records
+
+A record belongs to one zone and stores one response. To support multiple responses (i.e. multiple IP addressess for an A record), Record UIDs are used. A UID is optional, and records with UID can be combined with a record without UID (all their results will be returned).
+
+A single record holds the following data:
+
+- `data`: The actual response, an IP for A/AAAA records, Text for TXT records, etc
+- `ttl`: TTL of the response, optional
+
+*For MX records*
+
+- `mxPreference`: Configure the MX Preference (optional)
+
+*For SRV records*
+
+- `srvPort`: Configure SRV Port (optional)
+- `srvPriority`: Configure SRV Priority (optional)
+- `srvWeight`: Configure SRV Weight (optional)
