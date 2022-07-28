@@ -1,6 +1,5 @@
 +++
 title = "DNS"
-date = 2022-07-17T21:08:57+02:00
 weight = 6
 pre = "<b>X. </b>"
 +++
@@ -20,7 +19,7 @@ Gravity's DNS Server supports
 
 Each DNS record belongs to a zone. Most commonly, the zone will be the domain part of an FQDN, so for the record `foo.bar.baz.`, it would be `bar.baz.`. Keep the trailing period in mind, as this is crucial for the zone to work properly.
 
-Zones can also have lower level records, so for the zone `baz.`, you could add a record `foo.bar.` to get the same result as above.
+Zones can also have lower level records, so for the zone `baz.`, you could add a record `foo.bar.` to get the same result as above. The longest matching zone is picked to resolve a record. If all of the handlers of a zone return no response, there is no fallthrough to the next zone.
 
 The root zone, which is a zone for `.`, is used as fallback for any records for which a matching zone could not be found.
 
