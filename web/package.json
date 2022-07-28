@@ -10,7 +10,7 @@
     "dependencies": {
         "@rollup/plugin-commonjs": "^22.0.0",
         "@rollup/plugin-node-resolve": "^13.3.0",
-        "@rollup/plugin-typescript": "^8.3.3",
+        "@rollup/plugin-typescript": "^8.3.4",
         "@spectrum-css/table": "^4.0.19",
         "@spectrum-css/typography": "^4.0.20",
         "@spectrum-web-components/bundle": "^0.26.2",
