@@ -1,8 +1,7 @@
-+++
-title = "DNS"
-weight = 6
-pre = "<b>X. </b>"
-+++
+---
+title: "DNS"
+weight: 6
+---
 
 Gravity's DNS Server supports
 

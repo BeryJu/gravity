@@ -1,6 +1,7 @@
-+++
-title = "Handlers"
-+++
+---
+title: "Handlers"
+weight: 1
+---
 
 # Zone Handlers
 

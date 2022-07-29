@@ -1,3 +1,7 @@
+---
+cascade:
+- type: "docs"
+---
 # Gravity
 
 Fully-replicated DNS and DHCP Server using etcd

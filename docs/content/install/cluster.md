@@ -1,6 +1,6 @@
-+++
-title = "Clustering"
-+++
+---
+title: "Clustering"
+---
 
 Any number of Gravity instances can be clustered together. This has the following advantages:
 

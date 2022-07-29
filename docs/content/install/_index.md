@@ -1,9 +1,7 @@
-+++
-title = "Installation"
-weight = 5
-chapter = true
-pre = "<b>X. </b>"
-+++
+---
+title: "Installation"
+weight: 5
+---
 
 ### Installation
 

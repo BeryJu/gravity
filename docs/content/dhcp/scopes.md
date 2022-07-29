@@ -1,6 +1,7 @@
-+++
-title = "Scopes"
-+++
+---
+title: "Scopes"
+weight: 1
+---
 
 The scope for any particular request is found in the following way:
 

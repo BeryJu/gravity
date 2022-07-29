@@ -1,11 +1,25 @@
 baseURL = 'https://gravity.beryju.io/'
 languageCode = 'en-us'
 title = 'Gravity'
-theme = "hugo-theme-learn"
 
-# For search functionality
-[outputs]
-home = [ "HTML", "RSS", "JSON"]
+github_repo = "https://github.com/BeryJu/gravity"
+github_subdir = "docs"
 
-[params]
-themeVariant = "red"
+[[menu.main]]
+  name = "GitHub"
+  weight = 50
+  url = "https://github.com/BeryJu/gravity"
+
+[module]
+  proxy = "direct"
+  # uncomment line below for temporary local development of module
+  # replacements = "github.com/google/docsy -> ../../docsy"
+  [module.hugoVersion]
+    extended = true
+    min = "0.73.0"
+  [[module.imports]]
+    path = "github.com/google/docsy"
+    disable = false
+  [[module.imports]]
+    path = "github.com/google/docsy/dependencies"
+    disable = false

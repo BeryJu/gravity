@@ -1,8 +1,7 @@
-+++
-title = "DHCP"
-weight = 6
-pre = "<b>X. </b>"
-+++
+---
+title: "DHCP"
+weight: 6
+---
 
 Gravity's DHCP Server supports
 
