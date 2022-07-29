@@ -28,12 +28,14 @@ List of dictionaries to set DHCP options.
 Example options:
 
 ```json
-"options": [
-    {
-        "tagName": "router",
-        "value": "10.1.2.3"
-    },
-]
+{
+    "options": [
+        {
+            "tagName": "router",
+            "value": "10.1.2.3"
+        },
+    ]
+}
 ```
 
 Any of these tag names can be used:
@@ -64,10 +66,14 @@ Key:value settings for the IPAM
 
 DNS settings for this scope. If the zone exists as a zone in Gravity, then DNS integration is enabled. This will automatically create forward and reverse records with the same TTL as the lease (the records will also be renewed).
 
+Additionally, `addZoneInHostname` can be set to make Gravity append the zone to the DHCP hostname
+
 ```json
-"dns": {
-    "zone": "foo.bar.baz.", // needs to match the name of a DNS Zone to enable DNS integration
-    "search": [], // List of DNS search domains
-    "addZoneInHostname": false, // Add the Zone above to the hostname of each lease
+{
+    "dns": {
+        "zone": "foo.bar.baz.",
+        "search": [],
+        "addZoneInHostname": false
+    }
 }
 ```

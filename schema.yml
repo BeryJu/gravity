@@ -608,11 +608,11 @@ paths:
   /api/v1/etcd/join:
     post:
       operationId: etcd.join_member
-      parameters:
-      - in: query
-        name: peer
-        schema:
-          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EtcdEtcdJoinInput'
       responses:
         "200":
           content:
@@ -978,9 +978,9 @@ components:
           type: string
         cronExpr:
           type: string
-        enabled:
-          type: boolean
         endpoint:
+          type: string
+        path:
           type: string
         secretKey:
           type: string
@@ -1300,6 +1300,11 @@ components:
             $ref: '#/components/schemas/DnsZone'
           nullable: true
           type: array
+      type: object
+    EtcdEtcdJoinInput:
+      properties:
+        peer:
+          type: string
       type: object
     EtcdEtcdJoinOutput:
       properties:

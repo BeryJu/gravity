@@ -49,6 +49,9 @@ func (r *Role) saveSnapshot() *BackupStatus {
 	}
 	now := time.Now()
 	fileName := fmt.Sprintf("gravity-snapshot-%s-%d_%d_%d", extconfig.FullVersion(), now.Year(), now.Month(), now.Day())
+	if r.cfg.Path != "" {
+		fileName = fmt.Sprintf("%s/%s", r.cfg.Path, fileName)
+	}
 	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
 	if err != nil {
 		r.log.WithError(err).Warning("failed to upload snapshot")

@@ -10,17 +10,16 @@ import (
 )
 
 type RoleConfig struct {
-	Enabled   bool   `json:"enabled"`
 	AccessKey string `json:"accessKey"`
 	SecretKey string `json:"secretKey"`
 	Endpoint  string `json:"endpoint"`
 	Bucket    string `json:"bucket"`
+	Path      string `json:"path"`
 	CronExpr  string `json:"cronExpr"`
 }
 
 func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	def := RoleConfig{
-		Enabled:  true,
 		CronExpr: "0 */24 * * *",
 	}
 	if len(raw) < 1 {

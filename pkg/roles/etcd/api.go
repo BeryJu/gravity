@@ -44,7 +44,7 @@ func (r *Role) apiHandlerMembers() usecase.Interactor {
 
 func (r *Role) apiHandlerJoin() usecase.Interactor {
 	type etcdJoinInput struct {
-		Peer string `query:"peer"`
+		Peer string `json:"peer"`
 	}
 	type etcdJoinOutput struct {
 		Env string `json:"env"`

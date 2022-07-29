@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
@@ -62,7 +63,7 @@ func (s *Subnet) RunDiscovery() {
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
-		nmap.WithSystemDNS(),
+		nmap.WithCustomDNSServers(extconfig.Get().FallbackDNS),
 	)
 	s.log.WithField("args", scanner.Args()).Trace("nmap args")
 	if err != nil {

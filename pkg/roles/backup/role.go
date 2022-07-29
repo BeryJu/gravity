@@ -53,9 +53,6 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
-	if !r.cfg.Enabled {
-		return nil
-	}
 	endpoint, err := url.Parse(r.cfg.Endpoint)
 	if err != nil {
 		return err

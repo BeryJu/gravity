@@ -14,3 +14,11 @@ Gravity works around this issue with caching objects in memory, and as such even
 
 ## Adding nodes to a cluster
 
+The recommended way to add a node is via the API `/api/v1/etcd/join` endpoint. This endpoint takes a `peer` parameter in the body of the request, which should contain the URL to the instance you're adding.
+
+For example, given these two instances
+
+- gravity-a, running on 10.100.1.10
+- gravity-b, stopped on 10.100.2.10
+
+The `peer` parameter would be set to `https://10.100.2.10:2380`.
