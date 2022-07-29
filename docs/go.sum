@@ -3,4 +3,5 @@ github.com/google/docsy v0.4.0 h1:Eyt2aiDC1fnw/Qq/9xnIqUU5n5Yyk4c8gX3nBDdTv/4=
 github.com/google/docsy v0.4.0/go.mod h1:vJjGkHNaw9bO42gpFTWwAUzHZWZEVlK46Kx7ikY5c7Y=
 github.com/google/docsy/dependencies v0.4.0 h1:FXwyjtuFfPIPBauU2t7uIAgS6VYfJf+OD5pzxGvkQsQ=
 github.com/google/docsy/dependencies v0.4.0/go.mod h1:2zZxHF+2qvkyXhLZtsbnqMotxMukJXLaf8fAZER48oo=
+github.com/twbs/bootstrap v4.6.1+incompatible h1:75PsBfPU1SS65ag0Z3Cq6JNXVAfUNfB0oCLHh9k9Fu8=
 github.com/twbs/bootstrap v4.6.1+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
