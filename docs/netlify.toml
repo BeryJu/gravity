@@ -3,11 +3,10 @@ framework = "hugo"
 
 [build]
 publish = "public"
-command = "npm install && hugo --gc --minify"
+command = "hugo mod get && hugo --gc --minify"
 
 [context.production.environment]
 HUGO_ENV = "production"
-HUGO_ENABLEGITINFO = "true"
 
 [context.deploy-preview]
 command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"

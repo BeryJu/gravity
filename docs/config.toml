@@ -1,6 +1,7 @@
 baseURL = 'https://gravity.beryju.io/'
 languageCode = 'en-us'
 title = 'Gravity'
+enableGitInfo = true
 
 github_repo = "https://github.com/BeryJu/gravity"
 github_subdir = "docs"
