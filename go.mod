@@ -22,7 +22,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
-	github.com/swaggest/openapi-go v0.2.18
+	github.com/swaggest/openapi-go v0.2.19
 	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.4.5
 	github.com/swaggest/usecase v1.1.3
