@@ -10,7 +10,7 @@ COPY ./gen-ts-api/ /work/web/node_modules/gravity-api/
 RUN npm run build
 
 # Stage 2: Build
-FROM golang:1.18 as builder
+FROM golang:1.19.0 as builder
 
 ARG GIT_BUILD_HASH
 ENV GIT_BUILD_HASH=$GIT_BUILD_HASH
