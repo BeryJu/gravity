@@ -14,7 +14,7 @@
         "@spectrum-css/table": "^4.0.19",
         "@spectrum-css/typography": "^4.0.20",
         "@spectrum-web-components/bundle": "^0.26.2",
-        "@spectrum-web-components/sidenav": "^0.12.13",
+        "@spectrum-web-components/sidenav": "^0.12.15",
         "@trivago/prettier-plugin-sort-imports": "^3.3.0",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
