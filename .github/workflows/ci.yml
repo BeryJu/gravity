@@ -66,7 +66,7 @@ jobs:
           make -C .. gen-client-web
           npm run build
       - name: Build and push Docker images
-        uses: docker/build-push-action@v3.1.0
+        uses: docker/build-push-action@v3.1.1
         with:
           tags: |
             ghcr.io/beryju/gravity:latest
