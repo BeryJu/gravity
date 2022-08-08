@@ -22,7 +22,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
-	github.com/swaggest/openapi-go v0.2.19
+	github.com/swaggest/openapi-go v0.2.20
 	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.4.5
 	github.com/swaggest/usecase v1.1.3
@@ -30,7 +30,7 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.4
 	go.etcd.io/etcd/server/v3 v3.5.4
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/net v0.0.0-20220805013720-a33c5aa5df48
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 )
 
@@ -116,7 +116,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/swaggest/form/v5 v5.0.1 // indirect
-	github.com/swaggest/jsonschema-go v0.3.35 // indirect
+	github.com/swaggest/jsonschema-go v0.3.36 // indirect
 	github.com/swaggest/refl v1.1.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect
@@ -144,7 +144,7 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/tools v0.1.10 // indirect
