@@ -18,7 +18,7 @@
         "@trivago/prettier-plugin-sort-imports": "^3.3.0",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
-        "eslint": "^8.21.0",
+        "eslint": "^8.22.0",
         "eslint-config-google": "^0.14.0",
         "lit": "^2.3.0",
         "prettier": "^2.7.1",
