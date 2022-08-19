@@ -21,11 +21,20 @@ export class DNSZonesPage extends LitElement {
                         .dnsGetZones()
                         .then((zones) => zones.zones || []);
                 }}
-                .rowLink=${(item: DnsZone) => {
-                    return `#/dns/zones/${item.name}`;
-                }}
                 .rowRender=${(item: DnsZone) => {
-                    return [html`${item.name}`, html`${item.authoritative}`];
+                    return [
+                        html`<a href=${`#/dns/zones/${item.name}`}>${item.name}</a>`,
+                        html`${item.authoritative}`,
+                        html`<button @click=${() => {
+                            if (confirm(`Delete zone ${item.name}?`)) {
+                                new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteZones({
+                                    zone: item.name,
+                                }).finally(() => {
+                                    this.requestUpdate();
+                                });
+                            }
+                        }}>x</button>`,
+                    ];
                 }}
             >
             </gravity-table>

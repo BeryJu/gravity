@@ -18,11 +18,6 @@ export class Table<T> extends LitElement {
     };
 
     @property({ attribute: false })
-    rowLink: (item: T) => string | undefined = (item: T): string | undefined => {
-        return undefined;
-    };
-
-    @property({ attribute: false })
     data: () => Promise<T[]> = (): Promise<T[]> => {
         return Promise.resolve([] as T[]);
     };
@@ -59,12 +54,6 @@ export class Table<T> extends LitElement {
                             return data.map((item) => {
                                 return html`<tr
                                     class="spectrum-Table-row"
-                                    @click=${() => {
-                                        const link = this.rowLink(item);
-                                        if (link) {
-                                            window.location.assign(link);
-                                        }
-                                    }}
                                 >
                                     ${this.rowRender(item).map((col) => {
                                         return html`<td class="spectrum-Table-cell">${col}</td>`;

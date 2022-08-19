@@ -15,20 +15,25 @@ export class DHCPScopesPage extends LitElement {
             <gravity-header>DHCP Scopes</gravity-header>
             <sp-divider size="m"></sp-divider>
             <gravity-table
-                .columns=${["Scope", "Subnet", ""]}
+                .columns=${["Scope", "Subnet"]}
                 .data=${() => {
                     return new RolesDhcpApi(DEFAULT_CONFIG)
                         .dhcpGetScopes()
                         .then((scopes) => scopes.scopes || []);
                 }}
-                .rowLink=${(item: DhcpScope) => {
-                    return `#/dhcp/scopes/${item.scope}`;
-                }}
                 .rowRender=${(item: DhcpScope) => {
                     return [
-                        html`${item.scope}`,
+                        html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
                         html`${item.subnetCidr}`,
-                        html`<a href="foo">Edit</a>`,
+                        html`<button @click=${() => {
+                            if (confirm(`Delete scope ${item.scope}?`)) {
+                                new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteScopes({
+                                    scope: item.scope,
+                                }).finally(() => {
+                                    this.requestUpdate();
+                                });
+                            }
+                        }}>x</button>`,
                     ];
                 }}
             >
