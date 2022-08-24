@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20220708060408-061419f68f46
 	github.com/Netflix/go-env v0.0.0-20220526054621-78278af1949d
-	github.com/Ullaakut/nmap/v2 v2.2.0
+	github.com/Ullaakut/nmap/v2 v2.2.1
 	github.com/creasty/defaults v1.6.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-ping/ping v1.1.0
