@@ -57,7 +57,6 @@ func (bfwd *BlockyForwarder) setup() error {
 	blockLists := []string{
 		"https://adaway.org/hosts.txt",
 		"https://dbl.oisd.nl/",
-		"https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext",
 		"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
 		"https://v.firebog.net/hosts/AdguardDNS.txt",
 		"https://v.firebog.net/hosts/Easylist.txt",
