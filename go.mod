@@ -26,7 +26,7 @@ require (
 	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.5.1
 	github.com/swaggest/usecase v1.2.0
-	go.etcd.io/etcd/api/v3 v3.5.4
+	go.etcd.io/etcd/api/v3 v3.5.5
 	go.etcd.io/etcd/client/v3 v3.5.4
 	go.etcd.io/etcd/server/v3 v3.5.4
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
