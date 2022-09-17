@@ -1,10 +1,11 @@
-import "src/elements/router/Router404";
-
-import { CSSResult, LitElement, TemplateResult, css, html } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { Route } from "./Route";
-import { RouteMatch } from "./RouteMatch";
+import { ROUTE_SEPARATOR } from "../../common/constants";
+import { AKElement } from "../Base";
+import { Route } from "../router/Route";
+import { RouteMatch } from "../router/RouteMatch";
+import "../router/Router404";
 
 // Poliyfill for hashchange.newURL,
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onhashchange
@@ -28,8 +29,21 @@ window.addEventListener("load", () => {
         })();
 });
 
-@customElement("gravity-router-outlet")
-export class RouterOutlet extends LitElement {
+export function paramURL(url: string, params?: { [key: string]: unknown }): string {
+    let finalUrl = "#";
+    finalUrl += url;
+    if (params) {
+        finalUrl += ";";
+        finalUrl += encodeURIComponent(JSON.stringify(params));
+    }
+    return finalUrl;
+}
+export function navigate(url: string, params?: { [key: string]: unknown }): void {
+    window.location.assign(paramURL(url, params));
+}
+
+@customElement("ak-router-outlet")
+export class RouterOutlet extends AKElement {
     @property({ attribute: false })
     current?: RouteMatch;
 
@@ -39,18 +53,23 @@ export class RouterOutlet extends LitElement {
     @property({ attribute: false })
     routes: Route[] = [];
 
+    static get styles(): CSSResult[] {
+        return [
+            AKElement.GlobalStyle,
+            css`
+                :host {
+                    background-color: transparent !important;
+                }
+                *:first-child {
+                    flex-direction: column;
+                }
+            `,
+        ];
+    }
+
     constructor() {
         super();
         window.addEventListener("hashchange", (ev: HashChangeEvent) => this.navigate(ev));
-    }
-
-    static get styles(): CSSResult {
-        return css`
-            :host {
-                height: 100vh;
-                margin: 3rem 13rem;
-            }
-        `;
     }
 
     firstUpdated(): void {
@@ -58,16 +77,16 @@ export class RouterOutlet extends LitElement {
     }
 
     navigate(ev?: HashChangeEvent): void {
-        let activeUrl = window.location.hash.slice(1, Infinity);
+        let activeUrl = window.location.hash.slice(1, Infinity).split(ROUTE_SEPARATOR)[0];
         if (ev) {
             // Check if we've actually changed paths
-            const oldPath = new URL(ev.oldURL).hash.slice(1, Infinity);
+            const oldPath = new URL(ev.oldURL).hash.slice(1, Infinity).split(ROUTE_SEPARATOR)[0];
             if (oldPath === activeUrl) return;
         }
         if (activeUrl === "") {
             activeUrl = this.defaultUrl || "/";
             window.location.hash = `#${activeUrl}`;
-            console.debug(`gravity/router: defaulted URL to ${window.location.hash}`);
+            console.debug(`authentik/router: defaulted URL to ${window.location.hash}`);
             return;
         }
         let matchedRoute: RouteMatch | null = null;
@@ -77,15 +96,15 @@ export class RouterOutlet extends LitElement {
                 matchedRoute = new RouteMatch(route);
                 matchedRoute.arguments = match.groups || {};
                 matchedRoute.fullUrl = activeUrl;
-                console.debug("gravity/router: found match ", matchedRoute);
+                console.debug("authentik/router: found match ", matchedRoute);
                 return true;
             }
         });
         if (!matchedRoute) {
-            console.debug(`gravity/router: route "${activeUrl}" not defined`);
+            console.debug(`authentik/router: route "${activeUrl}" not defined`);
             const route = new Route(RegExp(""), async () => {
                 return html`<div class="pf-c-page__main">
-                    <gravity-router-404 url=${activeUrl}></gravity-router-404>
+                    <ak-router-404 url=${activeUrl}></ak-router-404>
                 </div>`;
             });
             matchedRoute = new RouteMatch(route);
@@ -93,7 +112,6 @@ export class RouterOutlet extends LitElement {
             matchedRoute.fullUrl = activeUrl;
         }
         this.current = matchedRoute;
-        this.requestUpdate();
     }
 
     render(): TemplateResult | undefined {

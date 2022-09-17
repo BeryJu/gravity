@@ -1,43 +1,64 @@
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import typescript from "@rollup/plugin-typescript";
+import json from "@rollup/plugin-json";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
-import minifyHTML from "rollup-plugin-minify-html-literals";
 import { terser } from "rollup-plugin-terser";
 
-const resources = [
-    { src: "src/style.css", dest: "./dist" },
-    { src: "assets/*", dest: "./dist/assets" },
+export const extensions = [".js", ".jsx", ".ts", ".tsx"];
+
+export const resources = [
+    {
+        src: "node_modules/@patternfly/patternfly/patternfly.min.css",
+        dest: "dist/",
+    },
+    {
+        src: "node_modules/@patternfly/patternfly/patternfly-base.css",
+        dest: "dist/",
+    },
+    { src: "src/elements/styles/authentik.css", dest: "dist/" },
+    {
+        src: "node_modules/@patternfly/patternfly/assets/*",
+        dest: "dist/assets/",
+    },
+    { src: "src/assets/*", dest: "dist/assets" },
+    { src: "./icons/*", dest: "dist/assets/icons" },
 ];
 
-module.exports = [
-    {
-        input: "./src/main.ts",
-        output: [
-            {
-                format: "es",
-                dir: "./dist/",
-                sourcemap: true,
-            },
-        ],
-        plugins: [
-            cssimport(),
-            resolve({ browser: true }),
-            commonjs(),
-            typescript(),
-            process.env.NODE_ENV === "production" && minifyHTML(),
-            process.env.NODE_ENV === "production" && terser(),
-            copy({
-                targets: [...resources],
-                copyOnce: false,
-            }),
-        ],
-        watch: {
-            clearScreen: false,
+// eslint-disable-next-line no-undef
+export const isProdBuild = process.env.NODE_ENV === "production";
+
+export default {
+    input: "./src/main.ts",
+    output: [
+        {
+            format: "es",
+            dir: "./dist/",
+            sourcemap: true,
         },
-        preserveEntrySignatures: false,
-        cache: true,
-        context: "window",
+    ],
+
+    plugins: [
+        cssimport(),
+        json(),
+        nodeResolve({ extensions, browser: true }),
+        commonjs(),
+        babel({
+            extensions,
+            babelHelpers: "runtime",
+            include: ["src/**/*"],
+        }),
+        isProdBuild && terser(),
+        copy({
+            targets: [...resources],
+            copyOnce: false,
+        }),
+    ].filter((p) => p),
+    watch: {
+        clearScreen: false,
     },
-];
+    preserveEntrySignatures: "strict",
+    cache: true,
+    context: "window",
+};

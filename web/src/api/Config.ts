@@ -2,7 +2,7 @@ import {
     Configuration,
     Middleware,
     ResponseContext,
-} from "gravity-api";
+} from "@beryju/gravity-api";
 
 export class LoggingMiddleware implements Middleware {
     post(context: ResponseContext): Promise<Response | void> {

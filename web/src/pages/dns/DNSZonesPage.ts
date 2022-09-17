@@ -1,43 +1,49 @@
-import "@spectrum-web-components/divider/sp-divider.js";
-import { DEFAULT_CONFIG } from "src/api/Config";
-import "src/elements/Header";
-import "src/elements/Table";
-
-import { LitElement, TemplateResult, html } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { DnsZone, RolesDnsApi } from "gravity-api";
+import { DnsZone, RolesDnsApi } from "@beryju/gravity-api";
+
+import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/forms/ModalForm";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
+import "./DNSZoneForm";
 
 @customElement("gravity-dns-zones")
-export class DNSZonesPage extends LitElement {
-    render(): TemplateResult {
+export class DNSZonesPage extends TablePage<DnsZone> {
+    pageTitle(): string {
+        return "DNS Zones";
+    }
+    pageDescription(): string | undefined {
+        return "DNS Zones innit";
+    }
+    pageIcon(): string {
+        return "";
+    }
+    apiEndpoint(page: number): Promise<PaginatedResponse<DnsZone>> {
+        return new RolesDnsApi(DEFAULT_CONFIG)
+            .dnsGetZones()
+            .then((zones) => PaginationWrapper(zones.zones || []));
+    }
+    columns(): TableColumn[] {
+        return [new TableColumn("Zone"), new TableColumn("Authoritative")];
+    }
+    row(item: DnsZone): TemplateResult[] {
+        return [
+            html`<a href=${`#/dns/zones/${item.name}`}>${item.name}</a>`,
+            html`${item.authoritative}`,
+        ];
+    }
+
+    renderObjectCreate(): TemplateResult {
         return html`
-            <gravity-header>DNS Zones</gravity-header>
-            <sp-divider size="m"></sp-divider>
-            <gravity-table
-                .columns=${["Zone", "Authoritative"]}
-                .data=${() => {
-                    return new RolesDnsApi(DEFAULT_CONFIG)
-                        .dnsGetZones()
-                        .then((zones) => zones.zones || []);
-                }}
-                .rowRender=${(item: DnsZone) => {
-                    return [
-                        html`<a href=${`#/dns/zones/${item.name}`}>${item.name}</a>`,
-                        html`${item.authoritative}`,
-                        html`<button @click=${() => {
-                            if (confirm(`Delete zone ${item.name}?`)) {
-                                new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteZones({
-                                    zone: item.name,
-                                }).finally(() => {
-                                    this.requestUpdate();
-                                });
-                            }
-                        }}>x</button>`,
-                    ];
-                }}
-            >
-            </gravity-table>
+            <ak-forms-modal>
+                <span slot="submit"> ${`Create`} </span>
+                <span slot="header"> ${`Create Zone`} </span>
+                <gravity-dns-zone-form slot="form"> </gravity-dns-zone-form>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+            </ak-forms-modal>
         `;
     }
 }

@@ -1,128 +1,138 @@
-import "@spectrum-web-components/sidenav/sp-sidenav-heading.js";
-import "@spectrum-web-components/sidenav/sp-sidenav-item.js";
-import "@spectrum-web-components/sidenav/sp-sidenav.js";
-import "@spectrum-web-components/split-view/sp-split-view.js";
-import "@spectrum-web-components/theme/scale-medium.js";
-import "@spectrum-web-components/theme/sp-theme.js";
-import "@spectrum-web-components/theme/sp-theme.js";
-import "@spectrum-web-components/theme/theme-darkest.js";
-import "@spectrum-web-components/theme/theme-lightest.js";
-import { Route } from "src/elements/router/Route";
-import "src/elements/router/RouterOutlet";
-import "src/pages/OverviewPage";
-
-import { LitElement, TemplateResult, css, html } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { AKElement } from "./elements/Base";
+import { Route } from "./elements/router/Route";
+import "./elements/router/RouterOutlet";
+import "./elements/sidebar/Sidebar";
+import "./elements/sidebar/SidebarItem";
+import "./pages/OverviewPage";
 
 export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
     new Route(new RegExp("^/overview$"), async () => {
-        await import("src/pages/OverviewPage");
+        await import("./pages/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
     }),
     new Route(new RegExp("^/cluster/nodes$"), async () => {
-        await import("src/pages/ClusterNodesPage");
+        await import("./pages/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route(new RegExp("^/dns/zones$"), async () => {
-        await import("src/pages/dns/DNSZonesPage");
+        await import("./pages/dns/DNSZonesPage");
         return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
     new Route(new RegExp("^/dns/zones/(?<zone>.*)$"), async (args) => {
-        await import("src/pages/dns/DNSRecordsPage");
+        await import("./pages/dns/DNSRecordsPage");
         return html`<gravity-dns-records zone=${args.zone}></gravity-dns-records>`;
     }),
     new Route(new RegExp("^/dhcp/scopes$"), async () => {
-        await import("src/pages/dhcp/DHCPScopesPage");
+        await import("./pages/dhcp/DHCPScopesPage");
         return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
     }),
     new Route(new RegExp("^/dhcp/scopes/(?<scope>.*)$"), async (args) => {
-        await import("src/pages/dhcp/DHCPLeasesPage");
+        await import("./pages/dhcp/DHCPLeasesPage");
         return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
     }),
 ];
 
 @customElement("gravity-app")
-export class App extends LitElement {
-    static get styles() {
-        return css`
-            :host {
-                display: block;
-            }
-            sp-split-view,
-            sp-sidenav {
-                height: 100vh;
-            }
-        `;
+export class AdminInterface extends AKElement {
+    static get styles(): CSSResult[] {
+        return [
+            PFBase,
+            PFPage,
+            PFButton,
+            PFDrawer,
+            AKElement.GlobalStyle,
+            css`
+                .pf-c-page__main,
+                .pf-c-drawer__content,
+                .pf-c-page__drawer {
+                    z-index: auto !important;
+                    background-color: transparent;
+                }
+                .display-none {
+                    display: none;
+                }
+                .pf-c-page {
+                    background-color: var(--pf-c-page--BackgroundColor) !important;
+                }
+                @media (prefers-color-scheme: dark) {
+                    /* Global page background colour */
+                    .pf-c-page {
+                        --pf-c-page--BackgroundColor: var(--ak-dark-background);
+                    }
+                }
+            `,
+        ];
     }
 
-    renderSidebar(): TemplateResult {
-        return html`<sp-sidenav variant="multilevel" value=${window.location.hash || "#/overview"}>
-            <sp-sidenav-item
-                value="#/overview"
-                label="Overview"
-                href="#/overview"
-            ></sp-sidenav-item>
-            <sp-sidenav-heading label="DNS">
-                <sp-sidenav-item
-                    value="#/dns/zones"
-                    label="Zones"
-                    href="#/dns/zones"
-                ></sp-sidenav-item>
-            </sp-sidenav-heading>
-            <sp-sidenav-heading label="DHCP">
-                <sp-sidenav-item
-                    value="#/dhcp/scopes"
-                    label="Subnets"
-                    href="#/dhcp/scopes"
-                ></sp-sidenav-item>
-            </sp-sidenav-heading>
-            <sp-sidenav-heading label="Discovery">
-                <sp-sidenav-item
-                    value="#/discovery/devices"
-                    label="Devices"
-                    href="#/discovery/devices"
-                ></sp-sidenav-item>
-                <sp-sidenav-item
-                    value="#/discovery/subnets"
-                    label="Subnets"
-                    href="#/discovery/subnets"
-                ></sp-sidenav-item>
-            </sp-sidenav-heading>
-            <sp-sidenav-heading label="Backup">
-                <sp-sidenav-item
-                    value="#/backup/status"
-                    label="Status"
-                    href="#/backup/status"
-                ></sp-sidenav-item>
-            </sp-sidenav-heading>
-            <sp-sidenav-heading label="Cluster">
-                <sp-sidenav-item
-                    value="#/cluster/roles"
-                    label="Instance Roles"
-                    href="#/cluster/roles"
-                ></sp-sidenav-item>
-                <sp-sidenav-item
-                    value="#/cluster/nodes"
-                    label="Nodes"
-                    href="#/cluster/nodes"
-                ></sp-sidenav-item>
-            </sp-sidenav-heading>
-        </sp-sidenav>`;
+    render(): TemplateResult {
+        return html` <div class="pf-c-page">
+            <ak-sidebar class="pf-c-page__sidebar pf-m-expanded">
+                ${this.renderSidebarItems()}
+            </ak-sidebar>
+            <main class="pf-c-page__main">
+                <ak-router-outlet
+                    role="main"
+                    class="pf-c-page__main"
+                    tabindex="-1"
+                    id="main-content"
+                    defaultUrl="/overview"
+                    .routes=${ROUTES}
+                >
+                </ak-router-outlet>
+            </main>
+        </div>`;
     }
 
-    render() {
-        let theme = "lightest";
-        if (window.location.search.includes("dark")) {
-            theme = "darkest";
-        }
+    renderSidebarItems(): TemplateResult {
         return html`
-            <sp-theme theme="classic" scale="medium" color=${theme}>
-                <sp-split-view primary-min="50" secondary-min="240" primary-size="240">
-                    ${this.renderSidebar()}
-                    <gravity-router-outlet .routes=${ROUTES}> </gravity-router-outlet>
-                </sp-split-view>
-            </sp-theme>
+            <ak-sidebar-item path="/overview">
+                <span slot="label">Overview</span>
+            </ak-sidebar-item>
+            <ak-sidebar-item .expanded=${true}>
+                <span slot="label">DNS</span>
+                <ak-sidebar-item path="/dns/zones" .activeWhen=${[`^/dhcp/zones/(?<zone>.*)$`]}>
+                    <span slot="label">Zones</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item .expanded=${true}>
+                <span slot="label">DHCP</span>
+                <ak-sidebar-item path="/dhcp/scopes" .activeWhen=${[`^/dhcp/scopes/(?<scope>.*)$`]}>
+                    <span slot="label">Scopes</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item>
+                <span slot="label">${`Discovery`}</span>
+                <ak-sidebar-item path="/discovery/devices">
+                    <span slot="label">Devices</span>
+                </ak-sidebar-item>
+                <ak-sidebar-item path="/discovery/subnets">
+                    <span slot="label">Subnets</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item .expanded=${true}>
+                <span slot="label">Backup</span>
+                <ak-sidebar-item path="/backup/status">
+                    <span slot="label">Status</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item>
+                <span slot="label">${`Cluster`}</span>
+                <ak-sidebar-item path="/cluster/roles">
+                    <span slot="label">Instance Roles</span>
+                </ak-sidebar-item>
+                <ak-sidebar-item path="/cluster/nodes">
+                    <span slot="label">Nodes</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
         `;
     }
 }

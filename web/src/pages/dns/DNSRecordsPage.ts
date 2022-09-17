@@ -1,44 +1,46 @@
-import "@spectrum-web-components/divider/sp-divider.js";
-import "@spectrum-web-components/progress-circle/sp-progress-circle.js";
-import { DEFAULT_CONFIG } from "src/api/Config";
-import "src/elements/Header";
-import "src/elements/Table";
-
-import { LitElement, TemplateResult, html } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { DnsRecord, RolesDnsApi } from "gravity-api";
+import { DnsRecord, RolesDnsApi } from "@beryju/gravity-api";
+
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
 
 @customElement("gravity-dns-records")
-export class DNSRecordsPage extends LitElement {
+export class DNSRecordsPage extends TablePage<DnsRecord> {
     @property()
     zone?: string;
 
-    render(): TemplateResult {
-        if (!this.zone) {
-            return html`<sp-progress-circle indeterminate size="l"></sp-progress-circle>`;
-        }
-        return html`
-            <gravity-header>DNS Records for ${this.zone}</gravity-header>
-            <sp-divider size="m"></sp-divider>
-            <gravity-table
-                .columns=${["Hostname", "Type", "Data"]}
-                .data=${() => {
-                    return new RolesDnsApi(DEFAULT_CONFIG)
-                        .dnsGetRecords({
-                            zone: this.zone || ".",
-                        })
-                        .then((records) => records.records || []);
-                }}
-                .rowRender=${(item: DnsRecord) => {
-                    return [
-                        html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
-                        html`${item.type}`,
-                        html`${item.data}`,
-                    ];
-                }}
-            >
-            </gravity-table>
-        `;
+    pageTitle(): string {
+        return `DNS Records for ${this.zone}`;
+    }
+    pageDescription(): string | undefined {
+        return undefined;
+    }
+    pageIcon(): string {
+        return "";
+    }
+    apiEndpoint(page: number): Promise<PaginatedResponse<DnsRecord>> {
+        return new RolesDnsApi(DEFAULT_CONFIG)
+            .dnsGetRecords({
+                zone: this.zone || ".",
+            })
+            .then((records) => PaginationWrapper(records.records || []));
+    }
+    columns(): TableColumn[] {
+        return [
+            new TableColumn("Hostname"),
+            new TableColumn("Record Type"),
+            new TableColumn("Data"),
+        ];
+    }
+    row(item: DnsRecord): TemplateResult<1 | 2>[] {
+        return [
+            html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
+            html`${item.type}`,
+            html`${item.data}`,
+        ];
     }
 }

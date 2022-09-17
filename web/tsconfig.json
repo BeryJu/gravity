@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
+        "rootDir": ".",
         "baseUrl": ".",
         "esModuleInterop": true,
         "skipLibCheck": true,

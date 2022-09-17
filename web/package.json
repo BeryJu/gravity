@@ -1,20 +1,36 @@
 {
-    "name": "gravity-web",
+    "name": "@beryju/gravity-web",
     "version": "0.0.1",
     "description": "",
     "scripts": {
-        "build": "rollup -c",
+        "build": "rm -rf dist/ && rollup -c",
         "watch": "rollup -c -w",
         "prettier": "prettier --write ."
     },
     "dependencies": {
+        "@codemirror/lang-html": "^6.1.1",
+        "@codemirror/lang-javascript": "^6.0.2",
+        "@codemirror/lang-python": "^6.0.1",
+        "@codemirror/lang-xml": "^6.0.0",
+        "@codemirror/legacy-modes": "^6.1.0",
+        "@types/codemirror": "5.60.5",
+        "@babel/core": "^7.19.1",
+        "@babel/plugin-proposal-decorators": "^7.19.1",
+        "@babel/plugin-transform-runtime": "^7.19.1",
+        "@babel/preset-env": "^7.19.1",
+        "@babel/preset-typescript": "^7.18.6",
+        "@beryju/gravity-api": "^0.0.2",
+        "@patternfly/patternfly": "^4.210.2",
+        "@polymer/iron-form": "^3.0.1",
+        "@polymer/paper-input": "^3.2.1",
+        "@rollup/plugin-babel": "^5.3.1",
         "@rollup/plugin-commonjs": "^22.0.2",
+        "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^14.1.0",
         "@rollup/plugin-typescript": "^8.5.0",
-        "@spectrum-css/table": "^4.0.19",
-        "@spectrum-css/typography": "^4.0.20",
-        "@spectrum-web-components/bundle": "^0.27.3",
         "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+        "babel-plugin-macros": "^3.1.0",
+        "babel-plugin-tsconfig-paths": "^1.0.3",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
         "eslint": "^8.23.1",
@@ -26,6 +42,7 @@
         "rollup-plugin-cssimport": "^1.0.3",
         "rollup-plugin-minify-html-literals": "^1.2.6",
         "rollup-plugin-terser": "^7.0.2",
-        "ts-lit-plugin": "^1.2.1"
+        "ts-lit-plugin": "^1.2.1",
+        "yaml": "^2.1.1"
     }
 }
