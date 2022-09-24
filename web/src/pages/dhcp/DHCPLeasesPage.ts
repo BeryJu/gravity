@@ -4,8 +4,11 @@ import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import { MessageLevel } from "../../common/messages";
+import "../../elements/buttons/SpinnerButton";
 import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
+import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
@@ -102,25 +105,32 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
                     <button slot="trigger" class="pf-c-button pf-m-plain">
                         <i class="fas fa-edit"></i>
                     </button> </ak-forms-modal
-                ><sp-button
-                    size="m"
-                    @click=${() => {
+                ><ak-spinner-button
+                    .callAction=${() => {
                         new RolesDhcpApi(DEFAULT_CONFIG)
                             .dhcpWolLeases({
                                 identifier: item.identifier || "",
                                 scope: this.scope,
                             })
                             .then(() => {
-                                alert("Successfully sent WOL");
+                                showMessage({
+                                    message: "Successfully sent WOL.",
+                                    level: MessageLevel.success,
+                                });
                             })
-                            .catch(() => {
-                                alert("failed to send WOL");
+                            .catch((exc) => {
+                                showMessage({
+                                    message: exc.toString(),
+                                    level: MessageLevel.error,
+                                });
                             });
                     }}
-                    >WOL</sp-button
-                >`,
+                    class="pf-m-primary"
+                    >WOL
+                </ak-spinner-button>`,
         ];
     }
+
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
