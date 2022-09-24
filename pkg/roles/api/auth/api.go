@@ -29,6 +29,21 @@ func (ap *AuthProvider) apiHandlerAuthConfig() usecase.Interactor {
 	return u
 }
 
+func (ap *AuthProvider) hasUsers(ctx context.Context) bool {
+	rawUsers, err := ap.inst.KV().Get(
+		ctx,
+		ap.inst.KV().Key(
+			types.KeyRole,
+			types.KeyUsers,
+		).Prefix(true).String(),
+	)
+	// Fallback to true to not give access when etcd request fails
+	if err != nil {
+		return true
+	}
+	return len(rawUsers.Kvs) > 0
+}
+
 func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
 	type userMeOutput struct {
 		Authenticated bool   `json:"authenticated" required:"true"`
@@ -38,8 +53,16 @@ func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
 		session := ctx.Value(types.RequestSession).(*sessions.Session)
 		u, ok := session.Values[types.SessionKeyUser]
 		if u == nil || !ok {
-			output.Authenticated = false
-			return nil
+			if !ap.hasUsers(ctx) {
+				session.Values[types.SessionKeyUser] = User{
+					Username: "default-user",
+					Password: "",
+				}
+				u = session.Values[types.SessionKeyUser]
+			} else {
+				output.Authenticated = false
+				return nil
+			}
 		}
 		user := u.(User)
 		output.Authenticated = true
