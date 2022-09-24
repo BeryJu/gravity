@@ -118,6 +118,7 @@ func (i *Instance) getRoles() []string {
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
 	i.writeInstanceInfo()
+	i.setupInstanceAPI()
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)
 		ctx, cancel := context.WithCancel(i.rootContext)

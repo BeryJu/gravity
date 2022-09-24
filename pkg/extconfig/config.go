@@ -29,9 +29,9 @@ type ExtConfig struct {
 }
 
 type ExtConfigDirs struct {
-	EtcdDir   string
-	CertDir   string
-	BackupDir string
+	EtcdDir   string `json:"etcdDir"`
+	CertDir   string `json:"certDir"`
+	BackupDir string `json:"backupDir"`
 }
 
 var globalExtConfig *ExtConfig

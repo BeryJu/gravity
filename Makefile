@@ -2,20 +2,22 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.1.7"
-GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=$(VERSION)" -v
+VERSION = "0.1.8"
+GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=${VERSION}" -v
+SCHEMA_FILE = schema.yml
 
 docker-build:
 	go build \
 		${GO_FLAGS} \
-		-ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=$(GIT_BUILD_HASH)" \
+		-ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		-a -o gravity .
 
 run:
-	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run $(GO_FLAGS) . server
+	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run ${GO_FLAGS} . server
 
 gen-build:
-	DEBUG=true go run $(GO_FLAGS) . cli generateSchema schema.yml
+	DEBUG=true go run ${GO_FLAGS} . cli generateSchema ${SCHEMA_FILE}
+	git add ${SCHEMA_FILE}
 
 gen-clean:
 	rm -rf gen-ts-api/
@@ -25,17 +27,17 @@ gen-client-ts:
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
 		openapitools/openapi-generator-cli:v6.0.0 generate \
-		-i /local/schema.yml \
+		-i /local/${SCHEMA_FILE} \
 		-g typescript-fetch \
 		-o /local/gen-ts-api \
-		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=$(VERSION) \
+		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=${VERSION} \
 		--git-repo-id BeryJu \
 		--git-user-id gravity
 	cd gen-ts-api && npm i
 
 gen-client-ts-update: gen-client-ts
 	cd gen-ts-api && npm publish
-	cd web && npm i gravity-api@$(VERSION)
+	cd web && npm i gravity-api@${VERSION}
 	cd web && git add package*.json
 
 gen: gen-build gen-clean gen-client-ts-update
