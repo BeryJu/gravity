@@ -42,6 +42,14 @@ export const ROUTES = [
         await import("./pages/dhcp/DHCPLeasesPage");
         return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
     }),
+    new Route(new RegExp("^/discovery/devices$"), async () => {
+        await import("./pages/discovery/DiscoveryDevicesPage");
+        return html`<gravity-discovery-devices></gravity-discovery-devices>`;
+    }),
+    new Route(new RegExp("^/discovery/subnets$"), async () => {
+        await import("./pages/discovery/DiscoverySubnetsPage");
+        return html`<gravity-discovery-subnets></gravity-discovery-subnets>`;
+    }),
     new Route(new RegExp("^/cluster/roles$"), async () => {
         await import("./pages/cluster/RolesPage");
         return html`<gravity-cluster-roles></gravity-cluster-roles>`;

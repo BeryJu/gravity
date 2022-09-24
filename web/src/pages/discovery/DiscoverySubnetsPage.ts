@@ -1,4 +1,4 @@
-import { DnsZone, RolesDnsApi } from "gravity-api";
+import { DiscoverySubnet, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -9,12 +9,12 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
-import "./DNSZoneForm";
+import "./DiscoverySubnetForm";
 
-@customElement("gravity-dns-zones")
-export class DNSZonesPage extends TablePage<DnsZone> {
+@customElement("gravity-discovery-subnets")
+export class DiscoverySubnetsPage extends TablePage<DiscoverySubnet> {
     pageTitle(): string {
-        return "DNS Zones";
+        return "Discovery subnets";
     }
     pageDescription(): string | undefined {
         return undefined;
@@ -29,9 +29,9 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DnsZone>> {
-        return new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
-            const data = (zones.zones || []).filter((l) =>
+    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoverySubnet>> {
+        return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
+            const data = (subnets.subnets || []).filter((l) =>
                 l.name.toLowerCase().includes(this.search.toLowerCase()),
             );
             data.sort((a, b) => {
@@ -44,24 +44,18 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     }
 
     columns(): TableColumn[] {
-        return [
-            new TableColumn("Zone"),
-            new TableColumn("Authoritative"),
-            new TableColumn("Actions"),
-        ];
+        return [new TableColumn("Name"), new TableColumn("CIDR"), new TableColumn("Actions")];
     }
 
-    row(item: DnsZone): TemplateResult[] {
+    row(item: DiscoverySubnet): TemplateResult[] {
         return [
-            html`<a href=${`#/dns/zones/${item.name}`}>
-                ${item.name === "." ? "Root Zone" : item.name}
-            </a>`,
-            html`${item.authoritative ? "Yes" : "No"}`,
+            html`${item.name}`,
+            html`${item.subnetCidr}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
-                <span slot="header"> ${"Update Zone"} </span>
-                <gravity-dns-zone-form slot="form" .instancePk=${item.name}>
-                </gravity-dns-zone-form>
+                <span slot="header"> ${"Update Subnet"} </span>
+                <gravity-discovery-subnet-form slot="form" .instancePk=${item.name}>
+                </gravity-discovery-subnet-form>
                 <button slot="trigger" class="pf-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -73,8 +67,8 @@ export class DNSZonesPage extends TablePage<DnsZone> {
         return html`
             <ak-forms-modal>
                 <span slot="submit"> ${"Create"} </span>
-                <span slot="header"> ${"Create Zone"} </span>
-                <gravity-dns-zone-form slot="form"> </gravity-dns-zone-form>
+                <span slot="header"> ${"Create Subnet"} </span>
+                <gravity-discovery-subnet-form slot="form"> </gravity-discovery-subnet-form>
                 <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
@@ -83,14 +77,14 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${"DNS Zone(s)"}
+            objectLabel=${"Discovery subnets(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DnsZone) => {
+            .metadata=${(item: DiscoverySubnet) => {
                 return [{ key: "Name", value: item.name }];
             }}
-            .delete=${(item: DnsZone) => {
-                return new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteZones({
-                    zone: item.name,
+            .delete=${(item: DiscoverySubnet) => {
+                return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryDeleteSubnets({
+                    identifier: item.name,
                 });
             }}
         >

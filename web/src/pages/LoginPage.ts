@@ -14,7 +14,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 import { DEFAULT_CONFIG } from "../api/Config";
 import { AKElement } from "../elements/Base";
 import { Form } from "../elements/forms/Form";
-import "./elements/forms/HorizontalFormElement";
+import "../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-login-form")
 export class LoginForm extends Form<AuthUserLoginInput> {

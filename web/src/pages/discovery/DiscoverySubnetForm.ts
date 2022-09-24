@@ -1,0 +1,62 @@
+import { DiscoverySubnet, RolesDiscoveryApi } from "gravity-api";
+
+import { TemplateResult, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
+
+import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/forms/HorizontalFormElement";
+import { ModelForm } from "../../elements/forms/ModelForm";
+
+@customElement("gravity-discovery-subnet-form")
+export class DiscoverySubnetForm extends ModelForm<DiscoverySubnet, string> {
+    loadInstance(pk: string): Promise<DiscoverySubnet> {
+        return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
+            const subnet = subnets.subnets?.find((z) => z.name === pk);
+            if (!subnet) throw new Error("No subnet");
+            return subnet;
+        });
+    }
+
+    getSuccessMessage(): string {
+        if (this.instance) {
+            return "Successfully updated subnet.";
+        } else {
+            return "Successfully created subnet.";
+        }
+    }
+
+    send = (data: DiscoverySubnet): Promise<void> => {
+        return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryPutSubnets({
+            identifier: data.name,
+            discoverySubnetsInput: data,
+        });
+    };
+
+    renderForm(): TemplateResult {
+        return html`<form class="pf-c-form pf-m-horizontal">
+            ${this.instance
+                ? html``
+                : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
+                      <input type="text" class="pf-c-form-control" required />
+                  </ak-form-element-horizontal>`}
+            <ak-form-element-horizontal label="Discovery CIDR" ?required=${true} name="subnetCidr">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.subnetCidr)}"
+                    class="pf-c-form-control"
+                    required
+                />
+            </ak-form-element-horizontal>
+            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="discoveryTTL">
+                <input
+                    type="number"
+                    value="${ifDefined(this.instance?.discoveryTTL || 86400)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">Default TTL of discovered devices, in seconds.</p>
+            </ak-form-element-horizontal>
+        </form>`;
+    }
+}
