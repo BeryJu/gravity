@@ -22,6 +22,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     pageIcon(): string {
         return "";
     }
+    checkbox = true;
     apiEndpoint(page: number): Promise<PaginatedResponse<DnsRecord>> {
         return new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetRecords({

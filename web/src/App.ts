@@ -128,13 +128,13 @@ export class AdminInterface extends AKElement {
             </ak-sidebar-item>
             <ak-sidebar-item .expanded=${true}>
                 <span slot="label">DNS</span>
-                <ak-sidebar-item path="/dns/zones" .activeWhen=${[`^/dhcp/zones/(?<zone>.*)$`]}>
+                <ak-sidebar-item path="/dns/zones" .activeWhen=${["^/dns/zones/(?<zone>.*)$"]}>
                     <span slot="label">Zones</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
             <ak-sidebar-item .expanded=${true}>
                 <span slot="label">DHCP</span>
-                <ak-sidebar-item path="/dhcp/scopes" .activeWhen=${[`^/dhcp/scopes/(?<scope>.*)$`]}>
+                <ak-sidebar-item path="/dhcp/scopes" .activeWhen=${["^/dhcp/scopes/(?<scope>.*)$"]}>
                     <span slot="label">Scopes</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>

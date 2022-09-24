@@ -33,7 +33,7 @@ export class SidebarItem extends AKElement {
                 .pf-c-nav__link.pf-m-current::after,
                 .pf-c-nav__link.pf-m-current:hover::after,
                 .pf-c-nav__item.pf-m-current:not(.pf-m-expanded) .pf-c-nav__link::after {
-                    --pf-c-nav__link--m-current--after--BorderColor: #fd4b2d;
+                    --pf-c-nav__link--m-current--after--BorderColor: var(--ak-accent);
                 }
 
                 .pf-c-nav__section + .pf-c-nav__section {

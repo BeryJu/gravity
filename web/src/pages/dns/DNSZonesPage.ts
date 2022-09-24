@@ -21,6 +21,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     pageIcon(): string {
         return "";
     }
+    checkbox = true;
     apiEndpoint(page: number): Promise<PaginatedResponse<DnsZone>> {
         return new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetZones()

@@ -15,6 +15,51 @@ import { Table, TableColumn } from "../table/Table";
 
 type BulkDeleteMetadata = { key: string; value: string }[];
 
+@customElement("ak-delete-objects-table")
+export class DeleteObjectsTable<T> extends Table<T> {
+    paginated = false;
+
+    @property({ attribute: false })
+    objects: T[] = [];
+
+    @property({ attribute: false })
+    metadata!: (item: T) => BulkDeleteMetadata;
+
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFList);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async apiEndpoint(page: number): Promise<PaginatedResponse<T>> {
+        return Promise.resolve({
+            pagination: {
+                count: this.objects.length,
+                current: 1,
+                totalPages: 1,
+                startIndex: 1,
+                endIndex: this.objects.length,
+            },
+            results: this.objects,
+        });
+    }
+
+    columns(): TableColumn[] {
+        return this.metadata(this.objects[0]).map((element) => {
+            return new TableColumn(element.key);
+        });
+    }
+
+    row(item: T): TemplateResult[] {
+        return this.metadata(item).map((element) => {
+            return html`${element.value}`;
+        });
+    }
+
+    renderToolbarContainer(): TemplateResult {
+        return html``;
+    }
+}
+
 @customElement("ak-forms-delete-bulk")
 export class DeleteBulkForm extends ModalButton {
     @property({ attribute: false })
@@ -91,6 +136,10 @@ export class DeleteBulkForm extends ModalButton {
                     </p>
                     <slot name="notice"></slot>
                 </form>
+            </section>
+            <section class="pf-c-modal-box__body pf-c-page__main-section pf-m-light">
+                <ak-delete-objects-table .objects=${this.objects} .metadata=${this.metadata}>
+                </ak-delete-objects-table>
             </section>
             <footer class="pf-c-modal-box__footer">
                 <ak-spinner-button
