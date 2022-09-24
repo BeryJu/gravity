@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"encoding/gob"
 	"encoding/json"
 
 	"beryju.io/gravity/pkg/roles"
@@ -23,6 +24,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 		inst: inst,
 		log:  inst.Log().WithField("mw", "auth"),
 	}
+	gob.Register(User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/auth/me", ap.apiHandlerAuthUserMe())

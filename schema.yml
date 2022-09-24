@@ -3,6 +3,49 @@ info:
   title: gravity
   version: 0.0.1
 paths:
+  /api/v1/auth/login:
+    post:
+      operationId: api.users_login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUserLoginInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUsersLoginOutput'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Unauthorized
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/me:
+    get:
+      operationId: api.users_me
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUserMeOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
   /api/v1/auth/users:
     delete:
       operationId: api.delete_users
@@ -946,6 +989,25 @@ components:
       properties:
         username:
           type: string
+      type: object
+    AuthUserLoginInput:
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+      type: object
+    AuthUserMeOutput:
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+      type: object
+    AuthUsersLoginOutput:
+      properties:
+        successful:
+          type: boolean
       type: object
     BackupBackupStatus:
       properties:

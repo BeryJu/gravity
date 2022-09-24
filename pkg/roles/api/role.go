@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"encoding/gob"
 	"net/http"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -40,8 +39,6 @@ func New(instance roles.Instance) *Role {
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.m.Use(r.SessionMiddleware)
 	r.setupUI()
-	auth.NewAuthProvider(r, r.i)
-	gob.Register(auth.User{})
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/api", r.apiHandlerRoleConfigGet())
@@ -70,6 +67,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
+	auth.NewAuthProvider(r, r.i)
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(ctx, map[string]interface{}{
