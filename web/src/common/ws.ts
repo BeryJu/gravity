@@ -36,7 +36,7 @@ export class WebsocketClient {
                         composed: true,
                         detail: {
                             level: MessageLevel.error,
-                            message: `Connection error, reconnecting...`,
+                            message: "Connection error, reconnecting...",
                         },
                     }),
                 );

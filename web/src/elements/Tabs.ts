@@ -102,7 +102,7 @@ export class Tabs extends AKElement {
         }
         if (!this.currentPage) {
             if (pages.length < 1) {
-                return html`<h1>${`no tabs defined`}</h1>`;
+                return html`<h1>${"no tabs defined"}</h1>`;
             }
             const wantedPage = pages[0].attributes.getNamedItem("slot")?.value;
             this.onClick(wantedPage);

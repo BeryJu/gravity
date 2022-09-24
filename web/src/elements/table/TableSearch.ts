@@ -51,7 +51,7 @@ export class TableSearch extends AKElement {
                 class="pf-c-form-control"
                 name="search"
                 type="search"
-                placeholder=${`Search...`}
+                placeholder=${"Search..."}
                 value="${ifDefined(this.value)}"
                 @search=${(ev: Event) => {
                     if (!this.onSearch) return;

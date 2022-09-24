@@ -130,7 +130,7 @@ export class HorizontalFormElement extends AKElement {
                 <div class="pf-c-form__horizontal-group">
                     ${this.writeOnly
                         ? html`<p class="pf-c-form__helper-text" aria-live="polite">
-                              ${`Click to change value`}
+                              ${"Click to change value"}
                           </p>`
                         : html``}
                     ${this.errorMessages.map((message) => {

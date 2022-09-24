@@ -28,6 +28,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
         return true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiEndpoint(page: number): Promise<PaginatedResponse<DhcpScope>> {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
             const data = (scopes.scopes || []).filter(
@@ -54,8 +55,8 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`${item.subnetCidr}`,
             html`<ak-forms-modal>
-                <span slot="submit"> ${`Update`} </span>
-                <span slot="header"> ${`Update Scope`} </span>
+                <span slot="submit"> ${"Update"} </span>
+                <span slot="header"> ${"Update Scope"} </span>
                 <gravity-dhcp-scope-form slot="form" .instancePk=${item.scope}>
                 </gravity-dhcp-scope-form>
                 <button slot="trigger" class="pf-c-button pf-m-plain">
@@ -68,12 +69,12 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${`DHCP Scope(s)`}
+            objectLabel=${"DHCP Scope(s)"}
             .objects=${this.selectedElements}
             .metadata=${(item: DhcpScope) => {
                 return [
-                    { key: `Scope`, value: item.scope },
-                    { key: `CIDR`, value: item.subnetCidr },
+                    { key: "Scope", value: item.scope },
+                    { key: "CIDR", value: item.subnetCidr },
                 ];
             }}
             .delete=${(item: DhcpScope) => {
@@ -83,7 +84,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
             }}
         >
             <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${`Delete`}
+                ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
     }
@@ -91,10 +92,10 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
-                <span slot="submit"> ${`Create`} </span>
-                <span slot="header"> ${`Create Scope`} </span>
+                <span slot="submit"> ${"Create"} </span>
+                <span slot="header"> ${"Create Scope"} </span>
                 <gravity-dhcp-scope-form slot="form"> </gravity-dhcp-scope-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

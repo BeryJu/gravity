@@ -1,6 +1,5 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
 
 import PFList from "@patternfly/patternfly/components/List/list.css";
 
@@ -81,7 +80,7 @@ export class DeleteForm extends ModalButton {
                     }}
                     class="pf-m-danger"
                 >
-                    ${`Delete`} </ak-spinner-button
+                    ${"Delete"} </ak-spinner-button
                 >&nbsp;
                 <ak-spinner-button
                     .callAction=${async () => {
@@ -89,7 +88,7 @@ export class DeleteForm extends ModalButton {
                     }}
                     class="pf-m-secondary"
                 >
-                    ${`Cancel`}
+                    ${"Cancel"}
                 </ak-spinner-button>
             </footer>`;
     }

@@ -178,7 +178,7 @@ export class TreeView extends AKElement {
     parse(data: string[]): TreeViewItem {
         const rootItem: TreeViewItem = {
             id: undefined,
-            label: `Roo`,
+            label: "Roo",
             childItems: [],
             level: -1,
         };

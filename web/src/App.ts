@@ -139,7 +139,7 @@ export class AdminInterface extends AKElement {
                 </ak-sidebar-item>
             </ak-sidebar-item>
             <ak-sidebar-item>
-                <span slot="label">${`Discovery`}</span>
+                <span slot="label">${"Discovery"}</span>
                 <ak-sidebar-item path="/discovery/devices">
                     <span slot="label">Devices</span>
                 </ak-sidebar-item>
@@ -154,7 +154,7 @@ export class AdminInterface extends AKElement {
                 </ak-sidebar-item>
             </ak-sidebar-item>
             <ak-sidebar-item>
-                <span slot="label">${`Cluster`}</span>
+                <span slot="label">${"Cluster"}</span>
                 <ak-sidebar-item path="/cluster/roles">
                     <span slot="label">Instance Roles</span>
                 </ak-sidebar-item>

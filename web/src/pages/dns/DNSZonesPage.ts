@@ -28,6 +28,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
         return true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiEndpoint(page: number): Promise<PaginatedResponse<DnsZone>> {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
             const data = (zones.zones || []).filter((l) =>
@@ -41,6 +42,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
             return PaginationWrapper(data);
         });
     }
+
     columns(): TableColumn[] {
         return [
             new TableColumn("Zone"),
@@ -48,6 +50,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
             new TableColumn("Actions"),
         ];
     }
+
     row(item: DnsZone): TemplateResult[] {
         return [
             html`<a href=${`#/dns/zones/${item.name}`}>
@@ -55,8 +58,8 @@ export class DNSZonesPage extends TablePage<DnsZone> {
             </a>`,
             html`${item.authoritative ? "Yes" : "No"}`,
             html`<ak-forms-modal>
-                <span slot="submit"> ${`Update`} </span>
-                <span slot="header"> ${`Update Zone`} </span>
+                <span slot="submit"> ${"Update"} </span>
+                <span slot="header"> ${"Update Zone"} </span>
                 <gravity-dns-zone-form slot="form" .instancePk=${item.name}>
                 </gravity-dns-zone-form>
                 <button slot="trigger" class="pf-c-button pf-m-plain">
@@ -69,10 +72,10 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
-                <span slot="submit"> ${`Create`} </span>
-                <span slot="header"> ${`Create Zone`} </span>
+                <span slot="submit"> ${"Create"} </span>
+                <span slot="header"> ${"Create Zone"} </span>
                 <gravity-dns-zone-form slot="form"> </gravity-dns-zone-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }
@@ -80,10 +83,10 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${`DNS Zone(s)`}
+            objectLabel=${"DNS Zone(s)"}
             .objects=${this.selectedElements}
             .metadata=${(item: DnsZone) => {
-                return [{ key: `Name`, value: item.name }];
+                return [{ key: "Name", value: item.name }];
             }}
             .delete=${(item: DnsZone) => {
                 return new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteZones({
@@ -92,7 +95,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
             }}
         >
             <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${`Delete`}
+                ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
     }

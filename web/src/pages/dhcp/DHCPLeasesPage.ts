@@ -17,7 +17,7 @@ import "./DHCPLeaseForm";
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpLease> {
     @property()
-    scope: string = "";
+    scope = "";
 
     pageTitle(): string {
         return `DHCP Leases for ${this.scope}`;
@@ -34,6 +34,7 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
         return true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiEndpoint(page: number): Promise<PaginatedResponse<DhcpLease>> {
         return new RolesDhcpApi(DEFAULT_CONFIG)
             .dhcpGetLeases({
@@ -66,13 +67,13 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${`DHCP Lease(s)`}
+            objectLabel=${"DHCP Lease(s)"}
             .objects=${this.selectedElements}
             .metadata=${(item: DhcpLease) => {
                 return [
-                    { key: `Scope`, value: item.scopeKey },
-                    { key: `Name`, value: item.hostname },
-                    { key: `Address`, value: item.address },
+                    { key: "Scope", value: item.scopeKey },
+                    { key: "Name", value: item.hostname },
+                    { key: "Address", value: item.address },
                 ];
             }}
             .delete=${(item: DhcpLease) => {
@@ -83,7 +84,7 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
             }}
         >
             <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${`Delete`}
+                ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
     }
@@ -94,8 +95,8 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
             html`${item.address}`,
             html`${item.identifier}`,
             html`<ak-forms-modal>
-                    <span slot="submit"> ${`Update`} </span>
-                    <span slot="header"> ${`Update Zone`} </span>
+                    <span slot="submit"> ${"Update"} </span>
+                    <span slot="header"> ${"Update Zone"} </span>
                     <gravity-dhcp-lease-form
                         slot="form"
                         scope=${this.scope}
@@ -107,7 +108,7 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
                     </button> </ak-forms-modal
                 ><ak-spinner-button
                     .callAction=${() => {
-                        new RolesDhcpApi(DEFAULT_CONFIG)
+                        return new RolesDhcpApi(DEFAULT_CONFIG)
                             .dhcpWolLeases({
                                 identifier: item.identifier || "",
                                 scope: this.scope,
@@ -134,10 +135,10 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
-                <span slot="submit"> ${`Create`} </span>
-                <span slot="header"> ${`Create lease`} </span>
+                <span slot="submit"> ${"Create"} </span>
+                <span slot="header"> ${"Create lease"} </span>
                 <gravity-dhcp-lease-form slot="form" scope=${this.scope}> </gravity-dhcp-lease-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

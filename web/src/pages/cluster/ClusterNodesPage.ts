@@ -21,6 +21,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
     pageIcon(): string {
         return "";
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiEndpoint(page: number): Promise<PaginatedResponse<InstanceInstanceInfo>> {
         return new InstancesApi(DEFAULT_CONFIG).rootGetInstances().then((inst) => {
             return PaginationWrapper(inst.instances || []);

@@ -50,7 +50,7 @@ export class TablePagination extends AKElement {
                                 this.pageChangeHandler(this.pages?.previous || 0);
                             }}
                             ?disabled="${(this.pages?.previous || 0) < 1}"
-                            aria-label="${`Go to previous page`}"
+                            aria-label="${"Go to previous page"}"
                         >
                             <i class="fas fa-angle-left" aria-hidden="true"></i>
                         </button>
@@ -62,7 +62,7 @@ export class TablePagination extends AKElement {
                                 this.pageChangeHandler(this.pages?.next || 0);
                             }}
                             ?disabled="${(this.pages?.next || 0) <= 0}"
-                            aria-label="${`Go to next page`}"
+                            aria-label="${"Go to next page"}"
                         >
                             <i class="fas fa-angle-right" aria-hidden="true"></i>
                         </button>

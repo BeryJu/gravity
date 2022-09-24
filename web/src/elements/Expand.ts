@@ -11,10 +11,10 @@ export class Expand extends AKElement {
     expanded = false;
 
     @property()
-    textOpen = `Show less`;
+    textOpen = "Show less";
 
     @property()
-    textClosed = `Show more`;
+    textClosed = "Show more";
 
     static get styles(): CSSResult[] {
         return [PFExpandableSection];

@@ -1,7 +1,7 @@
 import { AuthUserMeOutput, RolesApiApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFList from "@patternfly/patternfly/components/List/list.css";
@@ -16,7 +16,7 @@ import "./cards/DNSZoneCard";
 
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
-    @property()
+    @state()
     me?: AuthUserMeOutput;
 
     static get styles(): CSSResult[] {

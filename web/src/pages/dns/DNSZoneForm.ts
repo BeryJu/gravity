@@ -35,9 +35,9 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
 
     getSuccessMessage(): string {
         if (this.instance) {
-            return `Successfully updated zone.`;
+            return "Successfully updated zone.";
         } else {
-            return `Successfully created zone.`;
+            return "Successfully created zone.";
         }
     }
 
@@ -65,7 +65,7 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
                         class="pf-c-check__input"
                         ?checked=${this.instance?.authoritative}
                     />
-                    <label class="pf-c-check__label"> ${`Authoritative`} </label>
+                    <label class="pf-c-check__label"> ${"Authoritative"} </label>
                 </div>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Default TTL" ?required=${true} name="defaultTTL">
@@ -76,7 +76,7 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${`Handler Configs`} name="handlerConfigs">
+            <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
                 <ak-codemirror
                     mode="yaml"
                     value="${YAML.stringify(

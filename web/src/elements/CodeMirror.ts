@@ -7,7 +7,7 @@ import {
 } from "@codemirror/language";
 import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
-import { EditorView, keymap, lineNumbers } from "@codemirror/view";
+import { EditorView, lineNumbers } from "@codemirror/view";
 import YAML from "yaml";
 
 import { customElement, property } from "lit/decorators.js";

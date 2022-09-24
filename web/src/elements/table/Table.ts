@@ -222,7 +222,7 @@ export abstract class Table<T> extends AKElement {
         return html`<tr role="row">
             <td role="cell" colspan="25">
                 <div class="pf-l-bullseye">
-                    <ak-empty-state ?loading="${true}" header=${`Loading`}> </ak-empty-state>
+                    <ak-empty-state ?loading="${true}" header=${"Loading"}> </ak-empty-state>
                 </div>
             </td>
         </tr>`;
@@ -236,7 +236,7 @@ export abstract class Table<T> extends AKElement {
                         ${inner
                             ? inner
                             : html`<ak-empty-state
-                                  header="${`No objects found.`}"
+                                  header="${"No objects found."}"
                               ></ak-empty-state>`}
                     </div>
                 </td>
@@ -245,7 +245,7 @@ export abstract class Table<T> extends AKElement {
     }
 
     renderError(): TemplateResult {
-        return html`<ak-empty-state header="${`Failed to fetch objects.`}" icon="fa-times">
+        return html`<ak-empty-state header="${"Failed to fetch objects."}" icon="fa-times">
             <div slot="body">${this.hasError?.toString()}</div>
         </ak-empty-state>`;
     }
@@ -364,7 +364,7 @@ export abstract class Table<T> extends AKElement {
             }}
             class="pf-m-secondary"
         >
-            ${`Refresh`}</ak-spinner-button
+            ${"Refresh"}</ak-spinner-button
         >`;
     }
 
@@ -442,7 +442,7 @@ export abstract class Table<T> extends AKElement {
                                   <input
                                       name="select-all"
                                       type="checkbox"
-                                      aria-label=${`Select all rows`}
+                                      aria-label=${"Select all rows"}
                                       @input=${(ev: InputEvent) => {
                                           if ((ev.target as HTMLInputElement).checked) {
                                               this.selectedElements =

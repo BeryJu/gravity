@@ -23,7 +23,7 @@ export class PageHeader extends AKElement {
     @property()
     set header(value: string) {
         let title = TITLE_DEFAULT;
-        title = `${`Admin`} - ${title}`;
+        title = `${"Admin"} - ${title}`;
         if (value !== "") {
             title = `${value} - ${title}`;
         }

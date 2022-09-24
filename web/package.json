@@ -5,7 +5,9 @@
     "scripts": {
         "build": "rm -rf dist/ && rollup -c",
         "watch": "rollup -c -w",
-        "prettier": "prettier --write ."
+        "prettier": "prettier --write .",
+        "lint": "eslint . --max-warnings 0 --fix",
+        "lit-analyse": "lit-analyzer src"
     },
     "dependencies": {
         "@babel/core": "^7.19.1",
@@ -30,8 +32,12 @@
         "babel-plugin-tsconfig-paths": "^1.0.3",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
+        "@typescript-eslint/eslint-plugin": "^5.38.0",
+        "@typescript-eslint/parser": "^5.38.0",
         "eslint": "^8.24.0",
         "eslint-config-google": "^0.14.0",
+        "eslint-plugin-custom-elements": "0.0.6",
+        "eslint-plugin-lit": "^1.6.1",
         "gravity-api": "^0.1.2",
         "lit": "^2.3.1",
         "prettier": "^2.7.1",

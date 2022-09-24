@@ -22,7 +22,9 @@ import { SearchSelect } from "../SearchSelect";
 import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { showMessage } from "../messages/MessageContainer";
 
-export interface ValidationError {}
+export interface ValidationError {
+    [key: string]: string;
+}
 
 export class APIError extends Error {
     constructor(public response: ValidationError) {

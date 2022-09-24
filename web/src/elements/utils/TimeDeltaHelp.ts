@@ -21,13 +21,13 @@ export class TimeDeltaHelp extends AKElement {
         return html` <ak-tooltip>
             <p class="pf-c-form__helper-text" slot="trigger">
                 ${this.negative
-                    ? `(Format: hours=-1;minutes=-2;seconds=-3).`
-                    : `(Format: hours=1;minutes=2;seconds=3).`}
+                    ? "(Format: hours=-1;minutes=-2;seconds=-3)."
+                    : "(Format: hours=1;minutes=2;seconds=3)."}
                 <i class="pf-icon fa fa-question-circle" aria-hidden="true"></i>
             </p>
 
             <div slot="tooltip">
-                ${`The following keywords are supported:`}
+                ${"The following keywords are supported:"}
                 <ul class="pf-c-list">
                     <li><pre>microseconds</pre></li>
                     <li><pre>milliseconds</pre></li>

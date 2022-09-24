@@ -1,9 +1,7 @@
 import { DhcpScope, RolesDhcpApi } from "gravity-api";
-import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
@@ -22,9 +20,9 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
 
     getSuccessMessage(): string {
         if (this.instance) {
-            return `Successfully updated scope.`;
+            return "Successfully updated scope.";
         } else {
-            return `Successfully created scope.`;
+            return "Successfully created scope.";
         }
     }
 
@@ -49,7 +47,7 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
                         class="pf-c-check__input"
                         ?checked=${this.instance?._default}
                     />
-                    <label class="pf-c-check__label"> ${`Default`} </label>
+                    <label class="pf-c-check__label"> ${"Default"} </label>
                 </div>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="TTL" ?required=${true} name="ttl">

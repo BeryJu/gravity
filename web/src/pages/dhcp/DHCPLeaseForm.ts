@@ -27,9 +27,9 @@ export class DHCPLeaseForm extends ModelForm<DhcpLease, string> {
 
     getSuccessMessage(): string {
         if (this.instance) {
-            return `Successfully updated lease.`;
+            return "Successfully updated lease.";
         } else {
-            return `Successfully created lease.`;
+            return "Successfully created lease.";
         }
     }
 

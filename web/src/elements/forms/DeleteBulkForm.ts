@@ -1,12 +1,10 @@
 import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
+import { customElement, property } from "lit/decorators.js";
 
 import PFList from "@patternfly/patternfly/components/List/list.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
-import { PFSize } from "../Spinner";
 import { ModalButton } from "../buttons/ModalButton";
 import "../buttons/SpinnerButton";
 import { showMessage } from "../messages/MessageContainer";
@@ -75,10 +73,10 @@ export class DeleteBulkForm extends ModalButton {
         const rec = item as Record<string, unknown>;
         const meta = [];
         if (Object.prototype.hasOwnProperty.call(rec, "name")) {
-            meta.push({ key: `Name`, value: rec.name as string });
+            meta.push({ key: "Name", value: rec.name as string });
         }
         if (Object.prototype.hasOwnProperty.call(rec, "pk")) {
-            meta.push({ key: `ID`, value: rec.pk as string });
+            meta.push({ key: "ID", value: rec.pk as string });
         }
         return meta;
     };
@@ -148,7 +146,7 @@ export class DeleteBulkForm extends ModalButton {
                     }}
                     class="pf-m-danger"
                 >
-                    ${`Delete`} </ak-spinner-button
+                    ${"Delete"} </ak-spinner-button
                 >&nbsp;
                 <ak-spinner-button
                     .callAction=${async () => {
@@ -156,7 +154,7 @@ export class DeleteBulkForm extends ModalButton {
                     }}
                     class="pf-m-secondary"
                 >
-                    ${`Cancel`}
+                    ${"Cancel"}
                 </ak-spinner-button>
             </footer>`;
     }

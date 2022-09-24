@@ -80,7 +80,7 @@ export class ConfirmationForm extends ModalButton {
                     }}
                     class="pf-m-secondary"
                 >
-                    ${`Cancel`}
+                    ${"Cancel"}
                 </ak-spinner-button>
             </footer>`;
     }

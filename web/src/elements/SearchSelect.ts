@@ -29,7 +29,7 @@ export class SearchSelect<T> extends AKElement {
     blankable = false;
 
     @property()
-    placeholder: string = `Select an object.`;
+    placeholder = "Select an object.";
 
     static get styles(): CSSResult[] {
         return [PFBase, PFForm, PFFormControl, PFSelect, AKElement.GlobalStyle];

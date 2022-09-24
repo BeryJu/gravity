@@ -2,9 +2,11 @@ import { DnsRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
@@ -29,6 +31,8 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     searchEnabled(): boolean {
         return true;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiEndpoint(page: number): Promise<PaginatedResponse<DnsRecord>> {
         return new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetRecords({
@@ -65,11 +69,11 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
             html`${item.type}`,
             html`${item.data}`,
             html`<ak-forms-modal>
-                <span slot="submit"> ${`Update`} </span>
-                <span slot="header"> ${`Update Zone`} </span>
+                <span slot="submit"> ${"Update"} </span>
+                <span slot="header"> ${"Update Zone"} </span>
                 <gravity-dns-record-form
                     slot="form"
-                    zone=${this.zone}
+                    zone=${ifDefined(this.zone)}
                     .instancePk=${item.hostname + item.uid}
                 >
                 </gravity-dns-record-form>
@@ -83,13 +87,13 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${`DNS Record(s)`}
+            objectLabel=${"DNS Record(s)"}
             .objects=${this.selectedElements}
             .metadata=${(item: DnsRecord) => {
                 return [
-                    { key: `Hostname`, value: item.hostname },
-                    { key: `Type`, value: item.type },
-                    { key: `Data`, value: item.data },
+                    { key: "Hostname", value: item.hostname },
+                    { key: "Type", value: item.type },
+                    { key: "Data", value: item.data },
                 ];
             }}
             .delete=${(item: DnsRecord) => {
@@ -100,7 +104,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
             }}
         >
             <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${`Delete`}
+                ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
     }
@@ -108,10 +112,11 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
-                <span slot="submit"> ${`Create`} </span>
-                <span slot="header"> ${`Create Record`} </span>
-                <gravity-dns-record-form zone=${this.zone} slot="form"> </gravity-dns-record-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+                <span slot="submit"> ${"Create"} </span>
+                <span slot="header"> ${"Create Record"} </span>
+                <gravity-dns-record-form zone=${ifDefined(this.zone)} slot="form">
+                </gravity-dns-record-form>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

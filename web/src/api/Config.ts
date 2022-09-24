@@ -6,7 +6,7 @@ import {
 
 export class LoggingMiddleware implements Middleware {
     post(context: ResponseContext): Promise<Response | void> {
-        let msg = `gravity/api: `;
+        let msg = "gravity/api: ";
         msg += `${context.response.status} ${context.init.method} ${context.url}`;
         console.debug(msg);
         return Promise.resolve(context.response);

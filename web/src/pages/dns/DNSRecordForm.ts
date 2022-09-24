@@ -27,9 +27,9 @@ export class DNSRecordForm extends ModelForm<DnsRecord, string> {
 
     getSuccessMessage(): string {
         if (this.instance) {
-            return `Successfully updated record.`;
+            return "Successfully updated record.";
         } else {
-            return `Successfully created record.`;
+            return "Successfully created record.";
         }
     }
 

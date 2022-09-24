@@ -1,7 +1,7 @@
 import { AuthAuthConfigOutput, AuthUserLoginInput, RolesApiApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import PFBackgroundImage from "@patternfly/patternfly/components/BackgroundImage/background-image.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -33,15 +33,15 @@ export class LoginForm extends Form<AuthUserLoginInput> {
 
     renderForm(): TemplateResult {
         return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label=${`Username`} name="username">
+            <ak-form-element-horizontal label=${"Username"} name="username">
                 <input type="text" class="pf-c-form-control" autocomplete="username" />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${`Password`} name="password">
+            <ak-form-element-horizontal label=${"Password"} name="password">
                 <input type="password" class="pf-c-form-control" autocomplete="current-password" />
             </ak-form-element-horizontal>
             <button
                 class="pf-c-button pf-m-primary pf-m-block"
-                click=${(e: MouseEvent) => {
+                @click=${(e: MouseEvent) => {
                     e.preventDefault();
                     this.submit(e);
                 }}
@@ -54,7 +54,7 @@ export class LoginForm extends Form<AuthUserLoginInput> {
 
 @customElement("gravity-login")
 export class LoginPage extends AKElement {
-    @property()
+    @state()
     authConfig?: AuthAuthConfigOutput;
 
     static get styles(): CSSResult[] {
