@@ -2,6 +2,7 @@ package dns
 
 import (
 	"context"
+	"strings"
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -43,6 +44,9 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *struct{}) error {
 		z := r.newZone(input.Name)
 		z.Name = input.Name
+		if !strings.HasSuffix(z.Name, ".") {
+			z.Name += "."
+		}
 		z.Authoritative = input.Authoritative
 		z.HandlerConfigs = input.HandlerConfigs
 		z.DefaultTTL = input.DefaultTTL
