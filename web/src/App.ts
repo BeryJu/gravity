@@ -87,7 +87,9 @@ export class AdminInterface extends AKElement {
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             if (!me.authenticated) {
                 this.showSidebar = false;
-                window.location.href = "#/login";
+                if (window.location.href !== "#/login") {
+                    window.location.href = "#/login";
+                }
             }
         });
     }
