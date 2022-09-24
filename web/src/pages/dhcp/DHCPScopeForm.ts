@@ -2,11 +2,14 @@ import { DhcpScope, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
+import "../../elements/forms/FormGroup";
 import { ModelForm } from "../../elements/forms/ModelForm";
+import { KV } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
@@ -27,6 +30,15 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
     }
 
     send = (data: DhcpScope): Promise<void> => {
+        if (data.ipam) {
+            data.ipam.type = "internal";
+        }
+        if (!data.options) {
+            data.options = [];
+        }
+        data.options.filter(op => op.tagName === "router").forEach(op => {
+            op.value = (data as unknown as KV)["router"];
+        })
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
             scope: data.scope,
             dhcpScopesInput: data,
@@ -40,6 +52,27 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
                 : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
+            <ak-form-element-horizontal label="Subnet CIDR" ?required=${true} name="subnetCidr">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.subnetCidr)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">
+                    CIDR for which this scope is authoritative for.
+                </p>
+            </ak-form-element-horizontal>
+            <ak-form-element-horizontal label="Router" name="router">
+                <input
+                    type="text"
+                    value="${this.instance?.options?.filter(op => op.tagName === "router").map(op => op.value)}"
+                    class="pf-c-form-control"
+                />
+                <p class="pf-c-form__helper-text">
+                    Router for the subnet.
+                </p>
+            </ak-form-element-horizontal>
             <ak-form-element-horizontal name="_default">
                 <div class="pf-c-check">
                     <input
@@ -49,6 +82,9 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
                     />
                     <label class="pf-c-check__label"> ${"Default"} </label>
                 </div>
+                <p class="pf-c-form__helper-text">
+                    If checked, this scope will be used for clients when their network can't be determined.
+                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="TTL" ?required=${true} name="ttl">
                 <input
@@ -57,7 +93,52 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
                     class="pf-c-form-control"
                     required
                 />
+                <p class="pf-c-form__helper-text">
+                    Default TTL of leases, in seconds.
+                </p>
             </ak-form-element-horizontal>
+            <ak-form-group ?expanded=${true}>
+                <span slot="header">IPAM</span>
+                <div slot="body" class="pf-c-form">
+                    <ak-form-element-horizontal label="IP Range Start" ?required=${true} name="ipam.range_start">
+                        <input
+                            type="text"
+                            value="${this.instance?.ipam?.range_start}"
+                            class="pf-c-form-control"
+                            required
+                        />
+                        <p class="pf-c-form__helper-text">
+                            Start of the IP range, inclusive.
+                        </p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="IP Range End" ?required=${true} name="ipam.range_end">
+                        <input
+                            type="text"
+                            value="${this.instance?.ipam?.type}"
+                            class="pf-c-form-control"
+                            required
+                        />
+                        <p class="pf-c-form__helper-text">
+                            End of the IP range, exclusive.
+                        </p>
+                    </ak-form-element-horizontal>
+                </div>
+            </ak-form-group>
+            <ak-form-group>
+                <span slot="header">DNS settings</span>
+                <div slot="body" class="pf-c-form">
+                    <ak-form-element-horizontal label="DNS Zone" name="dns.zone">
+                        <input
+                            type="text"
+                            value="${ifDefined(this.instance?.dns?.zone)}"
+                            class="pf-c-form-control"
+                        />
+                        <p class="pf-c-form__helper-text">
+                            Optional, set to a DNS zone configured in Gravity to create DNS records. If the configured zone does not exist in Gravity, it is only used as domain for the leases.
+                        </p>
+                    </ak-form-element-horizontal>
+                </div>
+            </ak-form-group>
         </form>`;
     }
 }

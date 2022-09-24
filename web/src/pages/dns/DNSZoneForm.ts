@@ -50,14 +50,16 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
 
     renderForm(): TemplateResult {
         return html`<form class="pf-c-form pf-m-horizontal">
+            ${this.instance
+                ? html``
+                : html`
             <ak-form-element-horizontal label="Name" ?required=${true} name="zone">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.name)}"
                     class="pf-c-form-control"
                     required
                 />
-            </ak-form-element-horizontal>
+            </ak-form-element-horizontal>`}
             <ak-form-element-horizontal name="authoritative">
                 <div class="pf-c-check">
                     <input

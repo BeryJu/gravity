@@ -120,7 +120,7 @@ export class LoginPage extends AKElement {
                     <header class="pf-c-login__header">Gravity</header>
                     <main class="pf-c-login__main">
                         <header class="pf-c-login__main-header">
-                            <h1 class="pf-c-title pf-m-3xl">Log in to your account</h1>
+                            <h1 class="pf-c-title pf-m-3xl">Log in to Gravity.</h1>
                         </header>
                         <div class="pf-c-login__main-body">
                             <gravity-login-form></gravity-login-form>

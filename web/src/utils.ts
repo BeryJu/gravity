@@ -1,5 +1,9 @@
 import { PaginatedResponse } from "./elements/table/Table";
 
+export interface KV {
+    [key: string]: string;
+}
+
 export function PaginationWrapper<T>(items: T[]): PaginatedResponse<T> {
     return {
         pagination: {
