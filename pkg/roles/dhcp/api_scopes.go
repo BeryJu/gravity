@@ -26,7 +26,7 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 	type scopesOutput struct {
 		Scopes []*scope `json:"scopes" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input interface{}, output *scopesOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *scopesOutput) error {
 		for _, sc := range r.scopes {
 			output.Scopes = append(output.Scopes, &scope{
 				Name:       sc.Name,
