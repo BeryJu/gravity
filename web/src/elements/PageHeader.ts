@@ -6,14 +6,7 @@ import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { DEFAULT_CONFIG } from "../common/api/config";
-import {
-    EVENT_API_DRAWER_TOGGLE,
-    EVENT_NOTIFICATION_DRAWER_TOGGLE,
-    EVENT_SIDEBAR_TOGGLE,
-    EVENT_WS_MESSAGE,
-    TITLE_DEFAULT,
-} from "../common/constants";
+import { TITLE_DEFAULT } from "../common/constants";
 import { AKElement } from "./Base";
 
 @customElement("ak-page-header")
@@ -96,55 +89,14 @@ export class PageHeader extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<button
-                class="sidebar-trigger pf-c-button pf-m-plain"
-                @click=${() => {
-                    this.dispatchEvent(
-                        new CustomEvent(EVENT_SIDEBAR_TOGGLE, {
-                            bubbles: true,
-                            composed: true,
-                        }),
-                    );
-                }}
-            >
-                <i class="fas fa-bars"></i>
-            </button>
-            <section class="pf-c-page__main-section pf-m-light">
-                <div class="pf-c-content">
-                    <h1>
-                        ${this.renderIcon()}
-                        <slot name="header"> ${this.header} </slot>
-                    </h1>
-                    ${this.description ? html`<p>${this.description}</p>` : html``}
-                </div>
-            </section>
-            <button
-                class="notification-trigger pf-c-button pf-m-plain"
-                @click=${() => {
-                    this.dispatchEvent(
-                        new CustomEvent(EVENT_API_DRAWER_TOGGLE, {
-                            bubbles: true,
-                            composed: true,
-                        }),
-                    );
-                }}
-            >
-                <i class="fas fa-code"></i>
-            </button>
-            <button
-                class="notification-trigger pf-c-button pf-m-plain ${this.hasNotifications
-                    ? "has-notifications"
-                    : ""}"
-                @click=${() => {
-                    this.dispatchEvent(
-                        new CustomEvent(EVENT_NOTIFICATION_DRAWER_TOGGLE, {
-                            bubbles: true,
-                            composed: true,
-                        }),
-                    );
-                }}
-            >
-                <i class="fas fa-bell"></i>
-            </button> `;
+        return html` <section class="pf-c-page__main-section pf-m-light">
+            <div class="pf-c-content">
+                <h1>
+                    ${this.renderIcon()}
+                    <slot name="header"> ${this.header} </slot>
+                </h1>
+                ${this.description ? html`<p>${this.description}</p>` : html``}
+            </div>
+        </section>`;
     }
 }

@@ -79,7 +79,7 @@ export class SidebarItem extends AKElement {
     activeMatchers: RegExp[] = [];
 
     @property({ type: Boolean })
-    expanded = false;
+    expanded = true;
 
     @property({ type: Boolean })
     isActive = false;

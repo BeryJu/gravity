@@ -14,7 +14,7 @@ import { Route } from "./elements/router/Route";
 import "./elements/router/RouterOutlet";
 import "./elements/sidebar/Sidebar";
 import "./elements/sidebar/SidebarItem";
-import "./pages/OverviewPage";
+import "./pages/overview/OverviewPage";
 
 export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
@@ -23,11 +23,11 @@ export const ROUTES = [
         return html`<gravity-login></gravity-login>`;
     }),
     new Route(new RegExp("^/overview$"), async () => {
-        await import("./pages/OverviewPage");
+        await import("./pages/overview/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
     }),
     new Route(new RegExp("^/cluster/nodes$"), async () => {
-        await import("./pages/ClusterNodesPage");
+        await import("./pages/cluster/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route(new RegExp("^/dns/zones$"), async () => {

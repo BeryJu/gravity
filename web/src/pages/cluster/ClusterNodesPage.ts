@@ -3,12 +3,12 @@ import { InstanceInstanceInfo, InstancesApi } from "gravity-api";
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { DEFAULT_CONFIG } from "../api/Config";
-import "../elements/chips/Chip";
-import "../elements/chips/ChipGroup";
-import { PaginatedResponse, TableColumn } from "../elements/table/Table";
-import { TablePage } from "../elements/table/TablePage";
-import { PaginationWrapper } from "../utils";
+import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/chips/Chip";
+import "../../elements/chips/ChipGroup";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
