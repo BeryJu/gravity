@@ -7,5 +7,6 @@ type RequestContextValue string
 const RequestSession RequestContextValue = "session"
 
 const (
-	RequestKeyUser = "user"
+	SessionKeyUser      = "user"
+	SessionKeyOIDCState = "oidc_state"
 )

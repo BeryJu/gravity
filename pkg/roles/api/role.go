@@ -34,6 +34,7 @@ func New(instance roles.Instance) *Role {
 		i:        instance,
 		m:        mux.NewRouter(),
 		sessions: sess,
+		cfg:      &RoleConfig{},
 	}
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
@@ -66,7 +67,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	auth.NewAuthProvider(r, r.i)
+	auth.NewAuthProvider(r, r.i, r.cfg.OIDC)
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(ctx, map[string]interface{}{

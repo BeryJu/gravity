@@ -16,19 +16,25 @@ type AuthProvider struct {
 	role roles.Role
 	inst roles.Instance
 	log  *log.Entry
+	oidc *types.OIDCConfig
 }
 
-func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
+func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) *AuthProvider {
 	ap := &AuthProvider{
 		role: r,
 		inst: inst,
 		log:  inst.Log().WithField("mw", "auth"),
+		oidc: oidc,
+	}
+	if ap.oidc != nil {
+		ap.InitOIDC()
 	}
 	gob.Register(User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/auth/me", ap.apiHandlerAuthUserMe())
-		svc.Post("/api/v1/auth/login", ap.apiHandlerAuthUserLogin())
+		svc.Get("/api/v1/auth/me", ap.apiHandlerAuthMe())
+		svc.Get("/api/v1/auth/config", ap.apiHandlerAuthConfig())
+		svc.Post("/api/v1/auth/login", ap.apiHandlerAuthLogin())
 		svc.Get("/api/v1/auth/users", ap.apiHandlerAuthUserRead())
 		svc.Post("/api/v1/auth/users", ap.apiHandlerAuthUserPut())
 		svc.Delete("/api/v1/auth/users", ap.apiHandlerAuthUserDelete())

@@ -10,7 +10,8 @@ import (
 )
 
 type RoleConfig struct {
-	Port int32 `json:"port"`
+	Port int32             `json:"port"`
+	OIDC *types.OIDCConfig `json:"oidc"`
 }
 
 func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {

@@ -3,9 +3,28 @@ info:
   title: gravity
   version: 0.0.1
 paths:
+  /api/v1/auth/config:
+    get:
+      operationId: api.auth_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAuthConfigOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
   /api/v1/auth/login:
     post:
-      operationId: api.users_login
+      operationId: api.login_user
       requestBody:
         content:
           application/json:
@@ -965,8 +984,17 @@ components:
     ApiRoleConfig:
       nullable: true
       properties:
+        oidc:
+          $ref: '#/components/schemas/TypesOIDCConfig'
         port:
           type: integer
+      type: object
+    AuthAuthConfigOutput:
+      properties:
+        bool:
+          type: boolean
+        oidc:
+          type: boolean
       type: object
     AuthAuthUsersOutput:
       properties:
@@ -1503,4 +1531,21 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TypesOIDCConfig:
+      nullable: true
+      properties:
+        clientID:
+          type: string
+        clientSecret:
+          type: string
+        issuer:
+          type: string
+        redirectURL:
+          type: string
+        scopes:
+          items:
+            type: string
+          nullable: true
+          type: array
       type: object

@@ -24,7 +24,7 @@ var addUserCmd = &cobra.Command{
 		rootInst := instance.NewInstance()
 		inst := rootInst.ForRole("cli")
 		api := api.New(inst)
-		am := auth.NewAuthProvider(api, inst)
+		am := auth.NewAuthProvider(api, inst, nil)
 		fmt.Printf("Enter the password for %s: ", username)
 		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 		if err != nil {
