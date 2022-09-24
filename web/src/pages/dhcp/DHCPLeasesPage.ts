@@ -37,12 +37,12 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
             .then((leases) => {
                 const data = (leases.leases || []).filter(
                     (l) =>
-                        l.hostname?.toLowerCase().includes(this.search.toLowerCase()) ||
-                        l.address?.includes(this.search),
+                        l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
+                        l.address.includes(this.search),
                 );
                 data.sort((a, b) => {
-                    if ((a.hostname || "") > (b.hostname || "")) return 1;
-                    if ((a.hostname || "") < (b.hostname || "")) return -1;
+                    if (a.hostname > b.hostname) return 1;
+                    if (a.hostname < b.hostname) return -1;
                     return 0;
                 });
                 return PaginationWrapper(data);

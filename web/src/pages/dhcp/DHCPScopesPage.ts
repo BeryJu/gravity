@@ -4,6 +4,7 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
@@ -31,13 +32,13 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
             const data = (scopes.scopes || []).filter(
                 (l) =>
-                    l.scope?.toLowerCase().includes(this.search.toLowerCase()) ||
+                    l.scope.toLowerCase().includes(this.search.toLowerCase()) ||
                     l.dns?.zone?.toLowerCase().includes(this.search.toLowerCase()) ||
-                    l.subnetCidr?.includes(this.search),
+                    l.subnetCidr.includes(this.search),
             );
             data.sort((a, b) => {
-                if ((a.scope || "") > (b.scope || "")) return 1;
-                if ((a.scope || "") < (b.scope || "")) return -1;
+                if (a.scope > b.scope) return 1;
+                if (a.scope < b.scope) return -1;
                 return 0;
             });
             return PaginationWrapper(data);
@@ -47,12 +48,37 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     columns(): TableColumn[] {
         return [new TableColumn("Scope"), new TableColumn("Subnet")];
     }
+
     row(item: DhcpScope): TemplateResult[] {
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`${item.subnetCidr}`,
         ];
     }
+
+    renderToolbarSelected(): TemplateResult {
+        const disabled = this.selectedElements.length < 1;
+        return html`<ak-forms-delete-bulk
+            objectLabel=${`DHCP Scope(s)`}
+            .objects=${this.selectedElements}
+            .metadata=${(item: DhcpScope) => {
+                return [
+                    { key: `Scope`, value: item.scope },
+                    { key: `CIDR`, value: item.subnetCidr },
+                ];
+            }}
+            .delete=${(item: DhcpScope) => {
+                return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteScopes({
+                    scope: item.scope,
+                });
+            }}
+        >
+            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                ${`Delete`}
+            </button>
+        </ak-forms-delete-bulk>`;
+    }
+
     renderObjectCreate(): TemplateResult {
         return html`
             <ak-forms-modal>
