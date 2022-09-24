@@ -5,9 +5,7 @@ COPY ./web /work/web/
 
 ENV NODE_ENV=production
 WORKDIR /work/web
-RUN npm ci
-COPY ./gen-ts-api/ /work/web/node_modules/gravity-api/
-RUN npm run build
+RUN npm ci && npm run build
 
 # Stage 2: Build
 FROM golang:1.19.1 as builder
