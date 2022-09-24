@@ -1,0 +1,34 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ^1.18
+      - name: Setup node
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+      - name: Build web
+        working-directory: web/
+        run: |
+          npm ci
+          make -C .. gen-client-ts
+          npm run build
+      - run: go get -v -t -d ./...
+      - name: Run coverage
+        run: make test-etcd-start test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
