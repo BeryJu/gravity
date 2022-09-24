@@ -26,9 +26,7 @@ RUN go mod download
 COPY . .
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
-RUN go build \
-    -ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=$GIT_BUILD_HASH" \
-    -v -a -o gravity .
+RUN make docker-build
 
 # Stage 3: Run
 FROM docker.io/library/debian:stable-slim

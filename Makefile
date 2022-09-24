@@ -2,17 +2,25 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
+VERSION = "0.1.5"
+GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=$(VERSION)" -v
+
+docker-build:
+	go build \
+		${GO_FLAGS} \
+		-ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=$(GIT_BUILD_HASH)" \
+		-a -o gravity .
 
 run:
-	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run -v . server
+	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run $(GO_FLAGS) . server
 
 gen-build:
-	DEBUG=true go run -v . cli generateSchema schema.yml
+	DEBUG=true go run $(GO_FLAGS) . cli generateSchema schema.yml
 
 gen-clean:
 	rm -rf gen-ts-api/
 
-gen-client-web:
+gen-client-ts:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
@@ -20,14 +28,12 @@ gen-client-web:
 		-i /local/schema.yml \
 		-g typescript-fetch \
 		-o /local/gen-ts-api \
-		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=0.1.0 \
+		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=$(VERSION) \
 		--git-repo-id BeryJu \
 		--git-user-id gravity
-	mkdir -p web/node_modules/gravity-api
 	cd gen-ts-api && npm i
-	\cp -rfv gen-ts-api/* web/node_modules/gravity-api
 
-gen: gen-build gen-clean gen-client-web
+gen: gen-build gen-clean gen-client-ts
 
 test-etcd-start:
 	docker run \
