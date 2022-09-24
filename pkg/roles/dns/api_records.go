@@ -27,7 +27,7 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 		SRVWeight    uint16 `json:"srvWeight,omitempty"`
 	}
 	type recordsOutput struct {
-		Records []record `json:"records"`
+		Records []record `json:"records" required:"true"`
 	}
 	u := usecase.NewIOI(new(recordsInput), new(recordsOutput), func(ctx context.Context, input, output interface{}) error {
 		var (

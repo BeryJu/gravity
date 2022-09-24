@@ -15,7 +15,7 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	}
 	type zonesOutput struct {
-		Zones []zone `json:"zones"`
+		Zones []zone `json:"zones" required:"true"`
 	}
 	u := usecase.NewIOI(new(struct{}), new(zonesOutput), func(ctx context.Context, input, output interface{}) error {
 		var (

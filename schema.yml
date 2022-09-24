@@ -1209,6 +1209,8 @@ components:
             $ref: '#/components/schemas/DhcpScope'
           nullable: true
           type: array
+      required:
+      - scopes
       type: object
     DiscoveryDevice:
       properties:
@@ -1354,6 +1356,8 @@ components:
             $ref: '#/components/schemas/DnsRecord'
           nullable: true
           type: array
+      required:
+      - records
       type: object
     DnsRoleConfig:
       nullable: true
@@ -1419,6 +1423,8 @@ components:
             $ref: '#/components/schemas/DnsZone'
           nullable: true
           type: array
+      required:
+      - zones
       type: object
     EtcdEtcdJoinInput:
       properties:

@@ -23,7 +23,7 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 		} `json:"dns"`
 	}
 	type scopesOutput struct {
-		Scopes []*scope `json:"scopes"`
+		Scopes []*scope `json:"scopes" required:"true"`
 	}
 	u := usecase.NewIOI(new(struct{}), new(scopesOutput), func(ctx context.Context, input, output interface{}) error {
 		var (
