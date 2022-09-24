@@ -83,7 +83,7 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 		SRVPriority  uint16 `json:"srvPriority,omitempty"`
 		SRVWeight    uint16 `json:"srvWeight,omitempty"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *struct{}) error {
 		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
@@ -114,7 +114,7 @@ func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
 		Hostname string `query:"hostname"`
 		UID      string `query:"uid"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *struct{}) error {
 		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)

@@ -45,7 +45,7 @@ func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 	type roleDNSConfigInput struct {
 		Config *RoleConfig `json:"config"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input roleDNSConfigInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input roleDNSConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)

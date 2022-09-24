@@ -25,7 +25,14 @@ func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 }
 
 func (r *Role) loadInitialLeases() {
-	leases, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyLeases).Prefix(true).String(), clientv3.WithPrefix())
+	leases, err := r.i.KV().Get(
+		r.ctx,
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial leases")
 		time.Sleep(5 * time.Second)

@@ -38,7 +38,7 @@
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-custom-elements": "0.0.6",
         "eslint-plugin-lit": "^1.6.1",
-        "gravity-api": "^0.1.2",
+        "gravity-api": "^0.1.3",
         "lit": "^2.3.1",
         "prettier": "^2.7.1",
         "rollup": "^2.79.1",

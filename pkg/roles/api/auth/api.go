@@ -82,7 +82,7 @@ func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
 
 		Password string `json:"password"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input authUsersPut, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input authUsersPut, output *struct{}) error {
 		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -146,7 +146,7 @@ func (ap *AuthProvider) apiHandlerAuthUserDelete() usecase.Interactor {
 	type authUserDeleteInput struct {
 		Username string `query:"username"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input authUserDeleteInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input authUserDeleteInput, output *struct{}) error {
 		_, err := ap.inst.KV().Delete(ctx, ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,

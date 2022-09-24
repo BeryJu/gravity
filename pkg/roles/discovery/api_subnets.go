@@ -53,7 +53,7 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 		SubnetCIDR   string `json:"subnetCidr" required:"true"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
 		s := r.newSubnet(input.Name)
 		s.CIDR = input.SubnetCIDR
 		s.DiscoveryTTL = input.DiscoveryTTL
@@ -74,7 +74,7 @@ func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
 	type subnetsInput struct {
 		Name string `query:"identifier"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,

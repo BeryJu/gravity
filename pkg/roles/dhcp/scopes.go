@@ -188,7 +188,7 @@ func (s *Scope) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 
 	leaseKey := s.inst.KV().Key(
 		types.KeyRole,
-		types.KeyLeases,
+		types.KeyScopes,
 		s.Name,
 	)
 	_, err = s.inst.KV().Put(

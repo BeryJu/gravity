@@ -53,7 +53,7 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
 		DNSZone          string `json:"dnsZone"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
 		l := r.newLease(input.Identifier)
 		l.Address = input.Address
 		l.Hostname = input.Hostname
@@ -83,7 +83,7 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 		Identifier string `query:"identifier" required:"true"`
 		Scope      string `query:"scope" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
 		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument
@@ -106,7 +106,7 @@ func (r *Role) apiHandlerLeasesDelete() usecase.Interactor {
 		Identifier string `query:"identifier"`
 		Scope      string `query:"scope"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
 		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument

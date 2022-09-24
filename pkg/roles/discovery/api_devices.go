@@ -51,7 +51,7 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 		DHCPScope  string `json:"dhcpScope" required:"true"`
 		DNSZone    string `json:"dnsZone" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input deviceApplyInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input deviceApplyInput, output *struct{}) error {
 		rawDevice, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
@@ -86,7 +86,7 @@ func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
 	type devicesInput struct {
 		Name string `query:"identifier"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input devicesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input devicesInput, output *struct{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,

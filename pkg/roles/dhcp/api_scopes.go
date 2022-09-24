@@ -61,7 +61,7 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 			AddZoneInHostname bool     `json:"addZoneInHostname"`
 		} `json:"dns"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *struct{}) error {
 		s := r.newScope(input.Name)
 		s.SubnetCIDR = input.SubnetCIDR
 		s.Default = input.Default
@@ -93,7 +93,7 @@ func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 	type scopesInput struct {
 		Scope string `query:"scope" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *struct{}) error {
 		s, ok := r.scopes[input.Scope]
 		if !ok {
 			return status.InvalidArgument

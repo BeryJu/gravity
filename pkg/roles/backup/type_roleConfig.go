@@ -50,7 +50,7 @@ func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 	type roleBackupConfigInput struct {
 		Config *RoleConfig `json:"config"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input roleBackupConfigInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input roleBackupConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)

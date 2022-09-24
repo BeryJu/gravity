@@ -40,7 +40,7 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *struct{}) error {
 		z := r.newZone(input.Name)
 		z.Name = input.Name
 		z.Authoritative = input.Authoritative
@@ -63,7 +63,7 @@ func (r *Role) apiHandlerZonesDelete() usecase.Interactor {
 	type zoneInput struct {
 		Zone string `query:"zone"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *interface{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *struct{}) error {
 		z, ok := r.zones[input.Zone]
 		if !ok {
 			return status.InvalidArgument
