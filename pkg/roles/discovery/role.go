@@ -27,6 +27,7 @@ func New(instance roles.Instance) *Role {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/discovery/subnets", r.apiHandlerSubnets())
 		svc.Post("/api/v1/discovery/subnets", r.apiHandlerSubnetsPut())
+		svc.Post("/api/v1/discovery/subnets/start", r.apiHandlerSubnetsStart())
 		svc.Delete("/api/v1/discovery/subnets", r.apiHandlerSubnetsDelete())
 		svc.Get("/api/v1/discovery/devices", r.apiHandlerDevices())
 		svc.Post("/api/v1/discovery/devices/apply", r.apiHandlerDeviceApply())

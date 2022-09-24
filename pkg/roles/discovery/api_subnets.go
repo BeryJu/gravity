@@ -70,6 +70,22 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	return u
 }
 
+func (r *Role) apiHandlerSubnetsStart() usecase.Interactor {
+	type subnetsInput struct {
+		Name string `query:"identifier" required:"true"`
+	}
+	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
+		s := r.newSubnet(input.Name)
+		go s.RunDiscovery()
+		return nil
+	})
+	u.SetName("discovery.subnet_start")
+	u.SetTitle("Discovery Subnets")
+	u.SetTags("roles/discovery")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}
+
 func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
 	type subnetsInput struct {
 		Name string `query:"identifier"`
