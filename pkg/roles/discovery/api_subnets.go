@@ -13,7 +13,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 	type subnet struct {
 		Name string `json:"name" required:"true"`
 
-		CIDR         string `json:"cidr" required:"true"`
+		CIDR         string `json:"subnetCidr" required:"true"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	type subnetsOutput struct {

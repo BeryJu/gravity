@@ -2,7 +2,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.1.6"
+VERSION = "0.1.7"
 GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=$(VERSION)" -v
 
 docker-build:

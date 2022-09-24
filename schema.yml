@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.6
+  version: 0.1.7
 paths:
   /api/v1/auth/config:
     get:
@@ -1299,15 +1299,15 @@ components:
       type: object
     DiscoverySubnet:
       properties:
-        cidr:
-          type: string
         discoveryTTL:
           type: integer
         name:
           type: string
+        subnetCidr:
+          type: string
       required:
       - name
-      - cidr
+      - subnetCidr
       - discoveryTTL
       type: object
     DiscoverySubnetsInput:
