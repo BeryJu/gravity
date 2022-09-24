@@ -1,7 +1,4 @@
-import { html as htmlLang } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
-import { python } from "@codemirror/lang-python";
-import { xml } from "@codemirror/lang-xml";
 import {
     LanguageSupport,
     StreamLanguage,
@@ -112,14 +109,8 @@ export class CodeMirrorTextarea extends AKElement {
 
     getLanguageExtension(): LanguageSupport | undefined {
         switch (this.mode.toLowerCase()) {
-            case "xml":
-                return xml();
             case "javascript":
                 return javascript();
-            case "html":
-                return htmlLang();
-            case "python":
-                return python();
             case "yaml":
                 return new LanguageSupport(StreamLanguage.define(yamlMode.yaml));
         }
