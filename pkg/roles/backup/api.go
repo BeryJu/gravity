@@ -10,16 +10,17 @@ func (r *Role) apiHandlerBackupStart() usecase.Interactor {
 	type backupStartInput struct {
 		Wait bool `query:"wait" required:"true"`
 	}
-	u := usecase.NewIOI(new(backupStartInput), new(BackupStatus), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in  = input.(*backupStartInput)
-			out = output.(*BackupStatus)
-		)
-		if in.Wait {
-			out = r.saveSnapshot()
+	u := usecase.NewInteractor(func(ctx context.Context, input backupStartInput, output *BackupStatus) error {
+		if input.Wait {
+			o := r.saveSnapshot()
+			output.Duration = o.Duration
+			output.Error = o.Error
+			output.Filename = o.Filename
+			output.Size = o.Size
+			output.Status = o.Status
 		} else {
 			go r.saveSnapshot()
-			out.Status = BackupStatusStarted
+			output.Status = BackupStatusStarted
 		}
 		return nil
 	})

@@ -6,6 +6,7 @@ import (
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func (r *Role) apiHandlerScopesGet() usecase.Interactor {
@@ -25,12 +26,9 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 	type scopesOutput struct {
 		Scopes []*scope `json:"scopes" required:"true"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(scopesOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*scopesOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input interface{}, output *scopesOutput) error {
 		for _, sc := range r.scopes {
-			out.Scopes = append(out.Scopes, &scope{
+			output.Scopes = append(output.Scopes, &scope{
 				Name:       sc.Name,
 				SubnetCIDR: sc.SubnetCIDR,
 				Default:    sc.Default,
@@ -63,17 +61,14 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 			AddZoneInHostname bool     `json:"addZoneInHostname"`
 		} `json:"dns"`
 	}
-	u := usecase.NewIOI(new(scopesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*scopesInput)
-		)
-		s := r.newScope(in.Name)
-		s.SubnetCIDR = in.SubnetCIDR
-		s.Default = in.Default
-		s.Options = in.Options
-		s.TTL = in.TTL
-		s.IPAM = in.IPAM
-		s.DNS = in.DNS
+	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *interface{}) error {
+		s := r.newScope(input.Name)
+		s.SubnetCIDR = input.SubnetCIDR
+		s.Default = input.Default
+		s.Options = input.Options
+		s.TTL = input.TTL
+		s.IPAM = input.IPAM
+		s.DNS = input.DNS
 
 		cidr, err := netip.ParsePrefix(s.SubnetCIDR)
 		if err != nil {
@@ -98,15 +93,12 @@ func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 	type scopesInput struct {
 		Scope string `query:"scope" required:"true"`
 	}
-	u := usecase.NewIOI(new(scopesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*scopesInput)
-		)
-		s, ok := r.scopes[in.Scope]
+	u := usecase.NewInteractor(func(ctx context.Context, input scopesInput, output *interface{}) error {
+		s, ok := r.scopes[input.Scope]
 		if !ok {
 			return status.InvalidArgument
 		}
-		_, err := r.i.KV().Delete(ctx, s.etcdKey)
+		_, err := r.i.KV().Delete(ctx, s.etcdKey, clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

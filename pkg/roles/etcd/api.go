@@ -19,16 +19,13 @@ func (r *Role) apiHandlerMembers() usecase.Interactor {
 	type membersOutput struct {
 		Members []member `json:"members"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(membersOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*membersOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *membersOutput) error {
 		members, err := r.i.KV().MemberList(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, mem := range members.Members {
-			out.Members = append(out.Members, member{
+			output.Members = append(output.Members, member{
 				ID:   mem.ID,
 				Name: mem.Name,
 			})
@@ -49,15 +46,10 @@ func (r *Role) apiHandlerJoin() usecase.Interactor {
 	type etcdJoinOutput struct {
 		Env string `json:"env"`
 	}
-	u := usecase.NewIOI(new(etcdJoinInput), new(etcdJoinOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in  = input.(*etcdJoinInput)
-			out = output.(*etcdJoinOutput)
-		)
-
+	u := usecase.NewInteractor(func(ctx context.Context, input etcdJoinInput, output *etcdJoinOutput) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
 
-		_, err := r.i.KV().MemberAdd(ctx, []string{in.Peer})
+		_, err := r.i.KV().MemberAdd(ctx, []string{input.Peer})
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
@@ -66,7 +58,7 @@ func (r *Role) apiHandlerJoin() usecase.Interactor {
 			extconfig.Get().Instance.Identifier,
 			extconfig.Get().Instance.IP,
 		)
-		out.Env = env
+		output.Env = env
 		return nil
 	})
 	u.SetName("etcd.join_member")

@@ -20,7 +20,7 @@ gen-client-web:
 		-i /local/schema.yml \
 		-g typescript-fetch \
 		-o /local/gen-ts-api \
-		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=0.0.3 \
+		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=0.1.0 \
 		--git-repo-id BeryJu \
 		--git-user-id gravity
 	mkdir -p web/node_modules/gravity-api

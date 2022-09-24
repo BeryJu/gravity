@@ -22,14 +22,10 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 	type leasesOutput struct {
 		Leases []*lease `json:"leases" required:"true"`
 	}
-	u := usecase.NewIOI(new(leasesInput), new(leasesOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in  = input.(*leasesInput)
-			out = output.(*leasesOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *leasesOutput) error {
 		for _, l := range r.leases {
-			if l.ScopeKey == in.ScopeName {
-				out.Leases = append(out.Leases, &lease{
+			if l.ScopeKey == input.ScopeName {
+				output.Leases = append(output.Leases, &lease{
 					Identifier:       l.Identifier,
 					Address:          l.Address,
 					Hostname:         l.Hostname,
@@ -57,17 +53,14 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
 		DNSZone          string `json:"dnsZone"`
 	}
-	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*leasesInput)
-		)
-		l := r.newLease(in.Identifier)
-		l.Address = in.Address
-		l.Hostname = in.Hostname
-		l.AddressLeaseTime = in.AddressLeaseTime
-		l.ScopeKey = in.Scope
-		l.DNSZone = in.DNSZone
-		scope, ok := r.scopes[in.Scope]
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+		l := r.newLease(input.Identifier)
+		l.Address = input.Address
+		l.Hostname = input.Hostname
+		l.AddressLeaseTime = input.AddressLeaseTime
+		l.ScopeKey = input.Scope
+		l.DNSZone = input.DNSZone
+		scope, ok := r.scopes[input.Scope]
 		if !ok {
 			return status.InvalidArgument
 		}
@@ -90,11 +83,8 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 		Identifier string `query:"identifier" required:"true"`
 		Scope      string `query:"scope" required:"true"`
 	}
-	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*leasesInput)
-		)
-		l, ok := r.leases[in.Identifier]
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument
 		}
@@ -116,11 +106,8 @@ func (r *Role) apiHandlerLeasesDelete() usecase.Interactor {
 		Identifier string `query:"identifier"`
 		Scope      string `query:"scope"`
 	}
-	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*leasesInput)
-		)
-		l, ok := r.leases[in.Identifier]
+	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *interface{}) error {
+		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument
 		}

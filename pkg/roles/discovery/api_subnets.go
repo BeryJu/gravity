@@ -19,10 +19,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 	type subnetsOutput struct {
 		Subnets []subnet `json:"subnets"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(subnetsOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*subnetsOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *subnetsOutput) error {
 		prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 		subnets, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix())
 		if err != nil {
@@ -34,7 +31,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 				r.log.WithError(err).Warning("failed to parse subnet")
 				continue
 			}
-			out.Subnets = append(out.Subnets, subnet{
+			output.Subnets = append(output.Subnets, subnet{
 				Name:         sub.Identifier,
 				CIDR:         sub.CIDR,
 				DiscoveryTTL: sub.DiscoveryTTL,
@@ -56,13 +53,10 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 		SubnetCIDR   string `json:"subnetCidr" required:"true"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
-	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*subnetsInput)
-		)
-		s := r.newSubnet(in.Name)
-		s.CIDR = in.SubnetCIDR
-		s.DiscoveryTTL = in.DiscoveryTTL
+	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *interface{}) error {
+		s := r.newSubnet(input.Name)
+		s.CIDR = input.SubnetCIDR
+		s.DiscoveryTTL = input.DiscoveryTTL
 		err := s.put()
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -80,14 +74,11 @@ func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
 	type subnetsInput struct {
 		Name string `query:"identifier"`
 	}
-	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*subnetsInput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *interface{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,
-			in.Name,
+			input.Name,
 		).String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)

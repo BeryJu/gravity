@@ -19,10 +19,7 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 	type devicesOutput struct {
 		Devices []device `json:"devices"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(devicesOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*devicesOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *devicesOutput) error {
 		rawDevices, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
@@ -30,10 +27,9 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
-		out.Devices = make([]device, 0)
 		for _, rawDev := range rawDevices.Kvs {
 			dev := r.deviceFromKV(rawDev)
-			out.Devices = append(out.Devices, device{
+			output.Devices = append(output.Devices, device{
 				Hostname: dev.Hostname,
 				IP:       dev.IP,
 				MAC:      dev.MAC,
@@ -55,14 +51,11 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 		DHCPScope  string `json:"dhcpScope" required:"true"`
 		DNSZone    string `json:"dnsZone" required:"true"`
 	}
-	u := usecase.NewIOI(new(deviceApplyInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*deviceApplyInput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input deviceApplyInput, output *interface{}) error {
 		rawDevice, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
-			in.Identifier,
+			input.Identifier,
 		).String())
 		if err != nil {
 			return status.Wrap(errors.New("invalid key"), status.InvalidArgument)
@@ -72,10 +65,10 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 		}
 
 		device := r.deviceFromKV(rawDevice.Kvs[0])
-		if in.To == "dhcp" {
-			err = device.toDHCP(ctx, in.DHCPScope)
+		if input.To == "dhcp" {
+			err = device.toDHCP(ctx, input.DHCPScope)
 		} else {
-			err = device.toDNS(ctx, in.DNSZone)
+			err = device.toDNS(ctx, input.DNSZone)
 		}
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -93,14 +86,11 @@ func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
 	type devicesInput struct {
 		Name string `query:"identifier"`
 	}
-	u := usecase.NewIOI(new(devicesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*devicesInput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input devicesInput, output *interface{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,
-			in.Name,
+			input.Name,
 		).String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)

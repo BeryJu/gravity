@@ -3,7 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"beryju.io/gravity/pkg/instance"
 	"github.com/spf13/cobra"
@@ -16,7 +16,7 @@ var importCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		rootInst := instance.NewInstance()
 		for _, path := range args {
-			cont, err := ioutil.ReadFile(path)
+			cont, err := os.ReadFile(path)
 			if err != nil {
 				fmt.Println(err.Error())
 				continue

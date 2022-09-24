@@ -55,8 +55,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "500":
           content:
             application/json:
@@ -97,8 +97,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthAuthUsersPut'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "500":
           content:
             application/json:
@@ -137,8 +137,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -180,8 +180,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DhcpScopesInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -210,8 +210,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -263,8 +263,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DhcpLeasesInputType2'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -295,8 +295,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -346,8 +346,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DiscoveryDeviceApplyInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -378,8 +378,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -404,8 +404,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -453,8 +453,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DiscoverySubnetsInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -479,8 +479,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -522,8 +522,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DnsZoneInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -556,8 +556,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -637,8 +637,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DnsRecordsInputType2'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -743,8 +743,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ApiRoleAPIConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -781,8 +781,8 @@ paths:
             schema:
               $ref: '#/components/schemas/BackupRoleBackupConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -819,8 +819,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DhcpRoleDHCPConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -857,8 +857,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DiscoveryRoleDiscoveryConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -895,8 +895,8 @@ paths:
             schema:
               $ref: '#/components/schemas/DnsRoleDNSConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:
@@ -933,8 +933,8 @@ paths:
             schema:
               $ref: '#/components/schemas/MonitoringRoleMonitoringConfigInput'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
         "400":
           content:
             application/json:

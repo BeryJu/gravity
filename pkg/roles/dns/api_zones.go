@@ -5,6 +5,7 @@ import (
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func (r *Role) apiHandlerZonesGet() usecase.Interactor {
@@ -17,12 +18,9 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 	type zonesOutput struct {
 		Zones []zone `json:"zones" required:"true"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(zonesOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*zonesOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *zonesOutput) error {
 		for name, _zone := range r.zones {
-			out.Zones = append(out.Zones, zone{
+			output.Zones = append(output.Zones, zone{
 				Name:          name,
 				Authoritative: _zone.Authoritative,
 			})
@@ -42,15 +40,12 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	}
-	u := usecase.NewIOI(new(zoneInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*zoneInput)
-		)
-		z := r.newZone(in.Name)
-		z.Name = in.Name
-		z.Authoritative = in.Authoritative
-		z.HandlerConfigs = in.HandlerConfigs
-		z.DefaultTTL = in.DefaultTTL
+	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *interface{}) error {
+		z := r.newZone(input.Name)
+		z.Name = input.Name
+		z.Authoritative = input.Authoritative
+		z.HandlerConfigs = input.HandlerConfigs
+		z.DefaultTTL = input.DefaultTTL
 		err := z.put(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -68,15 +63,12 @@ func (r *Role) apiHandlerZonesDelete() usecase.Interactor {
 	type zoneInput struct {
 		Zone string `query:"zone"`
 	}
-	u := usecase.NewIOI(new(zoneInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*zoneInput)
-		)
-		z, ok := r.zones[in.Zone]
+	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *interface{}) error {
+		z, ok := r.zones[input.Zone]
 		if !ok {
 			return status.InvalidArgument
 		}
-		_, err := r.i.KV().Delete(ctx, z.etcdKey)
+		_, err := r.i.KV().Delete(ctx, z.etcdKey, clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

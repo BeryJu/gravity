@@ -29,12 +29,8 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 	type recordsOutput struct {
 		Records []record `json:"records" required:"true"`
 	}
-	u := usecase.NewIOI(new(recordsInput), new(recordsOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in  = input.(*recordsInput)
-			out = output.(*recordsOutput)
-		)
-		zone, ok := r.zones[in.Zone]
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *recordsOutput) error {
+		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("not found"), status.NotFound)
 		}
@@ -52,7 +48,7 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 				r.log.WithError(err).Warning("failed to parse record")
 				continue
 			}
-			out.Records = append(out.Records, record{
+			output.Records = append(output.Records, record{
 				UID:          rec.uid,
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + "." + zone.Name,
@@ -87,21 +83,18 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 		SRVPriority  uint16 `json:"srvPriority,omitempty"`
 		SRVWeight    uint16 `json:"srvWeight,omitempty"`
 	}
-	u := usecase.NewIOI(new(recordsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*recordsInput)
-		)
-		zone, ok := r.zones[in.Zone]
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *interface{}) error {
+		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
-		rec := zone.newRecord(in.Hostname, in.Type)
-		rec.uid = in.UID
-		rec.Data = in.Data
-		rec.MXPreference = in.MXPreference
-		rec.SRVPort = in.SRVPort
-		rec.SRVPriority = in.SRVPriority
-		rec.SRVWeight = in.SRVWeight
+		rec := zone.newRecord(input.Hostname, input.Type)
+		rec.uid = input.UID
+		rec.Data = input.Data
+		rec.MXPreference = input.MXPreference
+		rec.SRVPort = input.SRVPort
+		rec.SRVPriority = input.SRVPriority
+		rec.SRVWeight = input.SRVWeight
 		err := rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -121,20 +114,17 @@ func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
 		Hostname string `query:"hostname"`
 		UID      string `query:"uid"`
 	}
-	u := usecase.NewIOI(new(recordsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*recordsInput)
-		)
-		zone, ok := r.zones[in.Zone]
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *interface{}) error {
+		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
-		key := r.i.KV().Key(types.KeyRole, types.KeyZones, in.Zone, in.Hostname)
+		key := r.i.KV().Key(types.KeyRole, types.KeyZones, input.Zone, input.Hostname)
 		recs, ok := zone.records[key.String()]
 		if !ok {
 			return status.Wrap(errors.New("record not found"), status.NotFound)
 		}
-		rec, ok := recs[in.UID]
+		rec, ok := recs[input.UID]
 		if !ok {
 			return status.Wrap(errors.New("record uid not found"), status.NotFound)
 		}

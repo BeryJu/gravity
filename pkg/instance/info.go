@@ -35,10 +35,7 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 	type instancesOutput struct {
 		Instances []InstanceInfo `json:"instances"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(instancesOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*instancesOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *instancesOutput) error {
 		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()
 		instances, err := i.kv.Get(
 			ctx,
@@ -60,7 +57,7 @@ func (i *Instance) apiHandlerInstances() usecase.Interactor {
 				i.log.WithError(err).Warning("failed to parse instance info")
 				continue
 			}
-			out.Instances = append(out.Instances, inst)
+			output.Instances = append(output.Instances, inst)
 		}
 		return nil
 	})

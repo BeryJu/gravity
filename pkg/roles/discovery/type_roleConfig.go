@@ -27,15 +27,12 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	return &def
 }
 
-func (r *Role) apiHandlerRoleConfigGet() usecase.IOInteractor {
+func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
 	type roleDiscoveryConfigOutput struct {
 		Config *RoleConfig `json:"config"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(roleDiscoveryConfigOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*roleDiscoveryConfigOutput)
-		)
-		out.Config = r.cfg
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *roleDiscoveryConfigOutput) error {
+		output.Config = r.cfg
 		return nil
 	})
 	u.SetName("discovery.get_role_config")
@@ -44,15 +41,12 @@ func (r *Role) apiHandlerRoleConfigGet() usecase.IOInteractor {
 	return u
 }
 
-func (r *Role) apiHandlerRoleConfigPut() usecase.IOInteractor {
+func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 	type roleDiscoveryConfigInput struct {
 		Config *RoleConfig `json:"config"`
 	}
-	u := usecase.NewIOI(new(roleDiscoveryConfigInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*roleDiscoveryConfigInput)
-		)
-		jc, err := json.Marshal(in.Config)
+	u := usecase.NewInteractor(func(ctx context.Context, input roleDiscoveryConfigInput, output *interface{}) error {
+		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}

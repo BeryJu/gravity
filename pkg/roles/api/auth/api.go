@@ -89,16 +89,13 @@ func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
 
 		Password string `json:"password"`
 	}
-	u := usecase.NewIOI(new(authUsersPut), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*authUsersPut)
-		)
-		hash, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
+	u := usecase.NewInteractor(func(ctx context.Context, input authUsersPut, output *interface{}) error {
+		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		user := &User{
-			Username: in.Username,
+			Username: input.Username,
 			Password: string(hash),
 			ap:       ap,
 		}
@@ -122,10 +119,7 @@ func (ap *AuthProvider) apiHandlerAuthUserRead() usecase.Interactor {
 	type authUsersOutput struct {
 		Users []user `json:"users"`
 	}
-	u := usecase.NewIOI(new(struct{}), new(authUsersOutput), func(ctx context.Context, input, output interface{}) error {
-		var (
-			out = output.(*authUsersOutput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *authUsersOutput) error {
 		rawUsers, err := ap.inst.KV().Get(
 			ctx,
 			ap.inst.KV().Key(
@@ -142,7 +136,7 @@ func (ap *AuthProvider) apiHandlerAuthUserRead() usecase.Interactor {
 				ap.log.WithError(err).Warning("failed to parse user")
 				continue
 			}
-			out.Users = append(out.Users, user{
+			output.Users = append(output.Users, user{
 				Username: u.Username,
 			})
 		}
@@ -159,14 +153,11 @@ func (ap *AuthProvider) apiHandlerAuthUserDelete() usecase.Interactor {
 	type authUserDeleteInput struct {
 		Username string `query:"username"`
 	}
-	u := usecase.NewIOI(new(authUserDeleteInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
-		var (
-			in = input.(*authUserDeleteInput)
-		)
+	u := usecase.NewInteractor(func(ctx context.Context, input authUserDeleteInput, output *interface{}) error {
 		_, err := ap.inst.KV().Delete(ctx, ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
-			in.Username,
+			input.Username,
 		).String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
