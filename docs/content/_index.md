@@ -6,7 +6,8 @@ cascade:
 
 Fully-replicated DNS and DHCP Server using etcd
 
-> **Warning**
-> This project is in really early development. It might eat your cat.
-
-![](./grafana.png)
+![](./images/dns_zones.png)
+![](./images/dns_records.png)
+![](./images/dhcp_leases.png)
+![](./images/cluster_nodes.png)
+![](./images/grafana.png)

@@ -2,10 +2,11 @@
 
 Fully-replicated DNS and DHCP Server using etcd
 
-> **Warning**
-> This project is in really early development. It might eat your cat.
-
-![](./docs/content/grafana.png)
+![](./docs/content/images/dns_zones.png)
+![](./docs/content/images/dns_records.png)
+![](./docs/content/images/dhcp_leases.png)
+![](./docs/content/images/cluster_nodes.png)
+![](./docs/content/images/grafana.png)
 
 ### Configuration
 
@@ -30,7 +31,7 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 
 ### Things missing
 
-- [ ] Web UI that supports doing things
+- [x] Web UI that supports doing things
 - [x] API that supports doing things
 - [x] Maybe sending WOL to DHCP leases
 - [x] Metrics
@@ -49,5 +50,4 @@ Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
 - [x] Support for multiple records per FQDN
 - [ ] Watch role config and restart roles if it changes?
 - [x] Blocky metrics support
-- [ ] Make backup be tgz of snapshot and raw key:value etcd export
 - [x] Ping IP before internal IPAM considers it free
