@@ -146,6 +146,8 @@ export class Form<T> extends AKElement {
             }
             if (element.tagName.toLowerCase() === "select" && "multiple" in element.attributes) {
                 json[element.name] = values;
+            } else if (element.tagName.toLowerCase() === "input" && element.type === "number") {
+                json[element.name] = parseInt(element.value, 10);
             } else if (element.tagName.toLowerCase() === "input" && element.type === "date") {
                 json[element.name] = element.valueAsDate;
             } else if (
@@ -225,6 +227,7 @@ export class Form<T> extends AKElement {
                 return r;
             })
             .catch(async (ex: Error | ResponseError) => {
+                console.warn(ex);
                 if (!(ex instanceof ResponseError)) {
                     throw ex;
                 }
