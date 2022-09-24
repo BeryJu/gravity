@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"net/http"
+	"strings"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -21,10 +23,12 @@ func (ap *AuthProvider) InitOIDC() {
 		ap.oidc = nil
 		return
 	}
+	red := strings.ReplaceAll(ap.oidc.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
+	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().Instance.IP)
 	oauth2Config := oauth2.Config{
 		ClientID:     ap.oidc.ClientID,
 		ClientSecret: ap.oidc.ClientSecret,
-		RedirectURL:  ap.oidc.RedirectURL,
+		RedirectURL:  red,
 		Endpoint:     provider.Endpoint(),
 		Scopes:       ap.oidc.Scopes,
 	}
