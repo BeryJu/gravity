@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
@@ -13,10 +12,9 @@ import (
 )
 
 type AuthProvider struct {
-	role  roles.Role
-	inst  roles.Instance
-	log   *log.Entry
-	inner http.Handler
+	role roles.Role
+	inst roles.Instance
+	log  *log.Entry
 }
 
 func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
@@ -27,18 +25,13 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	}
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/auth/me", ap.apiHandlerAuthUserMe())
+		svc.Post("/api/v1/auth/login", ap.apiHandlerAuthUserLogin())
 		svc.Get("/api/v1/auth/users", ap.apiHandlerAuthUserRead())
 		svc.Post("/api/v1/auth/users", ap.apiHandlerAuthUserPut())
 		svc.Delete("/api/v1/auth/users", ap.apiHandlerAuthUserDelete())
 	})
 	return ap
-}
-
-func (ap *AuthProvider) AsMiddleware() func(http.Handler) http.Handler {
-	return func(h http.Handler) http.Handler {
-		ap.inner = h
-		return ap
-	}
 }
 
 func (ap *AuthProvider) CreateUser(ctx context.Context, username, password string) error {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/gob"
 	"net/http"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -9,6 +10,8 @@ import (
 	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/openapi-go/openapi3"
 	"github.com/swaggest/rest/nethttp"
@@ -17,23 +20,28 @@ import (
 )
 
 type Role struct {
-	m    *mux.Router
-	oapi *web.Service
-	log  *log.Entry
-	i    roles.Instance
-	ctx  context.Context
-	cfg  *RoleConfig
+	m        *mux.Router
+	oapi     *web.Service
+	log      *log.Entry
+	i        roles.Instance
+	ctx      context.Context
+	cfg      *RoleConfig
+	sessions sessions.Store
 }
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log: instance.Log(),
-		i:   instance,
-		m:   mux.NewRouter(),
+		log:      instance.Log(),
+		i:        instance,
+		m:        mux.NewRouter(),
+		sessions: sessions.NewCookieStore(securecookie.GenerateRandomKey(32)),
 	}
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
+	r.m.Use(r.SessionMiddleware)
 	r.setupUI()
+	auth.NewAuthProvider(r, r.i)
+	gob.Register(auth.User{})
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/api", r.apiHandlerRoleConfigGet())
@@ -62,11 +70,12 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	apiRouter.Use(auth.NewAuthProvider(r, r.i).AsMiddleware())
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(ctx, map[string]interface{}{
-		"svc": r.oapi,
+		"svc":     r.oapi,
+		"mux":     r.m,
+		"session": r.sessions,
 	}))
 }
 
