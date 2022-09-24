@@ -25,7 +25,7 @@ export class LoginForm extends Form<AuthUserLoginInput> {
             })
             .then((a) => {
                 if (a.successful) {
-                    window.location.href = "#/";
+                    window.location.hash = "#/";
                     window.location.reload();
                 }
             });
