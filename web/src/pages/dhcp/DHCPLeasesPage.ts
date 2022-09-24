@@ -5,9 +5,11 @@ import { customElement, property } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./DHCPLeaseForm";
 
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpLease> {
@@ -88,23 +90,45 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
             html`${item.hostname}`,
             html`${item.address}`,
             html`${item.identifier}`,
-            html`<sp-button
-                size="m"
-                @click=${() => {
-                    new RolesDhcpApi(DEFAULT_CONFIG)
-                        .dhcpWolLeases({
-                            identifier: item.identifier || "",
-                            scope: this.scope,
-                        })
-                        .then(() => {
-                            alert("Successfully sent WOL");
-                        })
-                        .catch(() => {
-                            alert("failed to send WOL");
-                        });
-                }}
-                >WOL</sp-button
-            >`,
+            html`<ak-forms-modal>
+                    <span slot="submit"> ${`Update`} </span>
+                    <span slot="header"> ${`Update Zone`} </span>
+                    <gravity-dhcp-lease-form
+                        slot="form"
+                        scope=${this.scope}
+                        .instancePk=${item.identifier}
+                    >
+                    </gravity-dhcp-lease-form>
+                    <button slot="trigger" class="pf-c-button pf-m-plain">
+                        <i class="fas fa-edit"></i>
+                    </button> </ak-forms-modal
+                ><sp-button
+                    size="m"
+                    @click=${() => {
+                        new RolesDhcpApi(DEFAULT_CONFIG)
+                            .dhcpWolLeases({
+                                identifier: item.identifier || "",
+                                scope: this.scope,
+                            })
+                            .then(() => {
+                                alert("Successfully sent WOL");
+                            })
+                            .catch(() => {
+                                alert("failed to send WOL");
+                            });
+                    }}
+                    >WOL</sp-button
+                >`,
         ];
+    }
+    renderObjectCreate(): TemplateResult {
+        return html`
+            <ak-forms-modal>
+                <span slot="submit"> ${`Create`} </span>
+                <span slot="header"> ${`Create lease`} </span>
+                <gravity-dhcp-lease-form slot="form" scope=${this.scope}> </gravity-dhcp-lease-form>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+            </ak-forms-modal>
+        `;
     }
 }

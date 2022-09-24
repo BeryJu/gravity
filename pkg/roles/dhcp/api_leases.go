@@ -15,7 +15,7 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 		Identifier       string `json:"identifier" required:"true"`
 		Address          string `json:"address" required:"true"`
 		Hostname         string `json:"hostname" required:"true"`
-		AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
+		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
 		ScopeKey         string `json:"scopeKey" required:"true"`
 		DNSZone          string `json:"dnsZone"`
 	}

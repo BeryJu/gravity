@@ -1,4 +1,4 @@
-import { DnsRecord, DnsZone, RolesDnsApi } from "gravity-api";
+import { DnsRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
