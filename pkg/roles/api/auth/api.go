@@ -22,7 +22,7 @@ func (ap *AuthProvider) apiHandlerAuthUserMe() usecase.Interactor {
 			output.Authenticated = false
 			return nil
 		}
-		user := u.(*User)
+		user := u.(User)
 		output.Authenticated = true
 		output.Username = user.Username
 		return nil

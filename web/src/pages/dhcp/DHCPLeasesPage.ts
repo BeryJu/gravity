@@ -1,7 +1,7 @@
+import { DhcpLease, RolesDhcpApi } from "gravity-api";
+
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-
-import { DhcpLease, RolesDhcpApi } from "gravity-api";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";

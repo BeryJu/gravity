@@ -1,5 +1,5 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
@@ -8,21 +8,11 @@ import PFGlobal from "@patternfly/patternfly/patternfly-base.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_SIDEBAR_TOGGLE } from "../../common/constants";
-import { first } from "../../common/utils";
 import { AKElement } from "../Base";
 
 // If the viewport is wider than MIN_WIDTH, the sidebar
 // is shown besides the content, and not overlaid.
 export const MIN_WIDTH = 1200;
-
-export const DefaultTenant = {
-    brandingLogo: "/static/dist/assets/icons/icon_left_brand.svg",
-    brandingFavicon: "/static/dist/assets/icons/icon.png",
-    brandingTitle: "authentik",
-    uiFooterLinks: [],
-    matchedDomain: "",
-    defaultLocale: "",
-};
 
 @customElement("ak-sidebar-brand")
 export class SidebarBrand extends AKElement {

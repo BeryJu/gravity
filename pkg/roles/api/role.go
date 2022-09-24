@@ -13,7 +13,6 @@ import (
 	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/openapi-go/openapi3"
-	"github.com/swaggest/rest/nethttp"
 	"github.com/swaggest/rest/web"
 	swgui "github.com/swaggest/swgui/v4emb"
 )
@@ -29,11 +28,12 @@ type Role struct {
 }
 
 func New(instance roles.Instance) *Role {
+	sess := sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 	r := &Role{
 		log:      instance.Log(),
 		i:        instance,
 		m:        mux.NewRouter(),
-		sessions: sessions.NewCookieStore(securecookie.GenerateRandomKey(32)),
+		sessions: sess,
 	}
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
@@ -63,7 +63,6 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi = web.DefaultService()
 	r.oapi.OpenAPI.Info.Title = "gravity"
 	r.oapi.OpenAPI.Info.Version = extconfig.Version
-	r.oapi.Use(nethttp.HTTPBasicSecurityMiddleware(r.oapi.OpenAPICollector, "Admin", "Admin access"))
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()

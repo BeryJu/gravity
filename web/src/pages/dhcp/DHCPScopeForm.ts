@@ -1,10 +1,9 @@
+import { DhcpScope, RolesDhcpApi } from "gravity-api";
 import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
-
-import { DhcpScope, RolesDhcpApi } from "gravity-api";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
@@ -38,13 +37,11 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
 
     renderForm(): TemplateResult {
         return html`<form class="pf-c-form pf-m-horizontal">
-            ${this.instance ? html`` : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
-                <input
-                    type="text"
-                    class="pf-c-form-control"
-                    required
-                />
-            </ak-form-element-horizontal>`}
+            ${this.instance
+                ? html``
+                : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
+                      <input type="text" class="pf-c-form-control" required />
+                  </ak-form-element-horizontal>`}
             <ak-form-element-horizontal name="_default">
                 <div class="pf-c-check">
                     <input

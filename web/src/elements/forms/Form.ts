@@ -1,6 +1,7 @@
 import "@polymer/iron-form/iron-form";
 import { IronFormElement } from "@polymer/iron-form/iron-form";
 import "@polymer/paper-input/paper-input";
+import { ResponseError } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -12,8 +13,6 @@ import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
-import { ResponseError } from "gravity-api";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";

@@ -720,14 +720,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiRoleAPIConfigOutput'
           description: OK
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Unauthorized
-      security:
-      - Admin: []
       summary: API role config
       tags:
       - roles/api
@@ -747,20 +739,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Bad Request
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Unauthorized
         "500":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
-      security:
-      - Admin: []
       summary: API role config
       tags:
       - roles/api
@@ -1440,8 +1424,3 @@ components:
           description: Status text.
           type: string
       type: object
-  securitySchemes:
-    Admin:
-      description: Admin access
-      scheme: basic
-      type: http

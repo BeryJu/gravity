@@ -1,3 +1,5 @@
+import { RolesApiApi } from "gravity-api";
+
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
@@ -6,6 +8,7 @@ import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
+import { DEFAULT_CONFIG } from "./api/Config";
 import { AKElement } from "./elements/Base";
 import { Route } from "./elements/router/Route";
 import "./elements/router/RouterOutlet";
@@ -15,6 +18,10 @@ import "./pages/OverviewPage";
 
 export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
+    new Route(new RegExp("^/login$"), async () => {
+        await import("./LoginPage");
+        return html`<gravity-login></gravity-login>`;
+    }),
     new Route(new RegExp("^/overview$"), async () => {
         await import("./pages/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
@@ -71,6 +78,14 @@ export class AdminInterface extends AKElement {
                 }
             `,
         ];
+    }
+
+    firstUpdated(): void {
+        new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
+            if (!me.authenticated) {
+                window.location.href = "#/login";
+            }
+        });
     }
 
     render(): TemplateResult {
