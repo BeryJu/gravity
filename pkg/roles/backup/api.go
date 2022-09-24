@@ -8,7 +8,7 @@ import (
 
 func (r *Role) apiHandlerBackupStart() usecase.Interactor {
 	type backupStartInput struct {
-		Wait bool `query:"wait"`
+		Wait bool `query:"wait" required:"true"`
 	}
 	u := usecase.NewIOI(new(backupStartInput), new(BackupStatus), func(ctx context.Context, input, output interface{}) error {
 		var (

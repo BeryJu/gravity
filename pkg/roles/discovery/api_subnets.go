@@ -11,8 +11,10 @@ import (
 
 func (r *Role) apiHandlerSubnets() usecase.Interactor {
 	type subnet struct {
-		CIDR         string `json:"cidr"`
-		DiscoveryTTL int    `json:"discoveryTTL"`
+		Name string `json:"name" required:"true"`
+
+		CIDR         string `json:"cidr" required:"true"`
+		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	type subnetsOutput struct {
 		Subnets []subnet `json:"subnets"`
@@ -33,6 +35,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 				continue
 			}
 			out.Subnets = append(out.Subnets, subnet{
+				Name:         sub.Identifier,
 				CIDR:         sub.CIDR,
 				DiscoveryTTL: sub.DiscoveryTTL,
 			})
@@ -48,10 +51,10 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 
 func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	type subnetsInput struct {
-		Name string `query:"identifier"`
+		Name string `query:"identifier" required:"true"`
 
-		SubnetCIDR   string `json:"subnetCidr"`
-		DiscoveryTTL int    `json:"discoveryTTL"`
+		SubnetCIDR   string `json:"subnetCidr" required:"true"`
+		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	u := usecase.NewIOI(new(subnetsInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

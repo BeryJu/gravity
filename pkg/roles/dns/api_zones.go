@@ -9,10 +9,10 @@ import (
 
 func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 	type zone struct {
-		Name           string              `json:"name"`
-		Authoritative  bool                `json:"authoritative"`
-		HandlerConfigs []map[string]string `json:"handlerConfigs"`
-		DefaultTTL     uint32              `json:"defaultTTL"`
+		Name           string              `json:"name" required:"true"`
+		Authoritative  bool                `json:"authoritative" required:"true"`
+		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
+		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	}
 	type zonesOutput struct {
 		Zones []zone `json:"zones"`
@@ -37,10 +37,10 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 	type zoneInput struct {
-		Name           string              `query:"zone"`
-		Authoritative  bool                `json:"authoritative"`
-		HandlerConfigs []map[string]string `json:"handlerConfigs"`
-		DefaultTTL     uint32              `json:"defaultTTL"`
+		Name           string              `query:"zone" required:"true"`
+		Authoritative  bool                `json:"authoritative" required:"true"`
+		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
+		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	}
 	u := usecase.NewIOI(new(zoneInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

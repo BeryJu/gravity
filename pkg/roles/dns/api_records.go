@@ -15,12 +15,12 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 		Zone string `query:"zone"`
 	}
 	type record struct {
-		UID      string `json:"uid"`
-		FQDN     string `json:"fqdn"`
-		Hostname string `json:"hostname"`
-		Type     string `json:"type"`
+		UID      string `json:"uid" required:"true"`
+		FQDN     string `json:"fqdn" required:"true"`
+		Hostname string `json:"hostname" required:"true"`
+		Type     string `json:"type" required:"true"`
 
-		Data         string `json:"data"`
+		Data         string `json:"data" required:"true"`
 		MXPreference uint16 `json:"mxPreference,omitempty"`
 		SRVPort      uint16 `json:"srvPort,omitempty"`
 		SRVPriority  uint16 `json:"srvPriority,omitempty"`
@@ -75,13 +75,13 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 	type recordsInput struct {
-		Zone     string `query:"zone"`
-		Hostname string `query:"hostname"`
+		Zone     string `query:"zone" required:"true"`
+		Hostname string `query:"hostname" required:"true"`
 		UID      string `query:"uid"`
 
-		Type string `json:"type"`
+		Type string `json:"type" required:"true"`
 
-		Data         string `json:"data"`
+		Data         string `json:"data" required:"true"`
 		MXPreference uint16 `json:"mxPreference,omitempty"`
 		SRVPort      uint16 `json:"srvPort,omitempty"`
 		SRVPriority  uint16 `json:"srvPriority,omitempty"`

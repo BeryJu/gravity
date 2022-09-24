@@ -10,12 +10,12 @@ import (
 
 func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 	type scope struct {
-		Name       string            `json:"scope"`
-		SubnetCIDR string            `json:"subnetCidr"`
-		Default    bool              `json:"default"`
-		Options    []*Option         `json:"options"`
-		TTL        int64             `json:"ttl"`
-		IPAM       map[string]string `json:"ipam"`
+		Name       string            `json:"scope" required:"true"`
+		SubnetCIDR string            `json:"subnetCidr" required:"true"`
+		Default    bool              `json:"default" required:"true"`
+		Options    []*Option         `json:"options" required:"true"`
+		TTL        int64             `json:"ttl" required:"true"`
+		IPAM       map[string]string `json:"ipam" required:"true"`
 		DNS        struct {
 			Zone              string   `json:"zone"`
 			Search            []string `json:"search"`
@@ -50,12 +50,12 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 	type scopesInput struct {
-		Name string `query:"scope"`
+		Name string `query:"scope" required:"true"`
 
-		SubnetCIDR string            `json:"subnetCidr"`
-		Default    bool              `json:"default"`
-		Options    []*Option         `json:"options"`
-		TTL        int64             `json:"ttl"`
+		SubnetCIDR string            `json:"subnetCidr" required:"true"`
+		Default    bool              `json:"default" required:"true"`
+		Options    []*Option         `json:"options" required:"true"`
+		TTL        int64             `json:"ttl" required:"true"`
 		IPAM       map[string]string `json:"ipam"`
 		DNS        struct {
 			Zone              string   `json:"zone"`
@@ -96,7 +96,7 @@ func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 
 func (r *Role) apiHandlerScopesDelete() usecase.Interactor {
 	type scopesInput struct {
-		Scope string `query:"scope"`
+		Scope string `query:"scope" required:"true"`
 	}
 	u := usecase.NewIOI(new(scopesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (

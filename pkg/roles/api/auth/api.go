@@ -12,8 +12,8 @@ import (
 
 func (ap *AuthProvider) apiHandlerAuthUserMe() usecase.Interactor {
 	type userMeOutput struct {
-		Authenticated bool   `json:"authenticated"`
-		Username      string `json:"username"`
+		Authenticated bool   `json:"authenticated" required:"true"`
+		Username      string `json:"username" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *userMeOutput) error {
 		session := ctx.Value(types.RequestSession).(*sessions.Session)

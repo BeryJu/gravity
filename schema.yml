@@ -114,6 +114,7 @@ paths:
       parameters:
       - in: query
         name: wait
+        required: true
         schema:
           type: boolean
       responses:
@@ -132,6 +133,7 @@ paths:
       parameters:
       - in: query
         name: scope
+        required: true
         schema:
           type: string
       responses:
@@ -169,6 +171,7 @@ paths:
       parameters:
       - in: query
         name: scope
+        required: true
         schema:
           type: string
       requestBody:
@@ -246,10 +249,12 @@ paths:
       parameters:
       - in: query
         name: identifier
+        required: true
         schema:
           type: string
       - in: query
         name: scope
+        required: true
         schema:
           type: string
       requestBody:
@@ -281,10 +286,12 @@ paths:
       parameters:
       - in: query
         name: identifier
+        required: true
         schema:
           type: string
       - in: query
         name: scope
+        required: true
         schema:
           type: string
       responses:
@@ -330,6 +337,7 @@ paths:
       parameters:
       - in: query
         name: identifier
+        required: true
         schema:
           type: string
       requestBody:
@@ -436,6 +444,7 @@ paths:
       parameters:
       - in: query
         name: identifier
+        required: true
         schema:
           type: string
       requestBody:
@@ -504,6 +513,7 @@ paths:
       parameters:
       - in: query
         name: zone
+        required: true
         schema:
           type: string
       requestBody:
@@ -609,10 +619,12 @@ paths:
       parameters:
       - in: query
         name: zone
+        required: true
         schema:
           type: string
       - in: query
         name: hostname
+        required: true
         schema:
           type: string
       - in: query
@@ -987,6 +999,9 @@ components:
           type: boolean
         username:
           type: string
+      required:
+      - authenticated
+      - username
       type: object
     AuthUsersLoginOutput:
       properties:
@@ -1045,6 +1060,11 @@ components:
           type: string
         scopeKey:
           type: string
+      required:
+      - identifier
+      - address
+      - hostname
+      - scopeKey
       type: object
     DhcpLeasesInputType2:
       properties:
@@ -1056,6 +1076,10 @@ components:
           type: string
         hostname:
           type: string
+      required:
+      - address
+      - hostname
+      - addressLeaseTime
       type: object
     DhcpLeasesOutput:
       properties:
@@ -1064,6 +1088,8 @@ components:
             $ref: '#/components/schemas/DhcpLease'
           nullable: true
           type: array
+      required:
+      - leases
       type: object
     DhcpOption:
       properties:
@@ -1132,6 +1158,13 @@ components:
           type: string
         ttl:
           type: integer
+      required:
+      - scope
+      - subnetCidr
+      - default
+      - options
+      - ttl
+      - ipam
       type: object
     DhcpScopesInput:
       properties:
@@ -1163,6 +1196,11 @@ components:
           type: string
         ttl:
           type: integer
+      required:
+      - subnetCidr
+      - default
+      - options
+      - ttl
       type: object
     DhcpScopesOutput:
       properties:
@@ -1180,6 +1218,10 @@ components:
           type: string
         mac:
           type: string
+      required:
+      - hostname
+      - ip
+      - mac
       type: object
     DiscoveryDeviceApplyInput:
       properties:
@@ -1192,6 +1234,10 @@ components:
           - dhcp
           - dns
           type: string
+      required:
+      - to
+      - dhcpScope
+      - dnsZone
       type: object
     DiscoveryDevicesOutput:
       properties:
@@ -1223,6 +1269,12 @@ components:
           type: string
         discoveryTTL:
           type: integer
+        name:
+          type: string
+      required:
+      - name
+      - cidr
+      - discoveryTTL
       type: object
     DiscoverySubnetsInput:
       properties:
@@ -1230,6 +1282,9 @@ components:
           type: integer
         subnetCidr:
           type: string
+      required:
+      - subnetCidr
+      - discoveryTTL
       type: object
     DiscoverySubnetsOutput:
       properties:
@@ -1263,6 +1318,12 @@ components:
           type: string
         uid:
           type: string
+      required:
+      - uid
+      - fqdn
+      - hostname
+      - type
+      - data
       type: object
     DnsRecordsInputType2:
       properties:
@@ -1282,6 +1343,9 @@ components:
           type: integer
         type:
           type: string
+      required:
+      - type
+      - data
       type: object
     DnsRecordsOutput:
       properties:
@@ -1323,6 +1387,11 @@ components:
           type: array
         name:
           type: string
+      required:
+      - name
+      - authoritative
+      - handlerConfigs
+      - defaultTTL
       type: object
     DnsZoneInput:
       properties:
@@ -1338,6 +1407,10 @@ components:
             type: object
           nullable: true
           type: array
+      required:
+      - authoritative
+      - handlerConfigs
+      - defaultTTL
       type: object
     DnsZonesOutput:
       properties:

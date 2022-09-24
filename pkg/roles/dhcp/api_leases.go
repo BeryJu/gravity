@@ -12,15 +12,15 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 		ScopeName string `query:"scope"`
 	}
 	type lease struct {
-		Identifier       string `json:"identifier"`
-		Address          string `json:"address"`
-		Hostname         string `json:"hostname"`
+		Identifier       string `json:"identifier" required:"true"`
+		Address          string `json:"address" required:"true"`
+		Hostname         string `json:"hostname" required:"true"`
 		AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
-		ScopeKey         string `json:"scopeKey"`
+		ScopeKey         string `json:"scopeKey" required:"true"`
 		DNSZone          string `json:"dnsZone"`
 	}
 	type leasesOutput struct {
-		Leases []*lease `json:"leases"`
+		Leases []*lease `json:"leases" required:"true"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(leasesOutput), func(ctx context.Context, input, output interface{}) error {
 		var (
@@ -49,12 +49,12 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `query:"identifier"`
-		Scope      string `query:"scope"`
+		Identifier string `query:"identifier" required:"true"`
+		Scope      string `query:"scope" required:"true"`
 
-		Address          string `json:"address"`
-		Hostname         string `json:"hostname"`
-		AddressLeaseTime string `json:"addressLeaseTime"`
+		Address          string `json:"address" required:"true"`
+		Hostname         string `json:"hostname" required:"true"`
+		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
 		DNSZone          string `json:"dnsZone"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
@@ -87,8 +87,8 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `query:"identifier"`
-		Scope      string `query:"scope"`
+		Identifier string `query:"identifier" required:"true"`
+		Scope      string `query:"scope" required:"true"`
 	}
 	u := usecase.NewIOI(new(leasesInput), new(struct{}), func(ctx context.Context, input, output interface{}) error {
 		var (
