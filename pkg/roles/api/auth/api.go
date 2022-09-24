@@ -79,7 +79,7 @@ func (ap *AuthProvider) apiHandlerAuthUserLogin() usecase.Interactor {
 	u.SetTitle("API Users")
 	u.SetTags("roles/api")
 	u.SetExpectedErrors(status.Internal)
-	u.SetExpectedErrors(status.Aborted)
+	u.SetExpectedErrors(status.Unauthenticated)
 	return u
 }
 
