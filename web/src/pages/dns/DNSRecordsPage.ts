@@ -16,7 +16,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     zone?: string;
 
     pageTitle(): string {
-        return `DNS Records for ${this.zone}`;
+        return `DNS Records for ${this.zone === "." ? "Root Zone" : this.zone}`;
     }
     pageDescription(): string | undefined {
         return undefined;

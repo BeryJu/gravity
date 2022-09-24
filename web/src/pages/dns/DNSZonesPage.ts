@@ -50,7 +50,9 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     }
     row(item: DnsZone): TemplateResult[] {
         return [
-            html`<a href=${`#/dns/zones/${item.name}`}>${item.name}</a>`,
+            html`<a href=${`#/dns/zones/${item.name}`}>
+                ${item.name === "." ? "Root Zone" : item.name}
+            </a>`,
             html`${item.authoritative ? "Yes" : "No"}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${`Update`} </span>
