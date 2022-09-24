@@ -1,7 +1,7 @@
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { InstanceInstanceInfo, InstancesApi } from "@beryju/gravity-api";
+import { InstanceInstanceInfo, InstancesApi } from "gravity-api";
 
 import { DEFAULT_CONFIG } from "../api/Config";
 import "../elements/chips/Chip";

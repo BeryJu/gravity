@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 
 
-import { DhcpScope, RolesDhcpApi } from "@beryju/gravity-api";
+import { DhcpScope, RolesDhcpApi } from "gravity-api";
 
 
 

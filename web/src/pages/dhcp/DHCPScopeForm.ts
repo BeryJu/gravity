@@ -4,7 +4,7 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import { DhcpScope, RolesDhcpApi } from "@beryju/gravity-api";
+import { DhcpScope, RolesDhcpApi } from "gravity-api";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
