@@ -8,6 +8,7 @@ import "../../elements/forms/DeleteBulkForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./DNSRecordForm";
 
 @customElement("gravity-dns-records")
 export class DNSRecordsPage extends TablePage<DnsRecord> {
@@ -54,6 +55,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
             new TableColumn("Hostname"),
             new TableColumn("Record Type"),
             new TableColumn("Data"),
+            new TableColumn("Actions"),
         ];
     }
 
@@ -62,6 +64,19 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
             html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
             html`${item.type}`,
             html`${item.data}`,
+            html`<ak-forms-modal>
+                <span slot="submit"> ${`Update`} </span>
+                <span slot="header"> ${`Update Zone`} </span>
+                <gravity-dns-record-form
+                    slot="form"
+                    zone=${this.zone}
+                    .instancePk=${item.hostname + item.uid}
+                >
+                </gravity-dns-record-form>
+                <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </ak-forms-modal>`,
         ];
     }
 
@@ -88,5 +103,16 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
                 ${`Delete`}
             </button>
         </ak-forms-delete-bulk>`;
+    }
+
+    renderObjectCreate(): TemplateResult {
+        return html`
+            <ak-forms-modal>
+                <span slot="submit"> ${`Create`} </span>
+                <span slot="header"> ${`Create Record`} </span>
+                <gravity-dns-record-form zone=${this.zone} slot="form"> </gravity-dns-record-form>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
+            </ak-forms-modal>
+        `;
     }
 }

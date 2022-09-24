@@ -10,7 +10,7 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 
-@customElement("gravity-dhcp-zone-form")
+@customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
     loadInstance(pk: string): Promise<DhcpScope> {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {

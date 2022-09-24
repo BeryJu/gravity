@@ -22,6 +22,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     pageIcon(): string {
         return "";
     }
+    checkbox = true;
 
     searchEnabled(): boolean {
         return true;
@@ -41,12 +42,25 @@ export class DNSZonesPage extends TablePage<DnsZone> {
         });
     }
     columns(): TableColumn[] {
-        return [new TableColumn("Zone"), new TableColumn("Authoritative")];
+        return [
+            new TableColumn("Zone"),
+            new TableColumn("Authoritative"),
+            new TableColumn("Actions"),
+        ];
     }
     row(item: DnsZone): TemplateResult[] {
         return [
             html`<a href=${`#/dns/zones/${item.name}`}>${item.name}</a>`,
-            html`${item.authoritative}`,
+            html`${item.authoritative ? "Yes" : "No"}`,
+            html`<ak-forms-modal>
+                <span slot="submit"> ${`Update`} </span>
+                <span slot="header"> ${`Update Zone`} </span>
+                <gravity-dns-zone-form slot="form" .instancePk=${item.name}>
+                </gravity-dns-zone-form>
+                <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </ak-forms-modal>`,
         ];
     }
 
@@ -60,6 +74,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
             </ak-forms-modal>
         `;
     }
+
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk

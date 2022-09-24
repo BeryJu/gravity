@@ -46,13 +46,22 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     }
 
     columns(): TableColumn[] {
-        return [new TableColumn("Scope"), new TableColumn("Subnet")];
+        return [new TableColumn("Scope"), new TableColumn("Subnet"), new TableColumn("Actions")];
     }
 
     row(item: DhcpScope): TemplateResult[] {
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`${item.subnetCidr}`,
+            html`<ak-forms-modal>
+                <span slot="submit"> ${`Update`} </span>
+                <span slot="header"> ${`Update Scope`} </span>
+                <gravity-dhcp-scope-form slot="form" .instancePk=${item.scope}>
+                </gravity-dhcp-scope-form>
+                <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </ak-forms-modal>`,
         ];
     }
 
@@ -84,7 +93,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
             <ak-forms-modal>
                 <span slot="submit"> ${`Create`} </span>
                 <span slot="header"> ${`Create Scope`} </span>
-                <gravity-dhcp-zone-form slot="form"> </gravity-dhcp-zone-form>
+                <gravity-dhcp-scope-form slot="form"> </gravity-dhcp-scope-form>
                 <button slot="trigger" class="pf-c-button pf-m-primary">${`Create`}</button>
             </ak-forms-modal>
         `;
