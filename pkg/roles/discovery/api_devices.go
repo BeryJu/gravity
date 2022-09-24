@@ -12,9 +12,10 @@ import (
 
 func (r *Role) apiHandlerDevices() usecase.Interactor {
 	type device struct {
-		Hostname string `json:"hostname" required:"true"`
-		IP       string `json:"ip" required:"true"`
-		MAC      string `json:"mac" required:"true"`
+		Identifier string `json:"identifier" required:"true"`
+		Hostname   string `json:"hostname" required:"true"`
+		IP         string `json:"ip" required:"true"`
+		MAC        string `json:"mac" required:"true"`
 	}
 	type devicesOutput struct {
 		Devices []device `json:"devices"`
@@ -30,9 +31,10 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 		for _, rawDev := range rawDevices.Kvs {
 			dev := r.deviceFromKV(rawDev)
 			output.Devices = append(output.Devices, device{
-				Hostname: dev.Hostname,
-				IP:       dev.IP,
-				MAC:      dev.MAC,
+				Identifier: dev.Identifier,
+				Hostname:   dev.Hostname,
+				IP:         dev.IP,
+				MAC:        dev.MAC,
 			})
 		}
 		return nil

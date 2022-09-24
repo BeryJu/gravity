@@ -79,7 +79,7 @@ export class SidebarBrand extends AKElement {
                   `
                 : html``}
             <a href="#/" class="pf-c-page__header-brand-link">
-                <div class="pf-c-brand ak-brand">Gravity</div>
+                <div class="pf-c-brand ak-brand">Gravity.</div>
             </a>`;
     }
 }

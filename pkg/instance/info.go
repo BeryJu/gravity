@@ -16,10 +16,10 @@ import (
 )
 
 type InstanceInfo struct {
-	Version    string `json:"version"`
-	Roles      string `json:"roles"`
-	Identifier string `json:"identifier"`
-	IP         string `json:"ip"`
+	Version    string `json:"version" required:"true"`
+	Roles      string `json:"roles" required:"true"`
+	Identifier string `json:"identifier" required:"true"`
+	IP         string `json:"ip" required:"true"`
 }
 
 func (i *Instance) getInfo() *InstanceInfo {
@@ -33,7 +33,7 @@ func (i *Instance) getInfo() *InstanceInfo {
 
 func (i *Instance) apiHandlerInstances() usecase.Interactor {
 	type instancesOutput struct {
-		Instances []InstanceInfo `json:"instances"`
+		Instances []InstanceInfo `json:"instances" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *instancesOutput) error {
 		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()

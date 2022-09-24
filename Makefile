@@ -2,7 +2,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.1.5"
+VERSION = "0.1.6"
 GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=$(VERSION)" -v
 
 docker-build:
@@ -33,7 +33,12 @@ gen-client-ts:
 		--git-user-id gravity
 	cd gen-ts-api && npm i
 
-gen: gen-build gen-clean gen-client-ts
+gen-client-ts-update: gen-client-ts
+	cd gen-ts-api && npm publish
+	cd web && npm i gravity-api@$(VERSION)
+	cd web && git add package*.json
+
+gen: gen-build gen-clean gen-client-ts-update
 
 test-etcd-start:
 	docker run \

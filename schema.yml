@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.5
+  version: 0.1.6
 paths:
   /api/v1/auth/config:
     get:
@@ -1245,11 +1245,14 @@ components:
       properties:
         hostname:
           type: string
+        identifier:
+          type: string
         ip:
           type: string
         mac:
           type: string
       required:
+      - identifier
       - hostname
       - ip
       - mac
@@ -1491,6 +1494,11 @@ components:
           type: string
         version:
           type: string
+      required:
+      - version
+      - roles
+      - identifier
+      - ip
       type: object
     InstanceInstancesOutput:
       properties:
@@ -1499,6 +1507,8 @@ components:
             $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
+      required:
+      - instances
       type: object
     MonitoringRoleConfig:
       nullable: true

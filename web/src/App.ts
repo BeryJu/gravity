@@ -19,16 +19,12 @@ import "./pages/overview/OverviewPage";
 export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
     new Route(new RegExp("^/login$"), async () => {
-        await import("./LoginPage");
+        await import("./pages/LoginPage");
         return html`<gravity-login></gravity-login>`;
     }),
     new Route(new RegExp("^/overview$"), async () => {
         await import("./pages/overview/OverviewPage");
         return html`<gravity-overview></gravity-overview>`;
-    }),
-    new Route(new RegExp("^/cluster/nodes$"), async () => {
-        await import("./pages/cluster/ClusterNodesPage");
-        return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route(new RegExp("^/dns/zones$"), async () => {
         await import("./pages/dns/DNSZonesPage");
@@ -45,6 +41,14 @@ export const ROUTES = [
     new Route(new RegExp("^/dhcp/scopes/(?<scope>.*)$"), async (args) => {
         await import("./pages/dhcp/DHCPLeasesPage");
         return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
+    }),
+    new Route(new RegExp("^/cluster/roles$"), async () => {
+        await import("./pages/cluster/RolesPage");
+        return html`<gravity-cluster-roles></gravity-cluster-roles>`;
+    }),
+    new Route(new RegExp("^/cluster/nodes$"), async () => {
+        await import("./pages/cluster/ClusterNodesPage");
+        return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
 ];
 
@@ -147,16 +151,10 @@ export class AdminInterface extends AKElement {
                     <span slot="label">Subnets</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
-            <ak-sidebar-item .expanded=${true}>
-                <span slot="label">Backup</span>
-                <ak-sidebar-item path="/backup/status">
-                    <span slot="label">Status</span>
-                </ak-sidebar-item>
-            </ak-sidebar-item>
             <ak-sidebar-item>
                 <span slot="label">${"Cluster"}</span>
                 <ak-sidebar-item path="/cluster/roles">
-                    <span slot="label">Instance Roles</span>
+                    <span slot="label">Roles</span>
                 </ak-sidebar-item>
                 <ak-sidebar-item path="/cluster/nodes">
                     <span slot="label">Nodes</span>

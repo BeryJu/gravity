@@ -11,9 +11,9 @@ import PFLogin from "@patternfly/patternfly/components/Login/login.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { DEFAULT_CONFIG } from "./api/Config";
-import { AKElement } from "./elements/Base";
-import { Form } from "./elements/forms/Form";
+import { DEFAULT_CONFIG } from "../api/Config";
+import { AKElement } from "../elements/Base";
+import { Form } from "../elements/forms/Form";
 import "./elements/forms/HorizontalFormElement";
 
 @customElement("gravity-login-form")
@@ -117,7 +117,7 @@ export class LoginPage extends AKElement {
             </div>
             <div class="pf-c-login">
                 <div class="pf-c-login__container">
-                    <header class="pf-c-login__header">Gravity</header>
+                    <header class="pf-c-login__header">Gravity.</header>
                     <main class="pf-c-login__main">
                         <header class="pf-c-login__main-header">
                             <h1 class="pf-c-title pf-m-3xl">Log in to Gravity.</h1>
