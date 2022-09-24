@@ -34,8 +34,6 @@ export class SidebarUser extends AKElement {
 
     render(): TemplateResult {
         return html`
-            <a href="/if/user/#/settings" class="pf-c-nav__link user-avatar" id="user-settings">
-            </a>
             <a href="/flows/-/default/invalidation/" class="pf-c-nav__link user-logout" id="logout">
                 <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
             </a>

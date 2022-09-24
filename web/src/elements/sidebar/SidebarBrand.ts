@@ -46,6 +46,7 @@ export class SidebarBrand extends AKElement {
                 .ak-brand {
                     width: 100%;
                     font-size: 3rem;
+                    color: var(--ak-accent);
                     text-align: center;
                 }
             `,

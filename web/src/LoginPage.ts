@@ -65,8 +65,9 @@ export class LoginPage extends AKElement {
             PFBackgroundImage,
             AKElement.GlobalStyle,
             css`
-                .pf-c-background-image::before {
-                    --ak-flow-background: url("./static/assets/images/pfbg_1200.jpg");
+                .pf-c-login__header {
+                    font-size: 3rem;
+                    color: var(--ak-accent);
                 }
             `,
         ];
@@ -115,10 +116,6 @@ export class LoginPage extends AKElement {
                         <div class="pf-c-login__main-body">
                             <gravity-login-form></gravity-login-form>
                         </div>
-                        <footer class="pf-c-login__main-footer">
-                            <ul class="pf-c-login__main-footer-links"></ul>
-                            <div class="pf-c-login__main-footer-band"></div>
-                        </footer>
                     </main>
                     <footer class="pf-c-login__footer"></footer>
                 </div>
