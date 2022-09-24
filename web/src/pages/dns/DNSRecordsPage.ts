@@ -48,7 +48,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
                 data.sort((a, b) => {
                     if (a.fqdn > b.fqdn) return 1;
                     if (a.fqdn < b.fqdn) return -1;
-                    return 0;
+                    return parseInt(a.uid) - parseInt(b.uid);
                 });
                 return PaginationWrapper(data);
             });

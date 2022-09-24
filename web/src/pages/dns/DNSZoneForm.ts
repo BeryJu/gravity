@@ -3,7 +3,6 @@ import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
@@ -18,7 +17,7 @@ export const DEFAULT_HANDLER_CONFIG = [
         type: "etcd",
     },
     {
-        type: "forward",
+        type: "forward_ip",
         to: "8.8.8.8:53",
     },
 ];
@@ -52,14 +51,9 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
         return html`<form class="pf-c-form pf-m-horizontal">
             ${this.instance
                 ? html``
-                : html`
-            <ak-form-element-horizontal label="Name" ?required=${true} name="zone">
-                <input
-                    type="text"
-                    class="pf-c-form-control"
-                    required
-                />
-            </ak-form-element-horizontal>`}
+                : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
+                      <input type="text" class="pf-c-form-control" required />
+                  </ak-form-element-horizontal>`}
             <ak-form-element-horizontal name="authoritative">
                 <div class="pf-c-check">
                     <input
