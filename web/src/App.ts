@@ -1,7 +1,7 @@
 import { RolesApiApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
@@ -50,6 +50,9 @@ export const ROUTES = [
 
 @customElement("gravity-app")
 export class AdminInterface extends AKElement {
+    @property({ type: Boolean })
+    showSidebar = true;
+
     static get styles(): CSSResult[] {
         return [
             PFBase,
@@ -83,13 +86,21 @@ export class AdminInterface extends AKElement {
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             if (!me.authenticated) {
+                this.showSidebar = false;
                 window.location.href = "#/login";
             }
         });
     }
 
     render(): TemplateResult {
-        return html` <div class="pf-c-page">
+        if (!this.showSidebar) {
+            return html`<div class="pf-c-page">
+                <main class="pf-c-page__main">
+                    <ak-router-outlet class="pf-c-page__main" .routes=${ROUTES}> </ak-router-outlet>
+                </main>
+            </div>`;
+        }
+        return html`<div class="pf-c-page">
             <ak-sidebar class="pf-c-page__sidebar pf-m-expanded">
                 ${this.renderSidebarItems()}
             </ak-sidebar>
