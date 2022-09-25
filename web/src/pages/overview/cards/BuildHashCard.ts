@@ -12,7 +12,7 @@ export class BuildHashCard extends AdminStatusCard<string> {
 
     getPrimaryValue(): Promise<string> {
         return new InstancesApi(DEFAULT_CONFIG).rootGetInfo().then((info) => {
-            return info.buildHash;
+            return info.buildHash.substring(0, 8);
         });
     }
 

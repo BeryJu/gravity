@@ -4,7 +4,8 @@ import (
 	"strings"
 )
 
-var Version = "0.0.1"
+// Set via ldflags
+var Version = ""
 var BuildHash = ""
 
 func FullVersion() string {
