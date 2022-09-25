@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
 	log "github.com/sirupsen/logrus"
 )
@@ -11,7 +12,7 @@ func NewRecoverMiddleware(l *log.Entry) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
-				err := recover()
+				err := extconfig.Recover()
 				if err == nil {
 					return
 				}

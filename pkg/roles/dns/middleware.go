@@ -5,6 +5,7 @@ import (
 	"net"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
@@ -14,7 +15,7 @@ import (
 func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		defer func() {
-			err := recover()
+			err := extconfig.Recover()
 			if err == nil {
 				return
 			}
