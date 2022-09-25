@@ -15,6 +15,7 @@ Fully-replicated DNS and DHCP Server using etcd
 The following environment variables can be set:
 
 - `DEBUG`: Enable debug mode
+- `LOG_LEVEL`: Log level, defaults to `info`.
 - `DATA_PATH`: Path to store etcd data, defaults to `./data`
 - `ETCD_PREFIX`: Global etcd prefix, defaults to `/gravity`
 - `ETCD_ENDPOINT`: etcd Client endpoint, defaults to `localhost:2379` when using embedded etcd

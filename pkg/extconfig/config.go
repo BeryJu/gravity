@@ -12,6 +12,7 @@ import (
 
 type ExtConfig struct {
 	Debug    bool   `env:"DEBUG,default=false"`
+	LogLevel string `env:"LOG_LEVEL,default=info"`
 	DataPath string `env:"DATA_PATH,default=./data"`
 	Etcd     struct {
 		Prefix      string `env:"ETCD_PREFIX,default=/gravity"`
@@ -72,10 +73,15 @@ func (e *ExtConfig) Listen(port int32) string {
 }
 
 func (e *ExtConfig) defaults() {
-	log.SetLevel(log.TraceLevel)
 	if e.Debug {
+		log.SetLevel(log.TraceLevel)
 		log.SetFormatter(&log.TextFormatter{})
 	} else {
+		l, err := log.ParseLevel(e.LogLevel)
+		if err != nil {
+			l = log.WarnLevel
+		}
+		log.SetLevel(l)
 		log.SetFormatter(&log.JSONFormatter{
 			DisableHTMLEscape: true,
 		})
