@@ -1,6 +1,6 @@
 {
     "name": "@beryju/gravity-web",
-    "version": "0.0.1",
+    "version": "0.1.8",
     "description": "",
     "scripts": {
         "build": "rm -rf dist/ && rollup -c",

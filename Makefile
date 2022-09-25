@@ -6,6 +6,12 @@ VERSION = "0.1.8"
 GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=${VERSION}" -v
 SCHEMA_FILE = schema.yml
 
+ci--env:
+	echo "##[set-output name=sha]${GITHUB_SHA}"
+	echo "##[set-output name=build]${GITHUB_RUN_ID}"
+	echo "##[set-output name=timestamp]$(shell date +%s)"
+	echo "##[set-output name=version]${VERSION}"
+
 docker-build:
 	go build \
 		${GO_FLAGS} \
@@ -14,6 +20,11 @@ docker-build:
 
 run:
 	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run ${GO_FLAGS} . server
+
+web-build:
+	cd web && npm ci
+	cd web && npm version ${VERSION}
+	cd web && npm run build
 
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . cli generateSchema ${SCHEMA_FILE}

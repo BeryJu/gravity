@@ -4,8 +4,8 @@ FROM --platform=${BUILDPLATFORM} docker.io/node:18 as web-builder
 COPY ./web /work/web/
 
 ENV NODE_ENV=production
-WORKDIR /work/web
-RUN npm ci && npm run build
+WORKDIR /work
+RUN make web-build
 
 # Stage 2: Build
 FROM golang:1.19.1 as builder
