@@ -31,8 +31,9 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           tags: |
+            ghcr.io/beryju/gravity:latest-${{ matrix.arch }}
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}-${{ matrix.arch }}
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.sha }}-${{ matrix.arch }}
+            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-${{ matrix.arch }}
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/${{ matrix.arch }}
           context: .
@@ -69,6 +70,6 @@ jobs:
           base-image: |
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}
           extra-images: |
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.sha }}-amd64,
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.sha }}-arm64
+            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-amd64,
+            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}-arm64
           push: ${{ github.ref == 'refs/heads/main' }}
