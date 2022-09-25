@@ -48,6 +48,7 @@ func (ap *AuthProvider) apiHandlerAuthLogin() usecase.Interactor {
 		}
 		session := ctx.Value(types.RequestSession).(*sessions.Session)
 		session.Values[types.SessionKeyUser] = user
+		session.Values[types.SessionKeyDirty] = true
 		output.Successful = true
 		return nil
 	})

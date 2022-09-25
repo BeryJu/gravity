@@ -9,4 +9,5 @@ const RequestSession RequestContextValue = "session"
 const (
 	SessionKeyUser      = "user"
 	SessionKeyOIDCState = "oidc_state"
+	SessionKeyDirty     = "dirty"
 )

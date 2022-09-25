@@ -40,6 +40,7 @@ func (ap *AuthProvider) InitOIDC() {
 			newState := base64.RawURLEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 			session := r.Context().Value(types.RequestSession).(*sessions.Session)
 			session.Values[types.SessionKeyOIDCState] = newState
+			session.Values[types.SessionKeyDirty] = true
 			http.Redirect(w, r, oauth2Config.AuthCodeURL(newState), http.StatusFound)
 		})
 		mux.Path("/auth/oidc/callback").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +85,7 @@ func (ap *AuthProvider) InitOIDC() {
 				Password: "",
 			}
 			session.Values[types.SessionKeyUser] = user
+			session.Values[types.SessionKeyDirty] = true
 			http.Redirect(w, r, "/", http.StatusFound)
 		})
 	})

@@ -17,9 +17,13 @@ type sessionWriter struct {
 }
 
 func (sw *sessionWriter) WriteHeader(statusCode int) {
-	err := sw.session.Save(sw.req, sw.w)
-	if err != nil {
-		sw.log.WithError(err).Warning("failed to save session")
+	if dirty, ok := sw.session.Values[types.SessionKeyDirty]; ok && dirty == true {
+		sw.log.Trace("session is dirty, writing")
+		sw.session.Values[types.SessionKeyDirty] = false
+		err := sw.session.Save(sw.req, sw.w)
+		if err != nil {
+			sw.log.WithError(err).Warning("failed to save session")
+		}
 	}
 	sw.w.WriteHeader(statusCode)
 }

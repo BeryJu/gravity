@@ -60,6 +60,7 @@ func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
 					Username: "default-user",
 					Password: "",
 				}
+				session.Values[types.SessionKeyDirty] = true
 				u = session.Values[types.SessionKeyUser]
 			} else {
 				output.Authenticated = false
