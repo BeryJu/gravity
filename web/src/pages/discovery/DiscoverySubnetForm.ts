@@ -28,7 +28,7 @@ export class DiscoverySubnetForm extends ModelForm<DiscoverySubnet, string> {
 
     send = (data: DiscoverySubnet): Promise<void> => {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryPutSubnets({
-            identifier: data.name,
+            identifier: this.instance?.name || data.name,
             discoverySubnetsInput: data,
         });
     };
