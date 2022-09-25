@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -36,6 +37,7 @@ func (ap *AuthProvider) hasUsers(ctx context.Context) bool {
 			types.KeyRole,
 			types.KeyUsers,
 		).Prefix(true).String(),
+		clientv3.WithPrefix(),
 	)
 	// Fallback to true to not give access when etcd request fails
 	if err != nil {

@@ -37,8 +37,8 @@ func New(instance roles.Instance) *Role {
 		cfg:      &RoleConfig{},
 	}
 	r.m.Use(NewRecoverMiddleware(r.log))
-	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.m.Use(r.SessionMiddleware)
+	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -67,7 +67,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	auth.NewAuthProvider(r, r.i, r.cfg.OIDC)
+	apiRouter.Use(auth.NewAuthProvider(r, r.i, r.cfg.OIDC).AsMiddleware())
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(ctx, map[string]interface{}{

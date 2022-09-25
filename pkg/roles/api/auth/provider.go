@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/gob"
 	"encoding/json"
+	"net/http"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
@@ -13,10 +14,12 @@ import (
 )
 
 type AuthProvider struct {
-	role roles.Role
-	inst roles.Instance
-	log  *log.Entry
-	oidc *types.OIDCConfig
+	role         roles.Role
+	inst         roles.Instance
+	log          *log.Entry
+	oidc         *types.OIDCConfig
+	inner        http.Handler
+	allowedPaths []string
 }
 
 func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) *AuthProvider {
@@ -25,6 +28,11 @@ func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) 
 		inst: inst,
 		log:  inst.Log().WithField("mw", "auth"),
 		oidc: oidc,
+		allowedPaths: []string{
+			"/api/v1/auth/me",
+			"/api/v1/auth/config",
+			"/api/v1/auth/login",
+		},
 	}
 	if ap.oidc != nil {
 		ap.InitOIDC()
@@ -69,4 +77,11 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 		return err
 	}
 	return nil
+}
+
+func (ap *AuthProvider) AsMiddleware() func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		ap.inner = h
+		return ap
+	}
 }

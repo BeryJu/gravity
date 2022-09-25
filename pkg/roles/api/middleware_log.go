@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"strings"
 	"time"
 
+	"beryju.io/gravity/pkg/roles/api/auth"
+	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -98,13 +100,21 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	responseLogger := &responseLogger{w: w}
 	h.handler.ServeHTTP(responseLogger, req)
 	duration := float64(time.Since(t)) / float64(time.Millisecond)
-	h.afterHandler(h.logger.WithFields(log.Fields{
-		"remote":    strings.Split(req.RemoteAddr, ":")[0],
+	fields := log.Fields{
+		"remote":    req.RemoteAddr,
 		"runtimeMS": fmt.Sprintf("%0.3f", duration),
 		"method":    req.Method,
 		"scheme":    req.URL.Scheme,
 		"size":      responseLogger.Size(),
 		"status":    responseLogger.Status(),
 		"userAgent": req.UserAgent(),
-	}), req).Info(url.RequestURI())
+	}
+	session := req.Context().Value(types.RequestSession).(*sessions.Session)
+	u, ok := session.Values[types.SessionKeyUser]
+	if ok && u != nil {
+		if uu, castOk := u.(auth.User); castOk {
+			fields["user"] = uu.Username
+		}
+	}
+	h.afterHandler(h.logger.WithFields(fields), req).Info(url.RequestURI())
 }

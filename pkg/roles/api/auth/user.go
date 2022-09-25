@@ -17,6 +17,10 @@ type User struct {
 	ap *AuthProvider
 }
 
+func (u *User) String() string {
+	return u.Username
+}
+
 func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*User, error) {
 	user := &User{}
 	prefix := ap.inst.KV().Key(
