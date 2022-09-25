@@ -23,7 +23,7 @@ run:
 
 web-build:
 	cd web && npm ci
-	cd web && npm version ${VERSION}
+	cd web && npm version ${VERSION} || true
 	cd web && npm run build
 
 gen-build:
