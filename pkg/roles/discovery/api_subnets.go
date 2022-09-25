@@ -48,9 +48,9 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 
 func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	type subnetsInput struct {
-		Name string `query:"identifier" required:"true"`
+		Name string `query:"identifier" required:"true" maxLength:"255"`
 
-		SubnetCIDR   string `json:"subnetCidr" required:"true"`
+		SubnetCIDR   string `json:"subnetCidr" required:"true" maxLength:"40"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {

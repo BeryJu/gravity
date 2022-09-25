@@ -48,9 +48,9 @@ func (r *Role) apiHandlerScopesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerScopesPut() usecase.Interactor {
 	type scopesInput struct {
-		Name string `query:"scope" required:"true"`
+		Name string `query:"scope" required:"true" maxLength:"255"`
 
-		SubnetCIDR string            `json:"subnetCidr" required:"true"`
+		SubnetCIDR string            `json:"subnetCidr" required:"true" maxLength:"40"`
 		Default    bool              `json:"default" required:"true"`
 		Options    []*Option         `json:"options" required:"true"`
 		TTL        int64             `json:"ttl" required:"true"`

@@ -36,7 +36,7 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 	type zoneInput struct {
-		Name           string              `query:"zone" required:"true"`
+		Name           string              `query:"zone" required:"true" maxLength:"255"`
 		Authoritative  bool                `json:"authoritative" required:"true"`
 		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`

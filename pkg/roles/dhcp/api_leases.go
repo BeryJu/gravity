@@ -45,13 +45,13 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 
 func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 	type leasesInput struct {
-		Identifier string `query:"identifier" required:"true"`
-		Scope      string `query:"scope" required:"true"`
+		Identifier string `query:"identifier" required:"true" maxLength:"255"`
+		Scope      string `query:"scope" required:"true" maxLength:"255"`
 
-		Address          string `json:"address" required:"true"`
-		Hostname         string `json:"hostname" required:"true"`
-		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
-		DNSZone          string `json:"dnsZone"`
+		Address          string `json:"address" required:"true" maxLength:"40"`
+		Hostname         string `json:"hostname" required:"true" maxLength:"255"`
+		AddressLeaseTime string `json:"addressLeaseTime" required:"true" maxLength:"40"`
+		DNSZone          string `json:"dnsZone" maxLength:"255"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
 		l := r.newLease(input.Identifier)

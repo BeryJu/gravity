@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.8
+  version: 0.1.9
 paths:
   /api/v1/auth/config:
     get:
@@ -192,6 +192,7 @@ paths:
         name: scope
         required: true
         schema:
+          maxLength: 255
           type: string
       requestBody:
         content:
@@ -270,11 +271,13 @@ paths:
         name: identifier
         required: true
         schema:
+          maxLength: 255
           type: string
       - in: query
         name: scope
         required: true
         schema:
+          maxLength: 255
           type: string
       requestBody:
         content:
@@ -465,6 +468,7 @@ paths:
         name: identifier
         required: true
         schema:
+          maxLength: 255
           type: string
       requestBody:
         content:
@@ -561,6 +565,7 @@ paths:
         name: zone
         required: true
         schema:
+          maxLength: 255
           type: string
       requestBody:
         content:
@@ -667,15 +672,18 @@ paths:
         name: zone
         required: true
         schema:
+          maxLength: 255
           type: string
       - in: query
         name: hostname
         required: true
         schema:
+          maxLength: 255
           type: string
       - in: query
         name: uid
         schema:
+          maxLength: 255
           type: string
       requestBody:
         content:
@@ -1144,12 +1152,16 @@ components:
     DhcpLeasesInputType2:
       properties:
         address:
+          maxLength: 40
           type: string
         addressLeaseTime:
+          maxLength: 40
           type: string
         dnsZone:
+          maxLength: 255
           type: string
         hostname:
+          maxLength: 255
           type: string
       required:
       - address
@@ -1268,6 +1280,7 @@ components:
           nullable: true
           type: array
         subnetCidr:
+          maxLength: 40
           type: string
         ttl:
           type: integer
@@ -1361,6 +1374,7 @@ components:
         discoveryTTL:
           type: integer
         subnetCidr:
+          maxLength: 40
           type: string
       required:
       - subnetCidr
@@ -1507,6 +1521,7 @@ components:
     EtcdEtcdJoinInput:
       properties:
         peer:
+          maxLength: 255
           type: string
       type: object
     EtcdEtcdJoinOutput:

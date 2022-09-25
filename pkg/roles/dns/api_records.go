@@ -71,9 +71,9 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 
 func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 	type recordsInput struct {
-		Zone     string `query:"zone" required:"true"`
-		Hostname string `query:"hostname" required:"true"`
-		UID      string `query:"uid"`
+		Zone     string `query:"zone" required:"true" maxLength:"255"`
+		Hostname string `query:"hostname" required:"true" maxLength:"255"`
+		UID      string `query:"uid" maxLength:"255"`
 
 		Type string `json:"type" required:"true"`
 
