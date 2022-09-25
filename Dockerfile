@@ -1,7 +1,7 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/node:18 as web-builder
 
-COPY ./web /work/web/
+COPY . /work
 
 ENV NODE_ENV=production
 WORKDIR /work
