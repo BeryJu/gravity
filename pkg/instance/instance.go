@@ -158,7 +158,7 @@ func (i *Instance) bootstrap() {
 		wg.Add(1)
 		go func(id string) {
 			defer func() {
-				err := extconfig.Recover()
+				err := extconfig.RecoverWrapper(recover())
 				if err == nil {
 					return
 				}

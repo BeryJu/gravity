@@ -12,7 +12,7 @@ import (
 func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 	return func(req *Request) *dhcpv4.DHCPv4 {
 		defer func() {
-			err := extconfig.Recover()
+			err := extconfig.RecoverWrapper(recover())
 			if err == nil {
 				return
 			}

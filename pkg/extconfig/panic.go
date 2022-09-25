@@ -3,31 +3,35 @@ package extconfig
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
-func Recover() any {
-	err := recover()
-	if err == nil {
-		return err
+func RecoverWrapper(input any) any {
+	if input != nil {
+		go ReportEatenCat()
 	}
-	_, ok := err.(error)
-	if !ok {
-		return err
-	}
-	go ReportEatenCat()
-	return nil
+	return input
 }
 
 func ReportEatenCat() {
+	log.Println("Reporting eaten cat")
 	data := map[string]string{
-		"domain":   "gravity-panic",
-		"name":     "pageview",
-		"referrer": FullVersion(),
+		"domain": "gravity-panic",
+		"name":   "pageview",
+		"url":    "http://localhost",
 	}
 	d, err := json.Marshal(data)
 	if err != nil {
 		return
 	}
-	http.DefaultClient.Post("https://analytics.beryju.org/api/event", "application/json", bytes.NewBuffer(d))
+	req, err := http.NewRequest("POST", "https://analytics.beryju.org/api/event", bytes.NewBuffer(d))
+	if err != nil {
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", fmt.Sprintf("gravity %s", FullVersion()))
+	http.DefaultClient.Do(req)
 }

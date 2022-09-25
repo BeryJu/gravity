@@ -15,7 +15,7 @@ import (
 func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		defer func() {
-			err := extconfig.Recover()
+			err := extconfig.RecoverWrapper(recover())
 			if err == nil {
 				return
 			}

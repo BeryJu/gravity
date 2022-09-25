@@ -12,7 +12,7 @@ func NewRecoverMiddleware(l *log.Entry) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
-				err := extconfig.Recover()
+				err := extconfig.RecoverWrapper(recover())
 				if err == nil {
 					return
 				}
