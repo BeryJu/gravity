@@ -49,6 +49,9 @@ export class SidebarBrand extends AKElement {
                     color: var(--ak-accent);
                     text-align: center;
                 }
+                .pf-c-page__header-brand-link:hover {
+                    text-decoration-color: var(--ak-accent);
+                }
             `,
         ];
     }
