@@ -109,11 +109,14 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		"status":    responseLogger.Status(),
 		"userAgent": req.UserAgent(),
 	}
-	session := req.Context().Value(types.RequestSession).(*sessions.Session)
-	u, ok := session.Values[types.SessionKeyUser]
-	if ok && u != nil {
-		if uu, castOk := u.(auth.User); castOk {
-			fields["user"] = uu.Username
+	se := req.Context().Value(types.RequestSession)
+	if se != nil {
+		session := se.(*sessions.Session)
+		u, ok := session.Values[types.SessionKeyUser]
+		if ok && u != nil {
+			if uu, castOk := u.(auth.User); castOk {
+				fields["user"] = uu.Username
+			}
 		}
 	}
 	h.afterHandler(h.logger.WithFields(fields), req).Info(url.RequestURI())
