@@ -33,17 +33,17 @@ func (r *Role) newDevice() *Device {
 }
 
 func (r *Role) deviceFromKV(kv *mvccpb.KeyValue) *Device {
-	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
+	prefix := r.i.KV().Key(types.KeyRole, types.KeyDevices).Prefix(true).String()
 	identifier := strings.TrimPrefix(string(kv.Key), prefix)
-	rec := r.newDevice()
-	rec.Identifier = identifier
+	dev := r.newDevice()
+	dev.Identifier = identifier
 
-	err := json.Unmarshal(kv.Value, &rec)
+	err := json.Unmarshal(kv.Value, &dev)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to parse device")
 		return nil
 	}
-	return rec
+	return dev
 }
 
 func (d *Device) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {

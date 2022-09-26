@@ -75,6 +75,14 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
+		_, err = r.i.KV().Delete(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeyDevices,
+			device.Identifier,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
 		return nil
 	})
 	u.SetName("discovery.apply_device")
@@ -91,7 +99,7 @@ func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input devicesInput, output *struct{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
-			types.KeySubnets,
+			types.KeyDevices,
 			input.Name,
 		).String())
 		if err != nil {
