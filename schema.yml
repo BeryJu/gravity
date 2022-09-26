@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.9
+  version: 0.1.10
 paths:
   /api/v1/backup/start:
     post:
@@ -905,15 +905,20 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/ApiRoleConfig'
+      required:
+      - config
       type: object
     ApiRoleAPIConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/ApiRoleConfig'
+      required:
+      - config
       type: object
     ApiRoleConfig:
-      nullable: true
       properties:
+        cookieSecret:
+          type: string
         oidc:
           $ref: '#/components/schemas/TypesOIDCConfig'
         port:
@@ -935,14 +940,17 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
       type: object
     BackupRoleBackupConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
       type: object
     BackupRoleConfig:
-      nullable: true
       properties:
         accessKey:
           type: string
@@ -1025,7 +1033,6 @@ components:
           type: array
       type: object
     DhcpRoleConfig:
-      nullable: true
       properties:
         leaseNegotiateTimeout:
           type: integer
@@ -1036,11 +1043,15 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/DhcpRoleConfig'
+      required:
+      - config
       type: object
     DhcpRoleDHCPConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/DhcpRoleConfig'
+      required:
+      - config
       type: object
     DhcpScope:
       properties:
@@ -1170,7 +1181,6 @@ components:
           type: array
       type: object
     DiscoveryRoleConfig:
-      nullable: true
       properties:
         enabled:
           type: boolean
@@ -1179,11 +1189,15 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/DiscoveryRoleConfig'
+      required:
+      - config
       type: object
     DiscoveryRoleDiscoveryConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/DiscoveryRoleConfig'
+      required:
+      - config
       type: object
     DiscoverySubnet:
       properties:
@@ -1281,7 +1295,6 @@ components:
       - records
       type: object
     DnsRoleConfig:
-      nullable: true
       properties:
         port:
           type: integer
@@ -1290,11 +1303,15 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/DnsRoleConfig'
+      required:
+      - config
       type: object
     DnsRoleDNSConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/DnsRoleConfig'
+      required:
+      - config
       type: object
     DnsZone:
       properties:
@@ -1430,7 +1447,6 @@ components:
       - currentInstanceIP
       type: object
     MonitoringRoleConfig:
-      nullable: true
       properties:
         port:
           type: integer
@@ -1439,11 +1455,15 @@ components:
       properties:
         config:
           $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
       type: object
     MonitoringRoleMonitoringConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
       type: object
     RestErrResponse:
       properties:

@@ -34,10 +34,10 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 
 func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
 	type roleMonitoringConfigOutput struct {
-		Config *RoleConfig `json:"config"`
+		Config RoleConfig `json:"config" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *roleMonitoringConfigOutput) error {
-		output.Config = r.cfg
+		output.Config = *r.cfg
 		return nil
 	})
 	u.SetName("monitoring.get_role_config")
@@ -48,7 +48,7 @@ func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
 
 func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 	type roleMonitoringConfigInput struct {
-		Config *RoleConfig `json:"config"`
+		Config RoleConfig `json:"config" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input roleMonitoringConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
