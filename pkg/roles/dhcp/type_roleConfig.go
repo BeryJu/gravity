@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -52,7 +53,7 @@ func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}
-		_, err = r.i.KV().Put(ctx, r.i.KV().Key(types.KeyRole, "dhcp").String(), string(jc))
+		_, err = r.i.KV().Put(ctx, r.i.KV().Key(instanceTypes.KeyRole, types.KeyRole).String(), string(jc))
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

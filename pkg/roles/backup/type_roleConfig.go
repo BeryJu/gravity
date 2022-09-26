@@ -55,7 +55,7 @@ func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}
-		_, err = r.i.KV().Put(ctx, r.i.KV().Key(types.KeyRole, "backup").String(), string(jc))
+		_, err = r.i.KV().Put(ctx, r.i.KV().Key(types.KeyRole, KeyRole).String(), string(jc))
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
