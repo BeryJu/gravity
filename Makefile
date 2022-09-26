@@ -3,7 +3,8 @@ PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
 VERSION = "0.1.9"
-GO_FLAGS = -ldflags "-X beryju.io/gravity/pkg/extconfig.Version=${VERSION}" -v
+LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
+GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
 
 ci--env:
@@ -14,9 +15,8 @@ ci--env:
 
 docker-build:
 	go build \
-		${GO_FLAGS} \
-		-ldflags "-X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
-		-a -o gravity .
+		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
+		-v -a -o gravity .
 
 run:
 	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run ${GO_FLAGS} . server
