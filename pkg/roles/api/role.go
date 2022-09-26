@@ -2,14 +2,15 @@ package api
 
 import (
 	"context"
+	"encoding/base64"
 	"net/http"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/api7/etcdstore"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/openapi-go/openapi3"
@@ -30,14 +31,12 @@ type Role struct {
 }
 
 func New(instance roles.Instance) *Role {
-	sess := sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 	mux := mux.NewRouter()
 	r := &Role{
-		log:      instance.Log(),
-		i:        instance,
-		m:        mux,
-		sessions: sess,
-		cfg:      &RoleConfig{},
+		log: instance.Log(),
+		i:   instance,
+		m:   mux,
+		cfg: &RoleConfig{},
 	}
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(r.SessionMiddleware)
@@ -54,6 +53,26 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
+
+	cookieSecret, err := base64.StdEncoding.DecodeString(r.cfg.CookieSecret)
+	if err != nil {
+		return err
+	}
+	sess, err := etcdstore.NewEtcdStore(
+		r.i.KV().Config(),
+		ctx,
+		r.i.KV().Key(
+			extconfig.Get().Etcd.Prefix,
+			types.KeyRole,
+			types.KeySessions,
+		).String(),
+		cookieSecret,
+	)
+	if err != nil {
+		return err
+	}
+	r.sessions = sess
+
 	r.auth = auth.NewAuthProvider(r, r.i, r.cfg.OIDC)
 	r.prepareOpenAPI(ctx)
 	listen := extconfig.Get().Listen(r.cfg.Port)

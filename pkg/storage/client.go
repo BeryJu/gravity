@@ -11,18 +11,20 @@ import (
 
 type Client struct {
 	*clientv3.Client
+	config clientv3.Config
 	prefix string
 	log    *log.Entry
 }
 
 func NewClient(prefix string, endpoints ...string) *Client {
 	l := log.WithField("component", "etcd-client")
-	cli, err := clientv3.New(clientv3.Config{
+	config := clientv3.Config{
 		Endpoints:            endpoints,
 		DialTimeout:          2 * time.Second,
 		DialKeepAliveTime:    2 * time.Second,
 		DialKeepAliveTimeout: 2 * time.Second,
-	})
+	}
+	cli, err := clientv3.New(config)
 	if err != nil {
 		l.Panic(err)
 	}
@@ -34,5 +36,10 @@ func NewClient(prefix string, endpoints ...string) *Client {
 		Client: cli,
 		log:    l,
 		prefix: prefix,
+		config: config,
 	}
+}
+
+func (c *Client) Config() clientv3.Config {
+	return c.config
 }
