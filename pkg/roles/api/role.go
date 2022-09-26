@@ -111,6 +111,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 }
 
 func (r *Role) Schema() *openapi3.Spec {
+	r.auth = auth.NewAuthProvider(r, r.i, nil)
 	r.prepareOpenAPI(context.Background())
 	return r.oapi.OpenAPICollector.Reflector().Spec
 }
