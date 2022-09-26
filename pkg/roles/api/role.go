@@ -97,5 +97,7 @@ func (r *Role) Schema() *openapi3.Spec {
 }
 
 func (r *Role) Stop() {
-	r.server.Shutdown(r.ctx)
+	if r.server != nil {
+		r.server.Shutdown(r.ctx)
+	}
 }

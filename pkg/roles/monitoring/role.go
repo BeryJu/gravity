@@ -75,5 +75,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) Stop() {
-	r.server.Shutdown(r.ctx)
+	if r.server != nil {
+		r.server.Shutdown(r.ctx)
+	}
 }
