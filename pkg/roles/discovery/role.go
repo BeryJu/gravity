@@ -42,8 +42,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
-		r.log.Info("Not enabling discovery")
-		return nil
+		return roles.ErrRoleNotConfigured
 	}
 	r.startWatchSubnets()
 	return nil

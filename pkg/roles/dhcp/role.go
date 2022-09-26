@@ -61,7 +61,13 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	go r.startWatchScopes()
 	go r.startWatchLeases()
 
-	return r.startServer4()
+	go func() {
+		err := r.startServer4()
+		if err != nil {
+			r.log.WithError(err).Warning("failed to listen")
+		}
+	}()
+	return nil
 }
 
 func (r *Role) startServer4() error {

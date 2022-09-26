@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"runtime"
-	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -66,16 +65,12 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 			),
 		),
 	)
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	if runtime.GOOS == "darwin" {
 		listen = fmt.Sprintf(":%d", r.cfg.Port)
 	}
 
 	srv := func(proto string) {
-		defer wg.Done()
 		server := &dns.Server{
 			Addr:    listen,
 			Net:     proto,
@@ -91,7 +86,6 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	go srv("udp")
 	go srv("tcp")
-	wg.Wait()
 	return nil
 }
 

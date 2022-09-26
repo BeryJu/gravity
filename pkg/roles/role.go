@@ -2,11 +2,14 @@ package roles
 
 import (
 	"context"
+	"errors"
 
 	"beryju.io/gravity/pkg/storage"
 	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
+
+var ErrRoleNotConfigured = errors.New("role: Not configured")
 
 type Role interface {
 	Start(ctx context.Context, config []byte) error

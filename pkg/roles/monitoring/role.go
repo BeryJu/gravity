@@ -17,21 +17,23 @@ import (
 )
 
 type Role struct {
-	m   *mux.Router
-	log *log.Entry
-	i   roles.Instance
-	ctx context.Context
-	cfg *RoleConfig
+	m      *mux.Router
+	log    *log.Entry
+	i      roles.Instance
+	ctx    context.Context
+	cfg    *RoleConfig
+	server *http.Server
 }
 
 //go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
 var blockyReg = prometheus.NewRegistry()
 
 func New(instance roles.Instance) *Role {
+	mux := mux.NewRouter()
 	r := &Role{
 		log: instance.Log(),
 		i:   instance,
-		m:   mux.NewRouter(),
+		m:   mux,
 	}
 	r.m.Use(api.NewRecoverMiddleware(r.log))
 	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
@@ -59,8 +61,19 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.WithField("listen", listen).Info("starting monitoring Server")
-	return http.ListenAndServe(listen, r.m)
+	r.server = &http.Server{
+		Addr:    listen,
+		Handler: r.m,
+	}
+	go func() {
+		err := r.server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			r.log.WithError(err).Warning("failed to listen")
+		}
+	}()
+	return nil
 }
 
 func (r *Role) Stop() {
+	r.server.Shutdown(r.ctx)
 }

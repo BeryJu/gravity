@@ -25,14 +25,17 @@ type Role struct {
 	ctx      context.Context
 	cfg      *RoleConfig
 	sessions sessions.Store
+	server   *http.Server
+	auth     *auth.AuthProvider
 }
 
 func New(instance roles.Instance) *Role {
 	sess := sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
+	mux := mux.NewRouter()
 	r := &Role{
 		log:      instance.Log(),
 		i:        instance,
-		m:        mux.NewRouter(),
+		m:        mux,
 		sessions: sess,
 		cfg:      &RoleConfig{},
 	}
@@ -51,10 +54,21 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
+	r.auth = auth.NewAuthProvider(r, r.i, r.cfg.OIDC)
 	r.prepareOpenAPI(ctx)
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.WithField("listen", listen).Info("starting API Server")
-	return http.ListenAndServe(listen, r.m)
+	r.server = &http.Server{
+		Addr:    listen,
+		Handler: r.m,
+	}
+	go func() {
+		err := r.server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			r.log.WithError(err).Warning("failed to listen")
+		}
+	}()
+	return nil
 }
 
 func (r *Role) prepareOpenAPI(ctx context.Context) {
@@ -67,7 +81,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi.Docs("/api/v1/docs", swgui.New)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
-	apiRouter.Use(auth.NewAuthProvider(r, r.i, r.cfg.OIDC).AsMiddleware())
+	apiRouter.Use(r.auth.AsMiddleware())
 	apiRouter.PathPrefix("/v1").Handler(r.oapi)
 
 	r.i.DispatchEvent(types.EventTopicAPIMuxSetup, roles.NewEvent(ctx, map[string]interface{}{
@@ -83,4 +97,5 @@ func (r *Role) Schema() *openapi3.Spec {
 }
 
 func (r *Role) Stop() {
+	r.server.Shutdown(r.ctx)
 }

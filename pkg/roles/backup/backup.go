@@ -35,7 +35,7 @@ func (r *Role) saveSnapshot() *BackupStatus {
 	if r.mc == nil {
 		return r.setStatus(&BackupStatus{
 			Status: BackupStatusFailed,
-			Error:  errors.New("Backup not configured"),
+			Error:  errors.New("backup not configured"),
 		})
 	}
 	// TODO: Only let the master do backups to prevent duplicates
