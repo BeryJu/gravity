@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
 	"golang.org/x/crypto/bcrypt"
@@ -40,9 +41,13 @@ func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) 
 	gob.Register(User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
+		mux := ev.Payload.Data["mux"].(*mux.Router)
+
 		svc.Get("/api/v1/auth/me", ap.apiHandlerAuthMe())
 		svc.Get("/api/v1/auth/config", ap.apiHandlerAuthConfig())
+
 		svc.Post("/api/v1/auth/login", ap.apiHandlerAuthLogin())
+		mux.Path("/auth/logout").HandlerFunc(ap.apiHandlerAuthLogout)
 
 		svc.Get("/api/v1/auth/users", ap.apiHandlerAuthUserGet())
 		svc.Post("/api/v1/auth/users", ap.apiHandlerAuthUserPut())

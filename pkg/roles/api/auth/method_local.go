@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"net/http"
 
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
@@ -55,7 +56,13 @@ func (ap *AuthProvider) apiHandlerAuthLogin() usecase.Interactor {
 	u.SetName("api.login_user")
 	u.SetTitle("API Users")
 	u.SetTags("roles/api")
-	u.SetExpectedErrors(status.Internal)
-	u.SetExpectedErrors(status.Unauthenticated)
+	u.SetExpectedErrors(status.Internal, status.Unauthenticated)
 	return u
+}
+
+func (ap *AuthProvider) apiHandlerAuthLogout(w http.ResponseWriter, r *http.Request) {
+	session := r.Context().Value(types.RequestSession).(*sessions.Session)
+	session.Values[types.SessionKeyUser] = nil
+	session.Values[types.SessionKeyDirty] = true
+	http.Redirect(w, r, "/", http.StatusFound)
 }
