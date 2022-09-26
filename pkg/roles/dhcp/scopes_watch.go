@@ -45,12 +45,10 @@ func (r *Role) loadInitialScopes() {
 }
 
 func (r *Role) startWatchScopes() {
-
 	watchChan := r.i.KV().Watch(
 		r.ctx,
 		r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String(),
 		clientv3.WithPrefix(),
-		clientv3.WithProgressNotify(),
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {

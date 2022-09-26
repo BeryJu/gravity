@@ -34,7 +34,6 @@ func (r *Role) startWatchSubnets() {
 		r.ctx,
 		prefix,
 		clientv3.WithPrefix(),
-		clientv3.WithProgressNotify(),
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
