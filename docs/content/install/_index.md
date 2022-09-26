@@ -41,3 +41,7 @@ The following environment variables can be set:
 - `INSTANCE_IP`: This instance's reachable IP, when running in docker this should be the hosts IP
 - `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but can be set to override that (set to 0.0.0.0 in docker)
 - `LISTEN_ONLY`: Enable listen-only mode which will not reply to any DHCP packets and not run discovery
+
+## First time use
+
+A default admin user is created on the first startup. You can find the credentials printed to stdout.

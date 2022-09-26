@@ -8,6 +8,8 @@ Gravity's API is accessible by default on Port 8008 under `/api/v1`. OpenAPI is 
 
 Session authentication using local users and OIDC is supported for browser usage. API Keys can also be created for automation.
 
+A default admin user is created on the first startup. You can find the credentials printed to stdout.
+
 #### CLI
 
 To create a new user, run the following command in the gravity container:
