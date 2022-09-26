@@ -9,6 +9,7 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./DiscoveryDeviceApply";
 
 @customElement("gravity-discovery-devices")
 export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
@@ -46,39 +47,46 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
     }
 
     columns(): TableColumn[] {
-        return [
-            new TableColumn("Hostname"),
-            new TableColumn("IP"),
-            new TableColumn("MAC"),
-            new TableColumn("Actions"),
-        ];
+        return [new TableColumn("IP"), new TableColumn("Hostname"), new TableColumn("MAC")];
     }
 
     row(item: DiscoveryDevice): TemplateResult<1 | 2>[] {
-        return [html`${item.hostname}`, html`${item.ip}`, html`${item.mac}`, html``];
+        return [
+            html`<pre>${item.ip}</pre>`,
+            html`${item.hostname || "-"}`,
+            html`<pre>${item.mac || "-"}</pre>`,
+        ];
     }
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
-        return html`<ak-forms-delete-bulk
-            objectLabel=${"Discovered Device(s)"}
-            .objects=${this.selectedElements}
-            .metadata=${(item: DiscoveryDevice) => {
-                return [
-                    { key: "Hostname", value: item.hostname },
-                    { key: "IP", value: item.ip },
-                    { key: "MAC", value: item.mac },
-                ];
-            }}
-            .delete=${(item: DiscoveryDevice) => {
-                return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryDeleteDevices({
-                    identifier: item.identifier,
-                });
-            }}
-        >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${"Delete"}
-            </button>
-        </ak-forms-delete-bulk>`;
+        return html`<gravity-discovery-apply
+                objectLabel=${"Discovered Device(s)"}
+                .objects=${this.selectedElements}
+            >
+                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-primary">
+                    ${"Apply"}
+                </button> </gravity-discovery-apply
+            >&nbsp;
+            <ak-forms-delete-bulk
+                objectLabel=${"Discovered Device(s)"}
+                .objects=${this.selectedElements}
+                .metadata=${(item: DiscoveryDevice) => {
+                    return [
+                        { key: "IP", value: item.ip },
+                        { key: "Hostname", value: item.hostname || "-" },
+                        { key: "MAC", value: item.mac || "-" },
+                    ];
+                }}
+                .delete=${(item: DiscoveryDevice) => {
+                    return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryDeleteDevices({
+                        identifier: item.identifier,
+                    });
+                }}
+            >
+                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                    ${"Delete"}
+                </button>
+            </ak-forms-delete-bulk> `;
     }
 }

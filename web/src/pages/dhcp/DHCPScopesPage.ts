@@ -53,7 +53,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     row(item: DhcpScope): TemplateResult[] {
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
-            html`${item.subnetCidr}`,
+            html`<pre>${item.subnetCidr}</pre>`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Scope"} </span>

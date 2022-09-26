@@ -83,12 +83,29 @@ export class DeleteBulkForm extends ModalButton {
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete!: (item: any) => Promise<any>;
+    delete!: (item: any, extraData: any) => Promise<any>;
 
-    confirm(): Promise<void> {
+    @property({ attribute: false })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    preDelete: () => Promise<any> = () => {
+        return Promise.resolve();
+    };
+
+    async confirm(): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let extraData: any = undefined;
+        try {
+            extraData = await this.preDelete();
+        } catch (exc) {
+            showMessage({
+                message: (exc as Error).toString(),
+                level: MessageLevel.error,
+            });
+            return Promise.reject();
+        }
         return Promise.all(
             this.objects.map((item) => {
-                return this.delete(item);
+                return this.delete(item, extraData);
             }),
         )
             .then(() => {
