@@ -58,6 +58,10 @@ export const ROUTES = [
         await import("./pages/cluster/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
+    new Route(new RegExp("^/auth/users$"), async () => {
+        await import("./pages/auth/AuthUsersPage");
+        return html`<gravity-auth-users></gravity-auth-users>`;
+    }),
 ];
 
 @customElement("gravity-app")
@@ -166,6 +170,15 @@ export class AdminInterface extends AKElement {
                 </ak-sidebar-item>
                 <ak-sidebar-item path="/cluster/nodes">
                     <span slot="label">Nodes</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item>
+                <span slot="label">${"Auth"}</span>
+                <ak-sidebar-item path="/auth/users">
+                    <span slot="label">Users</span>
+                </ak-sidebar-item>
+                <ak-sidebar-item path="/auth/api_keys">
+                    <span slot="label">API Keys</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
         `;
