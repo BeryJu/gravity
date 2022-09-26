@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
-	"beryju.io/gravity/pkg/roles/api/types"
 
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -61,7 +60,7 @@ func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
 			r.i.KV().Key(
 				instanceTypes.KeyInstance,
 				instanceTypes.KeyRole,
-				types.KeyRole,
+				KeyRole,
 			).String(),
 			string(jc),
 		)
