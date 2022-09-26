@@ -30,7 +30,7 @@ export class AuthUserForm extends ModelForm<AuthUser, string> {
         return new RolesApiApi(DEFAULT_CONFIG).apiPutUsers({
             username: data.username,
             authAuthUsersPut: {
-                password: (data as KV).password,
+                password: (data as unknown as KV).password,
             },
         });
     };

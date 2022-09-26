@@ -214,10 +214,13 @@ export class Form<T> extends AKElement {
         }
         return this.send(data)
             .then((r) => {
-                showMessage({
-                    level: MessageLevel.success,
-                    message: this.getSuccessMessage(),
-                });
+                const message = this.getSuccessMessage();
+                if (message) {
+                    showMessage({
+                        level: MessageLevel.success,
+                        message: this.getSuccessMessage(),
+                    });
+                }
                 this.dispatchEvent(
                     new CustomEvent(EVENT_REFRESH, {
                         bubbles: true,

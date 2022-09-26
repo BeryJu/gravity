@@ -1,34 +1,14 @@
 package auth
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
-	"go.etcd.io/etcd/api/v3/mvccpb"
 )
 
-const (
-	AuthorizationHeader = "Authorization"
-	BearerType          = "bearer"
-)
-
-type APIKey struct {
-	Username string `json:"username"`
-}
-
-func (ap *AuthProvider) apiKeyFromKV(raw *mvccpb.KeyValue) (*APIKey, error) {
-	apiKey := &APIKey{}
-	err := json.Unmarshal(raw.Value, &apiKey)
-	if err != nil {
-		return apiKey, err
-	}
-	return apiKey, nil
-}
-
-func (ap *AuthProvider) checkAPIKey(r *http.Request) bool {
+func (ap *AuthProvider) checkToken(r *http.Request) bool {
 	header := r.Header.Get(AuthorizationHeader)
 	if header == "" {
 		return false
@@ -40,22 +20,22 @@ func (ap *AuthProvider) checkAPIKey(r *http.Request) bool {
 	if !strings.EqualFold(parts[0], BearerType) {
 		return false
 	}
-	rawKeys, err := ap.inst.KV().Get(
+	rawTokens, err := ap.inst.KV().Get(
 		r.Context(),
 		ap.inst.KV().Key(
 			types.KeyRole,
-			types.KeyAPIKeys,
+			types.KeyTokens,
 			parts[1],
 		).String(),
 	)
 	if err != nil {
-		ap.log.WithError(err).Warning("failed to check API keys")
+		ap.log.WithError(err).Warning("failed to check token")
 		return false
 	}
-	if len(rawKeys.Kvs) < 1 {
+	if len(rawTokens.Kvs) < 1 {
 		return false
 	}
-	key, err := ap.apiKeyFromKV(rawKeys.Kvs[0])
+	key, err := ap.tokenFromKV(rawTokens.Kvs[0])
 	if err != nil {
 		return false
 	}

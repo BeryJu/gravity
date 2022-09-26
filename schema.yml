@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.13
+  version: 0.1.17
 paths:
   /api/v1/auth/config:
     get:
@@ -69,6 +69,69 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
       summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/tokens:
+    delete:
+      operationId: api.delete_tokens
+      parameters:
+      - in: query
+        name: key
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
+      tags:
+      - roles/api
+    get:
+      operationId: api.get_tokens
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAuthTokensOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_tokens
+      parameters:
+      - in: query
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAuthTokensPutOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
       tags:
       - roles/api
   /api/v1/auth/users:
@@ -1063,6 +1126,23 @@ components:
         oidc:
           type: boolean
       type: object
+    AuthAuthTokensOutput:
+      properties:
+        tokens:
+          items:
+            $ref: '#/components/schemas/AuthToken'
+          nullable: true
+          type: array
+      required:
+      - tokens
+      type: object
+    AuthAuthTokensPutOutput:
+      properties:
+        key:
+          type: string
+      required:
+      - key
+      type: object
     AuthAuthUsersOutput:
       properties:
         users:
@@ -1079,6 +1159,16 @@ components:
           type: string
       required:
       - password
+      type: object
+    AuthToken:
+      properties:
+        key:
+          type: string
+        username:
+          type: string
+      required:
+      - key
+      - username
       type: object
     AuthUser:
       properties:

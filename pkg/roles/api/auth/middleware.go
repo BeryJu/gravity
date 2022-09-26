@@ -20,7 +20,7 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	if ap.isAllowedPath(r) {
 		return true
 	}
-	if ap.checkAPIKey(r) {
+	if ap.checkToken(r) {
 		return true
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)

@@ -22,7 +22,9 @@ func (u *User) String() string {
 }
 
 func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*User, error) {
-	user := &User{}
+	user := &User{
+		ap: ap,
+	}
 	prefix := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyUsers,

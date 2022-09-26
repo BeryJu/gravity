@@ -62,6 +62,10 @@ export const ROUTES = [
         await import("./pages/auth/AuthUsersPage");
         return html`<gravity-auth-users></gravity-auth-users>`;
     }),
+    new Route(new RegExp("^/auth/tokens$"), async () => {
+        await import("./pages/auth/AuthTokensPage");
+        return html`<gravity-auth-tokens></gravity-auth-tokens>`;
+    }),
 ];
 
 @customElement("gravity-app")
@@ -177,8 +181,8 @@ export class AdminInterface extends AKElement {
                 <ak-sidebar-item path="/auth/users">
                     <span slot="label">Users</span>
                 </ak-sidebar-item>
-                <ak-sidebar-item path="/auth/api_keys">
-                    <span slot="label">API Keys</span>
+                <ak-sidebar-item path="/auth/tokens">
+                    <span slot="label">Tokens</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
         `;
