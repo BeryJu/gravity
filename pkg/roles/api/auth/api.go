@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
-	clientv3 "go.etcd.io/etcd/client/v3"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -30,22 +29,6 @@ func (ap *AuthProvider) apiHandlerAuthConfig() usecase.Interactor {
 	return u
 }
 
-func (ap *AuthProvider) hasUsers(ctx context.Context) bool {
-	rawUsers, err := ap.inst.KV().Get(
-		ctx,
-		ap.inst.KV().Key(
-			types.KeyRole,
-			types.KeyUsers,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	)
-	// Fallback to true to not give access when etcd request fails
-	if err != nil {
-		return true
-	}
-	return len(rawUsers.Kvs) > 0
-}
-
 func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
 	type userMeOutput struct {
 		Authenticated bool   `json:"authenticated" required:"true"`
@@ -55,17 +38,8 @@ func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
 		session := ctx.Value(types.RequestSession).(*sessions.Session)
 		u, ok := session.Values[types.SessionKeyUser]
 		if u == nil || !ok {
-			if !ap.hasUsers(ctx) {
-				session.Values[types.SessionKeyUser] = User{
-					Username: "default-user",
-					Password: "",
-				}
-				session.Values[types.SessionKeyDirty] = true
-				u = session.Values[types.SessionKeyUser]
-			} else {
-				output.Authenticated = false
-				return nil
-			}
+			output.Authenticated = false
+			return nil
 		}
 		user := u.(User)
 		output.Authenticated = true
