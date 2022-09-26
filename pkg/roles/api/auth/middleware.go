@@ -16,14 +16,25 @@ func (ap *AuthProvider) isAllowedPath(r *http.Request) bool {
 	return false
 }
 
-func (ap *AuthProvider) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
+	if ap.isAllowedPath(r) {
+		return true
+	}
+	if ap.checkAPIKey(r) {
+		return true
+	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	u, ok := session.Values[types.SessionKeyUser]
-	if u == nil || !ok {
-		if !ap.isAllowedPath(r) {
-			http.Error(rw, "unauthenticated", http.StatusUnauthorized)
-			return
-		}
+	if u != nil && ok {
+		return true
 	}
-	ap.inner.ServeHTTP(rw, r)
+	return false
+}
+
+func (ap *AuthProvider) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	if ap.isRequestAllowed(r) {
+		ap.inner.ServeHTTP(rw, r)
+		return
+	}
+	http.Error(rw, "unauthenticated", http.StatusUnauthorized)
 }

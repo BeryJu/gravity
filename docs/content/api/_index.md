@@ -6,7 +6,7 @@ Gravity's API is accessible by default on Port 8008 under `/api/v1`. OpenAPI is 
 
 ### Authentication
 
-Currently, only basic authentication is supported. Users can be added via the API or CLI.
+Session authentication using local users and OIDC is supported for browser usage. API Keys can also be created for automation.
 
 #### CLI
 
