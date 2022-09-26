@@ -15,6 +15,6 @@ func MustJSON(in interface{}) string {
 }
 
 func Context() context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second) //nolint
 	return ctx
 }

@@ -15,6 +15,11 @@ import (
 	"go.etcd.io/etcd/server/v3/embed"
 )
 
+const (
+	relInstCertPath = "/instance.pem"
+	relInstKeyPath  = "/instance_key.pem"
+)
+
 type Role struct {
 	etcdDir string
 	certDir string
