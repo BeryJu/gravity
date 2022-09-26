@@ -17,7 +17,9 @@ import (
 )
 
 func (ap *AuthProvider) InitOIDC() {
-	provider, err := oidc.NewProvider(context.Background(), ap.oidc.Issuer)
+	c := &http.Client{Transport: extconfig.Transport()}
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c)
+	provider, err := oidc.NewProvider(ctx, ap.oidc.Issuer)
 	if err != nil {
 		ap.log.WithError(err).Warning("failed to initialise oidc")
 		ap.oidc = nil
