@@ -67,7 +67,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
         return [
             html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
             html`${item.type}`,
-            html`${item.data}`,
+            html`<pre>${item.data}</pre>`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Zone"} </span>

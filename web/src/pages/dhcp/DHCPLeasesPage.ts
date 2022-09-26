@@ -92,8 +92,8 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
     row(item: DhcpLease): TemplateResult[] {
         return [
             html`${item.hostname}`,
-            html`${item.address}`,
-            html`${item.identifier}`,
+            html`<pre>${item.address}</pre>`,
+            html`<pre>${item.identifier}</pre>`,
             html`<ak-forms-modal>
                     <span slot="submit"> ${"Update"} </span>
                     <span slot="header"> ${"Update Zone"} </span>
