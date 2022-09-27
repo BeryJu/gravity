@@ -6,6 +6,7 @@ require (
 	github.com/0xERR0R/blocky v0.9.2-0.20220708060408-061419f68f46
 	github.com/Netflix/go-env v0.0.0-20220526054621-78278af1949d
 	github.com/Ullaakut/nmap/v2 v2.2.1
+	github.com/api7/etcdstore v1.1.0
 	github.com/coreos/go-oidc/v3 v3.4.0
 	github.com/creasty/defaults v1.6.0
 	github.com/getsentry/sentry-go v0.13.0
@@ -25,7 +26,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
-	github.com/swaggest/openapi-go v0.2.21
+	github.com/swaggest/openapi-go v0.2.22
 	github.com/swaggest/rest v0.2.30
 	github.com/swaggest/swgui v1.5.1
 	github.com/swaggest/usecase v1.2.0
@@ -41,7 +42,6 @@ require (
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/api7/etcdstore v1.1.0 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef // indirect
 	github.com/avast/retry-go/v4 v4.1.0 // indirect
@@ -122,7 +122,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/swaggest/form/v5 v5.0.1 // indirect
-	github.com/swaggest/jsonschema-go v0.3.36 // indirect
+	github.com/swaggest/jsonschema-go v0.3.40 // indirect
 	github.com/swaggest/refl v1.1.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect
