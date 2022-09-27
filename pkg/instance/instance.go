@@ -223,7 +223,7 @@ func (i *Instance) startWatchRole(id string) {
 }
 
 func (i *Instance) startRole(id string, rawConfig []byte) bool {
-	instanceRoleStarted.WithLabelValues(id, "running").SetToCurrentTime()
+	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
 	err := i.roles[id].Role.Start(i.roles[id].Context, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
 		i.log.WithField("roleId", id).Info("role not configured")
