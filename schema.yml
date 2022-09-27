@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.1.17
+  version: 0.1.18
 paths:
   /api/v1/auth/config:
     get:
@@ -667,14 +667,22 @@ paths:
       parameters:
       - in: query
         name: zone
+        required: true
         schema:
           type: string
       - in: query
         name: hostname
+        required: true
         schema:
           type: string
       - in: query
         name: uid
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: type
+        required: true
         schema:
           type: string
       responses:

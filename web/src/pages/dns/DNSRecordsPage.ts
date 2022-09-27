@@ -98,8 +98,10 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
             }}
             .delete=${(item: DnsRecord) => {
                 return new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteRecords({
-                    zone: this.zone,
+                    zone: this.zone || "",
                     hostname: item.hostname,
+                    uid: item.uid,
+                    type: item.type,
                 });
             }}
         >

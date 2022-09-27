@@ -109,26 +109,28 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 }
 
 func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
-	type recordsInput struct {
-		Zone     string `query:"zone"`
-		Hostname string `query:"hostname"`
-		UID      string `query:"uid"`
+	type recordsDeleteInput struct {
+		Zone     string `query:"zone" required:"true"`
+		Hostname string `query:"hostname" required:"true"`
+		UID      string `query:"uid" required:"true"`
+		Type     string `query:"type" required:"true"`
 	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *struct{}) error {
-		zone, ok := r.zones[input.Zone]
+	u := usecase.NewInteractor(func(ctx context.Context, input recordsDeleteInput, output *struct{}) error {
+		_, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
-		key := r.i.KV().Key(types.KeyRole, types.KeyZones, input.Zone, input.Hostname)
-		recs, ok := zone.records[key.String()]
-		if !ok {
-			return status.Wrap(errors.New("record not found"), status.NotFound)
-		}
-		rec, ok := recs[input.UID]
-		if !ok {
-			return status.Wrap(errors.New("record uid not found"), status.NotFound)
-		}
-		_, err := r.i.KV().Delete(ctx, rec.recordKey)
+		_, err := r.i.KV().Delete(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyZones,
+				input.Zone,
+				input.Hostname,
+				input.Type,
+				input.UID,
+			).String(),
+		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
