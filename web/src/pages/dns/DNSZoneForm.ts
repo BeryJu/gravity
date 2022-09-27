@@ -42,7 +42,7 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
 
     send = (data: DnsZone): Promise<void> => {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutZones({
-            zone: data.name,
+            zone: this.instance?.name || "",
             dnsZoneInput: data,
         });
     };
