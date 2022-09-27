@@ -8,12 +8,15 @@ WORKDIR /work
 RUN make web-build
 
 # Stage 2: Build
-FROM golang:1.19.1 as builder
+FROM --platform=${BUILDPLATFORM} golang:1.19.1 as builder
 
 ARG GIT_BUILD_HASH
+ARG TARGETARCH
+
 ENV GIT_BUILD_HASH=$GIT_BUILD_HASH
 ENV CGO_ENABLED=0
 ENV GOOS=linux
+ENV GOARCH=${TARGETARCH}
 
 WORKDIR /workspace
 COPY go.mod go.mod
