@@ -25,16 +25,17 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 		z, err := r.zoneFromKV(kv)
 		if err != nil {
 			r.log.WithError(err).Warning("failed to convert zone from event")
-		} else {
-			if oldZone, ok := r.zones[z.Name]; ok {
-				oldZone.StopWatchingRecords()
-			}
-			if !strings.HasSuffix(z.Name, ".") {
-				r.log.WithField("name", z.Name).Warning("Zone is missing trailing preiod, most likely configured incorrectly")
-			}
-			r.log.WithField("name", z.Name).Debug("added zone")
-			r.zones[z.Name] = z
+			return true
 		}
+		z.Init()
+		if oldZone, ok := r.zones[z.Name]; ok {
+			oldZone.StopWatchingRecords()
+		}
+		if !strings.HasSuffix(z.Name, ".") {
+			r.log.WithField("name", z.Name).Warning("Zone is missing trailing preiod, most likely configured incorrectly")
+		}
+		r.log.WithField("name", z.Name).Debug("added zone")
+		r.zones[z.Name] = z
 	}
 	return true
 }

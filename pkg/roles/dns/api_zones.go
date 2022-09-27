@@ -2,8 +2,10 @@ package dns
 
 import (
 	"context"
+	"errors"
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -20,10 +22,29 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 		Zones []zone `json:"zones" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *zonesOutput) error {
-		for name, _zone := range r.zones {
+		rawZones, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyZones,
+			).Prefix(true).String(),
+			clientv3.WithPrefix(),
+		)
+		if err != nil {
+			r.log.WithError(err).Warning("failed to get zones")
+			return status.Wrap(errors.New("failed to get zones"), status.Internal)
+		}
+		for _, rawZone := range rawZones.Kvs {
+			_zone, err := r.zoneFromKV(rawZone)
+			if err != nil {
+				r.log.WithError(err).Warning("failed to parse zone")
+				continue
+			}
 			output.Zones = append(output.Zones, zone{
-				Name:          name,
-				Authoritative: _zone.Authoritative,
+				Name:           _zone.Name,
+				Authoritative:  _zone.Authoritative,
+				DefaultTTL:     _zone.DefaultTTL,
+				HandlerConfigs: _zone.HandlerConfigs,
 			})
 		}
 		return nil
@@ -31,6 +52,7 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 	u.SetName("dns.get_zones")
 	u.SetTitle("DNS Zones")
 	u.SetTags("roles/dns")
+	u.SetExpectedErrors(status.Internal)
 	return u
 }
 

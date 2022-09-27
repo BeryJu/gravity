@@ -126,9 +126,12 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		return nil, err
 	}
 	z.log = r.log.WithField("zone", z.Name)
+	return z, nil
+}
 
+func (z *Zone) Init() {
 	if len(z.HandlerConfigs) < 1 {
-		r.log.Trace("No handler defined, defaulting to etcd")
+		z.log.Trace("No handler defined, defaulting to etcd")
 		z.HandlerConfigs = append(z.HandlerConfigs, map[string]string{
 			"type": "etcd",
 		})
@@ -149,19 +152,13 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 		case "memory":
 			handler = NewMemoryHandler(z, handlerCfg)
 		default:
-			r.log.WithField("type", t).Warning("invalid forwarder type")
-		}
-		if err != nil {
-			z.log.WithError(err).Warning("failed to setup handler")
-			continue
+			z.log.WithField("type", t).Warning("invalid forwarder type")
 		}
 		z.h = append(z.h, handler)
 	}
 
 	// start watching all records in this zone, in case etcd goes down
 	go z.watchZoneRecords()
-
-	return z, nil
 }
 
 func (z *Zone) watchZoneRecords() {
