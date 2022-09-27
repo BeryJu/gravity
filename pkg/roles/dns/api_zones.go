@@ -35,12 +35,12 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 			return status.Wrap(errors.New("failed to get zones"), status.Internal)
 		}
 		for _, rawZone := range rawZones.Kvs {
-			if strings.Contains(string(rawZone.Key), "/") {
-				continue
-			}
 			_zone, err := r.zoneFromKV(rawZone)
 			if err != nil {
 				r.log.WithError(err).Warning("failed to parse zone")
+				continue
+			}
+			if strings.Contains(_zone.Name, "/") {
 				continue
 			}
 			output.Zones = append(output.Zones, zone{
