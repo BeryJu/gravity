@@ -18,39 +18,48 @@ type RoleConfig struct {
 	OIDC         *types.OIDCConfig `json:"oidc"`
 }
 
+func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
+	if cfg.CookieSecret != "" {
+		return
+	}
+	cfg.CookieSecret = fallback
+	r.log.Info("cookie secret not in config, generating one")
+	go func(cfg *RoleConfig) {
+		jc, err := json.Marshal(cfg)
+		if err != nil {
+			r.log.WithError(err).Warning("failed to json parse config")
+			return
+		}
+		_, err = r.i.KV().Put(
+			context.Background(),
+			r.i.KV().Key(
+				instanceTypes.KeyInstance,
+				instanceTypes.KeyRole,
+				types.KeyRole,
+			).String(),
+			string(jc),
+		)
+		if err != nil {
+			r.log.WithError(err).Warning("failed to save config")
+			return
+		}
+	}(cfg)
+}
+
 func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	fallbackSecret := base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 	def := RoleConfig{
 		Port: 8008,
 	}
 	if len(raw) < 1 {
-		def.CookieSecret = fallbackSecret
+		r.checkCookieSecret(&def, fallbackSecret)
 		return &def
 	}
 	err := json.Unmarshal(raw, &def)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to decode role config")
 	}
-	if def.CookieSecret == "" {
-		def.CookieSecret = fallbackSecret
-		r.log.Info("cookie secret not in config, generating one")
-		go func(cfg *RoleConfig) {
-			jc, err := json.Marshal(cfg)
-			if err != nil {
-				r.log.WithError(err).Warning("failed to json parse config")
-				return
-			}
-			_, err = r.i.KV().Put(
-				context.Background(),
-				r.i.KV().Key(instanceTypes.KeyRole, types.KeyRole).String(),
-				string(jc),
-			)
-			if err != nil {
-				r.log.WithError(err).Warning("failed to save config")
-				return
-			}
-		}(&def)
-	}
+	r.checkCookieSecret(&def, fallbackSecret)
 	return &def
 }
 

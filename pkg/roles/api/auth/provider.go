@@ -56,7 +56,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) 
 		svc.Post("/api/v1/auth/tokens", ap.apiHandlerAuthTokenPut())
 		svc.Delete("/api/v1/auth/tokens", ap.apiHandlerAuthTokenDelete())
 	})
-	go ap.createDefaultUser()
+	ap.createDefaultUser()
 	return ap
 }
 
