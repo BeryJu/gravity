@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"runtime"
+	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -16,8 +17,9 @@ import (
 )
 
 type Role struct {
-	servers []*dns.Server
-	zones   map[string]*Zone
+	servers  []*dns.Server
+	serversM sync.Mutex
+	zones    map[string]*Zone
 
 	cfg *RoleConfig
 	log *log.Entry
@@ -27,10 +29,11 @@ type Role struct {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		servers: make([]*dns.Server, 0),
-		zones:   make(map[string]*Zone, 0),
-		log:     instance.Log(),
-		i:       instance,
+		servers:  make([]*dns.Server, 0),
+		serversM: sync.Mutex{},
+		zones:    make(map[string]*Zone, 0),
+		log:      instance.Log(),
+		i:        instance,
 	}
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
@@ -76,7 +79,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 			Net:     proto,
 			Handler: dnsMux,
 		}
+		r.serversM.Lock()
 		r.servers = append(r.servers, server)
+		r.serversM.Unlock()
 		r.log.WithField("listen", listen).WithField("proto", proto).Info("starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
