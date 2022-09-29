@@ -38,7 +38,7 @@ func TestRole_Start(t *testing.T) {
 		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
 		Path:      "foo",
-		CronExpr:  "0 0 1 1 0",
+		CronExpr:  "",
 	})
 	assert.Nil(t, role.Start(ctx, []byte(cfg)))
 	role.Stop()
@@ -57,7 +57,7 @@ func TestRole_SaveBackup(t *testing.T) {
 		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
 		Path:      "foo",
-		CronExpr:  "0 0 1 1 0",
+		CronExpr:  "",
 	})
 	assert.Nil(t, role.Start(ctx, []byte(cfg)))
 	defer role.Stop()

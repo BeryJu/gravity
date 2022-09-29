@@ -32,7 +32,7 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	return &def
 }
 
-func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
+func (r *Role) APIHandlerRoleConfigGet() usecase.Interactor {
 	type roleBackupConfigOutput struct {
 		Config RoleConfig `json:"config" required:"true"`
 	}
@@ -46,7 +46,7 @@ func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
+func (r *Role) APIHandlerRoleConfigPut() usecase.Interactor {
 	type roleBackupConfigInput struct {
 		Config RoleConfig `json:"config" required:"true"`
 	}
