@@ -32,11 +32,12 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	return &def
 }
 
+type RoleBackupConfigOutput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
 func (r *Role) APIHandlerRoleConfigGet() usecase.Interactor {
-	type roleBackupConfigOutput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *roleBackupConfigOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *RoleBackupConfigOutput) error {
 		output.Config = *r.cfg
 		return nil
 	})
@@ -46,11 +47,12 @@ func (r *Role) APIHandlerRoleConfigGet() usecase.Interactor {
 	return u
 }
 
+type RoleBackupConfigInput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
 func (r *Role) APIHandlerRoleConfigPut() usecase.Interactor {
-	type roleBackupConfigInput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input roleBackupConfigInput, output *struct{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input RoleBackupConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)

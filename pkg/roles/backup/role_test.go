@@ -15,6 +15,24 @@ const (
 	TestingMinioSecretKey = "gravity-key"
 )
 
+func getRole() *backup.Role {
+	rootInst := instance.NewInstance()
+	inst := rootInst.ForRole("backup")
+	role := backup.New(inst)
+	ctx := tests.Context()
+
+	cfg := tests.MustJSON(&backup.RoleConfig{
+		Endpoint:  "http://localhost:9000",
+		AccessKey: TestingMinioAccessKey,
+		SecretKey: TestingMinioSecretKey,
+		Bucket:    "gravity",
+		Path:      "foo",
+		CronExpr:  "",
+	})
+	role.Start(ctx, []byte(cfg))
+	return role
+}
+
 func TestRole_Start_NoConfig(t *testing.T) {
 	rootInst := instance.NewInstance()
 	inst := rootInst.ForRole("backup")
@@ -26,22 +44,7 @@ func TestRole_Start_NoConfig(t *testing.T) {
 }
 
 func TestRole_Start(t *testing.T) {
-	rootInst := instance.NewInstance()
-	inst := rootInst.ForRole("backup")
-	role := backup.New(inst)
-	assert.NotNil(t, role)
-	ctx := tests.Context()
-
-	cfg := tests.MustJSON(&backup.RoleConfig{
-		Endpoint:  "http://localhost:9000",
-		AccessKey: TestingMinioAccessKey,
-		SecretKey: TestingMinioSecretKey,
-		Bucket:    "gravity",
-		Path:      "foo",
-		CronExpr:  "",
-	})
-	assert.Nil(t, role.Start(ctx, []byte(cfg)))
-	role.Stop()
+	assert.NotNil(t, getRole())
 }
 
 func TestRole_SaveBackup(t *testing.T) {
