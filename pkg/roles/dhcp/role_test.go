@@ -15,6 +15,9 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	role := dhcp.New(inst)
 	assert.NotNil(t, role)
 	ctx := tests.Context()
-	assert.Nil(t, role.Start(ctx, []byte{}))
+	cfg := tests.MustJSON(&dhcp.RoleConfig{
+		Port: 1067,
+	})
+	assert.Nil(t, role.Start(ctx, []byte(cfg)))
 	role.Stop()
 }
