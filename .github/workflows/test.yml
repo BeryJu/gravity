@@ -28,8 +28,8 @@ jobs:
           make -C .. gen-client-ts
           npm run build
       - run: go get -v -t -d ./...
-      - name: Run coverage
-        run: make test-env-start test
+      - name: Run tests & coverage
+        run: make test
       - name: Cleanup
         if: ${{ always() }}
         run: make test-env-stop

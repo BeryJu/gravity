@@ -15,6 +15,6 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	role := monitoring.New(inst)
 	assert.NotNil(t, role)
 	ctx := tests.Context()
-	role.Start(ctx, []byte{})
+	assert.Nil(t, role.Start(ctx, []byte{}))
 	role.Stop()
 }

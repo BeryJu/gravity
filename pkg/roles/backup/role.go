@@ -45,7 +45,7 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/roles/backup", r.apiHandlerRoleConfigPut())
 	})
 	r.i.AddEventListener(EventTopicBackupRun, func(ev *roles.Event) {
-		r.saveSnapshot()
+		r.SaveSnapshot()
 	})
 	return r
 }
@@ -82,16 +82,16 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		return err
 	}
 	r.mc = minioClient
+	r.ensureBucket()
 	r.c = cron.New()
 	ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
-		r.saveSnapshot()
+		r.SaveSnapshot()
 	})
 	if err != nil {
 		return err
 	}
 	r.log.WithField("next", r.c.Entry(ei).Next).Debug("next backup run")
 	r.c.Start()
-	go r.saveSnapshot()
 	return nil
 }
 
