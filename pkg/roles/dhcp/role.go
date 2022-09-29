@@ -35,6 +35,9 @@ func New(instance roles.Instance) *Role {
 		scopes: make(map[string]*Scope),
 		leases: make(map[string]*Lease),
 	}
+	r.s4 = &handler4{
+		role: r,
+	}
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -61,6 +64,11 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	go r.startWatchScopes()
 	go r.startWatchLeases()
 
+	err := r.initServer4()
+	if err != nil {
+		r.log.WithError(err).Warning("failed to setup server")
+		return err
+	}
 	go func() {
 		err := r.startServer4()
 		if err != nil {
@@ -70,49 +78,49 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	return nil
 }
 
-func (r *Role) startServer4() error {
+func (r *Role) initServer4() error {
 	laddr := &net.UDPAddr{
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
 	}
 	var err error
-	l4 := &handler4{
-		role: r,
-	}
 	udpConn, err := server4.NewIPv4UDPConn(laddr.Zone, laddr)
 	if err != nil {
 		return err
 	}
-	l4.pc = ipv4.NewPacketConn(udpConn)
+	r.s4.pc = ipv4.NewPacketConn(udpConn)
 	var ifi *net.Interface
 	if laddr.Zone != "" {
 		ifi, err = net.InterfaceByName(laddr.Zone)
 		if err != nil {
 			return fmt.Errorf("DHCPv4: Listen could not find interface %s: %v", laddr.Zone, err)
 		}
-		l4.iface = *ifi
+		r.s4.iface = *ifi
 	} else {
 		// When not bound to an interface, we need the information in each
 		// packet to know which interface it came on
-		err = l4.pc.SetControlMessage(ipv4.FlagInterface, true)
+		err = r.s4.pc.SetControlMessage(ipv4.FlagInterface, true)
 		if err != nil {
 			return err
 		}
 	}
 
 	if laddr.IP.IsMulticast() {
-		err = l4.pc.JoinGroup(ifi, laddr)
+		err = r.s4.pc.JoinGroup(ifi, laddr)
 		if err != nil {
 			return err
 		}
 	}
-	r.s4 = l4
+	return nil
+}
+
+func (r *Role) startServer4() error {
 	r.log.WithField("port", r.cfg.Port).Info("starting DHCP Server")
-	return l4.Serve()
+	return r.s4.Serve()
 }
 
 func (r *Role) Stop() {
-	if r.s4 != nil {
+	if r.s4 != nil && r.s4.pc != nil {
 		r.s4.pc.Close()
 	}
 }

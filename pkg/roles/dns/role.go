@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"runtime"
-	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -17,9 +16,8 @@ import (
 )
 
 type Role struct {
-	servers  []*dns.Server
-	serversM sync.Mutex
-	zones    map[string]*Zone
+	servers []*dns.Server
+	zones   map[string]*Zone
 
 	cfg *RoleConfig
 	log *log.Entry
@@ -29,11 +27,10 @@ type Role struct {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		servers:  make([]*dns.Server, 0),
-		serversM: sync.Mutex{},
-		zones:    make(map[string]*Zone, 0),
-		log:      instance.Log(),
-		i:        instance,
+		servers: make([]*dns.Server, 0),
+		zones:   make(map[string]*Zone, 0),
+		log:     instance.Log(),
+		i:       instance,
 	}
 	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
@@ -73,24 +70,29 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		listen = fmt.Sprintf(":%d", r.cfg.Port)
 	}
 
-	srv := func(proto string) {
-		server := &dns.Server{
-			Addr:    listen,
-			Net:     proto,
-			Handler: dnsMux,
-		}
-		r.serversM.Lock()
-		r.servers = append(r.servers, server)
-		r.serversM.Unlock()
-		r.log.WithField("listen", listen).WithField("proto", proto).Info("starting DNS Server")
+	srv := func(idx int) {
+		server := r.servers[idx]
+		r.log.WithField("listen", listen).WithField("proto", server.Net).Info("starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
-			r.log.WithField("listen", listen).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
+			r.log.WithField("listen", listen).WithField("proto", server.Net).WithError(err).Warning("failed to start dns server")
 		}
 	}
 
-	go srv("udp")
-	go srv("tcp")
+	r.servers = []*dns.Server{
+		{
+			Addr:    listen,
+			Net:     "udp",
+			Handler: dnsMux,
+		},
+		{
+			Addr:    listen,
+			Net:     "tcp",
+			Handler: dnsMux,
+		},
+	}
+	go srv(0)
+	go srv(1)
 	return nil
 }
 
