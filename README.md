@@ -29,26 +29,3 @@ The following environment variables can be set:
 ### API
 
 Checkout `http://$INSTANCE_IP:8008/api/v1/docs`
-
-### Things missing
-
-- [x] Web UI that supports doing things
-- [x] API that supports doing things
-- [x] Maybe sending WOL to DHCP leases
-- [x] Metrics
-- [ ] Testing
-- [ ] Docs
-- [x] Real world testing
-    - [x] DHCP
-    - [x] DNS
-    - [x] Backup & Restore
-- [x] Replicated DNS caching
-- [x] In-memory caching for clusters with even nodes
-    - [x] Caching for DNS
-    - [x] Caching for DHCP
-- [ ] Support for different DNS handlerConfigs per instance (forward to different IP per instance)
-- [x] Full support for SRV and MX
-- [x] Support for multiple records per FQDN
-- [ ] Watch role config and restart roles if it changes?
-- [x] Blocky metrics support
-- [x] Ping IP before internal IPAM considers it free
