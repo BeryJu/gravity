@@ -1,4 +1,3 @@
-.ONESHELL:
 .SHELLFLAGS += -x -e
 PWD = $(shell pwd)
 UID = $(shell id -u)
