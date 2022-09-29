@@ -28,9 +28,11 @@ jobs:
           npm ci
           make -C .. gen-client-ts
           npm run build
+      - name: Setup test env
+        run: make test-env-start
       - name: Run tests & coverage
         run: make test
-      - name: Cleanup
+      - name: Stop test env
         if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
@@ -44,8 +46,7 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - name: Setup node
-        uses: actions/setup-node@v3.5.0
+      - uses: actions/setup-node@v3.5.0
         with:
           node-version: '16'
           cache: 'npm'

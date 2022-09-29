@@ -61,7 +61,7 @@ test-env-start:
 test-env-stop:
 	cd hack/tests/ && docker compose --project-name gravity-test-env down -v
 
-test: test-env-start
+test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup"
 	export ETCD_ENDPOINT="localhost:2379"
 	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...
