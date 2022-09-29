@@ -29,8 +29,11 @@ jobs:
           npm run build
       - run: go get -v -t -d ./...
       - name: Run coverage
-        run: make test-etcd-start test
-      - name: Upload coverage to Codecov
+        run: make test-env-start test
+      - name: Cleanup
+        if: ${{ always() }}
+        run: make test-env-stop
+      - if: ${{ always() }}
         uses: codecov/codecov-action@v3
   lint:
     name: Lint
