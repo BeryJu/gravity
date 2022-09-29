@@ -30,7 +30,22 @@ func (r *Role) setStatus(status *BackupStatus) *BackupStatus {
 	return status
 }
 
-func (r *Role) saveSnapshot() *BackupStatus {
+func (r *Role) GetBackupName() string {
+	now := time.Now()
+	fileName := fmt.Sprintf(
+		"gravity-snapshot-%s-%d_%d_%d",
+		extconfig.FullVersion(),
+		now.Year(),
+		now.Month(),
+		now.Day(),
+	)
+	if r.cfg.Path != "" {
+		fileName = fmt.Sprintf("%s/%s", r.cfg.Path, fileName)
+	}
+	return fileName
+}
+
+func (r *Role) SaveSnapshot() *BackupStatus {
 	start := time.Now()
 	if r.mc == nil {
 		return r.setStatus(&BackupStatus{
@@ -47,11 +62,7 @@ func (r *Role) saveSnapshot() *BackupStatus {
 			Error:  err,
 		})
 	}
-	now := time.Now()
-	fileName := fmt.Sprintf("gravity-snapshot-%s-%d_%d_%d", extconfig.FullVersion(), now.Year(), now.Month(), now.Day())
-	if r.cfg.Path != "" {
-		fileName = fmt.Sprintf("%s/%s", r.cfg.Path, fileName)
-	}
+	fileName := r.GetBackupName()
 	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
 	if err != nil {
 		r.log.WithError(err).Warning("failed to upload snapshot")
@@ -68,4 +79,15 @@ func (r *Role) saveSnapshot() *BackupStatus {
 		Size:     i.Size,
 		Duration: int64(finish.Seconds()),
 	})
+}
+
+func (r *Role) ensureBucket() {
+	exists, err := r.mc.BucketExists(r.ctx, r.cfg.Bucket)
+	if err == nil && exists {
+		return
+	}
+	err = r.mc.MakeBucket(r.ctx, r.cfg.Bucket, minio.MakeBucketOptions{})
+	if err != nil {
+		r.log.WithError(err).Warning("failed to create bucket")
+	}
 }

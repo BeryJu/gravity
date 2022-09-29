@@ -70,22 +70,29 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		listen = fmt.Sprintf(":%d", r.cfg.Port)
 	}
 
-	srv := func(proto string) {
-		server := &dns.Server{
-			Addr:    listen,
-			Net:     proto,
-			Handler: dnsMux,
-		}
-		r.servers = append(r.servers, server)
-		r.log.WithField("listen", listen).WithField("proto", proto).Info("starting DNS Server")
+	srv := func(idx int) {
+		server := r.servers[idx]
+		r.log.WithField("listen", listen).WithField("proto", server.Net).Info("starting DNS Server")
 		err := server.ListenAndServe()
 		if err != nil {
-			r.log.WithField("listen", listen).WithField("proto", proto).WithError(err).Warning("failed to start dns server")
+			r.log.WithField("listen", listen).WithField("proto", server.Net).WithError(err).Warning("failed to start dns server")
 		}
 	}
 
-	go srv("udp")
-	go srv("tcp")
+	r.servers = []*dns.Server{
+		{
+			Addr:    listen,
+			Net:     "udp",
+			Handler: dnsMux,
+		},
+		{
+			Addr:    listen,
+			Net:     "tcp",
+			Handler: dnsMux,
+		},
+	}
+	go srv(0)
+	go srv(1)
 	return nil
 }
 

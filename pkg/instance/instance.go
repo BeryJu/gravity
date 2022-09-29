@@ -32,12 +32,13 @@ type RoleContext struct {
 
 type Instance struct {
 	roles      map[string]RoleContext
+	rolesM     sync.Mutex
 	kv         *storage.Client
 	log        *log.Entry
 	identifier string
 
-	eventHandlersM sync.RWMutex
 	eventHandlers  map[string]map[string][]roles.EventHandler
+	eventHandlersM sync.RWMutex
 
 	etcd *etcd.Role
 
@@ -49,8 +50,9 @@ func NewInstance() *Instance {
 	extCfg := extconfig.Get()
 	ctx, canc := context.WithCancel(context.Background())
 	return &Instance{
-		log:               log.WithField("instance", extCfg.Instance.Identifier).WithField("forRole", "root"),
 		roles:             make(map[string]RoleContext),
+		rolesM:            sync.Mutex{},
+		log:               log.WithField("instance", extCfg.Instance.Identifier).WithField("forRole", "root"),
 		identifier:        extCfg.Instance.Identifier,
 		eventHandlersM:    sync.RWMutex{},
 		eventHandlers:     make(map[string]map[string][]roles.EventHandler),
@@ -148,7 +150,9 @@ func (i *Instance) bootstrap() {
 			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
 			continue
 		}
+		i.rolesM.Lock()
 		i.roles[roleId] = rc
+		i.rolesM.Unlock()
 	}
 	i.ForRole("root").DispatchEvent(
 		types.EventTopicInstanceBootstrapped,
@@ -211,11 +215,13 @@ func (i *Instance) startWatchRole(id string) {
 				// Cancel context and re-create the context
 				i.roles[id].ContextCancelFunc()
 				ctx, cancel := context.WithCancel(i.rootContext)
+				i.rolesM.Lock()
 				i.roles[id] = RoleContext{
 					Role:              i.roles[id].Role,
 					Context:           ctx,
 					ContextCancelFunc: cancel,
 				}
+				i.rolesM.Unlock()
 			}
 			started = i.startRole(id, rawConfig)
 		}

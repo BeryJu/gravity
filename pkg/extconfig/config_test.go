@@ -1,6 +1,7 @@
 package extconfig
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,9 @@ import (
 
 func TestExtconfig(t *testing.T) {
 	assert.NotNil(t, Get())
+	assert.NotNil(t, Get().Dirs())
+	assert.NotNil(t, Get().EtcdClient())
+	assert.True(t, strings.HasSuffix(Get().Listen(1234), "1234"))
 }
 
 func TestResolver(t *testing.T) {

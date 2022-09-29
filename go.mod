@@ -1,6 +1,6 @@
 module beryju.io/gravity
 
-go 1.18
+go 1.19
 
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20220708060408-061419f68f46

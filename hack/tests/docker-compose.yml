@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    ports:
+      - 2379:2379
+    command: |
+      /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://127.0.0.1:2379
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: gravity
+      MINIO_ROOT_PASSWORD: gravity-key
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"

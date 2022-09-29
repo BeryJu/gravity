@@ -50,8 +50,8 @@ func New(instance roles.Instance) *Role {
 	})
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/roles/monitoring", r.apiHandlerRoleConfigGet())
-		svc.Post("/api/v1/roles/monitoring", r.apiHandlerRoleConfigPut())
+		svc.Get("/api/v1/roles/monitoring", r.APIHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/monitoring", r.APIHandlerRoleConfigPut())
 	})
 	return r
 }

@@ -40,12 +40,12 @@ func New(instance roles.Instance) *Role {
 	}
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Post("/api/v1/backup/start", r.apiHandlerBackupStart())
-		svc.Get("/api/v1/roles/backup", r.apiHandlerRoleConfigGet())
-		svc.Post("/api/v1/roles/backup", r.apiHandlerRoleConfigPut())
+		svc.Post("/api/v1/backup/start", r.APIHandlerBackupStart())
+		svc.Get("/api/v1/roles/backup", r.APIHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/backup", r.APIHandlerRoleConfigPut())
 	})
 	r.i.AddEventListener(EventTopicBackupRun, func(ev *roles.Event) {
-		r.saveSnapshot()
+		r.SaveSnapshot()
 	})
 	return r
 }
@@ -82,16 +82,18 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		return err
 	}
 	r.mc = minioClient
+	r.ensureBucket()
 	r.c = cron.New()
-	ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
-		r.saveSnapshot()
-	})
-	if err != nil {
-		return err
+	if r.cfg.CronExpr != "" {
+		ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
+			r.SaveSnapshot()
+		})
+		if err != nil {
+			return err
+		}
+		r.log.WithField("next", r.c.Entry(ei).Next).Debug("next backup run")
+		r.c.Start()
 	}
-	r.log.WithField("next", r.c.Entry(ei).Next).Debug("next backup run")
-	r.c.Start()
-	go r.saveSnapshot()
 	return nil
 }
 

@@ -626,6 +626,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/DnsZonesOutput'
           description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
       summary: DNS Zones
       tags:
       - roles/dns
