@@ -19,9 +19,8 @@ func Test_Export(t *testing.T) {
 	assert.NoError(t, err)
 
 	rootInst := instance.New()
-	entries, err := rootInst.Export()
+	_, err = rootInst.Export()
 	assert.NoError(t, err)
-	assert.True(t, len(entries) > 0)
 }
 
 func Test_Import(t *testing.T) {
