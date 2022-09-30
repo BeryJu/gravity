@@ -18,7 +18,7 @@ var generateSchemaCmd = &cobra.Command{
 	Use:   "generateSchema [output_file]",
 	Short: "Generate OpenAPI Schema",
 	Run: func(cmd *cobra.Command, args []string) {
-		rootInst := instance.NewInstance()
+		rootInst := instance.New()
 		inst := rootInst.ForRole("api")
 		inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 			defer rootInst.Stop()
@@ -53,6 +53,6 @@ var generateSchemaCmd = &cobra.Command{
 }
 
 func init() {
-	cliCmd.AddCommand(generateSchemaCmd)
-	addUserCmd.PersistentFlags().StringVarP(&schemaFormat, "format", "f", "yaml", "Output format (yaml/json)")
+	rootCmd.AddCommand(generateSchemaCmd)
+	generateSchemaCmd.PersistentFlags().StringVarP(&schemaFormat, "format", "f", "yaml", "Output format (yaml/json)")
 }

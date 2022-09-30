@@ -11,7 +11,7 @@ import (
 )
 
 func CreateSomeRecords(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	zone := "gravity.beryju.io."
 	inst.KV().Put(
@@ -47,7 +47,7 @@ func CreateSomeRecords(t *testing.T) {
 }
 
 func Role() (*instance.Instance, *dns.Role) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
 	return rootInst, role

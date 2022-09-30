@@ -14,7 +14,7 @@ var importCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Short: "Import JSON file created with `export` into database",
 	Run: func(cmd *cobra.Command, args []string) {
-		rootInst := instance.NewInstance()
+		rootInst := instance.New()
 		for _, path := range args {
 			cont, err := os.ReadFile(path)
 			if err != nil {

@@ -10,7 +10,7 @@ import (
 )
 
 func TestRole_Start_NoConfig(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
 	assert.NotNil(t, role)
@@ -20,7 +20,7 @@ func TestRole_Start_NoConfig(t *testing.T) {
 }
 
 func TestRole_Start_EmptyConfig(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
 	assert.NotNil(t, role)

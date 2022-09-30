@@ -9,7 +9,7 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Run Gravity server",
 	Run: func(cmd *cobra.Command, args []string) {
-		inst := instance.NewInstance()
+		inst := instance.New()
 		defer inst.Stop()
 		inst.Start()
 	},

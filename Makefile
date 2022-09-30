@@ -55,7 +55,6 @@ gen-client-ts-update: gen-client-ts
 gen: gen-build gen-clean gen-client-ts-update
 
 test-env-start:
-	cd hack/tests/ && docker compose --project-name gravity-test-env pull -q
 	cd hack/tests/ && docker compose --project-name gravity-test-env up -d
 
 test-env-stop:

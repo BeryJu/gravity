@@ -13,7 +13,7 @@ var exportCmd = &cobra.Command{
 	Use:   "export [file]",
 	Short: "Output entire database into JSON file",
 	Run: func(cmd *cobra.Command, args []string) {
-		rootInst := instance.NewInstance()
+		rootInst := instance.New()
 		entries, err := rootInst.Export()
 		if err != nil {
 			fmt.Println(err.Error())

@@ -16,7 +16,7 @@ const (
 )
 
 func getRole() *backup.Role {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("backup")
 	role := backup.New(inst)
 	ctx := tests.Context()
@@ -34,7 +34,7 @@ func getRole() *backup.Role {
 }
 
 func TestRole_Start_NoConfig(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("backup")
 	role := backup.New(inst)
 	assert.NotNil(t, role)
@@ -48,7 +48,7 @@ func TestRole_Start(t *testing.T) {
 }
 
 func TestRole_SaveBackup(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("backup")
 	role := backup.New(inst)
 	assert.NotNil(t, role)

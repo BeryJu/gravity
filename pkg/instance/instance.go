@@ -46,7 +46,7 @@ type Instance struct {
 	rootContextCancel context.CancelFunc
 }
 
-func NewInstance() *Instance {
+func New() *Instance {
 	extCfg := extconfig.Get()
 	ctx, canc := context.WithCancel(context.Background())
 	return &Instance{
@@ -54,8 +54,8 @@ func NewInstance() *Instance {
 		rolesM:            sync.Mutex{},
 		log:               log.WithField("instance", extCfg.Instance.Identifier).WithField("forRole", "root"),
 		identifier:        extCfg.Instance.Identifier,
-		eventHandlersM:    sync.RWMutex{},
 		eventHandlers:     make(map[string]map[string][]roles.EventHandler),
+		eventHandlersM:    sync.RWMutex{},
 		kv:                extCfg.EtcdClient(),
 		rootContext:       ctx,
 		rootContextCancel: canc,

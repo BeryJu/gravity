@@ -14,14 +14,14 @@ import (
 
 var username string
 
-var addUserCmd = &cobra.Command{
-	Use:   "addUser",
+var cliUsersAddCmd = &cobra.Command{
+	Use:   "add",
 	Short: "Add a user for the API",
 	Run: func(cmd *cobra.Command, args []string) {
 		if username == "" {
 			panic("Must set -u")
 		}
-		rootInst := instance.NewInstance()
+		rootInst := instance.New()
 		inst := rootInst.ForRole("cli")
 		api := api.New(inst)
 		am := auth.NewAuthProvider(api, inst, nil)
@@ -39,6 +39,6 @@ var addUserCmd = &cobra.Command{
 }
 
 func init() {
-	cliCmd.AddCommand(addUserCmd)
-	addUserCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "set Username")
+	cliUsersCmd.AddCommand(cliUsersAddCmd)
+	cliUsersAddCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "set Username")
 }

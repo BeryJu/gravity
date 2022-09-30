@@ -10,7 +10,7 @@ import (
 )
 
 func Test_APIHandlerRoleConfigGet(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
 	ctx := tests.Context()
@@ -22,7 +22,7 @@ func Test_APIHandlerRoleConfigGet(t *testing.T) {
 }
 
 func Test_APIHandlerRoleConfigPut(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
 	ctx := tests.Context()

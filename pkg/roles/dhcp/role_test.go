@@ -10,7 +10,7 @@ import (
 )
 
 func TestRole_Start_NoConfig(t *testing.T) {
-	rootInst := instance.NewInstance()
+	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
 	assert.NotNil(t, role)
