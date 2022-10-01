@@ -29,7 +29,9 @@ jobs:
       - name: Setup test env
         run: make test-env-start
       - name: Run tests & coverage
-        run: make test
+        run: |
+          apt-get install -y nmap
+          make test
       - name: Stop test env
         if: ${{ always() }}
         run: make test-env-stop

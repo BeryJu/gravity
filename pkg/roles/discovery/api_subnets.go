@@ -54,7 +54,7 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
-		s := r.newSubnet(input.Name)
+		s := r.NewSubnet(input.Name)
 		s.CIDR = input.SubnetCIDR
 		s.DiscoveryTTL = input.DiscoveryTTL
 		err := s.put()
@@ -75,14 +75,29 @@ func (r *Role) apiHandlerSubnetsStart() usecase.Interactor {
 		Name string `query:"identifier" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
-		s := r.newSubnet(input.Name)
+		rawSub, err := r.i.KV().Get(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeySubnets,
+			input.Name,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if len(rawSub.Kvs) < 1 {
+			return status.Wrap(err, status.NotFound)
+		}
+		s, err := r.subnetFromKV(rawSub.Kvs[0])
+		if err != nil {
+			r.log.WithError(err).Warning("failed to parse subnet from KV")
+			return status.Wrap(err, status.Internal)
+		}
 		go s.RunDiscovery()
 		return nil
 	})
 	u.SetName("discovery.subnet_start")
 	u.SetTitle("Discovery Subnets")
 	u.SetTags("roles/discovery")
-	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	u.SetExpectedErrors(status.Internal, status.NotFound)
 	return u
 }
 
