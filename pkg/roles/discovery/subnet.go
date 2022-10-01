@@ -77,16 +77,7 @@ func (s *Subnet) RunDiscovery() []Device {
 		return []Device{}
 	}
 
-	progress := make(chan float32, 1)
-
-	// Function to listen and print the progress
-	go func() {
-		for p := range progress {
-			s.log.WithField("progress", p).Debug("scan progress")
-		}
-	}()
-
-	result, warnings, err := scanner.RunWithProgress(progress)
+	result, warnings, err := scanner.Run()
 	if err != nil {
 		s.log.WithError(err).Warning("unable to run nmap scan")
 		return []Device{}
