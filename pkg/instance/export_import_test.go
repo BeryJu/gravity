@@ -13,7 +13,7 @@ import (
 func Test_Export(t *testing.T) {
 	_, err := extconfig.Get().EtcdClient().Put(
 		tests.Context(),
-		"foo",
+		"/foo",
 		"bar",
 	)
 	assert.NoError(t, err)
