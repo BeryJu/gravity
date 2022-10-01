@@ -19,6 +19,7 @@ type Subnet struct {
 	Identifier string `json:"-"`
 
 	CIDR         string `json:"cidr"`
+	DNSResolver  string `json:"dnsResolver"`
 	DiscoveryTTL int    `json:"discoveryTTL"`
 
 	etcdKey string
@@ -27,7 +28,7 @@ type Subnet struct {
 	role    *Role
 }
 
-func (r *Role) newSubnet(name string) *Subnet {
+func (r *Role) NewSubnet(name string) *Subnet {
 	return &Subnet{
 		DiscoveryTTL: int((24 * time.Hour).Seconds()),
 		inst:         r.i,
@@ -41,7 +42,7 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 
-	sub := r.newSubnet(name)
+	sub := r.NewSubnet(name)
 	err := json.Unmarshal(raw.Value, &sub)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	return sub, nil
 }
 
-func (s *Subnet) RunDiscovery() {
+func (s *Subnet) RunDiscovery() []Device {
 	s.log.Trace("starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
 		"subnet": s,
@@ -59,37 +60,33 @@ func (s *Subnet) RunDiscovery() {
 		"subnet": s,
 	}))
 
+	dns := s.DNSResolver
+	if dns == "" {
+		dns = extconfig.Get().FallbackDNS
+	}
+
 	scanner, err := nmap.NewScanner(
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
-		nmap.WithCustomDNSServers(extconfig.Get().FallbackDNS),
+		nmap.WithCustomDNSServers(dns),
 	)
 	s.log.WithField("args", scanner.Args()).Trace("nmap args")
 	if err != nil {
-		s.log.Fatalf("unable to create nmap scanner: %v", err)
-		return
+		s.log.WithError(err).Warning("unable to create nmap scanner")
+		return []Device{}
 	}
 
-	progress := make(chan float32, 1)
-
-	// Function to listen and print the progress
-	go func() {
-		for p := range progress {
-			s.log.WithField("progress", p).Debug("scan progress")
-		}
-	}()
-
-	result, warnings, err := scanner.RunWithProgress(progress)
+	result, warnings, err := scanner.Run()
 	if err != nil {
-		s.log.Fatalf("unable to run nmap scan: %v", err)
-		return
+		s.log.WithError(err).Warning("unable to run nmap scan")
+		return []Device{}
 	}
-	if warnings != nil {
-		s.log.Printf("Warnings: \n %v", warnings)
+	for _, warning := range warnings {
+		s.log.Warning(warning)
 	}
 
-	// Use the results to print an example output
+	devices := []Device{}
 	for _, host := range result.Hosts {
 		dev := s.role.newDevice()
 		if len(host.Hostnames) > 0 {
@@ -102,11 +99,13 @@ func (s *Subnet) RunDiscovery() {
 				dev.IP = addr.Addr
 			}
 		}
+		devices = append(devices, *dev)
 		err := dev.put(s.role.ctx, int64(s.DiscoveryTTL))
 		if err != nil {
 			s.log.WithError(err).Warning("ignoring device")
 		}
 	}
+	return devices
 }
 
 func (s *Subnet) put(opts ...clientv3.OpOption) error {

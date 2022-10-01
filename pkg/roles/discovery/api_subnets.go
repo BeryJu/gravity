@@ -14,6 +14,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 		Name string `json:"name" required:"true"`
 
 		CIDR         string `json:"subnetCidr" required:"true"`
+		DNSResolver  string `json:"dnsResolver" required:"true"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	type subnetsOutput struct {
@@ -34,6 +35,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 			output.Subnets = append(output.Subnets, subnet{
 				Name:         sub.Identifier,
 				CIDR:         sub.CIDR,
+				DNSResolver:  sub.DNSResolver,
 				DiscoveryTTL: sub.DiscoveryTTL,
 			})
 		}
@@ -51,12 +53,14 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 		Name string `query:"identifier" required:"true" maxLength:"255"`
 
 		SubnetCIDR   string `json:"subnetCidr" required:"true" maxLength:"40"`
+		DNSResolver  string `json:"dnsResolver" required:"true" maxLength:"255"`
 		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
-		s := r.newSubnet(input.Name)
+		s := r.NewSubnet(input.Name)
 		s.CIDR = input.SubnetCIDR
 		s.DiscoveryTTL = input.DiscoveryTTL
+		s.DNSResolver = input.DNSResolver
 		err := s.put()
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -75,14 +79,29 @@ func (r *Role) apiHandlerSubnetsStart() usecase.Interactor {
 		Name string `query:"identifier" required:"true"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
-		s := r.newSubnet(input.Name)
+		rawSub, err := r.i.KV().Get(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeySubnets,
+			input.Name,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if len(rawSub.Kvs) < 1 {
+			return status.Wrap(err, status.NotFound)
+		}
+		s, err := r.subnetFromKV(rawSub.Kvs[0])
+		if err != nil {
+			r.log.WithError(err).Warning("failed to parse subnet from KV")
+			return status.Wrap(err, status.Internal)
+		}
 		go s.RunDiscovery()
 		return nil
 	})
 	u.SetName("discovery.subnet_start")
 	u.SetTitle("Discovery Subnets")
 	u.SetTags("roles/discovery")
-	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	u.SetExpectedErrors(status.Internal, status.NotFound)
 	return u
 }
 
