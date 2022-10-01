@@ -30,7 +30,7 @@ jobs:
         run: make test-env-start
       - name: Run tests & coverage
         run: |
-          apt-get install -y nmap
+          sudo apt-get install -y nmap
           make test
       - name: Stop test env
         if: ${{ always() }}
