@@ -32,6 +32,7 @@ services:
       MINIO_ROOT_PASSWORD: gravity-key
     command: server /data --console-address ":9001"
   coredns:
+    hostname: coredns.t.gravity.beryju.io
     image: coredns/coredns:1.10.0
     ports:
       - "1053:53"

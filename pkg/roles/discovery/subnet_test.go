@@ -30,5 +30,17 @@ func Test_Discovery_Docker(t *testing.T) {
 	sub.CIDR = DockerNetworkCIDR
 	sub.DNSResolver = DockerIPCoreDNS
 	devices := sub.RunDiscovery()
-	assert.Equal(t, []discovery.Device{}, devices)
+	assert.Equal(t, "10.200.0.1", devices[0].IP)
+
+	assert.Equal(t, "etcd.t.gravity.beryju.io", devices[1].Hostname)
+	assert.Equal(t, "10.200.0.2", devices[1].IP)
+	assert.Equal(t, "", devices[1].MAC)
+
+	assert.Equal(t, "minio.t.gravity.beryju.io", devices[2].Hostname)
+	assert.Equal(t, "10.200.0.3", devices[2].IP)
+	assert.Equal(t, "", devices[2].MAC)
+
+	assert.Equal(t, "coredns.t.gravity.beryju.io", devices[3].Hostname)
+	assert.Equal(t, "10.200.0.4", devices[3].IP)
+	assert.Equal(t, "", devices[3].MAC)
 }
