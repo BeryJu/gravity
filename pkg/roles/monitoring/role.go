@@ -37,23 +37,27 @@ func New(instance roles.Instance) *Role {
 	}
 	r.m.Use(api.NewRecoverMiddleware(r.log))
 	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
-	r.m.Path("/healthz/live").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
-	})
-	r.m.Path("/metrics").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
-			DisableCompression: true,
-		})).ServeHTTP(w, r)
-		promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
-			DisableCompression: true,
-		}).ServeHTTP(w, r)
-	})
+	r.m.Path("/healthz/live").HandlerFunc(r.HandleHealthLive)
+	r.m.Path("/metrics").HandlerFunc(r.HandleMetrics)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/monitoring", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/monitoring", r.APIRoleConfigPut())
 	})
 	return r
+}
+
+func (r *Role) HandleHealthLive(w http.ResponseWriter, re *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
+func (r *Role) HandleMetrics(w http.ResponseWriter, re *http.Request) {
+	promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
+		DisableCompression: true,
+	})).ServeHTTP(w, re)
+	promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
+		DisableCompression: true,
+	}).ServeHTTP(w, re)
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {

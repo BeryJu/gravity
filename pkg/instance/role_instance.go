@@ -36,7 +36,7 @@ func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
 	if ev.Context == nil {
 		ev.Context = context.Background()
 	}
-	ri.parent.dispatchEvent(topic, ev.WithTopic(topic))
+	ri.parent.DispatchEvent(topic, ev.WithTopic(topic))
 }
 
 func (ri *RoleInstance) AddEventListener(topic string, handler roles.EventHandler) {
