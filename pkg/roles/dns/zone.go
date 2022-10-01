@@ -130,13 +130,6 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 }
 
 func (z *Zone) Init() {
-	if len(z.HandlerConfigs) < 1 {
-		z.log.Trace("No handler defined, defaulting to etcd")
-		z.HandlerConfigs = append(z.HandlerConfigs, map[string]string{
-			"type": "etcd",
-		})
-	}
-
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"]
 		var handler Handler
