@@ -33,8 +33,8 @@ func TestRole_DNS_Handler_Forward(t *testing.T) {
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	ctx := tests.Context()
-	assert.Nil(t, role.Start(ctx, []byte{}))
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	time.Sleep(3 * time.Second)
 	defer role.Stop()
-	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", "127.0.0.1:53"))
+	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", "127.0.0.1:1054"))
 }

@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func RoleConfig() []byte {
+	return []byte(tests.MustJSON(dns.RoleConfig{
+		Port: 1054,
+	}))
+}
+
 func TestRole_DNS_Start_NoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
