@@ -12,9 +12,9 @@ import (
 )
 
 func Test_Start(t *testing.T) {
+	called := false
 	rootInst := instance.New()
 	inst := rootInst.ForRole("test")
-	called := false
 	inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 		defer rootInst.Stop()
 

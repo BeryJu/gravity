@@ -158,15 +158,10 @@ func (i *Instance) bootstrap() {
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
-	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
-		wg.Add(1)
-		go func(id string) {
-			i.startWatchRole(id)
-			wg.Done()
-		}(roleId)
+		go i.startWatchRole(roleId)
 	}
-	wg.Wait()
+	<-i.rootContext.Done()
 }
 
 func (i *Instance) startWatchRole(id string) {
@@ -245,7 +240,7 @@ func (i *Instance) Stop() {
 	i.log.Info("Stopping")
 	for _, role := range i.roles {
 		role.ContextCancelFunc()
-		go role.Role.Stop()
+		role.Role.Stop()
 	}
 	if i.etcd != nil {
 		i.etcd.Stop()
