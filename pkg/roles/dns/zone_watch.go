@@ -1,7 +1,6 @@
 package dns
 
 import (
-	"context"
 	"strings"
 	"time"
 
@@ -41,7 +40,14 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 }
 
 func (r *Role) loadInitialZones() {
-	zones, err := r.i.KV().Get(context.Background(), r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(), clientv3.WithPrefix())
+	zones, err := r.i.KV().Get(
+		r.ctx,
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial zones")
 		time.Sleep(5 * time.Second)

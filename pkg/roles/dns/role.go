@@ -46,7 +46,6 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/roles/dns", r.apiHandlerRoleConfigGet())
 		svc.Post("/api/v1/roles/dns", r.apiHandlerRoleConfigPut())
 	})
-	r.loadInitialZones()
 	return r
 }
 
@@ -54,6 +53,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
+	r.loadInitialZones()
 	go r.startWatchZones()
 
 	dnsMux := dns.NewServeMux()

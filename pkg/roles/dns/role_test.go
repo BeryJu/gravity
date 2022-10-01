@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRole_Start_NoConfig(t *testing.T) {
+func TestRole_DNS_Start_NoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
@@ -19,7 +19,7 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	role.Stop()
 }
 
-func TestRole_Start_EmptyConfig(t *testing.T) {
+func TestRole_DNS_Start_EmptyConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)

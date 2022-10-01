@@ -1,0 +1,9 @@
+.:53 {
+    errors
+    log
+    health
+    hosts {
+        10.0.0.1 gravity.beryju.io.
+    }
+    cache 30
+}

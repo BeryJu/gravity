@@ -16,3 +16,11 @@ services:
       - 9000:9000
       - 9001:9001
     command: server /data --console-address ":9001"
+  coredns:
+    image: coredns/coredns:1.10.0
+    command: -conf /etc/coredns/config
+    volumes:
+      - ./coredns/config:/etc/coredns/config
+    ports:
+      - "1053:53"
+      - "1053:53/udp"
