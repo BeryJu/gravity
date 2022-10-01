@@ -23,9 +23,10 @@ run:
 	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run ${GO_FLAGS} . server
 
 web-build:
-	cd web && npm ci
-	cd web && npm version ${VERSION} || true
-	cd web && npm run build
+	cd web
+	npm ci
+	npm version ${VERSION} || true
+	npm run build
 
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . cli generateSchema ${SCHEMA_FILE}
@@ -48,21 +49,26 @@ gen-client-ts:
 	cd gen-ts-api && npm i
 
 gen-client-ts-update: gen-client-ts
-	cd gen-ts-api && npm publish
-	cd web && npm i gravity-api@${VERSION}
-	cd web && git add package*.json
-	cd web && npm version ${VERSION} || true
+	cd gen-ts-api
+	npm publish
+	cd ../web
+	npm i gravity-api@${VERSION}
+	git add package*.json
+	npm version ${VERSION} || true
 
 gen: gen-build gen-clean gen-client-ts-update
 
 test-env-start:
-	cd hack/tests/ && docker compose --project-name gravity-test-env up -d
+	cd hack/tests/
+	docker compose --project-name gravity-test-env up -d
 
 test-env-stop:
-	cd hack/tests/ && docker compose --project-name gravity-test-env down -v
+	cd hack/tests/
+	docker compose --project-name gravity-test-env down -v
 
 test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup"
 	export ETCD_ENDPOINT="localhost:2379"
+	etcdctl del --prefix /
 	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...
 	go tool cover -html coverage.txt -o coverage.html
