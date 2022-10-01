@@ -12,7 +12,7 @@ func Test_APIHandlerRoleConfigGet(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 
-	var output backup.RoleBackupConfigOutput
+	var output backup.APIRoleBackupConfigOutput
 	assert.NoError(t, role.APIHandlerRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
@@ -22,7 +22,7 @@ func Test_APIHandlerRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIHandlerRoleConfigPut().Interact(tests.Context(), backup.RoleBackupConfigInput{
+	assert.NoError(t, role.APIHandlerRoleConfigPut().Interact(tests.Context(), backup.APIRoleBackupConfigInput{
 		Config: backup.RoleConfig{
 			Endpoint: "foo",
 		},

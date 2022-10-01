@@ -43,8 +43,8 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/dns/zones/records", r.apiHandlerZoneRecordsGet())
 		svc.Post("/api/v1/dns/zones/records", r.apiHandlerZoneRecordsPut())
 		svc.Delete("/api/v1/dns/zones/records", r.apiHandlerZoneRecordsDelete())
-		svc.Get("/api/v1/roles/dns", r.apiHandlerRoleConfigGet())
-		svc.Post("/api/v1/roles/dns", r.apiHandlerRoleConfigPut())
+		svc.Get("/api/v1/roles/dns", r.APIHandlerRoleConfigGet())
+		svc.Post("/api/v1/roles/dns", r.APIHandlerRoleConfigPut())
 	})
 	return r
 }

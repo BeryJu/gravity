@@ -29,11 +29,12 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	return &def
 }
 
-func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
-	type roleDNSConfigOutput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *roleDNSConfigOutput) error {
+type APIRoleDNSConfigOutput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
+func (r *Role) APIHandlerRoleConfigGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIRoleDNSConfigOutput) error {
 		output.Config = *r.cfg
 		return nil
 	})
@@ -43,11 +44,12 @@ func (r *Role) apiHandlerRoleConfigGet() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerRoleConfigPut() usecase.Interactor {
-	type roleDNSConfigInput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input roleDNSConfigInput, output *struct{}) error {
+type APIRoleDNSConfigInput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
+func (r *Role) APIHandlerRoleConfigPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleDNSConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
