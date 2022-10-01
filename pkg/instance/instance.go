@@ -16,6 +16,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
 	"beryju.io/gravity/pkg/roles/backup"
+	"beryju.io/gravity/pkg/roles/debug"
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/roles/discovery"
 	"beryju.io/gravity/pkg/roles/dns"
@@ -85,7 +86,7 @@ func (i *Instance) startSentry() {
 		HTTPTransport: extconfig.Transport(),
 	})
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              "https://a6690a50e8924263bd6f82fe3a1a2386@sentry.beryju.org/17",
+		Dsn:              "https://ccd520a9a2b8458ca1e82108a8afb801@sentry.beryju.org/17",
 		Environment:      "",
 		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
 		TracesSampleRate: 0.5,
@@ -93,7 +94,13 @@ func (i *Instance) startSentry() {
 	})
 	if err != nil {
 		i.log.WithError(err).Warning("failed to init sentry")
+		return
 	}
+	sentry.ConfigureScope(func(scope *sentry.Scope) {
+		scope.SetTag("gravity.instance", extconfig.Get().Instance.Identifier)
+		scope.SetTag("gravity.version", extconfig.Version)
+		scope.SetTag("gravity.hash", extconfig.BuildHash)
+	})
 }
 
 func (i *Instance) Log() *log.Entry {
@@ -143,6 +150,8 @@ func (i *Instance) bootstrap() {
 			rc.Role = backup.New(roleInst)
 		case "monitoring":
 			rc.Role = monitoring.New(roleInst)
+		case "debug":
+			rc.Role = debug.New(roleInst)
 		case "etcd":
 			// Special case
 			continue
@@ -232,7 +241,7 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 		i.log.WithField("roleId", id).WithError(err).Warning("failed to start role")
 		return false
 	}
-	i.log.WithField("roleId", id).Info("started role")
+	i.log.WithField("roleId", id).Debug("started role")
 	return true
 }
 
