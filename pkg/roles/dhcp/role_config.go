@@ -30,11 +30,12 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	return &def
 }
 
+type APIRoleDHCPConfigOutput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
 func (r *Role) APIRoleConfigGet() usecase.Interactor {
-	type roleDHCPConfigOutput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *roleDHCPConfigOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIRoleDHCPConfigOutput) error {
 		output.Config = *r.cfg
 		return nil
 	})
@@ -44,11 +45,12 @@ func (r *Role) APIRoleConfigGet() usecase.Interactor {
 	return u
 }
 
+type APIRoleDHCPConfigInput struct {
+	Config RoleConfig `json:"config" required:"true"`
+}
+
 func (r *Role) APIRoleConfigPut() usecase.Interactor {
-	type roleDHCPConfigInput struct {
-		Config RoleConfig `json:"config" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input roleDHCPConfigInput, output *struct{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleDHCPConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
