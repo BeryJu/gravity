@@ -19,6 +19,7 @@ type Subnet struct {
 	Identifier string `json:"-"`
 
 	CIDR         string `json:"cidr"`
+	DNSResolver  string `json:"dnsResolver"`
 	DiscoveryTTL int    `json:"discoveryTTL"`
 
 	etcdKey string
@@ -59,11 +60,16 @@ func (s *Subnet) RunDiscovery() []Device {
 		"subnet": s,
 	}))
 
+	dns := s.DNSResolver
+	if dns == "" {
+		dns = extconfig.Get().FallbackDNS
+	}
+
 	scanner, err := nmap.NewScanner(
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
-		nmap.WithCustomDNSServers(extconfig.Get().FallbackDNS),
+		nmap.WithCustomDNSServers(dns),
 	)
 	s.log.WithField("args", scanner.Args()).Trace("nmap args")
 	if err != nil {

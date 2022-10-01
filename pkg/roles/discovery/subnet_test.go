@@ -6,31 +6,14 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/discovery"
 	"beryju.io/gravity/pkg/tests"
-	dockertypes "github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/client"
 	"github.com/stretchr/testify/assert"
 )
 
-func getDockerTestCIDR() dockertypes.NetworkResource {
-	cli, err := client.NewClientWithOpts(
-		client.FromEnv,
-		client.WithAPIVersionNegotiation(),
-	)
-	if err != nil {
-		panic(err)
-	}
-	networks, err := cli.NetworkList(tests.Context(), dockertypes.NetworkListOptions{
-		Filters: filters.NewArgs(filters.KeyValuePair{
-			Key:   "label",
-			Value: "io.beryju.gravity/testing=true",
-		}),
-	})
-	if err != nil {
-		panic(err)
-	}
-	return networks[0]
-}
+const (
+	DockerNetworkCIDR = "10.200.0.0/16"
+
+	DockerIPCoreDNS = "10.200.0.200"
+)
 
 func Test_Discovery_Docker(t *testing.T) {
 	rootInst := instance.New()
@@ -44,7 +27,8 @@ func Test_Discovery_Docker(t *testing.T) {
 	defer role.Stop()
 
 	sub := role.NewSubnet("docker-test")
-	sub.CIDR = getDockerTestCIDR().IPAM.Config[0].Subnet
+	sub.CIDR = DockerNetworkCIDR
+	sub.DNSResolver = DockerIPCoreDNS
 	devices := sub.RunDiscovery()
 	assert.Equal(t, []discovery.Device{}, devices)
 }
