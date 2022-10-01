@@ -25,7 +25,6 @@ jobs:
         working-directory: web/
         run: |
           npm ci
-          make -C .. gen-client-ts
           npm run build
       - name: Setup test env
         run: make test-env-start
@@ -54,7 +53,6 @@ jobs:
         working-directory: web/
         run: |
           npm ci
-          make -C .. gen-client-ts
           npm run build
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
