@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIHandlerRoleConfigGet(t *testing.T) {
+func Test_APIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
@@ -18,11 +18,11 @@ func Test_APIHandlerRoleConfigGet(t *testing.T) {
 	defer role.Stop()
 
 	var output monitoring.APIRoleMonitoringConfigOutput
-	assert.NoError(t, role.APIHandlerRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
-func Test_APIHandlerRoleConfigPut(t *testing.T) {
+func Test_APIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
@@ -31,7 +31,7 @@ func Test_APIHandlerRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIHandlerRoleConfigPut().Interact(tests.Context(), monitoring.APIRoleMonitoringConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), monitoring.APIRoleMonitoringConfigInput{
 		Config: monitoring.RoleConfig{
 			Port: 1234,
 		},

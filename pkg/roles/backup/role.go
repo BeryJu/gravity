@@ -41,8 +41,8 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Post("/api/v1/backup/start", r.APIHandlerBackupStart())
-		svc.Get("/api/v1/roles/backup", r.APIHandlerRoleConfigGet())
-		svc.Post("/api/v1/roles/backup", r.APIHandlerRoleConfigPut())
+		svc.Get("/api/v1/roles/backup", r.APIRoleConfigGet())
+		svc.Post("/api/v1/roles/backup", r.APIRoleConfigPut())
 	})
 	r.i.AddEventListener(EventTopicBackupRun, func(ev *roles.Event) {
 		r.SaveSnapshot()

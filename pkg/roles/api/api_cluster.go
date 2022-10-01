@@ -1,4 +1,4 @@
-package etcd
+package api
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *Role) apiHandlerMembers() usecase.Interactor {
+func (r *Role) APIClusterMembers() usecase.Interactor {
 	type member struct {
 		ID   uint64 `json:"id"`
 		Name string `json:"name"`
@@ -39,7 +39,7 @@ func (r *Role) apiHandlerMembers() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerJoin() usecase.Interactor {
+func (r *Role) APIClusterJoin() usecase.Interactor {
 	type etcdJoinInput struct {
 		Peer string `json:"peer" maxLength:"255"`
 	}

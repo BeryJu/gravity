@@ -8,9 +8,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
-	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	log "github.com/sirupsen/logrus"
-	"github.com/swaggest/rest/web"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
@@ -30,12 +28,12 @@ type Role struct {
 	i   roles.Instance
 }
 
-func urlMustParse(raw string) *url.URL {
+func urlMustParse(raw string) url.URL {
 	u, err := url.Parse(raw)
 	if err != nil {
 		panic(err)
 	}
-	return u
+	return *u
 }
 
 func New(instance roles.Instance) *Role {
@@ -46,10 +44,10 @@ func New(instance roles.Instance) *Role {
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
 	cfg.LPUrls = []url.URL{
-		*urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
 	}
 	cfg.APUrls = []url.URL{
-		*urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
+		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
 	cfg.InitialCluster = ""
@@ -77,11 +75,6 @@ func New(instance roles.Instance) *Role {
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
-	ee.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/etcd/members", ee.apiHandlerMembers())
-		svc.Post("/api/v1/etcd/join", ee.apiHandlerJoin())
-	})
 	return ee
 }
 

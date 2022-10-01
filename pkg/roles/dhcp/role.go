@@ -48,8 +48,8 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/dhcp/scopes/leases", r.apiHandlerLeasesPut())
 		svc.Post("/api/v1/dhcp/scopes/leases/wol", r.apiHandlerLeasesWOL())
 		svc.Delete("/api/v1/dhcp/scopes/leases", r.apiHandlerLeasesDelete())
-		svc.Get("/api/v1/roles/dhcp", r.apiHandlerRoleConfigGet())
-		svc.Post("/api/v1/roles/dhcp", r.apiHandlerRoleConfigPut())
+		svc.Get("/api/v1/roles/dhcp", r.APIRoleConfigGet())
+		svc.Post("/api/v1/roles/dhcp", r.APIRoleConfigPut())
 	})
 	return r
 }

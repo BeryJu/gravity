@@ -33,7 +33,7 @@ type APIRoleDNSConfigOutput struct {
 	Config RoleConfig `json:"config" required:"true"`
 }
 
-func (r *Role) APIHandlerRoleConfigGet() usecase.Interactor {
+func (r *Role) APIRoleConfigGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIRoleDNSConfigOutput) error {
 		output.Config = *r.cfg
 		return nil
@@ -48,7 +48,7 @@ type APIRoleDNSConfigInput struct {
 	Config RoleConfig `json:"config" required:"true"`
 }
 
-func (r *Role) APIHandlerRoleConfigPut() usecase.Interactor {
+func (r *Role) APIRoleConfigPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleDNSConfigInput, output *struct{}) error {
 		jc, err := json.Marshal(input.Config)
 		if err != nil {

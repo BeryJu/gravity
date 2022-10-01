@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIHandlerRoleConfigGet(t *testing.T) {
+func Test_APIRoleConfigGet(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 
 	var output backup.APIRoleBackupConfigOutput
-	assert.NoError(t, role.APIHandlerRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
-func Test_APIHandlerRoleConfigPut(t *testing.T) {
+func Test_APIRoleConfigPut(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIHandlerRoleConfigPut().Interact(tests.Context(), backup.APIRoleBackupConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), backup.APIRoleBackupConfigInput{
 		Config: backup.RoleConfig{
 			Endpoint: "foo",
 		},
