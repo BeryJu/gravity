@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/dns/types"
@@ -36,5 +37,5 @@ func TestRole_DNS_Handler_Forward(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	time.Sleep(3 * time.Second)
 	defer role.Stop()
-	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", "127.0.0.1:1054"))
+	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }
