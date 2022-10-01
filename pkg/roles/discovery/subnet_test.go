@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	DockerNetworkCIDR = "10.200.0.0/16"
+	DockerNetworkCIDR = "10.200.0.0/28"
 
-	DockerIPCoreDNS = "10.200.0.200"
+	DockerIPCoreDNS = "10.200.0.4"
 )
 
 func Test_Discovery_Docker(t *testing.T) {

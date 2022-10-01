@@ -4,9 +4,9 @@
     health
     hosts {
         10.0.0.1 gravity.beryju.io
-        10.200.0.10 etcd.t.gravity.beryju.io
-        10.200.0.11 minio.t.gravity.beryju.io
-        10.200.0.200 coredns.t.gravity.beryju.io
+        10.200.0.2 etcd.t.gravity.beryju.io
+        10.200.0.3 minio.t.gravity.beryju.io
+        10.200.0.4 coredns.t.gravity.beryju.io
     }
     cache 30
 }

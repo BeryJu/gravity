@@ -7,7 +7,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.200.0.0/16
+        - subnet: 10.200.0.0/28
 
 services:
   etcd:
@@ -16,7 +16,7 @@ services:
       - 2379:2379
     networks:
       default:
-        ipv4_address: 10.200.0.10
+        ipv4_address: 10.200.0.2
     command: |
       /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://127.0.0.1:2379
   minio:
@@ -26,7 +26,7 @@ services:
       - 9001:9001
     networks:
       default:
-        ipv4_address: 10.200.0.11
+        ipv4_address: 10.200.0.3
     environment:
       MINIO_ROOT_USER: gravity
       MINIO_ROOT_PASSWORD: gravity-key
@@ -38,7 +38,7 @@ services:
       - "1053:53/udp"
     networks:
       default:
-        ipv4_address: 10.200.0.200
+        ipv4_address: 10.200.0.4
     command: -conf /etc/coredns/Corefile
     volumes:
       - ./coredns/Corefile:/etc/coredns/Corefile
