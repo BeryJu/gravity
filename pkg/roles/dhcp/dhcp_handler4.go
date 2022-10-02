@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	log "github.com/sirupsen/logrus"
@@ -73,6 +74,13 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		Context: context,
 		oob:     oob,
 	}
+	span := sentry.StartSpan(
+		r.Context,
+		"gravity.roles.dhcp.request",
+		sentry.TransactionName("gravity.roles.dhcp"),
+	)
+	span.Description = m.MessageType().String()
+	defer span.Finish()
 	resp := h.HandleRequest(r)
 
 	if resp != nil {

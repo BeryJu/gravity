@@ -1,8 +1,10 @@
 package dns
 
 import (
+	"context"
 	"strings"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 )
 
@@ -27,7 +29,15 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
 	var longestZone *Zone
 
+	span := sentry.StartSpan(
+		context.TODO(),
+		"gravity.roles.dns.request",
+		sentry.TransactionName("gravity.roles.dns"),
+	)
+	defer span.Finish()
+
 	for _, question := range r.Question {
+		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
 		for name, zone := range ro.zones {
 			// Zone doesn't have the correct suffix for the question
 			if !strings.HasSuffix(question.Name, name) {
