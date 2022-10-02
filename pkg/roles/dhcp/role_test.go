@@ -19,5 +19,5 @@ func TestRole_Start_NoConfig(t *testing.T) {
 		Port: 1067,
 	})
 	assert.Nil(t, role.Start(ctx, []byte(cfg)))
-	role.Stop()
+	defer role.Stop()
 }

@@ -4,8 +4,8 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
-func (r *Role) handleDHCPDiscover4(req *Request) *dhcpv4.DHCPv4 {
-	match := r.findLease(req)
+func (r *Role) HandleDHCPDiscover4(req *Request) *dhcpv4.DHCPv4 {
+	match := r.FindLease(req)
 	if match == nil {
 		scope := r.findScopeForRequest(req)
 		if scope == nil {

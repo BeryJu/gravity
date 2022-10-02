@@ -36,6 +36,7 @@ type Request struct {
 	peer    net.Addr
 	log     *log.Entry
 	Context context.Context
+	oob     *ipv4.ControlMessage
 }
 
 func (h *handler4) Serve() error {
@@ -65,48 +66,27 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		return
 	}
 
-	req := &Request{
+	r := &Request{
 		DHCPv4:  m,
 		peer:    _peer,
 		log:     h.role.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
 		Context: context,
+		oob:     oob,
 	}
-
-	if m.OpCode != dhcpv4.OpcodeBootRequest {
-		h.role.log.WithField("opcode", m.OpCode.String()).Info("handler4: unsupported opcode")
-		return
-	}
-	var handler Handler4
-	switch mt := m.MessageType(); mt {
-	case dhcpv4.MessageTypeDiscover:
-		handler = h.role.handleDHCPDiscover4
-	case dhcpv4.MessageTypeRequest:
-		handler = h.role.handleDHCPRequest4
-	case dhcpv4.MessageTypeDecline:
-		handler = h.role.handleDHCPDecline4
-	default:
-		req.log.WithField("msg", mt.String()).Info("Unsupported message type")
-		return
-	}
-
-	resp := h.role.recoverMiddleware4(
-		h.role.loggingMiddleware4(
-			handler,
-		),
-	)(req)
+	resp := h.HandleRequest(r)
 
 	if resp != nil {
-		h.role.logDHCPMessage(req, resp, log.Fields{})
+		h.role.logDHCPMessage(r, resp, log.Fields{})
 		useEthernet := false
 		var peer *net.UDPAddr
-		if !req.GatewayIPAddr.IsUnspecified() {
+		if !r.GatewayIPAddr.IsUnspecified() {
 			// TODO: make RFC8357 compliant
-			peer = &net.UDPAddr{IP: req.GatewayIPAddr, Port: dhcpv4.ServerPort}
+			peer = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
 		} else if resp.MessageType() == dhcpv4.MessageTypeNak {
 			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
-		} else if !req.ClientIPAddr.IsUnspecified() {
-			peer = &net.UDPAddr{IP: req.ClientIPAddr, Port: dhcpv4.ClientPort}
-		} else if req.IsBroadcast() {
+		} else if !r.ClientIPAddr.IsUnspecified() {
+			peer = &net.UDPAddr{IP: r.ClientIPAddr, Port: dhcpv4.ClientPort}
+		} else if r.IsBroadcast() {
 			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 		} else {
 			//sends a layer2 frame so that we can define the destination MAC address
@@ -116,36 +96,61 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 
 		var woob *ipv4.ControlMessage
 		if peer.IP.Equal(net.IPv4bcast) || peer.IP.IsLinkLocalUnicast() || useEthernet {
-			// Direct broadcasts, link-local and layer2 unicasts to the interface the request was
+			// Direct broadcasts, link-local and layer2 unicasts to the interface the ruest was
 			// received on. Other packets should use the normal routing table in
 			// case of asymetric routing
 			switch {
 			case h.iface.Index != 0:
 				woob = &ipv4.ControlMessage{IfIndex: h.iface.Index}
-			case oob != nil && oob.IfIndex != 0:
-				woob = &ipv4.ControlMessage{IfIndex: oob.IfIndex}
+			case r.oob != nil && r.oob.IfIndex != 0:
+				woob = &ipv4.ControlMessage{IfIndex: r.oob.IfIndex}
 			default:
-				req.log.Error("HandleMsg4: Did not receive interface information")
+				r.log.Error("HandleMsg4: Did not receive interface information")
 			}
 		}
 
 		if useEthernet {
-			req.log.Trace("sending via ethernet")
+			r.log.Trace("sending via ethernet")
 			intf, err := net.InterfaceByIndex(woob.IfIndex)
 			if err != nil {
-				req.log.WithError(err).WithField("index", woob.IfIndex).Error("handler4: Can not get Interface for index")
+				r.log.WithError(err).WithField("index", woob.IfIndex).Error("handler4: Can not get Interface for index")
 				return
 			}
 			err = sendEthernet(*intf, resp)
 			if err != nil {
-				req.log.WithError(err).Error("handler4: Cannot send Ethernet packet")
+				r.log.WithError(err).Error("handler4: Cannot send Ethernet packet")
 			}
 		} else {
 			if _, err := h.pc.WriteTo(resp.ToBytes(), woob, peer); err != nil {
-				req.log.WithField("peer", peer).WithError(err).Error("handler4: conn.Write failed")
+				r.log.WithField("peer", peer).WithError(err).Error("handler4: conn.Write failed")
 			}
 		}
 	} else {
-		req.log.Debug("handler4: dropping request because response is nil")
+		r.log.Debug("handler4: dropping request because response is nil")
 	}
+}
+
+func (h *handler4) HandleRequest(r *Request) *dhcpv4.DHCPv4 {
+	if r.OpCode != dhcpv4.OpcodeBootRequest {
+		h.role.log.WithField("opcode", r.OpCode.String()).Info("handler4: unsupported opcode")
+		return nil
+	}
+	var handler Handler4
+	switch mt := r.MessageType(); mt {
+	case dhcpv4.MessageTypeDiscover:
+		handler = h.role.HandleDHCPDiscover4
+	case dhcpv4.MessageTypeRequest:
+		handler = h.role.HandleDHCPRequest4
+	case dhcpv4.MessageTypeDecline:
+		handler = h.role.HandleDHCPDecline4
+	default:
+		r.log.WithField("msg", mt.String()).Info("Unsupported message type")
+		return nil
+	}
+
+	return h.role.recoverMiddleware4(
+		h.role.loggingMiddleware4(
+			handler,
+		),
+	)(r)
 }
