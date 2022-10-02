@@ -10,17 +10,18 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) apiHandlerDevices() usecase.Interactor {
-	type device struct {
-		Identifier string `json:"identifier" required:"true"`
-		Hostname   string `json:"hostname" required:"true"`
-		IP         string `json:"ip" required:"true"`
-		MAC        string `json:"mac" required:"true"`
-	}
-	type devicesOutput struct {
-		Devices []device `json:"devices"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *devicesOutput) error {
+type APIDevice struct {
+	Identifier string `json:"identifier" required:"true"`
+	Hostname   string `json:"hostname" required:"true"`
+	IP         string `json:"ip" required:"true"`
+	MAC        string `json:"mac" required:"true"`
+}
+type APIDevicesGetOutput struct {
+	Devices []APIDevice `json:"devices"`
+}
+
+func (r *Role) APIDevicesGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIDevicesGetOutput) error {
 		rawDevices, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
@@ -30,7 +31,7 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 		}
 		for _, rawDev := range rawDevices.Kvs {
 			dev := r.deviceFromKV(rawDev)
-			output.Devices = append(output.Devices, device{
+			output.Devices = append(output.Devices, APIDevice{
 				Identifier: dev.Identifier,
 				Hostname:   dev.Hostname,
 				IP:         dev.IP,
@@ -46,14 +47,15 @@ func (r *Role) apiHandlerDevices() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
-	type deviceApplyInput struct {
-		Identifier string `query:"identifier" required:"true"`
-		To         string `json:"to" enum:"dhcp,dns" required:"true"`
-		DHCPScope  string `json:"dhcpScope" required:"true"`
-		DNSZone    string `json:"dnsZone" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input deviceApplyInput, output *struct{}) error {
+type APIDevicesApplyInput struct {
+	Identifier string `query:"identifier" required:"true"`
+	To         string `json:"to" enum:"dhcp,dns" required:"true"`
+	DHCPScope  string `json:"dhcpScope" required:"true"`
+	DNSZone    string `json:"dnsZone" required:"true"`
+}
+
+func (r *Role) APIDevicesApply() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIDevicesApplyInput, output *struct{}) error {
 		rawDevice, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,
@@ -92,11 +94,12 @@ func (r *Role) apiHandlerDeviceApply() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerDevicesDelete() usecase.Interactor {
-	type devicesInput struct {
-		Name string `query:"identifier"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input devicesInput, output *struct{}) error {
+type APIDevicesDeleteInput struct {
+	Name string `query:"identifier"`
+}
+
+func (r *Role) APIDevicesDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIDevicesDeleteInput, output *struct{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeyDevices,

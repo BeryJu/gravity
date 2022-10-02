@@ -34,7 +34,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
             data.oidc.scopes = kv.scopesList.split(" ");
         }
         return new RolesApiApi(DEFAULT_CONFIG).apiPutRoleConfig2({
-            apiRoleAPIConfigInput: {
+            apiAPIRoleConfigInput: {
                 config: data,
             },
         });

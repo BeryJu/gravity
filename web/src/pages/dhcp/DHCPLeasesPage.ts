@@ -1,4 +1,4 @@
-import { DhcpLease, RolesDhcpApi } from "gravity-api";
+import { DhcpAPILease, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -15,7 +15,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DHCPLeaseForm";
 
 @customElement("gravity-dhcp-leases")
-export class DHCPLeasesPage extends TablePage<DhcpLease> {
+export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
     @property()
     scope = "";
 
@@ -35,7 +35,7 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DhcpLease>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DhcpAPILease>> {
         return new RolesDhcpApi(DEFAULT_CONFIG)
             .dhcpGetLeases({
                 scope: this.scope,
@@ -69,14 +69,14 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"DHCP Lease(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DhcpLease) => {
+            .metadata=${(item: DhcpAPILease) => {
                 return [
                     { key: "Scope", value: item.scopeKey },
                     { key: "Name", value: item.hostname },
                     { key: "Address", value: item.address },
                 ];
             }}
-            .delete=${(item: DhcpLease) => {
+            .delete=${(item: DhcpAPILease) => {
                 return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
                     identifier: item.identifier,
                     scope: item.scopeKey,
@@ -89,7 +89,7 @@ export class DHCPLeasesPage extends TablePage<DhcpLease> {
         </ak-forms-delete-bulk>`;
     }
 
-    row(item: DhcpLease): TemplateResult[] {
+    row(item: DhcpAPILease): TemplateResult[] {
         return [
             html`${item.hostname}`,
             html`<pre>${item.address}</pre>`,

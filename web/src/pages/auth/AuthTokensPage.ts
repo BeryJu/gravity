@@ -1,4 +1,4 @@
-import { AuthToken, RolesApiApi } from "gravity-api";
+import { AuthAPIToken, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./AuthTokenForm";
 
 @customElement("gravity-auth-tokens")
-export class AuthTokensPage extends TablePage<AuthToken> {
+export class AuthTokensPage extends TablePage<AuthAPIToken> {
     pageTitle(): string {
         return "Tokens";
     }
@@ -29,7 +29,7 @@ export class AuthTokensPage extends TablePage<AuthToken> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<AuthToken>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<AuthAPIToken>> {
         return new RolesApiApi(DEFAULT_CONFIG).apiGetTokens().then((tokens) => {
             const data = (tokens.tokens || []).filter((l) =>
                 l.username.toLowerCase().includes(this.search.toLowerCase()),
@@ -47,7 +47,7 @@ export class AuthTokensPage extends TablePage<AuthToken> {
         return [new TableColumn("Username")];
     }
 
-    row(item: AuthToken): TemplateResult<1 | 2>[] {
+    row(item: AuthAPIToken): TemplateResult[] {
         return [html`${item.username}`];
     }
 
@@ -56,10 +56,10 @@ export class AuthTokensPage extends TablePage<AuthToken> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"Tokens(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: AuthToken) => {
+            .metadata=${(item: AuthAPIToken) => {
                 return [{ key: "Username", value: item.username }];
             }}
-            .delete=${(item: AuthToken) => {
+            .delete=${(item: AuthAPIToken) => {
                 return new RolesApiApi(DEFAULT_CONFIG).apiDeleteTokens({
                     key: item.key,
                 });

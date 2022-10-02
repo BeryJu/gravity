@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.0
+  version: 0.2.1
 paths:
   /api/v1/auth/config:
     get:
@@ -413,7 +413,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveryDevicesOutput'
+                $ref: '#/components/schemas/DiscoveryAPIDevicesGetOutput'
           description: OK
         "500":
           content:
@@ -437,7 +437,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryDeviceApplyInput'
+              $ref: '#/components/schemas/DiscoveryAPIDevicesApplyInput'
       responses:
         "204":
           description: No Content
@@ -727,7 +727,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsRecordsOutput'
+                $ref: '#/components/schemas/DnsAPIRecordsGetOutput'
           description: OK
         "400":
           content:
@@ -774,7 +774,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsRecordsInputType2'
+              $ref: '#/components/schemas/DnsAPIRecordsPutInput'
       responses:
         "204":
           description: No Content
@@ -1432,6 +1432,46 @@ components:
         zone:
           type: string
       type: object
+    DiscoveryAPIDevice:
+      properties:
+        hostname:
+          type: string
+        identifier:
+          type: string
+        ip:
+          type: string
+        mac:
+          type: string
+      required:
+      - identifier
+      - hostname
+      - ip
+      - mac
+      type: object
+    DiscoveryAPIDevicesApplyInput:
+      properties:
+        dhcpScope:
+          type: string
+        dnsZone:
+          type: string
+        to:
+          enum:
+          - dhcp
+          - dns
+          type: string
+      required:
+      - to
+      - dhcpScope
+      - dnsZone
+      type: object
+    DiscoveryAPIDevicesGetOutput:
+      properties:
+        devices:
+          items:
+            $ref: '#/components/schemas/DiscoveryAPIDevice'
+          nullable: true
+          type: array
+      type: object
     DiscoveryAPIRoleConfigInput:
       properties:
         config:
@@ -1485,50 +1525,73 @@ components:
       - dnsResolver
       - discoveryTTL
       type: object
-    DiscoveryDevice:
-      properties:
-        hostname:
-          type: string
-        identifier:
-          type: string
-        ip:
-          type: string
-        mac:
-          type: string
-      required:
-      - identifier
-      - hostname
-      - ip
-      - mac
-      type: object
-    DiscoveryDeviceApplyInput:
-      properties:
-        dhcpScope:
-          type: string
-        dnsZone:
-          type: string
-        to:
-          enum:
-          - dhcp
-          - dns
-          type: string
-      required:
-      - to
-      - dhcpScope
-      - dnsZone
-      type: object
-    DiscoveryDevicesOutput:
-      properties:
-        devices:
-          items:
-            $ref: '#/components/schemas/DiscoveryDevice'
-          nullable: true
-          type: array
-      type: object
     DiscoveryRoleConfig:
       properties:
         enabled:
           type: boolean
+      type: object
+    DnsAPIRecord:
+      properties:
+        data:
+          type: string
+        fqdn:
+          type: string
+        hostname:
+          type: string
+        mxPreference:
+          minimum: 0
+          type: integer
+        srvPort:
+          minimum: 0
+          type: integer
+        srvPriority:
+          minimum: 0
+          type: integer
+        srvWeight:
+          minimum: 0
+          type: integer
+        type:
+          type: string
+        uid:
+          type: string
+      required:
+      - uid
+      - fqdn
+      - hostname
+      - type
+      - data
+      type: object
+    DnsAPIRecordsGetOutput:
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/DnsAPIRecord'
+          nullable: true
+          type: array
+      required:
+      - records
+      type: object
+    DnsAPIRecordsPutInput:
+      properties:
+        data:
+          type: string
+        mxPreference:
+          minimum: 0
+          type: integer
+        srvPort:
+          minimum: 0
+          type: integer
+        srvPriority:
+          minimum: 0
+          type: integer
+        srvWeight:
+          minimum: 0
+          type: integer
+        type:
+          type: string
+      required:
+      - type
+      - data
       type: object
     DnsAPIRoleConfigInput:
       properties:
@@ -1594,69 +1657,6 @@ components:
       - authoritative
       - handlerConfigs
       - defaultTTL
-      type: object
-    DnsRecord:
-      properties:
-        data:
-          type: string
-        fqdn:
-          type: string
-        hostname:
-          type: string
-        mxPreference:
-          minimum: 0
-          type: integer
-        srvPort:
-          minimum: 0
-          type: integer
-        srvPriority:
-          minimum: 0
-          type: integer
-        srvWeight:
-          minimum: 0
-          type: integer
-        type:
-          type: string
-        uid:
-          type: string
-      required:
-      - uid
-      - fqdn
-      - hostname
-      - type
-      - data
-      type: object
-    DnsRecordsInputType2:
-      properties:
-        data:
-          type: string
-        mxPreference:
-          minimum: 0
-          type: integer
-        srvPort:
-          minimum: 0
-          type: integer
-        srvPriority:
-          minimum: 0
-          type: integer
-        srvWeight:
-          minimum: 0
-          type: integer
-        type:
-          type: string
-      required:
-      - type
-      - data
-      type: object
-    DnsRecordsOutput:
-      properties:
-        records:
-          items:
-            $ref: '#/components/schemas/DnsRecord'
-          nullable: true
-          type: array
-      required:
-      - records
       type: object
     DnsRoleConfig:
       properties:

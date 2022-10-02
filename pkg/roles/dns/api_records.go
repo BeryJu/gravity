@@ -10,26 +10,27 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
-	type recordsInput struct {
-		Zone string `query:"zone"`
-	}
-	type record struct {
-		UID      string `json:"uid" required:"true"`
-		FQDN     string `json:"fqdn" required:"true"`
-		Hostname string `json:"hostname" required:"true"`
-		Type     string `json:"type" required:"true"`
+type APIRecordsGetInput struct {
+	Zone string `query:"zone"`
+}
+type APIRecord struct {
+	UID      string `json:"uid" required:"true"`
+	FQDN     string `json:"fqdn" required:"true"`
+	Hostname string `json:"hostname" required:"true"`
+	Type     string `json:"type" required:"true"`
 
-		Data         string `json:"data" required:"true"`
-		MXPreference uint16 `json:"mxPreference,omitempty"`
-		SRVPort      uint16 `json:"srvPort,omitempty"`
-		SRVPriority  uint16 `json:"srvPriority,omitempty"`
-		SRVWeight    uint16 `json:"srvWeight,omitempty"`
-	}
-	type recordsOutput struct {
-		Records []record `json:"records" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *recordsOutput) error {
+	Data         string `json:"data" required:"true"`
+	MXPreference uint16 `json:"mxPreference,omitempty"`
+	SRVPort      uint16 `json:"srvPort,omitempty"`
+	SRVPriority  uint16 `json:"srvPriority,omitempty"`
+	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+}
+type APIRecordsGetOutput struct {
+	Records []APIRecord `json:"records" required:"true"`
+}
+
+func (r *Role) APIRecordsGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsGetInput, output *APIRecordsGetOutput) error {
 		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("not found"), status.NotFound)
@@ -48,7 +49,7 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 				r.log.WithError(err).Warning("failed to parse record")
 				continue
 			}
-			output.Records = append(output.Records, record{
+			output.Records = append(output.Records, APIRecord{
 				UID:          rec.uid,
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + "." + zone.Name,
@@ -69,21 +70,22 @@ func (r *Role) apiHandlerZoneRecordsGet() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
-	type recordsInput struct {
-		Zone     string `query:"zone" required:"true" maxLength:"255"`
-		Hostname string `query:"hostname" required:"true" maxLength:"255"`
-		UID      string `query:"uid" maxLength:"255"`
+type APIRecordsPutInput struct {
+	Zone     string `query:"zone" required:"true" maxLength:"255"`
+	Hostname string `query:"hostname" required:"true" maxLength:"255"`
+	UID      string `query:"uid" maxLength:"255"`
 
-		Type string `json:"type" required:"true"`
+	Type string `json:"type" required:"true"`
 
-		Data         string `json:"data" required:"true"`
-		MXPreference uint16 `json:"mxPreference,omitempty"`
-		SRVPort      uint16 `json:"srvPort,omitempty"`
-		SRVPriority  uint16 `json:"srvPriority,omitempty"`
-		SRVWeight    uint16 `json:"srvWeight,omitempty"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsInput, output *struct{}) error {
+	Data         string `json:"data" required:"true"`
+	MXPreference uint16 `json:"mxPreference,omitempty"`
+	SRVPort      uint16 `json:"srvPort,omitempty"`
+	SRVPriority  uint16 `json:"srvPriority,omitempty"`
+	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+}
+
+func (r *Role) APIRecordsPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsPutInput, output *struct{}) error {
 		zone, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
@@ -108,14 +110,15 @@ func (r *Role) apiHandlerZoneRecordsPut() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerZoneRecordsDelete() usecase.Interactor {
-	type recordsDeleteInput struct {
-		Zone     string `query:"zone" required:"true"`
-		Hostname string `query:"hostname" required:"true"`
-		UID      string `query:"uid" required:"true"`
-		Type     string `query:"type" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input recordsDeleteInput, output *struct{}) error {
+type APIRecordsDeleteInput struct {
+	Zone     string `query:"zone" required:"true"`
+	Hostname string `query:"hostname" required:"true"`
+	UID      string `query:"uid" required:"true"`
+	Type     string `query:"type" required:"true"`
+}
+
+func (r *Role) APIRecordsDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsDeleteInput, output *struct{}) error {
 		_, ok := r.zones[input.Zone]
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)

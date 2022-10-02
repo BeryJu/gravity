@@ -27,7 +27,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
 
     send = (data: BackupRoleConfig): Promise<unknown> => {
         return new RolesBackupApi(DEFAULT_CONFIG).backupPutRoleConfig({
-            backupRoleBackupConfigInput: {
+            backupAPIRoleConfigInput: {
                 config: data,
             },
         });

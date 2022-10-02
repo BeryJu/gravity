@@ -25,7 +25,7 @@ export class RoleDNSConfigForm extends ModelForm<DnsRoleConfig, string> {
 
     send = (data: DnsRoleConfig): Promise<unknown> => {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutRoleConfig({
-            dnsRoleDNSConfigInput: { config: data },
+            dnsAPIRoleConfigInput: { config: data },
         });
     };
 

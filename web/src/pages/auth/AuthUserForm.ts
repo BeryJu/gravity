@@ -1,4 +1,4 @@
-import { AuthUser, RolesApiApi } from "gravity-api";
+import { AuthAPIUser, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -9,8 +9,8 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 import { KV } from "../../utils";
 
 @customElement("gravity-auth-user-form")
-export class AuthUserForm extends ModelForm<AuthUser, string> {
-    loadInstance(pk: string): Promise<AuthUser> {
+export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
+    loadInstance(pk: string): Promise<AuthAPIUser> {
         return new RolesApiApi(DEFAULT_CONFIG).apiGetUsers().then((users) => {
             const user = users.users?.find((z) => z.username === pk);
             if (!user) throw new Error("No user");
@@ -26,10 +26,10 @@ export class AuthUserForm extends ModelForm<AuthUser, string> {
         }
     }
 
-    send = (data: AuthUser): Promise<void> => {
+    send = (data: AuthAPIUser): Promise<void> => {
         return new RolesApiApi(DEFAULT_CONFIG).apiPutUsers({
             username: data.username,
-            authAuthUsersPut: {
+            authAPIUsersPutInput: {
                 password: (data as unknown as KV).password,
             },
         });

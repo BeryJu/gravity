@@ -1,4 +1,4 @@
-import { DiscoverySubnet, RolesDiscoveryApi } from "gravity-api";
+import { DiscoveryAPISubnet, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DiscoverySubnetForm";
 
 @customElement("gravity-discovery-subnets")
-export class DiscoverySubnetsPage extends TablePage<DiscoverySubnet> {
+export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
     pageTitle(): string {
         return "Discovery subnets";
     }
@@ -29,7 +29,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoverySubnet> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoverySubnet>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
             const data = (subnets.subnets || []).filter((l) =>
                 l.name.toLowerCase().includes(this.search.toLowerCase()),
@@ -47,7 +47,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoverySubnet> {
         return [new TableColumn("Name"), new TableColumn("CIDR"), new TableColumn("Actions")];
     }
 
-    row(item: DiscoverySubnet): TemplateResult[] {
+    row(item: DiscoveryAPISubnet): TemplateResult[] {
         return [
             html`${item.name}`,
             html`${item.subnetCidr}`,
@@ -79,10 +79,10 @@ export class DiscoverySubnetsPage extends TablePage<DiscoverySubnet> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"Discovery subnets(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DiscoverySubnet) => {
+            .metadata=${(item: DiscoveryAPISubnet) => {
                 return [{ key: "Name", value: item.name }];
             }}
-            .delete=${(item: DiscoverySubnet) => {
+            .delete=${(item: DiscoveryAPISubnet) => {
                 return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryDeleteSubnets({
                     identifier: item.name,
                 });

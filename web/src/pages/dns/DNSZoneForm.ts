@@ -1,4 +1,4 @@
-import { DnsZone, RolesDnsApi } from "gravity-api";
+import { DnsAPIZone, RolesDnsApi } from "gravity-api";
 import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
@@ -23,8 +23,8 @@ export const DEFAULT_HANDLER_CONFIG = [
 ];
 
 @customElement("gravity-dns-zone-form")
-export class DNSZoneForm extends ModelForm<DnsZone, string> {
-    loadInstance(pk: string): Promise<DnsZone> {
+export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
+    loadInstance(pk: string): Promise<DnsAPIZone> {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
             const zone = zones.zones?.find((z) => z.name === pk);
             if (!zone) throw new Error("No zone");
@@ -40,10 +40,10 @@ export class DNSZoneForm extends ModelForm<DnsZone, string> {
         }
     }
 
-    send = (data: DnsZone): Promise<void> => {
+    send = (data: DnsAPIZone): Promise<void> => {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutZones({
             zone: this.instance?.name || "",
-            dnsZoneInput: data,
+            dnsAPIZonesPutInput: data,
         });
     };
 

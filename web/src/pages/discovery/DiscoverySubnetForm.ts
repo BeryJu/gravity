@@ -1,4 +1,4 @@
-import { DiscoverySubnet, RolesDiscoveryApi } from "gravity-api";
+import { DiscoveryAPISubnet, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -9,8 +9,8 @@ import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-discovery-subnet-form")
-export class DiscoverySubnetForm extends ModelForm<DiscoverySubnet, string> {
-    loadInstance(pk: string): Promise<DiscoverySubnet> {
+export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
+    loadInstance(pk: string): Promise<DiscoveryAPISubnet> {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
             const subnet = subnets.subnets?.find((z) => z.name === pk);
             if (!subnet) throw new Error("No subnet");
@@ -26,10 +26,10 @@ export class DiscoverySubnetForm extends ModelForm<DiscoverySubnet, string> {
         }
     }
 
-    send = (data: DiscoverySubnet): Promise<void> => {
+    send = (data: DiscoveryAPISubnet): Promise<void> => {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryPutSubnets({
             identifier: this.instance?.name || data.name,
-            discoverySubnetsInput: data,
+            discoveryAPISubnetsPutInput: data,
         });
     };
 

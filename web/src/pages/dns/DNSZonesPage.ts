@@ -1,4 +1,4 @@
-import { DnsZone, RolesDnsApi } from "gravity-api";
+import { DnsAPIZone, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DNSZoneForm";
 
 @customElement("gravity-dns-zones")
-export class DNSZonesPage extends TablePage<DnsZone> {
+export class DNSZonesPage extends TablePage<DnsAPIZone> {
     pageTitle(): string {
         return "DNS Zones";
     }
@@ -29,7 +29,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DnsZone>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DnsAPIZone>> {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
             const data = (zones.zones || []).filter((l) =>
                 l.name.toLowerCase().includes(this.search.toLowerCase()),
@@ -51,7 +51,7 @@ export class DNSZonesPage extends TablePage<DnsZone> {
         ];
     }
 
-    row(item: DnsZone): TemplateResult[] {
+    row(item: DnsAPIZone): TemplateResult[] {
         return [
             html`<a href=${`#/dns/zones/${item.name}`}>
                 ${item.name === "." ? "Root Zone" : item.name}
@@ -85,10 +85,10 @@ export class DNSZonesPage extends TablePage<DnsZone> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"DNS Zone(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DnsZone) => {
+            .metadata=${(item: DnsAPIZone) => {
                 return [{ key: "Name", value: item.name }];
             }}
-            .delete=${(item: DnsZone) => {
+            .delete=${(item: DnsAPIZone) => {
                 return new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteZones({
                     zone: item.name,
                 });

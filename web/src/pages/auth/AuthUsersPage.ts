@@ -1,4 +1,4 @@
-import { AuthUser, RolesApiApi } from "gravity-api";
+import { AuthAPIUser, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./AuthUserForm";
 
 @customElement("gravity-auth-users")
-export class AuthUsersPage extends TablePage<AuthUser> {
+export class AuthUsersPage extends TablePage<AuthAPIUser> {
     pageTitle(): string {
         return "Users";
     }
@@ -29,7 +29,7 @@ export class AuthUsersPage extends TablePage<AuthUser> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<AuthUser>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<AuthAPIUser>> {
         return new RolesApiApi(DEFAULT_CONFIG).apiGetUsers().then((users) => {
             const data = (users.users || []).filter((l) =>
                 l.username.toLowerCase().includes(this.search.toLowerCase()),
@@ -47,7 +47,7 @@ export class AuthUsersPage extends TablePage<AuthUser> {
         return [new TableColumn("Username"), new TableColumn("Actions")];
     }
 
-    row(item: AuthUser): TemplateResult<1 | 2>[] {
+    row(item: AuthAPIUser): TemplateResult[] {
         return [
             html`${item.username}`,
             html`<ak-forms-modal>
@@ -67,10 +67,10 @@ export class AuthUsersPage extends TablePage<AuthUser> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"User(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: AuthUser) => {
+            .metadata=${(item: AuthAPIUser) => {
                 return [{ key: "Username", value: item.username }];
             }}
-            .delete=${(item: AuthUser) => {
+            .delete=${(item: AuthAPIUser) => {
                 return new RolesApiApi(DEFAULT_CONFIG).apiDeleteUsers({
                     username: item.username,
                 });

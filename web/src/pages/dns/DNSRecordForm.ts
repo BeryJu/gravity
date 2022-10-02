@@ -1,4 +1,4 @@
-import { DnsRecord, RolesDnsApi } from "gravity-api";
+import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -9,11 +9,11 @@ import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-dns-record-form")
-export class DNSRecordForm extends ModelForm<DnsRecord, string> {
+export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     @property()
     zone?: string;
 
-    loadInstance(pk: string): Promise<DnsRecord> {
+    loadInstance(pk: string): Promise<DnsAPIRecord> {
         return new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetRecords({
                 zone: this.zone,
@@ -33,12 +33,12 @@ export class DNSRecordForm extends ModelForm<DnsRecord, string> {
         }
     }
 
-    send = (data: DnsRecord): Promise<void> => {
+    send = (data: DnsAPIRecord): Promise<void> => {
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutRecords({
             zone: this.zone || "",
             hostname: data.hostname,
             uid: data.uid,
-            dnsRecordsInputType2: data,
+            dnsAPIRecordsPutInput: data,
         });
     };
 

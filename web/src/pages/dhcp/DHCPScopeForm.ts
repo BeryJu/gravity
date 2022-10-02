@@ -1,4 +1,4 @@
-import { DhcpScope, RolesDhcpApi } from "gravity-api";
+import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,8 +12,8 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 import { KV } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
-export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
-    loadInstance(pk: string): Promise<DhcpScope> {
+export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
+    loadInstance(pk: string): Promise<DhcpAPIScope> {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
             const zone = scopes.scopes?.find((z) => z.scope === pk);
             if (!zone) throw new Error("No scope");
@@ -29,7 +29,7 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
         }
     }
 
-    send = (data: DhcpScope): Promise<void> => {
+    send = (data: DhcpAPIScope): Promise<void> => {
         if (data.ipam) {
             data.ipam.type = "internal";
         }
@@ -43,7 +43,7 @@ export class DHCPScopeForm extends ModelForm<DhcpScope, string> {
             });
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
             scope: data.scope,
-            dhcpScopesInput: data,
+            dhcpAPIScopesPutInput: data,
         });
     };
 

@@ -1,4 +1,4 @@
-import { AuthToken, RolesApiApi } from "gravity-api";
+import { AuthAPIToken, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -11,12 +11,12 @@ import "../../elements/forms/HorizontalFormElement";
 import { showMessage } from "../../elements/messages/MessageContainer";
 
 @customElement("gravity-auth-token-form")
-export class AuthTokenForm extends Form<AuthToken> {
+export class AuthTokenForm extends Form<AuthAPIToken> {
     getSuccessMessage(): string {
         return "Successfully created token.";
     }
 
-    send = (data: AuthToken): Promise<void> => {
+    send = (data: AuthAPIToken): Promise<void> => {
         return new RolesApiApi(DEFAULT_CONFIG)
             .apiPutTokens({
                 username: data.username,

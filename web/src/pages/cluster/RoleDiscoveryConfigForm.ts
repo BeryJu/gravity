@@ -27,13 +27,13 @@ export class RoleDiscoveryConfigForm extends ModelForm<DiscoveryRoleConfig, stri
 
     send = (data: DiscoveryRoleConfig): Promise<unknown> => {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryPutRoleConfig({
-            discoveryRoleDiscoveryConfigInput: { config: data },
+            discoveryAPIRoleConfigInput: { config: data },
         });
     };
 
     renderForm(): TemplateResult {
         return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal ?required=${true} name="enabled">
+            <ak-form-element-horizontal name="enabled">
                 <div class="pf-c-check">
                     <input
                         type="checkbox"

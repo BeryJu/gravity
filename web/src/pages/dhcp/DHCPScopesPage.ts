@@ -1,4 +1,4 @@
-import { DhcpScope, RolesDhcpApi } from "gravity-api";
+import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DHCPScopeForm";
 
 @customElement("gravity-dhcp-scopes")
-export class DHCPScopesPage extends TablePage<DhcpScope> {
+export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     pageTitle(): string {
         return "DHCP Scopes";
     }
@@ -29,7 +29,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DhcpScope>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DhcpAPIScope>> {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
             const data = (scopes.scopes || []).filter(
                 (l) =>
@@ -50,7 +50,7 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
         return [new TableColumn("Scope"), new TableColumn("Subnet"), new TableColumn("Actions")];
     }
 
-    row(item: DhcpScope): TemplateResult[] {
+    row(item: DhcpAPIScope): TemplateResult[] {
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`<pre>${item.subnetCidr}</pre>`,
@@ -71,13 +71,13 @@ export class DHCPScopesPage extends TablePage<DhcpScope> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"DHCP Scope(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DhcpScope) => {
+            .metadata=${(item: DhcpAPIScope) => {
                 return [
                     { key: "Scope", value: item.scope },
                     { key: "CIDR", value: item.subnetCidr },
                 ];
             }}
-            .delete=${(item: DhcpScope) => {
+            .delete=${(item: DhcpAPIScope) => {
                 return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteScopes({
                     scope: item.scope,
                 });

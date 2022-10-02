@@ -1,4 +1,4 @@
-import { DhcpLease, RolesDhcpApi } from "gravity-api";
+import { DhcpAPILease, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -9,11 +9,11 @@ import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-dhcp-lease-form")
-export class DHCPLeaseForm extends ModelForm<DhcpLease, string> {
+export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     @property()
     scope?: string;
 
-    loadInstance(pk: string): Promise<DhcpLease> {
+    loadInstance(pk: string): Promise<DhcpAPILease> {
         return new RolesDhcpApi(DEFAULT_CONFIG)
             .dhcpGetLeases({
                 scope: this.scope,
@@ -33,11 +33,11 @@ export class DHCPLeaseForm extends ModelForm<DhcpLease, string> {
         }
     }
 
-    send = (data: DhcpLease): Promise<void> => {
+    send = (data: DhcpAPILease): Promise<void> => {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
             scope: this.scope || "",
             identifier: data.identifier,
-            dhcpLeasesInputType2: data,
+            dhcpAPILeasesPutInput: data,
         });
     };
 

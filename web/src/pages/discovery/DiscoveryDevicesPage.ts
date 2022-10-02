@@ -50,7 +50,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
         return [new TableColumn("IP"), new TableColumn("Hostname"), new TableColumn("MAC")];
     }
 
-    row(item: DiscoveryDevice): TemplateResult<1 | 2>[] {
+    row(item: DiscoveryDevice): TemplateResult[] {
         return [
             html`<pre>${item.ip}</pre>`,
             html`${item.hostname || "-"}`,

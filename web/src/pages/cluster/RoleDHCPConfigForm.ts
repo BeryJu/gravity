@@ -25,7 +25,7 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
 
     send = (data: DhcpRoleConfig): Promise<unknown> => {
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutRoleConfig({
-            dhcpRoleDHCPConfigInput: {
+            dhcpAPIRoleConfigInput: {
                 config: data,
             },
         });

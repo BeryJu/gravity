@@ -1,4 +1,4 @@
-import { DnsRecord, RolesDnsApi } from "gravity-api";
+import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -13,7 +13,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DNSRecordForm";
 
 @customElement("gravity-dns-records")
-export class DNSRecordsPage extends TablePage<DnsRecord> {
+export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     @property()
     zone?: string;
 
@@ -33,7 +33,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DnsRecord>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DnsAPIRecord>> {
         return new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetRecords({
                 zone: this.zone || ".",
@@ -63,7 +63,7 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
         ];
     }
 
-    row(item: DnsRecord): TemplateResult<1 | 2>[] {
+    row(item: DnsAPIRecord): TemplateResult[] {
         return [
             html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
             html`${item.type}`,
@@ -89,14 +89,14 @@ export class DNSRecordsPage extends TablePage<DnsRecord> {
         return html`<ak-forms-delete-bulk
             objectLabel=${"DNS Record(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DnsRecord) => {
+            .metadata=${(item: DnsAPIRecord) => {
                 return [
                     { key: "Hostname", value: item.hostname },
                     { key: "Type", value: item.type },
                     { key: "Data", value: item.data },
                 ];
             }}
-            .delete=${(item: DnsRecord) => {
+            .delete=${(item: DnsAPIRecord) => {
                 return new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteRecords({
                     zone: this.zone || "",
                     hostname: item.hostname,

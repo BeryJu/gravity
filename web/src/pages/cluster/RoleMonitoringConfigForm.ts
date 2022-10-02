@@ -27,7 +27,7 @@ export class RoleMonitoringConfigForm extends ModelForm<MonitoringRoleConfig, st
 
     send = (data: MonitoringRoleConfig): Promise<unknown> => {
         return new RolesMonitoringApi(DEFAULT_CONFIG).monitoringPutRoleConfig({
-            monitoringRoleMonitoringConfigInput: { config: data },
+            monitoringAPIRoleConfigInput: { config: data },
         });
     };
 
