@@ -11,7 +11,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAuthConfigOutput'
+                $ref: '#/components/schemas/AuthAPIConfigOutput'
           description: OK
         "500":
           content:
@@ -29,13 +29,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthUserLoginInput'
+              $ref: '#/components/schemas/AuthAPILoginInput'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthUsersLoginOutput'
+                $ref: '#/components/schemas/AuthAPILoginOutput'
           description: OK
         "401":
           content:
@@ -60,7 +60,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthUserMeOutput'
+                $ref: '#/components/schemas/AuthAPIMeOutput'
           description: OK
         "500":
           content:
@@ -99,7 +99,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAuthTokensOutput'
+                $ref: '#/components/schemas/AuthAPITokensGetOutput'
           description: OK
         "500":
           content:
@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAuthTokensPutOutput'
+                $ref: '#/components/schemas/AuthAPITokensPutOutput'
           description: OK
         "500":
           content:
@@ -162,7 +162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAuthUsersOutput'
+                $ref: '#/components/schemas/AuthAPIUsersGetOutput'
           description: OK
         "500":
           content:
@@ -185,7 +185,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthAuthUsersPut'
+              $ref: '#/components/schemas/AuthAPIUsersPutInput'
       responses:
         "204":
           description: No Content
@@ -251,7 +251,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpScopesOutput'
+                $ref: '#/components/schemas/DhcpAPIScopesGetOutput'
           description: OK
       summary: DHCP Scopes
       tags:
@@ -269,7 +269,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpScopesInput'
+              $ref: '#/components/schemas/DhcpAPIScopesPutInput'
       responses:
         "204":
           description: No Content
@@ -330,7 +330,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpLeasesOutput'
+                $ref: '#/components/schemas/DhcpAPILeasesGetOutput'
           description: OK
       summary: DHCP Leases
       tags:
@@ -354,7 +354,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpLeasesInputType2'
+              $ref: '#/components/schemas/DhcpAPILeasesPutInput'
       responses:
         "204":
           description: No Content
@@ -521,7 +521,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoverySubnetsOutput'
+                $ref: '#/components/schemas/DiscoveryAPISubnetsGetOutput'
           description: OK
         "500":
           content:
@@ -545,7 +545,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoverySubnetsInput'
+              $ref: '#/components/schemas/DiscoveryAPISubnetsPutInput'
       responses:
         "204":
           description: No Content
@@ -576,12 +576,12 @@ paths:
       responses:
         "204":
           description: No Content
-        "400":
+        "404":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
-          description: Bad Request
+          description: Not Found
         "500":
           content:
             application/json:
@@ -624,7 +624,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsZonesOutput'
+                $ref: '#/components/schemas/DnsAPIZonesGetOutput'
           description: OK
         "500":
           content:
@@ -648,7 +648,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsZoneInput'
+              $ref: '#/components/schemas/DnsAPIZonesPutInput'
       responses:
         "204":
           description: No Content
@@ -801,18 +801,18 @@ paths:
       - roles/dns
   /api/v1/etcd/join:
     post:
-      operationId: etcd.join_member
+      operationId: etcd.join_member2
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EtcdEtcdJoinInput'
+              $ref: '#/components/schemas/ApiEtcdJoinInput'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtcdEtcdJoinOutput'
+                $ref: '#/components/schemas/ApiEtcdJoinOutput'
           description: OK
         "500":
           content:
@@ -825,13 +825,13 @@ paths:
       - roles/etcd
   /api/v1/etcd/members:
     get:
-      operationId: etcd.get_members
+      operationId: etcd.get_members2
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtcdMembersOutput'
+                $ref: '#/components/schemas/ApiMembersOutput'
           description: OK
         "500":
           content:
@@ -850,7 +850,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceSystemInfo'
+                $ref: '#/components/schemas/InstanceAPIInstanceInfo'
           description: OK
         "500":
           content:
@@ -869,7 +869,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceInstancesOutput'
+                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
           description: OK
         "500":
           content:
@@ -888,7 +888,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiRoleAPIConfigOutput'
+                $ref: '#/components/schemas/ApiAPIRoleConfigOutput'
           description: OK
       summary: API role config
       tags:
@@ -899,7 +899,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiRoleAPIConfigInput'
+              $ref: '#/components/schemas/ApiAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -926,7 +926,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BackupRoleBackupConfigOutput'
+                $ref: '#/components/schemas/BackupAPIRoleConfigOutput'
           description: OK
       summary: Backup role config
       tags:
@@ -937,7 +937,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BackupRoleBackupConfigInput'
+              $ref: '#/components/schemas/BackupAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -964,7 +964,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpRoleDHCPConfigOutput'
+                $ref: '#/components/schemas/DhcpAPIRoleConfigOutput'
           description: OK
       summary: DHCP role config
       tags:
@@ -975,7 +975,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpRoleDHCPConfigInput'
+              $ref: '#/components/schemas/DhcpAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -1002,7 +1002,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveryRoleDiscoveryConfigOutput'
+                $ref: '#/components/schemas/DiscoveryAPIRoleConfigOutput'
           description: OK
       summary: Discovery role config
       tags:
@@ -1013,7 +1013,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryRoleDiscoveryConfigInput'
+              $ref: '#/components/schemas/DiscoveryAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -1040,7 +1040,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsRoleDNSConfigOutput'
+                $ref: '#/components/schemas/DnsAPIRoleConfigOutput'
           description: OK
       summary: DNS role config
       tags:
@@ -1051,7 +1051,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsRoleDNSConfigInput'
+              $ref: '#/components/schemas/DnsAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -1078,7 +1078,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MonitoringRoleMonitoringConfigOutput'
+                $ref: '#/components/schemas/MonitoringAPIRoleConfigOutput'
           description: OK
       summary: Monitoring role config
       tags:
@@ -1089,7 +1089,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MonitoringRoleMonitoringConfigInput'
+              $ref: '#/components/schemas/MonitoringAPIRoleConfigInput'
       responses:
         "204":
           description: No Content
@@ -1110,19 +1110,46 @@ paths:
       - roles/monitoring
 components:
   schemas:
-    ApiRoleAPIConfigInput:
+    ApiAPIRoleConfigInput:
       properties:
         config:
           $ref: '#/components/schemas/ApiRoleConfig'
       required:
       - config
       type: object
-    ApiRoleAPIConfigOutput:
+    ApiAPIRoleConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/ApiRoleConfig'
       required:
       - config
+      type: object
+    ApiEtcdJoinInput:
+      properties:
+        peer:
+          maxLength: 255
+          type: string
+      type: object
+    ApiEtcdJoinOutput:
+      properties:
+        env:
+          type: string
+      type: object
+    ApiMember:
+      properties:
+        id:
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      type: object
+    ApiMembersOutput:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/ApiMember'
+          nullable: true
+          type: array
       type: object
     ApiRoleConfig:
       properties:
@@ -1133,72 +1160,26 @@ components:
         port:
           type: integer
       type: object
-    AuthAuthConfigOutput:
+    AuthAPIConfigOutput:
       properties:
         bool:
           type: boolean
         oidc:
           type: boolean
       type: object
-    AuthAuthTokensOutput:
-      properties:
-        tokens:
-          items:
-            $ref: '#/components/schemas/AuthToken'
-          nullable: true
-          type: array
-      required:
-      - tokens
-      type: object
-    AuthAuthTokensPutOutput:
-      properties:
-        key:
-          type: string
-      required:
-      - key
-      type: object
-    AuthAuthUsersOutput:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/AuthUser'
-          nullable: true
-          type: array
-      required:
-      - users
-      type: object
-    AuthAuthUsersPut:
-      properties:
-        password:
-          type: string
-      required:
-      - password
-      type: object
-    AuthToken:
-      properties:
-        key:
-          type: string
-        username:
-          type: string
-      required:
-      - key
-      - username
-      type: object
-    AuthUser:
-      properties:
-        username:
-          type: string
-      required:
-      - username
-      type: object
-    AuthUserLoginInput:
+    AuthAPILoginInput:
       properties:
         password:
           type: string
         username:
           type: string
       type: object
-    AuthUserMeOutput:
+    AuthAPILoginOutput:
+      properties:
+        successful:
+          type: boolean
+      type: object
+    AuthAPIMeOutput:
       properties:
         authenticated:
           type: boolean
@@ -1208,10 +1189,70 @@ components:
       - authenticated
       - username
       type: object
-    AuthUsersLoginOutput:
+    AuthAPIToken:
       properties:
-        successful:
-          type: boolean
+        key:
+          type: string
+        username:
+          type: string
+      required:
+      - key
+      - username
+      type: object
+    AuthAPITokensGetOutput:
+      properties:
+        tokens:
+          items:
+            $ref: '#/components/schemas/AuthAPIToken'
+          nullable: true
+          type: array
+      required:
+      - tokens
+      type: object
+    AuthAPITokensPutOutput:
+      properties:
+        key:
+          type: string
+      required:
+      - key
+      type: object
+    AuthAPIUser:
+      properties:
+        username:
+          type: string
+      required:
+      - username
+      type: object
+    AuthAPIUsersGetOutput:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/AuthAPIUser'
+          nullable: true
+          type: array
+      required:
+      - users
+      type: object
+    AuthAPIUsersPutInput:
+      properties:
+        password:
+          type: string
+      required:
+      - password
+      type: object
+    BackupAPIRoleConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
+      type: object
+    BackupAPIRoleConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
       type: object
     BackupBackupStatus:
       properties:
@@ -1224,20 +1265,6 @@ components:
           type: integer
         status:
           type: string
-      type: object
-    BackupRoleBackupConfigInput:
-      properties:
-        config:
-          $ref: '#/components/schemas/BackupRoleConfig'
-      required:
-      - config
-      type: object
-    BackupRoleBackupConfigOutput:
-      properties:
-        config:
-          $ref: '#/components/schemas/BackupRoleConfig'
-      required:
-      - config
       type: object
     BackupRoleConfig:
       properties:
@@ -1254,7 +1281,7 @@ components:
         secretKey:
           type: string
       type: object
-    DhcpLease:
+    DhcpAPILease:
       properties:
         address:
           type: string
@@ -1275,7 +1302,17 @@ components:
       - addressLeaseTime
       - scopeKey
       type: object
-    DhcpLeasesInputType2:
+    DhcpAPILeasesGetOutput:
+      properties:
+        leases:
+          items:
+            $ref: '#/components/schemas/DhcpAPILease'
+          nullable: true
+          type: array
+      required:
+      - leases
+      type: object
+    DhcpAPILeasesPutInput:
       properties:
         address:
           maxLength: 40
@@ -1294,70 +1331,26 @@ components:
       - hostname
       - addressLeaseTime
       type: object
-    DhcpLeasesOutput:
-      properties:
-        leases:
-          items:
-            $ref: '#/components/schemas/DhcpLease'
-          nullable: true
-          type: array
-      required:
-      - leases
-      type: object
-    DhcpOption:
-      properties:
-        tag:
-          minimum: 0
-          nullable: true
-          type: integer
-        tagName:
-          type: string
-        value:
-          nullable: true
-          type: string
-        value64:
-          items:
-            type: string
-          nullable: true
-          type: array
-      type: object
-    DhcpRoleConfig:
-      properties:
-        leaseNegotiateTimeout:
-          type: integer
-        port:
-          type: integer
-      type: object
-    DhcpRoleDHCPConfigInput:
+    DhcpAPIRoleConfigInput:
       properties:
         config:
           $ref: '#/components/schemas/DhcpRoleConfig'
       required:
       - config
       type: object
-    DhcpRoleDHCPConfigOutput:
+    DhcpAPIRoleConfigOutput:
       properties:
         config:
           $ref: '#/components/schemas/DhcpRoleConfig'
       required:
       - config
       type: object
-    DhcpScope:
+    DhcpAPIScope:
       properties:
         default:
           type: boolean
         dns:
-          properties:
-            addZoneInHostname:
-              type: boolean
-            search:
-              items:
-                type: string
-              nullable: true
-              type: array
-            zone:
-              type: string
-          type: object
+          $ref: '#/components/schemas/DhcpScopeDNS'
         ipam:
           additionalProperties:
             type: string
@@ -1365,7 +1358,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/DhcpOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         scope:
@@ -1382,22 +1375,22 @@ components:
       - ttl
       - ipam
       type: object
-    DhcpScopesInput:
+    DhcpAPIScopesGetOutput:
+      properties:
+        scopes:
+          items:
+            $ref: '#/components/schemas/DhcpAPIScope'
+          nullable: true
+          type: array
+      required:
+      - scopes
+      type: object
+    DhcpAPIScopesPutInput:
       properties:
         default:
           type: boolean
         dns:
-          properties:
-            addZoneInHostname:
-              type: boolean
-            search:
-              items:
-                type: string
-              nullable: true
-              type: array
-            zone:
-              type: string
-          type: object
+          $ref: '#/components/schemas/DhcpScopeDNS'
         ipam:
           additionalProperties:
             type: string
@@ -1405,7 +1398,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/DhcpOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         subnetCidr:
@@ -1419,15 +1412,78 @@ components:
       - options
       - ttl
       type: object
-    DhcpScopesOutput:
+    DhcpRoleConfig:
       properties:
-        scopes:
+        leaseNegotiateTimeout:
+          type: integer
+        port:
+          type: integer
+      type: object
+    DhcpScopeDNS:
+      nullable: true
+      properties:
+        addZoneInHostname:
+          type: boolean
+        search:
           items:
-            $ref: '#/components/schemas/DhcpScope'
+            type: string
           nullable: true
           type: array
+        zone:
+          type: string
+      type: object
+    DiscoveryAPIRoleConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
       required:
-      - scopes
+      - config
+      type: object
+    DiscoveryAPIRoleConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
+      required:
+      - config
+      type: object
+    DiscoveryAPISubnet:
+      properties:
+        discoveryTTL:
+          type: integer
+        dnsResolver:
+          type: string
+        name:
+          type: string
+        subnetCidr:
+          type: string
+      required:
+      - name
+      - subnetCidr
+      - dnsResolver
+      - discoveryTTL
+      type: object
+    DiscoveryAPISubnetsGetOutput:
+      properties:
+        subnets:
+          items:
+            $ref: '#/components/schemas/DiscoveryAPISubnet'
+          nullable: true
+          type: array
+      type: object
+    DiscoveryAPISubnetsPutInput:
+      properties:
+        discoveryTTL:
+          type: integer
+        dnsResolver:
+          maxLength: 255
+          type: string
+        subnetCidr:
+          maxLength: 40
+          type: string
+      required:
+      - subnetCidr
+      - dnsResolver
+      - discoveryTTL
       type: object
     DiscoveryDevice:
       properties:
@@ -1474,51 +1530,70 @@ components:
         enabled:
           type: boolean
       type: object
-    DiscoveryRoleDiscoveryConfigInput:
+    DnsAPIRoleConfigInput:
       properties:
         config:
-          $ref: '#/components/schemas/DiscoveryRoleConfig'
+          $ref: '#/components/schemas/DnsRoleConfig'
       required:
       - config
       type: object
-    DiscoveryRoleDiscoveryConfigOutput:
+    DnsAPIRoleConfigOutput:
       properties:
         config:
-          $ref: '#/components/schemas/DiscoveryRoleConfig'
+          $ref: '#/components/schemas/DnsRoleConfig'
       required:
       - config
       type: object
-    DiscoverySubnet:
+    DnsAPIZone:
       properties:
-        discoveryTTL:
+        authoritative:
+          type: boolean
+        defaultTTL:
+          minimum: 0
           type: integer
+        handlerConfigs:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          nullable: true
+          type: array
         name:
-          type: string
-        subnetCidr:
           type: string
       required:
       - name
-      - subnetCidr
-      - discoveryTTL
+      - authoritative
+      - handlerConfigs
+      - defaultTTL
       type: object
-    DiscoverySubnetsInput:
+    DnsAPIZonesGetOutput:
       properties:
-        discoveryTTL:
-          type: integer
-        subnetCidr:
-          maxLength: 40
-          type: string
-      required:
-      - subnetCidr
-      - discoveryTTL
-      type: object
-    DiscoverySubnetsOutput:
-      properties:
-        subnets:
+        zones:
           items:
-            $ref: '#/components/schemas/DiscoverySubnet'
+            $ref: '#/components/schemas/DnsAPIZone'
           nullable: true
           type: array
+      required:
+      - zones
+      type: object
+    DnsAPIZonesPutInput:
+      properties:
+        authoritative:
+          type: boolean
+        defaultTTL:
+          minimum: 0
+          type: integer
+        handlerConfigs:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          nullable: true
+          type: array
+      required:
+      - authoritative
+      - handlerConfigs
+      - defaultTTL
       type: object
     DnsRecord:
       properties:
@@ -1588,98 +1663,6 @@ components:
         port:
           type: integer
       type: object
-    DnsRoleDNSConfigInput:
-      properties:
-        config:
-          $ref: '#/components/schemas/DnsRoleConfig'
-      required:
-      - config
-      type: object
-    DnsRoleDNSConfigOutput:
-      properties:
-        config:
-          $ref: '#/components/schemas/DnsRoleConfig'
-      required:
-      - config
-      type: object
-    DnsZone:
-      properties:
-        authoritative:
-          type: boolean
-        defaultTTL:
-          minimum: 0
-          type: integer
-        handlerConfigs:
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          nullable: true
-          type: array
-        name:
-          type: string
-      required:
-      - name
-      - authoritative
-      - handlerConfigs
-      - defaultTTL
-      type: object
-    DnsZoneInput:
-      properties:
-        authoritative:
-          type: boolean
-        defaultTTL:
-          minimum: 0
-          type: integer
-        handlerConfigs:
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          nullable: true
-          type: array
-      required:
-      - authoritative
-      - handlerConfigs
-      - defaultTTL
-      type: object
-    DnsZonesOutput:
-      properties:
-        zones:
-          items:
-            $ref: '#/components/schemas/DnsZone'
-          nullable: true
-          type: array
-      required:
-      - zones
-      type: object
-    EtcdEtcdJoinInput:
-      properties:
-        peer:
-          maxLength: 255
-          type: string
-      type: object
-    EtcdEtcdJoinOutput:
-      properties:
-        env:
-          type: string
-      type: object
-    EtcdMember:
-      properties:
-        id:
-          minimum: 0
-          type: integer
-        name:
-          type: string
-      type: object
-    EtcdMembersOutput:
-      properties:
-        members:
-          items:
-            $ref: '#/components/schemas/EtcdMember'
-          nullable: true
-          type: array
-      type: object
     ExtconfigExtConfigDirs:
       nullable: true
       properties:
@@ -1690,33 +1673,7 @@ components:
         etcdDir:
           type: string
       type: object
-    InstanceInstanceInfo:
-      properties:
-        identifier:
-          type: string
-        ip:
-          type: string
-        roles:
-          type: string
-        version:
-          type: string
-      required:
-      - version
-      - roles
-      - identifier
-      - ip
-      type: object
-    InstanceInstancesOutput:
-      properties:
-        instances:
-          items:
-            $ref: '#/components/schemas/InstanceInstanceInfo'
-          nullable: true
-          type: array
-      required:
-      - instances
-      type: object
-    InstanceSystemInfo:
+    InstanceAPIInstanceInfo:
       properties:
         buildHash:
           type: string
@@ -1735,24 +1692,50 @@ components:
       - currentInstanceIdentifier
       - currentInstanceIP
       type: object
+    InstanceAPIInstancesOutput:
+      properties:
+        instances:
+          items:
+            $ref: '#/components/schemas/InstanceInstanceInfo'
+          nullable: true
+          type: array
+      required:
+      - instances
+      type: object
+    InstanceInstanceInfo:
+      properties:
+        identifier:
+          type: string
+        ip:
+          type: string
+        roles:
+          type: string
+        version:
+          type: string
+      required:
+      - version
+      - roles
+      - identifier
+      - ip
+      type: object
+    MonitoringAPIRoleConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
+      type: object
+    MonitoringAPIRoleConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
+      type: object
     MonitoringRoleConfig:
       properties:
         port:
           type: integer
-      type: object
-    MonitoringRoleMonitoringConfigInput:
-      properties:
-        config:
-          $ref: '#/components/schemas/MonitoringRoleConfig'
-      required:
-      - config
-      type: object
-    MonitoringRoleMonitoringConfigOutput:
-      properties:
-        config:
-          $ref: '#/components/schemas/MonitoringRoleConfig'
-      required:
-      - config
       type: object
     RestErrResponse:
       properties:
@@ -1782,6 +1765,23 @@ components:
         redirectURL:
           type: string
         scopes:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    TypesOption:
+      properties:
+        tag:
+          minimum: 0
+          nullable: true
+          type: integer
+        tagName:
+          type: string
+        value:
+          nullable: true
+          type: string
+        value64:
           items:
             type: string
           nullable: true

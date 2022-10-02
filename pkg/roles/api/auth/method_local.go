@@ -11,15 +11,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (ap *AuthProvider) apiHandlerAuthLogin() usecase.Interactor {
-	type userLoginInput struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
-	type usersLoginOutput struct {
-		Successful bool `json:"successful"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input *userLoginInput, output *usersLoginOutput) error {
+type APILoginInput struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+type APILoginOutput struct {
+	Successful bool `json:"successful"`
+}
+
+func (ap *AuthProvider) APILogin() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input *APILoginInput, output *APILoginOutput) error {
 		rawUsers, err := ap.inst.KV().Get(
 			ctx,
 			ap.inst.KV().Key(
@@ -60,7 +61,7 @@ func (ap *AuthProvider) apiHandlerAuthLogin() usecase.Interactor {
 	return u
 }
 
-func (ap *AuthProvider) apiHandlerAuthLogout(w http.ResponseWriter, r *http.Request) {
+func (ap *AuthProvider) APILogout(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	session.Values[types.SessionKeyUser] = nil
 	session.Values[types.SessionKeyDirty] = true

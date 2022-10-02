@@ -9,12 +9,13 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (ap *AuthProvider) apiHandlerAuthConfig() usecase.Interactor {
-	type authConfigOutput struct {
-		Local bool `json:"bool"`
-		OIDC  bool `json:"oidc"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *authConfigOutput) error {
+type APIConfigOutput struct {
+	Local bool `json:"bool"`
+	OIDC  bool `json:"oidc"`
+}
+
+func (ap *AuthProvider) APIConfig() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIConfigOutput) error {
 		if ap.oidc != nil {
 			output.OIDC = true
 		}
@@ -28,12 +29,13 @@ func (ap *AuthProvider) apiHandlerAuthConfig() usecase.Interactor {
 	return u
 }
 
-func (ap *AuthProvider) apiHandlerAuthMe() usecase.Interactor {
-	type userMeOutput struct {
-		Authenticated bool   `json:"authenticated" required:"true"`
-		Username      string `json:"username" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *userMeOutput) error {
+type APIMeOutput struct {
+	Authenticated bool   `json:"authenticated" required:"true"`
+	Username      string `json:"username" required:"true"`
+}
+
+func (ap *AuthProvider) APIMe() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIMeOutput) error {
 		session := ctx.Value(types.RequestSession).(*sessions.Session)
 		u, ok := session.Values[types.SessionKeyUser]
 		if u == nil || !ok {

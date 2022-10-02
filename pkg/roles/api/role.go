@@ -52,6 +52,10 @@ func New(instance roles.Instance) *Role {
 	return r
 }
 
+func (r *Role) SessionStore() sessions.Store {
+	return r.sessions
+}
+
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)

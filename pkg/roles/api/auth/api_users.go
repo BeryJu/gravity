@@ -10,14 +10,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (ap *AuthProvider) apiHandlerAuthUserGet() usecase.Interactor {
-	type user struct {
-		Username string `json:"username" required:"true"`
-	}
-	type authUsersOutput struct {
-		Users []user `json:"users" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *authUsersOutput) error {
+type APIUser struct {
+	Username string `json:"username" required:"true"`
+}
+type APIUsersGetOutput struct {
+	Users []APIUser `json:"users" required:"true"`
+}
+
+func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIUsersGetOutput) error {
 		rawUsers, err := ap.inst.KV().Get(
 			ctx,
 			ap.inst.KV().Key(
@@ -35,7 +36,7 @@ func (ap *AuthProvider) apiHandlerAuthUserGet() usecase.Interactor {
 				ap.log.WithError(err).Warning("failed to parse user")
 				continue
 			}
-			output.Users = append(output.Users, user{
+			output.Users = append(output.Users, APIUser{
 				Username: u.Username,
 			})
 		}
@@ -48,13 +49,14 @@ func (ap *AuthProvider) apiHandlerAuthUserGet() usecase.Interactor {
 	return u
 }
 
-func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
-	type authUsersPut struct {
-		Username string `query:"username" required:"true"`
+type APIUsersPutInput struct {
+	Username string `query:"username" required:"true"`
 
-		Password string `json:"password" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input authUsersPut, output *struct{}) error {
+	Password string `json:"password" required:"true"`
+}
+
+func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIUsersPutInput, output *struct{}) error {
 		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -77,11 +79,12 @@ func (ap *AuthProvider) apiHandlerAuthUserPut() usecase.Interactor {
 	return u
 }
 
-func (ap *AuthProvider) apiHandlerAuthUserDelete() usecase.Interactor {
-	type authUserDeleteInput struct {
-		Username string `query:"username" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input authUserDeleteInput, output *struct{}) error {
+type APIUsersDeleteInput struct {
+	Username string `query:"username" required:"true"`
+}
+
+func (ap *AuthProvider) APIUsersDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIUsersDeleteInput, output *struct{}) error {
 		_, err := ap.inst.KV().Delete(ctx, ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
