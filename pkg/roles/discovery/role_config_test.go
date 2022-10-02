@@ -17,7 +17,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	var output discovery.APIRoleDiscoveryConfigOutput
+	var output discovery.APIRoleConfigOutput
 	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
@@ -31,7 +31,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), discovery.APIRoleDiscoveryConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), discovery.APIRoleConfigInput{
 		Config: discovery.RoleConfig{},
 	}, &output))
 }

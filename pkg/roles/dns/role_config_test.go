@@ -17,7 +17,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	var output dns.APIRoleDNSConfigOutput
+	var output dns.APIRoleConfigOutput
 	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
@@ -31,7 +31,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dns.APIRoleDNSConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dns.APIRoleConfigInput{
 		Config: dns.RoleConfig{
 			Port: 1054,
 		},

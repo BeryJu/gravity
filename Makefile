@@ -29,7 +29,7 @@ web-build:
 	npm run build
 
 gen-build:
-	DEBUG=true go run ${GO_FLAGS} . cli generateSchema ${SCHEMA_FILE}
+	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
 gen-clean:

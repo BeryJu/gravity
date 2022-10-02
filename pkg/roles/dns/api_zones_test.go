@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAPIScopesGet(t *testing.T) {
+func TestAPIZonesGet(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
@@ -32,7 +32,7 @@ func TestAPIScopesGet(t *testing.T) {
 	assert.NotNil(t, output)
 }
 
-func TestAPIScopesPut(t *testing.T) {
+func TestAPIZonesPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
@@ -68,7 +68,7 @@ func TestAPIScopesPut(t *testing.T) {
 	)
 }
 
-func TestAPIScopesDelete(t *testing.T) {
+func TestAPIZonesDelete(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)

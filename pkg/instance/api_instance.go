@@ -18,8 +18,8 @@ import (
 func (i *Instance) setupInstanceAPI() {
 	i.ForRole("instance").AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/instances", i.APIHandlerInstances())
-		svc.Get("/api/v1/info", i.APIHandlerInfo())
+		svc.Get("/api/v1/instances", i.APIInstances())
+		svc.Get("/api/v1/info", i.APIInstanceInfo())
 	})
 }
 
@@ -27,7 +27,7 @@ type APIInstancesOutput struct {
 	Instances []InstanceInfo `json:"instances" required:"true"`
 }
 
-func (i *Instance) APIHandlerInstances() usecase.Interactor {
+func (i *Instance) APIInstances() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstancesOutput) error {
 		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()
 		instances, err := i.kv.Get(
@@ -61,7 +61,7 @@ func (i *Instance) APIHandlerInstances() usecase.Interactor {
 	return u
 }
 
-type APISystemInfo struct {
+type APIInstanceInfo struct {
 	Version   string `json:"version" required:"true"`
 	BuildHash string `json:"buildHash" required:"true"`
 
@@ -71,8 +71,8 @@ type APISystemInfo struct {
 	CurrentInstanceIP         string `json:"currentInstanceIP" required:"true"`
 }
 
-func (i *Instance) APIHandlerInfo() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APISystemInfo) error {
+func (i *Instance) APIInstanceInfo() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstanceInfo) error {
 		output.Version = extconfig.Version
 		output.BuildHash = extconfig.BuildHash
 		output.Dirs = extconfig.Get().Dirs()

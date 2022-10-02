@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAPIHandlerBackupStart(t *testing.T) {
+func TestAPIBackupStart(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 
 	var output backup.BackupStatus
-	assert.NoError(t, role.APIHandlerBackupStart().Interact(tests.Context(), backup.BackupStartInput{
+	assert.NoError(t, role.APIBackupStart().Interact(tests.Context(), backup.APIBackupStartInput{
 		Wait: true,
 	}, &output))
 	assert.NotNil(t, output)

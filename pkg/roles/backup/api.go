@@ -6,12 +6,12 @@ import (
 	"github.com/swaggest/usecase"
 )
 
-type BackupStartInput struct {
+type APIBackupStartInput struct {
 	Wait bool `query:"wait" required:"true"`
 }
 
-func (r *Role) APIHandlerBackupStart() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input BackupStartInput, output *BackupStatus) error {
+func (r *Role) APIBackupStart() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIBackupStartInput, output *BackupStatus) error {
 		if input.Wait {
 			o := r.SaveSnapshot()
 			output.Duration = o.Duration

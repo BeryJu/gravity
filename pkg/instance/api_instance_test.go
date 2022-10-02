@@ -9,19 +9,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAPIHandlerInfo(t *testing.T) {
+func TestAPIInstanceInfo(t *testing.T) {
 	rootInst := instance.New()
 
-	var output instance.APISystemInfo
-	assert.NoError(t, rootInst.APIHandlerInfo().Interact(tests.Context(), struct{}{}, &output))
+	var output instance.APIInstanceInfo
+	assert.NoError(t, rootInst.APIInstanceInfo().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 	assert.Equal(t, output.Version, extconfig.Version)
 }
 
-func TestAPIHandlerInstances(t *testing.T) {
+func TestAPIInstances(t *testing.T) {
 	rootInst := instance.New()
 
 	var output instance.APIInstancesOutput
-	assert.NoError(t, rootInst.APIHandlerInstances().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, rootInst.APIInstances().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }

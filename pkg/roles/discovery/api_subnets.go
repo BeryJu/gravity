@@ -9,18 +9,19 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) apiHandlerSubnets() usecase.Interactor {
-	type subnet struct {
-		Name string `json:"name" required:"true"`
+type APISubnet struct {
+	Name string `json:"name" required:"true"`
 
-		CIDR         string `json:"subnetCidr" required:"true"`
-		DNSResolver  string `json:"dnsResolver" required:"true"`
-		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
-	}
-	type subnetsOutput struct {
-		Subnets []subnet `json:"subnets"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *subnetsOutput) error {
+	CIDR         string `json:"subnetCidr" required:"true"`
+	DNSResolver  string `json:"dnsResolver" required:"true"`
+	DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
+}
+type APISubnetsGetOutput struct {
+	Subnets []APISubnet `json:"subnets"`
+}
+
+func (r *Role) APISubnetsGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APISubnetsGetOutput) error {
 		prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 		subnets, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix())
 		if err != nil {
@@ -32,7 +33,7 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 				r.log.WithError(err).Warning("failed to parse subnet")
 				continue
 			}
-			output.Subnets = append(output.Subnets, subnet{
+			output.Subnets = append(output.Subnets, APISubnet{
 				Name:         sub.Identifier,
 				CIDR:         sub.CIDR,
 				DNSResolver:  sub.DNSResolver,
@@ -48,15 +49,16 @@ func (r *Role) apiHandlerSubnets() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
-	type subnetsInput struct {
-		Name string `query:"identifier" required:"true" maxLength:"255"`
+type APISubnetsPutInput struct {
+	Name string `query:"identifier" required:"true" maxLength:"255"`
 
-		SubnetCIDR   string `json:"subnetCidr" required:"true" maxLength:"40"`
-		DNSResolver  string `json:"dnsResolver" required:"true" maxLength:"255"`
-		DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
+	SubnetCIDR   string `json:"subnetCidr" required:"true" maxLength:"40"`
+	DNSResolver  string `json:"dnsResolver" required:"true" maxLength:"255"`
+	DiscoveryTTL int    `json:"discoveryTTL" required:"true"`
+}
+
+func (r *Role) APISubnetsPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APISubnetsPutInput, output *struct{}) error {
 		s := r.NewSubnet(input.Name)
 		s.CIDR = input.SubnetCIDR
 		s.DiscoveryTTL = input.DiscoveryTTL
@@ -74,11 +76,12 @@ func (r *Role) apiHandlerSubnetsPut() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerSubnetsStart() usecase.Interactor {
-	type subnetsInput struct {
-		Name string `query:"identifier" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
+type APISubnetsStartInput struct {
+	Name string `query:"identifier" required:"true"`
+}
+
+func (r *Role) APISubnetsStart() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APISubnetsStartInput, output *struct{}) error {
 		rawSub, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,
@@ -105,11 +108,12 @@ func (r *Role) apiHandlerSubnetsStart() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerSubnetsDelete() usecase.Interactor {
-	type subnetsInput struct {
-		Name string `query:"identifier"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input subnetsInput, output *struct{}) error {
+type APISubnetsDeleteInput struct {
+	Name string `query:"identifier"`
+}
+
+func (r *Role) APISubnetsDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APISubnetsDeleteInput, output *struct{}) error {
 		_, err := r.i.KV().Delete(ctx, r.i.KV().Key(
 			types.KeyRole,
 			types.KeySubnets,
