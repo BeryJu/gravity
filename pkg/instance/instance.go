@@ -91,6 +91,7 @@ func (i *Instance) startSentry() {
 		Release:          fmt.Sprintf("gravity@%s", extconfig.FullVersion()),
 		TracesSampleRate: 0.5,
 		Transport:        transport,
+		Debug:            extconfig.Get().Debug,
 	})
 	if err != nil {
 		i.log.WithError(err).Warning("failed to init sentry")
