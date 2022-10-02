@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIHandlerInfo(t *testing.T) {
+func TestAPIHandlerInfo(t *testing.T) {
 	rootInst := instance.New()
 
 	var output instance.APISystemInfo
@@ -18,7 +18,7 @@ func Test_APIHandlerInfo(t *testing.T) {
 	assert.Equal(t, output.Version, extconfig.Version)
 }
 
-func Test_APIHandlerInstances(t *testing.T) {
+func TestAPIHandlerInstances(t *testing.T) {
 	rootInst := instance.New()
 
 	var output instance.APIInstancesOutput

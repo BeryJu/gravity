@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRole_Start_NoConfig(t *testing.T) {
+func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("debug")
 	role := debug.New(inst)
@@ -20,7 +20,7 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	defer role.Stop()
 }
 
-func TestRole_Start_EmptyConfig(t *testing.T) {
+func TestRoleStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("debug")
 	role := debug.New(inst)

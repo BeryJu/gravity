@@ -11,17 +11,18 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) apiHandlerZonesGet() usecase.Interactor {
-	type zone struct {
-		Name           string              `json:"name" required:"true"`
-		Authoritative  bool                `json:"authoritative" required:"true"`
-		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
-		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
-	}
-	type zonesOutput struct {
-		Zones []zone `json:"zones" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *zonesOutput) error {
+type APIZone struct {
+	Name           string              `json:"name" required:"true"`
+	Authoritative  bool                `json:"authoritative" required:"true"`
+	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
+	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
+}
+type APIZonesGetOutput struct {
+	Zones []APIZone `json:"zones" required:"true"`
+}
+
+func (r *Role) APIZonesGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIZonesGetOutput) error {
 		rawZones, err := r.i.KV().Get(
 			ctx,
 			r.i.KV().Key(
@@ -43,7 +44,7 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 			if strings.Contains(_zone.Name, "/") {
 				continue
 			}
-			output.Zones = append(output.Zones, zone{
+			output.Zones = append(output.Zones, APIZone{
 				Name:           _zone.Name,
 				Authoritative:  _zone.Authoritative,
 				DefaultTTL:     _zone.DefaultTTL,
@@ -59,14 +60,15 @@ func (r *Role) apiHandlerZonesGet() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerZonesPut() usecase.Interactor {
-	type zoneInput struct {
-		Name           string              `query:"zone" required:"true" maxLength:"255"`
-		Authoritative  bool                `json:"authoritative" required:"true"`
-		HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
-		DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *struct{}) error {
+type APIZonesPutInput struct {
+	Name           string              `query:"zone" required:"true" maxLength:"255"`
+	Authoritative  bool                `json:"authoritative" required:"true"`
+	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
+	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
+}
+
+func (r *Role) APIZonesPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesPutInput, output *struct{}) error {
 		z := r.newZone(input.Name)
 		z.Name = input.Name
 		if !strings.HasSuffix(z.Name, ".") {
@@ -88,16 +90,21 @@ func (r *Role) apiHandlerZonesPut() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerZonesDelete() usecase.Interactor {
-	type zoneInput struct {
-		Zone string `query:"zone"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input zoneInput, output *struct{}) error {
-		z, ok := r.zones[input.Zone]
-		if !ok {
-			return status.InvalidArgument
-		}
-		_, err := r.i.KV().Delete(ctx, z.etcdKey, clientv3.WithPrefix())
+type APIZonesDeleteInput struct {
+	Zone string `query:"zone"`
+}
+
+func (r *Role) APIZonesDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesDeleteInput, output *struct{}) error {
+		_, err := r.i.KV().Delete(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyZones,
+				input.Zone,
+			).String(),
+			clientv3.WithPrefix(),
+		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

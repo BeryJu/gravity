@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRole_Start_NoConfig(t *testing.T) {
+func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
@@ -21,7 +21,7 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	defer role.Stop()
 }
 
-func TestRole_Start_EmptyConfig(t *testing.T) {
+func TestRoleStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
@@ -31,7 +31,7 @@ func TestRole_Start_EmptyConfig(t *testing.T) {
 	defer role.Stop()
 }
 
-func TestRole_Health(t *testing.T) {
+func TestRoleHealth(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)
@@ -44,7 +44,7 @@ func TestRole_Health(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 }
 
-func TestRole_Scrape(t *testing.T) {
+func TestMetricsScrape(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("monitoring")
 	role := monitoring.New(inst)

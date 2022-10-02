@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIRoleConfigGet(t *testing.T) {
+func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
@@ -22,7 +22,7 @@ func Test_APIRoleConfigGet(t *testing.T) {
 	assert.NotNil(t, output)
 }
 
-func Test_APIRoleConfigPut(t *testing.T) {
+func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)

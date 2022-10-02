@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIHandlerBackupStart(t *testing.T) {
+func TestAPIHandlerBackupStart(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 

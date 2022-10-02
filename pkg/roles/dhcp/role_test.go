@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRole_Start_NoConfig(t *testing.T) {
+func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)

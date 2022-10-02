@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Resolver(t *testing.T) {
+func TestResolver(t *testing.T) {
 	globalExtConfig.FallbackDNS = "127.0.0.1:1053"
 	r := Resolver()
 	addr, err := r.LookupHost(tests.Context(), "gravity.beryju.io.")

@@ -12,27 +12,15 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
-	"github.com/insomniacslk/dhcp/dhcpv4"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-type Option struct {
-	Tag     *uint8   `json:"tag"`
-	TagName string   `json:"tagName"`
-	Value   *string  `json:"value"`
-	Value64 []string `json:"value64"`
-}
-
-var TagMap map[string]uint8 = map[string]uint8{
-	"subnet_mask": dhcpv4.OptionSubnetMask.Code(),
-	"router":      dhcpv4.OptionRouter.Code(),
-	"time_server": dhcpv4.OptionTimeServer.Code(),
-	"name_server": dhcpv4.OptionNameServer.Code(),
-	"domain_name": dhcpv4.OptionDomainName.Code(),
-	"bootfile":    dhcpv4.OptionBootfileName.Code(),
-	"tftp_server": dhcpv4.OptionTFTPServerName.Code(),
+type ScopeDNS struct {
+	Zone              string   `json:"zone"`
+	Search            []string `json:"search"`
+	AddZoneInHostname bool     `json:"addZoneInHostname"`
 }
 
 type Scope struct {
@@ -40,14 +28,10 @@ type Scope struct {
 
 	SubnetCIDR string            `json:"subnetCidr"`
 	Default    bool              `json:"default"`
-	Options    []*Option         `json:"options"`
+	Options    []*types.Option   `json:"options"`
 	TTL        int64             `json:"ttl"`
 	IPAM       map[string]string `json:"ipam"`
-	DNS        struct {
-		Zone              string   `json:"zone"`
-		Search            []string `json:"search"`
-		AddZoneInHostname bool     `json:"addZoneInHostname"`
-	} `json:"dns"`
+	DNS        *ScopeDNS         `json:"dns"`
 
 	cidr    netip.Prefix
 	etcdKey string

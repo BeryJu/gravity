@@ -7,25 +7,26 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
-	type leasesInput struct {
-		ScopeName string `query:"scope"`
-	}
-	type lease struct {
-		Identifier       string `json:"identifier" required:"true"`
-		Address          string `json:"address" required:"true"`
-		Hostname         string `json:"hostname" required:"true"`
-		AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
-		ScopeKey         string `json:"scopeKey" required:"true"`
-		DNSZone          string `json:"dnsZone"`
-	}
-	type leasesOutput struct {
-		Leases []*lease `json:"leases" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *leasesOutput) error {
+type APILeasesGetInput struct {
+	ScopeName string `query:"scope"`
+}
+type APILease struct {
+	Identifier       string `json:"identifier" required:"true"`
+	Address          string `json:"address" required:"true"`
+	Hostname         string `json:"hostname" required:"true"`
+	AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
+	ScopeKey         string `json:"scopeKey" required:"true"`
+	DNSZone          string `json:"dnsZone"`
+}
+type APILeasesGetOutput struct {
+	Leases []*APILease `json:"leases" required:"true"`
+}
+
+func (r *Role) APILeasesGet() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesGetInput, output *APILeasesGetOutput) error {
 		for _, l := range r.leases {
 			if l.ScopeKey == input.ScopeName {
-				output.Leases = append(output.Leases, &lease{
+				output.Leases = append(output.Leases, &APILease{
 					Identifier:       l.Identifier,
 					Address:          l.Address,
 					Hostname:         l.Hostname,
@@ -43,17 +44,18 @@ func (r *Role) apiHandlerLeasesGet() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
-	type leasesInput struct {
-		Identifier string `query:"identifier" required:"true" maxLength:"255"`
-		Scope      string `query:"scope" required:"true" maxLength:"255"`
+type APILeasesPutInput struct {
+	Identifier string `query:"identifier" required:"true" maxLength:"255"`
+	Scope      string `query:"scope" required:"true" maxLength:"255"`
 
-		Address          string `json:"address" required:"true" maxLength:"40"`
-		Hostname         string `json:"hostname" required:"true" maxLength:"255"`
-		AddressLeaseTime string `json:"addressLeaseTime" required:"true" maxLength:"40"`
-		DNSZone          string `json:"dnsZone" maxLength:"255"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
+	Address          string `json:"address" required:"true" maxLength:"40"`
+	Hostname         string `json:"hostname" required:"true" maxLength:"255"`
+	AddressLeaseTime string `json:"addressLeaseTime" required:"true" maxLength:"40"`
+	DNSZone          string `json:"dnsZone" maxLength:"255"`
+}
+
+func (r *Role) APILeasesPut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesPutInput, output *struct{}) error {
 		l := r.newLease(input.Identifier)
 		l.Address = input.Address
 		l.Hostname = input.Hostname
@@ -78,12 +80,13 @@ func (r *Role) apiHandlerLeasesPut() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
-	type leasesInput struct {
-		Identifier string `query:"identifier" required:"true"`
-		Scope      string `query:"scope" required:"true"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
+type APILeasesWOLInput struct {
+	Identifier string `query:"identifier" required:"true"`
+	Scope      string `query:"scope" required:"true"`
+}
+
+func (r *Role) APILeasesWOL() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
 		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument
@@ -101,12 +104,13 @@ func (r *Role) apiHandlerLeasesWOL() usecase.Interactor {
 	return u
 }
 
-func (r *Role) apiHandlerLeasesDelete() usecase.Interactor {
-	type leasesInput struct {
-		Identifier string `query:"identifier"`
-		Scope      string `query:"scope"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input leasesInput, output *struct{}) error {
+type APILeasesDeleteInput struct {
+	Identifier string `query:"identifier"`
+	Scope      string `query:"scope"`
+}
+
+func (r *Role) APILeasesDelete() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesDeleteInput, output *struct{}) error {
 		l, ok := r.leases[input.Identifier]
 		if !ok {
 			return status.InvalidArgument

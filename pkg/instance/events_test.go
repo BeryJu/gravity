@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Events(t *testing.T) {
+func TestEvents(t *testing.T) {
 	rootInst := instance.New()
 	called := false
 	rootInst.ForRole("test").AddEventListener("test-topic", func(ev *roles.Event) {

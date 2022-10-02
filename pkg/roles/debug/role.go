@@ -39,7 +39,7 @@ func New(instance roles.Instance) *Role {
 	r.m.Handle("/debug/pprof/{cmd}", http.HandlerFunc(pprof.Index))
 	r.m.HandleFunc("/debug/sentry", func(w http.ResponseWriter, r *http.Request) {
 		sentry.WithScope(func(scope *sentry.Scope) {
-			scope.SetTag("gravity.test_error", "true")
+			scope.SetTag("gravity.Testerror", "true")
 			sentry.CaptureException(errors.New("debug test error"))
 		})
 	})

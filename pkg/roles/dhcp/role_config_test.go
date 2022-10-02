@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_APIRoleConfigGet(t *testing.T) {
+func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
@@ -17,12 +17,12 @@ func Test_APIRoleConfigGet(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	var output dhcp.APIRoleDHCPConfigOutput
+	var output dhcp.APIRoleConfigOutput
 	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
-func Test_APIRoleConfigPut(t *testing.T) {
+func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
@@ -31,7 +31,7 @@ func Test_APIRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	var output struct{}
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dhcp.APIRoleDHCPConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dhcp.APIRoleConfigInput{
 		Config: dhcp.RoleConfig{
 			Port: 613,
 		},

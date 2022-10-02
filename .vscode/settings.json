@@ -1,0 +1,6 @@
+{
+    "go.testEnvVars": {
+        "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup",
+        "ETCD_ENDPOINT": "localhost:2379",
+    },
+}

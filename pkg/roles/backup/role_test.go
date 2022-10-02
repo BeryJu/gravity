@@ -33,7 +33,7 @@ func getRole() *backup.Role {
 	return role
 }
 
-func TestRole_Start_NoConfig(t *testing.T) {
+func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("backup")
 	role := backup.New(inst)
@@ -43,11 +43,11 @@ func TestRole_Start_NoConfig(t *testing.T) {
 	role.Stop()
 }
 
-func TestRole_Start(t *testing.T) {
+func TestRoleStart(t *testing.T) {
 	assert.NotNil(t, getRole())
 }
 
-func TestRole_SaveBackup(t *testing.T) {
+func TestSaveBackup(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("backup")
 	role := backup.New(inst)

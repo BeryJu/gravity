@@ -156,7 +156,7 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 			continue
 		}
 		if opt.TagName != "" {
-			tag, ok := TagMap[opt.TagName]
+			tag, ok := types.TagMap[types.OptionTagName(opt.TagName)]
 			if !ok {
 				req.log.WithError(err).Warningf("invalid tag name %s", opt.TagName)
 				continue

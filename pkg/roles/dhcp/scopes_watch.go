@@ -32,7 +32,14 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 }
 
 func (r *Role) loadInitialScopes() {
-	scopes, err := r.i.KV().Get(r.ctx, r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String(), clientv3.WithPrefix())
+	scopes, err := r.i.KV().Get(
+		r.ctx,
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to list initial scopes")
 		time.Sleep(5 * time.Second)

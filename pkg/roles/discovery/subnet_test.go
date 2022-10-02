@@ -15,7 +15,10 @@ const (
 	DockerIPCoreDNS = "10.200.0.4"
 )
 
-func Test_Discovery_Docker(t *testing.T) {
+func TestDiscoveryDocker(t *testing.T) {
+	if !tests.HasLocalDocker() {
+		return
+	}
 	rootInst := instance.New()
 	inst := rootInst.ForRole("discovery")
 	role := discovery.New(inst)

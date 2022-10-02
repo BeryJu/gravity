@@ -14,10 +14,6 @@ func TestExtconfig(t *testing.T) {
 	assert.True(t, strings.HasSuffix(Get().Listen(1234), "1234"))
 }
 
-func TestResolver(t *testing.T) {
-	assert.NotNil(t, Resolver())
-}
-
 func TestTransport(t *testing.T) {
 	assert.NotNil(t, Transport())
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Export(t *testing.T) {
+func TestExport(t *testing.T) {
 	_, err := extconfig.Get().EtcdClient().Put(
 		tests.Context(),
 		"/foo",
@@ -24,7 +24,7 @@ func Test_Export(t *testing.T) {
 	assert.True(t, len(entries) > 0)
 }
 
-func Test_Import(t *testing.T) {
+func TestImport(t *testing.T) {
 	rootInst := instance.New()
 	entries := []instance.ExportEntry{
 		{

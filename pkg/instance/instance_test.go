@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Start(t *testing.T) {
+func TestStart(t *testing.T) {
 	called := false
 	rootInst := instance.New()
 	inst := rootInst.ForRole("test")

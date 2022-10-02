@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRole_DNS_Handler_Forward(t *testing.T) {
+func TestRoleDNSHandlerForward(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	inst.KV().Put(

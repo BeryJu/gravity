@@ -15,7 +15,7 @@ func RoleConfig() []byte {
 	}))
 }
 
-func TestRole_DNS_Start_NoConfig(t *testing.T) {
+func TestRoleDNSStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
@@ -25,7 +25,7 @@ func TestRole_DNS_Start_NoConfig(t *testing.T) {
 	role.Stop()
 }
 
-func TestRole_DNS_Start_EmptyConfig(t *testing.T) {
+func TestRoleDNSStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
