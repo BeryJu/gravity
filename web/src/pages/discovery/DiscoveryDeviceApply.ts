@@ -1,7 +1,7 @@
 import {
-    DiscoveryDevice,
-    DiscoveryDeviceApplyInput,
-    DiscoveryDeviceApplyInputToEnum,
+    DiscoveryAPIDevice,
+    DiscoveryAPIDevicesApplyInput,
+    DiscoveryAPIDevicesApplyInputToEnum,
     RolesDhcpApi,
     RolesDiscoveryApi,
     RolesDnsApi,
@@ -18,7 +18,7 @@ import { Form } from "../../elements/forms/Form";
 import "../../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-discover-apply-form")
-export class DiscoveryDeviceApplyForm extends Form<DiscoveryDeviceApplyInput> {
+export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput> {
     renderForm(): TemplateResult {
         return html`<form class="pf-c-form pf-m-horizontal">
             <ak-form-element-horizontal label="To" ?required=${true} name="to">
@@ -61,7 +61,7 @@ export class DiscoveryDeviceApplyForm extends Form<DiscoveryDeviceApplyInput> {
 
 @customElement("gravity-discovery-apply")
 export class DiscoveryDeviceApply extends DeleteBulkForm {
-    metadata = (item: DiscoveryDevice) => {
+    metadata = (item: DiscoveryAPIDevice) => {
         return [
             { key: "IP", value: item.ip },
             { key: "Hostname", value: item.hostname || "-" },
@@ -69,33 +69,36 @@ export class DiscoveryDeviceApply extends DeleteBulkForm {
         ];
     };
 
-    preDelete = (): Promise<DiscoveryDeviceApplyInput> => {
+    preDelete = (): Promise<DiscoveryAPIDevicesApplyInput> => {
         const form = this.shadowRoot?.querySelector<DiscoveryDeviceApplyForm>(
             "gravity-discover-apply-form",
         );
         if (!form) {
             return Promise.reject("No form found");
         }
-        const data = form.serializeForm() as DiscoveryDeviceApplyInput;
-        if (data.to === DiscoveryDeviceApplyInputToEnum.Dhcp && data.dhcpScope === "") {
+        const data = form.serializeForm() as DiscoveryAPIDevicesApplyInput;
+        if (data.to === DiscoveryAPIDevicesApplyInputToEnum.Dhcp && data.dhcpScope === "") {
             throw Error("DHCP Scope needs to be set to import to DHCP.");
         }
-        if (data.to === DiscoveryDeviceApplyInputToEnum.Dns && data.dnsZone === "") {
+        if (data.to === DiscoveryAPIDevicesApplyInputToEnum.Dns && data.dnsZone === "") {
             throw Error("DNS Zone needs to be set to import to DNS.");
         }
         return Promise.resolve(data);
     };
 
-    delete = (item: DiscoveryDevice, extraData: DiscoveryDeviceApplyInput): Promise<void> => {
-        if (item.mac === "" && extraData.to === DiscoveryDeviceApplyInputToEnum.Dhcp) {
+    delete = (
+        item: DiscoveryAPIDevice,
+        extraData: DiscoveryAPIDevicesApplyInput,
+    ): Promise<void> => {
+        if (item.mac === "" && extraData.to === DiscoveryAPIDevicesApplyInputToEnum.Dhcp) {
             return Promise.reject();
         }
-        if (item.hostname === "" && extraData.to === DiscoveryDeviceApplyInputToEnum.Dns) {
+        if (item.hostname === "" && extraData.to === DiscoveryAPIDevicesApplyInputToEnum.Dns) {
             return Promise.reject();
         }
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryApplyDevice({
             identifier: item.identifier,
-            discoveryDeviceApplyInput: extraData,
+            discoveryAPIDevicesApplyInput: extraData,
         });
     };
 

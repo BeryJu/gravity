@@ -1,4 +1,4 @@
-import { DiscoveryDevice, RolesDiscoveryApi } from "gravity-api";
+import { DiscoveryAPIDevice, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ import { PaginationWrapper } from "../../utils";
 import "./DiscoveryDeviceApply";
 
 @customElement("gravity-discovery-devices")
-export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
+export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
     pageTitle(): string {
         return "Discovered Devices";
     }
@@ -29,7 +29,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryDevice>> {
+    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryAPIDevice>> {
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetDevices().then((devices) => {
             const data = (devices.devices || []).filter(
                 (l) =>
@@ -50,7 +50,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
         return [new TableColumn("IP"), new TableColumn("Hostname"), new TableColumn("MAC")];
     }
 
-    row(item: DiscoveryDevice): TemplateResult[] {
+    row(item: DiscoveryAPIDevice): TemplateResult[] {
         return [
             html`<pre>${item.ip}</pre>`,
             html`${item.hostname || "-"}`,
@@ -71,14 +71,14 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryDevice> {
             <ak-forms-delete-bulk
                 objectLabel=${"Discovered Device(s)"}
                 .objects=${this.selectedElements}
-                .metadata=${(item: DiscoveryDevice) => {
+                .metadata=${(item: DiscoveryAPIDevice) => {
                     return [
                         { key: "IP", value: item.ip },
                         { key: "Hostname", value: item.hostname || "-" },
                         { key: "MAC", value: item.mac || "-" },
                     ];
                 }}
-                .delete=${(item: DiscoveryDevice) => {
+                .delete=${(item: DiscoveryAPIDevice) => {
                     return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryDeleteDevices({
                         identifier: item.identifier,
                     });
