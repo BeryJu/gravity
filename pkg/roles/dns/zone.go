@@ -11,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -77,7 +78,7 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 	}
 }
 
-func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
+func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 	for _, handler := range z.h {
 		z.log.WithField("handler", handler.Identifier()).Trace("sending request to handler")
 		start := time.Now()
@@ -85,6 +86,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg) {
 		finish := time.Since(start)
 		if handlerReply != nil {
 			z.log.WithField("handler", handler.Identifier()).Trace("returning reply from handler")
+			span.SetTag("gravity.dns.handler", handler.Identifier())
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
 			z.resolveUpdateMetrics(finish, r, handler, handlerReply)

@@ -67,7 +67,7 @@ test-env-stop:
 	docker compose --project-name gravity-test-env down -v
 
 test:
-	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup"
+	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug"
 	export ETCD_ENDPOINT="localhost:2379"
 	etcdctl del --prefix / || true
 	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...

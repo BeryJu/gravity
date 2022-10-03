@@ -60,5 +60,6 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		return
 	}
 	ro.log.WithField("zone", longestZone.etcdKey).Trace("routing request to zone")
-	longestZone.resolve(w, r)
+	span.SetTag("gravity.dns.zone", longestZone.Name)
+	longestZone.resolve(w, r, span)
 }
