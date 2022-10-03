@@ -37,6 +37,7 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/dns/metrics", r.APIMetrics())
 		svc.Get("/api/v1/dns/zones", r.APIZonesGet())
 		svc.Post("/api/v1/dns/zones", r.APIZonesPut())
 		svc.Delete("/api/v1/dns/zones", r.APIZonesDelete())

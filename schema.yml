@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.1
+  version: 0.2.2
 paths:
   /api/v1/auth/config:
     get:
@@ -591,6 +591,25 @@ paths:
       summary: Discovery Subnets
       tags:
       - roles/discovery
+  /api/v1/dns/metrics:
+    get:
+      operationId: dns.get_metrics
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Metrics
+      tags:
+      - roles/dns
   /api/v1/dns/zones:
     delete:
       operationId: dns.delete_zones
@@ -1530,6 +1549,16 @@ components:
         enabled:
           type: boolean
       type: object
+    DnsAPIMetricsGetOutput:
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/TypesAPIMetricsRecord'
+          nullable: true
+          type: array
+      required:
+      - records
+      type: object
     DnsAPIRecord:
       properties:
         data:
@@ -1752,6 +1781,19 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TypesAPIMetricsRecord:
+      properties:
+        handler:
+          type: string
+        node:
+          type: string
+        value:
+          type: integer
+      required:
+      - node
+      - handler
+      - value
       type: object
     TypesOIDCConfig:
       nullable: true
