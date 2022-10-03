@@ -22,6 +22,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/etcd"
 	"beryju.io/gravity/pkg/roles/monitoring"
+	"beryju.io/gravity/pkg/roles/tsdb"
 	"beryju.io/gravity/pkg/storage"
 )
 
@@ -153,6 +154,8 @@ func (i *Instance) bootstrap() {
 			rc.Role = monitoring.New(roleInst)
 		case "debug":
 			rc.Role = debug.New(roleInst)
+		case "tsdb":
+			rc.Role = tsdb.New(roleInst)
 		case "etcd":
 			// Special case
 			continue

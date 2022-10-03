@@ -11,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
@@ -75,6 +76,15 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 			h.Identifier(),
 			z.Name,
 		).Observe(float64(dur.Milliseconds()))
+		go z.inst.DispatchEvent(tsdbTypes.EventTopicTSDBInc, roles.NewEvent(
+			context.Background(),
+			map[string]interface{}{
+				"key": z.inst.KV().Key(
+					types.KeyRole,
+					h.Identifier(),
+				).String(),
+			},
+		))
 	}
 }
 
