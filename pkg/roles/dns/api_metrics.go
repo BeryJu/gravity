@@ -38,6 +38,7 @@ func (r *Role) APIMetrics() usecase.Interactor {
 			}
 			keyParts := strings.Split(strings.TrimPrefix(string(kv.Key), prefix), "/")
 			output.Records = append(output.Records, tsdbTypes.APIMetricsRecord{
+				Time:    keyParts[2],
 				Handler: keyParts[0],
 				Node:    keyParts[1],
 				Value:   value,

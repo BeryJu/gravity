@@ -1,6 +1,6 @@
-import { AuthUserMeOutput, RolesApiApi } from "gravity-api";
+import { AuthAPIMeOutput, RolesApiApi } from "gravity-api";
 
-import { CSSResult, TemplateResult, html } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
@@ -11,19 +11,31 @@ import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { AKElement } from "../../elements/Base";
 import "../../elements/PageHeader";
-import "./cards/BuildHashCard";
+import "../../elements/cards/AggregateCard";
 import "./cards/CurrentInstanceCard";
 import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
+import "./charts/DNSRequestsChart";
 
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
     @state()
-    me?: AuthUserMeOutput;
+    me?: AuthAPIMeOutput;
 
     static get styles(): CSSResult[] {
-        return [PFGrid, PFPage, PFContent, PFList, AKElement.GlobalStyle];
+        return [
+            PFGrid,
+            PFPage,
+            PFContent,
+            PFList,
+            AKElement.GlobalStyle,
+            css`
+                .big-graph-container {
+                    height: 35em;
+                }
+            `,
+        ];
     }
 
     firstUpdated(): void {
@@ -46,10 +58,17 @@ export class OverviewPage extends AKElement {
                         <gravity-overview-card-version></gravity-overview-card-version>
                     </div>
                     <div class="pf-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
-                        <gravity-overview-card-build-hash></gravity-overview-card-build-hash>
-                    </div>
-                    <div class="pf-l-grid__item pf-m-12-col pf-m-4-col-on-2xl">
                         <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
+                    </div>
+                    <div
+                        class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                    >
+                        <ak-aggregate-card
+                            icon="pf-icon pf-icon-server"
+                            header="DNS requests over the last 30 minutes"
+                        >
+                            <gravity-overview-charts-dns-requests></gravity-overview-charts-dns-requests>
+                        </ak-aggregate-card>
                     </div>
                 </div>
             </section>`;
