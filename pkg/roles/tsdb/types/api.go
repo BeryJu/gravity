@@ -6,3 +6,7 @@ type APIMetricsRecord struct {
 	Handler string `json:"handler" required:"true"`
 	Value   int64  `json:"value" required:"true"`
 }
+
+type APIMetricsGetOutput struct {
+	Records []APIMetricsRecord `json:"records" required:"true"`
+}

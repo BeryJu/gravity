@@ -11,42 +11,44 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
+type APIMember struct {
+	ID   uint64 `json:"id"`
+	Name string `json:"name"`
+}
+type APIMembersOutput struct {
+	Members []APIMember `json:"members"`
+}
+
 func (r *Role) APIClusterMembers() usecase.Interactor {
-	type member struct {
-		ID   uint64 `json:"id"`
-		Name string `json:"name"`
-	}
-	type membersOutput struct {
-		Members []member `json:"members"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *membersOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIMembersOutput) error {
 		members, err := r.i.KV().MemberList(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, mem := range members.Members {
-			output.Members = append(output.Members, member{
+			output.Members = append(output.Members, APIMember{
 				ID:   mem.ID,
 				Name: mem.Name,
 			})
 		}
 		return nil
 	})
-	u.SetName("etcd.get_members")
+	u.SetName("api.get_members")
 	u.SetTitle("Etcd members")
-	u.SetTags("roles/etcd")
+	u.SetTags("roles/api")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
 
+type APIMemberJoinInput struct {
+	Peer string `json:"peer" maxLength:"255"`
+}
+type APIMemberJoinOutput struct {
+	Env string `json:"env"`
+}
+
 func (r *Role) APIClusterJoin() usecase.Interactor {
-	type etcdJoinInput struct {
-		Peer string `json:"peer" maxLength:"255"`
-	}
-	type etcdJoinOutput struct {
-		Env string `json:"env"`
-	}
-	u := usecase.NewInteractor(func(ctx context.Context, input etcdJoinInput, output *etcdJoinOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberJoinInput, output *APIMemberJoinOutput) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
 
 		_, err := r.i.KV().MemberAdd(ctx, []string{input.Peer})

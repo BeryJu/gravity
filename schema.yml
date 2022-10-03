@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.3
+  version: 0.2.4
 paths:
   /api/v1/auth/config:
     get:
@@ -599,7 +599,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsAPIMetricsGetOutput'
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
           description: OK
         "500":
           content:
@@ -825,13 +825,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiEtcdJoinInput'
+              $ref: '#/components/schemas/ApiAPIMemberJoinInput'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiEtcdJoinOutput'
+                $ref: '#/components/schemas/ApiAPIMemberJoinOutput'
           description: OK
         "500":
           content:
@@ -844,13 +844,13 @@ paths:
       - roles/etcd
   /api/v1/etcd/members:
     get:
-      operationId: etcd.get_members2
+      operationId: api.get_members2
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiMembersOutput'
+                $ref: '#/components/schemas/ApiAPIMembersOutput'
           description: OK
         "500":
           content:
@@ -860,7 +860,7 @@ paths:
           description: Internal Server Error
       summary: Etcd members
       tags:
-      - roles/etcd
+      - roles/api
   /api/v1/info:
     get:
       operationId: root.get_info
@@ -1127,8 +1127,54 @@ paths:
       summary: Monitoring role config
       tags:
       - roles/monitoring
+  /api/v1/system/metrics/memory:
+    get:
+      operationId: api.get_metrics_memory2
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: System Metrics
+      tags:
+      - roles/api
 components:
   schemas:
+    ApiAPIMember:
+      properties:
+        id:
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      type: object
+    ApiAPIMemberJoinInput:
+      properties:
+        peer:
+          maxLength: 255
+          type: string
+      type: object
+    ApiAPIMemberJoinOutput:
+      properties:
+        env:
+          type: string
+      type: object
+    ApiAPIMembersOutput:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/ApiAPIMember'
+          nullable: true
+          type: array
+      type: object
     ApiAPIRoleConfigInput:
       properties:
         config:
@@ -1142,33 +1188,6 @@ components:
           $ref: '#/components/schemas/ApiRoleConfig'
       required:
       - config
-      type: object
-    ApiEtcdJoinInput:
-      properties:
-        peer:
-          maxLength: 255
-          type: string
-      type: object
-    ApiEtcdJoinOutput:
-      properties:
-        env:
-          type: string
-      type: object
-    ApiMember:
-      properties:
-        id:
-          minimum: 0
-          type: integer
-        name:
-          type: string
-      type: object
-    ApiMembersOutput:
-      properties:
-        members:
-          items:
-            $ref: '#/components/schemas/ApiMember'
-          nullable: true
-          type: array
       type: object
     ApiRoleConfig:
       properties:
@@ -1549,16 +1568,6 @@ components:
         enabled:
           type: boolean
       type: object
-    DnsAPIMetricsGetOutput:
-      properties:
-        records:
-          items:
-            $ref: '#/components/schemas/TypesAPIMetricsRecord'
-          nullable: true
-          type: array
-      required:
-      - records
-      type: object
     DnsAPIRecord:
       properties:
         data:
@@ -1781,6 +1790,16 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TypesAPIMetricsGetOutput:
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/TypesAPIMetricsRecord'
+          nullable: true
+          type: array
+      required:
+      - records
       type: object
     TypesAPIMetricsRecord:
       properties:

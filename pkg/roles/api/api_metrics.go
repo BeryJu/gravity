@@ -1,22 +1,22 @@
-package dns
+package api
 
 import (
 	"context"
 	"strconv"
 	"strings"
 
-	"beryju.io/gravity/pkg/roles/dns/types"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func (r *Role) APIMetrics() usecase.Interactor {
+func (r *Role) APIMemoryMetrics() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *tsdbTypes.APIMetricsGetOutput) error {
 		prefix := r.i.KV().Key(
 			tsdbTypes.KeyRole,
-			types.KeyRole,
+			"system",
+			"memory",
 		).Prefix(true).String()
 		rawMetrics, err := r.i.KV().Get(
 			ctx,
@@ -34,17 +34,16 @@ func (r *Role) APIMetrics() usecase.Interactor {
 			}
 			keyParts := strings.Split(strings.TrimPrefix(string(kv.Key), prefix), "/")
 			output.Records = append(output.Records, tsdbTypes.APIMetricsRecord{
-				Time:    keyParts[2],
-				Handler: keyParts[0],
-				Node:    keyParts[1],
-				Value:   value,
+				Time:  keyParts[1],
+				Node:  keyParts[0],
+				Value: value,
 			})
 		}
 		return nil
 	})
-	u.SetName("dns.get_metrics")
-	u.SetTitle("DNS Metrics")
-	u.SetTags("roles/dns")
+	u.SetName("api.get_metrics_memory")
+	u.SetTitle("System Metrics")
+	u.SetTags("roles/api")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }

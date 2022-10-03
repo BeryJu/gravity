@@ -46,6 +46,7 @@ func New(instance roles.Instance) *Role {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/api", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/api", r.APIRoleConfigPut())
+		svc.Get("/api/v1/system/metrics/memory", r.APIMemoryMetrics())
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 	})
