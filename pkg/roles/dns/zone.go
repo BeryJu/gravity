@@ -83,6 +83,9 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 					types.KeyRole,
 					h.Identifier(),
 				).String(),
+				"default": tsdbTypes.Metric{
+					ResetOnWrite: true,
+				},
 			},
 		))
 	}

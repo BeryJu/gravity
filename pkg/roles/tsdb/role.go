@@ -3,6 +3,7 @@ package tsdb
 import (
 	"context"
 	"net/http"
+	"runtime"
 	"strconv"
 	"sync"
 	"time"
@@ -20,7 +21,7 @@ type Role struct {
 	log *log.Entry
 	i   roles.Instance
 	ctx context.Context
-	m   map[string]int
+	m   map[string]types.Metric
 	ms  sync.RWMutex
 }
 
@@ -28,7 +29,7 @@ func New(instance roles.Instance) *Role {
 	r := &Role{
 		log: instance.Log(),
 		i:   instance,
-		m:   make(map[string]int),
+		m:   make(map[string]types.Metric),
 		ms:  sync.RWMutex{},
 	}
 	r.i.AddEventListener(debugTypes.EventTopicDebugMuxSetup, func(ev *roles.Event) {
@@ -40,7 +41,27 @@ func New(instance roles.Instance) *Role {
 			))
 		})
 	})
+	r.i.AddEventListener(types.EventTopicTSDBBeforeWrite, func(ev *roles.Event) {
+		var m runtime.MemStats
+		runtime.ReadMemStats(&m)
+		r.setMetric(
+			r.i.KV().Key(
+				types.KeySystem,
+				"memory",
+			).String(),
+			types.Metric{
+				Value: int(m.Sys),
+			},
+		)
+	})
 	return r
+}
+
+func (r *Role) setMetric(key string, value types.Metric) {
+	r.ms.Lock()
+	defer r.ms.Unlock()
+	r.log.WithField("key", key).Trace("tsdb set")
+	r.m[key] = value
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
@@ -49,11 +70,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		r.write()
 	})
 	r.i.AddEventListener(types.EventTopicTSDBSet, func(ev *roles.Event) {
-		r.ms.Lock()
-		defer r.ms.Unlock()
 		key := ev.Payload.Data["key"].(string)
-		r.log.WithField("key", key).Trace("tsdb inc")
-		r.m[key] = ev.Payload.Data["value"].(int)
+		r.log.WithField("key", key).Trace("tsdb set")
+		r.setMetric(key, ev.Payload.Data["value"].(types.Metric))
 	})
 	r.i.AddEventListener(types.EventTopicTSDBInc, func(ev *roles.Event) {
 		r.ms.Lock()
@@ -62,9 +81,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		r.log.WithField("key", key).Trace("tsdb inc")
 		val, ok := r.m[key]
 		if !ok {
-			val = 0
+			val = ev.Payload.Data["default"].(types.Metric)
 		}
-		r.m[key] = val + 1
+		val.Value += 1
+		r.m[key] = val
 	})
 	go func() {
 		for {
@@ -82,6 +102,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 func (r *Role) write() {
 	r.log.Trace("writing metrics")
+	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(r.ctx, map[string]interface{}{}))
 	r.ms.RLock()
 	defer r.ms.RUnlock()
 	// Don't bother granting a lease if we don't have any metrics
@@ -93,21 +114,25 @@ func (r *Role) write() {
 		r.log.WithError(err).Warning("failed to grant lease, skipping write")
 		return
 	}
-	for key, value := range r.m {
+	for rkey, value := range r.m {
 		key := r.i.KV().Key(
 			types.KeyRole,
-			key,
+			rkey,
 			extconfig.Get().Instance.Identifier,
 			strconv.FormatInt(time.Now().Unix(), 10),
 		).String()
 		_, err := r.i.KV().Put(
 			r.ctx,
 			key,
-			strconv.Itoa(value),
+			strconv.Itoa(value.Value),
 			clientv3.WithLease(lease.ID),
 		)
 		if err != nil {
 			r.log.WithError(err).WithField("key", key).Warning("failed to put value")
+		}
+		if value.ResetOnWrite {
+			value.Value = 0
+			r.m[rkey] = value
 		}
 	}
 }

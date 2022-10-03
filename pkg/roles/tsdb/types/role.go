@@ -1,5 +1,6 @@
 package types
 
 const (
-	KeyRole = "tsdb"
+	KeyRole   = "tsdb"
+	KeySystem = "system"
 )
