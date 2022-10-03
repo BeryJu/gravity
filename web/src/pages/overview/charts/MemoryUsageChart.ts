@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js";
-import { RolesDnsApi, TypesAPIMetricsGetOutput } from "gravity-api";
+import { RolesApiApi, RolesDnsApi, TypesAPIMetricsGetOutput } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -8,10 +8,10 @@ import { groupBy } from "../../../common/utils";
 import { getColorFromString } from "../../../elements/charts/Chart";
 import { AKChart } from "../../../elements/charts/Chart";
 
-@customElement("gravity-overview-charts-dns-requests")
-export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
+@customElement("gravity-overview-charts-memory-usage")
+export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesDnsApi(DEFAULT_CONFIG).dnsGetMetrics();
+        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetricsMemory2();
     }
 
     getChartType(): string {
@@ -22,10 +22,10 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
-        groupBy(data?.records || [], (record) => record.handler).forEach(([handler, records]) => {
+        groupBy(data?.records || [], (record) => record.node).forEach(([node, records]) => {
             chartData.datasets.push({
-                label: handler,
-                backgroundColor: getColorFromString(handler),
+                label: node,
+                backgroundColor: getColorFromString(node),
                 spanGaps: true,
                 data: records.map((record) => {
                     return {

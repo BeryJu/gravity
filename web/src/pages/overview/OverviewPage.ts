@@ -17,6 +17,7 @@ import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
 import "./charts/DNSRequestsChart";
+import "./charts/MemoryUsageChart";
 
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
@@ -65,9 +66,19 @@ export class OverviewPage extends AKElement {
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
-                            header="DNS requests over the last 30 minutes"
+                            header="DNS requests per handler over the last 30 minutes"
                         >
                             <gravity-overview-charts-dns-requests></gravity-overview-charts-dns-requests>
+                        </ak-aggregate-card>
+                    </div>
+                    <div
+                        class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                    >
+                        <ak-aggregate-card
+                            icon="pf-icon pf-icon-server"
+                            header="Memory usage per node"
+                        >
+                            <gravity-overview-charts-memory-usage></gravity-overview-charts-memory-usage>
                         </ak-aggregate-card>
                     </div>
                 </div>
