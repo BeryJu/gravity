@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js";
-import { RolesApiApi, RolesDnsApi, TypesAPIMetricsGetOutput } from "gravity-api";
+import { RolesApiApi, TypesAPIMetricsGetOutput } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -27,6 +27,7 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
                 label: node,
                 backgroundColor: getColorFromString(node),
                 spanGaps: true,
+                fill: true,
                 data: records.map((record) => {
                     return {
                         x: parseInt(record.time, 10) * 1000,

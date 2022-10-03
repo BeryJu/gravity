@@ -2,7 +2,7 @@ import { Chart, ChartConfiguration, ChartData, ChartOptions, Plugin, Tick } from
 import { Legend, Tooltip } from "chart.js";
 import { BarController, DoughnutController, LineController } from "chart.js";
 import { ArcElement, BarElement, LineElement, PointElement } from "chart.js";
-import { LinearScale, TimeScale } from "chart.js";
+import { Filler, LinearScale, TimeScale } from "chart.js";
 import "chartjs-adapter-moment";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
@@ -14,7 +14,7 @@ import { AKElement } from "../Base";
 Chart.register(Legend, Tooltip);
 Chart.register(LineController, BarController, DoughnutController);
 Chart.register(ArcElement, BarElement, PointElement, LineElement);
-Chart.register(TimeScale, LinearScale);
+Chart.register(TimeScale, LinearScale, Filler);
 
 export const FONT_COLOUR_DARK_MODE = "#fafafa";
 export const FONT_COLOUR_LIGHT_MODE = "#151515";

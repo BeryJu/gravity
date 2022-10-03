@@ -27,6 +27,7 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
                 label: handler,
                 backgroundColor: getColorFromString(handler),
                 spanGaps: true,
+                fill: true,
                 data: records.map((record) => {
                     return {
                         x: parseInt(record.time, 10) * 1000,
