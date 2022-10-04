@@ -40,7 +40,9 @@ func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
 }
 
 func (ri *RoleInstance) AddEventListener(topic string, handler roles.EventHandler) {
+	ri.parent.eventHandlersM.RLock()
 	topicHandlers, ok := ri.parent.eventHandlers[topic]
+	ri.parent.eventHandlersM.RUnlock()
 	if !ok {
 		topicHandlers = make(map[string][]roles.EventHandler)
 	}
