@@ -23,9 +23,12 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
             datasets: [],
         };
         groupBy(data?.records || [], (record) => record.handler).forEach(([handler, records]) => {
+            const background = getColorFromString(handler);
+            background.a = 0.3;
             chartData.datasets.push({
                 label: handler,
-                backgroundColor: getColorFromString(handler),
+                borderColor: getColorFromString(handler).toString(),
+                backgroundColor: background.toString(),
                 spanGaps: true,
                 fill: "origin",
                 cubicInterpolationMode: "monotone",

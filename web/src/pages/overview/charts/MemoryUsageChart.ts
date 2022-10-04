@@ -23,9 +23,12 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
             datasets: [],
         };
         groupBy(data?.records || [], (record) => record.node).forEach(([node, records]) => {
+            const background = getColorFromString(node);
+            background.a = 0.3;
             chartData.datasets.push({
                 label: node,
-                backgroundColor: getColorFromString(node),
+                borderColor: getColorFromString(node).toString(),
+                backgroundColor: background.toString(),
                 spanGaps: true,
                 fill: "origin",
                 cubicInterpolationMode: "monotone",

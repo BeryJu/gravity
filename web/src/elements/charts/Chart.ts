@@ -19,11 +19,26 @@ Chart.register(TimeScale, LinearScale, Filler);
 export const FONT_COLOUR_DARK_MODE = "#fafafa";
 export const FONT_COLOUR_LIGHT_MODE = "#151515";
 
-export function getColorFromString(stringInput: string) {
-    const stringUniqueHash = [...stringInput].reduce((acc, char) => {
-        return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-    return `hsl(${stringUniqueHash % 360}, 95%, 35%)`;
+export class RGBAColor {
+    constructor(public r: number, public g: number, public b: number, public a: number = 1) {}
+    toString(): string {
+        return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+    }
+}
+
+export function getColorFromString(stringInput: string): RGBAColor {
+    let hash = 0;
+    for (let i = 0; i < stringInput.length; i++) {
+        hash = stringInput.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+    }
+    const rgb = [0, 0, 0];
+    for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 255;
+        rgb[i] = value;
+    }
+    return new RGBAColor(rgb[0], rgb[1], rgb[2]);
+    // return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 export abstract class AKChart<T> extends AKElement {
