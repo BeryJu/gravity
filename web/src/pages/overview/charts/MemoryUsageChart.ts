@@ -27,11 +27,13 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
                 label: node,
                 backgroundColor: getColorFromString(node),
                 spanGaps: true,
-                fill: true,
+                fill: "origin",
+                cubicInterpolationMode: "monotone",
+                tension: 0.4,
                 data: records.map((record) => {
                     return {
                         x: parseInt(record.time, 10) * 1000,
-                        y: record.value,
+                        y: Math.round(record.value / 1024 / 1024),
                     };
                 }),
             });

@@ -76,7 +76,7 @@ export class OverviewPage extends AKElement {
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
-                            header="Memory usage per node"
+                            header="Memory usage per node (in MB)"
                         >
                             <gravity-overview-charts-memory-usage></gravity-overview-charts-memory-usage>
                         </ak-aggregate-card>
