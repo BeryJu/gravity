@@ -1,4 +1,4 @@
-import { AuthAuthConfigOutput, AuthUserLoginInput, RolesApiApi } from "gravity-api";
+import { AuthAPIConfigOutput, AuthAPILoginInput, RolesApiApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -17,11 +17,11 @@ import { Form } from "../elements/forms/Form";
 import "../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-login-form")
-export class LoginForm extends Form<AuthUserLoginInput> {
-    send = (data: AuthUserLoginInput): Promise<void> => {
+export class LoginForm extends Form<AuthAPILoginInput> {
+    send = (data: AuthAPILoginInput): Promise<void> => {
         return new RolesApiApi(DEFAULT_CONFIG)
             .apiLoginUser({
-                authUserLoginInput: data,
+                authAPILoginInput: data,
             })
             .then((a) => {
                 if (a.successful) {
@@ -55,7 +55,7 @@ export class LoginForm extends Form<AuthUserLoginInput> {
 @customElement("gravity-login")
 export class LoginPage extends AKElement {
     @state()
-    authConfig?: AuthAuthConfigOutput;
+    authConfig?: AuthAPIConfigOutput;
 
     static get styles(): CSSResult[] {
         return [
