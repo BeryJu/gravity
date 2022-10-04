@@ -6,7 +6,8 @@ publish = "public"
 command = "hugo mod get && hugo --gc --minify"
 
 [context.production.environment]
-HUGO_ENV = "production"
+  HUGO_ENV = "production"
+  HUGO_VERSION = "0.83.1"
 
 [context.deploy-preview]
 command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
