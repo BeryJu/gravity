@@ -8,7 +8,7 @@ WORKDIR /work
 RUN make web-build
 
 # Stage 2: Build
-FROM --platform=${BUILDPLATFORM} golang:1.19.1 as builder
+FROM --platform=${BUILDPLATFORM} golang:1.19.2 as builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
