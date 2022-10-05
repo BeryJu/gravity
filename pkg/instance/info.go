@@ -20,6 +20,9 @@ type InstanceInfo struct {
 
 func (i *Instance) getInfo() *InstanceInfo {
 	roles := maps.Keys(i.roles)
+	if i.etcd != nil {
+		roles = append(roles, "etcd")
+	}
 	slices.Sort(roles)
 	return &InstanceInfo{
 		Version:    extconfig.FullVersion(),

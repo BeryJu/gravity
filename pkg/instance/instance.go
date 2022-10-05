@@ -72,15 +72,9 @@ func (i *Instance) Start() {
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))
-		err := i.etcd.Start(func() {
-			i.bootstrap()
-		})
-		if err != nil {
-			i.log.WithError(err).Warning("failed to start etcd")
-		}
-	} else {
-		i.bootstrap()
+		i.etcd.Start(i.rootContext, []byte{})
 	}
+	i.bootstrap()
 }
 
 func (i *Instance) startSentry() {

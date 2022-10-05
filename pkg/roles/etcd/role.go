@@ -1,6 +1,7 @@
 package etcd
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"path"
@@ -78,18 +79,21 @@ func New(instance roles.Instance) *Role {
 	return ee
 }
 
-func (ee *Role) Start(ready func()) error {
+func (ee *Role) Start(ctx context.Context, config []byte) error {
 	e, err := embed.StartEtcd(ee.cfg)
 	if err != nil {
 		return err
 	}
 	ee.e = e
+	<-e.Server.ReadyNotify()
+	ee.log.Info("Embedded etcd Ready!")
 	go func() {
-		<-e.Server.ReadyNotify()
-		ee.log.Info("Embedded etcd Ready!")
-		ready()
+		err := <-e.Err()
+		if err != nil {
+			ee.log.WithError(err).Warning("failed to start/stop etcd")
+		}
 	}()
-	return <-e.Err()
+	return nil
 }
 
 func (ee *Role) Stop() {
