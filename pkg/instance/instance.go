@@ -46,6 +46,8 @@ type Instance struct {
 
 	rootContext       context.Context
 	rootContextCancel context.CancelFunc
+
+	instanceInfoLease *clientv3.LeaseID
 }
 
 func New() *Instance {
@@ -129,7 +131,8 @@ func (i *Instance) getRoles() []string {
 
 func (i *Instance) bootstrap() {
 	i.log.Trace("bootstrapping instance")
-	i.writeInstanceInfo()
+	i.keepAliveInstanceInfo()
+	i.putInstanceInfo()
 	i.setupInstanceAPI()
 	for _, roleId := range i.getRoles() {
 		instanceRoles.WithLabelValues(roleId).Add(1)
@@ -237,6 +240,7 @@ func (i *Instance) startWatchRole(id string) {
 }
 
 func (i *Instance) startRole(id string, rawConfig []byte) bool {
+	defer i.putInstanceInfo()
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
 	err := i.roles[id].Role.Start(i.roles[id].Context, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
