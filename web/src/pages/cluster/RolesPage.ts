@@ -16,6 +16,7 @@ import "./RoleDHCPConfigForm";
 import "./RoleDNSConfigForm";
 import "./RoleDiscoveryConfigForm";
 import "./RoleMonitoringConfigForm";
+import "./RoleTSDBConfigForm";
 
 export interface Role {
     id: string;
@@ -30,6 +31,7 @@ export const roles: Role[] = [
     { id: "backup", name: "Backup" },
     { id: "monitoring", name: "Monitoring" },
     { id: "etcd", name: "etcd" },
+    { id: "tsdb", name: "TSDB" },
 ];
 
 @customElement("gravity-cluster-roles")
@@ -91,6 +93,11 @@ export class RolesPage extends TablePage<Role> {
                     slot="form"
                     .instancePk=${role.id}
                 ></gravity-cluster-role-monitoring-config>`;
+            case "tsdb":
+                return html`<gravity-cluster-role-tsdb-config
+                    slot="form"
+                    .instancePk=${role.id}
+                ></gravity-cluster-role-tsdb-config>`;
             default:
                 return html`Not yet`;
         }

@@ -3,7 +3,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.2.4"
+VERSION = "0.2.6"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml

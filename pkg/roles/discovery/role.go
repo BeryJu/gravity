@@ -5,7 +5,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
-	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
@@ -23,7 +23,7 @@ func New(instance roles.Instance) *Role {
 		log: instance.Log(),
 		i:   instance,
 	}
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/discovery/subnets", r.APISubnetsGet())
 		svc.Post("/api/v1/discovery/subnets", r.APISubnetsPut())

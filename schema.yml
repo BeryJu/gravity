@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.4
+  version: 0.2.6
 paths:
   /api/v1/auth/config:
     get:
@@ -1127,6 +1127,44 @@ paths:
       summary: Monitoring role config
       tags:
       - roles/monitoring
+  /api/v1/roles/tsdb:
+    get:
+      operationId: tsdb.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TsdbAPIRoleConfigOutput'
+          description: OK
+      summary: TSDB role config
+      tags:
+      - roles/tsdb
+    post:
+      operationId: tsdb.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TsdbAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TSDB role config
+      tags:
+      - roles/tsdb
   /api/v1/system/metrics/memory:
     get:
       operationId: api.get_metrics_memory2
@@ -1790,6 +1828,29 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TsdbAPIRoleConfigInput:
+      properties:
+        config:
+          $ref: '#/components/schemas/TsdbRoleConfig'
+      required:
+      - config
+      type: object
+    TsdbAPIRoleConfigOutput:
+      properties:
+        config:
+          $ref: '#/components/schemas/TsdbRoleConfig'
+      required:
+      - config
+      type: object
+    TsdbRoleConfig:
+      properties:
+        enabled:
+          type: boolean
+        expire:
+          type: integer
+        scrape:
+          type: integer
       type: object
     TypesAPIMetricsGetOutput:
       properties:

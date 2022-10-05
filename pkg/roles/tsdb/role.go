@@ -10,16 +10,19 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	debugTypes "beryju.io/gravity/pkg/roles/debug/types"
 	"beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"github.com/swaggest/rest/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Role struct {
 	log *log.Entry
 	i   roles.Instance
+	cfg *RoleConfig
 	ctx context.Context
 	m   map[string]types.Metric
 	ms  sync.RWMutex
@@ -32,6 +35,11 @@ func New(instance roles.Instance) *Role {
 		m:   make(map[string]types.Metric),
 		ms:  sync.RWMutex{},
 	}
+	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/roles/tsdb", r.APIRoleConfigGet())
+		svc.Post("/api/v1/roles/tsdb", r.APIRoleConfigPut())
+	})
 	r.i.AddEventListener(debugTypes.EventTopicDebugMuxSetup, func(ev *roles.Event) {
 		mux := ev.Payload.Data["mux"].(*mux.Router)
 		mux.HandleFunc("/debug/tsdb/write", func(w http.ResponseWriter, re *http.Request) {
@@ -66,6 +74,10 @@ func (r *Role) setMetric(key string, value types.Metric) {
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
+	r.cfg = r.decodeRoleConfig(config)
+	if !r.cfg.Enabled {
+		return roles.ErrRoleNotConfigured
+	}
 	r.i.AddEventListener(types.EventTopicTSDBWrite, func(ev *roles.Event) {
 		r.write()
 	})
@@ -93,7 +105,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 				return
 			default:
 				r.write()
-				time.Sleep(30 * time.Second)
+				time.Sleep(time.Duration(r.cfg.Scrape) * time.Second)
 			}
 		}
 	}()
@@ -109,7 +121,7 @@ func (r *Role) write() {
 	if len(r.m) < 1 {
 		return
 	}
-	lease, err := r.i.KV().Grant(r.ctx, 60*30)
+	lease, err := r.i.KV().Grant(r.ctx, r.cfg.Expire)
 	if err != nil {
 		r.log.WithError(err).Warning("failed to grant lease, skipping write")
 		return
