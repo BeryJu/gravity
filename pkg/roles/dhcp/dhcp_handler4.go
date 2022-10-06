@@ -163,12 +163,9 @@ func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {
 		return nil
 	}
 
-	// return h.role.recoverMiddleware4(
-	// 	h.role.loggingMiddleware4(
-	// 		handler,
-	// 	),
-	// )(r)
-	return h.role.loggingMiddleware4(
-		handler,
+	return h.role.recoverMiddleware4(
+		h.role.loggingMiddleware4(
+			handler,
+		),
 	)(r)
 }
