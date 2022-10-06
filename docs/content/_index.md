@@ -2,7 +2,8 @@
 cascade:
 - type: "docs"
 ---
-# Gravity
+
+![](./images/logo-color.png)
 
 Fully-replicated DNS and DHCP Server using etcd
 

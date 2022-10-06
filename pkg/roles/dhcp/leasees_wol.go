@@ -14,7 +14,7 @@ func (l *Lease) sendWOL() error {
 	if err != nil {
 		return err
 	}
-	laddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:9", extconfig.Get().Instance.IP))
+	laddr, err := net.ResolveUDPAddr("udp", extconfig.Get().Listen(9))
 	if err != nil {
 		return err
 	}

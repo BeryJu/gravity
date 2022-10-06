@@ -1,12 +1,16 @@
-# gravity
+![](./web/src/assets/images/logo-color.png)
+
+---
+
+![Codecov](https://img.shields.io/codecov/c/gh/beryju/gravity?style=for-the-badge)
 
 Fully-replicated DNS and DHCP Server using etcd
 
-![](./docs/content/images/overview.png)
-![](./docs/content/images/dns_zones.png)
-![](./docs/content/images/dns_records.png)
-![](./docs/content/images/dhcp_leases.png)
-![](./docs/content/images/cluster_nodes.png)
-![](./docs/content/images/grafana.png)
+![](./docs/static/images/overview.png)
+![](./docs/static/images/dns_zones.png)
+![](./docs/static/images/dns_records.png)
+![](./docs/static/images/dhcp_leases.png)
+![](./docs/static/images/cluster_nodes.png)
+![](./docs/static/images/grafana.png)
 
 See https://gravity.beryju.io/ for more info.

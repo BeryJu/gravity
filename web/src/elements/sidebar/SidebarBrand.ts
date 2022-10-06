@@ -35,7 +35,6 @@ export class SidebarBrand extends AKElement {
                 .pf-c-brand img {
                     width: 100%;
                     padding: 0 0.5rem;
-                    height: 42px;
                 }
                 button.pf-c-button.sidebar-trigger {
                     background-color: transparent;
@@ -48,9 +47,6 @@ export class SidebarBrand extends AKElement {
                     font-size: 3rem;
                     color: var(--ak-accent);
                     text-align: center;
-                }
-                .pf-c-page__header-brand-link:hover {
-                    text-decoration-color: var(--ak-accent);
                 }
             `,
         ];
@@ -82,7 +78,12 @@ export class SidebarBrand extends AKElement {
                   `
                 : html``}
             <a href="#/" class="pf-c-page__header-brand-link">
-                <div class="pf-c-brand ak-brand">Gravity.</div>
+                <div class="pf-c-brand ak-brand">
+                    <img
+                        src="static/assets/images/logo-color.png"
+                        alt="gravity logo"
+                    />
+                </div>
             </a>`;
     }
 }
