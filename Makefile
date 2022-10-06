@@ -20,7 +20,10 @@ docker-build:
 		-v -a -o gravity .
 
 run:
-	INSTANCE_LISTEN=0.0.0.0 DEBUG=true LISTEN_ONLY=true go run ${GO_FLAGS} . server
+	export INSTANCE_LISTEN=0.0.0.0
+	export DEBUG=true
+	export LISTEN_ONLY=true
+	go run ${GO_FLAGS} . server
 
 web-build:
 	cd web
