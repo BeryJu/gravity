@@ -8,12 +8,12 @@ import (
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/tests"
-	"github.com/google/gopacket"
-	"github.com/google/gopacket/pcap"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
+
+var DHCPDiscoverPayload = []byte{1, 1, 6, 0, 136, 9, 170, 251, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 178, 183, 134, 44, 211, 250, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 130, 83, 99, 53, 1, 1, 55, 9, 1, 121, 3, 6, 15, 108, 114, 119, 252, 57, 2, 5, 220, 61, 7, 1, 178, 183, 134, 44, 211, 250, 51, 4, 0, 118, 167, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 func TestDHCPDiscover(t *testing.T) {
 	rootInst := instance.New()
@@ -28,9 +28,6 @@ func TestDHCPDiscover(t *testing.T) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-
-	role.Start(ctx, []byte{})
-	defer role.Stop()
 
 	inst.KV().Put(
 		ctx,
@@ -50,24 +47,20 @@ func TestDHCPDiscover(t *testing.T) {
 			},
 		}),
 	)
+	role.Start(ctx, []byte{})
+	defer role.Stop()
 
-	p, err := pcap.OpenOffline("../../../hack/dhcp-test-data/discover-offer.pcap")
+	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
 	assert.NoError(t, err)
-	packetSource := gopacket.NewPacketSource(p, p.LinkType())
-	for packet := range packetSource.Packets() {
-		dhcpLayer := packet.Layers()[3]
-		req, err := dhcpv4.FromBytes(dhcpLayer.LayerContents())
-		assert.NoError(t, err)
-		req4 := role.NewRequest4(req)
-		res := role.Handler4(req4)
-		assert.NotNil(t, res)
-		assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
-		ones, bits := res.SubnetMask().Size()
-		assert.Equal(t, 24, ones)
-		assert.Equal(t, 32, bits)
-		assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
-		assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
-	}
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 }
 
 func TestDHCPDiscoverDNS(t *testing.T) {
@@ -83,9 +76,6 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-
-	role.Start(ctx, []byte{})
-	defer role.Stop()
 
 	inst.KV().Put(
 		ctx,
@@ -110,22 +100,20 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 		}),
 	)
 
-	p, err := pcap.OpenOffline("../../../hack/dhcp-test-data/discover-offer.pcap")
+	role.Start(ctx, []byte{})
+	defer role.Stop()
+
+	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
 	assert.NoError(t, err)
-	packetSource := gopacket.NewPacketSource(p, p.LinkType())
-	for packet := range packetSource.Packets() {
-		dhcpLayer := packet.Layers()[3]
-		req, err := dhcpv4.FromBytes(dhcpLayer.LayerContents())
-		assert.NoError(t, err)
-		req4 := role.NewRequest4(req)
-		res := role.Handler4(req4)
-		assert.NotNil(t, res)
-		assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
-		ones, bits := res.SubnetMask().Size()
-		assert.Equal(t, 24, ones)
-		assert.Equal(t, 32, bits)
-		assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
-		assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
-		assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
-	}
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+	assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
+
 }
