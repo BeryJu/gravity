@@ -30,14 +30,23 @@ var bufpool = sync.Pool{New: func() interface{} { r := make([]byte, MaxDatagram)
 // MaxDatagram is the maximum length of message that can be received.
 const MaxDatagram = 1 << 16
 
-type Handler4 func(req *Request) *dhcpv4.DHCPv4
+type Handler4 func(req *Request4) *dhcpv4.DHCPv4
 
-type Request struct {
+type Request4 struct {
 	*dhcpv4.DHCPv4
 	peer    net.Addr
 	log     *log.Entry
 	Context context.Context
 	oob     *ipv4.ControlMessage
+}
+
+func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
+	return &Request4{
+		DHCPv4:  dhcp,
+		Context: r.ctx,
+		peer:    &net.UDPAddr{},
+		log:     r.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())),
+	}
 }
 
 func (h *handler4) Serve() error {
@@ -67,13 +76,11 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		return
 	}
 
-	r := &Request{
-		DHCPv4:  m,
-		peer:    _peer,
-		log:     h.role.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), m.TransactionID.String())),
-		Context: context,
-		oob:     oob,
-	}
+	r := h.role.NewRequest4(m)
+	r.peer = _peer
+	r.Context = context
+	r.oob = oob
+
 	span := sentry.StartSpan(
 		r.Context,
 		"gravity.roles.dhcp.request",
@@ -138,7 +145,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	}
 }
 
-func (h *handler4) HandleRequest(r *Request) *dhcpv4.DHCPv4 {
+func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {
 	if r.OpCode != dhcpv4.OpcodeBootRequest {
 		h.role.log.WithField("opcode", r.OpCode.String()).Info("handler4: unsupported opcode")
 		return nil
@@ -156,9 +163,12 @@ func (h *handler4) HandleRequest(r *Request) *dhcpv4.DHCPv4 {
 		return nil
 	}
 
-	return h.role.recoverMiddleware4(
-		h.role.loggingMiddleware4(
-			handler,
-		),
+	// return h.role.recoverMiddleware4(
+	// 	h.role.loggingMiddleware4(
+	// 		handler,
+	// 	),
+	// )(r)
+	return h.role.loggingMiddleware4(
+		handler,
 	)(r)
 }

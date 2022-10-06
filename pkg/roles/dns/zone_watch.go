@@ -19,6 +19,8 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 	if t == mvccpb.DELETE {
 		r.log.WithField("name", r.zones[relKey].Name).Trace("removed zone")
 		r.zones[relKey].StopWatchingRecords()
+		r.zonesM.Lock()
+		defer r.zonesM.Unlock()
 		delete(r.zones, relKey)
 	} else if t == mvccpb.PUT {
 		z, err := r.zoneFromKV(kv)
@@ -34,6 +36,8 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 			r.log.WithField("name", z.Name).Warning("Zone is missing trailing preiod, most likely configured incorrectly")
 		}
 		r.log.WithField("name", z.Name).Debug("added zone")
+		r.zonesM.Lock()
+		defer r.zonesM.Unlock()
 		r.zones[z.Name] = z
 	}
 	return true

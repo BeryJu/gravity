@@ -10,7 +10,7 @@ import (
 )
 
 func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
-	return func(req *Request) *dhcpv4.DHCPv4 {
+	return func(req *Request4) *dhcpv4.DHCPv4 {
 		defer func() {
 			err := extconfig.RecoverWrapper(recover())
 			if err == nil {
@@ -27,7 +27,7 @@ func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 	}
 }
 
-func (r *Role) logDHCPMessage(req *Request, m *dhcpv4.DHCPv4, fields log.Fields) {
+func (r *Role) logDHCPMessage(req *Request4, m *dhcpv4.DHCPv4, fields log.Fields) {
 	f := log.Fields{
 		"deviceIdentifier": r.DeviceIdentifier(m),
 		"opCode":           m.OpCode.String(),
@@ -45,7 +45,7 @@ func (r *Role) logDHCPMessage(req *Request, m *dhcpv4.DHCPv4, fields log.Fields)
 }
 
 func (r *Role) loggingMiddleware4(inner Handler4) Handler4 {
-	return func(req *Request) *dhcpv4.DHCPv4 {
+	return func(req *Request4) *dhcpv4.DHCPv4 {
 		f := log.Fields{
 			"client": req.peer.String(),
 		}

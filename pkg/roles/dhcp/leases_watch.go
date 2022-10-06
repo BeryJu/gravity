@@ -11,6 +11,8 @@ import (
 func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 	rec, err := r.leaseFromKV(ev.Kv)
 	if ev.Type == clientv3.EventTypeDelete {
+		r.leasesM.Lock()
+		defer r.leasesM.Unlock()
 		delete(r.leases, rec.Identifier)
 	} else {
 		// Check if the lease parsed above actually was parsed correctly,
@@ -20,6 +22,8 @@ func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 			r.log.WithError(err).Warning("failed to parse lease")
 			return
 		}
+		r.leasesM.Lock()
+		defer r.leasesM.Unlock()
 		r.leases[rec.Identifier] = rec
 	}
 }

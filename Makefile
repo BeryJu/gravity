@@ -74,5 +74,5 @@ test:
 	export ETCD_ENDPOINT="localhost:2379"
 	export DEBUG="true"
 	etcdctl del --prefix / || true
-	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...
+	go test -p 1 -race -coverprofile=coverage.txt -covermode=atomic -v ./...
 	go tool cover -html coverage.txt -o coverage.html

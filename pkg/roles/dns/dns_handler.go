@@ -38,6 +38,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 
 	for _, question := range r.Question {
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
+		ro.zonesM.RLock()
 		for name, zone := range ro.zones {
 			// Zone doesn't have the correct suffix for the question
 			if !strings.HasSuffix(question.Name, name) {
@@ -48,6 +49,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 				longestZone = zone
 			}
 		}
+		ro.zonesM.RUnlock()
 	}
 	if longestZone == nil {
 		longestZone = ro.zones["."]

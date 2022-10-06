@@ -3,5 +3,6 @@
         "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;debug;tsdb",
         "ETCD_ENDPOINT": "localhost:2379",
         "DEBUG": "true",
+        "INSTANCE_IP": "0.0.0.0",
     },
 }

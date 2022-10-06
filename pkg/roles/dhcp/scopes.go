@@ -71,6 +71,7 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	var ipamInst IPAM
 	switch s.IPAM["type"] {
 	case "internal":
+		fallthrough
 	default:
 		ipamInst, err = NewInternalIPAM(r, s)
 	}
@@ -81,9 +82,11 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	return s, nil
 }
 
-func (r *Role) findScopeForRequest(req *Request) *Scope {
+func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	var match *Scope
 	longestBits := 0
+	r.scopesM.RLock()
+	defer r.scopesM.RUnlock()
 	for _, scope := range r.scopes {
 		ip := req.peer.(*net.UDPAddr).IP
 		// Handle cases where peer is an actual IP (most likely relay)
@@ -111,7 +114,7 @@ func (r *Role) findScopeForRequest(req *Request) *Scope {
 	return match
 }
 
-func (s *Scope) match(peer net.IP, req *Request) int {
+func (s *Scope) match(peer net.IP, req *Request4) int {
 	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
 		s.log.WithError(err).Warning("failed to parse client ip")
@@ -123,7 +126,7 @@ func (s *Scope) match(peer net.IP, req *Request) int {
 	return -1
 }
 
-func (s *Scope) createLeaseFor(req *Request) *Lease {
+func (s *Scope) createLeaseFor(req *Request4) *Lease {
 	ident := s.role.DeviceIdentifier(req.DHCPv4)
 	lease := &Lease{
 		Identifier: ident,

@@ -1,0 +1,131 @@
+package dhcp_test
+
+import (
+	"testing"
+	"time"
+
+	"beryju.io/gravity/pkg/instance"
+	"beryju.io/gravity/pkg/roles/dhcp"
+	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/tests"
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/pcap"
+	"github.com/insomniacslk/dhcp/dhcpv4"
+	"github.com/stretchr/testify/assert"
+	clientv3 "go.etcd.io/etcd/client/v3"
+)
+
+func TestDHCPDiscover(t *testing.T) {
+	rootInst := instance.New()
+	inst := rootInst.ForRole("dhcp")
+	role := dhcp.New(inst)
+	ctx := tests.Context()
+	inst.KV().Delete(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+
+	role.Start(ctx, []byte{})
+	defer role.Stop()
+
+	inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	)
+
+	p, err := pcap.OpenOffline("../../../hack/dhcp-test-data/discover-offer.pcap")
+	assert.NoError(t, err)
+	packetSource := gopacket.NewPacketSource(p, p.LinkType())
+	for packet := range packetSource.Packets() {
+		dhcpLayer := packet.Layers()[3]
+		req, err := dhcpv4.FromBytes(dhcpLayer.LayerContents())
+		assert.NoError(t, err)
+		req4 := role.NewRequest4(req)
+		res := role.Handler4(req4)
+		assert.NotNil(t, res)
+		assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+		ones, bits := res.SubnetMask().Size()
+		assert.Equal(t, 24, ones)
+		assert.Equal(t, 32, bits)
+		assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+		assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+	}
+}
+
+func TestDHCPDiscoverDNS(t *testing.T) {
+	rootInst := instance.New()
+	inst := rootInst.ForRole("dhcp")
+	role := dhcp.New(inst)
+	ctx := tests.Context()
+	inst.KV().Delete(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+
+	role.Start(ctx, []byte{})
+	defer role.Stop()
+
+	inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			DNS: &dhcp.ScopeDNS{
+				Zone:              "test.gravity.beryju.io",
+				AddZoneInHostname: true,
+			},
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	)
+
+	p, err := pcap.OpenOffline("../../../hack/dhcp-test-data/discover-offer.pcap")
+	assert.NoError(t, err)
+	packetSource := gopacket.NewPacketSource(p, p.LinkType())
+	for packet := range packetSource.Packets() {
+		dhcpLayer := packet.Layers()[3]
+		req, err := dhcpv4.FromBytes(dhcpLayer.LayerContents())
+		assert.NoError(t, err)
+		req4 := role.NewRequest4(req)
+		res := role.Handler4(req4)
+		assert.NotNil(t, res)
+		assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+		ones, bits := res.SubnetMask().Size()
+		assert.Equal(t, 24, ones)
+		assert.Equal(t, 32, bits)
+		assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+		assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+		assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
+	}
+}

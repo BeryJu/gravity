@@ -18,6 +18,8 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 	}
 	if t == mvccpb.DELETE {
 		r.log.WithField("name", r.scopes[relKey].Name).Trace("removed scope")
+		r.scopesM.Lock()
+		defer r.scopesM.Unlock()
 		delete(r.scopes, relKey)
 	} else if t == mvccpb.PUT {
 		z, err := r.scopeFromKV(kv)
@@ -25,6 +27,8 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 			r.log.WithError(err).Warning("failed to convert scope from event")
 		} else {
 			r.log.WithField("name", z.Name).Debug("added scope")
+			r.scopesM.Lock()
+			defer r.scopesM.Unlock()
 			r.scopes[z.Name] = z
 		}
 	}

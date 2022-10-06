@@ -24,6 +24,8 @@ type APILeasesGetOutput struct {
 
 func (r *Role) APILeasesGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesGetInput, output *APILeasesGetOutput) error {
+		r.leasesM.RLock()
+		defer r.leasesM.RUnlock()
 		for _, l := range r.leases {
 			if l.ScopeKey == input.ScopeName {
 				output.Leases = append(output.Leases, &APILease{
@@ -62,7 +64,9 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 		l.AddressLeaseTime = input.AddressLeaseTime
 		l.ScopeKey = input.Scope
 		l.DNSZone = input.DNSZone
+		r.scopesM.RLock()
 		scope, ok := r.scopes[input.Scope]
+		r.scopesM.RUnlock()
 		if !ok {
 			return status.InvalidArgument
 		}
@@ -87,7 +91,9 @@ type APILeasesWOLInput struct {
 
 func (r *Role) APILeasesWOL() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
+		r.leasesM.RLock()
 		l, ok := r.leases[input.Identifier]
+		r.leasesM.RUnlock()
 		if !ok {
 			return status.InvalidArgument
 		}

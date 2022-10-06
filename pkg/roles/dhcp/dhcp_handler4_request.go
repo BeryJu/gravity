@@ -4,7 +4,7 @@ import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )
 
-func (r *Role) HandleDHCPRequest4(req *Request) *dhcpv4.DHCPv4 {
+func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 	match := r.FindLease(req)
 
 	if match == nil {
@@ -28,7 +28,9 @@ func (r *Role) HandleDHCPRequest4(req *Request) *dhcpv4.DHCPv4 {
 	return rep
 }
 
-func (r *Role) FindLease(req *Request) *Lease {
+func (r *Role) FindLease(req *Request4) *Lease {
+	r.leasesM.RLock()
+	defer r.leasesM.RUnlock()
 	lease, ok := r.leases[r.DeviceIdentifier(req.DHCPv4)]
 	if !ok {
 		return nil

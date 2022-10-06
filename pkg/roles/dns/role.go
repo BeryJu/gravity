@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"runtime"
+	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -18,6 +19,7 @@ import (
 type Role struct {
 	servers []*dns.Server
 	zones   map[string]*Zone
+	zonesM  sync.RWMutex
 
 	cfg *RoleConfig
 	log *log.Entry
@@ -29,6 +31,7 @@ func New(instance roles.Instance) *Role {
 	r := &Role{
 		servers: make([]*dns.Server, 0),
 		zones:   make(map[string]*Zone, 0),
+		zonesM:  sync.RWMutex{},
 		log:     instance.Log(),
 		i:       instance,
 	}

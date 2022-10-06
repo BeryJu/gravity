@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"sync"
 
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
@@ -17,8 +18,10 @@ import (
 )
 
 type Role struct {
-	scopes map[string]*Scope
-	leases map[string]*Lease
+	scopes  map[string]*Scope
+	scopesM sync.RWMutex
+	leases  map[string]*Lease
+	leasesM sync.RWMutex
 
 	cfg *RoleConfig
 
@@ -30,10 +33,12 @@ type Role struct {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log:    instance.Log(),
-		i:      instance,
-		scopes: make(map[string]*Scope),
-		leases: make(map[string]*Lease),
+		log:     instance.Log(),
+		i:       instance,
+		scopes:  make(map[string]*Scope),
+		scopesM: sync.RWMutex{},
+		leases:  make(map[string]*Lease),
+		leasesM: sync.RWMutex{},
 	}
 	r.s4 = &handler4{
 		role: r,
@@ -52,6 +57,10 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/roles/dhcp", r.APIRoleConfigPut())
 	})
 	return r
+}
+
+func (r *Role) Handler4(re *Request4) *dhcpv4.DHCPv4 {
+	return r.s4.HandleRequest(re)
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {

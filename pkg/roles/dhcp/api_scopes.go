@@ -25,6 +25,8 @@ type APIScopesGetOutput struct {
 
 func (r *Role) APIScopesGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIScopesGetOutput) error {
+		r.scopesM.RLock()
+		defer r.scopesM.RUnlock()
 		for _, sc := range r.scopes {
 			output.Scopes = append(output.Scopes, &APIScope{
 				Name:       sc.Name,

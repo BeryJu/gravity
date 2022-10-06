@@ -56,7 +56,9 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	}
 	l.etcdKey = string(raw.Key)
 
+	r.scopesM.RLock()
 	scope, ok := r.scopes[l.ScopeKey]
+	r.scopesM.RUnlock()
 	if !ok {
 		return l, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
 	}
@@ -93,9 +95,12 @@ func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 		return err
 	}
 
-	zone := l.scope.DNS.Zone
-	if l.DNSZone != "" {
-		zone = l.DNSZone
+	var zone string
+	if l.scope.DNS != nil {
+		zone = l.scope.DNS.Zone
+		if l.DNSZone != "" {
+			zone = l.DNSZone
+		}
 	}
 	ev := roles.NewEvent(
 		ctx,
@@ -113,7 +118,7 @@ func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	return nil
 }
 
-func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
+func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	rep, err := dhcpv4.NewReplyFromRequest(req.DHCPv4)
 	if err != nil {
 		req.log.WithError(err).Warning("failed to create reply")
@@ -133,13 +138,15 @@ func (l *Lease) createReply(req *Request) *dhcpv4.DHCPv4 {
 
 	// DNS Options
 	rep.UpdateOption(dhcpv4.OptDNS(net.ParseIP(extconfig.Get().Instance.IP)))
-	rep.UpdateOption(dhcpv4.OptDomainName(l.scope.DNS.Zone))
-	if len(l.scope.DNS.Search) > 0 {
-		rep.UpdateOption(dhcpv4.OptDomainSearch(&rfc1035label.Labels{Labels: l.scope.DNS.Search}))
+	if l.scope.DNS != nil {
+		rep.UpdateOption(dhcpv4.OptDomainName(l.scope.DNS.Zone))
+		if len(l.scope.DNS.Search) > 0 {
+			rep.UpdateOption(dhcpv4.OptDomainSearch(&rfc1035label.Labels{Labels: l.scope.DNS.Search}))
+		}
 	}
 	if l.Hostname != "" {
 		hostname := l.Hostname
-		if l.scope.DNS.AddZoneInHostname {
+		if l.scope.DNS != nil && l.scope.DNS.AddZoneInHostname {
 			fqdn := strings.Join([]string{l.Hostname, l.scope.DNS.Zone}, ".")
 			hostname = fqdn
 		}
