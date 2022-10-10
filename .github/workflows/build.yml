@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: vars
         run: make ci--env
-      - uses: Noelware/docker-manifest-action@v0.1.0
+      - uses: Noelware/docker-manifest-action@v0.2.3
         with:
           base-image: |
             ghcr.io/beryju/gravity:latest
@@ -62,7 +62,7 @@ jobs:
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}-amd64,
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}-arm64
           push: ${{ github.ref == 'refs/heads/main' }}
-      - uses: Noelware/docker-manifest-action@v0.1.0
+      - uses: Noelware/docker-manifest-action@v0.2.3
         with:
           base-image: |
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}
