@@ -121,7 +121,7 @@ github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqO
 github.com/blang/semver v3.5.1+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
 github.com/bool64/dev v0.1.35/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
 github.com/bool64/dev v0.1.41/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
-github.com/bool64/dev v0.2.20 h1:9eIRGdcg2kQW2NGza++QbOKidNNaK+KfWuUXcZFDejE=
+github.com/bool64/dev v0.2.22 h1:YJFKBRKplkt+0Emq/5Xk1Z5QRmMNzc1UOJkR3rxJksA=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/cenkalti/backoff/v4 v4.1.1 h1:G2HAfAmvm/GcKan2oOQpBXOd2tT2G57ZnZGWa1PxPBQ=
 github.com/cenkalti/backoff/v4 v4.1.1/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
@@ -786,8 +786,8 @@ github.com/swaggest/openapi-go v0.2.22 h1:uKZwAXo/LSNOSqkIUF81wS0fZujraRab79GYNc
 github.com/swaggest/openapi-go v0.2.22/go.mod h1:kgzt+q28wgd4A3iRDY7xL7k0Q9JXxHlR9U/lFI1AQ7w=
 github.com/swaggest/refl v1.1.0 h1:a+9a75Kv6ciMozPjVbOfcVTEQe81t2R3emvaD9oGQGc=
 github.com/swaggest/refl v1.1.0/go.mod h1:g3Qa6ki0A/L2yxiuUpT+cuBURuRaltF5SDQpg1kMZSY=
-github.com/swaggest/rest v0.2.30 h1:CqrF2CVBwCxgFYn8+uIYfuZgrM1PAawrQ7dM9iF5s34=
-github.com/swaggest/rest v0.2.30/go.mod h1:VF1UUsHdWB0GBl/myAnPI9RqeKTAlM/D8MTG9jviHVI=
+github.com/swaggest/rest v0.2.32 h1:Fkv8u3DMtiQQRXtMh2EMZpzbBTgh3ab69uv+NvEimKg=
+github.com/swaggest/rest v0.2.32/go.mod h1:3KEXiv4Qamgi5Mhp4RK/5MJ1iCud0l3MrTlnGVVCnm8=
 github.com/swaggest/swgui v1.5.1 h1:CXJ2l9n1nEz2AJXl/FHDGD5ZtlKnTRJb2p86njBfXfo=
 github.com/swaggest/swgui v1.5.1/go.mod h1:lKfAIKTFBStjUtyXz56OQpXgQtpGZAWWIBv4QJtxRQA=
 github.com/swaggest/usecase v1.2.0 h1:cHVFqxIbHfyTXp02JmWXk+ZADaSa87UZP+b3qL5Nz90=
