@@ -65,6 +65,6 @@ func TestSaveBackup(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, []byte(cfg)))
 	defer role.Stop()
 	status := role.SaveSnapshot()
-	assert.Equal(t, nil, status.Error)
+	assert.Equal(t, "", status.Error)
 	assert.Equal(t, "success", status.Status)
 }
