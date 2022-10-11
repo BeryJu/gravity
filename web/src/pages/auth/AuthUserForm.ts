@@ -28,7 +28,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
 
     send = (data: AuthAPIUser): Promise<void> => {
         return new RolesApiApi(DEFAULT_CONFIG).apiPutUsers({
-            username: data.username,
+            username: this.instance?.username || data.username,
             authAPIUsersPutInput: {
                 password: (data as unknown as KV).password,
             },

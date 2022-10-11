@@ -19,7 +19,7 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         const isSuccess = (value.status || []).filter((v) => v.status !== "success");
         if (!isSuccess) {
             return Promise.resolve<AdminStatus>({
-                icon: "fa fa-exclamation-triangle pf-m-warning"
+                icon: "fa fa-exclamation-triangle pf-m-warning",
             });
         }
         return Promise.resolve<AdminStatus>({
@@ -28,7 +28,7 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
     }
 
     renderValue(): TemplateResult {
-        return html`${(this.value?.status || []).map(s => {
+        return html`${(this.value?.status || []).map((s) => {
             return html`${s.time?.toLocaleDateString()} ${s.time?.toLocaleTimeString()}`;
         })}`;
     }

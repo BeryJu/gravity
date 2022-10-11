@@ -12,11 +12,11 @@ import { DEFAULT_CONFIG } from "../../api/Config";
 import { AKElement } from "../../elements/Base";
 import "../../elements/PageHeader";
 import "../../elements/cards/AggregateCard";
+import "./cards/BackupCard";
 import "./cards/CurrentInstanceCard";
 import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
-import "./cards/BackupCard";
 import "./charts/DNSRequestsChart";
 import "./charts/MemoryUsageChart";
 
