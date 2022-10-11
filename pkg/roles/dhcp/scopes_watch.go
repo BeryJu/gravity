@@ -17,7 +17,7 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 		return false
 	}
 	if t == mvccpb.DELETE {
-		r.log.WithField("name", r.scopes[relKey].Name).Trace("removed scope")
+		r.log.WithField("key", relKey).Trace("removed scope")
 		r.scopesM.Lock()
 		defer r.scopesM.Unlock()
 		delete(r.scopes, relKey)

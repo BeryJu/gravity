@@ -36,13 +36,19 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
         if (!data.options) {
             data.options = [];
         }
-        data.options
-            .filter((op) => op.tagName === "router")
-            .forEach((op) => {
-                op.value = (data as unknown as KV)["router"];
+        const routerOpts = data.options
+            .filter((op) => op.tagName === "router");
+        if (routerOpts.length < 1) {
+            data.options.push({
+                tagName:"router",
+                value: (data as unknown as KV)["router"],
             });
+        }
+        routerOpts.forEach((op) => {
+            op.value = (data as unknown as KV)["router"];
+        });
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
-            scope: data.scope,
+            scope: this.instance?.scope || data.scope,
             dhcpAPIScopesPutInput: data,
         });
     };
@@ -124,7 +130,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     >
                         <input
                             type="text"
-                            value="${ifDefined(this.instance?.ipam?.type)}"
+                            value="${ifDefined(this.instance?.ipam?.range_end)}"
                             class="pf-c-form-control"
                             required
                         />

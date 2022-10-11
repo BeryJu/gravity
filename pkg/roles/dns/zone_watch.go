@@ -17,7 +17,7 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 		return false
 	}
 	if t == mvccpb.DELETE {
-		r.log.WithField("name", r.zones[relKey].Name).Trace("removed zone")
+		r.log.WithField("key", relKey).Trace("removed zone")
 		r.zones[relKey].StopWatchingRecords()
 		r.zonesM.Lock()
 		defer r.zonesM.Unlock()

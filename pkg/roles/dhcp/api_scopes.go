@@ -2,7 +2,9 @@ package dhcp
 
 import (
 	"context"
+	"errors"
 	"net/netip"
+	"strings"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
@@ -25,9 +27,27 @@ type APIScopesGetOutput struct {
 
 func (r *Role) APIScopesGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIScopesGetOutput) error {
-		r.scopesM.RLock()
-		defer r.scopesM.RUnlock()
-		for _, sc := range r.scopes {
+		rawScopes, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyScopes,
+			).Prefix(true).String(),
+			clientv3.WithPrefix(),
+		)
+		if err != nil {
+			r.log.WithError(err).Warning("failed to get scopes")
+			return status.Wrap(errors.New("failed to get scopes"), status.Internal)
+		}
+		for _, rawScope := range rawScopes.Kvs {
+			sc, err := r.scopeFromKV(rawScope)
+			if err != nil {
+				r.log.WithError(err).Warning("failed to parse scope")
+				continue
+			}
+			if strings.Contains(sc.Name, "/") {
+				continue
+			}
 			output.Scopes = append(output.Scopes, &APIScope{
 				Name:       sc.Name,
 				SubnetCIDR: sc.SubnetCIDR,
