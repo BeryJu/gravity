@@ -13,7 +13,7 @@ func (ap *AuthProvider) checkToken(r *http.Request) bool {
 	if header == "" {
 		return false
 	}
-	parts := strings.SplitN(header, " ", 1)
+	parts := strings.SplitN(header, " ", 2)
 	if len(parts) < 2 {
 		return false
 	}
