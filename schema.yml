@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.7
+  version: 0.2.8
 paths:
   /api/v1/auth/config:
     get:
@@ -1335,13 +1335,31 @@ components:
       required:
       - password
       type: object
+    BackupAPIBackupStatus:
+      properties:
+        duration:
+          type: integer
+        error:
+          type: string
+        filename:
+          type: string
+        node:
+          type: string
+        size:
+          type: integer
+        status:
+          type: string
+        time:
+          format: date-time
+          type: string
+      type: object
     BackupAPIBackupStatusOutput:
       properties:
         status:
-          additionalProperties:
-            $ref: '#/components/schemas/BackupBackupStatus'
+          items:
+            $ref: '#/components/schemas/BackupAPIBackupStatus'
           nullable: true
-          type: object
+          type: array
       required:
       - status
       type: object
@@ -1370,6 +1388,9 @@ components:
         size:
           type: integer
         status:
+          type: string
+        time:
+          format: date-time
           type: string
       type: object
     BackupRoleConfig:

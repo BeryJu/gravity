@@ -11,11 +11,12 @@ import (
 )
 
 type BackupStatus struct {
-	Status   string `json:"status,omitempty"`
-	Error    string `json:"error,omitempty"`
-	Filename string `json:"filename,omitempty"`
-	Size     int64  `json:"size,omitempty"`
-	Duration int64  `json:"duration,omitempty"`
+	Status   string    `json:"status,omitempty"`
+	Error    string    `json:"error,omitempty"`
+	Filename string    `json:"filename,omitempty"`
+	Size     int64     `json:"size,omitempty"`
+	Duration int64     `json:"duration,omitempty"`
+	Time     time.Time `json:"time"`
 }
 
 const BackupStatusSuccess = "success"
@@ -67,6 +68,7 @@ func (r *Role) SaveSnapshot() *BackupStatus {
 	start := time.Now()
 	status := &BackupStatus{
 		Status: BackupStatusFailed,
+		Time:   time.Now(),
 	}
 	defer r.setStatus(status)
 	if r.mc == nil {

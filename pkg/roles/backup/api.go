@@ -36,8 +36,13 @@ func (r *Role) APIBackupStart() usecase.Interactor {
 	return u
 }
 
+type APIBackupStatus struct {
+	BackupStatus
+	Node string `json:"node"`
+}
+
 type APIBackupStatusOutput struct {
-	Status map[string]BackupStatus `json:"status" required:"true"`
+	Status []APIBackupStatus `json:"status" required:"true"`
 }
 
 func (r *Role) APIBackupStatus() usecase.Interactor {
@@ -54,7 +59,6 @@ func (r *Role) APIBackupStatus() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
-		output.Status = make(map[string]BackupStatus)
 		for _, rs := range rawStatus.Kvs {
 			var s BackupStatus
 			err := json.Unmarshal(rs.Value, &s)
@@ -63,7 +67,10 @@ func (r *Role) APIBackupStatus() usecase.Interactor {
 				continue
 			}
 			keyParts := strings.Split(strings.TrimPrefix(string(rs.Key), prefix), "/")
-			output.Status[keyParts[0]] = s
+			output.Status = append(output.Status, APIBackupStatus{
+				BackupStatus: s,
+				Node:         keyParts[0],
+			})
 		}
 		return nil
 	})
