@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.6
+  version: 0.2.7
 paths:
   /api/v1/auth/config:
     get:
@@ -215,6 +215,25 @@ paths:
                 $ref: '#/components/schemas/BackupBackupStatus'
           description: OK
       summary: Backup start
+      tags:
+      - roles/backup
+  /api/v1/backup/status:
+    get:
+      operationId: backup.status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupAPIBackupStatusOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Backup status
       tags:
       - roles/backup
   /api/v1/dhcp/scopes:
@@ -1316,6 +1335,16 @@ components:
       required:
       - password
       type: object
+    BackupAPIBackupStatusOutput:
+      properties:
+        status:
+          additionalProperties:
+            $ref: '#/components/schemas/BackupBackupStatus'
+          nullable: true
+          type: object
+      required:
+      - status
+      type: object
     BackupAPIRoleConfigInput:
       properties:
         config:
@@ -1334,7 +1363,8 @@ components:
       properties:
         duration:
           type: integer
-        error: {}
+        error:
+          type: string
         filename:
           type: string
         size:
