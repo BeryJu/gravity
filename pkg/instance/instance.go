@@ -249,7 +249,8 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 
 func (i *Instance) Stop() {
 	i.log.Info("Stopping")
-	for _, role := range i.roles {
+	for id, role := range i.roles {
+		i.log.WithField("roleId", id).Debug("stopping role")
 		role.ContextCancelFunc()
 		role.Role.Stop()
 	}

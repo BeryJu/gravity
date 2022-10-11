@@ -56,7 +56,6 @@ func (h *handler4) Serve() error {
 
 		n, oob, peer, err := h.pc.ReadFrom(b)
 		if err != nil {
-			h.role.log.WithError(err).Debug("Error reading from connection")
 			return err
 		}
 		go h.handle(b[:n], oob, peer.(*net.UDPAddr))

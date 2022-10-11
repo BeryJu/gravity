@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 
 	"beryju.io/gravity/pkg/roles"
@@ -123,9 +124,23 @@ func (r *Role) initServer4() error {
 	return nil
 }
 
+var useOfClosedErrMsg = "use of closed network connection"
+
+// isErrNetClosing checks whether is an ErrNetClosing error
+func isErrNetClosing(err error) bool {
+	if err == nil {
+		return false
+	}
+	return strings.Contains(err.Error(), useOfClosedErrMsg)
+}
+
 func (r *Role) startServer4() error {
 	r.log.WithField("port", r.cfg.Port).Info("starting DHCP Server")
-	return r.s4.Serve()
+	err := r.s4.Serve()
+	if !isErrNetClosing(err) {
+		return err
+	}
+	return nil
 }
 
 func (r *Role) Stop() {
