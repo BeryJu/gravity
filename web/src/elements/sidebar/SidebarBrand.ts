@@ -79,10 +79,7 @@ export class SidebarBrand extends AKElement {
                 : html``}
             <a href="#/" class="pf-c-page__header-brand-link">
                 <div class="pf-c-brand ak-brand">
-                    <img
-                        src="static/assets/images/logo-color.png"
-                        alt="gravity logo"
-                    />
+                    <img src="static/assets/images/logo-color.png" alt="gravity logo" />
                 </div>
             </a>`;
     }

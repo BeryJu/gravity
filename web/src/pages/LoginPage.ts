@@ -118,10 +118,7 @@ export class LoginPage extends AKElement {
             <div class="pf-c-login">
                 <div class="pf-c-login__container">
                     <header class="pf-c-login__header">
-                        <img
-                            src="static/assets/images/logo-color.png"
-                            alt="gravity logo"
-                        />
+                        <img src="static/assets/images/logo-color.png" alt="gravity logo" />
                     </header>
                     <main class="pf-c-login__main">
                         <header class="pf-c-login__main-header">
