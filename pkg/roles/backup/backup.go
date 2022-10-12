@@ -51,16 +51,16 @@ func (r *Role) setStatus(status *BackupStatus) {
 
 func (r *Role) GetBackupName() string {
 	now := time.Now()
-	fileName := fmt.Sprintf(
-		"gravity-snapshot-%s-%d_%d_%d",
+	r.cfg.Path += fmt.Sprintf("gravity/%s/%s",
 		extconfig.FullVersion(),
+		extconfig.Get().Instance.Identifier)
+	fileName := fmt.Sprintf(
+		"%s/gravity-snapshot-%d_%d_%d",
+		r.cfg.Path,
 		now.Year(),
 		now.Month(),
 		now.Day(),
 	)
-	if r.cfg.Path != "" {
-		fileName = fmt.Sprintf("%s/%s", r.cfg.Path, fileName)
-	}
 	return fileName
 }
 
