@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"path"
-	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -51,7 +50,6 @@ func New(instance roles.Instance) *Role {
 		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = ""
 	ee := &Role{
 		cfg:     cfg,
 		log:     instance.Log(),
@@ -62,13 +60,7 @@ func New(instance roles.Instance) *Role {
 	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
 	if extconfig.Get().Etcd.JoinCluster != "" {
 		cfg.ClusterState = embed.ClusterStateFlagExisting
-		joinParts := strings.Split(extconfig.Get().Etcd.JoinCluster, ";")
-		cfg.InitialCluster = fmt.Sprintf(
-			"%s,%s=https://%s:2380",
-			cfg.InitialCluster,
-			joinParts[0],
-			joinParts[1],
-		)
+		cfg.InitialCluster = cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
 	}
 	ee.log.Trace(cfg.InitialCluster)
 	cfg.PeerAutoTLS = true

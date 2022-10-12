@@ -56,7 +56,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			return status.Wrap(err, status.Internal)
 		}
 		env := fmt.Sprintf(
-			"ETCD_JOIN_CLUSTER='%s;%s'",
+			"%s=https://%s:2380",
 			extconfig.Get().Instance.Identifier,
 			extconfig.Get().Instance.IP,
 		)
