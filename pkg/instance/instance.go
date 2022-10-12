@@ -89,6 +89,7 @@ func (i *Instance) startSentry() {
 		TracesSampleRate: 0.5,
 		Transport:        transport,
 		Debug:            extconfig.Get().Debug,
+		DebugWriter:      NewSentryWriter(i.log.WithField("forRole", "sentry")),
 	})
 	if err != nil {
 		i.log.WithError(err).Warning("failed to init sentry")
