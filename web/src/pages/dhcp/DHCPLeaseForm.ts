@@ -34,6 +34,9 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     }
 
     send = (data: DhcpAPILease): Promise<void> => {
+        if (!data.addressLeaseTime) {
+            data.addressLeaseTime = "0";
+        }
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
             scope: this.scope || "",
             identifier: data.identifier,
