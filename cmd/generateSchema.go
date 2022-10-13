@@ -5,12 +5,13 @@ import (
 	"os"
 	"strings"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var schemaFormat = ""
@@ -46,17 +47,18 @@ var generateSchemaCmd = &cobra.Command{
 	Use:   "generateSchema [output_file]",
 	Short: "Generate OpenAPI Schema",
 	Run: func(cmd *cobra.Command, args []string) {
+		logger := extconfig.Get().Logger()
 		GenerateSchema(schemaFormat, func(schema []byte) {
 			if len(args) > 0 {
 				err := os.WriteFile(args[0], schema, 0644)
 				if err != nil {
-					log.WithError(err).Warning("failed to write schema")
+					logger.Warn("failed to write schema", zap.Error(err))
 					return
 				}
-				log.Infof("Successfully wrote schema to %s", args[0])
+				logger.Info("successfully wrote schema", zap.String("to", args[0]))
 			} else {
 				cmd.OutOrStdout().Write(schema)
-				log.Info("Successfully wrote schema to stdout")
+				logger.Info("Successfully wrote schema to stdout")
 			}
 		})
 	},

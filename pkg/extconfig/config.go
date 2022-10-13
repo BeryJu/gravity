@@ -7,7 +7,8 @@ import (
 
 	"beryju.io/gravity/pkg/storage"
 	env "github.com/Netflix/go-env"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type ExtConfig struct {
@@ -44,7 +45,7 @@ func Get() *ExtConfig {
 	var cfg ExtConfig
 	_, err := env.UnmarshalFromEnviron(&cfg)
 	if err != nil {
-		log.WithError(err).Warning("failed to load external config")
+		cfg.Logger().Warn("failed to load external config", zap.Error(err))
 		return nil
 	}
 	cfg.defaults()
@@ -72,20 +73,33 @@ func (e *ExtConfig) Listen(port int32) string {
 	return fmt.Sprintf("%s:%d", listen, port)
 }
 
-func (e *ExtConfig) defaults() {
-	if e.Debug {
-		log.SetLevel(log.TraceLevel)
-		log.SetFormatter(&log.TextFormatter{})
-	} else {
-		l, err := log.ParseLevel(e.LogLevel)
-		if err != nil {
-			l = log.WarnLevel
-		}
-		log.SetLevel(l)
-		log.SetFormatter(&log.JSONFormatter{
-			DisableHTMLEscape: true,
-		})
+func (e *ExtConfig) Logger() *zap.Logger {
+	config := zap.Config{
+		Encoding:         "json",
+		Development:      true,
+		OutputPaths:      []string{"stderr"},
+		ErrorOutputPaths: []string{"stderr"},
+		EncoderConfig:    zap.NewProductionEncoderConfig(),
 	}
+	l, err := zapcore.ParseLevel(e.LogLevel)
+	if err != nil {
+		l = zapcore.InfoLevel
+	}
+	config.Level = zap.NewAtomicLevelAt(l)
+	if e.Debug {
+		config.Development = true
+		config.Encoding = "console"
+		config.Level = zap.NewAtomicLevelAt(zapcore.DebugLevel)
+		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
+	}
+	log, err := config.Build()
+	if err != nil {
+		panic(err)
+	}
+	return log
+}
+
+func (e *ExtConfig) defaults() {
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
 		if err != nil {
