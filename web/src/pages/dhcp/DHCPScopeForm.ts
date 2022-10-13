@@ -36,11 +36,10 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
         if (!data.options) {
             data.options = [];
         }
-        const routerOpts = data.options
-            .filter((op) => op.tagName === "router");
+        const routerOpts = data.options.filter((op) => op.tagName === "router");
         if (routerOpts.length < 1) {
             data.options.push({
-                tagName:"router",
+                tagName: "router",
                 value: (data as unknown as KV)["router"],
             });
         }
