@@ -13,12 +13,9 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-var DHCPDiscoverPayload = []byte{1, 1, 6, 0, 136, 9, 170, 251, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 178, 183, 134, 44, 211, 250, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 130, 83, 99, 53, 1, 1, 55, 9, 1, 121, 3, 6, 15, 108, 114, 119, 252, 57, 2, 5, 220, 61, 7, 1, 178, 183, 134, 44, 211, 250, 51, 4, 0, 118, 167, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-
-func TestDHCPDiscover(t *testing.T) {
+func Cleanup() {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
 	inst.KV().Delete(
 		ctx,
@@ -28,6 +25,24 @@ func TestDHCPDiscover(t *testing.T) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
+	inst.KV().Delete(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+}
+
+var DHCPRequestPayload = []byte{1, 1, 6, 0, 136, 9, 170, 249, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 144, 187, 102, 50, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 130, 83, 99, 53, 1, 3, 55, 9, 1, 121, 3, 6, 15, 108, 114, 119, 252, 57, 2, 5, 220, 61, 7, 1, 68, 144, 187, 102, 50, 4, 50, 4, 10, 120, 20, 64, 51, 4, 0, 118, 167, 0, 12, 14, 106, 101, 110, 115, 45, 105, 112, 104, 111, 110, 101, 45, 49, 50, 255, 0, 0, 0, 0}
+
+func TestDHCPRequest(t *testing.T) {
+	rootInst := instance.New()
+	inst := rootInst.ForRole("dhcp")
+	role := dhcp.New(inst)
+	ctx := tests.Context()
+	Cleanup()
 
 	inst.KV().Put(
 		ctx,
@@ -50,7 +65,7 @@ func TestDHCPDiscover(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
+	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
 	assert.NoError(t, err)
 	req4 := role.NewRequest4(req)
 	res := role.Handler4(req4)
@@ -59,23 +74,16 @@ func TestDHCPDiscover(t *testing.T) {
 	ones, bits := res.SubnetMask().Size()
 	assert.Equal(t, 24, ones)
 	assert.Equal(t, 32, bits)
-	assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 }
 
-func TestDHCPDiscoverDNS(t *testing.T) {
+func TestDHCPRequestDNS(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
 	ctx := tests.Context()
-	inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyScopes,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	)
+	Cleanup()
 
 	inst.KV().Put(
 		ctx,
@@ -103,7 +111,7 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
+	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
 	assert.NoError(t, err)
 	req4 := role.NewRequest4(req)
 	res := role.Handler4(req4)
@@ -112,7 +120,7 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 	ones, bits := res.SubnetMask().Size()
 	assert.Equal(t, 24, ones)
 	assert.Equal(t, 32, bits)
-	assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 	assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
 }
