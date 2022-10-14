@@ -3,6 +3,9 @@ package backup
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -64,6 +67,37 @@ func (r *Role) GetBackupName() string {
 	return fileName
 }
 
+func (r *Role) snapshotToFile() (*os.File, error) {
+	reader, err := r.i.KV().Snapshot(r.ctx)
+	if err != nil {
+		r.log.WithError(err).Warning("failed to snapshot")
+		return nil, err
+	}
+	file, err := ioutil.TempFile(os.TempDir(), "gravity-snapshot.*.etcd")
+	if err != nil {
+		return nil, err
+	}
+
+	// make a buffer to keep chunks that are read
+	buf := make([]byte, 1024)
+	for {
+		// read a chunk
+		n, err := reader.Read(buf)
+		if err != nil && err != io.EOF {
+			return nil, err
+		}
+		if n == 0 {
+			break
+		}
+
+		// write a chunk
+		if _, err := file.Write(buf[:n]); err != nil {
+			return nil, err
+		}
+	}
+	return file, nil
+}
+
 func (r *Role) SaveSnapshot() *BackupStatus {
 	start := time.Now()
 	status := &BackupStatus{
@@ -75,15 +109,21 @@ func (r *Role) SaveSnapshot() *BackupStatus {
 		status.Error = "backup not configured"
 		return status
 	}
-	// TODO: Only let the master do backups to prevent duplicates
-	read, err := r.i.KV().Snapshot(r.ctx)
+	file, err := r.snapshotToFile()
 	if err != nil {
-		r.log.WithError(err).Warning("failed to snapshot")
+		status.Error = err.Error()
+		return status
+	}
+	defer os.Remove(file.Name())
+	file.Seek(0, io.SeekStart)
+	stat, err := file.Stat()
+	if err != nil {
 		status.Error = err.Error()
 		return status
 	}
 	fileName := r.GetBackupName()
-	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, read, -1, minio.PutObjectOptions{})
+
+	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, file, stat.Size(), minio.PutObjectOptions{})
 	if err != nil {
 		r.log.WithError(err).Warning("failed to upload snapshot")
 		status.Error = err.Error()
