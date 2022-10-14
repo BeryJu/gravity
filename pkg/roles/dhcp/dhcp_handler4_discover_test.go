@@ -19,6 +19,7 @@ func TestDHCPDiscover(t *testing.T) {
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
 	ctx := tests.Context()
+	Cleanup()
 
 	inst.KV().Put(
 		ctx,
