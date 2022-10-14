@@ -19,8 +19,7 @@ func TestStart(t *testing.T) {
 		defer rootInst.Stop()
 
 		// Start API to trigger EventTopicAPIMuxSetup
-		inst := rootInst.ForRole("api")
-		role := api.New(inst)
+		role := rootInst.Role("api").(*api.Role)
 		ctx := tests.Context()
 		assert.Nil(t, role.Start(ctx, []byte{}))
 		role.Stop()

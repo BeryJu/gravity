@@ -113,7 +113,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 		w.WriteMsg(soa)
 		return
 	}
-	z.log.Trace("No handler has a reply, fallback back to NX")
+	z.log.Trace("no handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
 	fallback.SetReply(r)
 	fallback.SetRcode(r, dns.RcodeNameError)
