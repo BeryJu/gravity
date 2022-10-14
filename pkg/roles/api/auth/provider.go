@@ -2,13 +2,18 @@ package auth
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/securecookie"
 	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
 	"golang.org/x/crypto/bcrypt"
@@ -23,20 +28,16 @@ type AuthProvider struct {
 	allowedPaths []string
 }
 
-func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) *AuthProvider {
+func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	ap := &AuthProvider{
 		role: r,
 		inst: inst,
 		log:  inst.Log().WithField("mw", "auth"),
-		oidc: oidc,
 		allowedPaths: []string{
 			"/api/v1/auth/me",
 			"/api/v1/auth/config",
 			"/api/v1/auth/login",
 		},
-	}
-	if ap.oidc != nil {
-		ap.InitOIDC()
 	}
 	gob.Register(User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
@@ -56,7 +57,22 @@ func NewAuthProvider(r roles.Role, inst roles.Instance, oidc *types.OIDCConfig) 
 		svc.Post("/api/v1/auth/tokens", ap.APITokensPut())
 		svc.Delete("/api/v1/auth/tokens", ap.APITokensDelete())
 	})
-	ap.createDefaultUser()
+	inst.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
+		password := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
+		err := ap.CreateUser(ev.Context, "admin", password)
+		if err != nil {
+			ap.log.WithError(err).Warning("failed to create default user")
+			return
+		}
+		text := `------------------------------------------------------------
+Welcome to gravity! An admin user has been created for you.
+Username: '%s'
+Password: '%s'
+Open 'http://%s:8008/' to start using Gravity!
+--------------------------------------------------------------------
+`
+		fmt.Printf(text, "admin", password, extconfig.Get().Instance.IP)
+	})
 	return ap
 }
 

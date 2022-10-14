@@ -18,7 +18,7 @@ func TestAPIUsersGet(t *testing.T) {
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
 	ctx := tests.Context()
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	inst.KV().Put(
 		ctx,
@@ -39,7 +39,7 @@ func TestAPIUsersPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
 	password := tests.RandomString()
@@ -75,7 +75,7 @@ func TestAPIUsersDelete(t *testing.T) {
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
 	ctx := tests.Context()
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
 

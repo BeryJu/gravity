@@ -2,6 +2,7 @@ package instance
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -25,6 +26,10 @@ import (
 	"beryju.io/gravity/pkg/roles/tsdb"
 	"beryju.io/gravity/pkg/storage"
 )
+
+type ClusterInfo struct {
+	Setup bool `json:"setup"`
+}
 
 type RoleContext struct {
 	Role              roles.Role
@@ -169,10 +174,54 @@ func (i *Instance) bootstrap() {
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
+	i.checkFirstStart()
 	for roleId := range i.roles {
 		go i.startWatchRole(roleId)
 	}
 	<-i.rootContext.Done()
+}
+
+func (i *Instance) checkFirstStart() {
+	inst := i.ForRole("root")
+	cluster, err := inst.KV().Get(
+		i.rootContext,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyCluster,
+		).String(),
+	)
+	if err != nil {
+		return
+	}
+	if len(cluster.Kvs) > 0 {
+		return
+	}
+	i.log.Info("Initial startup")
+	inst.DispatchEvent(
+		types.EventTopicInstanceFirstStart,
+		roles.NewEvent(i.rootContext, map[string]interface{}{}),
+	)
+
+	clusterJson, err := json.Marshal(&ClusterInfo{
+		Setup: true,
+	})
+	if err != nil {
+		i.log.WithError(err).Warning("failed to marshall cluster info")
+		return
+	}
+
+	_, err = inst.KV().Put(
+		i.rootContext,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyCluster,
+		).String(),
+		string(clusterJson),
+	)
+	if err != nil {
+		i.log.WithError(err).Warning("failed to put cluster info")
+		return
+	}
 }
 
 func (i *Instance) startWatchRole(id string) {

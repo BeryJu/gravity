@@ -16,7 +16,7 @@ func TestAPITokensGet(t *testing.T) {
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
 	ctx := tests.Context()
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	inst.KV().Put(
 		ctx,
@@ -37,7 +37,7 @@ func TestAPITokensPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	var output auth.APITokensPutOutput
 	name := tests.RandomString()
@@ -64,7 +64,7 @@ func TestAPITokensDelete(t *testing.T) {
 	inst := rootInst.ForRole("api")
 	role := api.New(inst)
 	ctx := tests.Context()
-	prov := auth.NewAuthProvider(role, inst, nil)
+	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
 

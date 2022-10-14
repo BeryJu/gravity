@@ -16,7 +16,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func (ap *AuthProvider) InitOIDC() {
+func (ap *AuthProvider) InitOIDC(config *types.OIDCConfig) {
 	c := &http.Client{Transport: extconfig.Transport()}
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c)
 	provider, err := oidc.NewProvider(ctx, ap.oidc.Issuer)
