@@ -2,7 +2,7 @@ package discovery
 
 import (
 	"context"
-	"fmt"
+	"net/netip"
 
 	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
@@ -40,7 +40,13 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a subnet based on the instance IP
 		subnet := r.NewSubnet("default-instance-subnet")
-		subnet.CIDR = fmt.Sprintf("%s/24", extconfig.Get().Instance.IP)
+		ip := netip.MustParseAddr(extconfig.Get().Instance.IP)
+		prefix, err := ip.Prefix(24)
+		if err != nil {
+			r.log.WithError(err).Warning("failed to get prefix")
+			return
+		}
+		subnet.CIDR = prefix.String()
 		subnet.DNSResolver = extconfig.Get().FallbackDNS
 		subnet.DiscoveryTTL = 86400
 		subnet.put(ev.Context)
