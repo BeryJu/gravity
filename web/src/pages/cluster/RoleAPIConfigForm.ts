@@ -15,7 +15,7 @@ import { KV } from "../../utils";
 export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     loadInstance(pk: string): Promise<ApiRoleConfig> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig2().then((config) => {
+        return new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig().then((config) => {
             return config.config;
         });
     }
@@ -33,7 +33,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
             const kv = data.oidc as unknown as KV;
             data.oidc.scopes = kv.scopesList.split(" ");
         }
-        return new RolesApiApi(DEFAULT_CONFIG).apiPutRoleConfig2({
+        return new RolesApiApi(DEFAULT_CONFIG).apiPutRoleConfig({
             apiAPIRoleConfigInput: {
                 config: data,
             },

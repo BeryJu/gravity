@@ -11,7 +11,7 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-memory-usage")
 export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetricsMemory2();
+        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetricsMemory();
     }
 
     getChartType(): string {
