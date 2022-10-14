@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -19,8 +20,8 @@ func GenerateSchema(format string, callback func(schema []byte)) {
 	inst := rootInst.ForRole("api")
 	inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 		defer rootInst.Stop()
-		api := api.New(inst)
-		schema := api.Schema()
+		api := rootInst.Role("api").(*api.Role)
+		schema := api.Schema(context.Background())
 		var out []byte
 		var err error
 		switch strings.ToLower(format) {

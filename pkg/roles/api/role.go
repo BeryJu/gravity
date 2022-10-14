@@ -38,6 +38,7 @@ func New(instance roles.Instance) *Role {
 		m:   mux,
 		cfg: &RoleConfig{},
 	}
+	r.auth = auth.NewAuthProvider(r, r.i)
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(r.SessionMiddleware)
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
@@ -50,7 +51,6 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 	})
-	r.auth = auth.NewAuthProvider(r, r.i)
 	return r
 }
 
@@ -82,7 +82,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.sessions = sess
 
 	if r.cfg.OIDC != nil {
-		r.auth.InitOIDC(r.cfg.OIDC)
+		r.auth.ConfigureOpenIDConnect(r.ctx, r.cfg.OIDC)
 	}
 	r.prepareOpenAPI(ctx)
 	listen := extconfig.Get().Listen(r.cfg.Port)
@@ -120,8 +120,8 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	}))
 }
 
-func (r *Role) Schema() *openapi3.Spec {
-	r.prepareOpenAPI(context.Background())
+func (r *Role) Schema(ctx context.Context) *openapi3.Spec {
+	r.prepareOpenAPI(ctx)
 	return r.oapi.OpenAPICollector.Reflector().Spec
 }
 

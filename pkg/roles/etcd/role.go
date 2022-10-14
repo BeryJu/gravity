@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -72,13 +73,15 @@ func New(instance roles.Instance) *Role {
 }
 
 func (ee *Role) Start(ctx context.Context, config []byte) error {
+	start := time.Now()
 	e, err := embed.StartEtcd(ee.cfg)
 	if err != nil {
 		return err
 	}
 	ee.e = e
 	<-e.Server.ReadyNotify()
-	ee.log.Info("Embedded etcd Ready!")
+	duration := float64(time.Since(start)) / float64(time.Millisecond)
+	ee.log.WithField("runtimeMS", fmt.Sprintf("%0.3f", duration)).Info("Embedded etcd Ready!")
 	go func() {
 		err := <-e.Err()
 		if err != nil {

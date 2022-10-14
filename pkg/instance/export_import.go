@@ -1,7 +1,6 @@
 package instance
 
 import (
-	"context"
 	"encoding/base64"
 	"strings"
 
@@ -15,7 +14,7 @@ type ExportEntry struct {
 }
 
 func (i *Instance) Export() ([]ExportEntry, error) {
-	exps, err := i.kv.Get(context.Background(), "/", clientv3.WithPrefix())
+	exps, err := i.kv.Get(i.rootContext, "/", clientv3.WithPrefix())
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func (i *Instance) Import(entries []ExportEntry) error {
 			i.log.WithField("key", entry.Key).WithError(err).Warning("failed to decode value")
 			continue
 		}
-		_, err = i.kv.Put(context.Background(), entry.Key, string(val))
+		_, err = i.kv.Put(i.rootContext, entry.Key, string(val))
 		if err != nil {
 			i.log.WithField("key", entry.Key).WithError(err).Warning("failed to put value")
 			continue

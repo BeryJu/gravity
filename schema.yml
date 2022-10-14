@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.2.8
+  version: 0.2.9
 paths:
   /api/v1/auth/config:
     get:
@@ -839,7 +839,7 @@ paths:
       - roles/dns
   /api/v1/etcd/join:
     post:
-      operationId: etcd.join_member2
+      operationId: etcd.join_member
       requestBody:
         content:
           application/json:
@@ -863,7 +863,7 @@ paths:
       - roles/etcd
   /api/v1/etcd/members:
     get:
-      operationId: api.get_members2
+      operationId: api.get_members
       responses:
         "200":
           content:
@@ -920,7 +920,7 @@ paths:
       - instances
   /api/v1/roles/api:
     get:
-      operationId: api.get_role_config2
+      operationId: api.get_role_config
       responses:
         "200":
           content:
@@ -932,7 +932,7 @@ paths:
       tags:
       - roles/api
     post:
-      operationId: api.put_role_config2
+      operationId: api.put_role_config
       requestBody:
         content:
           application/json:
@@ -1186,7 +1186,7 @@ paths:
       - roles/tsdb
   /api/v1/system/metrics/memory:
     get:
-      operationId: api.get_metrics_memory2
+      operationId: api.get_metrics_memory
       responses:
         "200":
           content:

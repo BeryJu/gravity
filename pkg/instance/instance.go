@@ -71,6 +71,14 @@ func New() *Instance {
 	}
 }
 
+func (i *Instance) Role(id string) roles.Role {
+	role, ok := i.roles[id]
+	if !ok {
+		return nil
+	}
+	return role.Role
+}
+
 func (i *Instance) Start() {
 	i.log.WithField("version", extconfig.FullVersion()).Info("Gravity starting")
 	go i.startSentry()
