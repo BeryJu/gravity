@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -73,7 +72,7 @@ func (r *Role) snapshotToFile() (*os.File, error) {
 		r.log.WithError(err).Warning("failed to snapshot")
 		return nil, err
 	}
-	file, err := ioutil.TempFile(os.TempDir(), "gravity-snapshot.*.etcd")
+	file, err := os.CreateTemp(os.TempDir(), "gravity-snapshot.*.etcd")
 	if err != nil {
 		return nil, err
 	}
