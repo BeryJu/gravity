@@ -63,7 +63,7 @@ func (r *Role) APISubnetsPut() usecase.Interactor {
 		s.CIDR = input.SubnetCIDR
 		s.DiscoveryTTL = input.DiscoveryTTL
 		s.DNSResolver = input.DNSResolver
-		err := s.put()
+		err := s.put(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

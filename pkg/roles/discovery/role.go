@@ -2,8 +2,10 @@ package discovery
 
 import (
 	"context"
+	"fmt"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 
@@ -34,6 +36,14 @@ func New(instance roles.Instance) *Role {
 		svc.Delete("/api/v1/discovery/devices/delete", r.APIDevicesDelete())
 		svc.Get("/api/v1/roles/discovery", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/discovery", r.APIRoleConfigPut())
+	})
+	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
+		// On first start create a subnet based on the instance IP
+		subnet := r.NewSubnet("default-instance-subnet")
+		subnet.CIDR = fmt.Sprintf("%s/24", extconfig.Get().Instance.IP)
+		subnet.DNSResolver = extconfig.Get().FallbackDNS
+		subnet.DiscoveryTTL = 86400
+		subnet.put(ev.Context)
 	})
 	return r
 }

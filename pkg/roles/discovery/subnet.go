@@ -108,14 +108,14 @@ func (s *Subnet) RunDiscovery() []Device {
 	return devices
 }
 
-func (s *Subnet) put(opts ...clientv3.OpOption) error {
+func (s *Subnet) put(ctx context.Context, opts ...clientv3.OpOption) error {
 	key := s.inst.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier)
 	raw, err := json.Marshal(&s)
 	if err != nil {
 		return err
 	}
 	_, err = s.inst.KV().Put(
-		context.Background(),
+		ctx,
 		key.String(),
 		string(raw),
 		opts...,

@@ -7,9 +7,10 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
-	apitypes "beryju.io/gravity/pkg/roles/api/types"
-	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
+	apiTypes "beryju.io/gravity/pkg/roles/api/types"
+	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	log "github.com/sirupsen/logrus"
@@ -35,10 +36,27 @@ func New(instance roles.Instance) *Role {
 		log:     instance.Log(),
 		i:       instance,
 	}
-	r.i.AddEventListener(dhcptypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
+	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
+		// On first start create a zone that'll forward to a reasonable default
+		zone := r.newZone(".")
+		zone.HandlerConfigs = []map[string]string{
+			{
+				"type": "memory",
+			},
+			{
+				"type": "etcd",
+			},
+			{
+				"type": "forward_ip",
+				"to":   extconfig.Get().FallbackDNS,
+			},
+		}
+		zone.put(ev.Context)
+	})
+	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/dns/metrics", r.APIMetrics())
 		svc.Get("/api/v1/dns/zones", r.APIZonesGet())
