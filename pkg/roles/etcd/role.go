@@ -9,7 +9,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
@@ -25,7 +25,7 @@ type Role struct {
 
 	e   *embed.Etcd
 	cfg *embed.Config
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 }
 
@@ -41,7 +41,7 @@ func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
 	cfg.Dir = dirs.EtcdDir
-	cfg.LogLevel = "warn"
+	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(instance.Log(), nil, nil)
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
 	cfg.LPUrls = []url.URL{
@@ -63,7 +63,7 @@ func New(instance roles.Instance) *Role {
 		cfg.ClusterState = embed.ClusterStateFlagExisting
 		cfg.InitialCluster = cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
 	}
-	ee.log.Trace(cfg.InitialCluster)
+	ee.log.Debug(cfg.InitialCluster)
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
@@ -80,12 +80,11 @@ func (ee *Role) Start(ctx context.Context, config []byte) error {
 	}
 	ee.e = e
 	<-e.Server.ReadyNotify()
-	duration := float64(time.Since(start)) / float64(time.Millisecond)
-	ee.log.WithField("runtimeMS", fmt.Sprintf("%0.3f", duration)).Info("Embedded etcd Ready!")
+	ee.log.Info("Embedded etcd Ready!", zap.Duration("runtimeMS", time.Since(start)))
 	go func() {
 		err := <-e.Err()
 		if err != nil {
-			ee.log.WithError(err).Warning("failed to start/stop etcd")
+			ee.log.Warn("failed to start/stop etcd", zap.Error(err))
 		}
 	}()
 	return nil

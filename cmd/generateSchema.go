@@ -34,7 +34,7 @@ func GenerateSchema(format string, callback func(schema []byte)) {
 			out, err = schema.MarshalJSON()
 		}
 		if err != nil {
-			rootInst.Log().WithError(err).Warning("failed to generate schema")
+			rootInst.Log().Warn("failed to generate schema", zap.Error(err))
 			return
 		}
 		callback(out)

@@ -28,6 +28,8 @@ type ExtConfig struct {
 	}
 	ListenOnlyMode bool   `env:"LISTEN_ONLY,default=false"`
 	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
+
+	logger *zap.Logger
 }
 
 type ExtConfigDirs struct {
@@ -45,10 +47,9 @@ func Get() *ExtConfig {
 	var cfg ExtConfig
 	_, err := env.UnmarshalFromEnviron(&cfg)
 	if err != nil {
-		cfg.Logger().Warn("failed to load external config", zap.Error(err))
-		return nil
+		panic(err)
 	}
-	cfg.defaults()
+	cfg.load()
 	globalExtConfig = &cfg
 	return &cfg
 }
@@ -62,7 +63,7 @@ func (e *ExtConfig) Dirs() *ExtConfigDirs {
 }
 
 func (e *ExtConfig) EtcdClient() *storage.Client {
-	return storage.NewClient(e.Etcd.Prefix, e.Etcd.Endpoint)
+	return storage.NewClient(e.Etcd.Prefix, e.logger, e.Etcd.Endpoint)
 }
 
 func (e *ExtConfig) Listen(port int32) string {
@@ -74,6 +75,10 @@ func (e *ExtConfig) Listen(port int32) string {
 }
 
 func (e *ExtConfig) Logger() *zap.Logger {
+	return e.logger
+}
+
+func (e *ExtConfig) buildLogger() *zap.Logger {
 	config := zap.Config{
 		Encoding:         "json",
 		Development:      true,
@@ -99,7 +104,8 @@ func (e *ExtConfig) Logger() *zap.Logger {
 	return log
 }
 
-func (e *ExtConfig) defaults() {
+func (e *ExtConfig) load() {
+	e.logger = e.buildLogger()
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
 		if err != nil {
@@ -108,7 +114,7 @@ func (e *ExtConfig) defaults() {
 		e.Instance.Identifier = h
 	}
 	if e.Instance.IP == "" {
-		instIp, err := GetIP()
+		instIp, err := e.GetIP()
 		if err != nil {
 			panic(err)
 		}

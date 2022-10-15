@@ -9,6 +9,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (r *Role) APIMemoryMetrics() usecase.Interactor {
@@ -29,7 +30,7 @@ func (r *Role) APIMemoryMetrics() usecase.Interactor {
 		for _, kv := range rawMetrics.Kvs {
 			value, err := strconv.ParseInt(string(kv.Value), 10, 0)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to parse metric value")
+				r.log.Warn("failed to parse metric value", zap.Error(err))
 				continue
 			}
 			keyParts := strings.Split(strings.TrimPrefix(string(kv.Key), prefix), "/")

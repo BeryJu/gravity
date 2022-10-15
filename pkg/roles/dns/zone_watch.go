@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
@@ -17,7 +18,7 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 		return false
 	}
 	if t == mvccpb.DELETE {
-		r.log.WithField("key", relKey).Trace("removed zone")
+		r.log.Debug("removed zone", zap.String("key", relKey))
 		r.zones[relKey].StopWatchingRecords()
 		r.zonesM.Lock()
 		defer r.zonesM.Unlock()
@@ -25,7 +26,7 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 	} else if t == mvccpb.PUT {
 		z, err := r.zoneFromKV(kv)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to convert zone from event")
+			r.log.Warn("failed to convert zone from event", zap.Error(err))
 			return true
 		}
 		z.Init()
@@ -33,9 +34,9 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 			oldZone.StopWatchingRecords()
 		}
 		if !strings.HasSuffix(z.Name, ".") {
-			r.log.WithField("name", z.Name).Warning("Zone is missing trailing preiod, most likely configured incorrectly")
+			r.log.Warn("Zone is missing trailing preiod, most likely configured incorrectly", zap.String("name", z.Name))
 		}
-		r.log.WithField("name", z.Name).Debug("added zone")
+		r.log.Debug("added zone", zap.String("name", z.Name))
 		r.zonesM.Lock()
 		defer r.zonesM.Unlock()
 		r.zones[z.Name] = z
@@ -53,7 +54,7 @@ func (r *Role) loadInitialZones() {
 		clientv3.WithPrefix(),
 	)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to list initial zones")
+		r.log.Warn("failed to list initial zones", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		r.startWatchZones()
 		return
@@ -72,7 +73,7 @@ func (r *Role) startWatchZones() {
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
 			if r.handleZoneOp(event.Type, event.Kv) {
-				r.log.WithField("key", string(event.Kv.Key)).Trace("zone watch update")
+				r.log.Debug("zone watch update", zap.String("key", string(event.Kv.Key)))
 			}
 		}
 	}

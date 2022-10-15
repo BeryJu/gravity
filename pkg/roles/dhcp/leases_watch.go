@@ -6,6 +6,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (r *Role) handleLeaseOp(ev *clientv3.Event) {
@@ -19,7 +20,7 @@ func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 		// we don't care for that when removing, but prevent adding
 		// empty leases
 		if err != nil {
-			r.log.WithError(err).Warning("failed to parse lease")
+			r.log.Warn("failed to parse lease", zap.Error(err))
 			return
 		}
 		r.leasesM.Lock()
@@ -38,7 +39,7 @@ func (r *Role) loadInitialLeases() {
 		clientv3.WithPrefix(),
 	)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to list initial leases")
+		r.log.Warn("failed to list initial leases", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		r.startWatchLeases()
 		return

@@ -8,6 +8,7 @@ import (
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"go.uber.org/zap"
 )
 
 type RoleConfig struct {
@@ -23,7 +24,7 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	}
 	err := json.Unmarshal(raw, &def)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to decode role config")
+		r.log.Warn("failed to decode role config", zap.Error(err))
 	}
 	return &def
 }

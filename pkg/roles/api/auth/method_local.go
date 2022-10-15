@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -31,7 +32,7 @@ func (ap *AuthProvider) APILogin() usecase.Interactor {
 		)
 		if err != nil {
 			bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
-			ap.log.WithError(err).Warning("failed to get users")
+			ap.log.Warn("failed to get users", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
 		if len(rawUsers.Kvs) < 1 {
@@ -41,11 +42,11 @@ func (ap *AuthProvider) APILogin() usecase.Interactor {
 		user, err := ap.userFromKV(rawUsers.Kvs[0])
 		if err != nil {
 			bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
-			ap.log.WithField("user", input.Username).WithError(err).Warning("failed to parse user")
+			ap.log.Warn("failed to parse user", zap.Error(err), zap.String("user", input.Username))
 			return status.Wrap(err, status.Internal)
 		}
 		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)) != nil {
-			ap.log.WithField("user", input.Username).Warning("invalid credentials")
+			ap.log.Warn("invalid credentials", zap.String("user", input.Username))
 			return status.Unauthenticated
 		}
 		session := ctx.Value(types.RequestSession).(*sessions.Session)

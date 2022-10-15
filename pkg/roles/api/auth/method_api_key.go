@@ -6,6 +6,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
+	"go.uber.org/zap"
 )
 
 func (ap *AuthProvider) checkToken(r *http.Request) bool {
@@ -29,7 +30,7 @@ func (ap *AuthProvider) checkToken(r *http.Request) bool {
 		).String(),
 	)
 	if err != nil {
-		ap.log.WithError(err).Warning("failed to check token")
+		ap.log.Warn("failed to check token", zap.Error(err))
 		return false
 	}
 	if len(rawTokens.Kvs) < 1 {

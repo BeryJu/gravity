@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/go-ping/ping"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type InternalIPAM struct {
@@ -18,7 +18,7 @@ type InternalIPAM struct {
 	End   netip.Addr
 
 	shouldPing bool
-	log        *log.Entry
+	log        *zap.Logger
 	role       *Role
 	scope      *Scope
 	ips        map[string]bool
@@ -42,7 +42,7 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 		SubnetCIDR: sub,
 		Start:      start,
 		End:        end,
-		log:        role.log.WithField("ipam", "internal"),
+		log:        role.log.With(zap.String("ipam", "internal")),
 		role:       role,
 		scope:      s,
 		ips:        make(map[string]bool),
@@ -67,7 +67,7 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 		if i.End.Compare(initialIp) == -1 {
 			break
 		}
-		i.log.WithField("ip", initialIp.String()).Debug("checking for free ip")
+		i.log.Debug("checking for free ip", zap.String("ip", initialIp.String()))
 		// Check if IP is in the correct subnet
 		if !i.SubnetCIDR.Contains(initialIp) {
 			return nil
@@ -86,17 +86,17 @@ func (i *InternalIPAM) NextFreeAddress() *netip.Addr {
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
 	if i.ips[ip.String()] {
-		i.log.WithField("reason", "used (in memory)").Trace("discarding")
+		i.log.Debug("discarding", zap.String("reason", "used (in memory)"))
 		return false
 	}
 	// Ip is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
-		i.log.WithField("reason", "before started").Trace("discarding")
+		i.log.Debug("discarding", zap.String("reason", "before started"))
 		return false
 	}
 	// Ip is more than the end of the range
 	if i.End.Compare(ip) == -1 {
-		i.log.WithField("reason", "after end").Trace("discarding")
+		i.log.Debug("discarding", zap.String("reason", "after end"))
 		return false
 	}
 	// check for existing leases
@@ -106,7 +106,7 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
 			continue
 		}
 		if l.Address == ip.String() {
-			i.log.WithField("reason", "existing lease").Trace("discarding")
+			i.log.Debug("discarding", zap.String("reason", "existing lease"))
 			return false
 		}
 	}
@@ -117,19 +117,19 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr) bool {
 	}
 	pinger, err := ping.NewPinger(ip.String())
 	if err != nil {
-		i.log.WithError(err).Warning("failed to ping IP")
+		i.log.Warn("failed to ping IP", zap.Error(err))
 		return true
 	}
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
 	pings := false
 	pinger.OnRecv = func(pkt *ping.Packet) {
-		i.log.WithField("reason", "pings").Trace("discarding")
+		i.log.Debug("discarding", zap.String("reason", "pings"))
 		pings = true
 	}
 	err = pinger.Run()
 	if err != nil {
-		i.log.WithError(err).Trace("failed to ping ip")
+		i.log.Debug("failed to ping ip", zap.Error(err))
 		return false
 	}
 	return !pings

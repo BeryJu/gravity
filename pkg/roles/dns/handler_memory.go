@@ -5,11 +5,11 @@ import (
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type MemoryHandler struct {
-	log *log.Entry
+	log *zap.Logger
 	z   *Zone
 }
 
@@ -17,7 +17,7 @@ func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
 	eh := &MemoryHandler{
 		z: z,
 	}
-	eh.log = z.log.WithField("handler", eh.Identifier())
+	eh.log = z.log.With(zap.String("handler", eh.Identifier()))
 	return eh
 }
 
@@ -38,7 +38,7 @@ func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 			if len(recs) < 1 {
 				continue
 			}
-			eh.log.WithField("key", fullRecordKey).Trace("got record in in-memory cache")
+			eh.log.Debug("got record in in-memory cache", zap.String("key", fullRecordKey))
 			for _, rec := range recs {
 				ans := rec.ToDNS(question.Name, question.Qtype)
 				if ans != nil {

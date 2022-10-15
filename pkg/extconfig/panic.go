@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	log "github.com/sirupsen/logrus"
 )
 
 func RecoverWrapper(input any) any {
@@ -17,7 +15,7 @@ func RecoverWrapper(input any) any {
 }
 
 func ReportEatenCat() {
-	log.Println("Reporting eaten cat")
+	Get().Logger().Info("Reporting eaten cat")
 	data := map[string]string{
 		"domain": "gravity-panic",
 		"name":   "pageview",

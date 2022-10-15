@@ -15,9 +15,9 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/insomniacslk/dhcp/rfc1035label"
-	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type Lease struct {
@@ -32,14 +32,14 @@ type Lease struct {
 	scope   *Scope
 	etcdKey string
 	inst    roles.Instance
-	log     *log.Entry
+	log     *zap.Logger
 }
 
 func (r *Role) newLease(identifier string) *Lease {
 	return &Lease{
 		inst:       r.i,
 		Identifier: identifier,
-		log:        r.log.WithField("identifier", identifier),
+		log:        r.log.With(zap.String("identifier", identifier)),
 	}
 }
 
@@ -114,14 +114,14 @@ func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	ev.Payload.RelatedObjectOptions = opts
 	l.inst.DispatchEvent(types.EventTopicDHCPLeasePut, ev)
 
-	l.log.WithField("expiry", expiry).WithField("identifier", l.Identifier).Debug("put lease")
+	l.log.Debug("put lease", zap.Int64("expiry", expiry), zap.String("identifier", l.Identifier))
 	return nil
 }
 
 func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	rep, err := dhcpv4.NewReplyFromRequest(req.DHCPv4)
 	if err != nil {
-		req.log.WithError(err).Warning("failed to create reply")
+		req.log.Warn("failed to create reply", zap.Error(err))
 		return nil
 	}
 	rep.UpdateOption(dhcpv4.OptSubnetMask(l.scope.ipam.GetSubnetMask()))
@@ -130,7 +130,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	if l.AddressLeaseTime != "" {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
 		if err != nil {
-			req.log.WithField("default", pl.String()).WithError(err).Warning("failed to parse address lease duration, defaulting")
+			req.log.Warn("failed to parse address lease duration, defaulting", zap.Error(err), zap.String("default", pl.String()))
 		} else {
 			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
 		}
@@ -165,7 +165,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		if opt.TagName != "" {
 			tag, ok := types.TagMap[types.OptionTagName(opt.TagName)]
 			if !ok {
-				req.log.WithError(err).Warningf("invalid tag name %s", opt.TagName)
+				req.log.Warn("invalid tag name", zap.String("tagName", opt.TagName))
 				continue
 			}
 			opt.Tag = &tag
@@ -187,7 +187,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 			for _, v := range opt.Value64 {
 				va, err := base64.StdEncoding.DecodeString(v)
 				if err != nil {
-					req.log.WithError(err).Warning("failed to convert base64 value to byte")
+					req.log.Warn("failed to convert base64 value to byte", zap.Error(err))
 				} else {
 					values64 = append(values64, va...)
 				}

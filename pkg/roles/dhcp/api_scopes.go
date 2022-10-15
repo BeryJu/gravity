@@ -10,6 +10,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APIScope struct {
@@ -36,13 +37,13 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 			clientv3.WithPrefix(),
 		)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to get scopes")
+			r.log.Warn("failed to get scopes", zap.Error(err))
 			return status.Wrap(errors.New("failed to get scopes"), status.Internal)
 		}
 		for _, rawScope := range rawScopes.Kvs {
 			sc, err := r.scopeFromKV(rawScope)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to parse scope")
+				r.log.Warn("failed to parse scope", zap.Error(err))
 				continue
 			}
 			if strings.Contains(sc.Name, "/") {

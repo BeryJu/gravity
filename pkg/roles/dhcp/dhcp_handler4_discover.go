@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
+	"go.uber.org/zap"
 )
 
 func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
@@ -12,7 +13,7 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 			req.log.Info("no scope found")
 			return nil
 		}
-		req.log.WithField("scope", scope.Name).Debug("found scope for new lease")
+		req.log.Debug("found scope for new lease", zap.String("scope", scope.Name))
 		match = scope.createLeaseFor(req)
 		if match == nil {
 			return nil

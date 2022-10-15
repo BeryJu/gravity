@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
@@ -17,16 +18,16 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 		return false
 	}
 	if t == mvccpb.DELETE {
-		r.log.WithField("key", relKey).Trace("removed scope")
+		r.log.Debug("removed scope", zap.String("key", relKey))
 		r.scopesM.Lock()
 		defer r.scopesM.Unlock()
 		delete(r.scopes, relKey)
 	} else if t == mvccpb.PUT {
 		z, err := r.scopeFromKV(kv)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to convert scope from event")
+			r.log.Warn("failed to convert scope from event", zap.Error(err))
 		} else {
-			r.log.WithField("name", z.Name).Debug("added scope")
+			r.log.Debug("added scope", zap.String("name", z.Name))
 			r.scopesM.Lock()
 			defer r.scopesM.Unlock()
 			r.scopes[z.Name] = z
@@ -45,7 +46,7 @@ func (r *Role) loadInitialScopes() {
 		clientv3.WithPrefix(),
 	)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to list initial scopes")
+		r.log.Warn("failed to list initial scopes", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		r.startWatchScopes()
 		return
@@ -64,7 +65,7 @@ func (r *Role) startWatchScopes() {
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
 			if r.handleScopeOp(event.Type, event.Kv) {
-				r.log.WithField("key", string(event.Kv.Key)).Trace("scope watch update")
+				r.log.Debug("scope watch update", zap.String("key", string(event.Kv.Key)))
 			}
 		}
 	}

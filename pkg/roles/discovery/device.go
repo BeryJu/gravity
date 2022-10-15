@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type Device struct {
@@ -40,7 +41,7 @@ func (r *Role) deviceFromKV(kv *mvccpb.KeyValue) *Device {
 
 	err := json.Unmarshal(kv.Value, &dev)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to parse device")
+		r.log.Warn("failed to parse device", zap.Error(err))
 		return nil
 	}
 	return dev

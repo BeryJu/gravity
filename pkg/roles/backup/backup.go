@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/backup/types"
 	"github.com/minio/minio-go/v7"
+	"go.uber.org/zap"
 )
 
 type BackupStatus struct {
@@ -33,7 +34,7 @@ func (r *Role) setStatus(status *BackupStatus) {
 	}
 	jstatus, err := json.Marshal(status)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to marshal status")
+		r.log.Warn("failed to marshal status", zap.Error(err))
 		return
 	}
 	_, err = r.i.KV().Put(
@@ -46,7 +47,7 @@ func (r *Role) setStatus(status *BackupStatus) {
 		string(jstatus),
 	)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to save status")
+		r.log.Warn("failed to save status", zap.Error(err))
 		return
 	}
 }
@@ -69,7 +70,7 @@ func (r *Role) GetBackupName() string {
 func (r *Role) snapshotToFile() (*os.File, error) {
 	reader, err := r.i.KV().Snapshot(r.ctx)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to snapshot")
+		r.log.Warn("failed to snapshot", zap.Error(err))
 		return nil, err
 	}
 	file, err := os.CreateTemp(os.TempDir(), "gravity-snapshot.*.etcd")
@@ -124,11 +125,11 @@ func (r *Role) SaveSnapshot() *BackupStatus {
 
 	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, file, stat.Size(), minio.PutObjectOptions{})
 	if err != nil {
-		r.log.WithError(err).Warning("failed to upload snapshot")
+		r.log.Warn("failed to upload snapshot", zap.Error(err))
 		status.Error = err.Error()
 		return status
 	}
-	r.log.WithField("size", i.Size).Info("Uploaded snapshot")
+	r.log.Info("Uploaded snapshot", zap.Int64("size", i.Size))
 	finish := time.Since(start)
 	status.Status = BackupStatusSuccess
 	status.Size = i.Size
@@ -144,6 +145,6 @@ func (r *Role) ensureBucket() {
 	}
 	err = r.mc.MakeBucket(r.ctx, r.cfg.Bucket, minio.MakeBucketOptions{})
 	if err != nil {
-		r.log.WithError(err).Warning("failed to create bucket")
+		r.log.Warn("failed to create bucket", zap.Error(err))
 	}
 }

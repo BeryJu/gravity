@@ -6,7 +6,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
@@ -17,37 +17,37 @@ func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 				return
 			}
 			if e, ok := err.(error); ok {
-				r.log.WithError(e).Warning("recover in dhcp handler")
+				r.log.Warn("recover in dhcp handler", zap.Error(e))
 				sentry.CaptureException(e)
 			} else {
-				r.log.WithField("panic", err).Warning("recover in dhcp handler")
+				r.log.Warn("recover in dhcp handler", zap.Any("panic", err))
 			}
 		}()
 		return inner(req)
 	}
 }
 
-func (r *Role) logDHCPMessage(req *Request4, m *dhcpv4.DHCPv4, fields log.Fields) {
-	f := log.Fields{
-		"deviceIdentifier": r.DeviceIdentifier(m),
-		"opCode":           m.OpCode.String(),
-		"hopCount":         m.HopCount,
-		"transactionID":    m.TransactionID.String(),
-		"flagsToString":    m.FlagsToString(),
-		"clientIPAddr":     m.ClientIPAddr.String(),
-		"yourIPAddr":       m.YourIPAddr.String(),
-		"serverIPAddr":     m.ServerIPAddr.String(),
-		"gatewayIPAddr":    m.GatewayIPAddr.String(),
-		"hostname":         m.HostName(),
-		"clientIdentifier": hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier)),
+func (r *Role) logDHCPMessage(req *Request4, m *dhcpv4.DHCPv4, fields []zap.Field) {
+	f := []zap.Field{
+		zap.String("deviceIdentifier", r.DeviceIdentifier(m)),
+		zap.String("opCode", m.OpCode.String()),
+		zap.Uint8("hopCount", m.HopCount),
+		zap.String("transactionID", m.TransactionID.String()),
+		zap.String("flagsToString", m.FlagsToString()),
+		zap.String("clientIPAddr", m.ClientIPAddr.String()),
+		zap.String("yourIPAddr", m.YourIPAddr.String()),
+		zap.String("serverIPAddr", m.ServerIPAddr.String()),
+		zap.String("gatewayIPAddr", m.GatewayIPAddr.String()),
+		zap.String("hostname", m.HostName()),
+		zap.String("clientIdentifier", hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier))),
 	}
-	req.log.WithFields(f).WithFields(fields).Info(m.MessageType().String())
+	req.log.With(f...).With(fields...).Info(m.MessageType().String())
 }
 
 func (r *Role) loggingMiddleware4(inner Handler4) Handler4 {
 	return func(req *Request4) *dhcpv4.DHCPv4 {
-		f := log.Fields{
-			"client": req.peer.String(),
+		f := []zap.Field{
+			zap.String("client", req.peer.String()),
 		}
 		r.logDHCPMessage(req, req.DHCPv4, f)
 		return inner(req)

@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"go.uber.org/zap"
 )
 
 type RoleConfig struct {
@@ -27,7 +28,7 @@ func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
 	go func(cfg *RoleConfig) {
 		jc, err := json.Marshal(cfg)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to json parse config")
+			r.log.Warn("failed to json parse config", zap.Error(err))
 			return
 		}
 		_, err = r.i.KV().Put(
@@ -40,7 +41,7 @@ func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
 			string(jc),
 		)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to save config")
+			r.log.Warn("failed to save config", zap.Error(err))
 			return
 		}
 	}(cfg)
@@ -57,7 +58,7 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	}
 	err := json.Unmarshal(raw, &def)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to decode role config")
+		r.log.Warn("failed to decode role config", zap.Error(err))
 	}
 	r.checkCookieSecret(&def, fallbackSecret)
 	return &def

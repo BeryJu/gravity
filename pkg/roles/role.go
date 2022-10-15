@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"beryju.io/gravity/pkg/storage"
-	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 var ErrRoleNotConfigured = errors.New("role: Not configured")
@@ -51,7 +51,7 @@ type EventHandler func(ev *Event)
 
 type Instance interface {
 	KV() *storage.Client
-	Log() *log.Entry
+	Log() *zap.Logger
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 }

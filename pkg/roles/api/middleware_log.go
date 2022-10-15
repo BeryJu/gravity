@@ -3,7 +3,6 @@ package api
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"net"
 	"net/http"
 	"time"
@@ -11,7 +10,7 @@ import (
 	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 // responseLogger is wrapper of http.ResponseWriter that keeps track of its HTTP status
@@ -72,16 +71,16 @@ func (l *responseLogger) Flush() {
 // loggingHandler is the http.Handler implementation for LoggingHandler
 type loggingHandler struct {
 	handler      http.Handler
-	logger       *log.Entry
+	logger       *zap.Logger
 	afterHandler afterHandler
 }
 
-type afterHandler func(l *log.Entry, r *http.Request) *log.Entry
+type afterHandler func(l *zap.Logger, r *http.Request) *zap.Logger
 
 // NewLoggingMiddleware provides an http.Handler which logs requests to the HTTP server
-func NewLoggingMiddleware(logger *log.Entry, after afterHandler) func(h http.Handler) http.Handler {
+func NewLoggingMiddleware(logger *zap.Logger, after afterHandler) func(h http.Handler) http.Handler {
 	if after == nil {
-		after = func(l *log.Entry, r *http.Request) *log.Entry {
+		after = func(l *zap.Logger, r *http.Request) *zap.Logger {
 			return l
 		}
 	}
@@ -99,15 +98,14 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	url := *req.URL
 	responseLogger := &responseLogger{w: w}
 	h.handler.ServeHTTP(responseLogger, req)
-	duration := float64(time.Since(t)) / float64(time.Millisecond)
-	fields := log.Fields{
-		"remote":    req.RemoteAddr,
-		"runtimeMS": fmt.Sprintf("%0.3f", duration),
-		"method":    req.Method,
-		"scheme":    req.URL.Scheme,
-		"size":      responseLogger.Size(),
-		"status":    responseLogger.Status(),
-		"userAgent": req.UserAgent(),
+	fields := []zap.Field{
+		zap.String("remote", req.RemoteAddr),
+		zap.Duration("runtimeMS", time.Since(t)),
+		zap.String("method", req.Method),
+		zap.String("scheme", req.URL.Scheme),
+		zap.Int("size", responseLogger.Size()),
+		zap.Int("status", responseLogger.Status()),
+		zap.String("userAgent", req.UserAgent()),
 	}
 	se := req.Context().Value(types.RequestSession)
 	if se != nil {
@@ -115,9 +113,9 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		u, ok := session.Values[types.SessionKeyUser]
 		if ok && u != nil {
 			if uu, castOk := u.(auth.User); castOk {
-				fields["user"] = uu.Username
+				fields = append(fields, zap.String("user", uu.Username))
 			}
 		}
 	}
-	h.afterHandler(h.logger.WithFields(fields), req).Info(url.RequestURI())
+	h.afterHandler(h.logger.With(fields...), req).Info(url.RequestURI())
 }

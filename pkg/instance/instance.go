@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
-	log "github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
@@ -41,7 +41,7 @@ type Instance struct {
 	roles      map[string]RoleContext
 	rolesM     sync.Mutex
 	kv         *storage.Client
-	log        *log.Entry
+	log        *zap.Logger
 	identifier string
 
 	eventHandlers  map[string]map[string][]roles.EventHandler
@@ -58,10 +58,11 @@ type Instance struct {
 func New() *Instance {
 	extCfg := extconfig.Get()
 	ctx, canc := context.WithCancel(context.Background())
+	log := extCfg.Logger().With(zap.String("instance", extCfg.Instance.Identifier), zap.String("forRole", "root"))
 	return &Instance{
 		roles:             make(map[string]RoleContext),
 		rolesM:            sync.Mutex{},
-		log:               log.WithField("instance", extCfg.Instance.Identifier).WithField("forRole", "root"),
+		log:               log,
 		identifier:        extCfg.Instance.Identifier,
 		eventHandlers:     make(map[string]map[string][]roles.EventHandler),
 		eventHandlersM:    sync.RWMutex{},
@@ -80,7 +81,7 @@ func (i *Instance) Role(id string) roles.Role {
 }
 
 func (i *Instance) Start() {
-	i.log.WithField("version", extconfig.FullVersion()).Info("Gravity starting")
+	i.log.Info("Gravity starting", zap.String("version", extconfig.FullVersion()))
 	go i.startSentry()
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
@@ -102,10 +103,10 @@ func (i *Instance) startSentry() {
 		TracesSampleRate: 0.5,
 		Transport:        transport,
 		Debug:            extconfig.Get().Debug,
-		DebugWriter:      NewSentryWriter(i.log.WithField("forRole", "sentry")),
+		DebugWriter:      NewSentryWriter(i.log.With(zap.String("forRole", "sentry"))),
 	})
 	if err != nil {
-		i.log.WithError(err).Warning("failed to init sentry")
+		i.log.Warn("failed to init sentry", zap.Error(err))
 		return
 	}
 	sentry.ConfigureScope(func(scope *sentry.Scope) {
@@ -115,7 +116,7 @@ func (i *Instance) startSentry() {
 	})
 }
 
-func (i *Instance) Log() *log.Entry {
+func (i *Instance) Log() *zap.Logger {
 	return i.log
 }
 
@@ -132,13 +133,13 @@ func (i *Instance) getRoles() []string {
 	if err == nil && len(rr.Kvs) > 0 {
 		roles = rr.Kvs[0].String()
 	} else {
-		i.log.WithField("roles", roles).Info("defaulting to bootstrap roles")
+		i.log.Info("defaulting to bootstrap roles", zap.Strings("roles", strings.Split(roles, ";")))
 	}
 	return strings.Split(roles, ";")
 }
 
 func (i *Instance) bootstrap() {
-	i.log.Trace("bootstrapping instance")
+	i.log.Debug("bootstrapping instance")
 	i.keepAliveInstanceInfo()
 	i.putInstanceInfo()
 	i.setupInstanceAPI()
@@ -171,7 +172,7 @@ func (i *Instance) bootstrap() {
 			// Special case
 			continue
 		default:
-			i.log.WithField("roleId", roleId).Info("Invalid role, skipping")
+			i.log.Info("Invalid role, skipping", zap.String("roleId", roleId))
 			continue
 		}
 		i.rolesM.Lock()
@@ -214,7 +215,7 @@ func (i *Instance) checkFirstStart() {
 		Setup: true,
 	})
 	if err != nil {
-		i.log.WithError(err).Warning("failed to marshall cluster info")
+		i.log.Warn("failed to marshall cluster info", zap.Error(err))
 		return
 	}
 
@@ -227,7 +228,7 @@ func (i *Instance) checkFirstStart() {
 		string(clusterJson),
 	)
 	if err != nil {
-		i.log.WithError(err).Warning("failed to put cluster info")
+		i.log.Warn("failed to put cluster info", zap.Error(err))
 		return
 	}
 }
@@ -239,10 +240,10 @@ func (i *Instance) startWatchRole(id string) {
 			return
 		}
 		if e, ok := err.(error); ok {
-			i.log.WithError(e).Warning("recover in role")
+			i.log.Warn("recover in role", zap.Error(e))
 			sentry.CaptureException(e)
 		} else {
-			i.log.WithField("panic", err).Warning("recover in role")
+			i.log.Warn("recover in role", zap.Any("panic", err))
 		}
 	}()
 	// Load current config
@@ -273,7 +274,7 @@ func (i *Instance) startWatchRole(id string) {
 				rawConfig = ev.Kv.Value
 			}
 			if started {
-				i.log.WithField("roleId", id).WithField("key", string(ev.Kv.Key)).Info("stopping role due to config change")
+				i.log.Info("stopping role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
 				i.roles[id].Role.Stop()
 				// Cancel context and re-create the context
 				i.roles[id].ContextCancelFunc()
@@ -296,19 +297,19 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
 	err := i.roles[id].Role.Start(i.roles[id].Context, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
-		i.log.WithField("roleId", id).Info("role not configured")
+		i.log.Info("role not configured", zap.String("roleId", id))
 	} else if err != nil {
-		i.log.WithField("roleId", id).WithError(err).Warning("failed to start role")
+		i.log.Warn("failed to start role", zap.String("roleId", id), zap.Error(err))
 		return false
 	}
-	i.log.WithField("roleId", id).Debug("started role")
+	i.log.Debug("failed to start role", zap.String("roleId", id))
 	return true
 }
 
 func (i *Instance) Stop() {
 	i.log.Info("Stopping")
 	for id, role := range i.roles {
-		i.log.WithField("roleId", id).Debug("stopping role")
+		i.log.Debug("stopping role", zap.String("roleId", id))
 		role.ContextCancelFunc()
 		role.Role.Stop()
 	}

@@ -15,17 +15,17 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/insomniacslk/dhcp/dhcpv4"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 // Credit to CoreDHCP
 // https://github.com/coredhcp/coredhcp/blob/master/server/sendEthernet.go
 
-//this function sends an unicast to the hardware address defined in resp.ClientHWAddr,
-//the layer3 destination address is still the broadcast address;
-//iface: the interface where the DHCP message should be sent;
-//resp: DHCPv4 struct, which should be sent;
-func sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
+// this function sends an unicast to the hardware address defined in resp.ClientHWAddr,
+// the layer3 destination address is still the broadcast address;
+// iface: the interface where the DHCP message should be sent;
+// resp: DHCPv4 struct, which should be sent;
+func (h *handler4) sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
 	eth := layers.Ethernet{
 		EthernetType: layers.EthernetTypeIPv4,
 		SrcMAC:       iface.HardwareAddr,
@@ -75,13 +75,13 @@ func sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error {
 	defer func() {
 		err = syscall.Close(fd)
 		if err != nil {
-			log.Errorf("Send Ethernet: Cannot close socket: %v", err)
+			h.role.log.Error("Send Ethernet: Cannot close socket", zap.Error(err))
 		}
 	}()
 
 	err = syscall.SetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_REUSEADDR, 1)
 	if err != nil {
-		log.Errorf("Send Ethernet: Cannot set option for socket: %v", err)
+		h.role.log.Error("Send Ethernet: Cannot set option for socket", zap.Error(err))
 	}
 
 	var hwAddr [8]byte

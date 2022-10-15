@@ -1,20 +1,20 @@
 package instance
 
 import (
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type sentryWriter struct {
-	entry *log.Entry
+	logger *zap.Logger
 }
 
-func NewSentryWriter(log *log.Entry) sentryWriter {
+func NewSentryWriter(log *zap.Logger) sentryWriter {
 	return sentryWriter{
-		entry: log,
+		logger: log,
 	}
 }
 
 func (sw sentryWriter) Write(p []byte) (n int, err error) {
-	sw.entry.Debug(string(p))
+	sw.logger.Debug(string(p))
 	return len(p), nil
 }

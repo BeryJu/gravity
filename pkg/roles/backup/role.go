@@ -11,8 +11,8 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/robfig/cron/v3"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
+	"go.uber.org/zap"
 )
 
 const (
@@ -24,7 +24,7 @@ type Role struct {
 	cfg *RoleConfig
 	c   *cron.Cron
 
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 	ctx context.Context
 }
@@ -88,7 +88,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		if err != nil {
 			return err
 		}
-		r.log.WithField("next", r.c.Entry(ei).Next).Debug("next backup run")
+		r.log.Info("next backup run", zap.String("next", r.c.Entry(ei).Next.String()))
 		r.c.Start()
 	}
 	return nil

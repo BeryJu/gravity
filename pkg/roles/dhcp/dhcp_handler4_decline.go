@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"github.com/insomniacslk/dhcp/dhcpv4"
+	"go.uber.org/zap"
 )
 
 func (r *Role) HandleDHCPDecline4(req *Request4) *dhcpv4.DHCPv4 {
@@ -11,7 +12,7 @@ func (r *Role) HandleDHCPDecline4(req *Request4) *dhcpv4.DHCPv4 {
 	}
 	_, err := r.i.KV().Delete(req.Context, match.etcdKey)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to delete lease")
+		r.log.Warn("failed to delete lease", zap.Error(err))
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()

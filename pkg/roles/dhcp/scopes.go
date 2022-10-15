@@ -12,9 +12,9 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
-	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type ScopeDNS struct {
@@ -38,7 +38,7 @@ type Scope struct {
 	ipam    IPAM
 	inst    roles.Instance
 	role    *Role
-	log     *log.Entry
+	log     *zap.Logger
 }
 
 func (r *Role) newScope(name string) *Scope {
@@ -47,7 +47,7 @@ func (r *Role) newScope(name string) *Scope {
 		inst: r.i,
 		role: r,
 		TTL:  int64((7 * 24 * time.Hour).Seconds()),
-		log:  r.log.WithField("scope", name),
+		log:  r.log.With(zap.String("scope", name)),
 	}
 }
 
@@ -92,7 +92,7 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 		// Handle cases where peer is an actual IP (most likely relay)
 		subBits := scope.match(ip, req)
 		if subBits > -1 && subBits > longestBits {
-			req.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (peer IP)")
+			req.log.Debug("selected scope based on cidr match (peer IP)", zap.String("scope", scope.Name))
 			match = scope
 			longestBits = subBits
 		}
@@ -100,14 +100,14 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 		if match == nil {
 			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), req)
 			if subBits > -1 && subBits > longestBits {
-				req.log.WithField("name", scope.Name).Trace("selected scope based on cidr match (instance IP)")
+				req.log.Debug("selected scope based on cidr match (instance IP)", zap.String("scope", scope.Name))
 				match = scope
 				longestBits = subBits
 			}
 		}
 		// Handle default scope
 		if match == nil && scope.Default {
-			req.log.WithField("name", scope.Name).Debug("selected scope based on default state")
+			req.log.Debug("selected scope based on default flag", zap.String("scope", scope.Name))
 			match = scope
 		}
 	}
@@ -117,7 +117,7 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 func (s *Scope) match(peer net.IP, req *Request4) int {
 	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
-		s.log.WithError(err).Warning("failed to parse client ip")
+		s.log.Warn("failed to parse client ip", zap.Error(err))
 		return -1
 	}
 	if s.cidr.Contains(ip) {
@@ -135,17 +135,17 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 		ScopeKey: s.Name,
 
 		inst:  s.inst,
-		log:   req.log.WithField("lease", ident),
+		log:   req.log.With(zap.String("lease", ident)),
 		scope: s,
 	}
 	requestedIP := req.RequestedIPAddress()
 	if requestedIP != nil {
-		s.log.WithField("ip", requestedIP).Debug("checking requested IP")
+		s.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
 		ip, err := netip.ParseAddr(requestedIP.String())
 		if err != nil {
-			s.log.WithError(err).Warning("failed to parse requested ip")
+			s.log.Warn("failed to parse requested ip", zap.Error(err))
 		} else if s.ipam.IsIPFree(ip) {
-			s.log.WithField("ip", requestedIP).Debug("requested IP is free")
+			s.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
 			lease.Address = requestedIP.String()
 		}
 	}

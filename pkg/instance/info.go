@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 )
@@ -36,14 +37,14 @@ func (i *Instance) keepAliveInstanceInfo() {
 	if i.instanceInfoLease == nil {
 		lease, err := i.kv.Lease.Grant(i.rootContext, 100)
 		if err != nil {
-			i.log.WithError(err).Warning("failed to grant lease")
+			i.log.Warn("failed to grant lease", zap.Error(err))
 			return
 		}
 		i.instanceInfoLease = &lease.ID
 	}
 	keepAlive, err := i.kv.KeepAlive(i.rootContext, *i.instanceInfoLease)
 	if err != nil {
-		i.log.WithError(err).Warning("failed to grant lease")
+		i.log.Warn("failed to grant lease", zap.Error(err))
 		return
 	}
 	go func() {
@@ -56,7 +57,7 @@ func (i *Instance) keepAliveInstanceInfo() {
 func (i *Instance) putInstanceInfo() {
 	ji, err := json.Marshal(i.getInfo())
 	if err != nil {
-		i.log.WithError(err).Warning("failed to get instance info")
+		i.log.Warn("failed to get instance info", zap.Error(err))
 		return
 	}
 	opts := []clientv3.OpOption{}
@@ -73,6 +74,6 @@ func (i *Instance) putInstanceInfo() {
 		opts...,
 	)
 	if err != nil {
-		i.log.WithError(err).Warning("failed to put instance info")
+		i.log.Warn("failed to put instance info", zap.Error(err))
 	}
 }

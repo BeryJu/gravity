@@ -8,6 +8,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APIRecordsGetInput struct {
@@ -46,7 +47,7 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 		for _, rec := range rawRecords.Kvs {
 			rec, err := zone.recordFromKV(rec)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to parse record")
+				r.log.Warn("failed to parse record", zap.Error(err))
 				continue
 			}
 			output.Records = append(output.Records, APIRecord{

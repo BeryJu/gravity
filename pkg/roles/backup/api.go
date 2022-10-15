@@ -9,6 +9,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APIBackupStartInput struct {
@@ -63,7 +64,7 @@ func (r *Role) APIBackupStatus() usecase.Interactor {
 			var s BackupStatus
 			err := json.Unmarshal(rs.Value, &s)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to unmarshal status")
+				r.log.Warn("failed to unmarshal status", zap.Error(err))
 				continue
 			}
 			keyParts := strings.Split(strings.TrimPrefix(string(rs.Key), prefix), "/")

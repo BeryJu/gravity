@@ -7,9 +7,9 @@ import (
 )
 
 func TestClient(t *testing.T) {
-	c := NewClient("/gravity", "localhost:2379")
+	c := NewClient("/gravity", nil, "localhost:2379")
 	assert.NotNil(t, c)
 	assert.Panics(t, func() {
-		NewClient("/gravity")
+		NewClient("/gravity", nil)
 	})
 }

@@ -8,13 +8,13 @@ import (
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
+	"go.uber.org/zap"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
 )
 
 type Role struct {
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 	cfg *RoleConfig
 	ctx context.Context
@@ -43,7 +43,7 @@ func New(instance roles.Instance) *Role {
 		ip := netip.MustParseAddr(extconfig.Get().Instance.IP)
 		prefix, err := ip.Prefix(24)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to get prefix")
+			r.log.Warn("failed to get prefix", zap.Error(err))
 			return
 		}
 		subnet.CIDR = prefix.String()

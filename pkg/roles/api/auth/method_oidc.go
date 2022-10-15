@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
 
@@ -21,7 +22,7 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 	ctx = context.WithValue(ctx, oauth2.HTTPClient, c)
 	provider, err := oidc.NewProvider(ctx, ap.oidc.Issuer)
 	if err != nil {
-		ap.log.WithError(err).Warning("failed to initialise oidc")
+		ap.log.Warn("failed to initialise oidc", zap.Error(err))
 		ap.oidc = nil
 		return
 	}
@@ -55,21 +56,21 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 
 			oauth2Token, err := oauth2Config.Exchange(r.Context(), r.URL.Query().Get("code"))
 			if err != nil {
-				ap.log.WithError(err).Warning("failed to exchange code")
+				ap.log.Warn("failed to exchange code", zap.Error(err))
 				http.Error(w, "failed to authenticate", http.StatusBadRequest)
 				return
 			}
 
 			rawIDToken, ok := oauth2Token.Extra("id_token").(string)
 			if !ok {
-				ap.log.Warning("no id_token")
+				ap.log.Warn("no id_token")
 				http.Error(w, "failed to authenticate", http.StatusBadRequest)
 				return
 			}
 
 			idToken, err := verifier.Verify(r.Context(), rawIDToken)
 			if err != nil {
-				ap.log.WithError(err).Warning("failed to verify id_token")
+				ap.log.Warn("failed to verify id_token", zap.Error(err))
 				http.Error(w, "failed to authenticate", http.StatusBadRequest)
 				return
 			}
@@ -78,7 +79,7 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 				Email string `json:"email"`
 			}
 			if err := idToken.Claims(&claims); err != nil {
-				ap.log.WithError(err).Warning("failed to get claims")
+				ap.log.Warn("failed to get claims", zap.Error(err))
 				http.Error(w, "failed to authenticate", http.StatusBadRequest)
 				return
 			}

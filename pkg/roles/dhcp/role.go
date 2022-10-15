@@ -10,8 +10,8 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
+	"go.uber.org/zap"
 	"golang.org/x/net/ipv4"
 
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -27,7 +27,7 @@ type Role struct {
 	cfg *RoleConfig
 
 	s4  *handler4
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 	ctx context.Context
 }
@@ -76,13 +76,13 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	err := r.initServer4()
 	if err != nil {
-		r.log.WithError(err).Warning("failed to setup server")
+		r.log.Warn("failed to setup server", zap.Error(err))
 		return err
 	}
 	go func() {
 		err := r.startServer4()
 		if err != nil {
-			r.log.WithError(err).Warning("failed to listen")
+			r.log.Warn("failed to listen", zap.Error(err))
 		}
 	}()
 	return nil
@@ -135,7 +135,7 @@ func isErrNetClosing(err error) bool {
 }
 
 func (r *Role) startServer4() error {
-	r.log.WithField("port", r.cfg.Port).Info("starting DHCP Server")
+	r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port))
 	err := r.s4.Serve()
 	if !isErrNetClosing(err) {
 		return err

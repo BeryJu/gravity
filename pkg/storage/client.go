@@ -3,7 +3,7 @@ package storage
 import (
 	"time"
 
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/namespace"
@@ -13,20 +13,20 @@ type Client struct {
 	*clientv3.Client
 	config clientv3.Config
 	prefix string
-	log    *log.Entry
+	log    *zap.Logger
 }
 
-func NewClient(prefix string, endpoints ...string) *Client {
-	l := log.WithField("component", "etcd-client")
+func NewClient(prefix string, logger *zap.Logger, endpoints ...string) *Client {
 	config := clientv3.Config{
 		Endpoints:            endpoints,
 		DialTimeout:          2 * time.Second,
 		DialKeepAliveTime:    2 * time.Second,
 		DialKeepAliveTimeout: 2 * time.Second,
+		Logger:               logger,
 	}
 	cli, err := clientv3.New(config)
 	if err != nil {
-		l.Panic(err)
+		logger.Panic("failed to setup etcd client", zap.Error(err))
 	}
 	cli.KV = namespace.NewKV(cli.KV, prefix)
 	cli.Watcher = namespace.NewWatcher(cli.Watcher, prefix)
@@ -34,7 +34,7 @@ func NewClient(prefix string, endpoints ...string) *Client {
 
 	return &Client{
 		Client: cli,
-		log:    l,
+		log:    logger,
 		prefix: prefix,
 		config: config,
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APISubnet struct {
@@ -30,7 +31,7 @@ func (r *Role) APISubnetsGet() usecase.Interactor {
 		for _, rawSub := range subnets.Kvs {
 			sub, err := r.subnetFromKV(rawSub)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to parse subnet")
+				r.log.Warn("failed to parse subnet", zap.Error(err))
 				continue
 			}
 			output.Subnets = append(output.Subnets, APISubnet{
@@ -95,7 +96,7 @@ func (r *Role) APISubnetsStart() usecase.Interactor {
 		}
 		s, err := r.subnetFromKV(rawSub.Kvs[0])
 		if err != nil {
-			r.log.WithError(err).Warning("failed to parse subnet from KV")
+			r.log.Warn("failed to parse subnet from KV", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
 		go s.RunDiscovery()

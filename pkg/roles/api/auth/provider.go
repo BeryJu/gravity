@@ -14,15 +14,15 @@ import (
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthProvider struct {
 	role         roles.Role
 	inst         roles.Instance
-	log          *log.Entry
+	log          *zap.Logger
 	oidc         *types.OIDCConfig
 	inner        http.Handler
 	allowedPaths []string
@@ -32,7 +32,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	ap := &AuthProvider{
 		role: r,
 		inst: inst,
-		log:  inst.Log().WithField("mw", "auth"),
+		log:  inst.Log().With(zap.String("forRole", "api/auth")),
 		allowedPaths: []string{
 			"/api/v1/auth/me",
 			"/api/v1/auth/config",
@@ -61,7 +61,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 		password := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 		err := ap.CreateUser(ev.Context, "admin", password)
 		if err != nil {
-			ap.log.WithError(err).Warning("failed to create default user")
+			ap.log.Warn("failed to create default user", zap.Error(err))
 			return
 		}
 		text := `------------------------------------------------------------
