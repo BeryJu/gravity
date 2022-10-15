@@ -51,6 +51,9 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 	})
+	r.server = &http.Server{
+		Handler: r.m,
+	}
 	return r
 }
 
@@ -87,10 +90,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.prepareOpenAPI(ctx)
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.Info("starting API Server", zap.String("listen", listen))
-	r.server = &http.Server{
-		Addr:    listen,
-		Handler: r.m,
-	}
+	r.server.Addr = listen
 	go func() {
 		err := r.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {

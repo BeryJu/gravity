@@ -7,7 +7,7 @@ import (
 )
 
 func TestKey(t *testing.T) {
-	c := NewClient("/gravity", "localhost:2379")
+	c := NewClient("/gravity", nil, "localhost:2379")
 	k := c.Key().Add("foo", "bar")
 	assert.Equal(t, "/foo/bar", k.String())
 	k = c.Key().Add("foo", "bar").Prefix(true)

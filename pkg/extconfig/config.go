@@ -81,7 +81,7 @@ func (e *ExtConfig) Logger() *zap.Logger {
 func (e *ExtConfig) buildLogger() *zap.Logger {
 	config := zap.Config{
 		Encoding:         "json",
-		Development:      true,
+		Development:      false,
 		OutputPaths:      []string{"stderr"},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
