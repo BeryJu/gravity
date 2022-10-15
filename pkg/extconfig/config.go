@@ -96,6 +96,7 @@ func (e *ExtConfig) buildLogger() *zap.Logger {
 		config.Encoding = "console"
 		config.Level = zap.NewAtomicLevelAt(zapcore.DebugLevel)
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
+		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	}
 	log, err := config.Build()
 	if err != nil {
