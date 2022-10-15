@@ -10,9 +10,9 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
-	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type Subnet struct {
@@ -24,7 +24,7 @@ type Subnet struct {
 
 	etcdKey string
 	inst    roles.Instance
-	log     *log.Entry
+	log     *zap.Logger
 	role    *Role
 }
 
@@ -33,7 +33,7 @@ func (r *Role) NewSubnet(name string) *Subnet {
 		DiscoveryTTL: int((24 * time.Hour).Seconds()),
 		inst:         r.i,
 		Identifier:   name,
-		log:          r.log.WithField("subnet", name),
+		log:          r.log.With(zap.String("subnet", name)),
 		role:         r,
 	}
 }
@@ -52,7 +52,7 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 }
 
 func (s *Subnet) RunDiscovery() []Device {
-	s.log.Trace("starting scan for subnet")
+	s.log.Debug("starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
 		"subnet": s,
 	}))
@@ -71,19 +71,19 @@ func (s *Subnet) RunDiscovery() []Device {
 		nmap.WithForcedDNSResolution(),
 		nmap.WithCustomDNSServers(dns),
 	)
-	s.log.WithField("args", scanner.Args()).Trace("nmap args")
+	s.log.Debug("nmap args", zap.Strings("args", scanner.Args()))
 	if err != nil {
-		s.log.WithError(err).Warning("unable to create nmap scanner")
+		s.log.Warn("unable to create nmap scanner", zap.Error(err))
 		return []Device{}
 	}
 
 	result, warnings, err := scanner.Run()
 	if err != nil {
-		s.log.WithError(err).Warning("unable to run nmap scan")
+		s.log.Warn("unable to run nmap scan", zap.Error(err))
 		return []Device{}
 	}
 	for _, warning := range warnings {
-		s.log.Warning(warning)
+		s.log.Warn(warning)
 	}
 
 	devices := []Device{}
@@ -102,7 +102,7 @@ func (s *Subnet) RunDiscovery() []Device {
 		devices = append(devices, *dev)
 		err := dev.put(s.role.ctx, int64(s.DiscoveryTTL))
 		if err != nil {
-			s.log.WithError(err).Warning("ignoring device")
+			s.log.Warn("ignoring device", zap.Error(err))
 		}
 	}
 	return devices

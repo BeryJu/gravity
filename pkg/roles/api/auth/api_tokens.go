@@ -9,6 +9,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APIToken struct {
@@ -35,7 +36,7 @@ func (ap *AuthProvider) APITokensGet() usecase.Interactor {
 		for _, rkey := range rawTokens.Kvs {
 			u, err := ap.tokenFromKV(rkey)
 			if err != nil {
-				ap.log.WithError(err).Warning("failed to parse api key")
+				ap.log.Warn("failed to parse api key", zap.Error(err))
 				continue
 			}
 			output.Tokens = append(output.Tokens, APIToken{

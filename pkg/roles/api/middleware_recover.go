@@ -5,10 +5,10 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
-func NewRecoverMiddleware(l *log.Entry) func(h http.Handler) http.Handler {
+func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
@@ -17,10 +17,10 @@ func NewRecoverMiddleware(l *log.Entry) func(h http.Handler) http.Handler {
 					return
 				}
 				if e, ok := err.(error); ok {
-					l.WithError(e).Warning("recover in API handler")
+					l.Warn("recover in API handler", zap.Error(e))
 					sentry.CaptureException(e)
 				} else {
-					l.WithField("panic", err).Warning("recover in API handler")
+					l.Warn("recover in API Handler", zap.Any("panic", err))
 				}
 				w.WriteHeader(http.StatusInternalServerError)
 				if r.Header.Get("Accept") == "application/json" {

@@ -10,7 +10,8 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
 )
 
@@ -34,18 +35,21 @@ type Handler4 func(req *Request4) *dhcpv4.DHCPv4
 
 type Request4 struct {
 	*dhcpv4.DHCPv4
-	peer    net.Addr
-	log     *log.Entry
-	Context context.Context
-	oob     *ipv4.ControlMessage
+	peer      net.Addr
+	log       *zap.Logger
+	Context   context.Context
+	oob       *ipv4.ControlMessage
+	requestId string
 }
 
 func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
+	requestId := fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())
 	return &Request4{
-		DHCPv4:  dhcp,
-		Context: r.ctx,
-		peer:    &net.UDPAddr{},
-		log:     r.log.WithField("request", fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())),
+		DHCPv4:    dhcp,
+		Context:   r.ctx,
+		peer:      &net.UDPAddr{},
+		log:       r.log.With(zap.String("request", requestId)),
+		requestId: requestId,
 	}
 }
 
@@ -71,7 +75,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	m, err := dhcpv4.FromBytes(buf)
 	bufpool.Put(&buf)
 	if err != nil {
-		h.role.log.WithError(err).Info("Error parsing DHCPv4 request")
+		h.role.log.Info("Error parsing DHCPv4 request", zap.Error(err))
 		return
 	}
 
@@ -90,7 +94,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	resp := h.HandleRequest(r)
 
 	if resp != nil {
-		h.role.logDHCPMessage(r, resp, log.Fields{})
+		h.role.logDHCPMessage(r, resp, []zapcore.Field{})
 		useEthernet := false
 		var peer *net.UDPAddr
 		if !r.GatewayIPAddr.IsUnspecified() {
@@ -124,19 +128,19 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		}
 
 		if useEthernet {
-			r.log.Trace("sending via ethernet")
+			r.log.Debug("sending via ethernet")
 			intf, err := net.InterfaceByIndex(woob.IfIndex)
 			if err != nil {
-				r.log.WithError(err).WithField("index", woob.IfIndex).Error("handler4: Can not get Interface for index")
+				r.log.Error("handler4: Can not get Interface for index", zap.Error(err), zap.Int("index", woob.IfIndex))
 				return
 			}
-			err = sendEthernet(*intf, resp)
+			err = h.sendEthernet(*intf, resp)
 			if err != nil {
-				r.log.WithError(err).Error("handler4: Cannot send Ethernet packet")
+				r.log.Error("handler4: Cannot send Ethernet packet", zap.Error(err))
 			}
 		} else {
 			if _, err := h.pc.WriteTo(resp.ToBytes(), woob, peer); err != nil {
-				r.log.WithField("peer", peer).WithError(err).Error("handler4: conn.Write failed")
+				r.log.Error("handler4: conn.Write failed", zap.Error(err), zap.String("peer", peer.String()))
 			}
 		}
 	} else {
@@ -146,7 +150,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 
 func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {
 	if r.OpCode != dhcpv4.OpcodeBootRequest {
-		h.role.log.WithField("opcode", r.OpCode.String()).Info("handler4: unsupported opcode")
+		h.role.log.Info("handler4: unsupported opcode", zap.String("opcode", r.OpCode.String()))
 		return nil
 	}
 	var handler Handler4
@@ -158,7 +162,7 @@ func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {
 	case dhcpv4.MessageTypeDecline:
 		handler = h.role.HandleDHCPDecline4
 	default:
-		r.log.WithField("msg", mt.String()).Info("Unsupported message type")
+		r.log.Info("Unsupported message type", zap.String("msg", mt.String()))
 		return nil
 	}
 

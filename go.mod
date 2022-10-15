@@ -23,7 +23,6 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
-	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.0
 	github.com/swaggest/openapi-go v0.2.22
@@ -33,11 +32,11 @@ require (
 	go.etcd.io/etcd/api/v3 v3.5.5
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.etcd.io/etcd/server/v3 v3.5.5
+	go.uber.org/zap v1.23.0
 	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be
 	golang.org/x/exp v0.0.0-20221004215720-b9f4876ce741
 	golang.org/x/net v0.0.0-20221002022538-bcab6841153b
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 )
 
 require (
@@ -119,6 +118,7 @@ require (
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/santhosh-tekuri/jsonschema/v3 v3.1.0 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.4.0 // indirect
@@ -142,12 +142,12 @@ require (
 	go.opentelemetry.io/otel/sdk v1.0.1 // indirect
 	go.opentelemetry.io/otel/trace v1.0.1 // indirect
 	go.opentelemetry.io/proto/otlp v0.9.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.21.0 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
+	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
+	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
 	golang.org/x/tools v0.1.12 // indirect

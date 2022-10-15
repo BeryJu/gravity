@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"beryju.io/gravity/pkg/roles"
+	"go.uber.org/zap"
 )
 
 func (r *Role) eventCreateLease(ev *roles.Event) {
@@ -22,7 +23,7 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 		ScopeKey: scope.Name,
 
 		inst:  scope.inst,
-		log:   scope.log.WithField("lease", ident),
+		log:   scope.log.With(zap.String("lease", ident)),
 		scope: scope,
 	}
 	lease.put(ev.Context, -1)

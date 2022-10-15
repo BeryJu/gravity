@@ -6,23 +6,23 @@ import (
 
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type sessionWriter struct {
 	w       http.ResponseWriter
 	session *sessions.Session
 	req     *http.Request
-	log     *log.Entry
+	log     *zap.Logger
 }
 
 func (sw *sessionWriter) WriteHeader(statusCode int) {
 	if dirty, ok := sw.session.Values[types.SessionKeyDirty]; ok && dirty == true {
-		sw.log.Trace("session is dirty, writing")
+		sw.log.Debug("session is dirty, writing")
 		sw.session.Values[types.SessionKeyDirty] = false
 		err := sw.session.Save(sw.req, sw.w)
 		if err != nil {
-			sw.log.WithError(err).Warning("failed to save session")
+			sw.log.Warn("failed to save session", zap.Error(err))
 		}
 	}
 	sw.w.WriteHeader(statusCode)

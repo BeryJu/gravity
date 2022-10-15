@@ -7,6 +7,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -33,7 +34,7 @@ func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
 		for _, ruser := range rawUsers.Kvs {
 			u, err := ap.userFromKV(ruser)
 			if err != nil {
-				ap.log.WithError(err).Warning("failed to parse user")
+				ap.log.Warn("failed to parse user", zap.Error(err))
 				continue
 			}
 			output.Users = append(output.Users, APIUser{

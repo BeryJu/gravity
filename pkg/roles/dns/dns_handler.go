@@ -6,6 +6,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
+	"go.uber.org/zap"
 )
 
 // Find a zone for the given fqdn
@@ -61,7 +62,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		w.WriteMsg(m)
 		return
 	}
-	ro.log.WithField("zone", longestZone.etcdKey).Trace("routing request to zone")
+	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
 	span.SetTag("gravity.dns.zone", longestZone.Name)
 	longestZone.resolve(w, r, span)
 }

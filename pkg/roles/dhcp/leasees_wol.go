@@ -6,7 +6,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/sabhiram/go-wol/wol"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 func (l *Lease) sendWOL() error {
@@ -32,11 +32,7 @@ func (l *Lease) sendWOL() error {
 	}
 	defer conn.Close()
 
-	l.log.WithFields(logrus.Fields{
-		"mac":   l.Identifier,
-		"raddr": bcast.String(),
-		"laddr": laddr.String(),
-	}).Info("Attempting WOL")
+	l.log.Info("Attempting WOL", zap.String("mac", l.Identifier), zap.String("raddr", bcast.String()), zap.String("laddr", laddr.String()))
 	n, err := conn.Write(bs)
 	if err == nil && n != 102 {
 		err = fmt.Errorf("magic packet sent was %d bytes (expected 102 bytes sent)", n)

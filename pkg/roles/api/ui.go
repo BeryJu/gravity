@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/web"
+	"go.uber.org/zap"
 )
 
 //go:embed ui/index.html
@@ -33,7 +34,7 @@ func (r *Role) setupUI() {
 	} else {
 		fs, err := fs.Sub(web.Static, "dist")
 		if err != nil {
-			r.log.WithError(err).Warning("failed to subst static fs")
+			r.log.Warn("failed to subst static fs", zap.Error(err))
 			return
 		}
 		handler = http.StripPrefix("/ui/static", http.FileServer(http.FS(fs)))

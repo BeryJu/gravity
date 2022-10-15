@@ -13,12 +13,12 @@ import (
 	"beryju.io/gravity/pkg/roles/debug/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type Role struct {
 	m      *mux.Router
-	log    *log.Entry
+	log    *zap.Logger
 	i      roles.Instance
 	ctx    context.Context
 	server *http.Server
@@ -61,7 +61,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	if !extconfig.Get().Debug {
 		return roles.ErrRoleNotConfigured
 	}
-	r.log.WithField("listen", listen).Info("starting debug Server")
+	r.log.Info("starting debug server", zap.String("listen", listen))
 	r.server = &http.Server{
 		Addr:    listen,
 		Handler: r.m,
@@ -69,7 +69,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	go func() {
 		err := r.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			r.log.WithError(err).Warning("failed to listen")
+			r.log.Warn("failed to listen", zap.Error(err))
 		}
 	}()
 	return nil

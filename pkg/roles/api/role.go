@@ -12,16 +12,16 @@ import (
 	"github.com/api7/etcdstore"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/openapi-go/openapi3"
 	"github.com/swaggest/rest/web"
 	swgui "github.com/swaggest/swgui/v4emb"
+	"go.uber.org/zap"
 )
 
 type Role struct {
 	m        *mux.Router
 	oapi     *web.Service
-	log      *log.Entry
+	log      *zap.Logger
 	i        roles.Instance
 	ctx      context.Context
 	cfg      *RoleConfig
@@ -51,6 +51,9 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 	})
+	r.server = &http.Server{
+		Handler: r.m,
+	}
 	return r
 }
 
@@ -86,15 +89,12 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	}
 	r.prepareOpenAPI(ctx)
 	listen := extconfig.Get().Listen(r.cfg.Port)
-	r.log.WithField("listen", listen).Info("starting API Server")
-	r.server = &http.Server{
-		Addr:    listen,
-		Handler: r.m,
-	}
+	r.log.Info("starting API Server", zap.String("listen", listen))
+	r.server.Addr = listen
 	go func() {
 		err := r.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			r.log.WithError(err).Warning("failed to listen")
+			r.log.Warn("failed to listen", zap.Error(err))
 		}
 	}()
 	return nil

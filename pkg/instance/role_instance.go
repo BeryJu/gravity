@@ -3,20 +3,21 @@ package instance
 import (
 	"context"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type RoleInstance struct {
-	log    *log.Entry
+	log    *zap.Logger
 	roleId string
 	parent *Instance
 }
 
 func (i *Instance) ForRole(roleId string) *RoleInstance {
 	in := &RoleInstance{
-		log:    i.log.WithField("forRole", roleId),
+		log:    extconfig.Get().Logger().With(zap.String("forRole", roleId)),
 		roleId: roleId,
 		parent: i,
 	}
@@ -27,12 +28,12 @@ func (ri *RoleInstance) KV() *storage.Client {
 	return ri.parent.kv
 }
 
-func (ri *RoleInstance) Log() *log.Entry {
+func (ri *RoleInstance) Log() *zap.Logger {
 	return ri.log
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
-	ri.log.WithField("topic", topic).Debug("dispatching event")
+	ri.log.Debug("dispatching event", zap.String("topic", topic))
 	if ev.Context == nil {
 		ev.Context = context.Background()
 	}

@@ -12,13 +12,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
+	"go.uber.org/zap"
 )
 
 type Role struct {
 	m      *mux.Router
-	log    *log.Entry
+	log    *zap.Logger
 	i      roles.Instance
 	ctx    context.Context
 	cfg    *RoleConfig
@@ -64,7 +64,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 	listen := extconfig.Get().Listen(r.cfg.Port)
-	r.log.WithField("listen", listen).Info("starting monitoring Server")
+	r.log.Info("starting monitoring Server", zap.String("listen", listen))
 	r.server = &http.Server{
 		Addr:    listen,
 		Handler: r.m,
@@ -72,7 +72,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	go func() {
 		err := r.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			r.log.WithError(err).Warning("failed to listen")
+			r.log.Warn("failed to listen", zap.Error(err))
 		}
 	}()
 	return nil

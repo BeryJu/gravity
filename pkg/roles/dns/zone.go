@@ -14,9 +14,9 @@ import (
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
-	log "github.com/sirupsen/logrus"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 const (
@@ -38,7 +38,7 @@ type Zone struct {
 
 	etcdKey string
 	inst    roles.Instance
-	log     *log.Entry
+	log     *zap.Logger
 }
 
 func (z *Zone) soa() *dns.Msg {
@@ -93,19 +93,19 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 
 func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 	for _, handler := range z.h {
-		z.log.WithField("handler", handler.Identifier()).Trace("sending request to handler")
+		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		start := time.Now()
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), r)
 		finish := time.Since(start)
 		if handlerReply != nil {
-			z.log.WithField("handler", handler.Identifier()).Trace("returning reply from handler")
+			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
 			span.SetTag("gravity.dns.handler", handler.Identifier())
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
 			z.resolveUpdateMetrics(finish, r, handler, handlerReply)
 			return
 		}
-		z.log.WithField("handler", handler.Identifier()).Trace("no reply, trying next handler")
+		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))
 	}
 	if z.Authoritative {
 		soa := z.soa()
@@ -113,7 +113,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 		w.WriteMsg(soa)
 		return
 	}
-	z.log.Trace("no handler has a reply, fallback back to NX")
+	z.log.Debug("no handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
 	fallback.SetReply(r)
 	fallback.SetRcode(r, dns.RcodeNameError)
@@ -140,7 +140,7 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	if err != nil {
 		return nil, err
 	}
-	z.log = r.log.WithField("zone", z.Name)
+	z.log = r.log.With(zap.String("zone", z.Name))
 	return z, nil
 }
 
@@ -160,7 +160,7 @@ func (z *Zone) Init() {
 		case "memory":
 			handler = NewMemoryHandler(z, handlerCfg)
 		default:
-			z.log.WithField("type", t).Warning("invalid forwarder type")
+			z.log.Warn("invalid forwarder type", zap.String("type", t))
 		}
 		z.h = append(z.h, handler)
 	}
@@ -200,7 +200,7 @@ func (z *Zone) watchZoneRecords() {
 
 	records, err := z.inst.KV().Get(ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
-		z.log.WithError(err).Warning("failed to list initial records")
+		z.log.Warn("failed to list initial records", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		z.watchZoneRecords()
 		return

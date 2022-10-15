@@ -19,7 +19,7 @@ func TestTransport(t *testing.T) {
 }
 
 func TestGetIP(t *testing.T) {
-	ip, err := GetIP()
+	ip, err := Get().GetIP()
 	assert.NotNil(t, ip)
 	assert.Nil(t, err)
 }

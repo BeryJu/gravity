@@ -6,12 +6,13 @@ import (
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (r *Role) startDiscovery(raw *mvccpb.KeyValue) {
 	sub, err := r.subnetFromKV(raw)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to parse subnet")
+		r.log.Warn("failed to parse subnet", zap.Error(err))
 		return
 	}
 	go sub.RunDiscovery()
@@ -21,7 +22,7 @@ func (r *Role) startWatchSubnets() {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
 	subnets, err := r.i.KV().Get(r.ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
-		r.log.WithError(err).Warning("failed to list initial subnets")
+		r.log.Warn("failed to list initial subnets", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		r.startWatchSubnets()
 		return

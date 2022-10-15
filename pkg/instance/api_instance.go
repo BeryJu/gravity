@@ -13,6 +13,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func (i *Instance) setupInstanceAPI() {
@@ -47,7 +48,7 @@ func (i *Instance) APIInstances() usecase.Interactor {
 			var inst InstanceInfo
 			err := json.Unmarshal(ri.Value, &inst)
 			if err != nil {
-				i.log.WithError(err).Warning("failed to parse instance info")
+				i.log.Warn("failed to parse instance info", zap.Error(err))
 				continue
 			}
 			output.Instances = append(output.Instances, inst)

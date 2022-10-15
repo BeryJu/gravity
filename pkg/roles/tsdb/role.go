@@ -14,13 +14,13 @@ import (
 	debugTypes "beryju.io/gravity/pkg/roles/debug/types"
 	"beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type Role struct {
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 	cfg *RoleConfig
 	ctx context.Context
@@ -68,7 +68,7 @@ func New(instance roles.Instance) *Role {
 func (r *Role) setMetric(key string, value types.Metric) {
 	r.ms.Lock()
 	defer r.ms.Unlock()
-	r.log.WithField("key", key).Trace("tsdb set")
+	r.log.Debug("tsdb set", zap.String("key", key))
 	r.m[key] = value
 }
 
@@ -83,14 +83,14 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	})
 	r.i.AddEventListener(types.EventTopicTSDBSet, func(ev *roles.Event) {
 		key := ev.Payload.Data["key"].(string)
-		r.log.WithField("key", key).Trace("tsdb set")
+		r.log.Debug("tsdb set", zap.String("key", key))
 		r.setMetric(key, ev.Payload.Data["value"].(types.Metric))
 	})
 	r.i.AddEventListener(types.EventTopicTSDBInc, func(ev *roles.Event) {
 		r.ms.Lock()
 		defer r.ms.Unlock()
 		key := ev.Payload.Data["key"].(string)
-		r.log.WithField("key", key).Trace("tsdb inc")
+		r.log.Debug("tsdb inc", zap.String("key", key))
 		val, ok := r.m[key]
 		if !ok {
 			val = ev.Payload.Data["default"].(types.Metric)
@@ -113,7 +113,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) write() {
-	r.log.Trace("writing metrics")
+	r.log.Debug("writing metrics")
 	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(r.ctx, map[string]interface{}{}))
 	r.ms.RLock()
 	defer r.ms.RUnlock()
@@ -123,7 +123,7 @@ func (r *Role) write() {
 	}
 	lease, err := r.i.KV().Grant(r.ctx, r.cfg.Expire)
 	if err != nil {
-		r.log.WithError(err).Warning("failed to grant lease, skipping write")
+		r.log.Warn("failed to grant lease, skipping write", zap.Error(err))
 		return
 	}
 	for rkey, value := range r.m {
@@ -140,7 +140,7 @@ func (r *Role) write() {
 			clientv3.WithLease(lease.ID),
 		)
 		if err != nil {
-			r.log.WithError(err).WithField("key", key).Warning("failed to put value")
+			r.log.Warn("failed to put value", zap.Error(err), zap.String("key", key))
 		}
 		if value.ResetOnWrite {
 			value.Value = 0

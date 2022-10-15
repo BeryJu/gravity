@@ -12,7 +12,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type IPForwarderHandler struct {
@@ -20,19 +20,19 @@ type IPForwarderHandler struct {
 
 	r   *net.Resolver
 	z   *Zone
-	log *log.Entry
+	log *zap.Logger
 }
 
 func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
 	ipf := &IPForwarderHandler{
 		z: z,
 	}
-	ipf.log = z.log.WithField("handler", ipf.Identifier())
+	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
 	rawTtl := config["cache_ttl"]
 	cacheTtl, err := strconv.Atoi(rawTtl)
 	if err != nil && rawTtl != "" {
-		ipf.log.WithField("config", config).WithError(err).Warning("failed to parse cache_ttl, defaulting to 0")
+		ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
 		cacheTtl = 0
 	}
 	ipf.CacheTTL = cacheTtl
@@ -103,7 +103,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx i
 	record.uid = strconv.Itoa(idx)
 	err := record.put(context.Background(), int64(cacheTtl))
 	if err != nil {
-		ipf.log.WithError(err).Warning("failed to cache answer")
+		ipf.log.Warn("failed to cache answer", zap.Error(err))
 	}
 }
 
@@ -126,7 +126,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.M
 		m.SetRcode(r, dns.RcodeNameError)
 		return m
 	} else if err != nil {
-		ipf.log.WithError(err).Warning("failed to forward")
+		ipf.log.Warn("failed to forward", zap.Error(err))
 		m.SetRcode(r, dns.RcodeServerFailure)
 		return m
 	}
@@ -134,7 +134,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.M
 	for idx, rawIp := range ips {
 		ip, err := netip.ParseAddr(rawIp)
 		if err != nil {
-			ipf.log.WithError(err).Warning("failed to parse response IP")
+			ipf.log.Warn("failed to parse response IP", zap.Error(err))
 			continue
 		}
 		var ans dns.RR

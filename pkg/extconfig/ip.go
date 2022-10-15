@@ -4,10 +4,10 @@ import (
 	"errors"
 	"net"
 
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
-func GetIP() (net.IP, error) {
+func (e *ExtConfig) GetIP() (net.IP, error) {
 	ifaces, err := net.Interfaces()
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func GetIP() (net.IP, error) {
 		}
 		addrs, err := i.Addrs()
 		if err != nil {
-			log.WithError(err).WithField("if", i).Trace("failed to get IPs from interface")
+			e.Logger().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
 			continue
 		}
 		for _, addr := range addrs {
@@ -32,7 +32,7 @@ func GetIP() (net.IP, error) {
 			if ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() {
 				continue
 			}
-			log.Debugf("Detected IP of instance as %s", ip.String())
+			e.Logger().Debug("Detected IP of instance", zap.String("ip", ip.String()))
 			return ip, nil
 		}
 	}

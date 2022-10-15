@@ -9,6 +9,7 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type APIZone struct {
@@ -32,13 +33,13 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 			clientv3.WithPrefix(),
 		)
 		if err != nil {
-			r.log.WithError(err).Warning("failed to get zones")
+			r.log.Warn("failed to get zones", zap.Error(err))
 			return status.Wrap(errors.New("failed to get zones"), status.Internal)
 		}
 		for _, rawZone := range rawZones.Kvs {
 			_zone, err := r.zoneFromKV(rawZone)
 			if err != nil {
-				r.log.WithError(err).Warning("failed to parse zone")
+				r.log.Warn("failed to parse zone", zap.Error(err))
 				continue
 			}
 			if strings.Contains(_zone.Name, "/") {

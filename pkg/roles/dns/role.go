@@ -13,8 +13,8 @@ import (
 	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
-	log "github.com/sirupsen/logrus"
 	"github.com/swaggest/rest/web"
+	"go.uber.org/zap"
 )
 
 type Role struct {
@@ -23,7 +23,7 @@ type Role struct {
 	zonesM  sync.RWMutex
 
 	cfg *RoleConfig
-	log *log.Entry
+	log *zap.Logger
 	i   roles.Instance
 	ctx context.Context
 }
@@ -94,10 +94,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	srv := func(idx int) {
 		server := r.servers[idx]
-		r.log.WithField("listen", listen).WithField("proto", server.Net).Info("starting DNS Server")
+		r.log.Info("starting DNS Server", zap.String("listen", listen), zap.String("proto", server.Net))
 		err := server.ListenAndServe()
 		if err != nil {
-			r.log.WithField("listen", listen).WithField("proto", server.Net).WithError(err).Warning("failed to start dns server")
+			r.log.Warn("failed to start dns server", zap.String("listen", listen), zap.String("proto", server.Net), zap.Error(err))
 		}
 	}
 

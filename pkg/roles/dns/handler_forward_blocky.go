@@ -8,7 +8,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 
 	"github.com/0xERR0R/blocky/config"
 	blockylog "github.com/0xERR0R/blocky/log"
@@ -20,7 +20,7 @@ type BlockyForwarder struct {
 	*IPForwarderHandler
 	c   map[string]string
 	b   *server.Server
-	log *log.Entry
+	log *zap.Logger
 }
 
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
@@ -28,11 +28,11 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
 		c:                  rawConfig,
 	}
-	bfwd.log = z.log.WithField("handler", bfwd.Identifier())
+	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
 	go func() {
 		err := bfwd.setup()
 		if err != nil {
-			bfwd.log.WithError(err).Warning("failed to setup blocky, queries will fallthrough")
+			bfwd.log.Warn("failed to setup blocky, queries will fallthrough", zap.Error(err))
 		}
 	}()
 	return bfwd
@@ -48,7 +48,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
 		if err != nil {
-			log.WithError(err).Warning("failed to parse upstream")
+			bfwd.log.Warn("failed to parse upstream", zap.Error(err))
 			continue
 		}
 		upstreams[idx] = us

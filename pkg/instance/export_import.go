@@ -6,6 +6,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type ExportEntry struct {
@@ -32,12 +33,12 @@ func (i *Instance) Import(entries []ExportEntry) error {
 	for _, entry := range entries {
 		val, err := base64.StdEncoding.DecodeString(entry.Value)
 		if err != nil {
-			i.log.WithField("key", entry.Key).WithError(err).Warning("failed to decode value")
+			i.log.Warn("failed to decode value", zap.Error(err), zap.String("key", entry.Key))
 			continue
 		}
 		_, err = i.kv.Put(i.rootContext, entry.Key, string(val))
 		if err != nil {
-			i.log.WithField("key", entry.Key).WithError(err).Warning("failed to put value")
+			i.log.Warn("failed to put value", zap.Error(err), zap.String("key", entry.Key))
 			continue
 		}
 	}

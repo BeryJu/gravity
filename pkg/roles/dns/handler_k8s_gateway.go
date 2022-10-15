@@ -6,12 +6,12 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	k8s_gateway "github.com/ori-edge/k8s_gateway"
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 type K8sGateway struct {
 	c   map[string]string
-	log *log.Entry
+	log *zap.Logger
 	gw  k8s_gateway.Gateway
 }
 
@@ -22,7 +22,7 @@ func NewK8sGateway(z *Zone, rawConfig map[string]string) *K8sGateway {
 			Zones: []string{z.Name},
 		},
 	}
-	k8gw.log = z.log.WithField("handler", k8gw.Identifier())
+	k8gw.log = z.log.With(zap.String("handler", k8gw.Identifier()))
 	k8gw.gw.RunKubeController(context.Background())
 	k8gw.gw.ExternalAddrFunc = k8gw.gw.SelfAddress
 	return k8gw
