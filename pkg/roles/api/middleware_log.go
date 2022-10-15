@@ -100,7 +100,7 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	h.handler.ServeHTTP(responseLogger, req)
 	fields := []zap.Field{
 		zap.String("remote", req.RemoteAddr),
-		zap.Duration("runtimeMS", time.Since(t)),
+		zap.Duration("runtime", time.Since(t)),
 		zap.String("method", req.Method),
 		zap.String("scheme", req.URL.Scheme),
 		zap.Int("size", responseLogger.Size()),

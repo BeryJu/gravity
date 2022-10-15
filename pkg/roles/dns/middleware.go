@@ -50,7 +50,7 @@ func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			clientIP = addr.IP.String()
 		}
 		f := []zap.Field{
-			zap.Duration("runtimeMS", time.Since(start)),
+			zap.Duration("runtime", time.Since(start)),
 			zap.String("client", clientIP),
 			zap.String("response", dns.RcodeToString[fw.Msg().Rcode]),
 		}

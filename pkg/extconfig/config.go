@@ -98,6 +98,7 @@ func (e *ExtConfig) buildLogger() *zap.Logger {
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	}
+	config.EncoderConfig.EncodeDuration = zapcore.MillisDurationEncoder
 	log, err := config.Build()
 	if err != nil {
 		panic(err)
