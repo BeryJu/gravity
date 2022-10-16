@@ -20,10 +20,10 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 				return
 			}
 			if e, ok := err.(error); ok {
-				r.log.Warn("recover in dns handler", zap.Error(e))
+				r.log.Error("recover in dns handler", zap.Error(e))
 				sentry.CaptureException(e)
 			} else {
-				r.log.Warn("recover in dns handler", zap.Any("panic", err))
+				r.log.Error("recover in dns handler", zap.Any("panic", err))
 			}
 			// ensure DNS query gets some sort of response to prevent
 			// clients hanging

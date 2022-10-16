@@ -17,10 +17,10 @@ func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 				return
 			}
 			if e, ok := err.(error); ok {
-				r.log.Warn("recover in dhcp handler", zap.Error(e))
+				r.log.Error("recover in dhcp handler", zap.Error(e))
 				sentry.CaptureException(e)
 			} else {
-				r.log.Warn("recover in dhcp handler", zap.Any("panic", err))
+				r.log.Error("recover in dhcp handler", zap.Any("panic", err))
 			}
 		}()
 		return inner(req)

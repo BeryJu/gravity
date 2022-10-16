@@ -18,8 +18,8 @@ jobs:
           cache: true
       - uses: actions/setup-node@v3.5.1
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
       - name: Build web
         working-directory: web/
@@ -48,8 +48,8 @@ jobs:
           cache: true
       - uses: actions/setup-node@v3.5.1
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
       - name: Build web
         working-directory: web/

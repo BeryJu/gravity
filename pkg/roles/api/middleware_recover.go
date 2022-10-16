@@ -17,10 +17,10 @@ func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 					return
 				}
 				if e, ok := err.(error); ok {
-					l.Warn("recover in API handler", zap.Error(e))
+					l.Error("recover in API handler", zap.Error(e))
 					sentry.CaptureException(e)
 				} else {
-					l.Warn("recover in API Handler", zap.Any("panic", err))
+					l.Error("recover in API Handler", zap.Any("panic", err))
 				}
 				w.WriteHeader(http.StatusInternalServerError)
 				if r.Header.Get("Accept") == "application/json" {

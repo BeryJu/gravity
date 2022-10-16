@@ -240,10 +240,10 @@ func (i *Instance) startWatchRole(id string) {
 			return
 		}
 		if e, ok := err.(error); ok {
-			i.log.Warn("recover in role", zap.Error(e))
+			i.log.Error("recover in role", zap.String("roleId", id), zap.Error(e))
 			sentry.CaptureException(e)
 		} else {
-			i.log.Warn("recover in role", zap.Any("panic", err))
+			i.log.Error("recover in role", zap.String("roleId", id), zap.Any("panic", err))
 		}
 	}()
 	// Load current config
