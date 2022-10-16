@@ -36,7 +36,8 @@ WORKDIR /
 
 COPY --from=builder /workspace/gravity /bin/gravity
 # For debugging purposes
-COPY --from=quay.io/coreos/etcd:v3.5.4 /usr/local/bin/etcdctl /usr/bin/etcdctl
+COPY --from=quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcdctl /usr/bin/etcdctl
+COPY --from=quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcdutl /usr/bin/etcdutl
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends nmap bash-completion bash ca-certificates && \
