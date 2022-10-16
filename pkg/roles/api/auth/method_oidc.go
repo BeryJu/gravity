@@ -20,22 +20,22 @@ import (
 func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *types.OIDCConfig) {
 	c := &http.Client{Transport: extconfig.Transport()}
 	ctx = context.WithValue(ctx, oauth2.HTTPClient, c)
-	provider, err := oidc.NewProvider(ctx, ap.oidc.Issuer)
+	provider, err := oidc.NewProvider(ctx, config.Issuer)
 	if err != nil {
 		ap.log.Warn("failed to initialise oidc", zap.Error(err))
-		ap.oidc = nil
 		return
 	}
-	red := strings.ReplaceAll(ap.oidc.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
+	ap.oidc = config
+	red := strings.ReplaceAll(config.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
 	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().Instance.IP)
 	oauth2Config := oauth2.Config{
-		ClientID:     ap.oidc.ClientID,
-		ClientSecret: ap.oidc.ClientSecret,
+		ClientID:     config.ClientID,
+		ClientSecret: config.ClientSecret,
 		RedirectURL:  red,
 		Endpoint:     provider.Endpoint(),
-		Scopes:       ap.oidc.Scopes,
+		Scopes:       config.Scopes,
 	}
-	verifier := provider.Verifier(&oidc.Config{ClientID: ap.oidc.ClientID})
+	verifier := provider.Verifier(&oidc.Config{ClientID: config.ClientID})
 
 	ap.inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		mux := ev.Payload.Data["mux"].(*mux.Router)
