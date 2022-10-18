@@ -2,6 +2,7 @@ package dns
 
 import (
 	"context"
+	"net"
 	"strings"
 
 	"github.com/getsentry/sentry-go"
@@ -35,6 +36,20 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		"gravity.roles.dns.request",
 		sentry.TransactionName("gravity.roles.dns"),
 	)
+	var clientIP = ""
+	switch addr := w.RemoteAddr().(type) {
+	case *net.UDPAddr:
+		clientIP = addr.IP.String()
+	case *net.TCPAddr:
+		clientIP = addr.IP.String()
+	}
+	hub := sentry.GetHubFromContext(span.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		IPAddress: clientIP,
+	})
 	defer span.Finish()
 
 	for _, question := range r.Question {

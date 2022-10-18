@@ -89,6 +89,15 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		"gravity.roles.dhcp.request",
 		sentry.TransactionName("gravity.roles.dhcp"),
 	)
+	hub := sentry.GetHubFromContext(span.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		Username:  m.HostName(),
+		IPAddress: _peer.String(),
+	})
+
 	span.Description = m.MessageType().String()
 	defer span.Finish()
 	resp := h.HandleRequest(r)
