@@ -154,7 +154,7 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 		if ip == nil {
 			return nil
 		}
-		lease.Address = s.ipam.NextFreeAddress().String()
+		lease.Address = ip.String()
 	}
 	return lease
 }

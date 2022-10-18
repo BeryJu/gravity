@@ -13,16 +13,16 @@ import (
 
 type InternalIPAM struct {
 	SubnetCIDR netip.Prefix
-
-	Start netip.Addr
-	End   netip.Addr
+	Start      netip.Addr
+	End        netip.Addr
 
 	shouldPing bool
-	log        *zap.Logger
-	role       *Role
-	scope      *Scope
 	ips        map[string]bool
 	ipsy       sync.RWMutex
+
+	log   *zap.Logger
+	role  *Role
+	scope *Scope
 }
 
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
