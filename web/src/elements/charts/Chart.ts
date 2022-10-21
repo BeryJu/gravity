@@ -38,7 +38,6 @@ export function getColorFromString(stringInput: string): RGBAColor {
         rgb[i] = value;
     }
     return new RGBAColor(rgb[0], rgb[1], rgb[2]);
-    // return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 export abstract class AKChart<T> extends AKElement {
