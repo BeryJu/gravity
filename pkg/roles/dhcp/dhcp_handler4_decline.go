@@ -8,11 +8,26 @@ import (
 func (r *Role) HandleDHCPDecline4(req *Request4) *dhcpv4.DHCPv4 {
 	match := r.FindLease(req)
 	if match == nil {
+		scope := r.findScopeForRequest(req)
+		if scope == nil {
+			req.log.Info("no scope found")
+			return nil
+		}
+		req.log.Debug("found scope for new lease", zap.String("scope", scope.Name))
+		match = scope.createLeaseFor(req)
+		if match == nil {
+			return nil
+		}
+		// because this happens for DHCP decline, the IP is assumed to be already taken
+		// and we only get here if there's no lease so the device is assumed to be managed
+		// externally, so create a leave with an "invalid" identifier which won't be picked
+		match.Identifier = "invalid"
 		return nil
 	}
-	_, err := r.i.KV().Delete(req.Context, match.etcdKey)
+	// since there's no further requests to confirm this lease, save it directly with the TTL of the scope
+	err := match.put(req.Context, match.scope.TTL)
 	if err != nil {
-		r.log.Warn("failed to delete lease", zap.Error(err))
+		r.log.Warn("failed to put lease", zap.Error(err))
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
