@@ -24,7 +24,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
 	github.com/spf13/cobra v1.6.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/swaggest/openapi-go v0.2.23
 	github.com/swaggest/rest v0.2.33
 	github.com/swaggest/swgui v1.5.1
@@ -121,7 +121,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.4.0 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/swaggest/form/v5 v5.0.1 // indirect
 	github.com/swaggest/jsonschema-go v0.3.40 // indirect
 	github.com/swaggest/refl v1.1.0 // indirect
