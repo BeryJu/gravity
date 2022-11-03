@@ -20,7 +20,7 @@ require (
 	github.com/miekg/dns v1.1.50
 	github.com/minio/minio-go/v7 v7.0.43
 	github.com/ori-edge/k8s_gateway v0.3.2
-	github.com/prometheus/client_golang v1.13.0
+	github.com/prometheus/client_golang v1.13.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
 	github.com/spf13/cobra v1.6.1
