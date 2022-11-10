@@ -9,7 +9,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coreos/go-oidc/v3 v3.4.0
 	github.com/creasty/defaults v1.6.0
-	github.com/getsentry/sentry-go v0.14.0
+	github.com/getsentry/sentry-go v0.15.0
 	github.com/go-ping/ping v1.1.0
 	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.3.0
