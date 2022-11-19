@@ -79,14 +79,14 @@ func (ee *Role) Start(ctx context.Context, config []byte) error {
 		return err
 	}
 	ee.e = e
-	<-e.Server.ReadyNotify()
-	ee.log.Info("Embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
 	go func() {
 		err := <-e.Err()
 		if err != nil {
 			ee.log.Warn("failed to start/stop etcd", zap.Error(err))
 		}
 	}()
+	<-e.Server.ReadyNotify()
+	ee.log.Info("Embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
 	return nil
 }
 
