@@ -81,6 +81,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return err
 	}
+	cfg.Blocking.StartStrategy = config.StartStrategyTypeFast
 	cfg.BootstrapDNS = config.BootstrapConfig{
 		Upstream: config.Upstream{
 			Net:  config.NetProtocolTcpUdp,
