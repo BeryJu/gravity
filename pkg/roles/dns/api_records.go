@@ -124,16 +124,20 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 		if !ok {
 			return status.Wrap(errors.New("zone not found"), status.NotFound)
 		}
+		key := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			input.Zone,
+			input.Hostname,
+			input.Type,
+			input.UID,
+		)
+		if input.UID != "" {
+			key = key.Add(input.UID)
+		}
 		_, err := r.i.KV().Delete(
 			ctx,
-			r.i.KV().Key(
-				types.KeyRole,
-				types.KeyZones,
-				input.Zone,
-				input.Hostname,
-				input.Type,
-				input.UID,
-			).String(),
+			key.String(),
 		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
