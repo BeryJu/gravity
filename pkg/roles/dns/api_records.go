@@ -130,7 +130,6 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 			input.Zone,
 			input.Hostname,
 			input.Type,
-			input.UID,
 		)
 		if input.UID != "" {
 			key = key.Add(input.UID)
