@@ -58,7 +58,7 @@ type Instance struct {
 func New() *Instance {
 	extCfg := extconfig.Get()
 	ctx, canc := context.WithCancel(context.Background())
-	log := extCfg.Logger().With(zap.String("instance", extCfg.Instance.Identifier), zap.String("forRole", "root"))
+	log := extCfg.Logger().With(zap.String("instance", extCfg.Instance.Identifier)).Named("instance")
 	return &Instance{
 		roles:             make(map[string]RoleContext),
 		rolesM:            sync.Mutex{},
@@ -103,7 +103,7 @@ func (i *Instance) startSentry() {
 		TracesSampleRate: 0.5,
 		Transport:        transport,
 		Debug:            extconfig.Get().Debug,
-		DebugWriter:      NewSentryWriter(i.log.With(zap.String("forRole", "sentry"))),
+		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
 	})
 	if err != nil {
 		i.log.Warn("failed to init sentry", zap.Error(err))

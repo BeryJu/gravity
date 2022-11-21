@@ -32,7 +32,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 	ap := &AuthProvider{
 		role: r,
 		inst: inst,
-		log:  inst.Log().With(zap.String("forRole", "api/auth")),
+		log:  inst.Log().Named("role.api.auth"),
 		allowedPaths: []string{
 			"/api/v1/auth/me",
 			"/api/v1/auth/config",

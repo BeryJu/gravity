@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
@@ -41,7 +42,12 @@ func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
 	cfg.Dir = dirs.EtcdDir
-	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(instance.Log(), nil, nil)
+	cfg.LogLevel = "warn"
+	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
+		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("etcd"),
+		nil,
+		nil,
+	)
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
 	cfg.LPUrls = []url.URL{
@@ -63,7 +69,6 @@ func New(instance roles.Instance) *Role {
 		cfg.ClusterState = embed.ClusterStateFlagExisting
 		cfg.InitialCluster = cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
 	}
-	ee.log.Debug(cfg.InitialCluster)
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)

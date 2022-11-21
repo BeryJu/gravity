@@ -17,7 +17,7 @@ type RoleInstance struct {
 
 func (i *Instance) ForRole(roleId string) *RoleInstance {
 	in := &RoleInstance{
-		log:    extconfig.Get().Logger().With(zap.String("forRole", roleId)),
+		log:    extconfig.Get().Logger().Named("role." + roleId),
 		roleId: roleId,
 		parent: i,
 	}

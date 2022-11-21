@@ -78,7 +78,18 @@ func (e *ExtConfig) Logger() *zap.Logger {
 	return e.logger
 }
 
-func (e *ExtConfig) buildLogger() *zap.Logger {
+func (e *ExtConfig) BuildLogger() *zap.Logger {
+	l, err := zapcore.ParseLevel(e.LogLevel)
+	if err != nil {
+		l = zapcore.InfoLevel
+	}
+	if e.Debug {
+		l = zapcore.DebugLevel
+	}
+	return e.BuildLoggerWithLevel(l)
+}
+
+func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	config := zap.Config{
 		Encoding:         "json",
 		Development:      false,
@@ -86,15 +97,10 @@ func (e *ExtConfig) buildLogger() *zap.Logger {
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
 	}
-	l, err := zapcore.ParseLevel(e.LogLevel)
-	if err != nil {
-		l = zapcore.InfoLevel
-	}
 	config.Level = zap.NewAtomicLevelAt(l)
 	if e.Debug {
 		config.Development = true
 		config.Encoding = "console"
-		config.Level = zap.NewAtomicLevelAt(zapcore.DebugLevel)
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	}
@@ -107,7 +113,7 @@ func (e *ExtConfig) buildLogger() *zap.Logger {
 }
 
 func (e *ExtConfig) load() {
-	e.logger = e.buildLogger()
+	e.logger = e.BuildLogger()
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
 		if err != nil {

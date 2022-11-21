@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/netip"
 	"strings"
+	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/dns/utils"
@@ -21,15 +22,18 @@ type BlockyForwarder struct {
 	c   map[string]string
 	b   *server.Server
 	log *zap.Logger
+	st  time.Time
 }
 
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
 		c:                  rawConfig,
+		st:                 time.Now(),
 	}
 	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
 	go func() {
+		bfwd.log.Debug("starting blocky setup")
 		err := bfwd.setup()
 		if err != nil {
 			bfwd.log.Warn("failed to setup blocky, queries will fallthrough", zap.Error(err))
@@ -81,7 +85,6 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return err
 	}
-	cfg.Blocking.StartStrategy = config.StartStrategyTypeFast
 	cfg.BootstrapDNS = config.BootstrapConfig{
 		Upstream: config.Upstream{
 			Net:  config.NetProtocolTcpUdp,
@@ -109,6 +112,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return fmt.Errorf("can't start server: %w", err)
 	}
+	bfwd.log.Debug("finished blocky setup", zap.Duration("took", time.Since(bfwd.st)))
 	bfwd.b = srv
 	return nil
 }
