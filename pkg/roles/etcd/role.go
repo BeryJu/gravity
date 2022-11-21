@@ -44,7 +44,7 @@ func New(instance roles.Instance) *Role {
 	cfg.Dir = dirs.EtcdDir
 	cfg.LogLevel = "warn"
 	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
-		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("etcd"),
+		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
 		nil,
 		nil,
 	)

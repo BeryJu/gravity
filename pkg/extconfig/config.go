@@ -63,7 +63,11 @@ func (e *ExtConfig) Dirs() *ExtConfigDirs {
 }
 
 func (e *ExtConfig) EtcdClient() *storage.Client {
-	return storage.NewClient(e.Etcd.Prefix, e.logger, e.Etcd.Endpoint)
+	return storage.NewClient(
+		e.Etcd.Prefix,
+		e.BuildLoggerWithLevel(zap.WarnLevel).Named("etcd.client"),
+		e.Etcd.Endpoint,
+	)
 }
 
 func (e *ExtConfig) Listen(port int32) string {
