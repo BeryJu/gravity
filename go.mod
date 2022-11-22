@@ -29,7 +29,7 @@ require (
 	github.com/swaggest/rest v0.2.34
 	github.com/swaggest/swgui v1.5.1
 	github.com/swaggest/usecase v1.2.0
-	go.etcd.io/etcd/api/v3 v3.5.5
+	go.etcd.io/etcd/api/v3 v3.5.6
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.etcd.io/etcd/server/v3 v3.5.5
 	go.uber.org/zap v1.23.0
