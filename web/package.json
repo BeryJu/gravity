@@ -34,7 +34,7 @@
         "babel-plugin-macros": "^3.1.0",
         "babel-plugin-tsconfig-paths": "^1.0.3",
         "chart.js": "^3.9.1",
-        "chartjs-adapter-moment": "^1.0.0",
+        "chartjs-adapter-moment": "^1.0.1",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.2.2",
         "eslint": "^8.28.0",
