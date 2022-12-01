@@ -18,7 +18,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
 	github.com/miekg/dns v1.1.50
-	github.com/minio/minio-go/v7 v7.0.44
+	github.com/minio/minio-go/v7 v7.0.45
 	github.com/ori-edge/k8s_gateway v0.3.2
 	github.com/prometheus/client_golang v1.14.0
 	github.com/robfig/cron/v3 v3.0.1
