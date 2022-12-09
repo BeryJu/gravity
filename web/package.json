@@ -42,7 +42,7 @@
         "eslint-plugin-custom-elements": "0.0.6",
         "eslint-plugin-lit": "^1.7.0",
         "gravity-api": "^0.2.10",
-        "lit": "^2.4.1",
+        "lit": "^2.5.0",
         "moment": "^2.29.4",
         "prettier": "^2.8.1",
         "rollup": "^2.79.1",
