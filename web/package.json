@@ -40,7 +40,7 @@
         "eslint": "^8.29.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-custom-elements": "0.0.6",
-        "eslint-plugin-lit": "^1.7.0",
+        "eslint-plugin-lit": "^1.7.1",
         "gravity-api": "^0.2.10",
         "lit": "^2.5.0",
         "moment": "^2.29.4",
