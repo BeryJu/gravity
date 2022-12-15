@@ -20,6 +20,13 @@ services:
     network_mode: host
     volumes:
       - data:/data
+    # The default log level of info logs DHCP and DNS queries, so ensure
+    # the logs aren't filling up the disk
+    logging:
+      driver: json-file
+      options:
+        max-size": "10m"
+        max-file": "3"
 
 volumes:
   data:

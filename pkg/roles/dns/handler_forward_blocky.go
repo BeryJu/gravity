@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/0xERR0R/blocky/config"
+	"github.com/0xERR0R/blocky/log"
 	blockylog "github.com/0xERR0R/blocky/log"
 	"github.com/0xERR0R/blocky/server"
 	"github.com/miekg/dns"
@@ -81,6 +82,8 @@ func (bfwd *BlockyForwarder) setup() error {
 	if !extconfig.Get().Debug {
 		cfg.LogFormat = blockylog.FormatTypeJson
 	}
+	// Only log errors from blocky to prevent double-logging all queries
+	cfg.LogLevel = log.LevelFatal
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
 		return err
