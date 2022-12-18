@@ -102,6 +102,7 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
 	}
 	config.Level = zap.NewAtomicLevelAt(l)
+	config.DisableCaller = !e.Debug
 	if e.Debug {
 		config.Development = true
 		config.Encoding = "console"

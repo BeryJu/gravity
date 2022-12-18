@@ -1,7 +1,6 @@
 package dns
 
 import (
-	"fmt"
 	"net"
 	"time"
 
@@ -37,28 +36,44 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 }
 
 func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
-	return func(w dns.ResponseWriter, m *dns.Msg) {
-		start := time.Now()
-		fw := utils.NewFakeDNSWriter(w)
-		inner(fw, m)
-		w.WriteMsg(fw.Msg())
+	getIP := func(addr net.Addr) string {
 		var clientIP = ""
-		switch addr := w.RemoteAddr().(type) {
+		switch addr := addr.(type) {
 		case *net.UDPAddr:
 			clientIP = addr.IP.String()
 		case *net.TCPAddr:
 			clientIP = addr.IP.String()
 		}
-		f := []zap.Field{
-			zap.Duration("runtime", time.Since(start)),
-			zap.String("client", clientIP),
-			zap.String("response", dns.RcodeToString[fw.Msg().Rcode]),
-		}
+		return clientIP
+	}
+
+	return func(w dns.ResponseWriter, m *dns.Msg) {
+		fw := utils.NewFakeDNSWriter(w)
+		start := time.Now()
+		inner(fw, m)
+		finish := time.Since(start)
+		w.WriteMsg(fw.Msg())
+
+		queryNames := make([]string, len(m.Question))
+		queryTypes := make([]string, len(m.Question))
+		answerRecords := make([]string, len(fw.Msg().Answer))
+		answerTypes := make([]string, len(fw.Msg().Answer))
 		for idx, q := range m.Question {
-			f = append(f, zap.String(fmt.Sprintf("query[%d]", idx), q.Name))
+			queryNames[idx] = q.Name
+			queryTypes[idx] = dns.TypeToString[q.Qtype]
 		}
 		for idx, a := range fw.Msg().Answer {
-			f = append(f, zap.String(fmt.Sprintf("answer[%d]", idx), dns.TypeToString[a.Header().Rrtype]))
+			answerRecords[idx] = a.String()
+			answerTypes[idx] = dns.TypeToString[a.Header().Rrtype]
+		}
+		f := []zap.Field{
+			zap.Duration("runtime", finish),
+			zap.String("client", getIP(w.RemoteAddr())),
+			zap.String("response", dns.RcodeToString[fw.Msg().Rcode]),
+			zap.Strings("queryNames", queryNames),
+			zap.Strings("queryTypes", queryTypes),
+			zap.Strings("answerRecords", answerRecords),
+			zap.Strings("answerTypes", answerTypes),
 		}
 		r.log.With(f...).Info("DNS Query")
 	}
