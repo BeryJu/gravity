@@ -122,7 +122,7 @@ func (bfwd *BlockyForwarder) setup() error {
 
 func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 	if bfwd.b == nil {
-		bfwd.log.Info("Blocky not started/setup yet, falling through to next handler")
+		bfwd.log.Debug("Blocky not started/setup yet, falling through to next handler")
 		return nil
 	}
 	bfwd.b.OnRequest(w, r)

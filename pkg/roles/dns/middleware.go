@@ -54,13 +54,12 @@ func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			zap.String("client", clientIP),
 			zap.String("response", dns.RcodeToString[fw.Msg().Rcode]),
 		}
-		msg := "DNS Request"
-		if len(m.Question) > 0 {
-			msg = m.Question[0].Name
+		for idx, q := range m.Question {
+			f = append(f, zap.String(fmt.Sprintf("query[%d]", idx), q.Name))
 		}
 		for idx, a := range fw.Msg().Answer {
 			f = append(f, zap.String(fmt.Sprintf("answer[%d]", idx), dns.TypeToString[a.Header().Rrtype]))
 		}
-		r.log.With(f...).Info(msg)
+		r.log.With(f...).Info("DNS Query")
 	}
 }

@@ -40,8 +40,9 @@ func (r *Role) logDHCPMessage(req *Request4, m *dhcpv4.DHCPv4, fields []zap.Fiel
 		zap.String("gatewayIPAddr", m.GatewayIPAddr.String()),
 		zap.String("hostname", m.HostName()),
 		zap.String("clientIdentifier", hex.EncodeToString(m.Options.Get(dhcpv4.OptionClientIdentifier))),
+		zap.String("messageType", m.MessageType().String()),
 	}
-	req.log.With(f...).With(fields...).Info(m.MessageType().String())
+	req.log.With(f...).With(fields...).Info("DHCP packet")
 }
 
 func (r *Role) loggingMiddleware4(inner Handler4) Handler4 {
