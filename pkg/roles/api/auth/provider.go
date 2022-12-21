@@ -2,18 +2,14 @@ package auth
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
-	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/securecookie"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -57,22 +53,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 		svc.Post("/api/v1/auth/tokens", ap.APITokensPut())
 		svc.Delete("/api/v1/auth/tokens", ap.APITokensDelete())
 	})
-	inst.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
-		password := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
-		err := ap.CreateUser(ev.Context, "admin", password)
-		if err != nil {
-			ap.log.Warn("failed to create default user", zap.Error(err))
-			return
-		}
-		text := `------------------------------------------------------------
-Welcome to gravity! An admin user has been created for you.
-Username: '%s'
-Password: '%s'
-Open 'http://%s:8008/' to start using Gravity!
---------------------------------------------------------------------
-`
-		fmt.Printf(text, "admin", password, extconfig.Get().Instance.IP)
-	})
+	inst.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, ap.FirstStart)
 	return ap
 }
 

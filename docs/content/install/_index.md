@@ -48,6 +48,8 @@ The following environment variables can be set:
 - `INSTANCE_IP`: This instance's reachable IP, when running in docker this should be the hosts IP
 - `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but can be set to override that (set to 0.0.0.0 in docker)
 - `LISTEN_ONLY`: Enable listen-only mode which will not reply to any DHCP packets and not run discovery
+- `ADMIN_PASSWORD`: Optionally set a default password for the admin user, if not set a random one will be generated
+- `ADMIN_TOKEN`: Optionally set a token to be created on first start, if not set no token will be created
 
 ## First time use
 
