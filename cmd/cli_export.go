@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var exportCmd = &cobra.Command{
@@ -15,17 +15,17 @@ var exportCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		exp, _, err := apiClient.RolesApiApi.ApiExport(context.Background()).Execute()
 		if err != nil {
-			fmt.Println(err)
+			logger.Error("failed to export", zap.Error(err))
 			return
 		}
 		raw, err := json.Marshal(exp)
 		if err != nil {
-			fmt.Println(err.Error())
+			logger.Error("failed to json marshal", zap.Error(err))
 			return
 		}
 		err = os.WriteFile(args[0], raw, 0644)
 		if err != nil {
-			fmt.Println(err.Error())
+			logger.Error("failed to write export", zap.Error(err))
 		}
 	},
 }

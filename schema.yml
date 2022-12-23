@@ -1547,7 +1547,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesOption'
+            $ref: '#/components/schemas/TypesDHCPOption'
           nullable: true
           type: array
         scope:
@@ -1587,7 +1587,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesOption'
+            $ref: '#/components/schemas/TypesDHCPOption'
           nullable: true
           type: array
         subnetCidr:
@@ -1989,23 +1989,7 @@ components:
       - handler
       - value
       type: object
-    TypesOIDCConfig:
-      properties:
-        clientID:
-          type: string
-        clientSecret:
-          type: string
-        issuer:
-          type: string
-        redirectURL:
-          type: string
-        scopes:
-          items:
-            type: string
-          nullable: true
-          type: array
-      type: object
-    TypesOption:
+    TypesDHCPOption:
       properties:
         tag:
           minimum: 0
@@ -2017,6 +2001,22 @@ components:
           nullable: true
           type: string
         value64:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    TypesOIDCConfig:
+      properties:
+        clientID:
+          type: string
+        clientSecret:
+          type: string
+        issuer:
+          type: string
+        redirectURL:
+          type: string
+        scopes:
           items:
             type: string
           nullable: true

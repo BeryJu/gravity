@@ -472,7 +472,7 @@ import (
 
 func main() {
     scope := "scope_example" // string | 
-    dhcpAPIScopesPutInput := *openapiclient.NewDhcpAPIScopesPutInput(false, []openapiclient.TypesOption{*openapiclient.NewTypesOption()}, "SubnetCidr_example", int32(123)) // DhcpAPIScopesPutInput |  (optional)
+    dhcpAPIScopesPutInput := *openapiclient.NewDhcpAPIScopesPutInput(false, []openapiclient.TypesDHCPOption{*openapiclient.NewTypesDHCPOption()}, "SubnetCidr_example", int32(123)) // DhcpAPIScopesPutInput |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)

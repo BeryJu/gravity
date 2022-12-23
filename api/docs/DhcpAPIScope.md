@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Default** | **bool** |  | 
 **Dns** | Pointer to [**DhcpScopeDNS**](DhcpScopeDNS.md) |  | [optional] 
 **Ipam** | **map[string]string** |  | 
-**Options** | [**[]TypesOption**](TypesOption.md) |  | 
+**Options** | [**[]TypesDHCPOption**](TypesDHCPOption.md) |  | 
 **Scope** | **string** |  | 
 **SubnetCidr** | **string** |  | 
 **Ttl** | **int32** |  | 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewDhcpAPIScope
 
-`func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesOption, scope string, subnetCidr string, ttl int32, ) *DhcpAPIScope`
+`func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32, ) *DhcpAPIScope`
 
 NewDhcpAPIScope instantiates a new DhcpAPIScope object
 This constructor will assign default values to properties that have it defined,
@@ -108,20 +108,20 @@ SetIpam sets Ipam field to given value.
 UnsetIpam ensures that no value is present for Ipam, not even an explicit nil
 ### GetOptions
 
-`func (o *DhcpAPIScope) GetOptions() []TypesOption`
+`func (o *DhcpAPIScope) GetOptions() []TypesDHCPOption`
 
 GetOptions returns the Options field if non-nil, zero value otherwise.
 
 ### GetOptionsOk
 
-`func (o *DhcpAPIScope) GetOptionsOk() (*[]TypesOption, bool)`
+`func (o *DhcpAPIScope) GetOptionsOk() (*[]TypesDHCPOption, bool)`
 
 GetOptionsOk returns a tuple with the Options field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOptions
 
-`func (o *DhcpAPIScope) SetOptions(v []TypesOption)`
+`func (o *DhcpAPIScope) SetOptions(v []TypesDHCPOption)`
 
 SetOptions sets Options field to given value.
 

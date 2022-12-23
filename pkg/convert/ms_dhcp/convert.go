@@ -9,19 +9,19 @@ import (
 	"strconv"
 	"strings"
 
-	"beryju.io/gravity/pkg/instance"
-	"beryju.io/gravity/pkg/roles/dhcp"
-	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/api"
+	"beryju.io/gravity/pkg/extconfig"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
 type Converter struct {
-	*instance.RoleInstance
-	d  *dhcp.Role
+	a  *api.APIClient
 	in DHCPServer
+	l  *zap.Logger
 }
 
-func New(inst *instance.RoleInstance, input string) (*Converter, error) {
+func New(api *api.APIClient, input string) (*Converter, error) {
 	x, err := os.ReadFile(input)
 	if err != nil {
 		return nil, err
@@ -32,9 +32,9 @@ func New(inst *instance.RoleInstance, input string) (*Converter, error) {
 		return nil, err
 	}
 	return &Converter{
-		RoleInstance: inst,
-		d:            dhcp.New(inst),
-		in:           dhcps,
+		a:  api,
+		in: dhcps,
+		l:  extconfig.Get().Logger().Named("convert.ms_dhcp"),
 	}, nil
 }
 
@@ -44,14 +44,13 @@ func (c *Converter) Run(ctx context.Context) {
 	}
 }
 
-func (c *Converter) convertScope(sc Scope, ctx context.Context) {
+func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 	// Build CIDR
 	m := net.IPMask(net.ParseIP(sc.SubnetMask).To4())
 	ones, _ := m.Size()
 	_, cidr, err := net.ParseCIDR(fmt.Sprintf("%s/%d", sc.ScopeId, ones))
 	if err != nil {
-		c.Log().Warn("failed to parse cidr", zap.Error(err))
-		return
+		return errors.Wrap(err, "failed to parse CIDR")
 	}
 	// Build lease duration
 	// saved as days:hours:minutes
@@ -64,41 +63,49 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) {
 	// 	continue
 	// }
 	// dur += day * 24 * time.Hour
-	gscope := c.d.NewScope(sc.Name)
-	gscope.SubnetCIDR = cidr.String()
-	// gscope.DNS.
-	gscope.IPAM = map[string]string{
-		"type":  "internal",
-		"start": sc.StartRange,
-		"end":   sc.EndRange,
+	gscope := api.DhcpAPIScopesPutInput{
+		Default:    false,
+		SubnetCidr: cidr.String(),
+		Ipam: map[string]string{
+			"type":  "internal",
+			"start": sc.StartRange,
+			"end":   sc.EndRange,
+		},
+		Options: []api.TypesDHCPOption{},
 	}
 	for _, optv := range sc.OptionValues.OptionValue {
 		tag, err := strconv.Atoi(optv.OptionId)
 		if err != nil {
-			c.Log().Error("failed to convert optionID to int", zap.Error(err))
+			c.l.Error("failed to convert optionID to int", zap.Error(err))
 			continue
 		}
-		t := uint8(tag)
+		t := int32(tag)
 		v := optv.Value[0]
-		gscope.Options = append(gscope.Options, &types.Option{
-			Tag:   &t,
-			Value: &v,
+		gscope.Options = append(gscope.Options, api.TypesDHCPOption{
+			Tag:   *api.NewNullableInt32(&t),
+			Value: *api.NewNullableString(&v),
 		})
 	}
-	gscope.Put(ctx, 0)
+	_, err = c.a.RolesDhcpApi.DhcpPutScopes(ctx).Scope(sc.Name).DhcpAPIScopesPutInput(gscope).Execute()
+	if err != nil {
+		return err
+	}
 
 	for _, res := range sc.Reservations.Reservation {
-		l := c.convertReservation(gscope, res)
+		l := c.convertReservation(sc.Name, ctx, res)
 		if l != nil {
-			l.Put(ctx, 0)
+			c.l.Warn("failed to convert reservation", zap.Error(err))
+			continue
 		}
 	}
 	for _, l := range sc.Leases.Lease {
-		ll := c.convertLease(gscope, l)
+		ll := c.convertLease(sc.Name, ctx, l)
 		if ll != nil {
-			ll.Put(ctx, 0)
+			c.l.Warn("failed to convert lease", zap.Error(err))
+			continue
 		}
 	}
+	return nil
 }
 
 func (c *Converter) getIdentifier(clientId string) string {
@@ -108,23 +115,23 @@ func (c *Converter) getIdentifier(clientId string) string {
 	return strings.ReplaceAll(clientId, "-", "")
 }
 
-func (c *Converter) convertReservation(gs *dhcp.Scope, r Reservation) *dhcp.Lease {
-	lease := c.d.NewLease(c.getIdentifier(r.ClientId))
-	lease.Address = r.IPAddress
-	lease.Hostname = r.Name
-	lease.ScopeKey = gs.Name
-	lease.AddressLeaseTime = ""
-	return lease
+func (c *Converter) convertReservation(scope string, ctx context.Context, r Reservation) error {
+	lease := api.DhcpAPILeasesPutInput{
+		Address:  r.IPAddress,
+		Hostname: r.Name,
+	}
+	_, err := c.a.RolesDhcpApi.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(r.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
+	return err
 }
 
-func (c *Converter) convertLease(gs *dhcp.Scope, l Lease) *dhcp.Lease {
+func (c *Converter) convertLease(scope string, ctx context.Context, l Lease) error {
 	if l.HostName == "BAD_ADDRESS" {
 		return nil
 	}
-	lease := c.d.NewLease(c.getIdentifier(l.ClientId))
-	lease.Address = l.IPAddress
-	lease.Hostname = l.HostName
-	lease.ScopeKey = gs.Name
-	lease.AddressLeaseTime = ""
-	return lease
+	lease := api.DhcpAPILeasesPutInput{
+		Address:  l.IPAddress,
+		Hostname: l.HostName,
+	}
+	_, err := c.a.RolesDhcpApi.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(l.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
+	return err
 }

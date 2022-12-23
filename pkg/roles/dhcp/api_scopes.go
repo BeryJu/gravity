@@ -14,13 +14,13 @@ import (
 )
 
 type APIScope struct {
-	Name       string            `json:"scope" required:"true"`
-	SubnetCIDR string            `json:"subnetCidr" required:"true"`
-	Default    bool              `json:"default" required:"true"`
-	Options    []*types.Option   `json:"options" required:"true"`
-	TTL        int64             `json:"ttl" required:"true"`
-	IPAM       map[string]string `json:"ipam" required:"true"`
-	DNS        *ScopeDNS         `json:"dns"`
+	Name       string              `json:"scope" required:"true"`
+	SubnetCIDR string              `json:"subnetCidr" required:"true"`
+	Default    bool                `json:"default" required:"true"`
+	Options    []*types.DHCPOption `json:"options" required:"true"`
+	TTL        int64               `json:"ttl" required:"true"`
+	IPAM       map[string]string   `json:"ipam" required:"true"`
+	DNS        *ScopeDNS           `json:"dns"`
 }
 type APIScopesGetOutput struct {
 	Scopes []*APIScope `json:"scopes" required:"true"`
@@ -70,12 +70,12 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 type APIScopesPutInput struct {
 	Name string `query:"scope" required:"true" maxLength:"255"`
 
-	SubnetCIDR string            `json:"subnetCidr" required:"true" maxLength:"40"`
-	Default    bool              `json:"default" required:"true"`
-	Options    []*types.Option   `json:"options" required:"true"`
-	TTL        int64             `json:"ttl" required:"true"`
-	IPAM       map[string]string `json:"ipam"`
-	DNS        *ScopeDNS         `json:"dns"`
+	SubnetCIDR string              `json:"subnetCidr" required:"true" maxLength:"40"`
+	Default    bool                `json:"default" required:"true"`
+	Options    []*types.DHCPOption `json:"options" required:"true"`
+	TTL        int64               `json:"ttl" required:"true"`
+	IPAM       map[string]string   `json:"ipam"`
+	DNS        *ScopeDNS           `json:"dns"`
 }
 
 func (r *Role) APIScopesPut() usecase.Interactor {

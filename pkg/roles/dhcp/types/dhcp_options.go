@@ -24,7 +24,7 @@ var TagMap map[OptionTagName]uint8 = map[OptionTagName]uint8{
 	TagNameTFTPserver: dhcpv4.OptionTFTPServerName.Code(),
 }
 
-type Option struct {
+type DHCPOption struct {
 	Tag     *uint8   `json:"tag"`
 	TagName string   `json:"tagName"`
 	Value   *string  `json:"value"`

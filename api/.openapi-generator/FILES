@@ -89,8 +89,8 @@ docs/TsdbAPIRoleConfigOutput.md
 docs/TsdbRoleConfig.md
 docs/TypesAPIMetricsGetOutput.md
 docs/TypesAPIMetricsRecord.md
+docs/TypesDHCPOption.md
 docs/TypesOIDCConfig.md
-docs/TypesOption.md
 git_push.sh
 go.mod
 go.sum
@@ -161,7 +161,7 @@ model_tsdb_api_role_config_output.go
 model_tsdb_role_config.go
 model_types_api_metrics_get_output.go
 model_types_api_metrics_record.go
+model_types_dhcp_option.go
 model_types_oidc_config.go
-model_types_option.go
 response.go
 utils.go

@@ -26,12 +26,12 @@ type ScopeDNS struct {
 type Scope struct {
 	Name string `json:"-"`
 
-	SubnetCIDR string            `json:"subnetCidr"`
-	Default    bool              `json:"default"`
-	Options    []*types.Option   `json:"options"`
-	TTL        int64             `json:"ttl"`
-	IPAM       map[string]string `json:"ipam"`
-	DNS        *ScopeDNS         `json:"dns"`
+	SubnetCIDR string              `json:"subnetCidr"`
+	Default    bool                `json:"default"`
+	Options    []*types.DHCPOption `json:"options"`
+	TTL        int64               `json:"ttl"`
+	IPAM       map[string]string   `json:"ipam"`
+	DNS        *ScopeDNS           `json:"dns"`
 
 	cidr    netip.Prefix
 	etcdKey string

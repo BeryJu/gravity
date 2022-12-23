@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"beryju.io/gravity/api"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var importCmd = &cobra.Command{
@@ -18,18 +18,18 @@ var importCmd = &cobra.Command{
 		for _, path := range args {
 			cont, err := os.ReadFile(path)
 			if err != nil {
-				fmt.Println(err.Error())
+				logger.Error("failed to read import", zap.Error(err))
 				continue
 			}
 			var entries api.ApiAPIImportInput
 			err = json.Unmarshal(cont, &entries)
 			if err != nil {
-				fmt.Println(err.Error())
+				logger.Error("failed to unmarshal", zap.Error(err))
 				continue
 			}
 			_, err = apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(entries).Execute()
 			if err != nil {
-				fmt.Println(err.Error())
+				logger.Error("failed to import", zap.Error(err))
 				continue
 			}
 		}

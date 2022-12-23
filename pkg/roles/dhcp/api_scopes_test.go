@@ -14,7 +14,7 @@ func testScope() dhcp.Scope {
 	return dhcp.Scope{
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
-		Options: []*types.Option{
+		Options: []*types.DHCPOption{
 			{
 				TagName: types.TagNameRouter,
 				Value:   types.OptionValue("10.200.0.1/24"),
@@ -59,7 +59,7 @@ func TestAPIScopesPut(t *testing.T) {
 		Name:       name,
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
-		Options: []*types.Option{
+		Options: []*types.DHCPOption{
 			{
 				TagName: types.TagNameRouter,
 				Value:   types.OptionValue("10.200.0.1/24"),
@@ -83,7 +83,7 @@ func TestAPIScopesPut(t *testing.T) {
 		dhcp.Scope{
 			SubnetCIDR: "10.200.0.0/24",
 			Default:    true,
-			Options: []*types.Option{
+			Options: []*types.DHCPOption{
 				{
 					TagName: types.TagNameRouter,
 					Value:   types.OptionValue("10.200.0.1/24"),

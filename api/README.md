@@ -202,8 +202,8 @@ Class | Method | HTTP request | Description
  - [TsdbRoleConfig](docs/TsdbRoleConfig.md)
  - [TypesAPIMetricsGetOutput](docs/TypesAPIMetricsGetOutput.md)
  - [TypesAPIMetricsRecord](docs/TypesAPIMetricsRecord.md)
+ - [TypesDHCPOption](docs/TypesDHCPOption.md)
  - [TypesOIDCConfig](docs/TypesOIDCConfig.md)
- - [TypesOption](docs/TypesOption.md)
 
 
 ## Documentation For Authorization

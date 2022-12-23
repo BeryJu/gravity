@@ -19,7 +19,7 @@ type DhcpAPIScope struct {
 	Default    bool              `json:"default"`
 	Dns        *DhcpScopeDNS     `json:"dns,omitempty"`
 	Ipam       map[string]string `json:"ipam"`
-	Options    []TypesOption     `json:"options"`
+	Options    []TypesDHCPOption `json:"options"`
 	Scope      string            `json:"scope"`
 	SubnetCidr string            `json:"subnetCidr"`
 	Ttl        int32             `json:"ttl"`
@@ -29,7 +29,7 @@ type DhcpAPIScope struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesOption, scope string, subnetCidr string, ttl int32) *DhcpAPIScope {
+func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32) *DhcpAPIScope {
 	this := DhcpAPIScope{}
 	this.Default = default_
 	this.Ipam = ipam
@@ -131,10 +131,10 @@ func (o *DhcpAPIScope) SetIpam(v map[string]string) {
 }
 
 // GetOptions returns the Options field value
-// If the value is explicit nil, the zero value for []TypesOption will be returned
-func (o *DhcpAPIScope) GetOptions() []TypesOption {
+// If the value is explicit nil, the zero value for []TypesDHCPOption will be returned
+func (o *DhcpAPIScope) GetOptions() []TypesDHCPOption {
 	if o == nil {
-		var ret []TypesOption
+		var ret []TypesDHCPOption
 		return ret
 	}
 
@@ -144,7 +144,7 @@ func (o *DhcpAPIScope) GetOptions() []TypesOption {
 // GetOptionsOk returns a tuple with the Options field value
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *DhcpAPIScope) GetOptionsOk() ([]TypesOption, bool) {
+func (o *DhcpAPIScope) GetOptionsOk() ([]TypesDHCPOption, bool) {
 	if o == nil || o.Options == nil {
 		return nil, false
 	}
@@ -152,7 +152,7 @@ func (o *DhcpAPIScope) GetOptionsOk() ([]TypesOption, bool) {
 }
 
 // SetOptions sets field value
-func (o *DhcpAPIScope) SetOptions(v []TypesOption) {
+func (o *DhcpAPIScope) SetOptions(v []TypesDHCPOption) {
 	o.Options = v
 }
 

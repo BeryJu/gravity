@@ -11,12 +11,14 @@ import (
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var apiUrl string
 var apiToken string
 
 var apiClient *api.APIClient
+var logger *zap.Logger
 
 var cliCmd = &cobra.Command{
 	Use:   "cli",
@@ -24,7 +26,7 @@ var cliCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		url, err := url.Parse(apiUrl)
 		if err != nil {
-			fmt.Println(err.Error())
+			logger.Error("failed to parse API URL", zap.Error(err))
 			return
 		}
 
@@ -59,6 +61,7 @@ func init() {
 		}
 		defUrl = fmt.Sprintf("unix://%s/gravity.sock", cwd)
 	}
+	logger = extconfig.Get().Logger().Named("cli")
 	cliCmd.PersistentFlags().StringVarP(&apiUrl, "host", "s", defUrl, "API Host")
 	cliCmd.PersistentFlags().StringVarP(&apiToken, "token", "t", "", "API Token")
 	rootCmd.AddCommand(cliCmd)
