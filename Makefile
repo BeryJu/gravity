@@ -40,7 +40,6 @@ gen-clean:
 
 gen-tag:
 	cd ${PWD}
-	git add .
 	git commit -m "tag version v${VERSION}"
 	git tag v${VERSION}
 
@@ -54,10 +53,11 @@ gen-client-go:
 		-o /local/api \
 		-c /local/api/config.yaml
 	rm -f ./api/.travis.yml ./api/go.mod ./api/go.sum
-	cd api
+	cd ./api/
 	go get
 	go fmt .
 	go mod tidy
+	git add .
 
 gen-client-ts:
 	docker run \
