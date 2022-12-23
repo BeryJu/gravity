@@ -20,7 +20,7 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 		}
 	}
 
-	match.put(req.Context, match.scope.TTL)
+	match.Put(req.Context, match.scope.TTL)
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
 

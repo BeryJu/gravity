@@ -41,13 +41,15 @@ type Scope struct {
 	log     *zap.Logger
 }
 
-func (r *Role) newScope(name string) *Scope {
+func (r *Role) NewScope(name string) *Scope {
 	return &Scope{
 		Name: name,
 		inst: r.i,
 		role: r,
 		TTL:  int64((7 * 24 * time.Hour).Seconds()),
 		log:  r.log.With(zap.String("scope", name)),
+		DNS:  &ScopeDNS{},
+		IPAM: make(map[string]string),
 	}
 }
 
@@ -55,7 +57,7 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 
-	s := r.newScope(name)
+	s := r.NewScope(name)
 	err := json.Unmarshal(raw.Value, &s)
 	if err != nil {
 		return nil, err
@@ -159,7 +161,7 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 	return lease
 }
 
-func (s *Scope) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
+func (s *Scope) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&s)
 	if err != nil {
 		return err

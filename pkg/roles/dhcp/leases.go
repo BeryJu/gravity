@@ -35,7 +35,7 @@ type Lease struct {
 	log     *zap.Logger
 }
 
-func (r *Role) newLease(identifier string) *Lease {
+func (r *Role) NewLease(identifier string) *Lease {
 	return &Lease{
 		inst:       r.i,
 		Identifier: identifier,
@@ -49,7 +49,7 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 		types.KeyLeases,
 	).Prefix(true).String()
 	identifier := strings.TrimPrefix(string(raw.Key), prefix)
-	l := r.newLease(identifier)
+	l := r.NewLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
 		return l, err
@@ -66,7 +66,7 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	return l, nil
 }
 
-func (l *Lease) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
+func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&l)
 	if err != nil {
 		return err

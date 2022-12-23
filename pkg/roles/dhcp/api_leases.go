@@ -58,7 +58,7 @@ type APILeasesPutInput struct {
 
 func (r *Role) APILeasesPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesPutInput, output *struct{}) error {
-		l := r.newLease(input.Identifier)
+		l := r.NewLease(input.Identifier)
 		l.Address = input.Address
 		l.Hostname = input.Hostname
 		l.AddressLeaseTime = input.AddressLeaseTime
@@ -71,7 +71,7 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 			return status.InvalidArgument
 		}
 		l.scope = scope
-		err := l.put(ctx, -1)
+		err := l.Put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

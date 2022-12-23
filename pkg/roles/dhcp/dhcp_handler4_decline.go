@@ -25,7 +25,7 @@ func (r *Role) HandleDHCPDecline4(req *Request4) *dhcpv4.DHCPv4 {
 		return nil
 	}
 	// since there's no further requests to confirm this lease, save it directly with the TTL of the scope
-	err := match.put(req.Context, match.scope.TTL)
+	err := match.Put(req.Context, match.scope.TTL)
 	if err != nil {
 		r.log.Warn("failed to put lease", zap.Error(err))
 	}

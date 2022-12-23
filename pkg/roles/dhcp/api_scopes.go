@@ -83,7 +83,7 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		if input.Name == "" {
 			return status.InvalidArgument
 		}
-		s := r.newScope(input.Name)
+		s := r.NewScope(input.Name)
 		s.SubnetCIDR = input.SubnetCIDR
 		s.Default = input.Default
 		s.Options = input.Options
@@ -97,7 +97,7 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		}
 		s.cidr = cidr
 
-		err = s.put(ctx, -1)
+		err = s.Put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
