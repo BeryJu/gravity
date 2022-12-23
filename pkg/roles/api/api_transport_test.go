@@ -4,12 +4,11 @@ import (
 	"encoding/base64"
 	"testing"
 
-	instanceTypes "beryju.io/gravity/pkg/instance/types"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/api"
-	"beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,20 +23,17 @@ func TestExport(t *testing.T) {
 
 	var output api.APIExportOutput
 
+	inst.KV().Delete(
+		ctx,
+		inst.KV().Key().Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
 	_, err := extconfig.Get().EtcdClient().Put(
 		tests.Context(),
 		"/foo",
 		"bar",
 	)
 	assert.NoError(t, err)
-	inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			instanceTypes.KeyInstance,
-			instanceTypes.KeyRole,
-			types.KeyRole,
-		).String(),
-	)
 
 	err = role.APIClusterExport().Interact(ctx, struct{}{}, &output)
 	assert.NoError(t, err)
