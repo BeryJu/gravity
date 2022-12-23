@@ -53,7 +53,7 @@ gen-client-go:
 		-o /local/api \
 		-c /local/api/config.yaml
 	rm -f ./api/.travis.yml ./api/go.mod ./api/go.sum
-	cd ./api/
+	cd ${PWD}/api/
 	go get
 	go fmt .
 	go mod tidy
@@ -73,12 +73,12 @@ gen-client-ts:
 	cd gen-ts-api && npm i
 
 gen-client-ts-update: gen-client-ts
-	cd gen-ts-api
+	cd ${PWD}/gen-ts-api
 	npm publish
-	cd ../web
+	cd ${PWD}/web
 	npm i gravity-api@${VERSION}
-	git add package*.json
 	npm version ${VERSION} || true
+	git add package*.json
 
 gen: gen-build gen-clean gen-client-go gen-client-ts-update gen-tag
 
