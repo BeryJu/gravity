@@ -44,6 +44,9 @@ gen-tag:
 	git tag v${VERSION}
 
 gen-client-go:
+	cd ${PWD}/api
+	rm *.go
+	cd ${PWD}
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
@@ -52,8 +55,8 @@ gen-client-go:
 		-g go \
 		-o /local/api \
 		-c /local/api/config.yaml
-	rm -f ./api/.travis.yml ./api/go.mod ./api/go.sum
 	cd ${PWD}/api/
+	rm -f .travis.yml go.mod go.sum
 	go get
 	go fmt .
 	go mod tidy
