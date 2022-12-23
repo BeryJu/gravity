@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 
-	"beryju.io/gravity/pkg/instance"
 	"github.com/spf13/cobra"
 )
 
@@ -13,13 +13,12 @@ var exportCmd = &cobra.Command{
 	Use:   "export [file]",
 	Short: "Output entire database into JSON file",
 	Run: func(cmd *cobra.Command, args []string) {
-		rootInst := instance.New()
-		entries, err := rootInst.Export()
+		exp, _, err := apiClient.RolesApiApi.ApiExport(context.Background()).Execute()
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 			return
 		}
-		raw, err := json.Marshal(entries)
+		raw, err := json.Marshal(exp)
 		if err != nil {
 			fmt.Println(err.Error())
 			return

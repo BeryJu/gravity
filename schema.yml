@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.3.0
+  version: 0.3.1
 paths:
   /api/v1/auth/config:
     get:
@@ -236,6 +236,45 @@ paths:
       summary: Backup status
       tags:
       - roles/backup
+  /api/v1/cluster/export:
+    get:
+      operationId: api.export
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIExportOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Export Cluster
+      tags:
+      - roles/api
+  /api/v1/cluster/import:
+    post:
+      operationId: api.import
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIImportInput'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Import Cluster
+      tags:
+      - roles/api
   /api/v1/dhcp/scopes:
     delete:
       operationId: dhcp.delete_scopes
@@ -1205,6 +1244,22 @@ paths:
       - roles/api
 components:
   schemas:
+    ApiAPIExportOutput:
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/ApiAPITransportEntry'
+          nullable: true
+          type: array
+      type: object
+    ApiAPIImportInput:
+      properties:
+        entries:
+          items:
+            $ref: '#/components/schemas/ApiAPITransportEntry'
+          nullable: true
+          type: array
+      type: object
     ApiAPIMember:
       properties:
         id:
@@ -1245,6 +1300,13 @@ components:
           $ref: '#/components/schemas/ApiRoleConfig'
       required:
       - config
+      type: object
+    ApiAPITransportEntry:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
       type: object
     ApiRoleConfig:
       properties:

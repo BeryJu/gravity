@@ -36,11 +36,10 @@ func TestAPIScopesPut(t *testing.T) {
 	inst := rootInst.ForRole("discovery")
 	role := discovery.New(inst)
 
-	var output struct{}
 	name := tests.RandomString()
 	assert.NoError(t, role.APISubnetsPut().Interact(tests.Context(), discovery.APISubnetsPutInput{
 		Name: name,
-	}, &output))
+	}, &struct{}{}))
 
 	tests.AssertEtcd(
 		t,

@@ -30,10 +30,9 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	var output struct{}
 	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), monitoring.APIRoleConfigInput{
 		Config: monitoring.RoleConfig{
 			Port: 1234,
 		},
-	}, &output))
+	}, &struct{}{}))
 }

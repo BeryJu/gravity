@@ -37,7 +37,6 @@ func TestAPIZonesPut(t *testing.T) {
 	inst := rootInst.ForRole("dns")
 	role := dns.New(inst)
 
-	var output struct{}
 	name := tests.RandomString() + "."
 	assert.NoError(t, role.APIZonesPut().Interact(tests.Context(), dns.APIZonesPutInput{
 		Name:          strings.TrimSuffix(name, "."),
@@ -47,7 +46,7 @@ func TestAPIZonesPut(t *testing.T) {
 				"type": "etcd",
 			},
 		},
-	}, &output))
+	}, &struct{}{}))
 
 	tests.AssertEtcd(
 		t,

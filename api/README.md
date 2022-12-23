@@ -83,11 +83,13 @@ Class | Method | HTTP request | Description
 *RolesApiApi* | [**ApiAuthConfig**](docs/RolesApiApi.md#apiauthconfig) | **Get** /api/v1/auth/config | API Users
 *RolesApiApi* | [**ApiDeleteTokens**](docs/RolesApiApi.md#apideletetokens) | **Delete** /api/v1/auth/tokens | Tokens
 *RolesApiApi* | [**ApiDeleteUsers**](docs/RolesApiApi.md#apideleteusers) | **Delete** /api/v1/auth/users | API Users
+*RolesApiApi* | [**ApiExport**](docs/RolesApiApi.md#apiexport) | **Get** /api/v1/cluster/export | Export Cluster
 *RolesApiApi* | [**ApiGetMembers**](docs/RolesApiApi.md#apigetmembers) | **Get** /api/v1/etcd/members | Etcd members
 *RolesApiApi* | [**ApiGetMetricsMemory**](docs/RolesApiApi.md#apigetmetricsmemory) | **Get** /api/v1/system/metrics/memory | System Metrics
 *RolesApiApi* | [**ApiGetRoleConfig**](docs/RolesApiApi.md#apigetroleconfig) | **Get** /api/v1/roles/api | API role config
 *RolesApiApi* | [**ApiGetTokens**](docs/RolesApiApi.md#apigettokens) | **Get** /api/v1/auth/tokens | Tokens
 *RolesApiApi* | [**ApiGetUsers**](docs/RolesApiApi.md#apigetusers) | **Get** /api/v1/auth/users | API Users
+*RolesApiApi* | [**ApiImport**](docs/RolesApiApi.md#apiimport) | **Post** /api/v1/cluster/import | Import Cluster
 *RolesApiApi* | [**ApiLoginUser**](docs/RolesApiApi.md#apiloginuser) | **Post** /api/v1/auth/login | API Users
 *RolesApiApi* | [**ApiPutRoleConfig**](docs/RolesApiApi.md#apiputroleconfig) | **Post** /api/v1/roles/api | API role config
 *RolesApiApi* | [**ApiPutTokens**](docs/RolesApiApi.md#apiputtokens) | **Post** /api/v1/auth/tokens | Tokens
@@ -133,12 +135,15 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [ApiAPIExportOutput](docs/ApiAPIExportOutput.md)
+ - [ApiAPIImportInput](docs/ApiAPIImportInput.md)
  - [ApiAPIMember](docs/ApiAPIMember.md)
  - [ApiAPIMemberJoinInput](docs/ApiAPIMemberJoinInput.md)
  - [ApiAPIMemberJoinOutput](docs/ApiAPIMemberJoinOutput.md)
  - [ApiAPIMembersOutput](docs/ApiAPIMembersOutput.md)
  - [ApiAPIRoleConfigInput](docs/ApiAPIRoleConfigInput.md)
  - [ApiAPIRoleConfigOutput](docs/ApiAPIRoleConfigOutput.md)
+ - [ApiAPITransportEntry](docs/ApiAPITransportEntry.md)
  - [ApiRoleConfig](docs/ApiRoleConfig.md)
  - [AuthAPIConfigOutput](docs/AuthAPIConfigOutput.md)
  - [AuthAPILoginInput](docs/AuthAPILoginInput.md)

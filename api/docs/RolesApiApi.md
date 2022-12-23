@@ -7,11 +7,13 @@ Method | HTTP request | Description
 [**ApiAuthConfig**](RolesApiApi.md#ApiAuthConfig) | **Get** /api/v1/auth/config | API Users
 [**ApiDeleteTokens**](RolesApiApi.md#ApiDeleteTokens) | **Delete** /api/v1/auth/tokens | Tokens
 [**ApiDeleteUsers**](RolesApiApi.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
+[**ApiExport**](RolesApiApi.md#ApiExport) | **Get** /api/v1/cluster/export | Export Cluster
 [**ApiGetMembers**](RolesApiApi.md#ApiGetMembers) | **Get** /api/v1/etcd/members | Etcd members
 [**ApiGetMetricsMemory**](RolesApiApi.md#ApiGetMetricsMemory) | **Get** /api/v1/system/metrics/memory | System Metrics
 [**ApiGetRoleConfig**](RolesApiApi.md#ApiGetRoleConfig) | **Get** /api/v1/roles/api | API role config
 [**ApiGetTokens**](RolesApiApi.md#ApiGetTokens) | **Get** /api/v1/auth/tokens | Tokens
 [**ApiGetUsers**](RolesApiApi.md#ApiGetUsers) | **Get** /api/v1/auth/users | API Users
+[**ApiImport**](RolesApiApi.md#ApiImport) | **Post** /api/v1/cluster/import | Import Cluster
 [**ApiLoginUser**](RolesApiApi.md#ApiLoginUser) | **Post** /api/v1/auth/login | API Users
 [**ApiPutRoleConfig**](RolesApiApi.md#ApiPutRoleConfig) | **Post** /api/v1/roles/api | API role config
 [**ApiPutTokens**](RolesApiApi.md#ApiPutTokens) | **Post** /api/v1/auth/tokens | Tokens
@@ -188,6 +190,65 @@ Name | Type | Description  | Notes
 ### Return type
 
  (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApiExport
+
+> ApiAPIExportOutput ApiExport(ctx).Execute()
+
+Export Cluster
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ApiExport(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiExport``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ApiExport`: ApiAPIExportOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiExport`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiApiExportRequest struct via the builder pattern
+
+
+### Return type
+
+[**ApiAPIExportOutput**](ApiAPIExportOutput.md)
 
 ### Authorization
 
@@ -491,6 +552,68 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApiImport
+
+> ApiImport(ctx).ApiAPIImportInput(apiAPIImportInput).Execute()
+
+Import Cluster
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    apiAPIImportInput := *openapiclient.NewApiAPIImportInput() // ApiAPIImportInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(apiAPIImportInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiImport``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiApiImportRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiAPIImportInput** | [**ApiAPIImportInput**](ApiAPIImportInput.md) |  | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

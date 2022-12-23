@@ -21,10 +21,9 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	role := getRole()
 	defer role.Stop()
 
-	var output struct{}
 	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), backup.APIRoleConfigInput{
 		Config: backup.RoleConfig{
 			Endpoint: "foo",
 		},
-	}, &output))
+	}, &struct{}{}))
 }

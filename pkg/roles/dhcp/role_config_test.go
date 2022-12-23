@@ -30,10 +30,9 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	var output struct{}
 	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dhcp.APIRoleConfigInput{
 		Config: dhcp.RoleConfig{
 			Port: 613,
 		},
-	}, &output))
+	}, &struct{}{}))
 }

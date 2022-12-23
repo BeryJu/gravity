@@ -3,6 +3,18 @@
         "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;debug;tsdb",
         "ETCD_ENDPOINT": "localhost:2379",
         "DEBUG": "true",
-        "INSTANCE_IP": "0.0.0.0",
+        "INSTANCE_IP": "0.0.0.0"
     },
+    "gitlens.autolinks": [
+        {
+            "alphanumeric": true,
+            "prefix": "#<num>",
+            "url": "https://github.com/beryju/gravity/issues/<num>",
+            "ignoreCase": false
+        }
+    ],
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifierEnding": "index",
+    "typescript.tsdk": "./web/node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true
 }

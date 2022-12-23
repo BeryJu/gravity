@@ -44,11 +44,10 @@ func TestAPIUsersPut(t *testing.T) {
 	name := tests.RandomString()
 	password := tests.RandomString()
 
-	var output struct{}
 	assert.NoError(t, prov.APIUsersPut().Interact(tests.Context(), auth.APIUsersPutInput{
 		Username: name,
 		Password: password,
-	}, &output))
+	}, &struct{}{}))
 
 	_, err := inst.KV().Get(
 		tests.Context(),

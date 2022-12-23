@@ -54,7 +54,6 @@ func TestAPIScopesPut(t *testing.T) {
 	inst := rootInst.ForRole("dhcp")
 	role := dhcp.New(inst)
 
-	var output struct{}
 	name := tests.RandomString()
 	assert.NoError(t, role.APIScopesPut().Interact(tests.Context(), dhcp.APIScopesPutInput{
 		Name:       name,
@@ -71,7 +70,7 @@ func TestAPIScopesPut(t *testing.T) {
 			"range_end":   "10.200.0.150",
 		},
 		DNS: &dhcp.ScopeDNS{},
-	}, &output))
+	}, &struct{}{}))
 
 	tests.AssertEtcd(
 		t,
