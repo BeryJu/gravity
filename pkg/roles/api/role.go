@@ -3,7 +3,11 @@ package api
 import (
 	"context"
 	"encoding/base64"
+	"errors"
+	"net"
 	"net/http"
+	"os"
+	"path"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -18,25 +22,31 @@ import (
 	"go.uber.org/zap"
 )
 
+const VAR_RUN = "/var/run"
+const GRAVITY_SOCK = "gravity.sock"
+
 type Role struct {
-	m        *mux.Router
-	oapi     *web.Service
-	log      *zap.Logger
-	i        roles.Instance
-	ctx      context.Context
-	cfg      *RoleConfig
-	sessions sessions.Store
-	server   *http.Server
-	auth     *auth.AuthProvider
+	m            *mux.Router
+	oapi         *web.Service
+	log          *zap.Logger
+	i            roles.Instance
+	ctx          context.Context
+	cfg          *RoleConfig
+	sessions     sessions.Store
+	httpServer   http.Server
+	socketServer http.Server
+	auth         *auth.AuthProvider
 }
 
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
 	r := &Role{
-		log: instance.Log(),
-		i:   instance,
-		m:   mux,
-		cfg: &RoleConfig{},
+		log:          instance.Log(),
+		i:            instance,
+		m:            mux,
+		cfg:          &RoleConfig{},
+		httpServer:   http.Server{},
+		socketServer: http.Server{},
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
 	r.m.Use(NewRecoverMiddleware(r.log))
@@ -51,9 +61,6 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 	})
-	r.server = &http.Server{
-		Handler: r.m,
-	}
 	return r
 }
 
@@ -88,15 +95,8 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		r.auth.ConfigureOpenIDConnect(r.ctx, r.cfg.OIDC)
 	}
 	r.prepareOpenAPI(ctx)
-	listen := extconfig.Get().Listen(r.cfg.Port)
-	r.log.Info("starting API Server", zap.String("listen", listen))
-	r.server.Addr = listen
-	go func() {
-		err := r.server.ListenAndServe()
-		if err != nil && err != http.ErrServerClosed {
-			r.log.Warn("failed to listen", zap.Error(err))
-		}
-	}()
+	go r.ListenAndServeHTTP()
+	go r.ListenAndServeSocket()
 	return nil
 }
 
@@ -120,13 +120,56 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	}))
 }
 
+func (r *Role) ListenAndServeHTTP() {
+	r.httpServer.Handler = r.m
+	listen := extconfig.Get().Listen(r.cfg.Port)
+	r.log.Info("starting API Server", zap.String("listen", listen))
+	r.httpServer.Addr = listen
+	err := r.httpServer.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		r.log.Warn("failed to listen", zap.Error(err))
+	}
+}
+
+func (r *Role) ListenAndServeSocket() {
+	stat, err := os.Stat(VAR_RUN)
+	if errors.Is(err, os.ErrNotExist) || !stat.IsDir() {
+		r.log.Info("/var/run doesn't exist or is not a dir, not starting socket API server")
+		return
+	}
+	r.socketServer.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		ctx := context.WithValue(req.Context(), types.RequestSession, &sessions.Session{
+			Values: map[interface{}]interface{}{
+				types.SessionKeyUser: auth.User{
+					Username: "gravity-socket",
+				},
+			},
+		})
+		reqAuth := req.WithContext(ctx)
+		r.m.ServeHTTP(w, reqAuth)
+	})
+	socketPath := path.Join(VAR_RUN, GRAVITY_SOCK)
+	if extconfig.Get().Debug {
+		socketPath = path.Join("./", GRAVITY_SOCK)
+	}
+	unixListener, err := net.Listen("unix", socketPath)
+	if err != nil {
+		r.log.Warn("failed to listen on socket", zap.Error(err))
+		return
+	}
+	r.log.Info("starting API Server (socket)", zap.String("listen", socketPath))
+	err = r.socketServer.Serve(unixListener)
+	if err != nil && err != http.ErrServerClosed {
+		r.log.Warn("failed to listen", zap.Error(err))
+	}
+}
+
 func (r *Role) Schema(ctx context.Context) *openapi3.Spec {
 	r.prepareOpenAPI(ctx)
 	return r.oapi.OpenAPICollector.Reflector().Spec
 }
 
 func (r *Role) Stop() {
-	if r.server != nil {
-		r.server.Shutdown(r.ctx)
-	}
+	r.httpServer.Shutdown(r.ctx)
+	r.socketServer.Shutdown(r.ctx)
 }

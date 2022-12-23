@@ -3,3 +3,4 @@ gen-ts-api/
 coverage.txt
 coverage.html
 *.pcap
+*.sock

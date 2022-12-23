@@ -39,8 +39,11 @@ func (sw *sessionWriter) Write(data []byte) (int, error) {
 func (r *Role) SessionMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, re *http.Request) {
 		session, _ := r.sessions.Get(re, types.SessionName)
-		c := context.WithValue(re.Context(), types.RequestSession, session)
-		req := re.Clone(c)
+		c := re.Context()
+		if c.Value(types.RequestSession) == nil {
+			c = context.WithValue(c, types.RequestSession, session)
+		}
+		req := re.WithContext(c)
 
 		sw := &sessionWriter{
 			w:       w,
