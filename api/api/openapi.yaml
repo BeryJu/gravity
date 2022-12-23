@@ -1,0 +1,2506 @@
+openapi: 3.0.3
+info:
+  title: gravity
+  version: 0.2.11
+servers:
+- url: /
+paths:
+  /api/v1/auth/config:
+    get:
+      operationId: api.auth_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPIConfigOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/login:
+    post:
+      operationId: api.login_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthAPILoginInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPILoginOutput'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/me:
+    get:
+      operationId: api.users_me
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPIMeOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/auth/tokens:
+    delete:
+      operationId: api.delete_tokens
+      parameters:
+      - explode: true
+        in: query
+        name: key
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
+      tags:
+      - roles/api
+    get:
+      operationId: api.get_tokens
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPITokensGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_tokens
+      parameters:
+      - explode: true
+        in: query
+        name: username
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPITokensPutOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Tokens
+      tags:
+      - roles/api
+  /api/v1/auth/users:
+    delete:
+      operationId: api.delete_users
+      parameters:
+      - explode: true
+        in: query
+        name: username
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+    get:
+      operationId: api.get_users
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthAPIUsersGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_users
+      parameters:
+      - explode: true
+        in: query
+        name: username
+        required: true
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthAPIUsersPutInput'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API Users
+      tags:
+      - roles/api
+  /api/v1/backup/start:
+    post:
+      operationId: backup.start
+      parameters:
+      - explode: true
+        in: query
+        name: wait
+        required: true
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupBackupStatus'
+          description: OK
+      summary: Backup start
+      tags:
+      - roles/backup
+  /api/v1/backup/status:
+    get:
+      operationId: backup.status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupAPIBackupStatusOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Backup status
+      tags:
+      - roles/backup
+  /api/v1/dhcp/scopes:
+    delete:
+      operationId: dhcp.delete_scopes
+      parameters:
+      - explode: true
+        in: query
+        name: scope
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+    get:
+      operationId: dhcp.get_scopes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpAPIScopesGetOutput'
+          description: OK
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+    post:
+      operationId: dhcp.put_scopes
+      parameters:
+      - explode: true
+        in: query
+        name: scope
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpAPIScopesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+  /api/v1/dhcp/scopes/leases:
+    delete:
+      operationId: dhcp.delete_leases
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: scope
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
+    get:
+      operationId: dhcp.get_leases
+      parameters:
+      - explode: true
+        in: query
+        name: scope
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpAPILeasesGetOutput'
+          description: OK
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
+    post:
+      operationId: dhcp.put_leases
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: scope
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpAPILeasesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
+  /api/v1/dhcp/scopes/leases/wol:
+    post:
+      operationId: dhcp.wol_leases
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: scope
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Leases
+      tags:
+      - roles/dhcp
+  /api/v1/discovery/devices:
+    get:
+      operationId: discovery.get_devices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryAPIDevicesGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery devices
+      tags:
+      - roles/discovery
+  /api/v1/discovery/devices/apply:
+    post:
+      operationId: discovery.apply_device
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: true
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryAPIDevicesApplyInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Apply Discovered devices
+      tags:
+      - roles/discovery
+  /api/v1/discovery/devices/delete:
+    delete:
+      operationId: discovery.delete_devices
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery devices
+      tags:
+      - roles/discovery
+  /api/v1/discovery/subnets:
+    delete:
+      operationId: discovery.delete_subnets
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery Subnets
+      tags:
+      - roles/discovery
+    get:
+      operationId: discovery.get_subnets
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryAPISubnetsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery subnets
+      tags:
+      - roles/discovery
+    post:
+      operationId: discovery.put_subnets
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryAPISubnetsPutInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery Subnets
+      tags:
+      - roles/discovery
+  /api/v1/discovery/subnets/start:
+    post:
+      operationId: discovery.subnet_start
+      parameters:
+      - explode: true
+        in: query
+        name: identifier
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery Subnets
+      tags:
+      - roles/discovery
+  /api/v1/dns/metrics:
+    get:
+      operationId: dns.get_metrics
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Metrics
+      tags:
+      - roles/dns
+  /api/v1/dns/zones:
+    delete:
+      operationId: dns.delete_zones
+      parameters:
+      - explode: true
+        in: query
+        name: zone
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Zones
+      tags:
+      - roles/dns
+    get:
+      operationId: dns.get_zones
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsAPIZonesGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Zones
+      tags:
+      - roles/dns
+    post:
+      operationId: dns.put_zones
+      parameters:
+      - explode: true
+        in: query
+        name: zone
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnsAPIZonesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Zones
+      tags:
+      - roles/dns
+  /api/v1/dns/zones/records:
+    delete:
+      operationId: dns.delete_records
+      parameters:
+      - explode: true
+        in: query
+        name: zone
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: hostname
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: uid
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: type
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Records
+      tags:
+      - roles/dns
+    get:
+      operationId: dns.get_records
+      parameters:
+      - explode: true
+        in: query
+        name: zone
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsAPIRecordsGetOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Records
+      tags:
+      - roles/dns
+    post:
+      operationId: dns.put_records
+      parameters:
+      - explode: true
+        in: query
+        name: zone
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: hostname
+        required: true
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: uid
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnsAPIRecordsPutInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Records
+      tags:
+      - roles/dns
+  /api/v1/etcd/join:
+    post:
+      operationId: etcd.join_member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIMemberJoinInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIMemberJoinOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Etcd join
+      tags:
+      - roles/etcd
+  /api/v1/etcd/members:
+    get:
+      operationId: api.get_members
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIMembersOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Etcd members
+      tags:
+      - roles/api
+  /api/v1/info:
+    get:
+      operationId: root.get_info
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIInstanceInfo'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instances
+      tags:
+      - instances
+  /api/v1/instances:
+    get:
+      operationId: root.get_instances
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instances
+      tags:
+      - instances
+  /api/v1/roles/api:
+    get:
+      operationId: api.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIRoleConfigOutput'
+          description: OK
+      summary: API role config
+      tags:
+      - roles/api
+    post:
+      operationId: api.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: API role config
+      tags:
+      - roles/api
+  /api/v1/roles/backup:
+    get:
+      operationId: backup.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupAPIRoleConfigOutput'
+          description: OK
+      summary: Backup role config
+      tags:
+      - roles/backup
+    post:
+      operationId: backup.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackupAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Backup role config
+      tags:
+      - roles/backup
+  /api/v1/roles/dhcp:
+    get:
+      operationId: dhcp.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpAPIRoleConfigOutput'
+          description: OK
+      summary: DHCP role config
+      tags:
+      - roles/dhcp
+    post:
+      operationId: dhcp.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP role config
+      tags:
+      - roles/dhcp
+  /api/v1/roles/discovery:
+    get:
+      operationId: discovery.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryAPIRoleConfigOutput'
+          description: OK
+      summary: Discovery role config
+      tags:
+      - roles/discovery
+    post:
+      operationId: discovery.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Discovery role config
+      tags:
+      - roles/discovery
+  /api/v1/roles/dns:
+    get:
+      operationId: dns.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsAPIRoleConfigOutput'
+          description: OK
+      summary: DNS role config
+      tags:
+      - roles/dns
+    post:
+      operationId: dns.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnsAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS role config
+      tags:
+      - roles/dns
+  /api/v1/roles/monitoring:
+    get:
+      operationId: monitoring.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringAPIRoleConfigOutput'
+          description: OK
+      summary: Monitoring role config
+      tags:
+      - roles/monitoring
+    post:
+      operationId: monitoring.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitoringAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Monitoring role config
+      tags:
+      - roles/monitoring
+  /api/v1/roles/tsdb:
+    get:
+      operationId: tsdb.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TsdbAPIRoleConfigOutput'
+          description: OK
+      summary: TSDB role config
+      tags:
+      - roles/tsdb
+    post:
+      operationId: tsdb.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TsdbAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TSDB role config
+      tags:
+      - roles/tsdb
+  /api/v1/system/metrics/memory:
+    get:
+      operationId: api.get_metrics_memory
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: System Metrics
+      tags:
+      - roles/api
+components:
+  schemas:
+    ApiAPIMember:
+      example:
+        name: name
+        id: 0
+      properties:
+        id:
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      type: object
+    ApiAPIMemberJoinInput:
+      example:
+        peer: peer
+      properties:
+        peer:
+          maxLength: 255
+          type: string
+      type: object
+    ApiAPIMemberJoinOutput:
+      example:
+        env: env
+      properties:
+        env:
+          type: string
+      type: object
+    ApiAPIMembersOutput:
+      example:
+        members:
+        - name: name
+          id: 0
+        - name: name
+          id: 0
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/ApiAPIMember'
+          nullable: true
+          type: array
+      type: object
+    ApiAPIRoleConfigInput:
+      example:
+        config:
+          port: 0
+          cookieSecret: cookieSecret
+          oidc:
+            clientID: clientID
+            redirectURL: redirectURL
+            clientSecret: clientSecret
+            scopes:
+            - scopes
+            - scopes
+            issuer: issuer
+      properties:
+        config:
+          $ref: '#/components/schemas/ApiRoleConfig'
+      required:
+      - config
+      type: object
+    ApiAPIRoleConfigOutput:
+      example:
+        config:
+          port: 0
+          cookieSecret: cookieSecret
+          oidc:
+            clientID: clientID
+            redirectURL: redirectURL
+            clientSecret: clientSecret
+            scopes:
+            - scopes
+            - scopes
+            issuer: issuer
+      properties:
+        config:
+          $ref: '#/components/schemas/ApiRoleConfig'
+      required:
+      - config
+      type: object
+    ApiRoleConfig:
+      example:
+        port: 0
+        cookieSecret: cookieSecret
+        oidc:
+          clientID: clientID
+          redirectURL: redirectURL
+          clientSecret: clientSecret
+          scopes:
+          - scopes
+          - scopes
+          issuer: issuer
+      properties:
+        cookieSecret:
+          type: string
+        oidc:
+          $ref: '#/components/schemas/TypesOIDCConfig'
+        port:
+          type: integer
+      type: object
+    AuthAPIConfigOutput:
+      example:
+        bool: true
+        oidc: true
+      properties:
+        bool:
+          type: boolean
+        oidc:
+          type: boolean
+      type: object
+    AuthAPILoginInput:
+      example:
+        password: password
+        username: username
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+      type: object
+    AuthAPILoginOutput:
+      example:
+        successful: true
+      properties:
+        successful:
+          type: boolean
+      type: object
+    AuthAPIMeOutput:
+      example:
+        authenticated: true
+        username: username
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+      required:
+      - authenticated
+      - username
+      type: object
+    AuthAPIToken:
+      example:
+        key: key
+        username: username
+      properties:
+        key:
+          type: string
+        username:
+          type: string
+      required:
+      - key
+      - username
+      type: object
+    AuthAPITokensGetOutput:
+      example:
+        tokens:
+        - key: key
+          username: username
+        - key: key
+          username: username
+      properties:
+        tokens:
+          items:
+            $ref: '#/components/schemas/AuthAPIToken'
+          nullable: true
+          type: array
+      required:
+      - tokens
+      type: object
+    AuthAPITokensPutOutput:
+      example:
+        key: key
+      properties:
+        key:
+          type: string
+      required:
+      - key
+      type: object
+    AuthAPIUser:
+      example:
+        username: username
+      properties:
+        username:
+          type: string
+      required:
+      - username
+      type: object
+    AuthAPIUsersGetOutput:
+      example:
+        users:
+        - username: username
+        - username: username
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/AuthAPIUser'
+          nullable: true
+          type: array
+      required:
+      - users
+      type: object
+    AuthAPIUsersPutInput:
+      example:
+        password: password
+      properties:
+        password:
+          type: string
+      required:
+      - password
+      type: object
+    BackupAPIBackupStatus:
+      example:
+        duration: 0
+        node: node
+        filename: filename
+        size: 6
+        time: 2000-01-23T04:56:07.000+00:00
+        error: error
+        status: status
+      properties:
+        duration:
+          type: integer
+        error:
+          type: string
+        filename:
+          type: string
+        node:
+          type: string
+        size:
+          type: integer
+        status:
+          type: string
+        time:
+          format: date-time
+          type: string
+      type: object
+    BackupAPIBackupStatusOutput:
+      example:
+        status:
+        - duration: 0
+          node: node
+          filename: filename
+          size: 6
+          time: 2000-01-23T04:56:07.000+00:00
+          error: error
+          status: status
+        - duration: 0
+          node: node
+          filename: filename
+          size: 6
+          time: 2000-01-23T04:56:07.000+00:00
+          error: error
+          status: status
+      properties:
+        status:
+          items:
+            $ref: '#/components/schemas/BackupAPIBackupStatus'
+          nullable: true
+          type: array
+      required:
+      - status
+      type: object
+    BackupAPIRoleConfigInput:
+      example:
+        config:
+          bucket: bucket
+          cronExpr: cronExpr
+          path: path
+          endpoint: endpoint
+          secretKey: secretKey
+          accessKey: accessKey
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
+      type: object
+    BackupAPIRoleConfigOutput:
+      example:
+        config:
+          bucket: bucket
+          cronExpr: cronExpr
+          path: path
+          endpoint: endpoint
+          secretKey: secretKey
+          accessKey: accessKey
+      properties:
+        config:
+          $ref: '#/components/schemas/BackupRoleConfig'
+      required:
+      - config
+      type: object
+    BackupBackupStatus:
+      example:
+        duration: 0
+        filename: filename
+        size: 6
+        time: 2000-01-23T04:56:07.000+00:00
+        error: error
+        status: status
+      properties:
+        duration:
+          type: integer
+        error:
+          type: string
+        filename:
+          type: string
+        size:
+          type: integer
+        status:
+          type: string
+        time:
+          format: date-time
+          type: string
+      type: object
+    BackupRoleConfig:
+      example:
+        bucket: bucket
+        cronExpr: cronExpr
+        path: path
+        endpoint: endpoint
+        secretKey: secretKey
+        accessKey: accessKey
+      properties:
+        accessKey:
+          type: string
+        bucket:
+          type: string
+        cronExpr:
+          type: string
+        endpoint:
+          type: string
+        path:
+          type: string
+        secretKey:
+          type: string
+      type: object
+    DhcpAPILease:
+      example:
+        identifier: identifier
+        hostname: hostname
+        address: address
+        dnsZone: dnsZone
+        scopeKey: scopeKey
+        addressLeaseTime: addressLeaseTime
+      properties:
+        address:
+          type: string
+        addressLeaseTime:
+          type: string
+        dnsZone:
+          type: string
+        hostname:
+          type: string
+        identifier:
+          type: string
+        scopeKey:
+          type: string
+      required:
+      - address
+      - addressLeaseTime
+      - hostname
+      - identifier
+      - scopeKey
+      type: object
+    DhcpAPILeasesGetOutput:
+      example:
+        leases:
+        - identifier: identifier
+          hostname: hostname
+          address: address
+          dnsZone: dnsZone
+          scopeKey: scopeKey
+          addressLeaseTime: addressLeaseTime
+        - identifier: identifier
+          hostname: hostname
+          address: address
+          dnsZone: dnsZone
+          scopeKey: scopeKey
+          addressLeaseTime: addressLeaseTime
+      properties:
+        leases:
+          items:
+            $ref: '#/components/schemas/DhcpAPILease'
+          nullable: true
+          type: array
+      required:
+      - leases
+      type: object
+    DhcpAPILeasesPutInput:
+      example:
+        hostname: hostname
+        address: address
+        dnsZone: dnsZone
+        addressLeaseTime: addressLeaseTime
+      properties:
+        address:
+          maxLength: 40
+          type: string
+        addressLeaseTime:
+          maxLength: 40
+          type: string
+        dnsZone:
+          maxLength: 255
+          type: string
+        hostname:
+          maxLength: 255
+          type: string
+      required:
+      - address
+      - addressLeaseTime
+      - hostname
+      type: object
+    DhcpAPIRoleConfigInput:
+      example:
+        config:
+          leaseNegotiateTimeout: 0
+          port: 6
+      properties:
+        config:
+          $ref: '#/components/schemas/DhcpRoleConfig'
+      required:
+      - config
+      type: object
+    DhcpAPIRoleConfigOutput:
+      example:
+        config:
+          leaseNegotiateTimeout: 0
+          port: 6
+      properties:
+        config:
+          $ref: '#/components/schemas/DhcpRoleConfig'
+      required:
+      - config
+      type: object
+    DhcpAPIScope:
+      example:
+        subnetCidr: subnetCidr
+        default: true
+        ipam:
+          key: ipam
+        scope: scope
+        dns:
+          search:
+          - search
+          - search
+          zone: zone
+          addZoneInHostname: true
+        options:
+        - value64:
+          - value64
+          - value64
+          tag: 0
+          tagName: tagName
+          value: value
+        - value64:
+          - value64
+          - value64
+          tag: 0
+          tagName: tagName
+          value: value
+        ttl: 6
+      properties:
+        default:
+          type: boolean
+        dns:
+          $ref: '#/components/schemas/DhcpScopeDNS'
+        ipam:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        options:
+          items:
+            $ref: '#/components/schemas/TypesOption'
+          nullable: true
+          type: array
+        scope:
+          type: string
+        subnetCidr:
+          type: string
+        ttl:
+          type: integer
+      required:
+      - default
+      - ipam
+      - options
+      - scope
+      - subnetCidr
+      - ttl
+      type: object
+    DhcpAPIScopesGetOutput:
+      example:
+        scopes:
+        - subnetCidr: subnetCidr
+          default: true
+          ipam:
+            key: ipam
+          scope: scope
+          dns:
+            search:
+            - search
+            - search
+            zone: zone
+            addZoneInHostname: true
+          options:
+          - value64:
+            - value64
+            - value64
+            tag: 0
+            tagName: tagName
+            value: value
+          - value64:
+            - value64
+            - value64
+            tag: 0
+            tagName: tagName
+            value: value
+          ttl: 6
+        - subnetCidr: subnetCidr
+          default: true
+          ipam:
+            key: ipam
+          scope: scope
+          dns:
+            search:
+            - search
+            - search
+            zone: zone
+            addZoneInHostname: true
+          options:
+          - value64:
+            - value64
+            - value64
+            tag: 0
+            tagName: tagName
+            value: value
+          - value64:
+            - value64
+            - value64
+            tag: 0
+            tagName: tagName
+            value: value
+          ttl: 6
+      properties:
+        scopes:
+          items:
+            $ref: '#/components/schemas/DhcpAPIScope'
+          nullable: true
+          type: array
+      required:
+      - scopes
+      type: object
+    DhcpAPIScopesPutInput:
+      example:
+        subnetCidr: subnetCidr
+        default: true
+        ipam:
+          key: ipam
+        dns:
+          search:
+          - search
+          - search
+          zone: zone
+          addZoneInHostname: true
+        options:
+        - value64:
+          - value64
+          - value64
+          tag: 0
+          tagName: tagName
+          value: value
+        - value64:
+          - value64
+          - value64
+          tag: 0
+          tagName: tagName
+          value: value
+        ttl: 0
+      properties:
+        default:
+          type: boolean
+        dns:
+          $ref: '#/components/schemas/DhcpScopeDNS'
+        ipam:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        options:
+          items:
+            $ref: '#/components/schemas/TypesOption'
+          nullable: true
+          type: array
+        subnetCidr:
+          maxLength: 40
+          type: string
+        ttl:
+          type: integer
+      required:
+      - default
+      - options
+      - subnetCidr
+      - ttl
+      type: object
+    DhcpRoleConfig:
+      example:
+        leaseNegotiateTimeout: 0
+        port: 6
+      properties:
+        leaseNegotiateTimeout:
+          type: integer
+        port:
+          type: integer
+      type: object
+    DhcpScopeDNS:
+      example:
+        search:
+        - search
+        - search
+        zone: zone
+        addZoneInHostname: true
+      properties:
+        addZoneInHostname:
+          type: boolean
+        search:
+          items:
+            type: string
+          nullable: true
+          type: array
+        zone:
+          type: string
+      type: object
+    DiscoveryAPIDevice:
+      example:
+        identifier: identifier
+        hostname: hostname
+        ip: ip
+        mac: mac
+      properties:
+        hostname:
+          type: string
+        identifier:
+          type: string
+        ip:
+          type: string
+        mac:
+          type: string
+      required:
+      - hostname
+      - identifier
+      - ip
+      - mac
+      type: object
+    DiscoveryAPIDevicesApplyInput:
+      example:
+        dnsZone: dnsZone
+        to: dhcp
+        dhcpScope: dhcpScope
+      properties:
+        dhcpScope:
+          type: string
+        dnsZone:
+          type: string
+        to:
+          enum:
+          - dhcp
+          - dns
+          type: string
+      required:
+      - dhcpScope
+      - dnsZone
+      - to
+      type: object
+    DiscoveryAPIDevicesGetOutput:
+      example:
+        devices:
+        - identifier: identifier
+          hostname: hostname
+          ip: ip
+          mac: mac
+        - identifier: identifier
+          hostname: hostname
+          ip: ip
+          mac: mac
+      properties:
+        devices:
+          items:
+            $ref: '#/components/schemas/DiscoveryAPIDevice'
+          nullable: true
+          type: array
+      type: object
+    DiscoveryAPIRoleConfigInput:
+      example:
+        config:
+          enabled: true
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
+      required:
+      - config
+      type: object
+    DiscoveryAPIRoleConfigOutput:
+      example:
+        config:
+          enabled: true
+      properties:
+        config:
+          $ref: '#/components/schemas/DiscoveryRoleConfig'
+      required:
+      - config
+      type: object
+    DiscoveryAPISubnet:
+      example:
+        subnetCidr: subnetCidr
+        name: name
+        dnsResolver: dnsResolver
+        discoveryTTL: 0
+      properties:
+        discoveryTTL:
+          type: integer
+        dnsResolver:
+          type: string
+        name:
+          type: string
+        subnetCidr:
+          type: string
+      required:
+      - discoveryTTL
+      - dnsResolver
+      - name
+      - subnetCidr
+      type: object
+    DiscoveryAPISubnetsGetOutput:
+      example:
+        subnets:
+        - subnetCidr: subnetCidr
+          name: name
+          dnsResolver: dnsResolver
+          discoveryTTL: 0
+        - subnetCidr: subnetCidr
+          name: name
+          dnsResolver: dnsResolver
+          discoveryTTL: 0
+      properties:
+        subnets:
+          items:
+            $ref: '#/components/schemas/DiscoveryAPISubnet'
+          nullable: true
+          type: array
+      type: object
+    DiscoveryAPISubnetsPutInput:
+      example:
+        subnetCidr: subnetCidr
+        dnsResolver: dnsResolver
+        discoveryTTL: 0
+      properties:
+        discoveryTTL:
+          type: integer
+        dnsResolver:
+          maxLength: 255
+          type: string
+        subnetCidr:
+          maxLength: 40
+          type: string
+      required:
+      - discoveryTTL
+      - dnsResolver
+      - subnetCidr
+      type: object
+    DiscoveryRoleConfig:
+      example:
+        enabled: true
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    DnsAPIRecord:
+      example:
+        srvPort: 0
+        uid: uid
+        hostname: hostname
+        mxPreference: 0
+        data: data
+        fqdn: fqdn
+        srvPriority: 0
+        srvWeight: 0
+        type: type
+      properties:
+        data:
+          type: string
+        fqdn:
+          type: string
+        hostname:
+          type: string
+        mxPreference:
+          minimum: 0
+          type: integer
+        srvPort:
+          minimum: 0
+          type: integer
+        srvPriority:
+          minimum: 0
+          type: integer
+        srvWeight:
+          minimum: 0
+          type: integer
+        type:
+          type: string
+        uid:
+          type: string
+      required:
+      - data
+      - fqdn
+      - hostname
+      - type
+      - uid
+      type: object
+    DnsAPIRecordsGetOutput:
+      example:
+        records:
+        - srvPort: 0
+          uid: uid
+          hostname: hostname
+          mxPreference: 0
+          data: data
+          fqdn: fqdn
+          srvPriority: 0
+          srvWeight: 0
+          type: type
+        - srvPort: 0
+          uid: uid
+          hostname: hostname
+          mxPreference: 0
+          data: data
+          fqdn: fqdn
+          srvPriority: 0
+          srvWeight: 0
+          type: type
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/DnsAPIRecord'
+          nullable: true
+          type: array
+      required:
+      - records
+      type: object
+    DnsAPIRecordsPutInput:
+      example:
+        srvPort: 0
+        mxPreference: 0
+        data: data
+        srvPriority: 0
+        srvWeight: 0
+        type: type
+      properties:
+        data:
+          type: string
+        mxPreference:
+          minimum: 0
+          type: integer
+        srvPort:
+          minimum: 0
+          type: integer
+        srvPriority:
+          minimum: 0
+          type: integer
+        srvWeight:
+          minimum: 0
+          type: integer
+        type:
+          type: string
+      required:
+      - data
+      - type
+      type: object
+    DnsAPIRoleConfigInput:
+      example:
+        config:
+          port: 0
+      properties:
+        config:
+          $ref: '#/components/schemas/DnsRoleConfig'
+      required:
+      - config
+      type: object
+    DnsAPIRoleConfigOutput:
+      example:
+        config:
+          port: 0
+      properties:
+        config:
+          $ref: '#/components/schemas/DnsRoleConfig'
+      required:
+      - config
+      type: object
+    DnsAPIZone:
+      example:
+        handlerConfigs:
+        - key: handlerConfigs
+        - key: handlerConfigs
+        authoritative: true
+        defaultTTL: 0
+        name: name
+      properties:
+        authoritative:
+          type: boolean
+        defaultTTL:
+          minimum: 0
+          type: integer
+        handlerConfigs:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          nullable: true
+          type: array
+        name:
+          type: string
+      required:
+      - authoritative
+      - defaultTTL
+      - handlerConfigs
+      - name
+      type: object
+    DnsAPIZonesGetOutput:
+      example:
+        zones:
+        - handlerConfigs:
+          - key: handlerConfigs
+          - key: handlerConfigs
+          authoritative: true
+          defaultTTL: 0
+          name: name
+        - handlerConfigs:
+          - key: handlerConfigs
+          - key: handlerConfigs
+          authoritative: true
+          defaultTTL: 0
+          name: name
+      properties:
+        zones:
+          items:
+            $ref: '#/components/schemas/DnsAPIZone'
+          nullable: true
+          type: array
+      required:
+      - zones
+      type: object
+    DnsAPIZonesPutInput:
+      example:
+        handlerConfigs:
+        - key: handlerConfigs
+        - key: handlerConfigs
+        authoritative: true
+        defaultTTL: 0
+      properties:
+        authoritative:
+          type: boolean
+        defaultTTL:
+          minimum: 0
+          type: integer
+        handlerConfigs:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          nullable: true
+          type: array
+      required:
+      - authoritative
+      - defaultTTL
+      - handlerConfigs
+      type: object
+    DnsRoleConfig:
+      example:
+        port: 0
+      properties:
+        port:
+          type: integer
+      type: object
+    ExtconfigExtConfigDirs:
+      example:
+        backupDir: backupDir
+        etcdDir: etcdDir
+        certDir: certDir
+      properties:
+        backupDir:
+          type: string
+        certDir:
+          type: string
+        etcdDir:
+          type: string
+      type: object
+    InstanceAPIInstanceInfo:
+      example:
+        currentInstanceIdentifier: currentInstanceIdentifier
+        currentInstanceIP: currentInstanceIP
+        buildHash: buildHash
+        dirs:
+          backupDir: backupDir
+          etcdDir: etcdDir
+          certDir: certDir
+        version: version
+      properties:
+        buildHash:
+          type: string
+        currentInstanceIP:
+          type: string
+        currentInstanceIdentifier:
+          type: string
+        dirs:
+          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
+        version:
+          type: string
+      required:
+      - buildHash
+      - currentInstanceIP
+      - currentInstanceIdentifier
+      - dirs
+      - version
+      type: object
+    InstanceAPIInstancesOutput:
+      example:
+        instances:
+        - identifier: identifier
+          ip: ip
+          roles: roles
+          version: version
+        - identifier: identifier
+          ip: ip
+          roles: roles
+          version: version
+      properties:
+        instances:
+          items:
+            $ref: '#/components/schemas/InstanceInstanceInfo'
+          nullable: true
+          type: array
+      required:
+      - instances
+      type: object
+    InstanceInstanceInfo:
+      example:
+        identifier: identifier
+        ip: ip
+        roles: roles
+        version: version
+      properties:
+        identifier:
+          type: string
+        ip:
+          type: string
+        roles:
+          type: string
+        version:
+          type: string
+      required:
+      - identifier
+      - ip
+      - roles
+      - version
+      type: object
+    MonitoringAPIRoleConfigInput:
+      example:
+        config:
+          port: 0
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
+      type: object
+    MonitoringAPIRoleConfigOutput:
+      example:
+        config:
+          port: 0
+      properties:
+        config:
+          $ref: '#/components/schemas/MonitoringRoleConfig'
+      required:
+      - config
+      type: object
+    MonitoringRoleConfig:
+      example:
+        port: 0
+      properties:
+        port:
+          type: integer
+      type: object
+    RestErrResponse:
+      properties:
+        code:
+          description: Application-specific error code.
+          type: integer
+        context:
+          additionalProperties: {}
+          description: Application context.
+          type: object
+        error:
+          description: Error message.
+          type: string
+        status:
+          description: Status text.
+          type: string
+      type: object
+    TsdbAPIRoleConfigInput:
+      example:
+        config:
+          scrape: 6
+          expire: 0
+          enabled: true
+      properties:
+        config:
+          $ref: '#/components/schemas/TsdbRoleConfig'
+      required:
+      - config
+      type: object
+    TsdbAPIRoleConfigOutput:
+      example:
+        config:
+          scrape: 6
+          expire: 0
+          enabled: true
+      properties:
+        config:
+          $ref: '#/components/schemas/TsdbRoleConfig'
+      required:
+      - config
+      type: object
+    TsdbRoleConfig:
+      example:
+        scrape: 6
+        expire: 0
+        enabled: true
+      properties:
+        enabled:
+          type: boolean
+        expire:
+          type: integer
+        scrape:
+          type: integer
+      type: object
+    TypesAPIMetricsGetOutput:
+      example:
+        records:
+        - handler: handler
+          node: node
+          time: time
+          value: 0
+        - handler: handler
+          node: node
+          time: time
+          value: 0
+      properties:
+        records:
+          items:
+            $ref: '#/components/schemas/TypesAPIMetricsRecord'
+          nullable: true
+          type: array
+      required:
+      - records
+      type: object
+    TypesAPIMetricsRecord:
+      example:
+        handler: handler
+        node: node
+        time: time
+        value: 0
+      properties:
+        handler:
+          type: string
+        node:
+          type: string
+        time:
+          type: string
+        value:
+          type: integer
+      required:
+      - handler
+      - node
+      - time
+      - value
+      type: object
+    TypesOIDCConfig:
+      example:
+        clientID: clientID
+        redirectURL: redirectURL
+        clientSecret: clientSecret
+        scopes:
+        - scopes
+        - scopes
+        issuer: issuer
+      properties:
+        clientID:
+          type: string
+        clientSecret:
+          type: string
+        issuer:
+          type: string
+        redirectURL:
+          type: string
+        scopes:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    TypesOption:
+      example:
+        value64:
+        - value64
+        - value64
+        tag: 0
+        tagName: tagName
+        value: value
+      properties:
+        tag:
+          minimum: 0
+          nullable: true
+          type: integer
+        tagName:
+          type: string
+        value:
+          nullable: true
+          type: string
+        value64:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object

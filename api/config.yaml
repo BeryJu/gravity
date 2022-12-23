@@ -1,0 +1,4 @@
+additionalProperties:
+  packageName: api
+  enumClassPrefix: true
+  useOneOfDiscriminatorLookup: true
