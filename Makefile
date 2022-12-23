@@ -38,6 +38,27 @@ gen-build:
 gen-clean:
 	rm -rf gen-ts-api/
 
+gen-tag:
+	cd ${PWD}
+	git add .
+	git commit -m "tag version v${VERSION}"
+	git tag v${VERSION}
+
+gen-client-go:
+	docker run \
+		--rm -v ${PWD}:/local \
+		--user ${UID}:${GID} \
+		openapitools/openapi-generator-cli:v6.0.0 generate \
+		-i /local/schema.yml \
+		-g go \
+		-o /local/api \
+		-c /local/api/config.yaml
+	rm -f ./api/.travis.yml ./api/go.mod ./api/go.sum
+	cd api
+	go get
+	go fmt .
+	go mod tidy
+
 gen-client-ts:
 	docker run \
 		--rm -v ${PWD}:/local \
@@ -59,7 +80,7 @@ gen-client-ts-update: gen-client-ts
 	git add package*.json
 	npm version ${VERSION} || true
 
-gen: gen-build gen-clean gen-client-ts-update
+gen: gen-build gen-clean gen-client-go gen-client-ts-update gen-tag
 
 test-env-start:
 	cd hack/tests/
