@@ -8,8 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
-var convertMsDHCP = &cobra.Command{
-	Use:   "ms_dhcp [input_xml [import_xml]]",
+var cliConverrtMSDHCPCmd = &cobra.Command{
+	Use:   "ms_dhcp [input_xml [input_xml]]",
 	Short: "Import Microsoft DHCP leases/reservations into gravity",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, cancel := context.WithCancel(cmd.Context())
@@ -26,5 +26,5 @@ var convertMsDHCP = &cobra.Command{
 }
 
 func init() {
-	cliConvertCmd.AddCommand(convertMsDHCP)
+	cliConvertCmd.AddCommand(cliConverrtMSDHCPCmd)
 }
