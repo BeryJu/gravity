@@ -7,7 +7,7 @@ command = "hugo mod get && hugo --gc --minify"
 
 [context.production.environment]
   HUGO_ENV = "production"
-  HUGO_VERSION = "0.83.1"
+  HUGO_VERSION = "0.108.0+extended"
 
 [context.deploy-preview]
 command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
