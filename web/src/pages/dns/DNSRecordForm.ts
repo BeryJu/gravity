@@ -33,11 +33,26 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
         }
     }
 
-    send = (data: DnsAPIRecord): Promise<void> => {
+    needsRecreate(data: DnsAPIRecord): boolean {
+        if (!this.instance) {
+            return false;
+        }
+        if (data.hostname !== this.instance.hostname) return true;
+        if (data.uid !== this.instance.uid) return true;
+        if (data.type !== this.instance.type) return true;
+        return false;
+    }
+
+    send = async (data: DnsAPIRecord): Promise<void> => {
+        if (this.instance && this.needsRecreate(data)) {
+            await new RolesDnsApi(DEFAULT_CONFIG).dnsDeleteRecords({
+                zone: this.zone || "",
+                ...this.instance,
+            });
+        }
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutRecords({
             zone: this.zone || "",
-            hostname: data.hostname,
-            uid: data.uid,
+            ...data,
             dnsAPIRecordsPutInput: data,
         });
     };

@@ -33,9 +33,23 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
         }
     }
 
-    send = (data: DhcpAPILease): Promise<void> => {
+    needsRecreate(data: DhcpAPILease): boolean {
+        if (!this.instance) {
+            return false;
+        }
+        if (data.identifier !== this.instance.identifier) return true;
+        return false;
+    }
+
+    send = async (data: DhcpAPILease): Promise<void> => {
         if (!data.addressLeaseTime) {
             data.addressLeaseTime = "0";
+        }
+        if (this.instance && this.needsRecreate(data)) {
+            await new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
+                scope: this.scope || "",
+                identifier: this.instance.identifier,
+            });
         }
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
             scope: this.scope || "",
