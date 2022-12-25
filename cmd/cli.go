@@ -31,7 +31,6 @@ var cliCmd = &cobra.Command{
 		}
 
 		config := api.NewConfiguration()
-		config.Debug = true
 		config.Host = url.Host
 		config.Scheme = url.Scheme
 		if url.Scheme == "unix" {

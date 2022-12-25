@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DHCPServer xmlns="http://schemas.microsoft.com/windows/DHCPServer">
+  <MajorVersion xmlns="">10</MajorVersion>
+  <MinorVersion xmlns="">0</MinorVersion>
+  <IPv4 xmlns="">
+    <ConflictDetectionAttempts>0</ConflictDetectionAttempts>
+    <NapEnabled>false</NapEnabled>
+    <NpsUnreachableAction>Full</NpsUnreachableAction>
+    <ActivatePolicies>true</ActivatePolicies>
+    <Classes>
+      <Class>
+        <Name>Default Routing and Remote Access Class</Name>
+        <Type>User</Type>
+        <Data>0x525241532e4d6963726f736f6674</Data>
+        <Description>User class for remote access clients</Description>
+      </Class>
+      <Class>
+        <Name>Default BOOTP Class</Name>
+        <Type>User</Type>
+        <Data>0x424f4f54502e4d6963726f736f6674</Data>
+        <Description>User class for BOOTP Clients</Description>
+      </Class>
+      <Class>
+        <Name>Microsoft Windows 2000 Options</Name>
+        <Type>Vendor</Type>
+        <Data>0x4d53465420352e30</Data>
+        <Description>Microsoft vendor-specific options for Windows 2000 and above Clients</Description>
+      </Class>
+      <Class>
+        <Name>Microsoft Windows 98 Options</Name>
+        <Type>Vendor</Type>
+        <Data>0x4d534654203938</Data>
+        <Description>Microsoft vendor-specific options for Windows 98 Clients</Description>
+      </Class>
+      <Class>
+        <Name>Microsoft Options</Name>
+        <Type>Vendor</Type>
+        <Data>0x4d534654</Data>
+        <Description>Microsoft vendor-specific options applicable to all Windows Clients</Description>
+      </Class>
+    </Classes>
+    <OptionDefinitions>
+      <OptionDefinition>
+        <Name>Classless Static Routes</Name>
+        <OptionId>121</OptionId>
+        <Type>BinaryData</Type>
+        <MultiValued>false</MultiValued>
+        <Description>Destination, mask and router IP addresses in priority order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Subnet Mask</Name>
+        <OptionId>1</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Subnet mask in network byte order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Time Offset</Name>
+        <OptionId>2</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>UTC offset in seconds</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Router</Name>
+        <OptionId>3</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of router addresses ordered by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Time Server</Name>
+        <OptionId>4</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of time server addresses, by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Name Servers</Name>
+        <OptionId>5</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of name servers [IEN 116], by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>DNS Servers</Name>
+        <OptionId>6</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of DNS servers, by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Log Servers</Name>
+        <OptionId>7</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of MIT_LCS UDP log servers on subnet</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Cookie Servers</Name>
+        <OptionId>8</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of cookie servers, RFC 865</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>LPR Servers</Name>
+        <OptionId>9</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of RFC 1179 servers, by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Impress Servers</Name>
+        <OptionId>10</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of Imagen Impress Servers</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Resource Location Servers</Name>
+        <OptionId>11</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of RFC 887 ResLoc Servers on subnet, by preference</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Host Name</Name>
+        <OptionId>12</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>Host name for client, RFC 1035 character set</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Boot File Size</Name>
+        <OptionId>13</OptionId>
+        <Type>Word</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Size of boot image file in 512-octet blocks</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Merit Dump File</Name>
+        <OptionId>14</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>Path name for crash dump file</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>DNS Domain Name</Name>
+        <OptionId>15</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>DNS Domain name for client resolutions</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Swap Server</Name>
+        <OptionId>16</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Address of client's swap server</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Root Path</Name>
+        <OptionId>17</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>Path name for client's root disk, char set NVT ASCII</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Extensions Path</Name>
+        <OptionId>18</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>tftp file for option extensions</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>IP Layer Forwarding</Name>
+        <OptionId>19</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>Disable/enable IP packet forwarding on this client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Nonlocal Source Routing</Name>
+        <OptionId>20</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>Disable/enable nonlocal datagrams</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Policy Filter Masks</Name>
+        <OptionId>21</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Destination/mask IP address pairs to filter source routes</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Max DG Reassembly Size</Name>
+        <OptionId>22</OptionId>
+        <Type>Word</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Maximum size datagram for reassembly by client; max 576</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Default IP Time-to-live</Name>
+        <OptionId>23</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>Default TTL for client's use on outgoing DGs</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Path MTU Aging Timeout</Name>
+        <OptionId>24</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Timeout in seconds for aging Path MTU values; RFC 1191</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Path MTU Plateau Table</Name>
+        <OptionId>25</OptionId>
+        <Type>Word</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>MTU discovery sizes, sorted by size, all &gt;= 68</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>MTU Option</Name>
+        <OptionId>26</OptionId>
+        <Type>Word</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>MTU discovery size, &gt;= 68</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>All subnets are local</Name>
+        <OptionId>27</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>The client assumes that all subnets are local</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Broadcast Address</Name>
+        <OptionId>28</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Broadcast address</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Perform Mask Discovery</Name>
+        <OptionId>29</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>The client should use ICMP for subnet mask discovery.</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Mask Supplier Option</Name>
+        <OptionId>30</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>The client should respond to subnet mask requests via ICMP.</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Perform Router Discovery</Name>
+        <OptionId>31</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>The client should solicit routers using RFC 1256.</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Router Solicitation Address</Name>
+        <OptionId>32</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Address to use for router solicitation</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Static Route Option</Name>
+        <OptionId>33</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Destination/router address pairs, in priority order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Trailer Encapsulation</Name>
+        <OptionId>34</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>The client should negotiate use of trailers (RFC 983).</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>ARP Cache Timeout</Name>
+        <OptionId>35</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Timeout in seconds for ARP cache entries</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Ethernet Encapsulation</Name>
+        <OptionId>36</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>0=&gt;client should use ENet V2; 1=&gt; IEEE 802.3</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>TCP Default Time-to-live</Name>
+        <OptionId>37</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>TTL that client uses when sending TCP segments</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Keepalive Interval</Name>
+        <OptionId>38</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Keepalive timeout in seconds</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Keepalive Garbage</Name>
+        <OptionId>39</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>Send garbage octet</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS Domain Name</Name>
+        <OptionId>40</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>Name of Network Information Service domain</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS Servers</Name>
+        <OptionId>41</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Addresses of NIS servers on client's subnet</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NTP Servers</Name>
+        <OptionId>42</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Addresses of Network Time Protocol servers</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Vendor Specific Info</Name>
+        <OptionId>43</OptionId>
+        <Type>BinaryData</Type>
+        <MultiValued>false</MultiValued>
+        <Description>Embedded vendor-specific options</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>WINS/NBNS Servers</Name>
+        <OptionId>44</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>NBNS Address(es) in priority order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NetBIOS over TCP/IP NBDD</Name>
+        <OptionId>45</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>NetBIOS over TCP/IP NBDD address(es) in priority order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>WINS/NBT Node Type</Name>
+        <OptionId>46</OptionId>
+        <Type>Byte</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0x00</DefaultValue>
+        <Description>0x1 = B-node, 0x2 = P-node, 0x4 = M-node, 0x8 = H-node</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NetBIOS Scope ID</Name>
+        <OptionId>47</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>NetBIOS over TCP/IP Scope ID</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>X Window System Font</Name>
+        <OptionId>48</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of X Windows font servers</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>X Window System Display</Name>
+        <OptionId>49</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Array of X Windows Display Mgr servers</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Lease</Name>
+        <OptionId>51</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Client IP address lease time in seconds</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Renewal (T1) Time Value</Name>
+        <OptionId>58</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Time between addr assignment to RENEWING state</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Rebinding (T2) Time Value</Name>
+        <OptionId>59</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Time from addr assignment to REBINDING state</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS+ Domain Name</Name>
+        <OptionId>64</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>The name of the client's NIS+ domain.</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS+ Servers</Name>
+        <OptionId>65</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>A list of IP addresses indicating NIS+ servers</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Boot Server Host Name</Name>
+        <OptionId>66</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>TFTP boot server host name</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Bootfile Name</Name>
+        <OptionId>67</OptionId>
+        <Type>String</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue />
+        <Description>Bootfile Name</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Mobile IP Home Agents</Name>
+        <OptionId>68</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>Mobile IP home agents in priority order</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Simple Mail Transport Protocol (SMTP) Servers</Name>
+        <OptionId>69</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of SMTP servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Post Office Protocol (POP3) Servers</Name>
+        <OptionId>70</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of POP3 servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Network News Transport Protocol (NNTP) Servers</Name>
+        <OptionId>71</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of NNTP servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>World Wide Web (WWW) Servers</Name>
+        <OptionId>72</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of WWW servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Finger Servers</Name>
+        <OptionId>73</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of Finger servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Internet Relay Chat (IRC) Servers</Name>
+        <OptionId>74</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of IRC servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>StreetTalk Servers</Name>
+        <OptionId>75</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of StreetTalk servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>StreetTalk Directory Assistance (STDA) Servers</Name>
+        <OptionId>76</OptionId>
+        <Type>IPv4Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue>0.0.0.0</DefaultValue>
+        <Description>List of STDA servers available to the client</Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Disable Netbios Option </Name>
+        <OptionId>1</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>1</DefaultValue>
+        <Description>Option for enabling or disabling Netbios for Microsoft Windows 2000 Clients</Description>
+        <VendorClass>Microsoft Options</VendorClass>
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Release DHCP Lease On Shutdown Option</Name>
+        <OptionId>2</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>1</DefaultValue>
+        <Description>Option for enabling or disabling Windows 2000 Clients to release DHCP lease on shutdown</Description>
+        <VendorClass>Microsoft Options</VendorClass>
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Default Router Metric Base</Name>
+        <OptionId>3</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>1</DefaultValue>
+        <Description>Default Router Base Metrics for Microsoft Windows 2000 Clients</Description>
+        <VendorClass>Microsoft Options</VendorClass>
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Disable Netbios Option </Name>
+        <OptionId>1</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>1</DefaultValue>
+        <Description>Option for enabling or disabling Netbios for Microsoft Windows 2000 Clients</Description>
+        <VendorClass>Microsoft Windows 2000 Options</VendorClass>
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Release DHCP Lease On Shutdown Option</Name>
+        <OptionId>2</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>1</DefaultValue>
+        <Description>Option for enabling or disabling Windows 2000 Clients to release DHCP lease on shutdown</Description>
+        <VendorClass>Microsoft Windows 2000 Options</VendorClass>
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Microsoft Default Router Metric Base</Name>
+        <OptionId>3</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>0</DefaultValue>
+        <Description>Default Router Base Metrics for Microsoft Windows 2000 Clients</Description>
+        <VendorClass>Microsoft Windows 2000 Options</VendorClass>
+      </OptionDefinition>
+    </OptionDefinitions>
+    <Filters>
+      <Allow>false</Allow>
+      <Deny>false</Deny>
+    </Filters>
+    <Scopes>
+      <Scope>
+        <ScopeId>10.0.5.0</ScopeId>
+        <Name>.5 scope</Name>
+        <SubnetMask>255.255.255.0</SubnetMask>
+        <StartRange>10.0.5.2</StartRange>
+        <EndRange>10.0.5.250</EndRange>
+        <LeaseDuration>8.00:00:00</LeaseDuration>
+        <State>Active</State>
+        <Type>Dhcp</Type>
+        <MaxBootpClients>4294967295</MaxBootpClients>
+        <NapEnable>false</NapEnable>
+        <Delay>0</Delay>
+        <NapProfile />
+        <Description />
+        <ActivatePolicies>true</ActivatePolicies>
+        <SuperScopeName />
+        <OptionValues>
+          <OptionValue>
+            <OptionId>3</OptionId>
+            <Value>10.0.5.1</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>6</OptionId>
+            <Value>10.0.10.2</Value>
+            <Value>10.0.10.4</Value>
+            <Value>10.0.20.2</Value>
+            <Value>10.0.20.4</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>15</OptionId>
+            <Value>test.gravity.beryju.io</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>51</OptionId>
+            <Value>691200</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>66</OptionId>
+            <Value>10.0.5.12</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>67</OptionId>
+            <Value>netboot.xyz.kpxe</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+        </OptionValues>
+        <Reservations>
+          <Reservation>
+            <Name>heimdall.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.3</IPAddress>
+            <ClientId>56-85-98-08-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>deb-tftp.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.250</IPAddress>
+            <ClientId>56-85-02-dc-00-01-00-01-27-fb-6b-0f-00-50-56-85-02-dc</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>deb-ansible.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.5</IPAddress>
+            <ClientId>56-a4-c7-4e-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>docker01.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.12</IPAddress>
+            <ClientId>56-a4-bf-51-00-01-00-01-28-16-b6-78-00-50-56-a4-bf-51</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>deb-calibre.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.6</IPAddress>
+            <ClientId>56-a4-e7-a1-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>deb.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.7</IPAddress>
+            <ClientId>56-a4-ea-04-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>vpn.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.10</IPAddress>
+            <ClientId>56-a4-55-c9-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>plex.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.13</IPAddress>
+            <ClientId>56-ab-e0-3d-00-01-00-01-29-47-94-c7-00-50-56-ab-e0-3d</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>authentik.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.11</IPAddress>
+            <ClientId>56-ab-8a-48-00-01-00-01-28-16-b6-78-00-50-56-a4-bf-51</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+          <Reservation>
+            <Name>unifi.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.5.21</IPAddress>
+            <ClientId>29-99-38-f1-00-01-00-01-29-a2-b1-e8-00-0c-29-99-38-f1</ClientId>
+            <Type>Dhcp</Type>
+            <Description />
+          </Reservation>
+        </Reservations>
+        <Leases>
+          <Lease>
+            <IPAddress>10.0.5.3</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-85-98-08-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>InactiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>heimdall.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.4</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-fc-21-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>Active</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <LeaseExpiryTime>2023-01-02 05:50:02Z</LeaseExpiryTime>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>proxy.test.gravity.beryju.io</HostName>
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.5</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-c7-4e-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>deb-ansible.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.6</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-e7-a1-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>deb-calibre.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.7</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-ea-04-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>InactiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>deb.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.10</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-55-c9-00-01-00-01-27-9c-3c-b3-00-50-56-ae-61-ca</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>vpn.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.11</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-ab-8a-48-00-01-00-01-28-16-b6-78-00-50-56-a4-bf-51</ClientId>
+            <AddressState>InactiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>authentik.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.12</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-a4-bf-51-00-01-00-01-28-16-b6-78-00-50-56-a4-bf-51</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>docker01.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.13</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-ab-e0-3d-00-01-00-01-29-47-94-c7-00-50-56-ab-e0-3d</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>plex.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.20</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-ae-2e-47-00-01-00-01-29-9b-f0-45-00-50-56-ae-2e-47</ClientId>
+            <AddressState>Active</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <LeaseExpiryTime>2023-01-01 04:13:18Z</LeaseExpiryTime>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>debian.test.gravity.beryju.io</HostName>
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.21</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>29-99-38-f1-00-01-00-01-29-a2-b1-e8-00-0c-29-99-38-f1</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>unifi.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.5.250</IPAddress>
+            <ScopeId>10.0.5.0</ScopeId>
+            <ClientId>56-85-02-dc-00-01-00-01-27-fb-6b-0f-00-50-56-85-02-dc</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>NoRegistration</DnsRR>
+            <DnsRegistration>NotApplicable</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>deb-tftp.test.gravity.beryju.io</HostName>
+            <Description />
+          </Lease>
+        </Leases>
+      </Scope>
+      <Scope>
+        <ScopeId>10.0.10.0</ScopeId>
+        <Name>.10 scope</Name>
+        <SubnetMask>255.255.255.0</SubnetMask>
+        <StartRange>10.0.10.10</StartRange>
+        <EndRange>10.0.10.250</EndRange>
+        <LeaseDuration>8.00:00:00</LeaseDuration>
+        <State>Active</State>
+        <Type>Dhcp</Type>
+        <MaxBootpClients>4294967295</MaxBootpClients>
+        <NapEnable>false</NapEnable>
+        <Delay>0</Delay>
+        <NapProfile />
+        <Description />
+        <ActivatePolicies>true</ActivatePolicies>
+        <SuperScopeName />
+        <OptionValues>
+          <OptionValue>
+            <OptionId>3</OptionId>
+            <Value>10.0.10.1</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>6</OptionId>
+            <Value>10.0.10.2</Value>
+            <Value>10.0.10.4</Value>
+            <Value>10.0.20.2</Value>
+            <Value>10.0.20.4</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>15</OptionId>
+            <Value>test.gravity.beryju.io</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+          <OptionValue>
+            <OptionId>51</OptionId>
+            <Value>691200</Value>
+            <VendorClass />
+            <UserClass />
+          </OptionValue>
+        </OptionValues>
+        <Reservations>
+          <Reservation>
+            <Name>FS01.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.10.10</IPAddress>
+            <ClientId>00-0c-29-a2-42-a6</ClientId>
+            <Type>Both</Type>
+            <Description>FS01</Description>
+          </Reservation>
+          <Reservation>
+            <Name>veeam.test.gravity.beryju.io</Name>
+            <IPAddress>10.0.10.20</IPAddress>
+            <ClientId>00-50-56-85-ae-2b</ClientId>
+            <Type>Both</Type>
+            <Description>Veeam</Description>
+          </Reservation>
+        </Reservations>
+        <Leases>
+          <Lease>
+            <IPAddress>10.0.10.10</IPAddress>
+            <ScopeId>10.0.10.0</ScopeId>
+            <ClientId>00-0c-29-a2-42-a6</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>FS01.test.gravity.beryju.io</HostName>
+            <Description>FS01</Description>
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.10.11</IPAddress>
+            <ScopeId>10.0.10.0</ScopeId>
+            <ClientId>00-50-56-ab-2e-d7</ClientId>
+            <AddressState>Active</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <LeaseExpiryTime>2022-12-30 04:56:34Z</LeaseExpiryTime>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>FS02.test.gravity.beryju.io</HostName>
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.10.12</IPAddress>
+            <ScopeId>10.0.10.0</ScopeId>
+            <ClientId>00-50-56-ab-68-1b</ClientId>
+            <AddressState>Active</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <LeaseExpiryTime>2023-01-02 14:45:44Z</LeaseExpiryTime>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>CCTV.test.gravity.beryju.io</HostName>
+          </Lease>
+          <Lease>
+            <IPAddress>10.0.10.20</IPAddress>
+            <ScopeId>10.0.10.0</ScopeId>
+            <ClientId>00-50-56-85-ae-2b</ClientId>
+            <AddressState>ActiveReservation</AddressState>
+            <ClientType>Dhcp</ClientType>
+            <NapCapable>false</NapCapable>
+            <DnsRR>PTR</DnsRR>
+            <DnsRegistration>Complete</DnsRegistration>
+            <NapStatus>FullAccess</NapStatus>
+            <HostName>veeam.test.gravity.beryju.io</HostName>
+            <Description>Veeam</Description>
+          </Lease>
+        </Leases>
+      </Scope>
+    </Scopes>
+  </IPv4>
+  <IPv6 xmlns="">
+    <Classes>
+      <Class>
+        <Name>Microsoft Windows Options</Name>
+        <Type>Vendor</Type>
+        <Data>0x4d53465420352e30</Data>
+        <Description>Microsoft vendor-specific options for Windows Clients</Description>
+        <VendorId>311</VendorId>
+      </Class>
+    </Classes>
+    <OptionDefinitions>
+      <OptionDefinition>
+        <Name>SIP Server Domain Name List </Name>
+        <OptionId>21</OptionId>
+        <Type>String</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>Domain Name of SIP servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Domain Search List </Name>
+        <OptionId>24</OptionId>
+        <Type>String</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>Domain search list used by clients to resolve hostnames with DNS, by preference </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS Domain List </Name>
+        <OptionId>29</OptionId>
+        <Type>String</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>Domain names of NIS servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS+ Domain Name List </Name>
+        <OptionId>30</OptionId>
+        <Type>String</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>Domain names of NIS+ servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>SIP Servers IPv6 Address List </Name>
+        <OptionId>22</OptionId>
+        <Type>IPv6Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>IPv6 addresses of SIP servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>DNS Recursive Name Server IPv6 Address List </Name>
+        <OptionId>23</OptionId>
+        <Type>IPv6Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>IPv6 Addresses of DNS recursive name servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS IPv6 Address List </Name>
+        <OptionId>27</OptionId>
+        <Type>IPv6Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>IPv6 Addresses of NIS servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>NIS+ IPv6 Address List </Name>
+        <OptionId>28</OptionId>
+        <Type>IPv6Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>IPv6 Addresses of NIS+ servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>SNTP Servers IPv6 Address List </Name>
+        <OptionId>31</OptionId>
+        <Type>IPv6Address</Type>
+        <MultiValued>true</MultiValued>
+        <DefaultValue />
+        <Description>IPv6 Addresses of SNTP servers available to the client </Description>
+        <VendorClass />
+      </OptionDefinition>
+      <OptionDefinition>
+        <Name>Information Refresh Time </Name>
+        <OptionId>32</OptionId>
+        <Type>DWord</Type>
+        <MultiValued>false</MultiValued>
+        <DefaultValue>86400</DefaultValue>
+        <Description>This option specifies an upper bound for how long a client should wait before refreshing information retrieved from DHCPv6 Server </Description>
+        <VendorClass />
+      </OptionDefinition>
+    </OptionDefinitions>
+    <StatelessStore>
+      <Enabled>false</Enabled>
+      <PurgeInterval>2.00:00:00</PurgeInterval>
+    </StatelessStore>
+  </IPv6>
+</DHCPServer>

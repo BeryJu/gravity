@@ -32,7 +32,7 @@ func TestRoleDNSZoneFind(t *testing.T) {
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	ctx := tests.Context()
-	assert.Nil(t, role.Start(ctx, []byte{}))
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 	zone := role.FindZone("foo.bar.")
 	assert.Equal(t, zone, role.FindZone("bar.baz."))

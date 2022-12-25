@@ -2,9 +2,12 @@ package dhcp
 
 import (
 	"context"
+	"errors"
 
+	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"go.uber.org/zap"
 )
 
 type APILeasesGetInput struct {
@@ -58,21 +61,34 @@ type APILeasesPutInput struct {
 
 func (r *Role) APILeasesPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesPutInput, output *struct{}) error {
+		rawScope, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyScopes,
+				input.Scope,
+			).String(),
+		)
+		if err != nil || len(rawScope.Kvs) < 1 {
+			r.log.Warn("failed to get scope", zap.Error(err))
+			return status.Wrap(errors.New("failed to get scope"), status.Internal)
+		}
+		scope, err := r.scopeFromKV(rawScope.Kvs[0])
+		if err != nil {
+			r.log.Warn("failed to construct scope", zap.Error(err))
+			return status.Wrap(errors.New("failed to construct scope"), status.Internal)
+		}
+
 		l := r.NewLease(input.Identifier)
 		l.Address = input.Address
 		l.Hostname = input.Hostname
 		l.AddressLeaseTime = input.AddressLeaseTime
 		l.ScopeKey = input.Scope
 		l.DNSZone = input.DNSZone
-		r.scopesM.RLock()
-		scope, ok := r.scopes[input.Scope]
-		r.scopesM.RUnlock()
-		if !ok {
-			return status.InvalidArgument
-		}
 		l.scope = scope
-		err := l.Put(ctx, -1)
+		err = l.Put(ctx, -1)
 		if err != nil {
+			r.log.Warn("failed to put lease", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
 		return nil

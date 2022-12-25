@@ -11,6 +11,7 @@ import (
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
+	"github.com/gosimple/slug"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -38,10 +39,15 @@ func New(api *api.APIClient, input string) (*Converter, error) {
 	}, nil
 }
 
-func (c *Converter) Run(ctx context.Context) {
+func (c *Converter) Run(ctx context.Context) []error {
+	errors := []error{}
 	for _, scope := range c.in.IPv4.Scopes.Scope {
-		c.convertScope(scope, ctx)
+		err := c.convertScope(scope, ctx)
+		if err != nil {
+			errors = append(errors, err)
+		}
 	}
+	return errors
 }
 
 func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
@@ -67,9 +73,9 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 		Default:    false,
 		SubnetCidr: cidr.String(),
 		Ipam: map[string]string{
-			"type":  "internal",
-			"start": sc.StartRange,
-			"end":   sc.EndRange,
+			"type":        "internal",
+			"range_start": sc.StartRange,
+			"range_end":   sc.EndRange,
 		},
 		Options: []api.TypesDHCPOption{},
 	}
@@ -86,23 +92,28 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 			Value: *api.NewNullableString(&v),
 		})
 	}
-	_, err = c.a.RolesDhcpApi.DhcpPutScopes(ctx).Scope(sc.Name).DhcpAPIScopesPutInput(gscope).Execute()
+	name := slug.Make(sc.Name)
+	_, err = c.a.RolesDhcpApi.DhcpPutScopes(ctx).Scope(name).DhcpAPIScopesPutInput(gscope).Execute()
 	if err != nil {
+		c.l.Warn("failed to convert scope", zap.Error(err))
 		return err
 	}
+	c.l.Info("converted scope", zap.String("name", name))
 
 	for _, res := range sc.Reservations.Reservation {
-		l := c.convertReservation(sc.Name, ctx, res)
+		l := c.convertReservation(name, ctx, res)
 		if l != nil {
 			c.l.Warn("failed to convert reservation", zap.Error(err))
-			continue
+		} else {
+			c.l.Info("converted reservation", zap.String("name", res.Name))
 		}
 	}
 	for _, l := range sc.Leases.Lease {
-		ll := c.convertLease(sc.Name, ctx, l)
+		ll := c.convertLease(name, ctx, l)
 		if ll != nil {
 			c.l.Warn("failed to convert lease", zap.Error(err))
-			continue
+		} else {
+			c.l.Info("converted lease", zap.String("name", l.HostName))
 		}
 	}
 	return nil
@@ -116,6 +127,9 @@ func (c *Converter) getIdentifier(clientId string) string {
 }
 
 func (c *Converter) convertReservation(scope string, ctx context.Context, r Reservation) error {
+	if ip := net.ParseIP(r.IPAddress); ip == nil {
+		return fmt.Errorf("failed to parse IP")
+	}
 	lease := api.DhcpAPILeasesPutInput{
 		Address:  r.IPAddress,
 		Hostname: r.Name,
@@ -127,6 +141,9 @@ func (c *Converter) convertReservation(scope string, ctx context.Context, r Rese
 func (c *Converter) convertLease(scope string, ctx context.Context, l Lease) error {
 	if l.HostName == "BAD_ADDRESS" {
 		return nil
+	}
+	if ip := net.ParseIP(l.IPAddress); ip == nil {
+		return fmt.Errorf("failed to parse IP")
 	}
 	lease := api.DhcpAPILeasesPutInput{
 		Address:  l.IPAddress,

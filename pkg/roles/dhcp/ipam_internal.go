@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/go-ping/ping"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -28,15 +29,15 @@ type InternalIPAM struct {
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 	sub, err := netip.ParsePrefix(s.SubnetCIDR)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to parse scope cidr")
 	}
 	start, err := netip.ParseAddr(s.IPAM["range_start"])
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to parse 'range_start'")
 	}
 	end, err := netip.ParseAddr(s.IPAM["range_end"])
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to parse 'range_end'")
 	}
 	ipam := &InternalIPAM{
 		SubnetCIDR: sub,
