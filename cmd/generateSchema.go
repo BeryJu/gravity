@@ -16,13 +16,13 @@ import (
 
 var schemaFormat = ""
 
-func GenerateSchema(format string, callback func(schema []byte)) {
+func GenerateSchema(ctx context.Context, format string, callback func(schema []byte)) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("api")
 	inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 		defer rootInst.Stop()
 		api := rootInst.Role("api").(*api.Role)
-		schema := api.Schema(context.Background())
+		schema := api.Schema(ctx)
 		var out []byte
 		var err error
 		switch strings.ToLower(format) {
@@ -48,7 +48,7 @@ var generateSchemaCmd = &cobra.Command{
 	Short: "Generate OpenAPI Schema",
 	Run: func(cmd *cobra.Command, args []string) {
 		logger := extconfig.Get().Logger()
-		GenerateSchema(schemaFormat, func(schema []byte) {
+		GenerateSchema(cmd.Context(), schemaFormat, func(schema []byte) {
 			if len(args) > 0 {
 				err := os.WriteFile(args[0], schema, 0644)
 				if err != nil {

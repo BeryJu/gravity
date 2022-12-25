@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 
@@ -27,7 +26,7 @@ var importCmd = &cobra.Command{
 				logger.Error("failed to unmarshal", zap.Error(err))
 				continue
 			}
-			_, err = apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(entries).Execute()
+			_, err = apiClient.RolesApiApi.ApiImport(cmd.Context()).ApiAPIImportInput(entries).Execute()
 			if err != nil {
 				logger.Error("failed to import", zap.Error(err))
 				continue

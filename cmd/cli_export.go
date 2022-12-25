@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 
@@ -13,7 +12,7 @@ var exportCmd = &cobra.Command{
 	Use:   "export [file]",
 	Short: "Output entire database into JSON file",
 	Run: func(cmd *cobra.Command, args []string) {
-		exp, _, err := apiClient.RolesApiApi.ApiExport(context.Background()).Execute()
+		exp, _, err := apiClient.RolesApiApi.ApiExport(cmd.Context()).Execute()
 		if err != nil {
 			logger.Error("failed to export", zap.Error(err))
 			return

@@ -12,7 +12,7 @@ var convertMsDHCP = &cobra.Command{
 	Use:   "ms_dhcp [input_xml [import_xml]]",
 	Short: "Import Microsoft DHCP leases/reservations into gravity",
 	Run: func(cmd *cobra.Command, args []string) {
-		ctx, cancel := context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(cmd.Context())
 		defer cancel()
 		for _, xml := range args {
 			conv, err := ms_dhcp.New(apiClient, xml)

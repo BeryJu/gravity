@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"beryju.io/gravity/cmd"
+	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateSchema(t *testing.T) {
 	called := false
-	cmd.GenerateSchema("json", func(schema []byte) {
+	cmd.GenerateSchema(tests.Context(), "json", func(schema []byte) {
 		assert.NotEqual(t, "", string(schema))
 		var out interface{}
 		json.Unmarshal(schema, &out)
