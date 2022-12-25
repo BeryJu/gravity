@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoleDNSIPForwarder(t *testing.T) {
+func TestRoleDNSBlockyForwarder(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	inst.KV().Put(
@@ -25,8 +25,9 @@ func TestRoleDNSIPForwarder(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "forward_ip",
-					"to":   "127.0.0.1:1053",
+					"type":       "forward_blocky",
+					"blocklists": "http://127.0.0.1:9005/blocky_file.txt",
+					"to":         "127.0.0.1:1053",
 				},
 			},
 		}),
@@ -37,5 +38,5 @@ func TestRoleDNSIPForwarder(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	time.Sleep(3 * time.Second)
 	defer role.Stop()
-	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+	assert.Equal(t, []string{"0.0.0.0", "::"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }

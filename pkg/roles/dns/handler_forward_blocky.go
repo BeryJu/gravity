@@ -33,13 +33,18 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		st:                 time.Now(),
 	}
 	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
-	go func() {
-		bfwd.log.Debug("starting blocky setup")
+	bfwd.log.Debug("starting blocky setup")
+	waitForStart := func() {
 		err := bfwd.setup()
 		if err != nil {
 			bfwd.log.Warn("failed to setup blocky, queries will fallthrough", zap.Error(err))
 		}
-	}()
+	}
+	if extconfig.Get().Debug {
+		waitForStart()
+	} else {
+		go waitForStart()
+	}
 	return bfwd
 }
 
@@ -79,11 +84,12 @@ func (bfwd *BlockyForwarder) setup() error {
 	}
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
+	cfg.LogLevel = log.LevelDebug
 	if !extconfig.Get().Debug {
 		cfg.LogFormat = blockylog.FormatTypeJson
+		// Only log errors from blocky to prevent double-logging all queries
+		cfg.LogLevel = log.LevelFatal
 	}
-	// Only log errors from blocky to prevent double-logging all queries
-	cfg.LogLevel = log.LevelFatal
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
 		return err
@@ -110,6 +116,7 @@ func (bfwd *BlockyForwarder) setup() error {
 			"default": {"block"},
 		},
 	}
+	bfwd.log.Debug("blocky config", zap.Any("config", cfg))
 
 	srv, err := server.NewServer(&cfg)
 	if err != nil {
