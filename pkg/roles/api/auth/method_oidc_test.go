@@ -19,7 +19,7 @@ func TestAuthOIDC(t *testing.T) {
 
 	role := api.New(inst)
 	assert.NoError(t, role.Start(ctx, []byte(tests.MustJSON(api.RoleConfig{
-		Port: 8008,
+		ListenOverride: "localhost:8008",
 		OIDC: &types.OIDCConfig{
 			Issuer:       "http://127.0.0.1:5556/dex",
 			ClientID:     "gravity",
