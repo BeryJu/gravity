@@ -2,7 +2,6 @@ package dns
 
 import (
 	"context"
-	"errors"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
@@ -32,9 +31,17 @@ type APIRecordsGetOutput struct {
 
 func (r *Role) APIRecordsGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsGetInput, output *APIRecordsGetOutput) error {
-		zone, ok := r.zones[input.Zone]
-		if !ok {
-			return status.Wrap(errors.New("not found"), status.NotFound)
+		rawZone, err := r.i.KV().Get(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			input.Zone,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		zone, err := r.zoneFromKV(rawZone.Kvs[0])
+		if err != nil {
+			return status.Wrap(err, status.Internal)
 		}
 		rawRecords, err := r.i.KV().Get(ctx, r.i.KV().Key(
 			types.KeyRole,
@@ -87,9 +94,17 @@ type APIRecordsPutInput struct {
 
 func (r *Role) APIRecordsPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsPutInput, output *struct{}) error {
-		zone, ok := r.zones[input.Zone]
-		if !ok {
-			return status.Wrap(errors.New("zone not found"), status.NotFound)
+		rawZone, err := r.i.KV().Get(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			input.Zone,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		zone, err := r.zoneFromKV(rawZone.Kvs[0])
+		if err != nil {
+			return status.Wrap(err, status.Internal)
 		}
 		rec := zone.newRecord(input.Hostname, input.Type)
 		rec.uid = input.UID
@@ -98,7 +113,7 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		rec.SRVPort = input.SRVPort
 		rec.SRVPriority = input.SRVPriority
 		rec.SRVWeight = input.SRVWeight
-		err := rec.put(ctx, -1)
+		err = rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
@@ -120,9 +135,17 @@ type APIRecordsDeleteInput struct {
 
 func (r *Role) APIRecordsDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRecordsDeleteInput, output *struct{}) error {
-		_, ok := r.zones[input.Zone]
-		if !ok {
-			return status.Wrap(errors.New("zone not found"), status.NotFound)
+		rawZone, err := r.i.KV().Get(ctx, r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			input.Zone,
+		).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		_, err = r.zoneFromKV(rawZone.Kvs[0])
+		if err != nil {
+			return status.Wrap(err, status.Internal)
 		}
 		key := r.i.KV().Key(
 			types.KeyRole,
@@ -134,7 +157,7 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 		if input.UID != "" {
 			key = key.Add(input.UID)
 		}
-		_, err := r.i.KV().Delete(
+		_, err = r.i.KV().Delete(
 			ctx,
 			key.String(),
 		)
