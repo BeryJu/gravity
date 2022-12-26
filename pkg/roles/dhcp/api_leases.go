@@ -133,11 +133,15 @@ type APILeasesDeleteInput struct {
 
 func (r *Role) APILeasesDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesDeleteInput, output *struct{}) error {
-		l, ok := r.leases[input.Identifier]
-		if !ok {
-			return status.InvalidArgument
-		}
-		_, err := r.i.KV().Delete(ctx, l.etcdKey)
+		key := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+			input.Identifier,
+		)
+		_, err := r.i.KV().Delete(
+			ctx,
+			key.String(),
+		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
