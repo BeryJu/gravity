@@ -14,8 +14,8 @@ import (
 )
 
 type RoleConfig struct {
-	Port           int32 `json:"port"`
-	ListenOverride string
+	Port           int32             `json:"port"`
+	ListenOverride string            `json:"-"`
 	CookieSecret   string            `json:"cookieSecret"`
 	OIDC           *types.OIDCConfig `json:"oidc"`
 }

@@ -31,7 +31,7 @@ func TestAPISubnetsGet(t *testing.T) {
 	assert.NotNil(t, output)
 }
 
-func TestAPIScopesPut(t *testing.T) {
+func TestAPISubnetsPut(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("discovery")
 	role := discovery.New(inst)

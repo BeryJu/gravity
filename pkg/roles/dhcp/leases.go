@@ -96,11 +96,11 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	}
 
 	var zone string
-	if l.scope.DNS != nil {
+	if l.scope != nil && l.scope.DNS != nil {
 		zone = l.scope.DNS.Zone
-		if l.DNSZone != "" {
-			zone = l.DNSZone
-		}
+	}
+	if l.DNSZone != "" {
+		zone = l.DNSZone
 	}
 	ev := roles.NewEvent(
 		ctx,
@@ -114,7 +114,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	ev.Payload.RelatedObjectOptions = opts
 	l.inst.DispatchEvent(types.EventTopicDHCPLeasePut, ev)
 
-	l.log.Debug("put lease", zap.Int64("expiry", expiry), zap.String("identifier", l.Identifier))
+	l.log.Debug("put lease", zap.Int64("expiry", expiry))
 	return nil
 }
 

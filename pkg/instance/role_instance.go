@@ -33,7 +33,11 @@ func (ri *RoleInstance) Log() *zap.Logger {
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
-	ri.log.Debug("dispatching event", zap.String("topic", topic))
+	l := ri.log
+	if extconfig.Get().Debug {
+		l = l.With(zap.Any("payload", ev.Payload.Data))
+	}
+	l.Debug("dispatching event", zap.String("topic", topic))
 	if ev.Context == nil {
 		ev.Context = context.Background()
 	}
