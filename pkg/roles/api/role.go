@@ -125,6 +125,9 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 func (r *Role) ListenAndServeHTTP() {
 	r.httpServer.Handler = r.m
 	listen := extconfig.Get().Listen(r.cfg.Port)
+	if r.cfg.ListenOverride != "" {
+		listen = r.cfg.ListenOverride
+	}
 	r.log.Info("starting API Server", zap.String("listen", listen))
 	r.httpServer.Addr = listen
 	err := r.httpServer.ListenAndServe()

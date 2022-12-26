@@ -16,11 +16,13 @@ import (
 
 func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	port := rand.Intn(65535-1024) + 1024
+	listen := fmt.Sprintf("localhost:%d", port)
+
 	inst := rootInst.ForRole("api")
 	role := roleAPI.New(inst)
 	ctx := tests.Context()
 	role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
-		Port: int32(port),
+		ListenOverride: listen,
 	})))
 
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
@@ -37,7 +39,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	config := api.NewConfiguration()
 	config.Debug = true
 	config.Scheme = "http"
-	config.Host = fmt.Sprintf("localhost:%d", port)
+	config.Host = listen
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
 	return api.NewAPIClient(config), func() {
 		role.Stop()

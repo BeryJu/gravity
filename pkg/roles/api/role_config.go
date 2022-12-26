@@ -14,9 +14,10 @@ import (
 )
 
 type RoleConfig struct {
-	Port         int32             `json:"port"`
-	CookieSecret string            `json:"cookieSecret"`
-	OIDC         *types.OIDCConfig `json:"oidc"`
+	Port           int32 `json:"port"`
+	ListenOverride string
+	CookieSecret   string            `json:"cookieSecret"`
+	OIDC           *types.OIDCConfig `json:"oidc"`
 }
 
 func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
