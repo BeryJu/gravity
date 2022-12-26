@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/base64"
 	"fmt"
-	"math/rand"
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/instance"
@@ -15,15 +14,10 @@ import (
 )
 
 func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
-	port := rand.Intn(65535-1024) + 1024
-	listen := fmt.Sprintf("localhost:%d", port)
-
 	inst := rootInst.ForRole("api")
 	role := roleAPI.New(inst)
 	ctx := tests.Context()
-	role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
-		ListenOverride: listen,
-	})))
+	role.Start(ctx, []byte{})
 
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
 
@@ -39,7 +33,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	config := api.NewConfiguration()
 	config.Debug = true
 	config.Scheme = "http"
-	config.Host = listen
+	config.Host = "localhost:8008"
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
 	return api.NewAPIClient(config), func() {
 		role.Stop()
