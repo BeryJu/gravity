@@ -94,7 +94,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.sessions = sess
 
 	if r.cfg.OIDC != nil {
-		r.auth.ConfigureOpenIDConnect(r.ctx, r.cfg.OIDC)
+		err := r.auth.ConfigureOpenIDConnect(r.ctx, r.cfg.OIDC)
+		if err != nil {
+			r.log.Warn("failed to setup OpenID Connect, ignoring", zap.Error(err))
+		}
 	}
 	r.prepareOpenAPI(ctx)
 	go r.ListenAndServeHTTP()

@@ -13,17 +13,17 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
 
-func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *types.OIDCConfig) {
+func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *types.OIDCConfig) error {
 	c := &http.Client{Transport: extconfig.Transport()}
 	ctx = context.WithValue(ctx, oauth2.HTTPClient, c)
 	provider, err := oidc.NewProvider(ctx, config.Issuer)
 	if err != nil {
-		ap.log.Warn("failed to initialise oidc", zap.Error(err))
-		return
+		return errors.Wrap(err, "failed to initialise oidc")
 	}
 	ap.oidc = config
 	red := strings.ReplaceAll(config.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
@@ -92,4 +92,5 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 			http.Redirect(w, r, "/", http.StatusFound)
 		})
 	})
+	return nil
 }

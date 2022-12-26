@@ -73,9 +73,14 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		err := r.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			r.log.Warn("failed to listen", zap.Error(err))
+			r.server = nil
 		}
 	}()
 	return nil
+}
+
+func (r *Role) IsRunning() bool {
+	return r.server != nil
 }
 
 func (r *Role) Stop() {

@@ -8,6 +8,7 @@
         10.200.0.3 minio.t.gravity.beryju.io
         10.200.0.4 coredns.t.gravity.beryju.io
         10.200.0.5 nginx.t.gravity.beryju.io
+        10.200.0.6 dex.t.gravity.beryju.io
     }
     cache 30
 }

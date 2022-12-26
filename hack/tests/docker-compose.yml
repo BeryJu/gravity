@@ -31,15 +31,6 @@ services:
       MINIO_ROOT_USER: gravity
       MINIO_ROOT_PASSWORD: gravity-key
     command: server /data --console-address ":9001"
-  nginx:
-    image: docker.io/library/nginx
-    ports:
-      - 9005:80
-    networks:
-      default:
-        ipv4_address: 10.200.0.5
-    volumes:
-      - ./nginx:/usr/share/nginx/html
   coredns:
     hostname: coredns.t.gravity.beryju.io
     image: docker.io/coredns/coredns:1.10.0
@@ -52,3 +43,22 @@ services:
     command: -conf /etc/coredns/Corefile
     volumes:
       - ./coredns/Corefile:/etc/coredns/Corefile
+  nginx:
+    image: docker.io/library/nginx
+    ports:
+      - 9005:80
+    networks:
+      default:
+        ipv4_address: 10.200.0.5
+    volumes:
+      - ./nginx:/usr/share/nginx/html
+  dex:
+    image: ghcr.io/dexidp/dex:v2.28.1
+    ports:
+      - 5556:5556
+    networks:
+      default:
+        ipv4_address: 10.200.0.6
+    command: dex serve /config/config.yml
+    volumes:
+      - ./dex/config.yml:/config/config.yml
