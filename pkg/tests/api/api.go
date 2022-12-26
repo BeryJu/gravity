@@ -17,7 +17,9 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	inst := rootInst.ForRole("api")
 	role := roleAPI.New(inst)
 	ctx := tests.Context()
-	role.Start(ctx, []byte{})
+	role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
+		ListenOverride: "localhost:8008",
+	})))
 
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
 
