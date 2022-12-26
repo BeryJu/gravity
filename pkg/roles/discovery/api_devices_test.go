@@ -41,7 +41,9 @@ func TestDeviceApplyDHCP(t *testing.T) {
 
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp"))
-	dhcpRole.Start(tests.Context(), []byte{})
+	dhcpRole.Start(tests.Context(), []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	})))
 	defer dhcpRole.Stop()
 
 	role := discovery.New(inst)
@@ -108,7 +110,9 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp"))
-	dhcpRole.Start(tests.Context(), []byte{})
+	dhcpRole.Start(tests.Context(), []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	})))
 	defer dhcpRole.Stop()
 	// Create DNS role to register events
 	dnsRole := dns.New(rootInst.ForRole("dns"))
