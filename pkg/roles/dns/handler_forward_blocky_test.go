@@ -10,11 +10,20 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestRoleDNSBlockyForwarder(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
+	inst.KV().Delete(
+		tests.Context(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
 	inst.KV().Put(
 		tests.Context(),
 		inst.KV().Key(
