@@ -134,6 +134,7 @@ func (i *Instance) getRoles() []string {
 	roles := extconfig.Get().BootstrapRoles
 	if err == nil && len(rr.Kvs) > 0 {
 		roles = string(rr.Kvs[0].Value)
+		i.log.Info("roles configured for instance", zap.Strings("roles", strings.Split(roles, ";")))
 	} else {
 		i.log.Info("defaulting to bootstrap roles", zap.Strings("roles", strings.Split(roles, ";")))
 	}

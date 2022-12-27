@@ -3,6 +3,7 @@ package tsdb
 import (
 	"context"
 	"net/http"
+	"os"
 	"runtime"
 	"strconv"
 	"sync"
@@ -14,6 +15,7 @@ import (
 	debugTypes "beryju.io/gravity/pkg/roles/debug/types"
 	"beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/gorilla/mux"
+	"github.com/struCoder/pidusage"
 	"github.com/swaggest/rest/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -39,6 +41,8 @@ func New(instance roles.Instance) *Role {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/tsdb", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/tsdb", r.APIRoleConfigPut())
+		svc.Get("/api/v1/system/metrics/memory", r.APIMetricsMemory())
+		svc.Get("/api/v1/system/metrics/cpu", r.APIMetricsCPU())
 	})
 	r.i.AddEventListener(debugTypes.EventTopicDebugMuxSetup, func(ev *roles.Event) {
 		mux := ev.Payload.Data["mux"].(*mux.Router)
@@ -59,6 +63,19 @@ func New(instance roles.Instance) *Role {
 			).String(),
 			types.Metric{
 				Value: int(m.Sys),
+			},
+		)
+		sysInfo, err := pidusage.GetStat(os.Getpid())
+		if err != nil {
+			return
+		}
+		r.SetMetric(
+			r.i.KV().Key(
+				types.KeySystem,
+				"cpu",
+			).String(),
+			types.Metric{
+				Value: int(sysInfo.CPU),
 			},
 		)
 	})
