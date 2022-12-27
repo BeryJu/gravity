@@ -100,7 +100,6 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	})
 	r.i.AddEventListener(types.EventTopicTSDBSet, func(ev *roles.Event) {
 		key := ev.Payload.Data["key"].(string)
-		r.log.Debug("tsdb set", zap.String("key", key))
 		r.SetMetric(key, ev.Payload.Data["value"].(types.Metric))
 	})
 	r.i.AddEventListener(types.EventTopicTSDBInc, func(ev *roles.Event) {
