@@ -12,10 +12,11 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -91,7 +92,7 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 	}
 }
 
-func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
+func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span trace.Span) {
 	for _, handler := range z.h {
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		start := time.Now()
@@ -99,7 +100,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 		finish := time.Since(start)
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
-			span.SetTag("gravity.dns.handler", handler.Identifier())
+			span.SetAttributes(attribute.String("gravity.dns.handler", handler.Identifier()))
 			handlerReply.SetReply(r)
 			w.WriteMsg(handlerReply)
 			z.resolveUpdateMetrics(finish, r, handler, handlerReply)

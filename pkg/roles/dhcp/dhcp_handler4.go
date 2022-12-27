@@ -7,9 +7,10 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
@@ -84,22 +85,11 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	r.Context = context
 	r.oob = oob
 
-	span := sentry.StartSpan(
-		r.Context,
-		"gravity.roles.dhcp.request",
-		sentry.TransactionName("gravity.roles.dhcp"),
-	)
-	hub := sentry.GetHubFromContext(span.Context())
-	if hub == nil {
-		hub = sentry.CurrentHub()
-	}
-	hub.Scope().SetUser(sentry.User{
-		Username:  m.HostName(),
-		IPAddress: _peer.String(),
-	})
-
-	span.Description = m.MessageType().String()
-	defer span.Finish()
+	_, span := otel.Tracer("").Start(r.Context, "gravity.roles.dhcp.request")
+	span.SetAttributes(attribute.String("messageType", m.MessageType().String()))
+	span.SetAttributes(attribute.String("host", m.HostName()))
+	span.SetAttributes(attribute.String("ip", _peer.String()))
+	defer span.End()
 	resp := h.HandleRequest(r)
 
 	if resp != nil {
