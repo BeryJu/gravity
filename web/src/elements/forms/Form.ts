@@ -18,7 +18,6 @@ import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
 import { camelToSnake, convertToSlug } from "../../common/utils";
 import { AKElement } from "../Base";
-import { SearchSelect } from "../SearchSelect";
 import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { showMessage } from "../messages/MessageContainer";
 
@@ -165,13 +164,6 @@ export class Form<T> extends AKElement {
                 json[element.name] = new Date(element.value);
             } else if (element.tagName.toLowerCase() === "input" && element.type === "checkbox") {
                 json[element.name] = element.checked;
-            } else if (element.tagName.toLowerCase() === "ak-search-select") {
-                const select = element as unknown as SearchSelect<unknown>;
-                try {
-                    json[element.name] = select.value(select.selectedObject);
-                } catch {
-                    console.debug("authentik/form: SearchSelect.value error");
-                }
             } else {
                 for (let v = 0; v < values.length; v++) {
                     this.serializeFieldRecursive(element, values[v], json);

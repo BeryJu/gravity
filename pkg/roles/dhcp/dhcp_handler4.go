@@ -97,7 +97,6 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		useEthernet := false
 		var peer *net.UDPAddr
 		if !r.GatewayIPAddr.IsUnspecified() {
-			// TODO: make RFC8357 compliant
 			peer = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
 		} else if resp.MessageType() == dhcpv4.MessageTypeNak {
 			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}

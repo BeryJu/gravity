@@ -113,8 +113,9 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
 
     renderObjectCreate(): TemplateResult {
         return html`
-            <ak-forms-modal>
+            <ak-forms-modal submitKeepOpen="submit-keep-open">
                 <span slot="submit"> ${"Create"} </span>
+                <span slot="submit-keep-open"> ${"Create & stay open"} </span>
                 <span slot="header"> ${"Create Record"} </span>
                 <gravity-dns-record-form zone=${ifDefined(this.zone)} slot="form">
                 </gravity-dns-record-form>
