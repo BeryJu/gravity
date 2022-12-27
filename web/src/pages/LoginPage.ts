@@ -68,6 +68,11 @@ export class LoginPage extends AKElement {
             PFBackgroundImage,
             AKElement.GlobalStyle,
             css`
+                :host {
+                    background-image: url("/ui/static/assets/images/background.jpg");
+                    background-position: center center;
+                    background-size: cover;
+                }
                 .pf-c-login__header {
                     font-size: 3rem;
                     color: var(--ak-accent);
@@ -84,37 +89,35 @@ export class LoginPage extends AKElement {
 
     render(): TemplateResult {
         return html`
-            <div class="pf-c-background-image">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="pf-c-background-image__filter"
-                    width="0"
-                    height="0"
-                >
-                    <filter id="image_overlay">
-                        <feColorMatrix
-                            in="SourceGraphic"
-                            type="matrix"
-                            values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"
-                        />
-                        <feComponentTransfer color-interpolation-filters="sRGB" result="duotone">
-                            <feFuncR
-                                type="table"
-                                tableValues="0.086274509803922 0.43921568627451"
-                            ></feFuncR>
-                            <feFuncG
-                                type="table"
-                                tableValues="0.086274509803922 0.43921568627451"
-                            ></feFuncG>
-                            <feFuncB
-                                type="table"
-                                tableValues="0.086274509803922 0.43921568627451"
-                            ></feFuncB>
-                            <feFuncA type="table" tableValues="0 1"></feFuncA>
-                        </feComponentTransfer>
-                    </filter>
-                </svg>
-            </div>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="pf-c-background-image__filter"
+                width="0"
+                height="0"
+            >
+                <filter id="image_overlay">
+                    <feColorMatrix
+                        in="SourceGraphic"
+                        type="matrix"
+                        values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"
+                    />
+                    <feComponentTransfer color-interpolation-filters="sRGB" result="duotone">
+                        <feFuncR
+                            type="table"
+                            tableValues="0.086274509803922 0.43921568627451"
+                        ></feFuncR>
+                        <feFuncG
+                            type="table"
+                            tableValues="0.086274509803922 0.43921568627451"
+                        ></feFuncG>
+                        <feFuncB
+                            type="table"
+                            tableValues="0.086274509803922 0.43921568627451"
+                        ></feFuncB>
+                        <feFuncA type="table" tableValues="0 1"></feFuncA>
+                    </feComponentTransfer>
+                </filter>
+            </svg>
             <div class="pf-c-login">
                 <div class="pf-c-login__container">
                     <header class="pf-c-login__header">
@@ -139,7 +142,20 @@ export class LoginPage extends AKElement {
                               `
                             : html``}
                     </main>
-                    <footer class="pf-c-login__footer"></footer>
+                    <footer class="pf-c-login__footer">
+                        <p></p>
+                        <ul class="pf-c-list pf-m-inline">
+                            <li>
+                                <a
+                                    href="https://gravity.beryju.io?utm_source=gravity&amp;utm_medium=login"
+                                    >${"Powered by Gravity"}</a
+                                >
+                            </li>
+                            <li>
+                                <a href="https://unsplash.com/@hassaanhre">${"Background image"}</a>
+                            </li>
+                        </ul>
+                    </footer>
                 </div>
             </div>
         `;

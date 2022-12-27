@@ -17,9 +17,9 @@ import "./cards/CurrentInstanceCard";
 import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
+import "./charts/CPUUsageChart";
 import "./charts/DNSRequestsChart";
 import "./charts/MemoryUsageChart";
-import "./charts/CPUUsageChart";
 
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
