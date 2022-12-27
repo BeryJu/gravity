@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/storage"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func MustJSON(in interface{}) string {
@@ -30,9 +31,14 @@ func RandomString() string {
 }
 
 func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...interface{}) {
+	args := []clientv3.OpOption{}
+	if key.IsPrefix() {
+		args = append(args, clientv3.WithPrefix())
+	}
 	values, err := c.Get(
 		Context(),
 		key.String(),
+		args...,
 	)
 	assert.NoError(t, err)
 	assert.Equal(t, len(expected), len(values.Kvs))

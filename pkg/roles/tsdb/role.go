@@ -52,7 +52,7 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(types.EventTopicTSDBBeforeWrite, func(ev *roles.Event) {
 		var m runtime.MemStats
 		runtime.ReadMemStats(&m)
-		r.setMetric(
+		r.SetMetric(
 			r.i.KV().Key(
 				types.KeySystem,
 				"memory",
@@ -65,7 +65,7 @@ func New(instance roles.Instance) *Role {
 	return r
 }
 
-func (r *Role) setMetric(key string, value types.Metric) {
+func (r *Role) SetMetric(key string, value types.Metric) {
 	r.ms.Lock()
 	defer r.ms.Unlock()
 	r.log.Debug("tsdb set", zap.String("key", key))
@@ -84,7 +84,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.i.AddEventListener(types.EventTopicTSDBSet, func(ev *roles.Event) {
 		key := ev.Payload.Data["key"].(string)
 		r.log.Debug("tsdb set", zap.String("key", key))
-		r.setMetric(key, ev.Payload.Data["value"].(types.Metric))
+		r.SetMetric(key, ev.Payload.Data["value"].(types.Metric))
 	})
 	r.i.AddEventListener(types.EventTopicTSDBInc, func(ev *roles.Event) {
 		r.ms.Lock()

@@ -25,6 +25,10 @@ func (k *Key) Prefix(val bool) *Key {
 	return k
 }
 
+func (k *Key) IsPrefix() bool {
+	return k.prefix
+}
+
 func (k *Key) Copy() *Key {
 	p := make([]string, len(k.parts))
 	copy(k.parts, p)
