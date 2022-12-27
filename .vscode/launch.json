@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch gravity",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": ".",
+            "args": [
+                "server",
+            ],
+            "env": {
+                "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;debug;tsdb",
+                "DEBUG": "true",
+                "INSTANCE_IP": "0.0.0.0"
+            }
+        }
+    ]
+}
