@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CookieSecret** | Pointer to **string** |  | [optional] 
+**ListenOverride** | Pointer to **string** |  | [optional] 
 **Oidc** | Pointer to [**TypesOIDCConfig**](TypesOIDCConfig.md) |  | [optional] 
 **Port** | Pointer to **int32** |  | [optional] 
 
@@ -51,6 +52,31 @@ SetCookieSecret sets CookieSecret field to given value.
 `func (o *ApiRoleConfig) HasCookieSecret() bool`
 
 HasCookieSecret returns a boolean if a field has been set.
+
+### GetListenOverride
+
+`func (o *ApiRoleConfig) GetListenOverride() string`
+
+GetListenOverride returns the ListenOverride field if non-nil, zero value otherwise.
+
+### GetListenOverrideOk
+
+`func (o *ApiRoleConfig) GetListenOverrideOk() (*string, bool)`
+
+GetListenOverrideOk returns a tuple with the ListenOverride field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetListenOverride
+
+`func (o *ApiRoleConfig) SetListenOverride(v string)`
+
+SetListenOverride sets ListenOverride field to given value.
+
+### HasListenOverride
+
+`func (o *ApiRoleConfig) HasListenOverride() bool`
+
+HasListenOverride returns a boolean if a field has been set.
 
 ### GetOidc
 

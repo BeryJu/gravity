@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.3.4
+  version: 0.3.5
 servers:
 - url: /
 paths:
@@ -1385,6 +1385,7 @@ components:
         config:
           port: 0
           cookieSecret: cookieSecret
+          listenOverride: listenOverride
           oidc:
             clientID: clientID
             redirectURL: redirectURL
@@ -1404,6 +1405,7 @@ components:
         config:
           port: 0
           cookieSecret: cookieSecret
+          listenOverride: listenOverride
           oidc:
             clientID: clientID
             redirectURL: redirectURL
@@ -1432,6 +1434,7 @@ components:
       example:
         port: 0
         cookieSecret: cookieSecret
+        listenOverride: listenOverride
         oidc:
           clientID: clientID
           redirectURL: redirectURL
@@ -1442,6 +1445,8 @@ components:
           issuer: issuer
       properties:
         cookieSecret:
+          type: string
+        listenOverride:
           type: string
         oidc:
           $ref: '#/components/schemas/TypesOIDCConfig'
