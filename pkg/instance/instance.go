@@ -10,7 +10,6 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	clientv3 "go.etcd.io/etcd/client/v3"
-	"go.etcd.io/etcd/server/v3/embed"
 	"go.uber.org/zap"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -87,7 +86,7 @@ func (i *Instance) Start() {
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))
-		i.etcd.Start(i.rootContext, func(c *embed.Config) {})
+		i.etcd.Start(i.rootContext)
 	}
 	i.bootstrap()
 }

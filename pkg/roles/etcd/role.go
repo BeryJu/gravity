@@ -40,48 +40,44 @@ func urlMustParse(raw string) url.URL {
 
 func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
+	cfg := embed.NewConfig()
+	cfg.Dir = dirs.EtcdDir
+	cfg.LogLevel = "warn"
+	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
+		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
+		nil,
+		nil,
+	)
+	cfg.AutoCompactionMode = "periodic"
+	cfg.AutoCompactionRetention = "60m"
+	cfg.LPUrls = []url.URL{
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
+	}
+	cfg.APUrls = []url.URL{
+		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
+	}
+	cfg.Name = extconfig.Get().Instance.Identifier
 	ee := &Role{
+		cfg:     cfg,
 		log:     instance.Log(),
 		i:       instance,
 		etcdDir: dirs.EtcdDir,
 		certDir: dirs.CertDir,
 	}
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
+	if extconfig.Get().Etcd.JoinCluster != "" {
+		cfg.ClusterState = embed.ClusterStateFlagExisting
+		cfg.InitialCluster = cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
+	}
+	cfg.PeerAutoTLS = true
+	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
+	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
+	cfg.PeerTLSInfo.ClientCertAuth = true
+	cfg.SelfSignedCertValidity = 1
 	return ee
 }
 
-func (ee *Role) Start(ctx context.Context, config func(c *embed.Config)) error {
-	ee.cfg = embed.NewConfig()
-	ee.cfg.Dir = ee.etcdDir
-	ee.cfg.LogLevel = "warn"
-	ee.cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
-		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
-		nil,
-		nil,
-	)
-	ee.cfg.AutoCompactionMode = "periodic"
-	ee.cfg.AutoCompactionRetention = "60m"
-	ee.cfg.LPUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
-	}
-	ee.cfg.LCUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2379))),
-	}
-	ee.cfg.APUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
-	}
-	ee.cfg.Name = extconfig.Get().Instance.Identifier
-	ee.cfg.InitialCluster = fmt.Sprintf("%s=https://%s:%d", ee.cfg.Name, extconfig.Get().Instance.IP, 2380)
-	if extconfig.Get().Etcd.JoinCluster != "" {
-		ee.cfg.ClusterState = embed.ClusterStateFlagExisting
-		ee.cfg.InitialCluster = ee.cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
-	}
-	ee.cfg.PeerAutoTLS = true
-	ee.cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
-	ee.cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
-	ee.cfg.PeerTLSInfo.ClientCertAuth = true
-	ee.cfg.SelfSignedCertValidity = 1
-	config(ee.cfg)
-
+func (ee *Role) Start(ctx context.Context) error {
 	start := time.Now()
 	e, err := embed.StartEtcd(ee.cfg)
 	if err != nil {
