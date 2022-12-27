@@ -1,7 +1,6 @@
 import { CSSResult, PropertyDeclaration, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import AKGlobal from "@goauthentik/common/styles/authentik.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
@@ -10,7 +9,7 @@ import { Wizard } from "./Wizard";
 @customElement("ak-wizard-page")
 export class WizardPage extends AKElement {
     static get styles(): CSSResult[] {
-        return [PFBase, AKGlobal];
+        return [PFBase, AKElement.GlobalStyle];
     }
 
     @property()

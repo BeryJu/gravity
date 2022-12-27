@@ -6,6 +6,7 @@ import { state } from "lit/decorators.js";
 import PFWizard from "@patternfly/patternfly/components/Wizard/wizard.css";
 
 import { ModalButton } from "../buttons/ModalButton";
+import "./ActionWizardPage";
 import { WizardPage } from "./WizardPage";
 
 export interface WizardAction {
@@ -204,7 +205,7 @@ export class Wizard extends ModalButton {
                             }
                         }}
                     >
-                        ${lastPage ? "Finish" : "Nex"}
+                        ${lastPage ? "Finish" : "Next"}
                     </button>
                     ${(this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0) > 0 &&
                     this.canBack

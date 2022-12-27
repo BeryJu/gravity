@@ -10,6 +10,7 @@ import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
 import "./DNSZoneForm";
+import "./wizard/DNSZoneWizard";
 
 @customElement("gravity-dns-zones")
 export class DNSZonesPage extends TablePage<DnsAPIZone> {
@@ -70,14 +71,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
     }
 
     renderObjectCreate(): TemplateResult {
-        return html`
-            <ak-forms-modal>
-                <span slot="submit"> ${"Create"} </span>
-                <span slot="header"> ${"Create Zone"} </span>
-                <gravity-dns-zone-form slot="form"> </gravity-dns-zone-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
-            </ak-forms-modal>
-        `;
+        return html` <gravity-dns-zone-wizard></gravity-dns-zone-wizard> `;
     }
 
     renderToolbarSelected(): TemplateResult {
