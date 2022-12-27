@@ -22,7 +22,7 @@ var exportCmd = &cobra.Command{
 			logger.Error("failed to json marshal", zap.Error(err))
 			return
 		}
-		err = os.WriteFile(args[0], raw, 0644)
+		err = os.WriteFile(args[0], raw, 0o644)
 		if err != nil {
 			logger.Error("failed to write export", zap.Error(err))
 		}

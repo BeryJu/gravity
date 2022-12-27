@@ -5,8 +5,10 @@ import (
 )
 
 // Set via ldflags
-var Version = ""
-var BuildHash = ""
+var (
+	Version   = ""
+	BuildHash = ""
+)
 
 func FullVersion() string {
 	version := strings.Builder{}

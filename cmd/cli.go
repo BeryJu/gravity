@@ -14,11 +14,15 @@ import (
 	"go.uber.org/zap"
 )
 
-var apiUrl string
-var apiToken string
+var (
+	apiUrl   string
+	apiToken string
+)
 
-var apiClient *api.APIClient
-var logger *zap.Logger
+var (
+	apiClient *api.APIClient
+	logger    *zap.Logger
+)
 
 var cliCmd = &cobra.Command{
 	Use:   "cli",

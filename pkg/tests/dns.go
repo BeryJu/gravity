@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func DNSLookup(query string, to string) []string {
+func DNSLookup(query, to string) []string {
 	r := &net.Resolver{
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {

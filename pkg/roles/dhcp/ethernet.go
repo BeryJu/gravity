@@ -90,7 +90,7 @@ func (h *handler4) sendEthernet(iface net.Interface, resp *dhcpv4.DHCPv4) error 
 		Protocol: 0,
 		Ifindex:  iface.Index,
 		Halen:    6,
-		Addr:     hwAddr, //not used
+		Addr:     hwAddr, // not used
 	}
 	err = syscall.Sendto(fd, data, 0, &ethAddr)
 	if err != nil {

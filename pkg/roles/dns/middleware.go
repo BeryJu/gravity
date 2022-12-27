@@ -37,7 +37,7 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 
 func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	getIP := func(addr net.Addr) string {
-		var clientIP = ""
+		clientIP := ""
 		switch addr := addr.(type) {
 		case *net.UDPAddr:
 			clientIP = addr.IP.String()

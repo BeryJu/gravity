@@ -50,7 +50,7 @@ var generateSchemaCmd = &cobra.Command{
 		logger := extconfig.Get().Logger()
 		GenerateSchema(cmd.Context(), schemaFormat, func(schema []byte) {
 			if len(args) > 0 {
-				err := os.WriteFile(args[0], schema, 0644)
+				err := os.WriteFile(args[0], schema, 0o644)
 				if err != nil {
 					logger.Warn("failed to write schema", zap.Error(err))
 					return

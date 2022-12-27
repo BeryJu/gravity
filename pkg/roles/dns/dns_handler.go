@@ -35,7 +35,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	_, span := otel.Tracer("").Start(context.TODO(), "gravity.roles.dns.request")
 	defer span.End()
 
-	var clientIP = ""
+	clientIP := ""
 	switch addr := w.RemoteAddr().(type) {
 	case *net.UDPAddr:
 		clientIP = addr.IP.String()

@@ -57,7 +57,7 @@ func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
 func (h *handler4) Serve() error {
 	for {
 		b := *bufpool.Get().(*[]byte)
-		b = b[:MaxDatagram] //Reslice to max capacity in case the buffer in pool was resliced smaller
+		b = b[:MaxDatagram] // Reslice to max capacity in case the buffer in pool was resliced smaller
 
 		n, oob, peer, err := h.pc.ReadFrom(b)
 		if err != nil {
@@ -105,7 +105,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 		} else if r.IsBroadcast() {
 			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 		} else {
-			//sends a layer2 frame so that we can define the destination MAC address
+			// sends a layer2 frame so that we can define the destination MAC address
 			peer = &net.UDPAddr{IP: resp.YourIPAddr, Port: dhcpv4.ClientPort}
 			useEthernet = true
 		}

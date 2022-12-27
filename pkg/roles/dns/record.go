@@ -54,7 +54,7 @@ func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	return rec, nil
 }
 
-func (z *Zone) newRecord(name string, t string) *Record {
+func (z *Zone) newRecord(name, t string) *Record {
 	return &Record{
 		Name: name,
 		Type: t,

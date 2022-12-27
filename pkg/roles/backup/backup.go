@@ -22,9 +22,11 @@ type BackupStatus struct {
 	Time     time.Time `json:"time"`
 }
 
-const BackupStatusSuccess = "success"
-const BackupStatusStarted = "started"
-const BackupStatusFailed = "failed"
+const (
+	BackupStatusSuccess = "success"
+	BackupStatusStarted = "started"
+	BackupStatusFailed  = "failed"
+)
 
 func (r *Role) setStatus(status *BackupStatus) {
 	backupStatus.WithLabelValues(status.Status).SetToCurrentTime()

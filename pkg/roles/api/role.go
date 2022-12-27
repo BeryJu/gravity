@@ -22,8 +22,10 @@ import (
 	"go.uber.org/zap"
 )
 
-const VAR_RUN = "/var/run"
-const GRAVITY_SOCK = "gravity.sock"
+const (
+	VAR_RUN      = "/var/run"
+	GRAVITY_SOCK = "gravity.sock"
+)
 
 type Role struct {
 	m            *mux.Router

@@ -15,6 +15,7 @@ const firstStartHeader = `------------------------------------------------------
 Welcome to gravity! An admin user has been created for you.
 Username: '%s'
 Password: '%s'`
+
 const firstStartFooter = `
 Open 'http://%s:8008/' to start using Gravity!
 --------------------------------------------------------------------
