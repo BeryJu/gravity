@@ -9,6 +9,7 @@
         10.200.0.4 coredns.t.gravity.beryju.io
         10.200.0.5 nginx.t.gravity.beryju.io
         10.200.0.6 dex.t.gravity.beryju.io
+        fe80::1 ipv6.t.gravity.beryju.io
     }
     cache 30
 }

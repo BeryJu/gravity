@@ -13,7 +13,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func TestRoleDNSBlockyForwarder(t *testing.T) {
+func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	inst.KV().Delete(

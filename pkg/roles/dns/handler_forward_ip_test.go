@@ -10,9 +10,10 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func TestRoleDNSIPForwarder(t *testing.T) {
+func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 	rootInst := instance.New()
 	inst := rootInst.ForRole("dns")
 	inst.KV().Put(
@@ -38,4 +39,85 @@ func TestRoleDNSIPForwarder(t *testing.T) {
 	time.Sleep(3 * time.Second)
 	defer role.Stop()
 	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+}
+
+func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
+	rootInst := instance.New()
+	inst := rootInst.ForRole("dns")
+	inst.KV().Delete(
+		tests.Context(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			".",
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+	inst.KV().Put(
+		tests.Context(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			".",
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type":      "forward_ip",
+					"to":        "127.0.0.1:1053",
+					"cache_ttl": "-2",
+				},
+			},
+		}),
+	)
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	ctx := tests.Context()
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+	time.Sleep(3 * time.Second)
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			".",
+			"gravity.beryju.io",
+			types.DNSRecordTypeA,
+			"0",
+		),
+		dns.Record{
+			Data: "10.0.0.1",
+		},
+	)
+}
+
+func TestRoleDNS_IPForwarder_v6(t *testing.T) {
+	rootInst := instance.New()
+	inst := rootInst.ForRole("dns")
+	inst.KV().Put(
+		tests.Context(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			".",
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type": "forward_ip",
+					"to":   "127.0.0.1:1053",
+				},
+			},
+		}),
+	)
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	ctx := tests.Context()
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	time.Sleep(3 * time.Second)
+	defer role.Stop()
+	assert.Equal(t, []string{"fe80::1"}, tests.DNSLookup("ipv6.t.gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }

@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/0xERR0R/blocky/config"
-	"github.com/0xERR0R/blocky/log"
 	blockylog "github.com/0xERR0R/blocky/log"
 	"github.com/0xERR0R/blocky/server"
 	"github.com/miekg/dns"
@@ -84,11 +83,11 @@ func (bfwd *BlockyForwarder) setup() error {
 	}
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
-	cfg.LogLevel = log.LevelDebug
+	cfg.LogLevel = blockylog.LevelDebug
 	if !extconfig.Get().Debug {
 		cfg.LogFormat = blockylog.FormatTypeJson
 		// Only log errors from blocky to prevent double-logging all queries
-		cfg.LogLevel = log.LevelFatal
+		cfg.LogLevel = blockylog.LevelFatal
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
