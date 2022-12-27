@@ -82,6 +82,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 <select class="pf-c-form-control">
                     <option value="A" ?selected=${this.instance?.type === "A"}>A</option>
                     <option value="AAAA" ?selected=${this.instance?.type === "AAAA"}>AAAA</option>
+                    <option value="CNAME" ?selected=${this.instance?.type === "CNAME"}>CNAME</option>
                     <option value="PTR" ?selected=${this.instance?.type === "PTR"}>PTR</option>
                     <option value="NS" ?selected=${this.instance?.type === "NS"}>NS</option>
                     <option value="MX" ?selected=${this.instance?.type === "MX"}>MX</option>
