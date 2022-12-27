@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.3.5
+  version: 0.3.6
 paths:
   /api/v1/auth/config:
     get:
@@ -1223,6 +1223,25 @@ paths:
       summary: TSDB role config
       tags:
       - roles/tsdb
+  /api/v1/system/metrics/cpu:
+    get:
+      operationId: api.get_metrics_cpu
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: System Metrics
+      tags:
+      - roles/api
   /api/v1/system/metrics/memory:
     get:
       operationId: api.get_metrics_memory
