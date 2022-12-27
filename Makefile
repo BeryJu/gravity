@@ -9,10 +9,10 @@ GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
 
 ci--env:
-	echo "##[set-output name=sha]${GITHUB_SHA}"
-	echo "##[set-output name=build]${GITHUB_RUN_ID}"
-	echo "##[set-output name=timestamp]$(shell date +%s)"
-	echo "##[set-output name=version]${VERSION}"
+	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
+	echo "build=${GITHUB_RUN_ID}" >> ${GITHUB_OUTPUT}
+	echo "timestamp=$(shell date +%s)" >> ${GITHUB_OUTPUT}
+	echo "version=${VERSION}" >> ${GITHUB_OUTPUT}
 
 docker-build:
 	go build \
