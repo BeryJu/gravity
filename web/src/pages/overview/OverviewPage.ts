@@ -19,6 +19,7 @@ import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
 import "./charts/DNSRequestsChart";
 import "./charts/MemoryUsageChart";
+import "./charts/CPUUsageChart";
 
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
@@ -76,13 +77,23 @@ export class OverviewPage extends AKElement {
                         </ak-aggregate-card>
                     </div>
                     <div
-                        class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                        class="pf-l-grid__item pf-m-6-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
-                            header="Memory usage per node (in MB)"
+                            header="Memory usage per node (MB)"
                         >
                             <gravity-overview-charts-memory-usage></gravity-overview-charts-memory-usage>
+                        </ak-aggregate-card>
+                    </div>
+                    <div
+                        class="pf-l-grid__item pf-m-6-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                    >
+                        <ak-aggregate-card
+                            icon="pf-icon pf-icon-server"
+                            header="CPU usage per node (%)"
+                        >
+                            <gravity-overview-charts-cpu-usage></gravity-overview-charts-cpu-usage>
                         </ak-aggregate-card>
                     </div>
                 </div>
