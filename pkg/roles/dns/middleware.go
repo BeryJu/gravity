@@ -35,6 +35,23 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	}
 }
 
+func (r *Role) dnsRRToValue(ro dns.RR) string {
+	switch v := ro.(type) {
+	case *dns.A:
+		return v.A.String()
+	case *dns.AAAA:
+		return v.AAAA.String()
+	case *dns.PTR:
+		return v.Ptr
+	case *dns.MX:
+		return v.Mx
+	case *dns.CNAME:
+		return v.Target
+	default:
+		return ro.String()
+	}
+}
+
 func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 	getIP := func(addr net.Addr) string {
 		clientIP := ""
@@ -63,7 +80,7 @@ func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			queryTypes[idx] = dns.TypeToString[q.Qtype]
 		}
 		for idx, a := range fw.Msg().Answer {
-			answerRecords[idx] = a.String()
+			answerRecords[idx] = r.dnsRRToValue(a)
 			answerTypes[idx] = dns.TypeToString[a.Header().Rrtype]
 		}
 		f := []zap.Field{
