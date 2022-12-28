@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"time"
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/api"
@@ -29,6 +30,7 @@ func TestAuthOIDC(t *testing.T) {
 		},
 	}))))
 	defer role.Stop()
+	time.Sleep(3 * time.Second)
 
 	res, err := http.DefaultClient.Get("http://localhost:8008/auth/oidc")
 	assert.NoError(t, err)
