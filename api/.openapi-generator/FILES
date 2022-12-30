@@ -40,6 +40,7 @@ docs/BackupAPIRoleConfigOutput.md
 docs/BackupBackupStatus.md
 docs/BackupRoleConfig.md
 docs/DhcpAPILease.md
+docs/DhcpAPILeaseInfo.md
 docs/DhcpAPILeasesGetOutput.md
 docs/DhcpAPILeasesPutInput.md
 docs/DhcpAPIRoleConfigInput.md
@@ -121,6 +122,7 @@ model_backup_api_role_config_output.go
 model_backup_backup_status.go
 model_backup_role_config.go
 model_dhcp_api_lease.go
+model_dhcp_api_lease_info.go
 model_dhcp_api_leases_get_output.go
 model_dhcp_api_leases_put_input.go
 model_dhcp_api_role_config_input.go

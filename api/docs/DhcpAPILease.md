@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **DnsZone** | Pointer to **string** |  | [optional] 
 **Hostname** | **string** |  | 
 **Identifier** | **string** |  | 
+**Info** | Pointer to [**DhcpAPILeaseInfo**](DhcpAPILeaseInfo.md) |  | [optional] 
 **ScopeKey** | **string** |  | 
 
 ## Methods
@@ -134,6 +135,31 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+
+### GetInfo
+
+`func (o *DhcpAPILease) GetInfo() DhcpAPILeaseInfo`
+
+GetInfo returns the Info field if non-nil, zero value otherwise.
+
+### GetInfoOk
+
+`func (o *DhcpAPILease) GetInfoOk() (*DhcpAPILeaseInfo, bool)`
+
+GetInfoOk returns a tuple with the Info field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInfo
+
+`func (o *DhcpAPILease) SetInfo(v DhcpAPILeaseInfo)`
+
+SetInfo sets Info field to given value.
+
+### HasInfo
+
+`func (o *DhcpAPILease) HasInfo() bool`
+
+HasInfo returns a boolean if a field has been set.
 
 ### GetScopeKey
 

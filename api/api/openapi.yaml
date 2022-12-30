@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.3.12
+  version: 0.3.13
 servers:
 - url: /
 paths:
@@ -1717,6 +1717,8 @@ components:
         dnsZone: dnsZone
         scopeKey: scopeKey
         addressLeaseTime: addressLeaseTime
+        info:
+          vendor: vendor
       properties:
         address:
           type: string
@@ -1728,6 +1730,8 @@ components:
           type: string
         identifier:
           type: string
+        info:
+          $ref: '#/components/schemas/DhcpAPILeaseInfo'
         scopeKey:
           type: string
       required:
@@ -1736,6 +1740,13 @@ components:
       - hostname
       - identifier
       - scopeKey
+      type: object
+    DhcpAPILeaseInfo:
+      example:
+        vendor: vendor
+      properties:
+        vendor:
+          type: string
       type: object
     DhcpAPILeasesGetOutput:
       example:
@@ -1746,12 +1757,16 @@ components:
           dnsZone: dnsZone
           scopeKey: scopeKey
           addressLeaseTime: addressLeaseTime
+          info:
+            vendor: vendor
         - identifier: identifier
           hostname: hostname
           address: address
           dnsZone: dnsZone
           scopeKey: scopeKey
           addressLeaseTime: addressLeaseTime
+          info:
+            vendor: vendor
       properties:
         leases:
           items:
