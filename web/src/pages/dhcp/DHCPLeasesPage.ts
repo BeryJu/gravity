@@ -14,6 +14,13 @@ import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
 import "./DHCPLeaseForm";
 
+const ip2int = (ip: string): number => {
+    return parseInt(
+        ip.split(".").reduce((acc, byte) => acc + byte.padStart(3, "0"), ""),
+        10,
+    );
+};
+
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
     @property()
@@ -47,9 +54,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                         l.address.includes(this.search),
                 );
                 data.sort((a, b) => {
-                    if (a.hostname > b.hostname) return 1;
-                    if (a.hostname < b.hostname) return -1;
-                    return 0;
+                    return ip2int(a.address) - ip2int(b.address);
                 });
                 return PaginationWrapper(data);
             });
