@@ -48,7 +48,5 @@ RUN apt-get update && \
     /bin/gravity completion bash > /etc/bash_completion.d/gravity && \
     echo ". /etc/bash_completion" >> /etc/bash.bashrc
 
-ENV INSTANCE_LISTEN="0.0.0.0"
-
 ENTRYPOINT ["/bin/gravity"]
 CMD [ "server" ]
