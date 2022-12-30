@@ -57,8 +57,6 @@ func xtoi2(s string, e byte) (byte, bool) {
 	return byte(n), ok && ei == 2
 }
 
-const hexDigit = "0123456789abcdef"
-
 type HardwareAddr net.HardwareAddr
 
 // ParseMAC parses s as an IEEE 802 MAC-48, EUI-48, or EUI-64 using one of the
@@ -108,19 +106,8 @@ func (address HardwareAddr) Mask(mask []byte) []byte {
 	return out
 }
 
-type t2 struct {
-	T3    map[byte]t2
-	Block *AddressBlock
-}
-
 type OuiDb struct {
-	hw   [6]byte
-	mask int
-
-	dict   [][]byte
 	Blocks []AddressBlock
-
-	t map[int]t2
 }
 
 // New returns a new OUI database loaded from the specified file.
