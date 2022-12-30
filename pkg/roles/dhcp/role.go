@@ -9,6 +9,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
@@ -30,6 +31,8 @@ type Role struct {
 	log *zap.Logger
 	i   roles.Instance
 	ctx context.Context
+
+	oui *oui.OuiDb
 }
 
 func New(instance roles.Instance) *Role {
@@ -57,6 +60,7 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/roles/dhcp", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/dhcp", r.APIRoleConfigPut())
 	})
+	r.initOUI()
 	return r
 }
 

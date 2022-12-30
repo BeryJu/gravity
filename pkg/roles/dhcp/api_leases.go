@@ -13,6 +13,9 @@ import (
 type APILeasesGetInput struct {
 	ScopeName string `query:"scope"`
 }
+type APILeaseInfo struct {
+	Vendor string `json:"vendor"`
+}
 type APILease struct {
 	Identifier       string `json:"identifier" required:"true"`
 	Address          string `json:"address" required:"true"`
@@ -20,6 +23,8 @@ type APILease struct {
 	AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
 	ScopeKey         string `json:"scopeKey" required:"true"`
 	DNSZone          string `json:"dnsZone"`
+
+	Info *APILeaseInfo `json:"info"`
 }
 type APILeasesGetOutput struct {
 	Leases []*APILease `json:"leases" required:"true"`
@@ -30,16 +35,26 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 		r.leasesM.RLock()
 		defer r.leasesM.RUnlock()
 		for _, l := range r.leases {
-			if l.ScopeKey == input.ScopeName {
-				output.Leases = append(output.Leases, &APILease{
-					Identifier:       l.Identifier,
-					Address:          l.Address,
-					Hostname:         l.Hostname,
-					AddressLeaseTime: l.AddressLeaseTime,
-					ScopeKey:         l.ScopeKey,
-					DNSZone:          l.DNSZone,
-				})
+			if l.ScopeKey != input.ScopeName {
+				continue
 			}
+			al := &APILease{
+				Identifier:       l.Identifier,
+				Address:          l.Address,
+				Hostname:         l.Hostname,
+				AddressLeaseTime: l.AddressLeaseTime,
+				ScopeKey:         l.ScopeKey,
+				DNSZone:          l.DNSZone,
+			}
+			if r.oui != nil {
+				entry, err := r.oui.LookupString(l.Identifier)
+				if err == nil {
+					al.Info = &APILeaseInfo{
+						Vendor: entry.Organization,
+					}
+				}
+			}
+			output.Leases = append(output.Leases, al)
 		}
 		return nil
 	})

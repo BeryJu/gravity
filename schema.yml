@@ -1503,6 +1503,8 @@ components:
           type: string
         identifier:
           type: string
+        info:
+          $ref: '#/components/schemas/DhcpAPILeaseInfo'
         scopeKey:
           type: string
       required:
@@ -1511,6 +1513,11 @@ components:
       - hostname
       - addressLeaseTime
       - scopeKey
+      type: object
+    DhcpAPILeaseInfo:
+      properties:
+        vendor:
+          type: string
       type: object
     DhcpAPILeasesGetOutput:
       properties:

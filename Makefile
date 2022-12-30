@@ -31,6 +31,9 @@ web-build:
 	npm version ${VERSION} || true
 	npm run build
 
+gen-update-oui:
+	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/macoui/db.txt || true
+
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
