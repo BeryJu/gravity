@@ -1261,6 +1261,78 @@ paths:
       summary: System Metrics
       tags:
       - roles/api
+  /api/v1/tools/ping:
+    post:
+      operationId: tools.ping
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIToolPingInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIToolPingOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Ping tool
+      tags:
+      - roles/api
+  /api/v1/tools/portmap:
+    post:
+      operationId: tools.portmap
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIToolPortmapInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIToolPortmapOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Portmap tool
+      tags:
+      - roles/api
+  /api/v1/tools/traceroute:
+    post:
+      operationId: tools.traceroute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIToolTracerouteInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPIToolTracerouteOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Traceroute tool
+      tags:
+      - roles/api
 components:
   schemas:
     ApiAPIExportOutput:
@@ -1319,6 +1391,77 @@ components:
           $ref: '#/components/schemas/ApiRoleConfig'
       required:
       - config
+      type: object
+    ApiAPIToolPingInput:
+      properties:
+        host:
+          type: string
+      type: object
+    ApiAPIToolPingOutput:
+      properties:
+        avgRtt:
+          $ref: '#/components/schemas/TimeDuration'
+        maxRtt:
+          $ref: '#/components/schemas/TimeDuration'
+        minRtt:
+          $ref: '#/components/schemas/TimeDuration'
+        packetLoss:
+          type: number
+        packetsRecv:
+          type: integer
+        packetsRecvDuplicates:
+          type: integer
+        packetsSent:
+          type: integer
+        stdDevRtt:
+          $ref: '#/components/schemas/TimeDuration'
+      type: object
+    ApiAPIToolPortmapInput:
+      properties:
+        host:
+          type: string
+      type: object
+    ApiAPIToolPortmapOutput:
+      properties:
+        ports:
+          items:
+            $ref: '#/components/schemas/ApiAPIToolPortmapOutputPort'
+          nullable: true
+          type: array
+      type: object
+    ApiAPIToolPortmapOutputPort:
+      properties:
+        name:
+          type: string
+        port:
+          minimum: 0
+          type: integer
+        protocol:
+          type: string
+        reason:
+          type: string
+      type: object
+    ApiAPIToolTracerouteInput:
+      properties:
+        host:
+          type: string
+      type: object
+    ApiAPIToolTracerouteOutput:
+      properties:
+        hops:
+          items:
+            $ref: '#/components/schemas/ApiAPIToolTracerouteOutputHop'
+          nullable: true
+          type: array
+      type: object
+    ApiAPIToolTracerouteOutputHop:
+      properties:
+        address:
+          type: string
+        elapsedTime:
+          $ref: '#/components/schemas/TimeDuration'
+        success:
+          type: boolean
       type: object
     ApiAPITransportEntry:
       properties:
@@ -1968,6 +2111,8 @@ components:
           description: Status text.
           type: string
       type: object
+    TimeDuration:
+      type: integer
     TsdbAPIRoleConfigInput:
       properties:
         config:

@@ -47,6 +47,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef // indirect
 	github.com/avast/retry-go/v4 v4.3.1 // indirect

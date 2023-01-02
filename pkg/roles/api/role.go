@@ -63,6 +63,9 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/roles/api", r.APIRoleConfigPut())
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
+		svc.Post("/api/v1/tools/ping", r.APIToolPing())
+		svc.Post("/api/v1/tools/traceroute", r.APIToolTraceroute())
+		svc.Post("/api/v1/tools/portmap", r.APIToolPortmap())
 	})
 	return r
 }

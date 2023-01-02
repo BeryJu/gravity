@@ -86,6 +86,8 @@ github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbt
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/Ullaakut/nmap/v2 v2.2.2 h1:178Ety3d8T21sF6WZxyj7QVZUhnC1tL1J+tHLLW507Q=
 github.com/Ullaakut/nmap/v2 v2.2.2/go.mod h1:/6YyiW1Rgn7J6DAWCgL4CZZf6zJCFhB07PQzvjFfzLI=
+github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908 h1:6suDyKbvZ5r2G/gblQLV9Cdv7rdqNlUxsRXpLOF0rKM=
+github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908/go.mod h1:HPBB/4vaPt7NcN9l72/+IwsmDVQsa6AWM6ZDKJCLB9U=
 github.com/ahmetb/gen-crd-api-reference-docs v0.3.0/go.mod h1:TdjdkYhlOifCQWPs1UdTma97kQQMozf5h26hTuG70u8=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
