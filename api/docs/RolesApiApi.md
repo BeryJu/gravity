@@ -20,6 +20,9 @@ Method | HTTP request | Description
 [**ApiPutTokens**](RolesApiApi.md#ApiPutTokens) | **Post** /api/v1/auth/tokens | Tokens
 [**ApiPutUsers**](RolesApiApi.md#ApiPutUsers) | **Post** /api/v1/auth/users | API Users
 [**ApiUsersMe**](RolesApiApi.md#ApiUsersMe) | **Get** /api/v1/auth/me | API Users
+[**ToolsPing**](RolesApiApi.md#ToolsPing) | **Post** /api/v1/tools/ping | Ping tool
+[**ToolsPortmap**](RolesApiApi.md#ToolsPortmap) | **Post** /api/v1/tools/portmap | Portmap tool
+[**ToolsTraceroute**](RolesApiApi.md#ToolsTraceroute) | **Post** /api/v1/tools/traceroute | Traceroute tool
 
 
 
@@ -987,6 +990,198 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ToolsPing
+
+> ApiAPIToolPingOutput ToolsPing(ctx).ApiAPIToolPingInput(apiAPIToolPingInput).Execute()
+
+Ping tool
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    apiAPIToolPingInput := *openapiclient.NewApiAPIToolPingInput() // ApiAPIToolPingInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ToolsPing(context.Background()).ApiAPIToolPingInput(apiAPIToolPingInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsPing``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ToolsPing`: ApiAPIToolPingOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsPing`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiToolsPingRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiAPIToolPingInput** | [**ApiAPIToolPingInput**](ApiAPIToolPingInput.md) |  | 
+
+### Return type
+
+[**ApiAPIToolPingOutput**](ApiAPIToolPingOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ToolsPortmap
+
+> ApiAPIToolPortmapOutput ToolsPortmap(ctx).ApiAPIToolPortmapInput(apiAPIToolPortmapInput).Execute()
+
+Portmap tool
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    apiAPIToolPortmapInput := *openapiclient.NewApiAPIToolPortmapInput() // ApiAPIToolPortmapInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ToolsPortmap(context.Background()).ApiAPIToolPortmapInput(apiAPIToolPortmapInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsPortmap``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ToolsPortmap`: ApiAPIToolPortmapOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsPortmap`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiToolsPortmapRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiAPIToolPortmapInput** | [**ApiAPIToolPortmapInput**](ApiAPIToolPortmapInput.md) |  | 
+
+### Return type
+
+[**ApiAPIToolPortmapOutput**](ApiAPIToolPortmapOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ToolsTraceroute
+
+> ApiAPIToolTracerouteOutput ToolsTraceroute(ctx).ApiAPIToolTracerouteInput(apiAPIToolTracerouteInput).Execute()
+
+Traceroute tool
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    apiAPIToolTracerouteInput := *openapiclient.NewApiAPIToolTracerouteInput() // ApiAPIToolTracerouteInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ToolsTraceroute(context.Background()).ApiAPIToolTracerouteInput(apiAPIToolTracerouteInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsTraceroute``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ToolsTraceroute`: ApiAPIToolTracerouteOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsTraceroute`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiToolsTracerouteRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiAPIToolTracerouteInput** | [**ApiAPIToolTracerouteInput**](ApiAPIToolTracerouteInput.md) |  | 
+
+### Return type
+
+[**ApiAPIToolTracerouteOutput**](ApiAPIToolTracerouteOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

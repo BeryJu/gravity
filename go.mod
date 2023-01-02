@@ -6,6 +6,7 @@ require (
 	github.com/0xERR0R/blocky v0.9.2-0.20221116083521-0d63ca3ef59e
 	github.com/Netflix/go-env v0.0.0-20220526054621-78278af1949d
 	github.com/Ullaakut/nmap/v2 v2.2.2
+	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
 	github.com/api7/etcdstore v1.1.0
 	github.com/coreos/go-oidc/v3 v3.4.0
 	github.com/creasty/defaults v1.6.0
@@ -47,7 +48,6 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef // indirect
 	github.com/avast/retry-go/v4 v4.3.1 // indirect
