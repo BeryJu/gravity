@@ -66,6 +66,10 @@ export const ROUTES = [
         await import("./pages/auth/AuthTokensPage");
         return html`<gravity-auth-tokens></gravity-auth-tokens>`;
     }),
+    new Route(new RegExp("^/tools$"), async () => {
+        await import("./pages/tools/ToolPage");
+        return html`<gravity-tools></gravity-tools>`;
+    }),
 ];
 
 @customElement("gravity-app")
@@ -184,6 +188,9 @@ export class AdminInterface extends AKElement {
                 <ak-sidebar-item path="/auth/tokens">
                     <span slot="label">Tokens</span>
                 </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item path="/tools">
+                <span slot="label">Tools</span>
             </ak-sidebar-item>
         `;
     }

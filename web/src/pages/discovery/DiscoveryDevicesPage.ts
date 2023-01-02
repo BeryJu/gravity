@@ -6,6 +6,7 @@ import { customElement } from "lit/decorators.js";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
+import { paramURL } from "../../elements/router/RouterOutlet";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
@@ -52,7 +53,13 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
 
     row(item: DiscoveryAPIDevice): TemplateResult[] {
         return [
-            html`<pre>${item.ip}</pre>`,
+            html`<a
+                href=${paramURL("/tools", {
+                    host: item.ip,
+                })}
+            >
+                <pre>${item.ip}</pre>
+            </a>`,
             html`${item.hostname || "-"}`,
             html`<pre>${item.mac || "-"}</pre>`,
         ];

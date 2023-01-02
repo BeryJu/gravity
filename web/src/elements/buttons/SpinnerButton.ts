@@ -25,6 +25,7 @@ export class SpinnerButton extends AKElement {
             AKElement.GlobalStyle,
             css`
                 button {
+                    height: 100%;
                     /* Have to use !important here, as buttons with pf-m-progress have transition already */
                     transition: all var(--pf-c-button--m-progress--TransitionDuration) ease 0s !important;
                 }
