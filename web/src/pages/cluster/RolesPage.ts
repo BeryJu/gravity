@@ -24,13 +24,13 @@ export interface Role {
 }
 
 export const roles: Role[] = [
-    { id: "dhcp", name: "DHCP" },
-    { id: "dns", name: "DNS" },
     { id: "api", name: "API" },
-    { id: "discovery", name: "Discovery" },
     { id: "backup", name: "Backup" },
-    { id: "monitoring", name: "Monitoring" },
+    { id: "dhcp", name: "DHCP" },
+    { id: "discovery", name: "Discovery" },
+    { id: "dns", name: "DNS" },
     { id: "etcd", name: "etcd" },
+    { id: "monitoring", name: "Monitoring" },
     { id: "tsdb", name: "TSDB" },
 ];
 
