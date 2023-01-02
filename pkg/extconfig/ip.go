@@ -7,6 +7,16 @@ import (
 	"go.uber.org/zap"
 )
 
+func mustParseCIDR(cidr string) *net.IPNet {
+	_, net, err := net.ParseCIDR(cidr)
+	if err != nil {
+		panic(err)
+	}
+	return net
+}
+
+var ulaPrefix = mustParseCIDR("fc00::/7")
+
 func (e *ExtConfig) GetIP() (net.IP, error) {
 	ifaces, err := net.Interfaces()
 	if err != nil {
@@ -30,6 +40,9 @@ func (e *ExtConfig) GetIP() (net.IP, error) {
 				continue
 			}
 			if ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() {
+				continue
+			}
+			if ulaPrefix.Contains(ip) {
 				continue
 			}
 			e.Logger().Debug("Detected IP of instance", zap.String("ip", ip.String()))
