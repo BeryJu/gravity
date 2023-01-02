@@ -13,12 +13,11 @@ import { KV } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
-    loadInstance(pk: string): Promise<DhcpAPIScope> {
-        return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
-            const zone = scopes.scopes?.find((z) => z.scope === pk);
-            if (!zone) throw new Error("No scope");
-            return zone;
-        });
+    async loadInstance(pk: string): Promise<DhcpAPIScope> {
+        const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
+        const zone = scopes.scopes?.find((z) => z.scope === pk);
+        if (!zone) throw new Error("No scope");
+        return zone;
     }
 
     getSuccessMessage(): string {

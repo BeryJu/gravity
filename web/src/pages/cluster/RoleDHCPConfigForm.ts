@@ -10,9 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-dhcp-config")
 export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<DhcpRoleConfig> {
-        return new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetRoleConfig().then((config) => config.config);
+    async loadInstance(): Promise<DhcpRoleConfig> {
+        const config = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {

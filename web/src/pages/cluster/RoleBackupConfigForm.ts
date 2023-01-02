@@ -10,11 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-backup-config")
 export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<BackupRoleConfig> {
-        return new RolesBackupApi(DEFAULT_CONFIG).backupGetRoleConfig().then((config) => {
-            return config.config;
-        });
+    async loadInstance(): Promise<BackupRoleConfig> {
+        const config = await new RolesBackupApi(DEFAULT_CONFIG).backupGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {

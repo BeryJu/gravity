@@ -10,12 +10,11 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-discovery-subnet-form")
 export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
-    loadInstance(pk: string): Promise<DiscoveryAPISubnet> {
-        return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
-            const subnet = subnets.subnets?.find((z) => z.name === pk);
-            if (!subnet) throw new Error("No subnet");
-            return subnet;
-        });
+    async loadInstance(pk: string): Promise<DiscoveryAPISubnet> {
+        const subnets = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets();
+        const subnet = subnets.subnets?.find((z) => z.name === pk);
+        if (!subnet) throw new Error("No subnet");
+        return subnet;
     }
 
     getSuccessMessage(): string {

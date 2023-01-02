@@ -16,17 +16,14 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     @state()
     recordType = "A";
 
-    loadInstance(pk: string): Promise<DnsAPIRecord> {
-        return new RolesDnsApi(DEFAULT_CONFIG)
-            .dnsGetRecords({
-                zone: this.zone,
-            })
-            .then((records) => {
-                const record = records.records?.find((z) => z.hostname + z.uid === pk);
-                if (!record) throw new Error("No record");
-                this.recordType = record.type;
-                return record;
-            });
+    async loadInstance(pk: string): Promise<DnsAPIRecord> {
+        const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
+            zone: this.zone,
+        });
+        const record = records.records?.find((z) => z.hostname + z.uid === pk);
+        if (!record) throw new Error("No record");
+        this.recordType = record.type;
+        return record;
     }
 
     getSuccessMessage(): string {

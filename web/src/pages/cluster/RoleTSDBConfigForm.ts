@@ -10,9 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-tsdb-config")
 export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<TsdbRoleConfig> {
-        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetRoleConfig().then((config) => config.config);
+    async loadInstance(): Promise<TsdbRoleConfig> {
+        const config = await new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {

@@ -10,11 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-monitoring-config")
 export class RoleMonitoringConfigForm extends ModelForm<MonitoringRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<MonitoringRoleConfig> {
-        return new RolesMonitoringApi(DEFAULT_CONFIG)
-            .monitoringGetRoleConfig()
-            .then((config) => config.config);
+    async loadInstance(): Promise<MonitoringRoleConfig> {
+        const config = await new RolesMonitoringApi(DEFAULT_CONFIG).monitoringGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {

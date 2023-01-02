@@ -13,16 +13,13 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     @property()
     scope?: string;
 
-    loadInstance(pk: string): Promise<DhcpAPILease> {
-        return new RolesDhcpApi(DEFAULT_CONFIG)
-            .dhcpGetLeases({
-                scope: this.scope,
-            })
-            .then((leases) => {
-                const lease = leases.leases?.find((z) => z.identifier === pk);
-                if (!lease) throw new Error("No lease");
-                return lease;
-            });
+    async loadInstance(pk: string): Promise<DhcpAPILease> {
+        const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({
+            scope: this.scope,
+        });
+        const lease = leases.leases?.find((z) => z.identifier === pk);
+        if (!lease) throw new Error("No lease");
+        return lease;
     }
 
     getSuccessMessage(): string {

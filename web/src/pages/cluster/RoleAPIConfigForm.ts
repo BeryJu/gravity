@@ -13,8 +13,7 @@ import { KV } from "../../utils";
 
 @customElement("gravity-cluster-role-api-config")
 export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<ApiRoleConfig> {
+    loadInstance(): Promise<ApiRoleConfig> {
         return new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig().then((config) => {
             return config.config;
         });

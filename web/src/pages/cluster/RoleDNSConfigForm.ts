@@ -10,9 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-dns-config")
 export class RoleDNSConfigForm extends ModelForm<DnsRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<DnsRoleConfig> {
-        return new RolesDnsApi(DEFAULT_CONFIG).dnsGetRoleConfig().then((config) => config.config);
+    async loadInstance(): Promise<DnsRoleConfig> {
+        const config = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {

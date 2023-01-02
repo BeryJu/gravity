@@ -24,12 +24,11 @@ export const DEFAULT_HANDLER_CONFIG = [
 
 @customElement("gravity-dns-zone-form")
 export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
-    loadInstance(pk: string): Promise<DnsAPIZone> {
-        return new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
-            const zone = zones.zones?.find((z) => z.name === pk);
-            if (!zone) throw new Error("No zone");
-            return zone;
-        });
+    async loadInstance(pk: string): Promise<DnsAPIZone> {
+        const zones = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones();
+        const zone = zones.zones?.find((z) => z.name === pk);
+        if (!zone) throw new Error("No zone");
+        return zone;
     }
 
     getSuccessMessage(): string {

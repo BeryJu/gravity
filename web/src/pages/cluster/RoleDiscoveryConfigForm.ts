@@ -10,11 +10,9 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-discovery-config")
 export class RoleDiscoveryConfigForm extends ModelForm<DiscoveryRoleConfig, string> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loadInstance(pk: string): Promise<DiscoveryRoleConfig> {
-        return new RolesDiscoveryApi(DEFAULT_CONFIG)
-            .discoveryGetRoleConfig()
-            .then((config) => config.config);
+    async loadInstance(): Promise<DiscoveryRoleConfig> {
+        const config = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {
