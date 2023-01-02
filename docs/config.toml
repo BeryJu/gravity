@@ -6,6 +6,9 @@ enableGitInfo = true
 github_repo = "https://github.com/BeryJu/gravity"
 github_subdir = "docs"
 
+[params]
+  description = "Fully-replicated DNS and DHCP Server with ad-blocking powered by etcd"
+
 [[menu.main]]
   name = "GitHub"
   weight = 50
