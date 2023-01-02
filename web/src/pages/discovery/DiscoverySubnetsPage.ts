@@ -4,8 +4,11 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import { MessageLevel } from "../../common/messages";
+import "../../elements/buttons/ActionButton";
 import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
+import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
@@ -29,18 +32,17 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
-        return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets().then((subnets) => {
-            const data = (subnets.subnets || []).filter((l) =>
-                l.name.toLowerCase().includes(this.search.toLowerCase()),
-            );
-            data.sort((a, b) => {
-                if (a.name > b.name) return 1;
-                if (a.name < b.name) return -1;
-                return 0;
-            });
-            return PaginationWrapper(data);
+    async apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
+        const subnets = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets();
+        const data = (subnets.subnets || []).filter((l) =>
+            l.name.toLowerCase().includes(this.search.toLowerCase()),
+        );
+        data.sort((a, b) => {
+            if (a.name > b.name) return 1;
+            if (a.name < b.name) return -1;
+            return 0;
         });
+        return PaginationWrapper(data);
     }
 
     columns(): TableColumn[] {
@@ -52,14 +54,28 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
             html`${item.name}`,
             html`${item.subnetCidr}`,
             html`<ak-forms-modal>
-                <span slot="submit"> ${"Update"} </span>
-                <span slot="header"> ${"Update Subnet"} </span>
-                <gravity-discovery-subnet-form slot="form" .instancePk=${item.name}>
-                </gravity-discovery-subnet-form>
-                <button slot="trigger" class="pf-c-button pf-m-plain">
-                    <i class="fas fa-edit"></i>
-                </button>
-            </ak-forms-modal>`,
+                    <span slot="submit"> ${"Update"} </span>
+                    <span slot="header"> ${"Update Subnet"} </span>
+                    <gravity-discovery-subnet-form slot="form" .instancePk=${item.name}>
+                    </gravity-discovery-subnet-form>
+                    <button slot="trigger" class="pf-c-button pf-m-plain">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </ak-forms-modal>
+                <ak-action-button
+                    class="pf-m-plain"
+                    .apiRequest=${async () => {
+                        await new RolesDiscoveryApi(DEFAULT_CONFIG).discoverySubnetStart({
+                            identifier: item.name,
+                        });
+                        showMessage({
+                            level: MessageLevel.info,
+                            message: "Started discovery",
+                        });
+                    }}
+                >
+                    <i class="fas fa-play" aria-hidden="true"></i>
+                </ak-action-button>`,
         ];
     }
 
