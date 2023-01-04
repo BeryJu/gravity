@@ -39,7 +39,7 @@
         "deepmerge": "^4.2.2",
         "eslint": "^8.31.0",
         "eslint-config-google": "^0.14.0",
-        "eslint-plugin-custom-elements": "0.0.6",
+        "eslint-plugin-custom-elements": "0.0.7",
         "eslint-plugin-lit": "^1.7.2",
         "gravity-api": "^0.3.14",
         "lit": "^2.5.0",
