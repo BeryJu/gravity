@@ -27,7 +27,7 @@ jobs:
       - id: vars
         run: make ci--env
       - name: Build and push Docker images
-        uses: docker/build-push-action@v3.2.0
+        uses: docker/build-push-action@v3.3.0
         with:
           tags: |
             ghcr.io/beryju/gravity:latest-${{ matrix.arch }}
