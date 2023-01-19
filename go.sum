@@ -106,8 +106,8 @@ github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJm
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/blang/semver v3.5.1+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
 github.com/bool64/dev v0.1.41/go.mod h1:cTHiTDNc8EewrQPy3p1obNilpMpdmlUesDkFTF2zRWU=
-github.com/bool64/dev v0.2.22 h1:YJFKBRKplkt+0Emq/5Xk1Z5QRmMNzc1UOJkR3rxJksA=
 github.com/bool64/dev v0.2.22/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
+github.com/bool64/dev v0.2.24 h1:xptlKivPh870W3Xc9szPcM7wkFmTMuHT8rc0nu7dITk=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/cenkalti/backoff/v4 v4.1.1 h1:G2HAfAmvm/GcKan2oOQpBXOd2tT2G57ZnZGWa1PxPBQ=
 github.com/cenkalti/backoff/v4 v4.1.1/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
@@ -773,10 +773,10 @@ github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69
 github.com/swaggest/assertjson v1.7.0 h1:SKw5Rn0LQs6UvmGrIdaKQbMR1R3ncXm5KNon+QJ7jtw=
 github.com/swaggest/form/v5 v5.0.2 h1:TiimP7UX3q1nSI5ZGg6tGMmxg8UJB0JNpaZjXWH6V2E=
 github.com/swaggest/form/v5 v5.0.2/go.mod h1:Ayta1ggwSnDd4zwzv47jQL4RHk7WOTHp65nzwBc0IhU=
-github.com/swaggest/jsonschema-go v0.3.43 h1:qJcVuGs8RAsV4X4qmUd5mepEIwFHqLs9PkB1/DmvjYk=
-github.com/swaggest/jsonschema-go v0.3.43/go.mod h1:KOiJQorzO12Yj9+5HRCJsH7OcYaa5QjH4/IilA+8TQg=
-github.com/swaggest/openapi-go v0.2.26 h1:Sjx3wb0ndm4KcrveDTFHgN+Rt+W5X2WVTuFGHIyD22s=
-github.com/swaggest/openapi-go v0.2.26/go.mod h1:/BGi03cUWE7qFLJdtqWN6feSS2cpGczMoEO6IHsxZH8=
+github.com/swaggest/jsonschema-go v0.3.45 h1:h2RhU+K3HbI8c+giX4PWI8R96EW6/wtPHfagpAvdPfc=
+github.com/swaggest/jsonschema-go v0.3.45/go.mod h1:pW2jvwFFD2cQ0jv51bAo8+RLmma7yaUOIcH8s54EfJw=
+github.com/swaggest/openapi-go v0.2.28 h1:PRgJTqRfpsWte7qPqMFJooLu8cWyL91FhpYH2k1353Y=
+github.com/swaggest/openapi-go v0.2.28/go.mod h1:2RAaFLmRFQiR8TQJyIZzh2NTY1ihk3/WxYJFxQ+TfFU=
 github.com/swaggest/refl v1.1.0 h1:a+9a75Kv6ciMozPjVbOfcVTEQe81t2R3emvaD9oGQGc=
 github.com/swaggest/refl v1.1.0/go.mod h1:g3Qa6ki0A/L2yxiuUpT+cuBURuRaltF5SDQpg1kMZSY=
 github.com/swaggest/rest v0.2.36 h1:f8r5s6alPZ0JG9bUQK1Sslx2BPd9fmRLGI8W2tjT/Jo=
