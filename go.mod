@@ -29,8 +29,8 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1
 	github.com/struCoder/pidusage v0.2.1
-	github.com/swaggest/openapi-go v0.2.26
-	github.com/swaggest/rest v0.2.36
+	github.com/swaggest/openapi-go v0.2.28
+	github.com/swaggest/rest v0.2.37
 	github.com/swaggest/swgui v1.5.1
 	github.com/swaggest/usecase v1.2.0
 	go.etcd.io/etcd/api/v3 v3.5.6
@@ -53,7 +53,7 @@ require (
 	github.com/avast/retry-go/v4 v4.3.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/coredns/caddy v1.1.1 // indirect
 	github.com/coredns/coredns v1.9.3 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
@@ -63,7 +63,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
-	github.com/go-chi/chi/v5 v5.0.7 // indirect
+	github.com/go-chi/chi/v5 v5.0.8 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -132,7 +132,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/swaggest/form/v5 v5.0.2 // indirect
-	github.com/swaggest/jsonschema-go v0.3.43 // indirect
+	github.com/swaggest/jsonschema-go v0.3.45 // indirect
 	github.com/swaggest/refl v1.1.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect
