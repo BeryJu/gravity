@@ -29,7 +29,12 @@ const (
 )
 
 func (r *Role) setStatus(status *BackupStatus) {
-	backupStatus.WithLabelValues(status.Status).SetToCurrentTime()
+	// Reset all backup statuses to 0
+	for _, st := range []string{BackupStatusSuccess, BackupStatusStarted, BackupStatusFailed} {
+		backupStatus.WithLabelValues(st).Set(0)
+	}
+	backupStatus.WithLabelValues(status.Status).Set(1)
+
 	if status.Status == BackupStatusSuccess {
 		backupSize.Set(float64(status.Size))
 		backupDuration.Set(float64(status.Duration))
