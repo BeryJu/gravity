@@ -50,8 +50,9 @@ func New(instance roles.Instance) *Role {
 				"type": "etcd",
 			},
 			{
-				"type": "forward_ip",
-				"to":   extconfig.Get().FallbackDNS,
+				"type":      "forward_ip",
+				"to":        extconfig.Get().FallbackDNS,
+				"cache_ttl": "3600",
 			},
 		}
 		zone.put(ev.Context)
