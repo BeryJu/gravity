@@ -20,6 +20,7 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         if (failed.length > 0) {
             return Promise.resolve<AdminStatus>({
                 icon: "fa fa-exclamation-triangle pf-m-warning",
+                message: html`${failed.map(f => html`${f.error}`)}`,
             });
         }
         return Promise.resolve<AdminStatus>({

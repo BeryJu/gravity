@@ -15,10 +15,10 @@ export class VersionCard extends AdminStatusCard<InstanceAPIInstanceInfo> {
         return new InstancesApi(DEFAULT_CONFIG).rootGetInfo();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getStatus(value: InstanceAPIInstanceInfo): Promise<AdminStatus> {
         return Promise.resolve<AdminStatus>({
             icon: "fa fa-check-circle pf-m-success",
+            message: html`${value?.buildHash.substring(0, 7)}`,
         });
     }
 
@@ -27,7 +27,7 @@ export class VersionCard extends AdminStatusCard<InstanceAPIInstanceInfo> {
             href="https://github.com/BeryJu/gravity/commit/${this.value?.buildHash}"
             target="_blank"
         >
-            ${this.value?.version} (${this.value?.buildHash.substring(0, 7)})
+            ${this.value?.version}
         </a>`;
     }
 }
