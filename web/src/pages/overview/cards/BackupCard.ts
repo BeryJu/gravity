@@ -15,10 +15,9 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         return new RolesBackupApi(DEFAULT_CONFIG).backupStatus();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getStatus(value: BackupAPIBackupStatusOutput): Promise<AdminStatus> {
-        const isSuccess = (value.status || []).filter((v) => v.status !== "success");
-        if (!isSuccess) {
+        const failed = (value.status || []).filter((v) => v.status !== "success");
+        if (failed.length > 0) {
             return Promise.resolve<AdminStatus>({
                 icon: "fa fa-exclamation-triangle pf-m-warning",
             });
