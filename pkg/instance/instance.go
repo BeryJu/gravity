@@ -296,6 +296,7 @@ func (i *Instance) Stop() {
 		role.Role.Stop()
 	}
 	if i.etcd != nil {
+		i.log.Info("stopping role", zap.String("roleId", "etcd"))
 		i.etcd.Stop()
 	}
 	i.rootContextCancel()

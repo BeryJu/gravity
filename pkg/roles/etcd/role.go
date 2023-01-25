@@ -99,6 +99,5 @@ func (ee *Role) Stop() {
 	if ee.e == nil {
 		return
 	}
-	ee.log.Info("Stopping etcd")
 	ee.e.Close()
 }
