@@ -9,6 +9,7 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { DEFAULT_CONFIG } from "./api/Config";
+import { EVENT_SIDEBAR_TOGGLE } from "./common/constants";
 import { AKElement } from "./elements/Base";
 import { Route } from "./elements/router/Route";
 import "./elements/router/RouterOutlet";
@@ -107,6 +108,17 @@ export class AdminInterface extends AKElement {
         ];
     }
 
+    constructor() {
+        super();
+        this.showSidebar = window.innerWidth >= 1280;
+        window.addEventListener("resize", () => {
+            this.showSidebar = window.innerWidth >= 1280;
+        });
+        window.addEventListener(EVENT_SIDEBAR_TOGGLE, () => {
+            this.showSidebar = !this.showSidebar;
+        });
+    }
+
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             if (!me.authenticated) {
@@ -120,15 +132,10 @@ export class AdminInterface extends AKElement {
     }
 
     render(): TemplateResult {
-        if (!this.showSidebar) {
-            return html`<div class="pf-c-page">
-                <main class="pf-c-page__main">
-                    <ak-router-outlet class="pf-c-page__main" .routes=${ROUTES}> </ak-router-outlet>
-                </main>
-            </div>`;
-        }
         return html`<div class="pf-c-page">
-            <ak-sidebar class="pf-c-page__sidebar pf-m-expanded">
+            <ak-sidebar
+                class="pf-c-page__sidebar ${this.showSidebar ? "pf-m-expanded" : "pf-m-collapsed"}"
+            >
                 ${this.renderSidebarItems()}
             </ak-sidebar>
             <main class="pf-c-page__main">

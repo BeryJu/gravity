@@ -6,7 +6,7 @@ import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { TITLE_DEFAULT } from "../common/constants";
+import { EVENT_SIDEBAR_TOGGLE, TITLE_DEFAULT } from "../common/constants";
 import { AKElement } from "./Base";
 
 @customElement("ak-page-header")
@@ -89,14 +89,27 @@ export class PageHeader extends AKElement {
     }
 
     render(): TemplateResult {
-        return html` <section class="pf-c-page__main-section pf-m-light">
-            <div class="pf-c-content">
-                <h1>
-                    ${this.renderIcon()}
-                    <slot name="header"> ${this.header} </slot>
-                </h1>
-                ${this.description ? html`<p>${this.description}</p>` : html``}
-            </div>
-        </section>`;
+        return html`<button
+                class="sidebar-trigger pf-c-button pf-m-plain"
+                @click=${() => {
+                    this.dispatchEvent(
+                        new CustomEvent(EVENT_SIDEBAR_TOGGLE, {
+                            bubbles: true,
+                            composed: true,
+                        }),
+                    );
+                }}
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+            <section class="pf-c-page__main-section pf-m-light">
+                <div class="pf-c-content">
+                    <h1>
+                        ${this.renderIcon()}
+                        <slot name="header"> ${this.header} </slot>
+                    </h1>
+                    ${this.description ? html`<p>${this.description}</p>` : html``}
+                </div>
+            </section>`;
     }
 }
