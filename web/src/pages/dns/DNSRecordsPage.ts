@@ -33,19 +33,18 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<DnsAPIRecord>> {
-        const records = await new RolesDnsApi(DEFAULT_CONFIG)
-            .dnsGetRecords({
-                zone: this.zone || ".",
-            });
+        const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
+            zone: this.zone || ".",
+        });
         const data = (records.records || []).filter(
-            (l) => l.fqdn.toLowerCase().includes(this.search.toLowerCase()) ||
+            (l) =>
+                l.fqdn.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.type.toLowerCase().includes(this.search.toLowerCase()) ||
-                l.data.includes(this.search));
+                l.data.includes(this.search),
+        );
         data.sort((a, b) => {
-            if (a.fqdn > b.fqdn)
-                return 1;
-            if (a.fqdn < b.fqdn)
-                return -1;
+            if (a.fqdn > b.fqdn) return 1;
+            if (a.fqdn < b.fqdn) return -1;
             return parseInt(a.uid) - parseInt(b.uid);
         });
         return PaginationWrapper(data);

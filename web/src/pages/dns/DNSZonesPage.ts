@@ -31,12 +31,12 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
 
     async apiEndpoint(): Promise<PaginatedResponse<DnsAPIZone>> {
         const zones = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones();
-        const data = (zones.zones || []).filter((l) => l.name.toLowerCase().includes(this.search.toLowerCase()));
+        const data = (zones.zones || []).filter((l) =>
+            l.name.toLowerCase().includes(this.search.toLowerCase()),
+        );
         data.sort((a, b) => {
-            if (a.name > b.name)
-                return 1;
-            if (a.name < b.name)
-                return -1;
+            if (a.name > b.name) return 1;
+            if (a.name < b.name) return -1;
             return 0;
         });
         return PaginationWrapper(data);

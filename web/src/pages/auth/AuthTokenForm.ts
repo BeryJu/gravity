@@ -17,10 +17,9 @@ export class AuthTokenForm extends Form<AuthAPIToken> {
     }
 
     send = async (data: AuthAPIToken): Promise<void> => {
-        const out = await new RolesApiApi(DEFAULT_CONFIG)
-            .apiPutTokens({
-                username: data.username,
-            });
+        const out = await new RolesApiApi(DEFAULT_CONFIG).apiPutTokens({
+            username: data.username,
+        });
         showMessage({
             level: MessageLevel.success,
             message: out.key,

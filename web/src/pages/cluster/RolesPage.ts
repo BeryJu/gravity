@@ -1,4 +1,4 @@
-import { InstanceInstanceInfo, ClusterInstancesApi } from "gravity-api";
+import { ClusterInstancesApi, InstanceInstanceInfo } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";

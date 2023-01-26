@@ -13,8 +13,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
     async loadInstance(pk: string): Promise<AuthAPIUser> {
         const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers();
         const user = users.users?.find((z) => z.username === pk);
-        if (!user)
-            throw new Error("No user");
+        if (!user) throw new Error("No user");
         return user;
     }
 

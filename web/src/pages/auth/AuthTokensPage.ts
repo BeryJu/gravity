@@ -30,12 +30,12 @@ export class AuthTokensPage extends TablePage<AuthAPIToken> {
 
     async apiEndpoint(): Promise<PaginatedResponse<AuthAPIToken>> {
         const tokens = await new RolesApiApi(DEFAULT_CONFIG).apiGetTokens();
-        const data = (tokens.tokens || []).filter((l) => l.username.toLowerCase().includes(this.search.toLowerCase()));
+        const data = (tokens.tokens || []).filter((l) =>
+            l.username.toLowerCase().includes(this.search.toLowerCase()),
+        );
         data.sort((a, b) => {
-            if (a.username > b.username)
-                return 1;
-            if (a.username < b.username)
-                return -1;
+            if (a.username > b.username) return 1;
+            if (a.username < b.username) return -1;
             return 0;
         });
         return PaginationWrapper(data);

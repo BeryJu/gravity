@@ -32,14 +32,14 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
     async apiEndpoint(): Promise<PaginatedResponse<DiscoveryAPIDevice>> {
         const devices = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetDevices();
         const data = (devices.devices || []).filter(
-            (l) => l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
+            (l) =>
+                l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.mac.toLowerCase().includes(this.search.toLowerCase()) ||
-                l.ip.includes(this.search));
+                l.ip.includes(this.search),
+        );
         data.sort((a, b) => {
-            if (a.hostname > b.hostname)
-                return 1;
-            if (a.hostname < b.hostname)
-                return -1;
+            if (a.hostname > b.hostname) return 1;
+            if (a.hostname < b.hostname) return -1;
             return 0;
         });
         return PaginationWrapper(data);

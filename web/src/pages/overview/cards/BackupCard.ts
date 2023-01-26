@@ -20,7 +20,12 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         if (failed.length > 0) {
             return Promise.resolve<AdminStatus>({
                 icon: "fa fa-exclamation-triangle pf-m-warning",
-                message: html`${failed.map(f => html`${f.error}`)}`,
+                message: html`${failed.map((f) => html`${f.error}`)}`,
+            });
+        }
+        if ((value.status || []).length < 1) {
+            return Promise.resolve<AdminStatus>({
+                icon: "fa fa-exclamation-triangle pf-m-warning",
             });
         }
         return Promise.resolve<AdminStatus>({
@@ -49,6 +54,9 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
     }
 
     renderValue(): TemplateResult {
+        if ((this.value?.status || []).length < 1) {
+            return html`No backups`;
+        }
         return html`${(this.value?.status || []).map((s) => {
             return html`${s.time?.toLocaleDateString()} ${s.time?.toLocaleTimeString()}`;
         })}`;

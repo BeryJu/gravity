@@ -31,14 +31,14 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     async apiEndpoint(): Promise<PaginatedResponse<DhcpAPIScope>> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
         const data = (scopes.scopes || []).filter(
-            (l) => l.scope.toLowerCase().includes(this.search.toLowerCase()) ||
+            (l) =>
+                l.scope.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.dns?.zone?.toLowerCase().includes(this.search.toLowerCase()) ||
-                l.subnetCidr.includes(this.search));
+                l.subnetCidr.includes(this.search),
+        );
         data.sort((a, b) => {
-            if (a.scope > b.scope)
-                return 1;
-            if (a.scope < b.scope)
-                return -1;
+            if (a.scope > b.scope) return 1;
+            if (a.scope < b.scope) return -1;
             return 0;
         });
         return PaginationWrapper(data);
