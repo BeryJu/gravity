@@ -18,7 +18,6 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/swaggest/openapi-go/openapi3"
 	"github.com/swaggest/rest/web"
-	swgui "github.com/swaggest/swgui/v4emb"
 	"go.uber.org/zap"
 )
 
@@ -116,7 +115,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	r.oapi = web.DefaultService()
 	r.oapi.OpenAPI.Info.Title = "gravity"
 	r.oapi.OpenAPI.Info.Version = extconfig.Version
-	r.oapi.Docs("/api/v1/docs", swgui.New)
+	r.oapi.Method(http.MethodGet, "/api/v1/openapi.json", r.oapi.OpenAPICollector)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
 	apiRouter.Use(r.auth.AsMiddleware())

@@ -10,6 +10,10 @@ export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export const resources = [
     {
+        src: "node_modules/rapidoc/dist/rapidoc-min.js",
+        dest: "dist/",
+    },
+    {
         src: "node_modules/@patternfly/patternfly/patternfly.min.css",
         dest: "dist/",
     },
