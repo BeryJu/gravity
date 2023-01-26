@@ -154,6 +154,7 @@ func (i *Instance) bootstrap() {
 		i.roles[roleId] = rc
 		i.rolesM.Unlock()
 	}
+	i.ForRole("root").AddEventListener(types.EventTopicRoleRestart, i.eventRoleRestart)
 	i.ForRole("root").DispatchEvent(
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
@@ -163,6 +164,13 @@ func (i *Instance) bootstrap() {
 		go i.startWatchRole(roleId)
 	}
 	<-i.rootContext.Done()
+}
+
+func (i *Instance) eventRoleRestart(ev *roles.Event) {
+	id := ev.Payload.Data["id"].(string)
+	config := ev.Payload.Data["config"].([]byte)
+	i.stopRole(id)
+	i.startRole(id, config)
 }
 
 func (i *Instance) checkFirstStart() {
@@ -234,7 +242,7 @@ func (i *Instance) startWatchRole(id string) {
 	if err == nil && len(config.Kvs) > 0 {
 		rawConfig = config.Kvs[0].Value
 	}
-	started := i.startRole(id, rawConfig)
+	i.startRole(id, rawConfig)
 	for resp := range i.kv.Watch(
 		i.rootContext,
 		i.kv.Key(
@@ -248,21 +256,14 @@ func (i *Instance) startWatchRole(id string) {
 			if ev.Type != clientv3.EventTypeDelete && len(ev.Kv.Value) > 0 {
 				rawConfig = ev.Kv.Value
 			}
-			if started {
-				i.log.Info("stopping role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
-				i.roles[id].Role.Stop()
-				// Cancel context and re-create the context
-				i.roles[id].ContextCancelFunc()
-				ctx, cancel := context.WithCancel(i.rootContext)
-				i.rolesM.Lock()
-				i.roles[id] = RoleContext{
-					Role:              i.roles[id].Role,
-					Context:           ctx,
-					ContextCancelFunc: cancel,
-				}
-				i.rolesM.Unlock()
-			}
-			started = i.startRole(id, rawConfig)
+			i.log.Info("stopping role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
+			i.DispatchEvent(types.EventTopicRoleRestart, roles.NewEvent(
+				i.rootContext,
+				map[string]interface{}{
+					"id":     id,
+					"config": rawConfig,
+				},
+			))
 		}
 	}
 }
@@ -286,6 +287,21 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 		},
 	))
 	return true
+}
+
+func (i *Instance) stopRole(id string) {
+	i.log.Info("stopping role", zap.String("roleId", id))
+	i.roles[id].Role.Stop()
+	// Cancel context and re-create the context
+	i.roles[id].ContextCancelFunc()
+	ctx, cancel := context.WithCancel(i.rootContext)
+	i.rolesM.Lock()
+	i.roles[id] = RoleContext{
+		Role:              i.roles[id].Role,
+		Context:           ctx,
+		ContextCancelFunc: cancel,
+	}
+	i.rolesM.Unlock()
 }
 
 func (i *Instance) Stop() {

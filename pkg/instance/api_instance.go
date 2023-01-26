@@ -7,22 +7,11 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
-	"beryju.io/gravity/pkg/roles"
-	apitypes "beryju.io/gravity/pkg/roles/api/types"
-	"github.com/swaggest/rest/web"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
-
-func (i *Instance) setupInstanceAPI() {
-	i.ForRole("instance").AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
-		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/instances", i.APIInstances())
-		svc.Get("/api/v1/info", i.APIInstanceInfo())
-	})
-}
 
 type APIInstancesOutput struct {
 	Instances []InstanceInfo `json:"instances" required:"true"`
@@ -55,9 +44,9 @@ func (i *Instance) APIInstances() usecase.Interactor {
 		}
 		return nil
 	})
-	u.SetName("root.get_instances")
+	u.SetName("cluster.get_instances")
 	u.SetTitle("Instances")
-	u.SetTags("instances")
+	u.SetTags("cluster/instances")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
@@ -81,9 +70,9 @@ func (i *Instance) APIInstanceInfo() usecase.Interactor {
 		output.CurrentInstanceIdentifier = extconfig.Get().Instance.Identifier
 		return nil
 	})
-	u.SetName("root.get_info")
-	u.SetTitle("Instances")
-	u.SetTags("instances")
+	u.SetName("cluster.get_info")
+	u.SetTitle("Instance")
+	u.SetTags("cluster/instances")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
