@@ -32,26 +32,23 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
         return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DnsAPIRecord>> {
-        return new RolesDnsApi(DEFAULT_CONFIG)
+    async apiEndpoint(): Promise<PaginatedResponse<DnsAPIRecord>> {
+        const records = await new RolesDnsApi(DEFAULT_CONFIG)
             .dnsGetRecords({
                 zone: this.zone || ".",
-            })
-            .then((records) => {
-                const data = (records.records || []).filter(
-                    (l) =>
-                        l.fqdn.toLowerCase().includes(this.search.toLowerCase()) ||
-                        l.type.toLowerCase().includes(this.search.toLowerCase()) ||
-                        l.data.includes(this.search),
-                );
-                data.sort((a, b) => {
-                    if (a.fqdn > b.fqdn) return 1;
-                    if (a.fqdn < b.fqdn) return -1;
-                    return parseInt(a.uid) - parseInt(b.uid);
-                });
-                return PaginationWrapper(data);
             });
+        const data = (records.records || []).filter(
+            (l) => l.fqdn.toLowerCase().includes(this.search.toLowerCase()) ||
+                l.type.toLowerCase().includes(this.search.toLowerCase()) ||
+                l.data.includes(this.search));
+        data.sort((a, b) => {
+            if (a.fqdn > b.fqdn)
+                return 1;
+            if (a.fqdn < b.fqdn)
+                return -1;
+            return parseInt(a.uid) - parseInt(b.uid);
+        });
+        return PaginationWrapper(data);
     }
 
     columns(): TableColumn[] {

@@ -31,8 +31,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
         return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async apiEndpoint(page: number): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
+    async apiEndpoint(): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
         const subnets = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets();
         const data = (subnets.subnets || []).filter((l) =>
             l.name.toLowerCase().includes(this.search.toLowerCase()),

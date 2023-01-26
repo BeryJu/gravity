@@ -16,8 +16,7 @@ export class DHCPScopeCard extends AdminStatusCard<number> {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getStatus(value: number): Promise<AdminStatus> {
+    getStatus(): Promise<AdminStatus> {
         return Promise.resolve<AdminStatus>({
             icon: "fa fa-check-circle pf-m-success",
         });

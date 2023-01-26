@@ -28,19 +28,17 @@ export class AuthTokensPage extends TablePage<AuthAPIToken> {
         return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<AuthAPIToken>> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetTokens().then((tokens) => {
-            const data = (tokens.tokens || []).filter((l) =>
-                l.username.toLowerCase().includes(this.search.toLowerCase()),
-            );
-            data.sort((a, b) => {
-                if (a.username > b.username) return 1;
-                if (a.username < b.username) return -1;
-                return 0;
-            });
-            return PaginationWrapper(data);
+    async apiEndpoint(): Promise<PaginatedResponse<AuthAPIToken>> {
+        const tokens = await new RolesApiApi(DEFAULT_CONFIG).apiGetTokens();
+        const data = (tokens.tokens || []).filter((l) => l.username.toLowerCase().includes(this.search.toLowerCase()));
+        data.sort((a, b) => {
+            if (a.username > b.username)
+                return 1;
+            if (a.username < b.username)
+                return -1;
+            return 0;
         });
+        return PaginationWrapper(data);
     }
 
     columns(): TableColumn[] {

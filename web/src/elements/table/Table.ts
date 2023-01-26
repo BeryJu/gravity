@@ -103,12 +103,11 @@ export abstract class Table<T> extends AKElement {
         return false;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     renderExpanded(item: T): TemplateResult {
         if (this.expandable) {
             throw new Error("Expandable is enabled but renderExpanded is not overridden!");
         }
-        return html``;
+        return html`${item}`;
     }
 
     @property({ attribute: false })
@@ -394,9 +393,8 @@ export abstract class Table<T> extends AKElement {
         </ak-table-search>`;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     renderSelectedChip(item: T): TemplateResult {
-        return html``;
+        return html`${item}`;
     }
 
     renderToolbarContainer(): TemplateResult {

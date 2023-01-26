@@ -1,4 +1,4 @@
-import { InstanceAPIInstanceInfo, InstancesApi } from "gravity-api";
+import { ClusterInstancesApi, InstanceAPIInstanceInfo } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -12,7 +12,7 @@ export class VersionCard extends AdminStatusCard<InstanceAPIInstanceInfo> {
     headerLink = "#/cluster/nodes";
 
     getPrimaryValue(): Promise<InstanceAPIInstanceInfo> {
-        return new InstancesApi(DEFAULT_CONFIG).rootGetInfo();
+        return new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo();
     }
 
     getStatus(value: InstanceAPIInstanceInfo): Promise<AdminStatus> {

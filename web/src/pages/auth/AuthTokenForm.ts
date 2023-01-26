@@ -16,17 +16,15 @@ export class AuthTokenForm extends Form<AuthAPIToken> {
         return "Successfully created token.";
     }
 
-    send = (data: AuthAPIToken): Promise<void> => {
-        return new RolesApiApi(DEFAULT_CONFIG)
+    send = async (data: AuthAPIToken): Promise<void> => {
+        const out = await new RolesApiApi(DEFAULT_CONFIG)
             .apiPutTokens({
                 username: data.username,
-            })
-            .then((out) => {
-                showMessage({
-                    level: MessageLevel.success,
-                    message: out.key,
-                });
             });
+        showMessage({
+            level: MessageLevel.success,
+            message: out.key,
+        });
     };
 
     renderForm(): TemplateResult {

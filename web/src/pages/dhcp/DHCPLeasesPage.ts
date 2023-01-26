@@ -41,23 +41,18 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<DhcpAPILease>> {
-        return new RolesDhcpApi(DEFAULT_CONFIG)
+    async apiEndpoint(): Promise<PaginatedResponse<DhcpAPILease>> {
+        const leases = await new RolesDhcpApi(DEFAULT_CONFIG)
             .dhcpGetLeases({
                 scope: this.scope,
-            })
-            .then((leases) => {
-                const data = (leases.leases || []).filter(
-                    (l) =>
-                        l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
-                        l.address.includes(this.search),
-                );
-                data.sort((a, b) => {
-                    return ip2int(a.address) - ip2int(b.address);
-                });
-                return PaginationWrapper(data);
             });
+        const data = (leases.leases || []).filter(
+            (l) => l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
+                l.address.includes(this.search));
+        data.sort((a, b) => {
+            return ip2int(a.address) - ip2int(b.address);
+        });
+        return PaginationWrapper(data);
     }
 
     columns(): TableColumn[] {

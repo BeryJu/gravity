@@ -1,4 +1,4 @@
-import { InstancesApi } from "gravity-api";
+import { ClusterInstancesApi } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -10,13 +10,12 @@ export class CurrentInstanceCard extends AdminStatusCard<string> {
     header = "Current instance";
 
     getPrimaryValue(): Promise<string> {
-        return new InstancesApi(DEFAULT_CONFIG).rootGetInfo().then((info) => {
+        return new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo().then((info) => {
             return info.currentInstanceIdentifier;
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getStatus(value: string): Promise<AdminStatus> {
+    getStatus(): Promise<AdminStatus> {
         return Promise.resolve<AdminStatus>({
             icon: "fa fa-check-circle pf-m-success",
         });

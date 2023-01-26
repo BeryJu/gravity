@@ -27,8 +27,7 @@ export class DeleteObjectsTable<T> extends Table<T> {
         return super.styles.concat(PFList);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async apiEndpoint(page: number): Promise<PaginatedResponse<T>> {
+    async apiEndpoint(): Promise<PaginatedResponse<T>> {
         return Promise.resolve({
             pagination: {
                 count: this.objects.length,

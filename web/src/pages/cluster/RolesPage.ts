@@ -1,4 +1,4 @@
-import { InstanceInstanceInfo, InstancesApi } from "gravity-api";
+import { InstanceInstanceInfo, ClusterInstancesApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -49,12 +49,10 @@ export class RolesPage extends TablePage<Role> {
         return "";
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    apiEndpoint(page: number): Promise<PaginatedResponse<Role>> {
-        return new InstancesApi(DEFAULT_CONFIG).rootGetInstances().then((inst) => {
-            this.instances = inst.instances || [];
-            return PaginationWrapper(roles);
-        });
+    async apiEndpoint(): Promise<PaginatedResponse<Role>> {
+        const inst = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
+        this.instances = inst.instances || [];
+        return PaginationWrapper(roles);
     }
 
     columns(): TableColumn[] {

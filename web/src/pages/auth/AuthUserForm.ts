@@ -10,12 +10,12 @@ import { KV } from "../../utils";
 
 @customElement("gravity-auth-user-form")
 export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
-    loadInstance(pk: string): Promise<AuthAPIUser> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetUsers().then((users) => {
-            const user = users.users?.find((z) => z.username === pk);
-            if (!user) throw new Error("No user");
-            return user;
-        });
+    async loadInstance(pk: string): Promise<AuthAPIUser> {
+        const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers();
+        const user = users.users?.find((z) => z.username === pk);
+        if (!user)
+            throw new Error("No user");
+        return user;
     }
 
     getSuccessMessage(): string {

@@ -13,10 +13,9 @@ import { KV } from "../../utils";
 
 @customElement("gravity-cluster-role-api-config")
 export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
-    loadInstance(): Promise<ApiRoleConfig> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig().then((config) => {
-            return config.config;
-        });
+    async loadInstance(): Promise<ApiRoleConfig> {
+        const config = await new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig();
+        return config.config;
     }
 
     getSuccessMessage(): string {
