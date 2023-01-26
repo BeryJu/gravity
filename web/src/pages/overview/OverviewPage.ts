@@ -51,10 +51,10 @@ export class OverviewPage extends AKElement {
             </ak-page-header>
             <section class="pf-c-page__main-section">
                 <div class="pf-l-grid pf-m-gutter">
-                    <div class="pf-l-grid__item pf-m-3-col pf-m-2-col-on-2xl">
+                    <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                         <gravity-overview-card-dhcp-scopes></gravity-overview-card-dhcp-scopes>
                     </div>
-                    <div class="pf-l-grid__item pf-m-3-col pf-m-2-col-on-2xl">
+                    <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                         <gravity-overview-card-dns-zones></gravity-overview-card-dns-zones>
                     </div>
                     <div class="pf-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
@@ -63,7 +63,7 @@ export class OverviewPage extends AKElement {
                     <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                         <gravity-overview-card-version></gravity-overview-card-version>
                     </div>
-                    <div class="pf-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
+                    <div class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-2xl">
                         <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
                     </div>
                     <div
@@ -77,7 +77,7 @@ export class OverviewPage extends AKElement {
                         </ak-aggregate-card>
                     </div>
                     <div
-                        class="pf-l-grid__item pf-m-6-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                        class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
@@ -87,7 +87,7 @@ export class OverviewPage extends AKElement {
                         </ak-aggregate-card>
                     </div>
                     <div
-                        class="pf-l-grid__item pf-m-6-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                        class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
