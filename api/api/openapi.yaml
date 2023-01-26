@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.3.17
+  version: 0.3.18
 servers:
 - url: /
 paths:
@@ -287,6 +287,70 @@ paths:
       summary: Import Cluster
       tags:
       - roles/api
+  /api/v1/cluster/info:
+    get:
+      operationId: cluster.get_info
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIInstanceInfo'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instance
+      tags:
+      - cluster/instances
+  /api/v1/cluster/instances:
+    get:
+      operationId: cluster.get_instances
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instances
+      tags:
+      - cluster/instances
+  /api/v1/cluster/roles/restart:
+    post:
+      operationId: cluster.instance_role_restart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceAPIRoleRestartInput'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instance roles
+      tags:
+      - cluster/instances
   /api/v1/dhcp/scopes:
     delete:
       operationId: dhcp.delete_scopes
@@ -987,44 +1051,6 @@ paths:
       summary: Etcd members
       tags:
       - roles/api
-  /api/v1/info:
-    get:
-      operationId: root.get_info
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstanceAPIInstanceInfo'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: Instances
-      tags:
-      - instances
-  /api/v1/instances:
-    get:
-      operationId: root.get_instances
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: Instances
-      tags:
-      - instances
   /api/v1/roles/api:
     get:
       operationId: api.get_role_config
@@ -2614,6 +2640,13 @@ components:
           type: array
       required:
       - instances
+      type: object
+    InstanceAPIRoleRestartInput:
+      example:
+        roleId: roleId
+      properties:
+        roleId:
+          type: string
       type: object
     InstanceInstanceInfo:
       example:

@@ -2,7 +2,7 @@
 .travis.yml
 README.md
 api/openapi.yaml
-api_instances.go
+api_cluster_instances.go
 api_roles_api.go
 api_roles_backup.go
 api_roles_dhcp.go
@@ -47,6 +47,7 @@ docs/BackupAPIRoleConfigInput.md
 docs/BackupAPIRoleConfigOutput.md
 docs/BackupBackupStatus.md
 docs/BackupRoleConfig.md
+docs/ClusterInstancesApi.md
 docs/DhcpAPILease.md
 docs/DhcpAPILeaseInfo.md
 docs/DhcpAPILeasesGetOutput.md
@@ -79,8 +80,8 @@ docs/DnsRoleConfig.md
 docs/ExtconfigExtConfigDirs.md
 docs/InstanceAPIInstanceInfo.md
 docs/InstanceAPIInstancesOutput.md
+docs/InstanceAPIRoleRestartInput.md
 docs/InstanceInstanceInfo.md
-docs/InstancesApi.md
 docs/MonitoringAPIRoleConfigInput.md
 docs/MonitoringAPIRoleConfigOutput.md
 docs/MonitoringRoleConfig.md
@@ -169,6 +170,7 @@ model_dns_role_config.go
 model_extconfig_ext_config_dirs.go
 model_instance_api_instance_info.go
 model_instance_api_instances_output.go
+model_instance_api_role_restart_input.go
 model_instance_instance_info.go
 model_monitoring_api_role_config_input.go
 model_monitoring_api_role_config_output.go
