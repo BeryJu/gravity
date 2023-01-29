@@ -5,7 +5,7 @@ title: "Role configuration"
 - `accessKey`: S3 Access Key for backups
 - `secretKey`: S3 Secret Key for backups
 
-    If credentials aren't set, Gravity will try to use environment variables, and fall back to getting credentials from the EC2 service.
+  If credentials aren't set, Gravity will try to use environment variables, and fall back to getting credentials from the EC2 service.
 
 - `endpoint`: S3 Endpoint
 - `bucket`: S3 bucket

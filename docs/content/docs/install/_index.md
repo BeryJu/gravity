@@ -9,7 +9,7 @@ weight: 5
 
 ```yaml
 ---
-version: '3.4'
+version: "3.4"
 
 services:
   gravity:

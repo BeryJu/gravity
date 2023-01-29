@@ -31,12 +31,12 @@ Forward queries to another DNS Server
 
 - `to` (required): List of DNS Servers to forward query to
 
-    Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`
+  Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`
 
 - `cache_ttl`: Optional TTL to cache responses in etcd
 
-    Defaults to 0. Attempts to cache for the TTL of the response.
-    Set to -1 to never cache, and set to -2 to cache without a TTL
+  Defaults to 0. Attempts to cache for the TTL of the response.
+  Set to -1 to never cache, and set to -2 to cache without a TTL
 
 ### forward_blocky
 
@@ -46,24 +46,24 @@ Forward queries to another DNS Server using blocky for Ad/Privacy blocking
 
 - `to` (required): List of DNS Servers to forward query to
 
-    Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`
+  Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`
 
 - `cache_ttl`: Optional TTL to cache responses in etcd
 
-    Defaults to 0. Attempts to cache for the TTL of the response.
-    Set to -1 to never cache, and set to -2 to cache without a TTL
+  Defaults to 0. Attempts to cache for the TTL of the response.
+  Set to -1 to never cache, and set to -2 to cache without a TTL
 
 - `blocklists`: List of blocklists to load
 
-    Multiple URLs should be separated by `;`. Defaults to these lists:
+  Multiple URLs should be separated by `;`. Defaults to these lists:
 
-    - https://adaway.org/hosts.txt
-    - https://dbl.oisd.nl/
-    - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
-    - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-    - https://v.firebog.net/hosts/AdguardDNS.txt
-    - https://v.firebog.net/hosts/Easylist.txt
-    - https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+  - https://adaway.org/hosts.txt
+  - https://dbl.oisd.nl/
+  - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
+  - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  - https://v.firebog.net/hosts/AdguardDNS.txt
+  - https://v.firebog.net/hosts/Easylist.txt
+  - https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
 
 ### k8s_gateway
 

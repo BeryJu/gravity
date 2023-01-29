@@ -29,12 +29,12 @@ Example options:
 
 ```json
 {
-    "options": [
-        {
-            "tagName": "router",
-            "value": "10.1.2.3"
-        },
-    ]
+  "options": [
+    {
+      "tagName": "router",
+      "value": "10.1.2.3"
+    }
+  ]
 }
 ```
 
@@ -70,10 +70,10 @@ Additionally, `addZoneInHostname` can be set to make Gravity append the zone to 
 
 ```json
 {
-    "dns": {
-        "zone": "foo.bar.baz.",
-        "search": [],
-        "addZoneInHostname": false
-    }
+  "dns": {
+    "zone": "foo.bar.baz.",
+    "search": [],
+    "addZoneInHostname": false
+  }
 }
 ```

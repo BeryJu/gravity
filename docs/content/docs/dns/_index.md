@@ -12,6 +12,7 @@ Gravity's DNS Server supports
 - use [k8s_gateway](https://github.com/ori-edge/k8s_gateway) to resolve kubernetes ingresses
 
 ### Concepts
+
 ---
 
 ##### Zones
@@ -33,11 +34,11 @@ A single record holds the following data:
 - `data`: The actual response, an IP for A/AAAA records, Text for TXT records, etc
 - `ttl`: TTL of the response, optional
 
-*For MX records*
+_For MX records_
 
 - `mxPreference`: Configure the MX Preference (optional)
 
-*For SRV records*
+_For SRV records_
 
 - `srvPort`: Configure SRV Port (optional)
 - `srvPriority`: Configure SRV Priority (optional)
