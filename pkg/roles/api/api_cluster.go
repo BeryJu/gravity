@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -50,17 +51,28 @@ type APIMemberJoinOutput struct {
 func (r *Role) APIClusterJoin() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberJoinInput, output *APIMemberJoinOutput) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
-
-		_, err := r.i.KV().MemberAdd(ctx, []string{input.Peer})
+		initialCluster := []string{}
+		members, err := r.i.KV().MemberList(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
-		env := fmt.Sprintf(
+		for _, mem := range members.Members {
+			for _, u := range mem.PeerURLs {
+				initialCluster = append(initialCluster, fmt.Sprintf("%s=%s", mem.Name, u))
+			}
+		}
+
+		_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+
+		initialCluster = append(initialCluster, fmt.Sprintf(
 			"%s=https://%s:2380",
 			extconfig.Get().Instance.Identifier,
 			extconfig.Get().Instance.IP,
-		)
-		output.Env = env
+		))
+		output.Env = strings.Join(initialCluster, ",")
 		return nil
 	})
 	u.SetName("etcd.join_member")

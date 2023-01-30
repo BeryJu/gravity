@@ -5,10 +5,14 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"strings"
 	"time"
 
+	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -42,9 +46,8 @@ func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
 	cfg.Dir = dirs.EtcdDir
-	cfg.LogLevel = "warn"
 	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
-		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
+		extconfig.Get().BuildLoggerWithLevel(zapcore.DebugLevel).Named("role.etcd"),
 		nil,
 		nil,
 	)
@@ -65,16 +68,53 @@ func New(instance roles.Instance) *Role {
 		certDir: dirs.CertDir,
 	}
 	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
-	if extconfig.Get().Etcd.JoinCluster != "" {
-		cfg.ClusterState = embed.ClusterStateFlagExisting
-		cfg.InitialCluster = cfg.InitialCluster + "," + extconfig.Get().Etcd.JoinCluster
-	}
+	cfg.InitialClusterToken = uuid.New().String()
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
+	err := ee.prepareJoin(cfg)
+	if err != nil {
+		instance.Log().Warn("failed to join cluster", zap.Error(err))
+	}
 	return ee
+}
+
+func (ee *Role) prepareJoin(cfg *embed.Config) error {
+	join := extconfig.Get().Etcd.JoinCluster
+	if join == "" {
+		return nil
+	}
+	joinParts := strings.SplitN(join, ",", 2)
+	if len(joinParts) < 2 {
+		return fmt.Errorf("join string must consist of two parts: <token>,<api url>")
+	}
+	token := joinParts[0]
+	apiUrl := joinParts[1]
+
+	u, err := url.Parse(apiUrl)
+	if err != nil {
+		return errors.Wrap(err, "failed to parse API url")
+	}
+
+	config := api.NewConfiguration()
+	config.Host = u.Host
+	config.Scheme = u.Scheme
+	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
+	apiClient := api.NewAPIClient(config)
+
+	res, _, err := apiClient.RolesEtcdApi.EtcdJoinMember(context.Background()).ApiAPIMemberJoinInput(
+		api.ApiAPIMemberJoinInput{
+			Peer: api.PtrString(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+		},
+	).Execute()
+	if err != nil || res.Env == nil {
+		return errors.Wrap(err, "failed to send api request to join")
+	}
+	cfg.ClusterState = embed.ClusterStateFlagExisting
+	cfg.InitialCluster = res.GetEnv()
+	return nil
 }
 
 func (ee *Role) Start(ctx context.Context) error {
