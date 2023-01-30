@@ -61,7 +61,7 @@ func WaitForPort(listen string) {
 		if ln != nil {
 			_ = ln.Close()
 		}
-		if err == nil {
+		if err != nil {
 			return
 		}
 		try += 1
