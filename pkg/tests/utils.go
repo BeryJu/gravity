@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net"
 	"runtime"
 	"testing"
@@ -53,6 +54,8 @@ func HasLocalDocker() bool {
 }
 
 func WaitForPort(listen string) {
+	max := 30
+	try := 0
 	for {
 		ln, err := net.Listen("tcp", listen)
 		if ln != nil {
@@ -61,5 +64,10 @@ func WaitForPort(listen string) {
 		if err == nil {
 			return
 		}
+		try += 1
+		if try >= max {
+			panic(fmt.Errorf("failed to wait for port '%s' to be listening", listen))
+		}
+		time.Sleep(1 * time.Millisecond)
 	}
 }
