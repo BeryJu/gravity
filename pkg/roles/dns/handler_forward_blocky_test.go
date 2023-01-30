@@ -2,7 +2,6 @@ package dns_test
 
 import (
 	"testing"
-	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
@@ -45,7 +44,8 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	assert.NotNil(t, role)
 	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
-	time.Sleep(3 * time.Second)
 	defer role.Stop()
+
+	tests.WaitForPort(extconfig.Get().Listen(1054))
 	assert.Equal(t, []string{"0.0.0.0", "::"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }

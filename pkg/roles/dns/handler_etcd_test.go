@@ -2,7 +2,6 @@ package dns_test
 
 import (
 	"testing"
-	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
@@ -49,8 +48,8 @@ func TestRoleDNSHandlerEtcd(t *testing.T) {
 	assert.NotNil(t, role)
 	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
-	time.Sleep(3 * time.Second)
 	defer role.Stop()
 
+	tests.WaitForPort(extconfig.Get().Listen(1054))
 	assert.Equal(t, []string{"10.1.2.3"}, tests.DNSLookup("foo.", extconfig.Get().Listen(1054)))
 }

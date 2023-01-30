@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"net"
 	"runtime"
 	"testing"
 	"time"
@@ -49,4 +50,16 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 
 func HasLocalDocker() bool {
 	return runtime.GOOS == "linux"
+}
+
+func WaitForPort(listen string) {
+	for {
+		ln, err := net.Listen("tcp", listen)
+		if ln != nil {
+			_ = ln.Close()
+		}
+		if err == nil {
+			return
+		}
+	}
 }

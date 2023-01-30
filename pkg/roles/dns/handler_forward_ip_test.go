@@ -36,8 +36,9 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 	assert.NotNil(t, role)
 	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
-	time.Sleep(3 * time.Second)
 	defer role.Stop()
+
+	tests.WaitForPort(extconfig.Get().Listen(1054))
 	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }
 
@@ -75,6 +76,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
+	tests.WaitForPort(extconfig.Get().Listen(1054))
 	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 	time.Sleep(3 * time.Second)
 	tests.AssertEtcd(
@@ -117,7 +119,8 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 	assert.NotNil(t, role)
 	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
-	time.Sleep(3 * time.Second)
 	defer role.Stop()
+
+	tests.WaitForPort(extconfig.Get().Listen(1054))
 	assert.Equal(t, []string{"fe80::1"}, tests.DNSLookup("ipv6.t.gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }
