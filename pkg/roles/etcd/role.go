@@ -11,7 +11,6 @@ import (
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -45,21 +44,6 @@ func urlMustParse(raw string) url.URL {
 func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
-	cfg.Dir = dirs.EtcdDir
-	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
-		extconfig.Get().BuildLoggerWithLevel(zapcore.DebugLevel).Named("role.etcd"),
-		nil,
-		nil,
-	)
-	cfg.AutoCompactionMode = "periodic"
-	cfg.AutoCompactionRetention = "60m"
-	cfg.LPUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
-	}
-	cfg.APUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
-	}
-	cfg.Name = extconfig.Get().Instance.Identifier
 	ee := &Role{
 		cfg:     cfg,
 		log:     instance.Log(),
@@ -67,16 +51,41 @@ func New(instance roles.Instance) *Role {
 		etcdDir: dirs.EtcdDir,
 		certDir: dirs.CertDir,
 	}
+	cfg.Dir = dirs.EtcdDir
+	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
+		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
+		nil,
+		nil,
+	)
+	cfg.AutoCompactionMode = "periodic"
+	cfg.AutoCompactionRetention = "60m"
+	// --listen-client-urls
+	cfg.LCUrls = []url.URL{
+		urlMustParse("http://localhost:2379"),
+	}
+	// --advertise-client-urls
+	cfg.ACUrls = []url.URL{
+		urlMustParse("http://localhost:2379"),
+	}
+	// --listen-peer-urls
+	cfg.LPUrls = []url.URL{
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
+	}
+	// --initial-advertise-peer-urls
+	cfg.APUrls = []url.URL{
+		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
+	}
+	cfg.Name = extconfig.Get().Instance.Identifier
 	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
-	cfg.InitialClusterToken = uuid.New().String()
 	cfg.PeerAutoTLS = true
-	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, relInstCertPath)
-	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, relInstKeyPath)
+	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, "peer", relInstCertPath)
+	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, "peer", relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
 	err := ee.prepareJoin(cfg)
 	if err != nil {
 		instance.Log().Warn("failed to join cluster", zap.Error(err))
+		return nil
 	}
 	return ee
 }
@@ -139,5 +148,6 @@ func (ee *Role) Stop() {
 	if ee.e == nil {
 		return
 	}
+	ee.log.Info("stopping etcd")
 	ee.e.Close()
 }

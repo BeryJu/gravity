@@ -68,7 +68,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 		}
 
 		initialCluster = append(initialCluster, fmt.Sprintf(
-			"%s=https://%s:2380",
+			"%s=http://%s:2380",
 			extconfig.Get().Instance.Identifier,
 			extconfig.Get().Instance.IP,
 		))

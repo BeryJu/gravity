@@ -11,6 +11,7 @@ networks:
 services:
   gravity-1:
     hostname: gravity-1
+    container_name: gravity-1
     image: ghcr.io/beryju/gravity:latest
     restart: unless-stopped
     user: root
@@ -27,6 +28,7 @@ services:
       - data-1:/data
   gravity-2:
     hostname: gravity-2
+    container_name: gravity-2
     image: ghcr.io/beryju/gravity:latest
     restart: unless-stopped
     user: root
@@ -39,25 +41,26 @@ services:
         ipv4_address: 10.201.0.12
     volumes:
       - data-2:/data
-  # gravity-3:
-  #   hostname: gravity-3
-  #   image: ghcr.io/beryju/gravity:latest
-  #   restart: unless-stopped
-  #   user: root
-  #   depends_on:
-  #     - gravity-1
-  #   environment:
-  #     ETCD_JOIN_CLUSTER: gravity-1=https://10.201.0.11:2380,gravity-2=https://10.201.0.12:2380
-  #   networks:
-  #     default:
-  #       ipv4_address: 10.201.0.13
-  #   volumes:
-  #     - data-3:/data
+  gravity-3:
+    hostname: gravity-3
+    container_name: gravity-3
+    image: ghcr.io/beryju/gravity:latest
+    restart: unless-stopped
+    user: root
+    depends_on:
+      - gravity-2
+    environment:
+      ETCD_JOIN_CLUSTER: bootstrap-token,http://10.201.0.12:8008
+    networks:
+      default:
+        ipv4_address: 10.201.0.13
+    volumes:
+      - data-3:/data
 
 volumes:
   data-1:
     driver: local
   data-2:
     driver: local
-  # data-3:
-  #   driver: local
+  data-3:
+    driver: local
