@@ -70,6 +70,7 @@ func (s *Subnet) RunDiscovery() []Device {
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
 		nmap.WithCustomDNSServers(dns),
+		nmap.WithContext(s.role.ctx),
 	)
 	s.log.Debug("nmap args", zap.Strings("args", scanner.Args()))
 	if err != nil {
