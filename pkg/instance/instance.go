@@ -85,7 +85,16 @@ func (i *Instance) Start() {
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 		i.etcd = etcd.New(i.ForRole("etcd"))
-		i.etcd.Start(i.rootContext)
+		if i.etcd == nil {
+			i.Stop()
+			return
+		}
+		err := i.etcd.Start(i.rootContext)
+		if err != nil {
+			i.log.Warn("failed to start etcd", zap.Error(err))
+			i.Stop()
+			return
+		}
 	}
 	i.bootstrap()
 }

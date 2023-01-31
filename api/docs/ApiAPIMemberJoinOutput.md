@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Env** | Pointer to **string** |  | [optional] 
+**EtcdInitialCluster** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -25,30 +25,30 @@ NewApiAPIMemberJoinOutputWithDefaults instantiates a new ApiAPIMemberJoinOutput 
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetEnv
+### GetEtcdInitialCluster
 
-`func (o *ApiAPIMemberJoinOutput) GetEnv() string`
+`func (o *ApiAPIMemberJoinOutput) GetEtcdInitialCluster() string`
 
-GetEnv returns the Env field if non-nil, zero value otherwise.
+GetEtcdInitialCluster returns the EtcdInitialCluster field if non-nil, zero value otherwise.
 
-### GetEnvOk
+### GetEtcdInitialClusterOk
 
-`func (o *ApiAPIMemberJoinOutput) GetEnvOk() (*string, bool)`
+`func (o *ApiAPIMemberJoinOutput) GetEtcdInitialClusterOk() (*string, bool)`
 
-GetEnvOk returns a tuple with the Env field if it's non-nil, zero value otherwise
+GetEtcdInitialClusterOk returns a tuple with the EtcdInitialCluster field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetEnv
+### SetEtcdInitialCluster
 
-`func (o *ApiAPIMemberJoinOutput) SetEnv(v string)`
+`func (o *ApiAPIMemberJoinOutput) SetEtcdInitialCluster(v string)`
 
-SetEnv sets Env field to given value.
+SetEtcdInitialCluster sets EtcdInitialCluster field to given value.
 
-### HasEnv
+### HasEtcdInitialCluster
 
-`func (o *ApiAPIMemberJoinOutput) HasEnv() bool`
+`func (o *ApiAPIMemberJoinOutput) HasEtcdInitialCluster() bool`
 
-HasEnv returns a boolean if a field has been set.
+HasEtcdInitialCluster returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

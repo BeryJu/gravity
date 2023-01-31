@@ -1,10 +1,16 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/node:18 as web-builder
 
+WORKDIR /work
+
+COPY ./web/package.json /work/web/package.json
+COPY ./web/package-lock.json /work/web/package-lock.json
+
+RUN cd web && npm ci
+
 COPY . /work
 
 ENV NODE_ENV=production
-WORKDIR /work
 RUN make web-build
 
 # Stage 2: Build
@@ -21,12 +27,10 @@ ENV GOARCH=${TARGETARCH}
 WORKDIR /workspace
 COPY go.mod go.mod
 COPY go.sum go.sum
-
-RUN go mod download
-
 COPY . .
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
+RUN go mod download
 RUN make docker-build
 
 # Stage 3: Run

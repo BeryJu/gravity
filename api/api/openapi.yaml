@@ -1470,17 +1470,23 @@ components:
       type: object
     ApiAPIMemberJoinInput:
       example:
+        identifier: identifier
         peer: peer
+        roles: roles
       properties:
+        identifier:
+          type: string
         peer:
           maxLength: 255
+          type: string
+        roles:
           type: string
       type: object
     ApiAPIMemberJoinOutput:
       example:
-        env: env
+        etcdInitialCluster: etcdInitialCluster
       properties:
-        env:
+        etcdInitialCluster:
           type: string
       type: object
     ApiAPIMembersOutput:

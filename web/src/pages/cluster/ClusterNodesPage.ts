@@ -1,11 +1,7 @@
 import { ClusterInstancesApi, InstanceInstanceInfo } from "gravity-api";
 
-
-
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/chips/Chip";
@@ -14,7 +10,7 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
-import "./ClusterJoinForm";
+import "./wizard/ClusterJoinWizard";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
@@ -54,14 +50,8 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             html`${item.version}`,
         ];
     }
+
     renderObjectCreate(): TemplateResult {
-        return html`
-            <ak-forms-modal>
-                <span slot="submit"> ${"Join"} </span>
-                <span slot="header"> ${"Join"} </span>
-                <gravity-cluster-join ?closeAfterSuccessfulSubmit=${false} slot="form"> </gravity-cluster-join>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Join"}</button>
-            </ak-forms-modal>
-        `;
+        return html` <gravity-cluster-join-wizard></gravity-cluster-join-wizard> `;
     }
 }
