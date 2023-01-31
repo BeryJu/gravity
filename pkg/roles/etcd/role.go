@@ -97,7 +97,7 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 		return nil
 	}
 
-	if _, err := os.Stat(path.Join(ee.certDir, "peer", relInstCertPath)); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(path.Join(ee.certDir, "peer", relInstCertPath)); !errors.Is(err, os.ErrNotExist) {
 		return nil
 	}
 
