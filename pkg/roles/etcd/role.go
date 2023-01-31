@@ -102,6 +102,8 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	token := joinParts[0]
 	apiUrl := joinParts[1]
 
+	ee.log.Info("joining etcd cluster", zap.String("peer", apiUrl))
+
 	u, err := url.Parse(apiUrl)
 	if err != nil {
 		return errors.Wrap(err, "failed to parse API url")
@@ -115,19 +117,26 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 
 	res, _, err := apiClient.RolesEtcdApi.EtcdJoinMember(context.Background()).ApiAPIMemberJoinInput(
 		api.ApiAPIMemberJoinInput{
-			Peer: api.PtrString(fmt.Sprintf("http://%s:2380", extconfig.Get().Instance.IP)),
+			Peer: api.PtrString(
+				fmt.Sprintf(
+					"https://%s:2380",
+					extconfig.Get().Instance.IP,
+				),
+			),
 		},
 	).Execute()
 	if err != nil || res.Env == nil {
 		return errors.Wrap(err, "failed to send api request to join")
 	}
 	cfg.ClusterState = embed.ClusterStateFlagExisting
-	cfg.InitialCluster = res.GetEnv()
+	cfg.InitialCluster = res.GetEnv() + "," + cfg.InitialCluster
+	ee.log.Info("joining etcd cluster", zap.String("initialCluster", cfg.InitialCluster))
 	return nil
 }
 
 func (ee *Role) Start(ctx context.Context) error {
 	start := time.Now()
+	ee.log.Info("starting embedded etcd")
 	e, err := embed.StartEtcd(ee.cfg)
 	if err != nil {
 		return err
@@ -140,7 +149,7 @@ func (ee *Role) Start(ctx context.Context) error {
 		}
 	}()
 	<-e.Server.ReadyNotify()
-	ee.log.Info("Embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
+	ee.log.Info("embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
 	return nil
 }
 

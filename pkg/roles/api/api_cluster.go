@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/backup"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	"go.uber.org/zap"
 )
 
 type APIMember struct {
@@ -62,16 +62,13 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			}
 		}
 
-		_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})
-		if err != nil {
-			return status.Wrap(err, status.Internal)
-		}
+		go func() {
+			_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})
+			if err != nil {
+				r.log.Warn("failed to add member", zap.Error(err))
+			}
+		}()
 
-		initialCluster = append(initialCluster, fmt.Sprintf(
-			"%s=http://%s:2380",
-			extconfig.Get().Instance.Identifier,
-			extconfig.Get().Instance.IP,
-		))
 		output.Env = strings.Join(initialCluster, ",")
 		return nil
 	})
