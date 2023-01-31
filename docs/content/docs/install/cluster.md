@@ -14,11 +14,12 @@ Gravity works around this issue with caching objects in memory, and as such even
 
 ## Adding nodes to a cluster
 
-The recommended way to add a node is via the API `/api/v1/etcd/join` endpoint. This endpoint takes a `peer` parameter in the body of the request, which should contain the URL to the instance you're adding.
+Adding a node can be done via the web interface, which will output a ready-to-use docker compose file.
 
-For example, given these two instances
+Alternatively, a token can be created, which can be used to join nodes to the cluster. To join a node manually, set the `ETCD_JOIN_CLUSTER` environment variable.
 
-- gravity-a, running on 10.100.1.10
-- gravity-b, stopped on 10.100.2.10
+The format should be the API token followed by a command followed by the HTTP URL of the instance that should be used to join off of.
 
-The `peer` parameter would be set to `https://10.100.2.10:2380`.
+For example, given the token `bootstrap-token` and the IP `10.0.0.1`, the value should be
+
+`bootstrap-token,http://10.0.0.1:8008`
