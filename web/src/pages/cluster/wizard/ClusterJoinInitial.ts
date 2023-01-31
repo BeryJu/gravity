@@ -28,7 +28,7 @@ export class ClusterJoinInitial extends WizardFormPage {
             }
             roles.push(key.replaceAll(prefix, ""));
         });
-        this.host.state["roles"] = roles.join(",");
+        this.host.state["roles"] = roles.join(";");
 
         const info = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo();
         this.host.state["node_ip"] = info.currentInstanceIP;
