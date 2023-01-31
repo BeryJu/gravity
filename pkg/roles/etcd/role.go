@@ -123,13 +123,14 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 					extconfig.Get().Instance.IP,
 				),
 			),
+			Identifier: &extconfig.Get().Instance.Identifier,
 		},
 	).Execute()
-	if err != nil || res.Env == nil {
+	if err != nil || res.EtcdInitialCluster == nil {
 		return errors.Wrap(err, "failed to send api request to join")
 	}
 	cfg.ClusterState = embed.ClusterStateFlagExisting
-	cfg.InitialCluster = res.GetEnv() + "," + cfg.InitialCluster
+	cfg.InitialCluster = res.GetEtcdInitialCluster()
 	ee.log.Info("joining etcd cluster", zap.String("initialCluster", cfg.InitialCluster))
 	return nil
 }

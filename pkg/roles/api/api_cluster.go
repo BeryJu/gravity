@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"strings"
 
+	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/backup"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	"go.uber.org/zap"
+	"golang.org/x/exp/slices"
 )
 
 type APIMember struct {
@@ -42,10 +45,12 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 }
 
 type APIMemberJoinInput struct {
-	Peer string `json:"peer" maxLength:"255"`
+	Peer       string `json:"peer" maxLength:"255"`
+	Roles      string `json:"roles"`
+	Identifier string `json:"identifier"`
 }
 type APIMemberJoinOutput struct {
-	Env string `json:"env"`
+	EtcdInitialCluster string `json:"etcdInitialCluster"`
 }
 
 func (r *Role) APIClusterJoin() usecase.Interactor {
@@ -61,6 +66,30 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 				initialCluster = append(initialCluster, fmt.Sprintf("%s=%s", mem.Name, u))
 			}
 		}
+		initialCluster = append(initialCluster, fmt.Sprintf(
+			"%s=%s", input.Identifier, input.Peer,
+		))
+
+		// Pre-configure roles for new node
+		roles := strings.Split(input.Roles, ",")
+		if input.Roles == "" {
+			roles = strings.Split(extconfig.Get().BootstrapRoles, ",")
+			// If we're copying our roles, exclude backup
+			for idx, role := range roles {
+				if role == "backup" {
+					slices.Delete(roles, idx, idx+1)
+				}
+			}
+		}
+		r.i.KV().Put(
+			ctx,
+			r.i.KV().Key(
+				types.KeyInstance,
+				input.Identifier,
+				types.KeyRoles,
+			).String(),
+			strings.Join(roles, ","),
+		)
 
 		go func() {
 			_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})
@@ -69,7 +98,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			}
 		}()
 
-		output.Env = strings.Join(initialCluster, ",")
+		output.EtcdInitialCluster = strings.Join(initialCluster, ",")
 		return nil
 	})
 	u.SetName("etcd.join_member")

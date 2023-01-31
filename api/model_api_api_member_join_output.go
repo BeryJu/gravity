@@ -16,7 +16,7 @@ import (
 
 // ApiAPIMemberJoinOutput struct for ApiAPIMemberJoinOutput
 type ApiAPIMemberJoinOutput struct {
-	Env *string `json:"env,omitempty"`
+	EtcdInitialCluster *string `json:"etcdInitialCluster,omitempty"`
 }
 
 // NewApiAPIMemberJoinOutput instantiates a new ApiAPIMemberJoinOutput object
@@ -36,42 +36,42 @@ func NewApiAPIMemberJoinOutputWithDefaults() *ApiAPIMemberJoinOutput {
 	return &this
 }
 
-// GetEnv returns the Env field value if set, zero value otherwise.
-func (o *ApiAPIMemberJoinOutput) GetEnv() string {
-	if o == nil || o.Env == nil {
+// GetEtcdInitialCluster returns the EtcdInitialCluster field value if set, zero value otherwise.
+func (o *ApiAPIMemberJoinOutput) GetEtcdInitialCluster() string {
+	if o == nil || o.EtcdInitialCluster == nil {
 		var ret string
 		return ret
 	}
-	return *o.Env
+	return *o.EtcdInitialCluster
 }
 
-// GetEnvOk returns a tuple with the Env field value if set, nil otherwise
+// GetEtcdInitialClusterOk returns a tuple with the EtcdInitialCluster field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIMemberJoinOutput) GetEnvOk() (*string, bool) {
-	if o == nil || o.Env == nil {
+func (o *ApiAPIMemberJoinOutput) GetEtcdInitialClusterOk() (*string, bool) {
+	if o == nil || o.EtcdInitialCluster == nil {
 		return nil, false
 	}
-	return o.Env, true
+	return o.EtcdInitialCluster, true
 }
 
-// HasEnv returns a boolean if a field has been set.
-func (o *ApiAPIMemberJoinOutput) HasEnv() bool {
-	if o != nil && o.Env != nil {
+// HasEtcdInitialCluster returns a boolean if a field has been set.
+func (o *ApiAPIMemberJoinOutput) HasEtcdInitialCluster() bool {
+	if o != nil && o.EtcdInitialCluster != nil {
 		return true
 	}
 
 	return false
 }
 
-// SetEnv gets a reference to the given string and assigns it to the Env field.
-func (o *ApiAPIMemberJoinOutput) SetEnv(v string) {
-	o.Env = &v
+// SetEtcdInitialCluster gets a reference to the given string and assigns it to the EtcdInitialCluster field.
+func (o *ApiAPIMemberJoinOutput) SetEtcdInitialCluster(v string) {
+	o.EtcdInitialCluster = &v
 }
 
 func (o ApiAPIMemberJoinOutput) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Env != nil {
-		toSerialize["env"] = o.Env
+	if o.EtcdInitialCluster != nil {
+		toSerialize["etcdInitialCluster"] = o.EtcdInitialCluster
 	}
 	return json.Marshal(toSerialize)
 }

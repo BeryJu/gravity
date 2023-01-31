@@ -16,7 +16,9 @@ import (
 
 // ApiAPIMemberJoinInput struct for ApiAPIMemberJoinInput
 type ApiAPIMemberJoinInput struct {
-	Peer *string `json:"peer,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
+	Peer       *string `json:"peer,omitempty"`
+	Roles      *string `json:"roles,omitempty"`
 }
 
 // NewApiAPIMemberJoinInput instantiates a new ApiAPIMemberJoinInput object
@@ -34,6 +36,38 @@ func NewApiAPIMemberJoinInput() *ApiAPIMemberJoinInput {
 func NewApiAPIMemberJoinInputWithDefaults() *ApiAPIMemberJoinInput {
 	this := ApiAPIMemberJoinInput{}
 	return &this
+}
+
+// GetIdentifier returns the Identifier field value if set, zero value otherwise.
+func (o *ApiAPIMemberJoinInput) GetIdentifier() string {
+	if o == nil || o.Identifier == nil {
+		var ret string
+		return ret
+	}
+	return *o.Identifier
+}
+
+// GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApiAPIMemberJoinInput) GetIdentifierOk() (*string, bool) {
+	if o == nil || o.Identifier == nil {
+		return nil, false
+	}
+	return o.Identifier, true
+}
+
+// HasIdentifier returns a boolean if a field has been set.
+func (o *ApiAPIMemberJoinInput) HasIdentifier() bool {
+	if o != nil && o.Identifier != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetIdentifier gets a reference to the given string and assigns it to the Identifier field.
+func (o *ApiAPIMemberJoinInput) SetIdentifier(v string) {
+	o.Identifier = &v
 }
 
 // GetPeer returns the Peer field value if set, zero value otherwise.
@@ -68,10 +102,48 @@ func (o *ApiAPIMemberJoinInput) SetPeer(v string) {
 	o.Peer = &v
 }
 
+// GetRoles returns the Roles field value if set, zero value otherwise.
+func (o *ApiAPIMemberJoinInput) GetRoles() string {
+	if o == nil || o.Roles == nil {
+		var ret string
+		return ret
+	}
+	return *o.Roles
+}
+
+// GetRolesOk returns a tuple with the Roles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApiAPIMemberJoinInput) GetRolesOk() (*string, bool) {
+	if o == nil || o.Roles == nil {
+		return nil, false
+	}
+	return o.Roles, true
+}
+
+// HasRoles returns a boolean if a field has been set.
+func (o *ApiAPIMemberJoinInput) HasRoles() bool {
+	if o != nil && o.Roles != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetRoles gets a reference to the given string and assigns it to the Roles field.
+func (o *ApiAPIMemberJoinInput) SetRoles(v string) {
+	o.Roles = &v
+}
+
 func (o ApiAPIMemberJoinInput) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Identifier != nil {
+		toSerialize["identifier"] = o.Identifier
+	}
 	if o.Peer != nil {
 		toSerialize["peer"] = o.Peer
+	}
+	if o.Roles != nil {
+		toSerialize["roles"] = o.Roles
 	}
 	return json.Marshal(toSerialize)
 }

@@ -1387,13 +1387,17 @@ components:
       type: object
     ApiAPIMemberJoinInput:
       properties:
+        identifier:
+          type: string
         peer:
           maxLength: 255
+          type: string
+        roles:
           type: string
       type: object
     ApiAPIMemberJoinOutput:
       properties:
-        env:
+        etcdInitialCluster:
           type: string
       type: object
     ApiAPIMembersOutput:
