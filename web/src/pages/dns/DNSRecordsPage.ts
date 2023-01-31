@@ -1,7 +1,7 @@
 import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
@@ -16,6 +16,9 @@ import "./DNSRecordForm";
 export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     @property()
     zone?: string;
+
+    @state()
+    isReverseZone = false;
 
     pageTitle(): string {
         return `DNS Records for ${this.zone === "." ? "Root Zone" : this.zone}`;
@@ -33,6 +36,9 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<DnsAPIRecord>> {
+        if ((this.zone || "").endsWith(".in-addr.arpa.")) {
+            this.isReverseZone = true;
+        }
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
             zone: this.zone || ".",
         });
@@ -113,7 +119,11 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="submit-keep-open"> ${"Create & stay open"} </span>
                 <span slot="header"> ${"Create Record"} </span>
-                <gravity-dns-record-form zone=${ifDefined(this.zone)} slot="form">
+                <gravity-dns-record-form
+                    zone=${ifDefined(this.zone)}
+                    slot="form"
+                    recordType=${this.isReverseZone ? "PTR" : "A"}
+                >
                 </gravity-dns-record-form>
                 <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>

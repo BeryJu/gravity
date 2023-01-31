@@ -1,7 +1,7 @@
 import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
@@ -13,7 +13,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     @property()
     zone?: string;
 
-    @state()
+    @property()
     recordType = "A";
 
     async loadInstance(pk: string): Promise<DnsAPIRecord> {
@@ -100,15 +100,13 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                         this.recordType = current;
                     }}
                 >
-                    <option value="A" ?selected=${this.instance?.type === "A"}>A</option>
-                    <option value="AAAA" ?selected=${this.instance?.type === "AAAA"}>AAAA</option>
-                    <option value="CNAME" ?selected=${this.instance?.type === "CNAME"}>
-                        CNAME
-                    </option>
-                    <option value="PTR" ?selected=${this.instance?.type === "PTR"}>PTR</option>
-                    <option value="NS" ?selected=${this.instance?.type === "NS"}>NS</option>
-                    <option value="MX" ?selected=${this.instance?.type === "MX"}>MX</option>
-                    <option value="SRV" ?selected=${this.instance?.type === "SRV"}>SRV</option>
+                    <option value="A" ?selected=${this.recordType === "A"}>A</option>
+                    <option value="AAAA" ?selected=${this.recordType === "AAAA"}>AAAA</option>
+                    <option value="CNAME" ?selected=${this.recordType === "CNAME"}>CNAME</option>
+                    <option value="PTR" ?selected=${this.recordType === "PTR"}>PTR</option>
+                    <option value="NS" ?selected=${this.recordType === "NS"}>NS</option>
+                    <option value="MX" ?selected=${this.recordType === "MX"}>MX</option>
+                    <option value="SRV" ?selected=${this.recordType === "SRV"}>SRV</option>
                 </select>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="${this.getLabel()}" ?required=${true} name="data">
