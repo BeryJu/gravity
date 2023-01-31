@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"os"
 	"path"
 	"strings"
 	"time"
@@ -95,6 +96,11 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	if join == "" {
 		return nil
 	}
+
+	if _, err := os.Stat(path.Join(ee.certDir, "peer", relInstCertPath)); errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
+
 	joinParts := strings.SplitN(join, ",", 2)
 	if len(joinParts) < 2 {
 		return fmt.Errorf("join string must consist of two parts: <token>,<api url>")
