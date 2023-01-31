@@ -2,8 +2,10 @@ package dns
 
 import (
 	"context"
+	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -108,6 +110,9 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		}
 		rec := zone.newRecord(input.Hostname, input.Type)
 		rec.uid = input.UID
+		if strings.EqualFold(input.Type, "PTR") || strings.EqualFold(input.Type, "CNAME") {
+			input.Data = utils.EnsureTrailingPeriod(input.Data)
+		}
 		rec.Data = input.Data
 		rec.MXPreference = input.MXPreference
 		rec.SRVPort = input.SRVPort
