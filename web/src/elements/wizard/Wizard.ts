@@ -12,6 +12,7 @@ import { WizardPage } from "./WizardPage";
 export interface WizardAction {
     displayName: string;
     subText?: string;
+    uid: string;
     run: () => Promise<boolean>;
 }
 
@@ -98,20 +99,24 @@ export class Wizard extends ModalButton {
     /**
      * Add action to the beginning of the list
      */
-    addActionBefore(displayName: string, run: () => Promise<boolean>): void {
+    addActionBefore(displayName: string, uid: string, run: () => Promise<boolean>): void {
+        this.actions = this.actions.filter(action => action.uid !== uid);
         this.actions.unshift({
             displayName,
             run,
+            uid,
         });
     }
 
     /**
      * Add action at the end of the list
      */
-    addActionAfter(displayName: string, run: () => Promise<boolean>): void {
+    addActionAfter(displayName: string, uid: string, run: () => Promise<boolean>): void {
+        this.actions = this.actions.filter(action => action.uid !== uid);
         this.actions.push({
             displayName,
             run,
+            uid,
         });
     }
 

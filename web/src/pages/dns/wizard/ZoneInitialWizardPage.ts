@@ -25,7 +25,7 @@ export class ZoneInitialWizardPage extends WizardFormPage {
             name: name,
         };
         this.host.state["handlerConfigs"] = [];
-        this.host.addActionBefore("Create zone", async (): Promise<boolean> => {
+        this.host.addActionBefore("Create zone", "create-zone", async (): Promise<boolean> => {
             zone.handlerConfigs = this.host.state["handlerConfigs"] as {
                 [key: string]: string;
             }[];
