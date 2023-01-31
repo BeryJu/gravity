@@ -70,6 +70,9 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                     class="pf-c-form-control"
                     required
                 />
+                <p class="pf-c-form__helper-text">
+                    Default TTL for records which don't specify a non-zero value.
+                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
                 <ak-codemirror

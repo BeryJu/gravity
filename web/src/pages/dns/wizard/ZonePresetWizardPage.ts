@@ -72,6 +72,7 @@ export class ZonePresetWizardPage extends WizardPage {
 
     activeCallback = async () => {
         this.host.isValid = true;
+        this.applicationTypes[0].callback(this.host);
     };
 
     render(): TemplateResult {

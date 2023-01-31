@@ -19,9 +19,9 @@ export class ZoneInitialWizardPage extends WizardFormPage {
             name += ".";
         }
         const zone: DnsAPIZone = {
-            authoritative: false,
+            authoritative: data.authoritative as boolean,
             handlerConfigs: [],
-            defaultTTL: 0,
+            defaultTTL: 86400,
             name: name,
         };
         this.host.state["handlerConfigs"] = [];
