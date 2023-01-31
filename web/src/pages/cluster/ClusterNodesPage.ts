@@ -10,6 +10,7 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./wizard/ClusterJoinWizard";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
@@ -48,5 +49,9 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             html`${item.ip}`,
             html`${item.version}`,
         ];
+    }
+
+    renderObjectCreate(): TemplateResult {
+        return html` <gravity-cluster-join-wizard></gravity-cluster-join-wizard> `;
     }
 }
