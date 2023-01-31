@@ -130,6 +130,7 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 				),
 			),
 			Identifier: &extconfig.Get().Instance.Identifier,
+			Roles:      &extconfig.Get().BootstrapRoles,
 		},
 	).Execute()
 	if err != nil || res.EtcdInitialCluster == nil {
