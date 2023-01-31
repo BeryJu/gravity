@@ -80,17 +80,19 @@ export class HorizontalFormElement extends AKElement {
             });
         }
         this.querySelectorAll("*").forEach((input) => {
-            switch (input.tagName.toLowerCase()) {
-                case "input":
-                case "textarea":
-                case "select":
-                case "ak-codemirror":
-                case "ak-chip-group":
-                case "ak-search-select":
-                    (input as HTMLInputElement).name = this.name;
-                    break;
-                default:
-                    return;
+            if (this.name && this.name !== "") {
+                switch (input.tagName.toLowerCase()) {
+                    case "input":
+                    case "textarea":
+                    case "select":
+                    case "ak-codemirror":
+                    case "ak-chip-group":
+                    case "ak-search-select":
+                        (input as HTMLInputElement).name = this.name;
+                        break;
+                    default:
+                        return;
+                }
             }
             if (this.writeOnly && !this.writeOnlyActivated) {
                 const i = input as HTMLInputElement;

@@ -26,11 +26,6 @@ export class ClusterJoinWizard extends AKElement {
     @property({ type: Boolean })
     showButton = true;
 
-    @property({ attribute: false })
-    finalHandler: () => Promise<void> = () => {
-        return Promise.resolve();
-    };
-
     render(): TemplateResult {
         return html`
             <ak-wizard
@@ -38,9 +33,6 @@ export class ClusterJoinWizard extends AKElement {
                 .steps=${["gravity-cluster-join-initial", "gravity-cluster-join-compose"]}
                 header=${"Join a node"}
                 description=${"Join a gravity node to the cluster."}
-                .finalHandler=${() => {
-                    return this.finalHandler();
-                }}
             >
                 <button slot="trigger" class="pf-c-button pf-m-primary">${this.createText}</button>
             </ak-wizard>

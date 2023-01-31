@@ -28,11 +28,6 @@ export class DNSZoneWizard extends AKElement {
     @property({ type: Boolean })
     showButton = true;
 
-    @property({ attribute: false })
-    finalHandler: () => Promise<void> = () => {
-        return Promise.resolve();
-    };
-
     render(): TemplateResult {
         return html`
             <ak-wizard
@@ -40,9 +35,6 @@ export class DNSZoneWizard extends AKElement {
                 .steps=${["gravity-dns-wizard-initial", "gravity-dns-wizard-type"]}
                 header=${"New zone"}
                 description=${"Create a new DNS zone."}
-                .finalHandler=${() => {
-                    return this.finalHandler();
-                }}
             >
                 <button slot="trigger" class="pf-c-button pf-m-primary">${this.createText}</button>
             </ak-wizard>

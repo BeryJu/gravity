@@ -14,6 +14,15 @@ import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
 export class ClusterJoinCompose extends WizardFormPage {
     sidebarLabel = () => "Deployment";
 
+    activeCallback = async () => {
+        this.host.canBack = false;
+        this.host.isValid = true;
+    };
+
+    nextCallback = async (): Promise<boolean> => {
+        return true;
+    };
+
     renderCompose(): KeyUnknown {
         return {
             version: "3.4",
@@ -49,9 +58,7 @@ export class ClusterJoinCompose extends WizardFormPage {
     renderForm(): TemplateResult {
         return html`
             <form class="pf-c-form pf-m-horizontal">
-                <p>
-                    Use the compose file below to deploy the new gravity node.
-                </p>
+                <p>Use the compose file below to deploy the new gravity node.</p>
                 <ak-codemirror mode="yaml" value="${YAML.stringify(this.renderCompose())}">
                 </ak-codemirror>
             </form>
