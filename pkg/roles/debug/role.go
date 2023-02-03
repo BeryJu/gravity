@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/pprof"
+	"runtime"
+
+	"github.com/felixge/fgprof"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -40,6 +43,7 @@ func New(instance roles.Instance) *Role {
 	r.m.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	r.m.HandleFunc("/debug/pprof/trace", pprof.Trace)
 	r.m.HandleFunc("/debug/pprof/{cmd}", pprof.Index)
+	r.m.HandleFunc("/debug/fgprof", fgprof.Handler().ServeHTTP)
 	r.m.HandleFunc("/debug/sentry", func(w http.ResponseWriter, r *http.Request) {
 		sentry.WithScope(func(scope *sentry.Scope) {
 			scope.SetTag("gravity.Testerror", "true")
@@ -61,6 +65,8 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	if !extconfig.Get().Debug {
 		return roles.ErrRoleNotConfigured
 	}
+	runtime.SetBlockProfileRate(5)
+
 	r.log.Info("starting debug server", zap.String("listen", listen))
 	r.server = &http.Server{
 		Addr:    listen,

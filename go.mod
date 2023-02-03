@@ -10,6 +10,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coreos/go-oidc/v3 v3.5.0
 	github.com/creasty/defaults v1.6.0
+	github.com/felixge/fgprof v0.9.3
 	github.com/getsentry/sentry-go v0.17.0
 	github.com/go-ping/ping v1.1.0
 	github.com/google/gopacket v1.1.19
@@ -81,6 +82,7 @@ require (
 	github.com/google/gnostic v0.5.7-v3refs // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
+	github.com/google/pprof v0.0.0-20211214055906-6f57359322fd // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
