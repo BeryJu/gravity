@@ -31,7 +31,7 @@ require (
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.28
 	github.com/swaggest/rest v0.2.39
-	github.com/swaggest/usecase v1.2.0
+	github.com/swaggest/usecase v1.2.1
 	go.etcd.io/etcd/api/v3 v3.5.7
 	go.etcd.io/etcd/client/v3 v3.5.7
 	go.etcd.io/etcd/etcdutl/v3 v3.5.7
