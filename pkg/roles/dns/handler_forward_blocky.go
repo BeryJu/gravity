@@ -93,11 +93,13 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return err
 	}
-	cfg.BootstrapDNS = config.BootstrapConfig{
-		Upstream: config.Upstream{
-			Net:  config.NetProtocolTcpUdp,
-			Host: bootstrap.Addr().String(),
-			Port: bootstrap.Port(),
+	cfg.BootstrapDNS = []config.BootstrappedUpstreamConfig{
+		{
+			Upstream: config.Upstream{
+				Net:  config.NetProtocolTcpUdp,
+				Host: bootstrap.Addr().String(),
+				Port: bootstrap.Port(),
+			},
 		},
 	}
 	cfg.Upstream = config.UpstreamConfig{
