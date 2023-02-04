@@ -5,9 +5,8 @@ import (
 	"net"
 	"strings"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 )
 
@@ -32,21 +31,29 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
 	var longestZone *Zone
 
-	_, span := otel.Tracer("").Start(context.TODO(), "gravity.roles.dns.request")
-	defer span.End()
-
-	clientIP := ""
+	span := sentry.StartSpan(
+		context.TODO(),
+		"gravity.roles.dns.request",
+		sentry.TransactionName("gravity.roles.dns"),
+	)
+	var clientIP = ""
 	switch addr := w.RemoteAddr().(type) {
 	case *net.UDPAddr:
 		clientIP = addr.IP.String()
 	case *net.TCPAddr:
 		clientIP = addr.IP.String()
 	}
-	span.SetAttributes(attribute.String("ip", clientIP))
-	defer span.End()
+	hub := sentry.GetHubFromContext(span.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		IPAddress: clientIP,
+	})
+	defer span.Finish()
 
 	for _, question := range r.Question {
-		span.SetAttributes(attribute.String("gravity.dns.query.type", dns.TypeToString[question.Qtype]))
+		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
 		ro.zonesM.RLock()
 		for name, zone := range ro.zones {
 			// Zone doesn't have the correct suffix for the question
@@ -71,6 +78,6 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		return
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
-	span.SetAttributes(attribute.String("gravity.dns.zone", longestZone.Name))
+	span.SetTag("gravity.dns.zone", longestZone.Name)
 	longestZone.resolve(w, r, span)
 }
