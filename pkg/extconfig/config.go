@@ -20,7 +20,7 @@ type ExtConfig struct {
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;debug;tsdb"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
 	Instance       struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`

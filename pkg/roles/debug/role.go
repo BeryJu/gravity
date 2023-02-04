@@ -62,9 +62,6 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		},
 	))
 	listen := extconfig.Get().Listen(8010)
-	if !extconfig.Get().Debug {
-		return roles.ErrRoleNotConfigured
-	}
 	runtime.SetBlockProfileRate(5)
 
 	r.log.Info("starting debug server", zap.String("listen", listen))
