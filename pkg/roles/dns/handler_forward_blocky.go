@@ -84,6 +84,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
 	cfg.LogLevel = blockylog.LevelDebug
+	cfg.QueryLog.Type = config.QueryLogTypeNone
 	if !extconfig.Get().Debug {
 		cfg.LogFormat = blockylog.FormatTypeJson
 		// Only log errors from blocky to prevent double-logging all queries
