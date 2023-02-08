@@ -23,14 +23,15 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 		defer r.scopesM.Unlock()
 		delete(r.scopes, relKey)
 	} else if t == mvccpb.PUT {
-		z, err := r.scopeFromKV(kv)
+		s, err := r.scopeFromKV(kv)
 		if err != nil {
 			r.log.Warn("failed to convert scope from event", zap.Error(err))
 		} else {
-			r.log.Debug("added scope", zap.String("name", z.Name))
+			s.calculateUsage()
+			r.log.Debug("added scope", zap.String("name", s.Name))
 			r.scopesM.Lock()
 			defer r.scopesM.Unlock()
-			r.scopes[z.Name] = z
+			r.scopes[s.Name] = s
 		}
 	}
 	return true

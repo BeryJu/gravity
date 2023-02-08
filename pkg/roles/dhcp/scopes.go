@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"net"
 	"net/netip"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"github.com/netdata/go.d.plugin/pkg/iprange"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -72,7 +74,7 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 
 	var ipamInst IPAM
 	switch s.IPAM["type"] {
-	case "internal":
+	case InternalIPAMType:
 		fallthrough
 	default:
 		ipamInst, err = NewInternalIPAM(r, s)
@@ -190,4 +192,23 @@ func (s *Scope) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 		return err
 	}
 	return nil
+}
+
+// calculateUsage Calculate scope usage for prometheus metrics
+func (s *Scope) calculateUsage() {
+	if s.IPAM["type"] != InternalIPAMType {
+		return
+	}
+	ii := s.ipam.(*InternalIPAM)
+	ips := iprange.New(ii.Start.AsSlice(), ii.End.AsSlice())
+	usable := ips.Size()
+	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
+	used := big.NewInt(0)
+	for _, lease := range s.role.leases {
+		if lease.ScopeKey != s.Name {
+			continue
+		}
+		used = used.Add(used, big.NewInt(1))
+	}
+	dhcpScopeUsage.WithLabelValues(s.Name).Set(float64(used.Uint64()))
 }

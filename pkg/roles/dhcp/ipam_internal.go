@@ -12,6 +12,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const InternalIPAMType = "internal"
+
 type InternalIPAM struct {
 	SubnetCIDR netip.Prefix
 	Start      netip.Addr

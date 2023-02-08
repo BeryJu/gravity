@@ -115,6 +115,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	l.inst.DispatchEvent(types.EventTopicDHCPLeasePut, ev)
 
 	l.log.Debug("put lease", zap.Int64("expiry", expiry))
+	go l.scope.calculateUsage()
 	return nil
 }
 

@@ -75,6 +75,12 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.loadInitialScopes()
 	r.loadInitialLeases()
 
+	// Since scope usage relies on r.leases, but r.leases is loaded after the scopes,
+	// manually update the usage
+	for _, s := range r.scopes {
+		s.calculateUsage()
+	}
+
 	go r.startWatchScopes()
 	go r.startWatchLeases()
 
