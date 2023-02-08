@@ -9,6 +9,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const K8sGatewayType = "k8s_gateway"
+
 type K8sGateway struct {
 	c   map[string]string
 	log *zap.Logger
@@ -29,7 +31,7 @@ func NewK8sGateway(z *Zone, rawConfig map[string]string) *K8sGateway {
 }
 
 func (k8gw *K8sGateway) Identifier() string {
-	return "k8s_gateway"
+	return K8sGatewayType
 }
 
 func (k8gw *K8sGateway) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {

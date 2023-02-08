@@ -149,15 +149,15 @@ func (z *Zone) Init() {
 		t := handlerCfg["type"]
 		var handler Handler
 		switch t {
-		case "forward_blocky":
+		case BlockyForwarderType:
 			handler = NewBlockyForwarder(z, handlerCfg)
-		case "forward_ip":
+		case IPForwarderType:
 			handler = NewIPForwarderHandler(z, handlerCfg)
-		case "k8s_gateway":
+		case K8sGatewayType:
 			handler = NewK8sGateway(z, handlerCfg)
-		case "etcd":
+		case EtcdType:
 			handler = NewEtcdHandler(z, handlerCfg)
-		case "memory":
+		case MemoryType:
 			handler = NewMemoryHandler(z, handlerCfg)
 		default:
 			z.log.Warn("invalid forwarder type", zap.String("type", t))

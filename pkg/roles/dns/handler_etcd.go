@@ -10,6 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const EtcdType = "etcd"
+
 type EtcdHandler struct {
 	log *zap.Logger
 	z   *Zone
@@ -24,7 +26,7 @@ func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
 }
 
 func (eh *EtcdHandler) Identifier() string {
-	return "etcd"
+	return EtcdType
 }
 
 func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {

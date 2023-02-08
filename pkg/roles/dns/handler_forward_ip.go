@@ -15,6 +15,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const IPForwarderType = "forward_ip"
+
 type IPForwarderHandler struct {
 	CacheTTL int
 
@@ -108,7 +110,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx i
 }
 
 func (ipf *IPForwarderHandler) Identifier() string {
-	return "forward_ip"
+	return IPForwarderType
 }
 
 func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {

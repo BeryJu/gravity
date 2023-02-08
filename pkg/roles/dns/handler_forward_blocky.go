@@ -17,6 +17,8 @@ import (
 	"github.com/miekg/dns"
 )
 
+const BlockyForwarderType = "forward_blocky"
+
 type BlockyForwarder struct {
 	*IPForwarderHandler
 	c   map[string]string
@@ -48,7 +50,7 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 }
 
 func (bfwd *BlockyForwarder) Identifier() string {
-	return "forward_blocky"
+	return BlockyForwarderType
 }
 
 func (bfwd *BlockyForwarder) setup() error {

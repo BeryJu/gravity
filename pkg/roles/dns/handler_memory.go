@@ -8,6 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const MemoryType = "memory"
+
 type MemoryHandler struct {
 	log *zap.Logger
 	z   *Zone
@@ -22,7 +24,7 @@ func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
 }
 
 func (eh *MemoryHandler) Identifier() string {
-	return "memory"
+	return MemoryType
 }
 
 func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
