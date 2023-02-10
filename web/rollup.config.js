@@ -6,7 +6,6 @@ import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
 import { terser } from "rollup-plugin-terser";
 
-
 export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export const resources = [

@@ -1,4 +1,4 @@
-import { BackupAPIBackupStatusOutput, RolesBackupApi } from "gravity-api";
+import { BackupAPIBackupStatus, BackupAPIBackupStatusOutput, RolesBackupApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -15,12 +15,22 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         return new RolesBackupApi(DEFAULT_CONFIG).backupStatus();
     }
 
+    getLatestBackup(): BackupAPIBackupStatus | undefined {
+        const statuses = (this.value?.status || []).sort(
+            (a, b) => a.time.getTime() - b.time.getTime(),
+        );
+        if (statuses.length < 1) {
+            return undefined;
+        }
+        return statuses[0];
+    }
+
     getStatus(value: BackupAPIBackupStatusOutput): Promise<AdminStatus> {
         const failed = (value.status || []).filter((v) => v.status !== "success");
         if (failed.length > 0) {
             return Promise.resolve<AdminStatus>({
                 icon: "fa fa-exclamation-triangle pf-m-warning",
-                message: html`${failed.map((f) => html`${f.error}`)}`,
+                message: html`${this.getLatestBackup()?.status}`,
             });
         }
         if ((value.status || []).length < 1) {
@@ -57,8 +67,6 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         if ((this.value?.status || []).length < 1) {
             return html`No backups`;
         }
-        return html`${(this.value?.status || []).map((s) => {
-            return html`${s.time?.toLocaleDateString()} ${s.time?.toLocaleTimeString()}`;
-        })}`;
+        return html`${this.getLatestBackup()?.time.toLocaleDateString}`;
     }
 }
