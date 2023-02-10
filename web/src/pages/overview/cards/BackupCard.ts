@@ -67,6 +67,6 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
         if ((this.value?.status || []).length < 1) {
             return html`No backups`;
         }
-        return html`${this.getLatestBackup()?.time.toLocaleDateString}`;
+        return html`${this.getLatestBackup()?.time.toLocaleDateString()}`;
     }
 }

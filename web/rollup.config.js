@@ -46,7 +46,7 @@ export default {
     plugins: [
         cssimport(),
         json(),
-        nodeResolve({ extensions, browser: true, preferBuiltins: true }),
+        nodeResolve({ extensions, browser: true, preferBuiltins: false }),
         commonjs(),
         babel({
             extensions,
