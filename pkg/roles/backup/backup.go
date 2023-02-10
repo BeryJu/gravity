@@ -14,12 +14,12 @@ import (
 )
 
 type BackupStatus struct {
-	Status   string    `json:"status,omitempty"`
-	Error    string    `json:"error,omitempty"`
-	Filename string    `json:"filename,omitempty"`
-	Size     int64     `json:"size,omitempty"`
-	Duration int64     `json:"duration,omitempty"`
-	Time     time.Time `json:"time"`
+	Status   string    `json:"status,omitempty" required:"true"`
+	Error    string    `json:"error,omitempty" required:"true"`
+	Filename string    `json:"filename,omitempty" required:"true"`
+	Size     int64     `json:"size,omitempty" required:"true"`
+	Duration int64     `json:"duration,omitempty" required:"true"`
+	Time     time.Time `json:"time" required:"true"`
 }
 
 const (

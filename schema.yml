@@ -1608,6 +1608,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - status
+      - error
+      - filename
+      - size
+      - duration
+      - time
       type: object
     BackupAPIBackupStatusOutput:
       properties:
@@ -1648,6 +1655,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - status
+      - error
+      - filename
+      - size
+      - duration
+      - time
       type: object
     BackupRoleConfig:
       properties:
