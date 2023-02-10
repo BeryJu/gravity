@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.4.2
+  version: 0.4.3
 servers:
 - url: /
 paths:
@@ -1824,6 +1824,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - duration
+      - error
+      - filename
+      - size
+      - status
+      - time
       type: object
     BackupAPIBackupStatusOutput:
       example:
@@ -1903,6 +1910,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - duration
+      - error
+      - filename
+      - size
+      - status
+      - time
       type: object
     BackupRoleConfig:
       example:

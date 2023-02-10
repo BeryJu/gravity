@@ -4,18 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Duration** | Pointer to **int32** |  | [optional] 
-**Error** | Pointer to **string** |  | [optional] 
-**Filename** | Pointer to **string** |  | [optional] 
-**Size** | Pointer to **int32** |  | [optional] 
-**Status** | Pointer to **string** |  | [optional] 
-**Time** | Pointer to **time.Time** |  | [optional] 
+**Duration** | **int32** |  | 
+**Error** | **string** |  | 
+**Filename** | **string** |  | 
+**Size** | **int32** |  | 
+**Status** | **string** |  | 
+**Time** | **time.Time** |  | 
 
 ## Methods
 
 ### NewBackupBackupStatus
 
-`func NewBackupBackupStatus() *BackupBackupStatus`
+`func NewBackupBackupStatus(duration int32, error_ string, filename string, size int32, status string, time time.Time, ) *BackupBackupStatus`
 
 NewBackupBackupStatus instantiates a new BackupBackupStatus object
 This constructor will assign default values to properties that have it defined,
@@ -49,11 +49,6 @@ and a boolean to check if the value has been set.
 
 SetDuration sets Duration field to given value.
 
-### HasDuration
-
-`func (o *BackupBackupStatus) HasDuration() bool`
-
-HasDuration returns a boolean if a field has been set.
 
 ### GetError
 
@@ -74,11 +69,6 @@ and a boolean to check if the value has been set.
 
 SetError sets Error field to given value.
 
-### HasError
-
-`func (o *BackupBackupStatus) HasError() bool`
-
-HasError returns a boolean if a field has been set.
 
 ### GetFilename
 
@@ -99,11 +89,6 @@ and a boolean to check if the value has been set.
 
 SetFilename sets Filename field to given value.
 
-### HasFilename
-
-`func (o *BackupBackupStatus) HasFilename() bool`
-
-HasFilename returns a boolean if a field has been set.
 
 ### GetSize
 
@@ -124,11 +109,6 @@ and a boolean to check if the value has been set.
 
 SetSize sets Size field to given value.
 
-### HasSize
-
-`func (o *BackupBackupStatus) HasSize() bool`
-
-HasSize returns a boolean if a field has been set.
 
 ### GetStatus
 
@@ -149,11 +129,6 @@ and a boolean to check if the value has been set.
 
 SetStatus sets Status field to given value.
 
-### HasStatus
-
-`func (o *BackupBackupStatus) HasStatus() bool`
-
-HasStatus returns a boolean if a field has been set.
 
 ### GetTime
 
@@ -174,11 +149,6 @@ and a boolean to check if the value has been set.
 
 SetTime sets Time field to given value.
 
-### HasTime
-
-`func (o *BackupBackupStatus) HasTime() bool`
-
-HasTime returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
