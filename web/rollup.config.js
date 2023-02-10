@@ -6,6 +6,7 @@ import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
 import { terser } from "rollup-plugin-terser";
 
+
 export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export const resources = [
@@ -46,7 +47,7 @@ export default {
     plugins: [
         cssimport(),
         json(),
-        nodeResolve({ extensions, browser: true }),
+        nodeResolve({ extensions, browser: true, preferBuiltins: true }),
         commonjs(),
         babel({
             extensions,

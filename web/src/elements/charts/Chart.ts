@@ -4,6 +4,7 @@ import { BarController, DoughnutController, LineController } from "chart.js";
 import { ArcElement, BarElement, LineElement, PointElement } from "chart.js";
 import { Filler, LinearScale, TimeScale } from "chart.js";
 import "chartjs-adapter-moment";
+import { sha256 } from "sha.js";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { property } from "lit/decorators.js";
@@ -28,8 +29,9 @@ export class RGBAColor {
 
 export function getColorFromString(stringInput: string): RGBAColor {
     let hash = 0;
-    for (let i = 0; i < stringInput.length; i++) {
-        hash = stringInput.charCodeAt(i) + ((hash << 5) - hash);
+    const hashedString = new sha256().update(stringInput).digest("hex");
+    for (let i = 0; i < hashedString.length; i++) {
+        hash = hashedString.charCodeAt(i) + ((hash << 5) - hash);
         hash = hash & hash;
     }
     const rgb = [0, 0, 0];

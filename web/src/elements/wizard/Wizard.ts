@@ -100,7 +100,7 @@ export class Wizard extends ModalButton {
      * Add action to the beginning of the list
      */
     addActionBefore(displayName: string, uid: string, run: () => Promise<boolean>): void {
-        this.actions = this.actions.filter(action => action.uid !== uid);
+        this.actions = this.actions.filter((action) => action.uid !== uid);
         this.actions.unshift({
             displayName,
             run,
@@ -112,7 +112,7 @@ export class Wizard extends ModalButton {
      * Add action at the end of the list
      */
     addActionAfter(displayName: string, uid: string, run: () => Promise<boolean>): void {
-        this.actions = this.actions.filter(action => action.uid !== uid);
+        this.actions = this.actions.filter((action) => action.uid !== uid);
         this.actions.push({
             displayName,
             run,
