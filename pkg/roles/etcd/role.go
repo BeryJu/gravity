@@ -97,7 +97,8 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 		return nil
 	}
 
-	if _, err := os.Stat(path.Join(ee.certDir, "peer", relInstCertPath)); !errors.Is(err, os.ErrNotExist) {
+	// Don't attempt to join if we have an etcd directory already
+	if _, err := os.Stat(path.Join(ee.etcdDir, "member")); err == nil {
 		return nil
 	}
 
