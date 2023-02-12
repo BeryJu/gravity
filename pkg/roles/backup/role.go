@@ -3,6 +3,7 @@ package backup
 import (
 	"context"
 	"net/url"
+	"os"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -49,6 +50,7 @@ func New(instance roles.Instance) *Role {
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
+	os.MkdirAll(extconfig.Get().Dirs().BackupDir, os.ModeSticky|os.ModePerm)
 	r.cfg = r.decodeRoleConfig(config)
 	if r.cfg.Endpoint == "" {
 		return roles.ErrRoleNotConfigured
@@ -74,12 +76,6 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 			},
 		)
 	}
-	minioClient, err := minio.New(endpoint.Host, opts)
-	if err != nil {
-		return err
-	}
-	r.mc = minioClient
-	r.ensureBucket()
 	r.c = cron.New()
 	if r.cfg.CronExpr != "" {
 		ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
@@ -91,6 +87,12 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		r.log.Info("next backup run", zap.String("next", r.c.Entry(ei).Next.String()))
 		r.c.Start()
 	}
+	minioClient, err := minio.New(endpoint.Host, opts)
+	if err != nil {
+		return err
+	}
+	r.mc = minioClient
+	r.ensureBucket()
 	return nil
 }
 

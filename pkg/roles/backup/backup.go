@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -85,6 +86,7 @@ func (r *Role) snapshotToFile() (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+	r.log.Info("creating local snapshot", zap.String("path", file.Name()))
 
 	// make a buffer to keep chunks that are read
 	buf := make([]byte, 1024)
@@ -113,16 +115,17 @@ func (r *Role) SaveSnapshot() *BackupStatus {
 		Time:   time.Now(),
 	}
 	defer r.setStatus(status)
-	if r.mc == nil {
-		status.Error = "backup not configured"
-		return status
-	}
 	file, err := r.snapshotToFile()
 	if err != nil {
 		status.Error = err.Error()
 		return status
 	}
-	defer os.Remove(file.Name())
+	newPath := path.Join(extconfig.Get().Dirs().BackupDir, "gravity-local-snapshot")
+	os.Rename(file.Name(), newPath)
+	if r.mc == nil {
+		status.Status = BackupStatusSuccess
+		return status
+	}
 	file.Seek(0, io.SeekStart)
 	stat, err := file.Stat()
 	if err != nil {
@@ -130,7 +133,6 @@ func (r *Role) SaveSnapshot() *BackupStatus {
 		return status
 	}
 	fileName := r.GetBackupName()
-
 	i, err := r.mc.PutObject(r.ctx, r.cfg.Bucket, fileName, file, stat.Size(), minio.PutObjectOptions{})
 	if err != nil {
 		r.log.Warn("failed to upload snapshot", zap.Error(err))
