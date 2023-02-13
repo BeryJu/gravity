@@ -9,13 +9,15 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/FormGroup";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV } from "../../utils";
+import { KV, first } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     async loadInstance(pk: string): Promise<DhcpAPIScope> {
-        const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
-        const zone = scopes.scopes?.find((z) => z.scope === pk);
+        const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
+            name: pk,
+        });
+        const zone = first(scopes.scopes);
         if (!zone) throw new Error("No scope");
         return zone;
     }

@@ -7,6 +7,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
+import { first } from "../../utils";
 
 @customElement("gravity-dhcp-lease-form")
 export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
@@ -16,8 +17,9 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     async loadInstance(pk: string): Promise<DhcpAPILease> {
         const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({
             scope: this.scope,
+            identifier: pk,
         });
-        const lease = leases.leases?.find((z) => z.identifier === pk);
+        const lease = first(leases.leases);
         if (!lease) throw new Error("No lease");
         return lease;
     }

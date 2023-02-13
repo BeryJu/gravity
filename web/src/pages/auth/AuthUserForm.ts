@@ -6,13 +6,15 @@ import { customElement } from "lit/decorators.js";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV } from "../../utils";
+import { KV, first } from "../../utils";
 
 @customElement("gravity-auth-user-form")
 export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
     async loadInstance(pk: string): Promise<AuthAPIUser> {
-        const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers();
-        const user = users.users?.find((z) => z.username === pk);
+        const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers({
+            username: pk,
+        });
+        const user = first(users.users);
         if (!user) throw new Error("No user");
         return user;
     }

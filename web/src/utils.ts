@@ -16,3 +16,17 @@ export function PaginationWrapper<T>(items: T[]): PaginatedResponse<T> {
         results: items,
     };
 }
+
+export function first<T>(items: T[] | null | undefined): T | undefined {
+    if (items !== undefined && items !== null && items.length > 0) {
+        return items[0];
+    }
+    return undefined;
+}
+
+export function ip2int(ip: string): number {
+    return parseInt(
+        ip.split(".").reduce((acc, byte) => acc + byte.padStart(3, "0"), ""),
+        10,
+    );
+}

@@ -11,15 +11,8 @@ import "../../elements/forms/ModalForm";
 import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
+import { PaginationWrapper, ip2int } from "../../utils";
 import "./DHCPLeaseForm";
-
-const ip2int = (ip: string): number => {
-    return parseInt(
-        ip.split(".").reduce((acc, byte) => acc + byte.padStart(3, "0"), ""),
-        10,
-    );
-};
 
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
