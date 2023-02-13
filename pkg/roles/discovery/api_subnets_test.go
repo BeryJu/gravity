@@ -27,7 +27,7 @@ func TestAPISubnetsGet(t *testing.T) {
 	)
 
 	var output discovery.APISubnetsGetOutput
-	assert.NoError(t, role.APISubnetsGet().Interact(ctx, struct{}{}, &output))
+	assert.NoError(t, role.APISubnetsGet().Interact(ctx, discovery.APISubnetsGetInput{}, &output))
 	assert.NotNil(t, output)
 }
 

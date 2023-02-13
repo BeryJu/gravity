@@ -10,6 +10,9 @@ import (
 	"go.uber.org/zap"
 )
 
+type APISubnetsGetInput struct {
+	Name string `query:"name"  description:"Optionally get Subnet by name"`
+}
 type APISubnet struct {
 	Name string `json:"name" required:"true"`
 
@@ -22,9 +25,14 @@ type APISubnetsGetOutput struct {
 }
 
 func (r *Role) APISubnetsGet() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APISubnetsGetOutput) error {
-		prefix := r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true).String()
-		subnets, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix())
+	u := usecase.NewInteractor(func(ctx context.Context, input APISubnetsGetInput, output *APISubnetsGetOutput) error {
+		key := r.i.KV().Key(types.KeyRole, types.KeySubnets)
+		if input.Name == "" {
+			key = key.Prefix(true)
+		} else {
+			key = key.Add(input.Name)
+		}
+		subnets, err := r.i.KV().Get(ctx, key.String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

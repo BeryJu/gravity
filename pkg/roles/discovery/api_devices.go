@@ -10,6 +10,9 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+type APIDevicesGetInput struct {
+	Identifier string `query:"identifier"  description:"Optionally get device by identifier"`
+}
 type APIDevice struct {
 	Identifier string `json:"identifier" required:"true"`
 	Hostname   string `json:"hostname" required:"true"`
@@ -21,11 +24,14 @@ type APIDevicesGetOutput struct {
 }
 
 func (r *Role) APIDevicesGet() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIDevicesGetOutput) error {
-		rawDevices, err := r.i.KV().Get(ctx, r.i.KV().Key(
-			types.KeyRole,
-			types.KeyDevices,
-		).Prefix(true).String(), clientv3.WithPrefix())
+	u := usecase.NewInteractor(func(ctx context.Context, input APIDevicesGetInput, output *APIDevicesGetOutput) error {
+		key := r.i.KV().Key(types.KeyRole, types.KeyDevices)
+		if input.Identifier == "" {
+			key = key.Prefix(true)
+		} else {
+			key = key.Add(input.Identifier)
+		}
+		rawDevices, err := r.i.KV().Get(ctx, key.String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

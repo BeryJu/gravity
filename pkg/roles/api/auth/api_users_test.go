@@ -31,7 +31,7 @@ func TestAPIUsersGet(t *testing.T) {
 	)
 
 	var output auth.APIUsersGetOutput
-	assert.NoError(t, prov.APIUsersGet().Interact(ctx, struct{}{}, &output))
+	assert.NoError(t, prov.APIUsersGet().Interact(ctx, auth.APIUsersGetInput{}, &output))
 	assert.NotNil(t, output)
 }
 

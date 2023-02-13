@@ -45,7 +45,7 @@ func TestAPIScopesGet(t *testing.T) {
 	)
 
 	var output dhcp.APIScopesGetOutput
-	assert.NoError(t, role.APIScopesGet().Interact(ctx, struct{}{}, &output))
+	assert.NoError(t, role.APIScopesGet().Interact(ctx, dhcp.APIScopesGetInput{}, &output))
 	assert.NotNil(t, output)
 }
 

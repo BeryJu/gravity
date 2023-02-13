@@ -12,6 +12,9 @@ import (
 	"go.uber.org/zap"
 )
 
+type APIZonesGetInput struct {
+	Name string `query:"name"  description:"Optionally get DNS Zone by name"`
+}
 type APIZone struct {
 	Name           string              `json:"name" required:"true"`
 	Authoritative  bool                `json:"authoritative" required:"true"`
@@ -23,13 +26,19 @@ type APIZonesGetOutput struct {
 }
 
 func (r *Role) APIZonesGet() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIZonesGetOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesGetInput, output *APIZonesGetOutput) error {
+		key := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+		)
+		if input.Name == "" {
+			key = key.Prefix(true)
+		} else {
+			key = key.Add(input.Name)
+		}
 		rawZones, err := r.i.KV().Get(
 			ctx,
-			r.i.KV().Key(
-				types.KeyRole,
-				types.KeyZones,
-			).Prefix(true).String(),
+			key.String(),
 			clientv3.WithPrefix(),
 		)
 		if err != nil {

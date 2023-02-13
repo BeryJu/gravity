@@ -31,7 +31,7 @@ func TestAPIDevicesGet(t *testing.T) {
 	)
 
 	var output discovery.APIDevicesGetOutput
-	assert.NoError(t, role.APIDevicesGet().Interact(ctx, struct{}{}, &output))
+	assert.NoError(t, role.APIDevicesGet().Interact(ctx, discovery.APIDevicesGetInput{}, &output))
 	assert.NotNil(t, output)
 }
 
