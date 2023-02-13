@@ -28,7 +28,7 @@ func TestAPIZonesGet(t *testing.T) {
 	)
 
 	var output dns.APIZonesGetOutput
-	assert.NoError(t, role.APIZonesGet().Interact(ctx, struct{}{}, &output))
+	assert.NoError(t, role.APIZonesGet().Interact(ctx, dns.APIZonesGetInput{}, &output))
 	assert.NotNil(t, output)
 }
 
