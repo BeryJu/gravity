@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.4.6
+  version: 0.4.7
 servers:
 - url: /
 paths:
@@ -981,6 +981,15 @@ paths:
         name: zone
         required: false
         schema:
+          type: string
+        style: form
+      - description: Optionally get DNS Records for hostname
+        explode: true
+        in: query
+        name: hostname
+        required: false
+        schema:
+          description: Optionally get DNS Records for hostname
           type: string
         style: form
       responses:
