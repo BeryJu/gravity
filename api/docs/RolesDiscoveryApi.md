@@ -206,7 +206,7 @@ No authorization required
 
 ## DiscoveryGetDevices
 
-> DiscoveryAPIDevicesGetOutput DiscoveryGetDevices(ctx).Execute()
+> DiscoveryAPIDevicesGetOutput DiscoveryGetDevices(ctx).Identifier(identifier).Execute()
 
 Discovery devices
 
@@ -223,10 +223,11 @@ import (
 )
 
 func main() {
+    identifier := "identifier_example" // string | Optionally get device by identifier (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetDevices(context.Background()).Execute()
+    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetDevices(context.Background()).Identifier(identifier).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryGetDevices``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -238,12 +239,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiDiscoveryGetDevicesRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **identifier** | **string** | Optionally get device by identifier | 
 
 ### Return type
 
@@ -324,7 +329,7 @@ No authorization required
 
 ## DiscoveryGetSubnets
 
-> DiscoveryAPISubnetsGetOutput DiscoveryGetSubnets(ctx).Execute()
+> DiscoveryAPISubnetsGetOutput DiscoveryGetSubnets(ctx).Name(name).Execute()
 
 Discovery subnets
 
@@ -341,10 +346,11 @@ import (
 )
 
 func main() {
+    name := "name_example" // string | Optionally get Subnet by name (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetSubnets(context.Background()).Execute()
+    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetSubnets(context.Background()).Name(name).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryGetSubnets``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -356,12 +362,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiDiscoveryGetSubnetsRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **string** | Optionally get Subnet by name | 
 
 ### Return type
 

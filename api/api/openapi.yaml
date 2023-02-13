@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.4.5
+  version: 0.4.6
 servers:
 - url: /
 paths:
@@ -165,6 +165,16 @@ paths:
       - roles/api
     get:
       operationId: api.get_users
+      parameters:
+      - description: Optional username of a user to get
+        explode: true
+        in: query
+        name: username
+        required: false
+        schema:
+          description: Optional username of a user to get
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -382,6 +392,16 @@ paths:
       - roles/dhcp
     get:
       operationId: dhcp.get_scopes
+      parameters:
+      - description: Optionally get DHCP Scope by name
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          description: Optionally get DHCP Scope by name
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -470,6 +490,15 @@ paths:
         name: scope
         required: false
         schema:
+          type: string
+        style: form
+      - description: Optional identifier of a lease to get
+        explode: true
+        in: query
+        name: identifier
+        required: false
+        schema:
+          description: Optional identifier of a lease to get
           type: string
         style: form
       responses:
@@ -563,6 +592,16 @@ paths:
   /api/v1/discovery/devices:
     get:
       operationId: discovery.get_devices
+      parameters:
+      - description: Optionally get device by identifier
+        explode: true
+        in: query
+        name: identifier
+        required: false
+        schema:
+          description: Optionally get device by identifier
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -679,6 +718,16 @@ paths:
       - roles/discovery
     get:
       operationId: discovery.get_subnets
+      parameters:
+      - description: Optionally get Subnet by name
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          description: Optionally get Subnet by name
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -808,6 +857,16 @@ paths:
       - roles/dns
     get:
       operationId: dns.get_zones
+      parameters:
+      - description: Optionally get DNS Zone by name
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          description: Optionally get DNS Zone by name
+          type: string
+        style: form
       responses:
         "200":
           content:

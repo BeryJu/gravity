@@ -565,7 +565,7 @@ No authorization required
 
 ## ApiGetUsers
 
-> AuthAPIUsersGetOutput ApiGetUsers(ctx).Execute()
+> AuthAPIUsersGetOutput ApiGetUsers(ctx).Username(username).Execute()
 
 API Users
 
@@ -582,10 +582,11 @@ import (
 )
 
 func main() {
+    username := "username_example" // string | Optional username of a user to get (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetUsers(context.Background()).Execute()
+    resp, r, err := apiClient.RolesApiApi.ApiGetUsers(context.Background()).Username(username).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetUsers``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -597,12 +598,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiApiGetUsersRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **username** | **string** | Optional username of a user to get | 
 
 ### Return type
 

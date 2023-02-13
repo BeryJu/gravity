@@ -330,7 +330,7 @@ No authorization required
 
 ## DnsGetZones
 
-> DnsAPIZonesGetOutput DnsGetZones(ctx).Execute()
+> DnsAPIZonesGetOutput DnsGetZones(ctx).Name(name).Execute()
 
 DNS Zones
 
@@ -347,10 +347,11 @@ import (
 )
 
 func main() {
+    name := "name_example" // string | Optionally get DNS Zone by name (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsGetZones(context.Background()).Execute()
+    resp, r, err := apiClient.RolesDnsApi.DnsGetZones(context.Background()).Name(name).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsGetZones``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -362,12 +363,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiDnsGetZonesRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **string** | Optionally get DNS Zone by name | 
 
 ### Return type
 

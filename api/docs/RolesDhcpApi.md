@@ -144,7 +144,7 @@ No authorization required
 
 ## DhcpGetLeases
 
-> DhcpAPILeasesGetOutput DhcpGetLeases(ctx).Scope(scope).Execute()
+> DhcpAPILeasesGetOutput DhcpGetLeases(ctx).Scope(scope).Identifier(identifier).Execute()
 
 DHCP Leases
 
@@ -162,10 +162,11 @@ import (
 
 func main() {
     scope := "scope_example" // string |  (optional)
+    identifier := "identifier_example" // string | Optional identifier of a lease to get (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpGetLeases(context.Background()).Scope(scope).Execute()
+    resp, r, err := apiClient.RolesDhcpApi.DhcpGetLeases(context.Background()).Scope(scope).Identifier(identifier).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpGetLeases``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -187,6 +188,7 @@ Other parameters are passed through a pointer to a apiDhcpGetLeasesRequest struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **scope** | **string** |  | 
+ **identifier** | **string** | Optional identifier of a lease to get | 
 
 ### Return type
 
@@ -267,7 +269,7 @@ No authorization required
 
 ## DhcpGetScopes
 
-> DhcpAPIScopesGetOutput DhcpGetScopes(ctx).Execute()
+> DhcpAPIScopesGetOutput DhcpGetScopes(ctx).Name(name).Execute()
 
 DHCP Scopes
 
@@ -284,10 +286,11 @@ import (
 )
 
 func main() {
+    name := "name_example" // string | Optionally get DHCP Scope by name (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpGetScopes(context.Background()).Execute()
+    resp, r, err := apiClient.RolesDhcpApi.DhcpGetScopes(context.Background()).Name(name).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpGetScopes``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -299,12 +302,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiDhcpGetScopesRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **string** | Optionally get DHCP Scope by name | 
 
 ### Return type
 
