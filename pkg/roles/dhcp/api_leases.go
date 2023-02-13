@@ -11,7 +11,8 @@ import (
 )
 
 type APILeasesGetInput struct {
-	ScopeName string `query:"scope"`
+	ScopeName  string `query:"scope"`
+	Identifier string `query:"identifier" description:"Optional identifier of a lease to get"`
 }
 type APILeaseInfo struct {
 	Vendor string `json:"vendor"`
@@ -36,6 +37,9 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 		defer r.leasesM.RUnlock()
 		for _, l := range r.leases {
 			if l.ScopeKey != input.ScopeName {
+				continue
+			}
+			if input.Identifier != "" && input.Identifier != l.Identifier {
 				continue
 			}
 			al := &APILease{

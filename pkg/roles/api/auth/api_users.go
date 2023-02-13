@@ -11,6 +11,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type APIUsersGetInput struct {
+	Username string `query:"username" description:"Optional username of a user to get"`
+}
 type APIUser struct {
 	Username string `json:"username" required:"true"`
 }
@@ -19,13 +22,19 @@ type APIUsersGetOutput struct {
 }
 
 func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIUsersGetOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIUsersGetInput, output *APIUsersGetOutput) error {
+		key := ap.inst.KV().Key(
+			types.KeyRole,
+			types.KeyUsers,
+		)
+		if input.Username == "" {
+			key = key.Prefix(true)
+		} else {
+			key = key.Add(input.Username)
+		}
 		rawUsers, err := ap.inst.KV().Get(
 			ctx,
-			ap.inst.KV().Key(
-				types.KeyRole,
-				types.KeyUsers,
-			).Prefix(true).String(),
+			key.String(),
 			clientv3.WithPrefix(),
 		)
 		if err != nil {

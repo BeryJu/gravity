@@ -157,6 +157,13 @@ paths:
       - roles/api
     get:
       operationId: api.get_users
+      parameters:
+      - description: Optional username of a user to get
+        in: query
+        name: username
+        schema:
+          description: Optional username of a user to get
+          type: string
       responses:
         "200":
           content:
@@ -368,6 +375,13 @@ paths:
       - roles/dhcp
     get:
       operationId: dhcp.get_scopes
+      parameters:
+      - description: Optionally get DHCP Scope by name
+        in: query
+        name: name
+        schema:
+          description: Optionally get DHCP Scope by name
+          type: string
       responses:
         "200":
           content:
@@ -446,6 +460,12 @@ paths:
       - in: query
         name: scope
         schema:
+          type: string
+      - description: Optional identifier of a lease to get
+        in: query
+        name: identifier
+        schema:
+          description: Optional identifier of a lease to get
           type: string
       responses:
         "200":
@@ -530,6 +550,13 @@ paths:
   /api/v1/discovery/devices:
     get:
       operationId: discovery.get_devices
+      parameters:
+      - description: Optionally get device by identifier
+        in: query
+        name: identifier
+        schema:
+          description: Optionally get device by identifier
+          type: string
       responses:
         "200":
           content:
@@ -638,6 +665,13 @@ paths:
       - roles/discovery
     get:
       operationId: discovery.get_subnets
+      parameters:
+      - description: Optionally get Subnet by name
+        in: query
+        name: name
+        schema:
+          description: Optionally get Subnet by name
+          type: string
       responses:
         "200":
           content:
@@ -760,6 +794,13 @@ paths:
       - roles/dns
     get:
       operationId: dns.get_zones
+      parameters:
+      - description: Optionally get DNS Zone by name
+        in: query
+        name: name
+        schema:
+          description: Optionally get DNS Zone by name
+          type: string
       responses:
         "200":
           content:
