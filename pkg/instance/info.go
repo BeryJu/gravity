@@ -1,6 +1,7 @@
 package instance
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 
@@ -33,16 +34,16 @@ func (i *Instance) getInfo() *InstanceInfo {
 	}
 }
 
-func (i *Instance) keepAliveInstanceInfo() {
+func (i *Instance) keepAliveInstanceInfo(ctx context.Context) {
 	if i.instanceInfoLease == nil {
-		lease, err := i.kv.Lease.Grant(i.rootContext, 100)
+		lease, err := i.kv.Lease.Grant(ctx, 100)
 		if err != nil {
 			i.log.Warn("failed to grant lease", zap.Error(err))
 			return
 		}
 		i.instanceInfoLease = &lease.ID
 	}
-	keepAlive, err := i.kv.KeepAlive(i.rootContext, *i.instanceInfoLease)
+	keepAlive, err := i.kv.KeepAlive(ctx, *i.instanceInfoLease)
 	if err != nil {
 		i.log.Warn("failed to grant lease", zap.Error(err))
 		return
@@ -54,7 +55,7 @@ func (i *Instance) keepAliveInstanceInfo() {
 	}()
 }
 
-func (i *Instance) putInstanceInfo() {
+func (i *Instance) putInstanceInfo(ctx context.Context) {
 	ji, err := json.Marshal(i.getInfo())
 	if err != nil {
 		i.log.Warn("failed to get instance info", zap.Error(err))
@@ -65,7 +66,7 @@ func (i *Instance) putInstanceInfo() {
 		opts = append(opts, clientv3.WithLease(*i.instanceInfoLease))
 	}
 	_, err = i.kv.Put(
-		i.rootContext,
+		ctx,
 		i.kv.Key(
 			types.KeyInstance,
 			extconfig.Get().Instance.Identifier,

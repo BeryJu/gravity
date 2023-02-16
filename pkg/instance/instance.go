@@ -97,7 +97,10 @@ func (i *Instance) Start() {
 			return
 		}
 	}
-	i.bootstrap()
+	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
+	i.bootstrap(bs.Context())
+	bs.Finish()
+	<-i.rootContext.Done()
 }
 
 func (i *Instance) startSentry() {
@@ -133,9 +136,9 @@ func (i *Instance) Log() *zap.Logger {
 	return i.log
 }
 
-func (i *Instance) getRoles() []string {
+func (i *Instance) getRoles(ctx context.Context) []string {
 	rr, err := i.kv.Get(
-		i.rootContext,
+		ctx,
 		i.kv.Key(
 			types.KeyInstance,
 			i.identifier,
@@ -152,16 +155,16 @@ func (i *Instance) getRoles() []string {
 	return strings.Split(roles, ";")
 }
 
-func (i *Instance) bootstrap() {
+func (i *Instance) bootstrap(ctx context.Context) {
 	i.log.Debug("bootstrapping instance")
-	i.keepAliveInstanceInfo()
-	i.putInstanceInfo()
+	i.keepAliveInstanceInfo(ctx)
+	i.putInstanceInfo(ctx)
 	i.setupInstanceAPI()
-	for _, roleId := range i.getRoles() {
+	for _, roleId := range i.getRoles(ctx) {
 		instanceRoles.WithLabelValues(roleId).Add(1)
-		ctx, cancel := context.WithCancel(i.rootContext)
+		rctx, cancel := context.WithCancel(i.rootContext)
 		rc := RoleContext{
-			Context:           ctx,
+			Context:           rctx,
 			ContextCancelFunc: cancel,
 		}
 		roleInst := i.ForRole(roleId)
@@ -198,24 +201,23 @@ func (i *Instance) bootstrap() {
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
-	i.checkFirstStart()
+	i.checkFirstStart(ctx)
 	for roleId := range i.roles {
-		go i.startWatchRole(roleId)
+		go i.startWatchRole(ctx, roleId)
 	}
-	<-i.rootContext.Done()
 }
 
 func (i *Instance) eventRoleRestart(ev *roles.Event) {
 	id := ev.Payload.Data["id"].(string)
 	config := ev.Payload.Data["config"].([]byte)
-	i.stopRole(id)
-	i.startRole(id, config)
+	i.stopRole(ev.Context, id)
+	i.startRole(ev.Context, id, config)
 }
 
-func (i *Instance) checkFirstStart() {
+func (i *Instance) checkFirstStart(ctx context.Context) {
 	inst := i.ForRole("root")
 	cluster, err := inst.KV().Get(
-		i.rootContext,
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyCluster,
@@ -230,7 +232,7 @@ func (i *Instance) checkFirstStart() {
 	i.log.Info("Initial startup")
 	inst.DispatchEvent(
 		types.EventTopicInstanceFirstStart,
-		roles.NewEvent(i.rootContext, map[string]interface{}{}),
+		roles.NewEvent(ctx, map[string]interface{}{}),
 	)
 
 	clusterJson, err := json.Marshal(&ClusterInfo{
@@ -242,7 +244,7 @@ func (i *Instance) checkFirstStart() {
 	}
 
 	_, err = inst.KV().Put(
-		i.rootContext,
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyCluster,
@@ -255,7 +257,7 @@ func (i *Instance) checkFirstStart() {
 	}
 }
 
-func (i *Instance) startWatchRole(id string) {
+func (i *Instance) startWatchRole(ctx context.Context, id string) {
 	defer func() {
 		err := extconfig.RecoverWrapper(recover())
 		if err == nil {
@@ -270,7 +272,7 @@ func (i *Instance) startWatchRole(id string) {
 	}()
 	// Load current config
 	config, err := i.kv.Get(
-		i.roles[id].Context,
+		ctx,
 		i.kv.Key(
 			types.KeyInstance,
 			types.KeyRole,
@@ -281,9 +283,9 @@ func (i *Instance) startWatchRole(id string) {
 	if err == nil && len(config.Kvs) > 0 {
 		rawConfig = config.Kvs[0].Value
 	}
-	i.startRole(id, rawConfig)
+	i.startRole(ctx, id, rawConfig)
 	for resp := range i.kv.Watch(
-		i.rootContext,
+		ctx,
 		i.kv.Key(
 			types.KeyInstance,
 			types.KeyRole,
@@ -297,7 +299,7 @@ func (i *Instance) startWatchRole(id string) {
 			}
 			i.log.Info("stopping role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
 			i.DispatchEvent(types.EventTopicRoleRestart, roles.NewEvent(
-				i.rootContext,
+				ctx,
 				map[string]interface{}{
 					"id":     id,
 					"config": rawConfig,
@@ -307,8 +309,11 @@ func (i *Instance) startWatchRole(id string) {
 	}
 }
 
-func (i *Instance) startRole(id string, rawConfig []byte) bool {
-	defer i.putInstanceInfo()
+func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) bool {
+	srs := sentry.StartSpan(ctx, "gravity.instance.start_role")
+	srs.SetTag("gravity.role", id)
+	defer srs.Finish()
+	defer i.putInstanceInfo(srs.Context())
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
 	err := i.roles[id].Role.Start(i.roles[id].Context, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
@@ -319,7 +324,7 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 	}
 	i.log.Debug("started role", zap.String("roleId", id))
 	i.DispatchEvent(types.EventTopicRoleStarted, roles.NewEvent(
-		i.rootContext,
+		srs.Context(),
 		map[string]interface{}{
 			"role":   id,
 			"config": rawConfig,
@@ -328,7 +333,10 @@ func (i *Instance) startRole(id string, rawConfig []byte) bool {
 	return true
 }
 
-func (i *Instance) stopRole(id string) {
+func (i *Instance) stopRole(ctx context.Context, id string) {
+	srs := sentry.StartSpan(ctx, "gravity.instance.stop_role")
+	srs.SetTag("gravity.role", id)
+	defer srs.Finish()
 	i.log.Info("stopping role", zap.String("roleId", id))
 	i.roles[id].Role.Stop()
 	// Cancel context and re-create the context
