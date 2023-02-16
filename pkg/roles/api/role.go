@@ -9,6 +9,8 @@ import (
 	"os"
 	"path"
 
+	sentryhttp "github.com/getsentry/sentry-go/http"
+
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/auth"
@@ -52,6 +54,9 @@ func New(instance roles.Instance) *Role {
 	r.auth = auth.NewAuthProvider(r, r.i)
 	r.m.Use(NewRecoverMiddleware(r.log))
 	r.m.Use(r.SessionMiddleware)
+	r.m.Use(sentryhttp.New(sentryhttp.Options{
+		Repanic: true,
+	}).Handle)
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
