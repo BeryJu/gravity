@@ -50,6 +50,7 @@ func New(instance roles.Instance) *Role {
 		cfg:          &RoleConfig{},
 		httpServer:   http.Server{},
 		socketServer: http.Server{},
+		ctx:          instance.Context(),
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
 	r.m.Use(NewRecoverMiddleware(r.log))
@@ -79,7 +80,6 @@ func (r *Role) SessionStore() sessions.Store {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
 	cookieSecret, err := base64.StdEncoding.DecodeString(r.cfg.CookieSecret)
@@ -102,7 +102,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.sessions = sess
 
 	if r.cfg.OIDC != nil {
-		err := r.auth.ConfigureOpenIDConnect(r.ctx, r.cfg.OIDC)
+		err := r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
 		if err != nil {
 			r.log.Warn("failed to setup OpenID Connect, ignoring", zap.Error(err))
 		}

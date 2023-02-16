@@ -37,6 +37,7 @@ func New(instance roles.Instance) *Role {
 		i:     instance,
 		m:     mux,
 		ready: false,
+		ctx:   instance.Context(),
 	}
 	r.m.Use(api.NewRecoverMiddleware(r.log))
 	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
@@ -78,7 +79,6 @@ func (r *Role) HandleMetrics(w http.ResponseWriter, re *http.Request) {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	r.log.Info("starting monitoring Server", zap.String("listen", listen))

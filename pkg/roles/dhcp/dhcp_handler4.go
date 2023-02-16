@@ -43,11 +43,13 @@ type Request4 struct {
 	requestId string
 }
 
+type contextRequestID struct{}
+
 func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
 	requestId := fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())
 	return &Request4{
 		DHCPv4:    dhcp,
-		Context:   r.ctx,
+		Context:   context.WithValue(r.ctx, contextRequestID{}, requestId),
 		peer:      &net.UDPAddr{},
 		log:       r.log.With(zap.String("request", requestId)),
 		requestId: requestId,

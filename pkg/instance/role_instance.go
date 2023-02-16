@@ -10,16 +10,18 @@ import (
 )
 
 type RoleInstance struct {
-	log    *zap.Logger
-	roleId string
-	parent *Instance
+	log     *zap.Logger
+	roleId  string
+	parent  *Instance
+	context context.Context
 }
 
 func (i *Instance) ForRole(roleId string) *RoleInstance {
 	in := &RoleInstance{
-		log:    extconfig.Get().Logger().Named("role." + roleId),
-		roleId: roleId,
-		parent: i,
+		log:     extconfig.Get().Logger().Named("role." + roleId),
+		roleId:  roleId,
+		parent:  i,
+		context: i.rootContext,
 	}
 	return in
 }
@@ -30,6 +32,10 @@ func (ri *RoleInstance) KV() *storage.Client {
 
 func (ri *RoleInstance) Log() *zap.Logger {
 	return ri.log
+}
+
+func (ri *RoleInstance) Context() context.Context {
+	return ri.context
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {

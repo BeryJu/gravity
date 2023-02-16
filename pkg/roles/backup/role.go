@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -34,6 +35,7 @@ func New(instance roles.Instance) *Role {
 	r := &Role{
 		log: instance.Log(),
 		i:   instance,
+		ctx: instance.Context(),
 	}
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -43,13 +45,12 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/roles/backup", r.APIRoleConfigPut())
 	})
 	r.i.AddEventListener(EventTopicBackupRun, func(ev *roles.Event) {
-		r.SaveSnapshot()
+		r.SaveSnapshot(ev.Context)
 	})
 	return r
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	os.MkdirAll(extconfig.Get().Dirs().BackupDir, os.ModeSticky|os.ModePerm)
 	r.cfg = r.decodeRoleConfig(config)
 	if r.cfg.Endpoint == "" {
@@ -79,7 +80,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.c = cron.New()
 	if r.cfg.CronExpr != "" {
 		ei, err := r.c.AddFunc(r.cfg.CronExpr, func() {
-			r.SaveSnapshot()
+			ctx, cancel := context.WithTimeout(r.ctx, 60*time.Minute)
+			defer cancel()
+			r.SaveSnapshot(ctx)
 		})
 		if err != nil {
 			return err

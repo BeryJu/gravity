@@ -24,6 +24,7 @@ func New(instance roles.Instance) *Role {
 	r := &Role{
 		log: instance.Log(),
 		i:   instance,
+		ctx: instance.Context(),
 	}
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -55,7 +56,6 @@ func New(instance roles.Instance) *Role {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		return roles.ErrRoleNotConfigured

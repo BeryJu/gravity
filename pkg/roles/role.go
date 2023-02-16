@@ -54,4 +54,5 @@ type Instance interface {
 	Log() *zap.Logger
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
+	Context() context.Context
 }

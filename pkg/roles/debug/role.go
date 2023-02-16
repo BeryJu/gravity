@@ -33,6 +33,7 @@ func New(instance roles.Instance) *Role {
 		log: instance.Log(),
 		i:   instance,
 		m:   mux,
+		ctx: instance.Context(),
 	}
 	r.m.Use(api.NewRecoverMiddleware(r.log))
 	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
@@ -54,7 +55,6 @@ func New(instance roles.Instance) *Role {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.i.DispatchEvent(types.EventTopicDebugMuxSetup, roles.NewEvent(
 		ctx,
 		map[string]interface{}{

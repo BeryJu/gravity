@@ -37,6 +37,7 @@ func New(instance roles.Instance) *Role {
 		i:   instance,
 		m:   make(map[string]types.Metric),
 		ms:  sync.RWMutex{},
+		ctx: instance.Context(),
 	}
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -91,13 +92,12 @@ func (r *Role) SetMetric(key string, value types.Metric) {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 	if !r.cfg.Enabled {
 		return roles.ErrRoleNotConfigured
 	}
 	r.i.AddEventListener(types.EventTopicTSDBWrite, func(ev *roles.Event) {
-		r.write()
+		r.write(ev.Context)
 	})
 	r.i.AddEventListener(types.EventTopicTSDBSet, func(ev *roles.Event) {
 		key := ev.Payload.Data["key"].(string)
@@ -116,12 +116,14 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		r.m[key] = val
 	})
 	go func() {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		for {
 			select {
 			case <-r.ctx.Done():
 				return
 			default:
-				r.write()
+				r.write(ctx)
 				time.Sleep(time.Duration(r.cfg.Scrape) * time.Second)
 			}
 		}
@@ -129,8 +131,8 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	return nil
 }
 
-func (r *Role) write() {
-	tx := sentry.StartTransaction(r.ctx, "gravity.tsdb.write")
+func (r *Role) write(ctx context.Context) {
+	tx := sentry.StartTransaction(ctx, "gravity.tsdb.write")
 	defer tx.Finish()
 	r.log.Debug("writing metrics")
 	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(tx.Context(), map[string]interface{}{}))

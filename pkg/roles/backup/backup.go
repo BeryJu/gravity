@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -29,7 +30,7 @@ const (
 	BackupStatusFailed  = "failed"
 )
 
-func (r *Role) setStatus(status *BackupStatus) {
+func (r *Role) setStatus(ctx context.Context, status *BackupStatus) {
 	// Reset all backup statuses to 0
 	for _, st := range []string{BackupStatusSuccess, BackupStatusStarted, BackupStatusFailed} {
 		backupStatus.WithLabelValues(st).Set(0)
@@ -46,7 +47,7 @@ func (r *Role) setStatus(status *BackupStatus) {
 		return
 	}
 	_, err = r.i.KV().Put(
-		r.ctx,
+		ctx,
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyStatus,
@@ -76,8 +77,8 @@ func (r *Role) GetBackupName() string {
 	return fileName
 }
 
-func (r *Role) snapshotToFile() (*os.File, error) {
-	reader, err := r.i.KV().Snapshot(r.ctx)
+func (r *Role) snapshotToFile(ctx context.Context) (*os.File, error) {
+	reader, err := r.i.KV().Snapshot(ctx)
 	if err != nil {
 		r.log.Warn("failed to snapshot", zap.Error(err))
 		return nil, err
@@ -108,14 +109,14 @@ func (r *Role) snapshotToFile() (*os.File, error) {
 	return file, nil
 }
 
-func (r *Role) SaveSnapshot() *BackupStatus {
+func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 	start := time.Now()
 	status := &BackupStatus{
 		Status: BackupStatusFailed,
 		Time:   time.Now(),
 	}
-	defer r.setStatus(status)
-	file, err := r.snapshotToFile()
+	defer r.setStatus(ctx, status)
+	file, err := r.snapshotToFile(ctx)
 	if err != nil {
 		status.Error = err.Error()
 		return status

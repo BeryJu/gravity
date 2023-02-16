@@ -1,7 +1,6 @@
 package dns
 
 import (
-	"context"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
@@ -33,14 +32,13 @@ func (eh *EtcdHandler) Identifier() string {
 func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
-	ctx := context.Background()
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String()
 		eh.log.Debug("fetching kv key", zap.String("key", fullRecordKey))
 		es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 		es.SetTag("gravity.dns.handler.etcd.key", fullRecordKey)
-		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey, clientv3.WithPrefix())
+		res, err := eh.z.inst.KV().Get(r.Context(), fullRecordKey, clientv3.WithPrefix())
 		es.Finish()
 		if err != nil || len(res.Kvs) < 1 {
 			continue

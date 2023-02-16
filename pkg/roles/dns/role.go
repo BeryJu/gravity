@@ -36,6 +36,7 @@ func New(instance roles.Instance) *Role {
 		zonesM:  sync.RWMutex{},
 		log:     instance.Log(),
 		i:       instance,
+		ctx:     instance.Context(),
 	}
 	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
@@ -74,7 +75,6 @@ func New(instance roles.Instance) *Role {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
 	start := sentry.StartSpan(ctx, "gravity.dns.start")
