@@ -112,11 +112,15 @@ func (i *Instance) startSentry() {
 	transport.Configure(sentry.ClientOptions{
 		HTTPTransport: extconfig.NewUserAgentTransport(release, extconfig.Transport()),
 	})
+	rate := 0.5
+	if extconfig.Get().Debug {
+		rate = 1
+	}
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:              extconfig.Get().Sentry.DSN,
 		Release:          release,
 		EnableTracing:    true,
-		TracesSampleRate: 0.5,
+		TracesSampleRate: rate,
 		Transport:        transport,
 		Debug:            extconfig.Get().Debug,
 		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
