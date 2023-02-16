@@ -6,9 +6,10 @@ import (
 	_ "unsafe"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
-	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -23,6 +24,7 @@ type Role struct {
 	ctx    context.Context
 	cfg    *RoleConfig
 	server *http.Server
+	ready  bool
 }
 
 //go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
@@ -31,15 +33,22 @@ var blockyReg = prometheus.NewRegistry()
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
 	r := &Role{
-		log: instance.Log(),
-		i:   instance,
-		m:   mux,
+		log:   instance.Log(),
+		i:     instance,
+		m:     mux,
+		ready: false,
 	}
 	r.m.Use(api.NewRecoverMiddleware(r.log))
 	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
 	r.m.Path("/healthz/live").HandlerFunc(r.HandleHealthLive)
+	r.m.Path("/healthz/ready").HandlerFunc(r.HandleHealthReady)
 	r.m.Path("/metrics").HandlerFunc(r.HandleMetrics)
-	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/roles/monitoring", r.APIRoleConfigGet())
+		svc.Post("/api/v1/roles/monitoring", r.APIRoleConfigPut())
+	})
+	r.i.AddEventListener(instanceTypes.EventTopicRolesStarted, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/monitoring", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/monitoring", r.APIRoleConfigPut())
@@ -49,6 +58,14 @@ func New(instance roles.Instance) *Role {
 
 func (r *Role) HandleHealthLive(w http.ResponseWriter, re *http.Request) {
 	w.WriteHeader(http.StatusOK)
+}
+
+func (r *Role) HandleHealthReady(w http.ResponseWriter, re *http.Request) {
+	if r.ready {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}
 }
 
 func (r *Role) HandleMetrics(w http.ResponseWriter, re *http.Request) {

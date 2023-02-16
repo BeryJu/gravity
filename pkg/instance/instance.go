@@ -214,6 +214,7 @@ func (i *Instance) bootstrap(ctx context.Context) {
 	}
 	go func() {
 		wg.Wait()
+		i.DispatchEvent(types.EventTopicRolesStarted, roles.NewEvent(ctx, map[string]interface{}{}))
 		sentry.TransactionFromContext(ctx).Finish()
 	}()
 }
