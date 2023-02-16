@@ -25,7 +25,7 @@ command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
   force = true
 
 [[redirects]]
-  from = "/api/sentry"
-  to = "https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"
+  from = "/api/sentry*"
+  to = "https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2:splat"
   status = 200
   force = true
