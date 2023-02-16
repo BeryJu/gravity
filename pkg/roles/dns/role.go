@@ -77,7 +77,7 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
-	start := sentry.StartSpan(ctx, "gravity.dns.start")
+	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dns.start")
 	defer start.Finish()
 
 	r.loadInitialZones(start.Context())

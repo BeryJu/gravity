@@ -73,7 +73,7 @@ func (r *Role) Handler4(re *Request4) *dhcpv4.DHCPv4 {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
-	start := sentry.StartSpan(ctx, "gravity.dhcp.start")
+	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
 	r.loadInitialScopes(start.Context())
 	r.loadInitialLeases(start.Context())

@@ -50,9 +50,7 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/roles/monitoring", r.APIRoleConfigPut())
 	})
 	r.i.AddEventListener(instanceTypes.EventTopicRolesStarted, func(ev *roles.Event) {
-		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/roles/monitoring", r.APIRoleConfigGet())
-		svc.Post("/api/v1/roles/monitoring", r.APIRoleConfigPut())
+		r.ready = true
 	})
 	return r
 }
