@@ -93,18 +93,20 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 
 func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
 	for _, handler := range z.h {
-		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
-		start := time.Now()
 		ss := span.StartChild("gravity.dns.request.handler")
+		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		ss.SetTag("gravity.dns.handler", handler.Identifier())
-		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), r)
+		// Create new request for handler with the correct context
+		hr := utils.NewRequest(r.Msg, ss.Context())
+
+		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), hr)
 		ss.Finish()
-		finish := time.Since(start)
+
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
 			handlerReply.SetReply(r.Msg)
 			w.WriteMsg(handlerReply)
-			z.resolveUpdateMetrics(finish, r, handler, handlerReply)
+			z.resolveUpdateMetrics(ss.EndTime.Sub(ss.StartTime), r, handler, handlerReply)
 			return
 		}
 		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))
