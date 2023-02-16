@@ -310,7 +310,7 @@ func (i *Instance) startWatchRole(ctx context.Context, id string) {
 }
 
 func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) bool {
-	srs := sentry.StartSpan(ctx, "gravity.instance.start_role")
+	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.start_role")
 	srs.SetTag("gravity.role", id)
 	defer srs.Finish()
 	defer i.putInstanceInfo(srs.Context())
@@ -334,7 +334,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 }
 
 func (i *Instance) stopRole(ctx context.Context, id string) {
-	srs := sentry.StartSpan(ctx, "gravity.instance.stop_role")
+	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.stop_role")
 	srs.SetTag("gravity.role", id)
 	defer srs.Finish()
 	i.log.Info("stopping role", zap.String("roleId", id))

@@ -32,10 +32,9 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
 	var longestZone *Zone
 
-	span := sentry.StartSpan(
+	span := sentry.StartTransaction(
 		context.TODO(),
 		"gravity.dns.request",
-		sentry.TransactionName("gravity.dns"),
 	)
 	var clientIP = ""
 	switch addr := w.RemoteAddr().(type) {

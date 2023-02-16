@@ -58,7 +58,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Question, ans dns.RR, idx int) {
-	cs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_ip.cache")
+	cs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.cache")
 	cs.SetTag("gravity.dns.handler.forward_ip.cache.query", query.String())
 	cs.SetTag("gravity.dns.handler.forward_ip.cache.ans", ans.String())
 	defer cs.Finish()
@@ -124,7 +124,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 		return nil
 	}
 	question := r.Question[0]
-	fs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_ip.lookup")
+	fs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.lookup")
 	ips, err := ipf.r.LookupHost(r.Context(), question.Name)
 	fs.Finish()
 	m := new(dns.Msg)

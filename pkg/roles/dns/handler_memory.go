@@ -31,7 +31,7 @@ func (eh *MemoryHandler) Identifier() string {
 func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
-	ms := sentry.StartSpan(r.Context(), "gravity.dns.handler.memory.get")
+	ms := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.memory.get")
 	defer ms.Finish()
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))

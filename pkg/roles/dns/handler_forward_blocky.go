@@ -137,7 +137,7 @@ func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest)
 		bfwd.log.Debug("Blocky not started/setup yet, falling through to next handler")
 		return nil
 	}
-	bs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_blocky.handle")
+	bs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_blocky.handle")
 	bfwd.b.OnRequest(w, r.Msg)
 	bs.Finish()
 	// fall to next handler when no record is found

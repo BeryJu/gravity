@@ -38,7 +38,7 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String()
 		eh.log.Debug("fetching kv key", zap.String("key", fullRecordKey))
-		es := sentry.StartSpan(r.Context(), "gravity.dns.handler.etcd.get")
+		es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 		es.SetTag("gravity.dns.handler.etcd.key", fullRecordKey)
 		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey, clientv3.WithPrefix())
 		es.Finish()
