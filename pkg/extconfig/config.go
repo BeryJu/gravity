@@ -21,7 +21,11 @@ type ExtConfig struct {
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
 	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
-	Instance       struct {
+	Sentry         struct {
+		Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
+	}
+	Instance struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
 		Listen     string `env:"INSTANCE_LISTEN"`

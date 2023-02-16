@@ -50,6 +50,8 @@ The following environment variables can be set:
 - `LISTEN_ONLY`: Enable listen-only mode which will not reply to any DHCP packets and not run discovery
 - `ADMIN_PASSWORD`: Optionally set a default password for the admin user, if not set a random one will be generated
 - `ADMIN_TOKEN`: Optionally set a token to be created on first start, if not set no token will be created
+- `SENTRY_ENABLED`: Enable sentry error reporting and tracing
+- `SENTRY_DSN`: Configure a custom sentry DSN
 
 ## First time use
 
