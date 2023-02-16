@@ -1,8 +1,10 @@
 package storage
 
 import (
+	"context"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -42,4 +44,25 @@ func NewClient(prefix string, logger *zap.Logger, endpoints ...string) *Client {
 
 func (c *Client) Config() clientv3.Config {
 	return c.config
+}
+
+func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
+	span := sentry.StartSpan(ctx, "etcd.get")
+	span.SetTag("etcd.key", key)
+	defer span.Finish()
+	return c.Client.Get(ctx, key, opts...)
+}
+
+func (c *Client) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
+	span := sentry.StartSpan(ctx, "etcd.put")
+	span.SetTag("etcd.key", key)
+	defer span.Finish()
+	return c.Client.Put(ctx, key, val, opts...)
+}
+
+func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
+	span := sentry.StartSpan(ctx, "etcd.delete")
+	span.SetTag("etcd.key", key)
+	defer span.Finish()
+	return c.Client.Delete(ctx, key, opts...)
 }
