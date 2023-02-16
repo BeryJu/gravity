@@ -12,6 +12,7 @@ import (
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
@@ -76,8 +77,11 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
-	r.loadInitialZones()
-	go r.startWatchZones()
+	start := sentry.StartTransaction(ctx, "gravity.dns.start")
+	defer start.Finish()
+
+	r.loadInitialZones(start.Context())
+	go r.startWatchZones(start.Context())
 
 	dnsMux := dns.NewServeMux()
 	dnsMux.HandleFunc(

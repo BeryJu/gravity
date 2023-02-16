@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -44,9 +45,9 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 	return true
 }
 
-func (r *Role) loadInitialZones() {
+func (r *Role) loadInitialZones(ctx context.Context) {
 	zones, err := r.i.KV().Get(
-		r.ctx,
+		ctx,
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
@@ -56,7 +57,7 @@ func (r *Role) loadInitialZones() {
 	if err != nil {
 		r.log.Warn("failed to list initial zones", zap.Error(err))
 		time.Sleep(5 * time.Second)
-		r.startWatchZones()
+		r.loadInitialZones(ctx)
 		return
 	}
 	for _, zone := range zones.Kvs {
@@ -64,9 +65,9 @@ func (r *Role) loadInitialZones() {
 	}
 }
 
-func (r *Role) startWatchZones() {
+func (r *Role) startWatchZones(ctx context.Context) {
 	watchChan := r.i.KV().Watch(
-		r.ctx,
+		ctx,
 		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)

@@ -11,6 +11,7 @@ import (
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
 	"golang.org/x/net/ipv4"
@@ -72,8 +73,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
-	r.loadInitialScopes()
-	r.loadInitialLeases()
+	start := sentry.StartTransaction(ctx, "gravity.dhcp.start")
+	defer start.Finish()
+	r.loadInitialScopes(start.Context())
+	r.loadInitialLeases(start.Context())
 
 	// Since scope usage relies on r.leases, but r.leases is loaded after the scopes,
 	// manually update the usage

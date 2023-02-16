@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -29,9 +30,9 @@ func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 	}
 }
 
-func (r *Role) loadInitialLeases() {
+func (r *Role) loadInitialLeases(ctx context.Context) {
 	leases, err := r.i.KV().Get(
-		r.ctx,
+		ctx,
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,

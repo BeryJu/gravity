@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -37,9 +38,9 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 	return true
 }
 
-func (r *Role) loadInitialScopes() {
+func (r *Role) loadInitialScopes(ctx context.Context) {
 	scopes, err := r.i.KV().Get(
-		r.ctx,
+		ctx,
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
