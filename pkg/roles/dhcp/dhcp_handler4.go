@@ -71,7 +71,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	if extconfig.Get().ListenOnlyMode {
 		return
 	}
-	context, canc := context.WithCancel(context.Background())
+	context, canc := context.WithCancel(h.role.ctx)
 	defer canc()
 	m, err := dhcpv4.FromBytes(buf)
 	bufpool.Put(&buf)

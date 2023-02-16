@@ -39,7 +39,7 @@ func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
 	}
 	l.Debug("dispatching event", zap.String("topic", topic))
 	if ev.Context == nil {
-		ev.Context = context.Background()
+		ev.Context = context.TODO()
 	}
 	ri.parent.DispatchEvent(topic, ev.WithTopic(topic))
 }

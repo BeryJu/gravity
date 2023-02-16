@@ -125,7 +125,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 	}
 	question := r.Question[0]
 	fs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_ip.lookup")
-	ips, err := ipf.r.LookupHost(context.Background(), question.Name)
+	ips, err := ipf.r.LookupHost(r.Context(), question.Name)
 	fs.Finish()
 	m := new(dns.Msg)
 	m.SetReply(r.Msg)
