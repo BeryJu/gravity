@@ -99,7 +99,6 @@ func (i *Instance) Start() {
 	}
 	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
 	i.bootstrap(bs.Context())
-	bs.Finish()
 	<-i.rootContext.Done()
 }
 
@@ -206,9 +205,17 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
 	i.checkFirstStart(ctx)
+	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
-		go i.startWatchRole(ctx, roleId)
+		wg.Add(1)
+		go i.startWatchRole(ctx, roleId, func() {
+			wg.Done()
+		})
 	}
+	go func() {
+		wg.Wait()
+		sentry.TransactionFromContext(ctx).Finish()
+	}()
 }
 
 func (i *Instance) eventRoleRestart(ev *roles.Event) {
@@ -261,7 +268,7 @@ func (i *Instance) checkFirstStart(ctx context.Context) {
 	}
 }
 
-func (i *Instance) startWatchRole(ctx context.Context, id string) {
+func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback func()) {
 	defer func() {
 		err := extconfig.RecoverWrapper(recover())
 		if err == nil {
@@ -288,6 +295,7 @@ func (i *Instance) startWatchRole(ctx context.Context, id string) {
 		rawConfig = config.Kvs[0].Value
 	}
 	i.startRole(ctx, id, rawConfig)
+	startCallback()
 	for resp := range i.kv.Watch(
 		ctx,
 		i.kv.Key(
