@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 )
@@ -27,9 +28,11 @@ func (eh *MemoryHandler) Identifier() string {
 	return MemoryType
 }
 
-func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
+	ms := sentry.StartSpan(r.Context(), "gravity.dns.handler.memory.get")
+	defer ms.Finish()
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String()

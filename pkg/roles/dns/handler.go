@@ -6,6 +6,6 @@ import (
 )
 
 type Handler interface {
-	Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg
+	Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg
 	Identifier() string
 }

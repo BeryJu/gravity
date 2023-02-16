@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 )
@@ -56,7 +57,11 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 	return ipf
 }
 
-func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx int) {
+func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Question, ans dns.RR, idx int) {
+	cs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_ip.cache")
+	cs.SetTag("gravity.dns.handler.forward_ip.cache.query", query.String())
+	cs.SetTag("gravity.dns.handler.forward_ip.cache.ans", ans.String())
+	defer cs.Finish()
 	if ans == nil {
 		return
 	}
@@ -103,7 +108,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(query dns.Question, ans dns.RR, idx i
 	}
 	record.TTL = ans.Header().Ttl
 	record.uid = strconv.Itoa(idx)
-	err := record.put(context.Background(), int64(cacheTtl))
+	err := record.put(r.Context(), int64(cacheTtl))
 	if err != nil {
 		ipf.log.Warn("failed to cache answer", zap.Error(err))
 	}
@@ -113,23 +118,25 @@ func (ipf *IPForwarderHandler) Identifier() string {
 	return IPForwarderType
 }
 
-func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	if len(r.Question) < 1 {
 		ipf.log.Error("No question")
 		return nil
 	}
 	question := r.Question[0]
+	fs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_ip.lookup")
 	ips, err := ipf.r.LookupHost(context.Background(), question.Name)
+	fs.Finish()
 	m := new(dns.Msg)
-	m.SetReply(r)
+	m.SetReply(r.Msg)
 
 	var dnsErr *net.DNSError
 	if errors.As(err, &dnsErr) {
-		m.SetRcode(r, dns.RcodeNameError)
+		m.SetRcode(r.Msg, dns.RcodeNameError)
 		return m
 	} else if err != nil {
 		ipf.log.Warn("failed to forward", zap.Error(err))
-		m.SetRcode(r, dns.RcodeServerFailure)
+		m.SetRcode(r.Msg, dns.RcodeServerFailure)
 		return m
 	}
 	m.Answer = make([]dns.RR, 0)
@@ -165,13 +172,13 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.M
 			continue
 		}
 		m.Answer = append(m.Answer, ans)
-		go ipf.cacheToEtcd(question, ans, idx)
+		go ipf.cacheToEtcd(r, question, ans, idx)
 	}
 	m.RecursionAvailable = true
 	if len(m.Answer) < 1 {
-		m.SetRcode(r, dns.RcodeNameError)
+		m.SetRcode(r.Msg, dns.RcodeNameError)
 	} else {
-		m.SetRcode(r, dns.RcodeSuccess)
+		m.SetRcode(r.Msg, dns.RcodeSuccess)
 	}
 	return m
 }

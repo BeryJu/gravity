@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -29,7 +30,7 @@ func (eh *EtcdHandler) Identifier() string {
 	return EtcdType
 }
 
-func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
 	ctx := context.Background()
@@ -37,7 +38,10 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String()
 		eh.log.Debug("fetching kv key", zap.String("key", fullRecordKey))
+		es := sentry.StartSpan(r.Context(), "gravity.dns.handler.etcd.get")
+		es.SetTag("gravity.dns.handler.etcd.key", fullRecordKey)
 		res, err := eh.z.inst.KV().Get(ctx, fullRecordKey, clientv3.WithPrefix())
+		es.Finish()
 		if err != nil || len(res.Kvs) < 1 {
 			continue
 		}

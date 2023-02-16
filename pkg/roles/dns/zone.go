@@ -64,7 +64,7 @@ func (z *Zone) soa() *dns.Msg {
 	return m
 }
 
-func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, rep *dns.Msg) {
+func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler, rep *dns.Msg) {
 	for _, question := range q.Question {
 		dnsQueries.WithLabelValues(
 			dns.TypeToString[question.Qtype],
@@ -91,16 +91,18 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *dns.Msg, h Handler, re
 	}
 }
 
-func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
+func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
 	for _, handler := range z.h {
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		start := time.Now()
+		ss := span.StartChild("gravity.dns.request.handler")
+		ss.SetTag("gravity.dns.handler", handler.Identifier())
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), r)
+		ss.Finish()
 		finish := time.Since(start)
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
-			span.SetTag("gravity.dns.handler", handler.Identifier())
-			handlerReply.SetReply(r)
+			handlerReply.SetReply(r.Msg)
 			w.WriteMsg(handlerReply)
 			z.resolveUpdateMetrics(finish, r, handler, handlerReply)
 			return
@@ -109,14 +111,14 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *dns.Msg, span *sentry.Span) {
 	}
 	if z.Authoritative {
 		soa := z.soa()
-		soa.SetReply(r)
+		soa.SetReply(r.Msg)
 		w.WriteMsg(soa)
 		return
 	}
 	z.log.Debug("no handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
-	fallback.SetReply(r)
-	fallback.SetRcode(r, dns.RcodeNameError)
+	fallback.SetReply(r.Msg)
+	fallback.SetRcode(r.Msg, dns.RcodeNameError)
 	w.WriteMsg(fallback)
 }
 

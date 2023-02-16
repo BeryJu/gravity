@@ -5,6 +5,7 @@ import (
 	"net"
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
@@ -33,8 +34,8 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 
 	span := sentry.StartSpan(
 		context.TODO(),
-		"gravity.roles.dns.request",
-		sentry.TransactionName("gravity.roles.dns"),
+		"gravity.dns.request",
+		sentry.TransactionName("gravity.dns"),
 	)
 	var clientIP = ""
 	switch addr := w.RemoteAddr().(type) {
@@ -79,5 +80,5 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
 	span.SetTag("gravity.dns.zone", longestZone.Name)
-	longestZone.resolve(w, r, span)
+	longestZone.resolve(w, utils.NewRequest(r, span.Context()), span)
 }

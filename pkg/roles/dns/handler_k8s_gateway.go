@@ -34,12 +34,12 @@ func (k8gw *K8sGateway) Identifier() string {
 	return K8sGatewayType
 }
 
-func (k8gw *K8sGateway) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (k8gw *K8sGateway) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	if !k8gw.gw.Controller.HasSynced() {
 		k8gw.log.Info("K8s Gateway not synced yet, falling through to next handler")
 		return nil
 	}
-	k8gw.gw.ServeDNS(context.TODO(), w, r)
+	k8gw.gw.ServeDNS(r.Context(), w, r.Msg)
 	// fall to next handler when no record is found
 	if w.Msg().Rcode == dns.RcodeNameError {
 		return nil

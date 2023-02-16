@@ -9,6 +9,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 
 	"github.com/0xERR0R/blocky/config"
@@ -131,19 +132,21 @@ func (bfwd *BlockyForwarder) setup() error {
 	return nil
 }
 
-func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *dns.Msg) *dns.Msg {
+func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	if bfwd.b == nil {
 		bfwd.log.Debug("Blocky not started/setup yet, falling through to next handler")
 		return nil
 	}
-	bfwd.b.OnRequest(w, r)
+	bs := sentry.StartSpan(r.Context(), "gravity.dns.handler.forward_blocky.handle")
+	bfwd.b.OnRequest(w, r.Msg)
+	bs.Finish()
 	// fall to next handler when no record is found
 	if w.Msg().Rcode == dns.RcodeNameError {
 		return nil
 	}
 	for _, query := range r.Question {
 		for idx, ans := range w.Msg().Answer {
-			go bfwd.cacheToEtcd(query, ans, idx)
+			go bfwd.cacheToEtcd(r, query, ans, idx)
 		}
 	}
 	return w.Msg()
