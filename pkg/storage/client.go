@@ -16,9 +16,10 @@ type Client struct {
 	config clientv3.Config
 	prefix string
 	log    *zap.Logger
+	debug  bool
 }
 
-func NewClient(prefix string, logger *zap.Logger, endpoints ...string) *Client {
+func NewClient(prefix string, logger *zap.Logger, debug bool, endpoints ...string) *Client {
 	config := clientv3.Config{
 		Endpoints:            endpoints,
 		DialTimeout:          2 * time.Second,
@@ -39,6 +40,7 @@ func NewClient(prefix string, logger *zap.Logger, endpoints ...string) *Client {
 		log:    logger,
 		prefix: prefix,
 		config: config,
+		debug:  debug,
 	}
 }
 
@@ -49,6 +51,9 @@ func (c *Client) Config() clientv3.Config {
 func (c *Client) trace(ctx context.Context, op string, key string) func() {
 	tx := sentry.TransactionFromContext(ctx)
 	if tx == nil {
+		if c.debug {
+			c.log.Warn("etcd op without transaction", zap.String("key", key))
+		}
 		return func() {}
 	}
 	span := tx.StartChild(op)

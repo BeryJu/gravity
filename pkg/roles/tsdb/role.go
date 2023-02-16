@@ -14,6 +14,7 @@ import (
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	debugTypes "beryju.io/gravity/pkg/roles/debug/types"
 	"beryju.io/gravity/pkg/roles/tsdb/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/mux"
 	"github.com/struCoder/pidusage"
 	"github.com/swaggest/rest/web"
@@ -129,15 +130,17 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) write() {
+	tx := sentry.StartTransaction(r.ctx, "gravity.tsdb.write")
+	defer tx.Finish()
 	r.log.Debug("writing metrics")
-	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(r.ctx, map[string]interface{}{}))
+	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(tx.Context(), map[string]interface{}{}))
 	r.ms.RLock()
 	defer r.ms.RUnlock()
 	// Don't bother granting a lease if we don't have any metrics
 	if len(r.m) < 1 {
 		return
 	}
-	lease, err := r.i.KV().Grant(r.ctx, r.cfg.Expire)
+	lease, err := r.i.KV().Grant(tx.Context(), r.cfg.Expire)
 	if err != nil {
 		r.log.Warn("failed to grant lease, skipping write", zap.Error(err))
 		return
@@ -150,7 +153,7 @@ func (r *Role) write() {
 			strconv.FormatInt(time.Now().Unix(), 10),
 		).String()
 		_, err := r.i.KV().Put(
-			r.ctx,
+			tx.Context(),
 			key,
 			strconv.Itoa(value.Value),
 			clientv3.WithLease(lease.ID),

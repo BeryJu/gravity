@@ -24,6 +24,7 @@ run:
 	export DEBUG=true
 	export LISTEN_ONLY=true
 	export SENTRY_ENVIRONMENT=testing
+	export SENTRY_ENABLED=true
 	go run ${GO_FLAGS} . server
 
 web-build:

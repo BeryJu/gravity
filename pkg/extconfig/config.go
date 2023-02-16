@@ -70,6 +70,7 @@ func (e *ExtConfig) EtcdClient() *storage.Client {
 	return storage.NewClient(
 		e.Etcd.Prefix,
 		e.BuildLoggerWithLevel(zap.WarnLevel).Named("etcd.client"),
+		e.Debug,
 		e.Etcd.Endpoint,
 	)
 }
