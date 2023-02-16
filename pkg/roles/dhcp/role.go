@@ -73,7 +73,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.ctx = ctx
 	r.cfg = r.decodeRoleConfig(config)
 
-	start := sentry.StartTransaction(ctx, "gravity.dhcp.start")
+	start := sentry.StartSpan(ctx, "gravity.dhcp.start")
 	defer start.Finish()
 	r.loadInitialScopes(start.Context())
 	r.loadInitialLeases(start.Context())
