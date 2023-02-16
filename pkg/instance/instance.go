@@ -107,7 +107,7 @@ func (i *Instance) startSentry() {
 		HTTPTransport: extconfig.NewUserAgentTransport(release, extconfig.Transport()),
 	})
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              "https://foo@gravity.beryju.io/api/sentry",
+		Dsn:              "https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2",
 		Release:          release,
 		EnableTracing:    true,
 		TracesSampleRate: 0.5,
