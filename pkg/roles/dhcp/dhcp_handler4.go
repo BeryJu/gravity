@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -95,7 +96,7 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	}
 	hub.Scope().SetUser(sentry.User{
 		Username:  m.HostName(),
-		IPAddress: _peer.String(),
+		IPAddress: strings.Split(_peer.String(), ":")[0],
 	})
 
 	span.Description = m.MessageType().String()
