@@ -23,6 +23,7 @@ run:
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
+	export SENTRY_ENVIRONMENT=testing
 	go run ${GO_FLAGS} . server
 
 web-build:

@@ -46,23 +46,29 @@ func (c *Client) Config() clientv3.Config {
 	return c.config
 }
 
-func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
-	span := sentry.StartSpan(ctx, "etcd.get")
+func (c *Client) trace(ctx context.Context, op string, key string) func() {
+	tx := sentry.TransactionFromContext(ctx)
+	if tx == nil {
+		return func() {}
+	}
+	span := tx.StartChild(op)
 	span.SetTag("etcd.key", key)
-	defer span.Finish()
+	return func() {
+		span.Finish()
+	}
+}
+
+func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
+	defer c.trace(ctx, "etcd.get", key)()
 	return c.Client.Get(ctx, key, opts...)
 }
 
 func (c *Client) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
-	span := sentry.StartSpan(ctx, "etcd.put")
-	span.SetTag("etcd.key", key)
-	defer span.Finish()
+	defer c.trace(ctx, "etcd.put", key)()
 	return c.Client.Put(ctx, key, val, opts...)
 }
 
 func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
-	span := sentry.StartSpan(ctx, "etcd.delete")
-	span.SetTag("etcd.key", key)
-	defer span.Finish()
+	defer c.trace(ctx, "etcd.delete", key)()
 	return c.Client.Delete(ctx, key, opts...)
 }
