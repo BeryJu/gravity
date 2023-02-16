@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/sessions"
 )
 
@@ -25,6 +26,13 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	u, ok := session.Values[types.SessionKeyUser]
+	hub := sentry.GetHubFromContext(r.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		Username: u.(User).Username,
+	})
 	if u != nil && ok {
 		return true
 	}
