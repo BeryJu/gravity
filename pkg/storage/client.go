@@ -57,6 +57,7 @@ func (c *Client) trace(ctx context.Context, op string, key string) func() {
 		return func() {}
 	}
 	span := tx.StartChild(op)
+	span.Description = key
 	span.SetTag("etcd.key", key)
 	return func() {
 		span.Finish()
