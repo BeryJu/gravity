@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/storage"
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -25,7 +26,7 @@ func MustJSON(in interface{}) string {
 
 func Context() context.Context {
 	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second) //nolint
-	return ctx
+	return sentry.StartTransaction(ctx, "test").Context()
 }
 
 func RandomString() string {
