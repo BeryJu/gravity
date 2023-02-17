@@ -12,9 +12,9 @@ import (
 
 func TestAPIRecordsGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 
 	zone := tests.RandomString() + "."
 	inst.KV().Put(
@@ -49,12 +49,13 @@ func TestAPIRecordsGet(t *testing.T) {
 
 func TestAPIRecordsPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
 	name := tests.RandomString() + "."
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
@@ -62,7 +63,7 @@ func TestAPIRecordsPut(t *testing.T) {
 		).String(),
 		tests.MustJSON(dns.Zone{}),
 	)
-	assert.NoError(t, role.APIRecordsPut().Interact(tests.Context(), dns.APIRecordsPutInput{
+	assert.NoError(t, role.APIRecordsPut().Interact(ctx, dns.APIRecordsPutInput{
 		Zone:     name,
 		Hostname: "test",
 		Type:     "A",
@@ -87,9 +88,9 @@ func TestAPIRecordsPut(t *testing.T) {
 
 func TestAPIRecordsDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 
 	zone := tests.RandomString() + "."
 	inst.KV().Put(
@@ -115,7 +116,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 		}),
 	)
 
-	assert.NoError(t, role.APIRecordsDelete().Interact(tests.Context(), dns.APIRecordsDeleteInput{
+	assert.NoError(t, role.APIRecordsDelete().Interact(ctx, dns.APIRecordsDeleteInput{
 		Zone:     zone,
 		Hostname: "test",
 		Type:     "A",

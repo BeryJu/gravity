@@ -15,32 +15,32 @@ import (
 
 func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
-	api := api.New(rootInst.ForRole("api"))
-	api.Start(tests.Context(), []byte{})
-	defer api.Stop()
-	role := monitoring.New(rootInst.ForRole("monitoring"))
-	assert.NotNil(t, role)
 	ctx := tests.Context()
+	api := api.New(rootInst.ForRole("api", ctx))
+	api.Start(ctx, []byte{})
+	defer api.Stop()
+	role := monitoring.New(rootInst.ForRole("monitoring", ctx))
+	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, []byte{}))
 	defer role.Stop()
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 }
 
 func TestRoleStartInvalidListen(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte(tests.MustJSON(monitoring.RoleConfig{
 		Port: -1,
 	}))))
@@ -51,10 +51,10 @@ func TestRoleStartInvalidListen(t *testing.T) {
 
 func TestRoleHealth(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 	rr := httptest.NewRecorder()
@@ -64,10 +64,10 @@ func TestRoleHealth(t *testing.T) {
 
 func TestMetricsScrape(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 	rr := httptest.NewRecorder()

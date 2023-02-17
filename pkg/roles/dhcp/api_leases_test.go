@@ -20,13 +20,13 @@ func testLease() dhcp.Lease {
 
 func TestAPILeasesGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 
 	scope := testScope()
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
@@ -54,13 +54,14 @@ func TestAPILeasesGet(t *testing.T) {
 
 func TestAPILeasesPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 
 	scope := testScope()
 	name := tests.RandomString()
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,
@@ -68,7 +69,7 @@ func TestAPILeasesPut(t *testing.T) {
 		).String(),
 		tests.MustJSON(scope),
 	)
-	assert.NoError(t, role.APILeasesPut().Interact(tests.Context(), dhcp.APILeasesPutInput{
+	assert.NoError(t, role.APILeasesPut().Interact(ctx, dhcp.APILeasesPutInput{
 		Identifier: name,
 		Scope:      scope.Name,
 		Address:    "192.0.2.1",
@@ -93,13 +94,13 @@ func TestAPILeasesPut(t *testing.T) {
 
 func TestAPILeasesDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 
 	scope := testScope()
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,

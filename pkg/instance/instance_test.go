@@ -18,13 +18,13 @@ import (
 func TestStart(t *testing.T) {
 	called := false
 	rootInst := instance.New()
-	inst := rootInst.ForRole("test")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("test", ctx)
 	inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 		defer rootInst.Stop()
 
 		// Start API to trigger EventTopicAPIMuxSetup
 		role := rootInst.Role("api").(*api.Role)
-		ctx := tests.Context()
 		assert.Nil(t, role.Start(ctx, []byte{}))
 		role.Stop()
 
@@ -37,9 +37,10 @@ func TestStart(t *testing.T) {
 func TestFirstStart(t *testing.T) {
 	called := false
 	rootInst := instance.New()
-	inst := rootInst.ForRole("test")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("test", ctx)
 	inst.KV().Delete(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyCluster,
 		).Prefix(true).String(),
@@ -57,10 +58,11 @@ func TestFirstStart(t *testing.T) {
 func TestWatch(t *testing.T) {
 	called := 0
 	rootInst := instance.New()
-	inst := rootInst.ForRole("test")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("test", ctx)
 
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyInstance,
 			extconfig.Get().Instance.Identifier,
@@ -80,7 +82,7 @@ func TestWatch(t *testing.T) {
 				// and the etcd watcher to start
 				time.Sleep(5 * time.Second)
 				inst.KV().Put(
-					tests.Context(),
+					ctx,
 					inst.KV().Key(
 						types.KeyInstance,
 						types.KeyRole,
@@ -98,7 +100,7 @@ func TestWatch(t *testing.T) {
 		}
 	})
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyInstance,
 			types.KeyRole,

@@ -11,26 +11,26 @@ import (
 
 func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
-	role := discovery.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
+	role := discovery.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
 	var output discovery.APIRoleConfigOutput
-	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(ctx, struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
-	role := discovery.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
+	role := discovery.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), discovery.APIRoleConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, discovery.APIRoleConfigInput{
 		Config: discovery.RoleConfig{},
 	}, &struct{}{}))
 }

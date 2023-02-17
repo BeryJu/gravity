@@ -13,9 +13,9 @@ import (
 
 func TestAPITokensGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	inst.KV().Put(
@@ -35,13 +35,14 @@ func TestAPITokensGet(t *testing.T) {
 
 func TestAPITokensPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	var output auth.APITokensPutOutput
 	name := tests.RandomString()
-	assert.NoError(t, prov.APITokensPut().Interact(tests.Context(), auth.APITokensPutInput{
+	assert.NoError(t, prov.APITokensPut().Interact(ctx, auth.APITokensPutInput{
 		Username: name,
 	}, &output))
 
@@ -61,9 +62,9 @@ func TestAPITokensPut(t *testing.T) {
 
 func TestAPITokensDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
@@ -78,7 +79,7 @@ func TestAPITokensDelete(t *testing.T) {
 		tests.MustJSON(auth.Token{}),
 	)
 
-	assert.NoError(t, prov.APITokensDelete().Interact(tests.Context(), auth.APITokensDeleteInput{
+	assert.NoError(t, prov.APITokensDelete().Interact(ctx, auth.APITokensDeleteInput{
 		Key: name,
 	}, &struct{}{}))
 

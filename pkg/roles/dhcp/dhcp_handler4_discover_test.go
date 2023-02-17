@@ -16,9 +16,9 @@ var DHCPDiscoverPayload = []byte{1, 1, 6, 0, 136, 9, 170, 251, 0, 0, 0, 0, 0, 0,
 
 func TestDHCPDiscover(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	Cleanup()
 
 	inst.KV().Put(
@@ -57,9 +57,9 @@ func TestDHCPDiscover(t *testing.T) {
 
 func TestDHCPDiscoverDNS(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	Cleanup()
 
 	inst.KV().Put(

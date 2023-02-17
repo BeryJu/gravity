@@ -18,7 +18,7 @@ var schemaFormat = ""
 
 func GenerateSchema(ctx context.Context, format string, callback func(schema []byte)) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
+	inst := rootInst.ForRole("api", ctx)
 	inst.AddEventListener(types.EventTopicInstanceBootstrapped, func(ev *roles.Event) {
 		defer rootInst.Stop()
 		api := rootInst.Role("api").(*api.Role)

@@ -30,9 +30,9 @@ func testScope() dhcp.Scope {
 
 func TestAPIScopesGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 
 	inst.KV().Put(
 		ctx,
@@ -51,11 +51,12 @@ func TestAPIScopesGet(t *testing.T) {
 
 func TestAPIScopesPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 
 	name := tests.RandomString()
-	assert.NoError(t, role.APIScopesPut().Interact(tests.Context(), dhcp.APIScopesPutInput{
+	assert.NoError(t, role.APIScopesPut().Interact(ctx, dhcp.APIScopesPutInput{
 		Name:       name,
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
@@ -100,9 +101,9 @@ func TestAPIScopesPut(t *testing.T) {
 
 func TestAPIScopesDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 
 	name := tests.RandomString()
 

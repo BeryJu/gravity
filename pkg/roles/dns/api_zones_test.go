@@ -13,9 +13,9 @@ import (
 
 func TestAPIZonesGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 
 	inst.KV().Put(
 		ctx,
@@ -34,11 +34,12 @@ func TestAPIZonesGet(t *testing.T) {
 
 func TestAPIZonesPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
 	name := tests.RandomString() + "."
-	assert.NoError(t, role.APIZonesPut().Interact(tests.Context(), dns.APIZonesPutInput{
+	assert.NoError(t, role.APIZonesPut().Interact(ctx, dns.APIZonesPutInput{
 		Name:          strings.TrimSuffix(name, "."),
 		Authoritative: true,
 		HandlerConfigs: []map[string]string{
@@ -69,9 +70,9 @@ func TestAPIZonesPut(t *testing.T) {
 
 func TestAPIZonesDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 
 	name := tests.RandomString() + "."
 
@@ -85,7 +86,7 @@ func TestAPIZonesDelete(t *testing.T) {
 		tests.MustJSON(dns.Zone{}),
 	)
 
-	assert.NoError(t, role.APIZonesDelete().Interact(tests.Context(), dns.APIZonesDeleteInput{
+	assert.NoError(t, role.APIZonesDelete().Interact(ctx, dns.APIZonesDeleteInput{
 		Zone: name,
 	}, &struct{}{}))
 

@@ -16,12 +16,12 @@ type RoleInstance struct {
 	context context.Context
 }
 
-func (i *Instance) ForRole(roleId string) *RoleInstance {
+func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {
 	in := &RoleInstance{
 		log:     extconfig.Get().Logger().Named("role." + roleId),
 		roleId:  roleId,
 		parent:  i,
-		context: i.rootContext,
+		context: ctx,
 	}
 	return in
 }

@@ -15,7 +15,7 @@ import (
 func TestAuthOIDC(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
-	inst := rootInst.ForRole("api")
+	inst := rootInst.ForRole("api", ctx)
 
 	role := api.New(inst)
 	assert.NoError(t, role.Start(ctx, []byte(tests.MustJSON(api.RoleConfig{

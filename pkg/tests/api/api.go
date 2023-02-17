@@ -14,9 +14,9 @@ import (
 )
 
 func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
-	inst := rootInst.ForRole("api")
-	role := roleAPI.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := roleAPI.New(inst)
 	role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
 		ListenOverride: "localhost:8008",
 	})))

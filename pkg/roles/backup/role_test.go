@@ -17,9 +17,9 @@ const (
 
 func getRole() *backup.Role {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("backup")
-	role := backup.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("backup", ctx)
+	role := backup.New(inst)
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
 		Endpoint:  "http://localhost:9000",
@@ -35,10 +35,10 @@ func getRole() *backup.Role {
 
 func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("backup")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("backup", ctx)
 	role := backup.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Equal(t, roles.ErrRoleNotConfigured, role.Start(ctx, []byte{}))
 	role.Stop()
 }
@@ -49,10 +49,10 @@ func TestRoleStart(t *testing.T) {
 
 func TestSaveBackup(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("backup")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("backup", ctx)
 	role := backup.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
 		Endpoint:  "http://localhost:9000",
@@ -64,7 +64,7 @@ func TestSaveBackup(t *testing.T) {
 	})
 	assert.Nil(t, role.Start(ctx, []byte(cfg)))
 	defer role.Stop()
-	status := role.SaveSnapshot()
+	status := role.SaveSnapshot(ctx)
 	assert.Equal(t, "", status.Error)
 	assert.Equal(t, "success", status.Status)
 }

@@ -12,7 +12,7 @@ import (
 func TestEvents(t *testing.T) {
 	rootInst := instance.New()
 	called := false
-	rootInst.ForRole("test").AddEventListener("test-topic", func(ev *roles.Event) {
+	rootInst.ForRole("test", tests.Context()).AddEventListener("test-topic", func(ev *roles.Event) {
 		called = true
 	})
 	rootInst.DispatchEvent("test-topic", roles.NewEvent(tests.Context(), map[string]interface{}{}))

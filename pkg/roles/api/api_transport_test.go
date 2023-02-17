@@ -15,9 +15,9 @@ import (
 
 func TestExport(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
@@ -29,7 +29,7 @@ func TestExport(t *testing.T) {
 		clientv3.WithPrefix(),
 	)
 	_, err := extconfig.Get().EtcdClient().Put(
-		tests.Context(),
+		ctx,
 		"/foo",
 		"bar",
 	)
@@ -49,9 +49,9 @@ func TestExport(t *testing.T) {
 
 func TestImport(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
@@ -72,7 +72,7 @@ func TestImport(t *testing.T) {
 	err := role.APIClusterImport().Interact(ctx, entries, &struct{}{})
 	assert.NoError(t, err)
 	res, err := extconfig.Get().EtcdClient().Get(
-		tests.Context(),
+		ctx,
 		"foo",
 	)
 	assert.NoError(t, err)

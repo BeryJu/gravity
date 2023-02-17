@@ -14,9 +14,10 @@ import (
 
 func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	inst.KV().Delete(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
@@ -24,7 +25,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 		clientv3.WithPrefix(),
 	)
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
@@ -42,7 +43,6 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	)
 	role := dns.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 

@@ -12,9 +12,9 @@ import (
 
 func TestAPISubnetsGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
-	role := discovery.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
+	role := discovery.New(inst)
 
 	inst.KV().Put(
 		ctx,
@@ -33,11 +33,12 @@ func TestAPISubnetsGet(t *testing.T) {
 
 func TestAPISubnetsPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
 	role := discovery.New(inst)
 
 	name := tests.RandomString()
-	assert.NoError(t, role.APISubnetsPut().Interact(tests.Context(), discovery.APISubnetsPutInput{
+	assert.NoError(t, role.APISubnetsPut().Interact(ctx, discovery.APISubnetsPutInput{
 		Name: name,
 	}, &struct{}{}))
 
@@ -55,9 +56,9 @@ func TestAPISubnetsPut(t *testing.T) {
 
 func TestAPISubnetsDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
-	role := discovery.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
+	role := discovery.New(inst)
 
 	name := tests.RandomString()
 
@@ -71,7 +72,7 @@ func TestAPISubnetsDelete(t *testing.T) {
 		tests.MustJSON(discovery.Subnet{}),
 	)
 
-	assert.NoError(t, role.APISubnetsDelete().Interact(tests.Context(), discovery.APISubnetsDeleteInput{
+	assert.NoError(t, role.APISubnetsDelete().Interact(ctx, discovery.APISubnetsDeleteInput{
 		Name: name,
 	}, &struct{}{}))
 

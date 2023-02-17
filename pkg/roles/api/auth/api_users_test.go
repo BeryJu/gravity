@@ -15,9 +15,9 @@ import (
 
 func TestAPIUsersGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	inst.KV().Put(
@@ -37,20 +37,21 @@ func TestAPIUsersGet(t *testing.T) {
 
 func TestAPIUsersPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
 	password := tests.RandomString()
 
-	assert.NoError(t, prov.APIUsersPut().Interact(tests.Context(), auth.APIUsersPutInput{
+	assert.NoError(t, prov.APIUsersPut().Interact(ctx, auth.APIUsersPutInput{
 		Username: name,
 		Password: password,
 	}, &struct{}{}))
 
 	_, err := inst.KV().Get(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
@@ -61,7 +62,7 @@ func TestAPIUsersPut(t *testing.T) {
 
 	var loginOutput auth.APILoginOutput
 	sess := role.SessionStore()
-	ctx := context.WithValue(tests.Context(), types.RequestSession, sessions.NewSession(sess, types.SessionName))
+	ctx = context.WithValue(tests.Context(), types.RequestSession, sessions.NewSession(sess, types.SessionName))
 	assert.NoError(t, prov.APILogin().Interact(ctx, &auth.APILoginInput{
 		Username: name,
 		Password: password,
@@ -71,9 +72,9 @@ func TestAPIUsersPut(t *testing.T) {
 
 func TestAPIUsersDelete(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("api")
-	role := api.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("api", ctx)
+	role := api.New(inst)
 	prov := auth.NewAuthProvider(role, inst)
 
 	name := tests.RandomString()
@@ -88,7 +89,7 @@ func TestAPIUsersDelete(t *testing.T) {
 		tests.MustJSON(auth.User{}),
 	)
 
-	assert.NoError(t, prov.APIUsersDelete().Interact(tests.Context(), auth.APIUsersDeleteInput{
+	assert.NoError(t, prov.APIUsersDelete().Interact(ctx, auth.APIUsersDeleteInput{
 		Username: name,
 	}, &struct{}{}))
 

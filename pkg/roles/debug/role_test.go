@@ -11,20 +11,20 @@ import (
 
 func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("debug")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("debug", ctx)
 	role := debug.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.NoError(t, role.Start(ctx, []byte{}))
 	defer role.Stop()
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("debug")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("debug", ctx)
 	role := debug.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.NoError(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 }

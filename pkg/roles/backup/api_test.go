@@ -36,9 +36,10 @@ func TestAPIBackupStarNoWait(t *testing.T) {
 
 func TestAPIBackupStatus(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("backup")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("backup", ctx)
 	inst.KV().Delete(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 		).Prefix(true).String(),
@@ -51,7 +52,7 @@ func TestAPIBackupStatus(t *testing.T) {
 	defer role.Stop()
 
 	var output backup.APIBackupStatusOutput
-	assert.NoError(t, role.APIBackupStatus().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIBackupStatus().Interact(ctx, struct{}{}, &output))
 	assert.Equal(t, backup.BackupStatusSuccess, output.Status[0].Status)
 	assert.Equal(t, extconfig.Get().Instance.Identifier, output.Status[0].Node)
 }

@@ -15,8 +15,8 @@ import (
 
 func Cleanup() {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
 	inst.KV().Delete(
 		ctx,
 		inst.KV().Key(
@@ -39,9 +39,9 @@ var DHCPRequestPayload = []byte{1, 1, 6, 0, 136, 9, 170, 249, 0, 0, 0, 0, 0, 0, 
 
 func TestDHCPRequest(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	Cleanup()
 
 	inst.KV().Put(
@@ -80,9 +80,9 @@ func TestDHCPRequest(t *testing.T) {
 
 func TestDHCPRequestDNS(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	Cleanup()
 
 	inst.KV().Put(

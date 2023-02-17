@@ -11,10 +11,10 @@ import (
 
 func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	cfg := tests.MustJSON(&dhcp.RoleConfig{
 		Port: 1067,
 	})

@@ -11,26 +11,26 @@ import (
 
 func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
 	var output dhcp.APIRoleConfigOutput
-	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(ctx, struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dhcp")
-	role := dhcp.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dhcp.APIRoleConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, dhcp.APIRoleConfigInput{
 		Config: dhcp.RoleConfig{
 			Port: 613,
 		},

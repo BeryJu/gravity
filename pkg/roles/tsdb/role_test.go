@@ -19,14 +19,14 @@ func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 
-	apiRole := api.New(rootInst.ForRole("api"))
+	apiRole := api.New(rootInst.ForRole("api", ctx))
 	assert.NoError(t, apiRole.Start(ctx, []byte{}))
 	defer apiRole.Stop()
-	debugRole := debug.New(rootInst.ForRole("debug"))
+	debugRole := debug.New(rootInst.ForRole("debug", ctx))
 	assert.NoError(t, debugRole.Start(ctx, []byte{}))
 	defer debugRole.Stop()
 
-	inst := rootInst.ForRole("tsdb")
+	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
 	assert.NotNil(t, role)
 	assert.NoError(t, role.Start(ctx, []byte{}))
@@ -35,20 +35,20 @@ func TestRoleStartNoConfig(t *testing.T) {
 
 func TestRoleStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("tsdb")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.NoError(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 }
 
 func TestRoleStartNotEnabled(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("tsdb")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Error(t, roles.ErrRoleNotConfigured, role.Start(ctx, []byte(tests.MustJSON(tsdb.RoleConfig{
 		Enabled: false,
 	}))))
@@ -57,9 +57,9 @@ func TestRoleStartNotEnabled(t *testing.T) {
 
 func TestRoleWrite(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("tsdb")
-	role := tsdb.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("tsdb", ctx)
+	role := tsdb.New(inst)
 	assert.NoError(t, role.Start(ctx, []byte("{}")))
 	defer role.Stop()
 	nameBeforeWrite := tests.RandomString()

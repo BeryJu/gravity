@@ -15,7 +15,7 @@ func TestDHCPImport(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	// Create DHCP role to register API routes
-	dhcp.New(rootInst.ForRole("dhcp"))
+	dhcp.New(rootInst.ForRole("dhcp", ctx))
 
 	files := []string{
 		"./test_a.xml",

@@ -17,20 +17,20 @@ func RoleConfig() []byte {
 
 func TestRoleDNSStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte{}))
 	role.Stop()
 }
 
 func TestRoleDNSStartEmptyConfig(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte("{}")))
 	role.Stop()
 }

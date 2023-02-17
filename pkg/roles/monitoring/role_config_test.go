@@ -11,26 +11,26 @@ import (
 
 func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
-	role := monitoring.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
+	role := monitoring.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
 	var output monitoring.APIRoleConfigOutput
-	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(ctx, struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("monitoring")
-	role := monitoring.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("monitoring", ctx)
+	role := monitoring.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), monitoring.APIRoleConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, monitoring.APIRoleConfigInput{
 		Config: monitoring.RoleConfig{
 			Port: 1234,
 		},

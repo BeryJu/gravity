@@ -33,7 +33,7 @@ type ClusterInfo struct {
 
 type RoleContext struct {
 	Role              roles.Role
-	Context           context.Context
+	RoleInstance      *RoleInstance
 	ContextCancelFunc context.CancelFunc
 }
 
@@ -82,24 +82,33 @@ func (i *Instance) Role(id string) roles.Role {
 
 func (i *Instance) Start() {
 	i.log.Info("Gravity starting", zap.String("version", extconfig.FullVersion()))
-	go i.startSentry()
+	i.startSentry()
+	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
-		i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
-		i.etcd = etcd.New(i.ForRole("etcd"))
-		if i.etcd == nil {
-			i.Stop()
-			return
-		}
-		err := i.etcd.Start(i.rootContext)
-		if err != nil {
-			i.log.Warn("failed to start etcd", zap.Error(err))
-			i.Stop()
+		if !i.startEtcd(bs.Context()) {
 			return
 		}
 	}
-	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
 	i.bootstrap(bs.Context())
 	<-i.rootContext.Done()
+}
+
+func (i *Instance) startEtcd(ctx context.Context) bool {
+	i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
+	es := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.bootstrap_etcd")
+	defer es.Finish()
+	i.etcd = etcd.New(i.ForRole("etcd", es.Context()))
+	if i.etcd == nil {
+		i.Stop()
+		return false
+	}
+	err := i.etcd.Start(es.Context())
+	if err != nil {
+		i.log.Warn("failed to start etcd", zap.Error(err))
+		i.Stop()
+		return false
+	}
+	return true
 }
 
 func (i *Instance) startSentry() {
@@ -163,31 +172,31 @@ func (i *Instance) bootstrap(ctx context.Context) {
 	i.keepAliveInstanceInfo(ctx)
 	i.putInstanceInfo(ctx)
 	i.setupInstanceAPI()
+	rootInstance := i.ForRole("root", ctx)
 	for _, roleId := range i.getRoles(ctx) {
 		instanceRoles.WithLabelValues(roleId).Add(1)
 		rctx, cancel := context.WithCancel(i.rootContext)
 		rc := RoleContext{
-			Context:           rctx,
+			RoleInstance:      i.ForRole(roleId, rctx),
 			ContextCancelFunc: cancel,
 		}
-		roleInst := i.ForRole(roleId)
 		switch roleId {
 		case "dhcp":
-			rc.Role = dhcp.New(roleInst)
+			rc.Role = dhcp.New(rc.RoleInstance)
 		case "dns":
-			rc.Role = dns.New(roleInst)
+			rc.Role = dns.New(rc.RoleInstance)
 		case "api":
-			rc.Role = api.New(roleInst)
+			rc.Role = api.New(rc.RoleInstance)
 		case "discovery":
-			rc.Role = discovery.New(roleInst)
+			rc.Role = discovery.New(rc.RoleInstance)
 		case "backup":
-			rc.Role = backup.New(roleInst)
+			rc.Role = backup.New(rc.RoleInstance)
 		case "monitoring":
-			rc.Role = monitoring.New(roleInst)
+			rc.Role = monitoring.New(rc.RoleInstance)
 		case "debug":
-			rc.Role = debug.New(roleInst)
+			rc.Role = debug.New(rc.RoleInstance)
 		case "tsdb":
-			rc.Role = tsdb.New(roleInst)
+			rc.Role = tsdb.New(rc.RoleInstance)
 		case "etcd":
 			// Special case
 			continue
@@ -199,8 +208,8 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		i.roles[roleId] = rc
 		i.rolesM.Unlock()
 	}
-	i.ForRole("root").AddEventListener(types.EventTopicRoleRestart, i.eventRoleRestart)
-	i.ForRole("root").DispatchEvent(
+	rootInstance.AddEventListener(types.EventTopicRoleRestart, i.eventRoleRestart)
+	rootInstance.DispatchEvent(
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
@@ -227,7 +236,7 @@ func (i *Instance) eventRoleRestart(ev *roles.Event) {
 }
 
 func (i *Instance) checkFirstStart(ctx context.Context) {
-	inst := i.ForRole("root")
+	inst := i.ForRole("root", ctx)
 	cluster, err := inst.KV().Get(
 		ctx,
 		inst.KV().Key(
@@ -329,7 +338,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	defer srs.Finish()
 	defer i.putInstanceInfo(srs.Context())
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
-	err := i.roles[id].Role.Start(i.roles[id].Context, rawConfig)
+	err := i.roles[id].Role.Start(srs.Context(), rawConfig)
 	if err == roles.ErrRoleNotConfigured {
 		i.log.Info("role not configured", zap.String("roleId", id))
 	} else if err != nil {
@@ -360,7 +369,7 @@ func (i *Instance) stopRole(ctx context.Context, id string) {
 	i.rolesM.Lock()
 	i.roles[id] = RoleContext{
 		Role:              i.roles[id].Role,
-		Context:           ctx,
+		RoleInstance:      i.ForRole(id, ctx),
 		ContextCancelFunc: cancel,
 	}
 	i.rolesM.Unlock()

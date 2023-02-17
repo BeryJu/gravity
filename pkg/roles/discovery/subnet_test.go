@@ -20,10 +20,10 @@ func TestDiscoveryDocker(t *testing.T) {
 		return
 	}
 	rootInst := instance.New()
-	inst := rootInst.ForRole("discovery")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("discovery", ctx)
 	role := discovery.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, []byte(tests.MustJSON(discovery.RoleConfig{
 		Enabled: true,
 	}))))

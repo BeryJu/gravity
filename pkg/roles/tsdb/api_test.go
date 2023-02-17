@@ -15,9 +15,10 @@ import (
 
 func TestAPIMetricsMemory(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("metrics")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("metrics", ctx)
 	inst.KV().Delete(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 		).Prefix(true).String(),
@@ -25,19 +26,19 @@ func TestAPIMetricsMemory(t *testing.T) {
 	)
 
 	role := tsdb.New(inst)
-	ctx := tests.Context()
 	assert.NoError(t, role.Start(ctx, []byte{}))
 	inst.DispatchEvent(types.EventTopicTSDBWrite, roles.NewEvent(ctx, map[string]interface{}{}))
 
 	var output types.APIMetricsGetOutput
-	assert.NoError(t, role.APIMetricsMemory().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIMetricsMemory().Interact(ctx, struct{}{}, &output))
 	assert.Equal(t, extconfig.Get().Instance.Identifier, output.Records[0].Node)
 	assert.Equal(t, 1, len(output.Records))
 }
 
 func TestAPIMetricsCPU(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("metrics")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("metrics", ctx)
 	inst.KV().Delete(
 		tests.Context(),
 		inst.KV().Key(
@@ -47,12 +48,11 @@ func TestAPIMetricsCPU(t *testing.T) {
 	)
 
 	role := tsdb.New(inst)
-	ctx := tests.Context()
 	assert.NoError(t, role.Start(ctx, []byte{}))
 	inst.DispatchEvent(types.EventTopicTSDBWrite, roles.NewEvent(ctx, map[string]interface{}{}))
 
 	var output types.APIMetricsGetOutput
-	assert.NoError(t, role.APIMetricsCPU().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIMetricsCPU().Interact(ctx, struct{}{}, &output))
 	assert.Equal(t, extconfig.Get().Instance.Identifier, output.Records[0].Node)
 	assert.Equal(t, 1, len(output.Records))
 }

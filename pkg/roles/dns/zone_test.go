@@ -12,9 +12,10 @@ import (
 
 func TestRoleDNSZoneFind(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
 	inst.KV().Put(
-		tests.Context(),
+		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
@@ -31,7 +32,6 @@ func TestRoleDNSZoneFind(t *testing.T) {
 	)
 	role := dns.New(inst)
 	assert.NotNil(t, role)
-	ctx := tests.Context()
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 	zone := role.FindZone("foo.bar.")

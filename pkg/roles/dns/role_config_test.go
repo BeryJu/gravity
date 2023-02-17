@@ -11,26 +11,26 @@ import (
 
 func TestAPIRoleConfigGet(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
 	var output dns.APIRoleConfigOutput
-	assert.NoError(t, role.APIRoleConfigGet().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, role.APIRoleConfigGet().Interact(ctx, struct{}{}, &output))
 	assert.NotNil(t, output)
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
 	rootInst := instance.New()
-	inst := rootInst.ForRole("dns")
-	role := dns.New(inst)
 	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	role := dns.New(inst)
 	role.Start(ctx, []byte{})
 	defer role.Stop()
 
-	assert.NoError(t, role.APIRoleConfigPut().Interact(tests.Context(), dns.APIRoleConfigInput{
+	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, dns.APIRoleConfigInput{
 		Config: dns.RoleConfig{
 			Port: 1054,
 		},
