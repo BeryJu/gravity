@@ -52,7 +52,7 @@ func (c *Client) trace(ctx context.Context, op string, key string) func() {
 	tx := sentry.TransactionFromContext(ctx)
 	if tx == nil {
 		if c.debug {
-			c.log.Warn("etcd op without transaction", zap.String("key", key))
+			c.log.Warn("etcd op without transaction", zap.String("key", key), zap.String("op", op))
 		}
 		return func() {}
 	}

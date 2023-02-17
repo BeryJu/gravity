@@ -132,22 +132,24 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) write(ctx context.Context) {
-	tx := sentry.StartTransaction(ctx, "gravity.tsdb.write")
-	defer tx.Finish()
+	ss := sentry.StartSpan(ctx, "gravity.tsdb.write")
+	defer ss.Finish()
 	r.log.Debug("writing metrics")
-	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(tx.Context(), map[string]interface{}{}))
+	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(ss.Context(), map[string]interface{}{}))
 	r.ms.RLock()
 	defer r.ms.RUnlock()
 	// Don't bother granting a lease if we don't have any metrics
 	if len(r.m) < 1 {
 		return
 	}
-	lease, err := r.i.KV().Grant(tx.Context(), r.cfg.Expire)
+	lease, err := r.i.KV().Grant(ss.Context(), r.cfg.Expire)
 	if err != nil {
 		r.log.Warn("failed to grant lease, skipping write", zap.Error(err))
 		return
 	}
 	for rkey, value := range r.m {
+		ks := ss.StartChild("gravity.tsdb.write_key")
+		ks.Description = rkey
 		key := r.i.KV().Key(
 			types.KeyRole,
 			rkey,
@@ -155,7 +157,7 @@ func (r *Role) write(ctx context.Context) {
 			strconv.FormatInt(time.Now().Unix(), 10),
 		).String()
 		_, err := r.i.KV().Put(
-			tx.Context(),
+			ks.Context(),
 			key,
 			strconv.Itoa(value.Value),
 			clientv3.WithLease(lease.ID),
@@ -167,6 +169,7 @@ func (r *Role) write(ctx context.Context) {
 			value.Value = 0
 			r.m[rkey] = value
 		}
+		defer ks.Finish()
 	}
 }
 

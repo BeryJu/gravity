@@ -148,7 +148,7 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	return z, nil
 }
 
-func (z *Zone) Init() {
+func (z *Zone) Init(ctx context.Context) {
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"]
 		var handler Handler
@@ -170,10 +170,10 @@ func (z *Zone) Init() {
 	}
 
 	// start watching all records in this zone, in case etcd goes down
-	go z.watchZoneRecords()
+	go z.watchZoneRecords(ctx)
 }
 
-func (z *Zone) watchZoneRecords() {
+func (z *Zone) watchZoneRecords(ctx context.Context) {
 	evtHandler := func(ev *clientv3.Event) {
 		z.recordsSync.Lock()
 		defer z.recordsSync.Unlock()
@@ -197,7 +197,7 @@ func (z *Zone) watchZoneRecords() {
 			z.records[rec.recordKey][rec.uid] = rec
 		}
 	}
-	ctx, canc := context.WithCancel(context.Background())
+	ctx, canc := context.WithCancel(ctx)
 	z.recordsWatchCtx = canc
 
 	prefix := z.inst.KV().Key(z.etcdKey).Prefix(true).String()
@@ -206,7 +206,7 @@ func (z *Zone) watchZoneRecords() {
 	if err != nil {
 		z.log.Warn("failed to list initial records", zap.Error(err))
 		time.Sleep(5 * time.Second)
-		z.watchZoneRecords()
+		z.watchZoneRecords(ctx)
 		return
 	}
 	for _, record := range records.Kvs {

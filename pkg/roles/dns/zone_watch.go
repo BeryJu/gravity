@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
+func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue, ctx context.Context) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	relKey := strings.TrimPrefix(string(kv.Key), prefix)
 	// we only care about zone-level updates, everything underneath doesn't matter
@@ -30,7 +30,7 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool 
 			r.log.Warn("failed to convert zone from event", zap.Error(err))
 			return true
 		}
-		z.Init()
+		z.Init(ctx)
 		if oldZone, ok := r.zones[z.Name]; ok {
 			oldZone.StopWatchingRecords()
 		}
@@ -61,7 +61,7 @@ func (r *Role) loadInitialZones(ctx context.Context) {
 		return
 	}
 	for _, zone := range zones.Kvs {
-		r.handleZoneOp(mvccpb.PUT, zone)
+		r.handleZoneOp(mvccpb.PUT, zone, ctx)
 	}
 }
 
@@ -73,7 +73,7 @@ func (r *Role) startWatchZones(ctx context.Context) {
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
-			if r.handleZoneOp(event.Type, event.Kv) {
+			if r.handleZoneOp(event.Type, event.Kv, ctx) {
 				r.log.Debug("zone watch update", zap.String("key", string(event.Kv.Key)))
 			}
 		}
