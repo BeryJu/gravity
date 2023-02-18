@@ -55,10 +55,12 @@ func (r *Role) loadInitialZones(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil && !errors.Is(err, context.Canceled) {
+	if err != nil {
 		r.log.Warn("failed to list initial zones", zap.Error(err))
-		time.Sleep(5 * time.Second)
-		r.loadInitialZones(ctx)
+		if !errors.Is(err, context.Canceled) {
+			time.Sleep(5 * time.Second)
+			r.loadInitialZones(ctx)
+		}
 		return
 	}
 	for _, zone := range zones.Kvs {

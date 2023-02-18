@@ -40,10 +40,12 @@ func (r *Role) loadInitialLeases(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil && !errors.Is(err, context.Canceled) {
+	if err != nil {
 		r.log.Warn("failed to list initial leases", zap.Error(err))
-		time.Sleep(5 * time.Second)
-		r.loadInitialLeases(ctx)
+		if !errors.Is(err, context.Canceled) {
+			time.Sleep(5 * time.Second)
+			r.loadInitialLeases(ctx)
+		}
 		return
 	}
 	for _, lease := range leases.Kvs {

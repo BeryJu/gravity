@@ -48,10 +48,12 @@ func (r *Role) loadInitialScopes(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil && !errors.Is(err, context.Canceled) {
+	if err != nil {
 		r.log.Warn("failed to list initial scopes", zap.Error(err))
-		time.Sleep(5 * time.Second)
-		r.loadInitialScopes(ctx)
+		if !errors.Is(err, context.Canceled) {
+			time.Sleep(5 * time.Second)
+			r.loadInitialScopes(ctx)
+		}
 		return
 	}
 	for _, scope := range scopes.Kvs {

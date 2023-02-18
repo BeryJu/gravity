@@ -14,9 +14,9 @@ func TestRoleStartNoConfig(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
+	defer role.Stop()
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, []byte{}))
-	role.Stop()
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
@@ -24,7 +24,7 @@ func TestRoleStartEmptyConfig(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
+	defer role.Stop()
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, []byte("{}")))
-	role.Stop()
 }
