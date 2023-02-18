@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"testing"
@@ -31,7 +32,7 @@ func TestAuthOIDC(t *testing.T) {
 	defer role.Stop()
 	tests.WaitForPort(8008)
 
-	res, err := http.DefaultClient.Get("http://localhost:8008/auth/oidc")
+	res, err := http.DefaultClient.Get(fmt.Sprintf("http://%s/auth/oidc", tests.Listen(8008)))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
 	assert.True(t, strings.HasPrefix(res.Request.URL.String(), "http://127.0.0.1:5556/dex/auth/local"))
