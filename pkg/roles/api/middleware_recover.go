@@ -3,7 +3,6 @@ package api
 import (
 	"net/http"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 )
@@ -12,7 +11,7 @@ func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
-				err := extconfig.RecoverWrapper(recover())
+				err := recover()
 				if err == nil {
 					return
 				}

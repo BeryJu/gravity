@@ -3,7 +3,6 @@ package dhcp
 import (
 	"encoding/hex"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.uber.org/zap"
@@ -12,7 +11,7 @@ import (
 func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 	return func(req *Request4) *dhcpv4.DHCPv4 {
 		defer func() {
-			err := extconfig.RecoverWrapper(recover())
+			err := recover()
 			if err == nil {
 				return
 			}

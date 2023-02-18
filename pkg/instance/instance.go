@@ -280,7 +280,7 @@ func (i *Instance) checkFirstStart(ctx context.Context) {
 
 func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback func()) {
 	defer func() {
-		err := extconfig.RecoverWrapper(recover())
+		err := recover()
 		if err == nil {
 			return
 		}
