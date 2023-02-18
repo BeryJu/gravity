@@ -46,6 +46,6 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	tests.WaitForPort(extconfig.Get().Listen(1054))
+	tests.WaitForPort(1054)
 	assert.Equal(t, []string{"0.0.0.0", "::"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
 }

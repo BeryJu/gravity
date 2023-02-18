@@ -1,6 +1,8 @@
 package dhcp
 
 import (
+	"fmt"
+
 	"beryju.io/gravity/pkg/roles"
 	"go.uber.org/zap"
 )
@@ -14,7 +16,7 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 	r.scopesM.RLock()
 	scope := r.scopes[scopeName]
 	r.scopesM.RUnlock()
-
+	fmt.Println(scope.log)
 	lease := &Lease{
 		Identifier: ident,
 

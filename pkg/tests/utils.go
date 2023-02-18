@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
@@ -54,9 +55,17 @@ func HasLocalDocker() bool {
 	return runtime.GOOS == "linux"
 }
 
-func WaitForPort(listen string) {
+func Listen(port int32) string {
+	if runtime.GOOS == "darwin" {
+		return fmt.Sprintf(":%d", port)
+	}
+	return extconfig.Get().Listen(port)
+}
+
+func WaitForPort(port int32) {
 	max := 30
 	try := 0
+	listen := Listen(port)
 	for {
 		ln, err := net.Listen("tcp", listen)
 		if ln != nil {

@@ -50,6 +50,6 @@ func TestRoleDNSHandlerEtcd(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	tests.WaitForPort(extconfig.Get().Listen(1054))
+	tests.WaitForPort(1054)
 	assert.Equal(t, []string{"10.1.2.3"}, tests.DNSLookup("foo.", extconfig.Get().Listen(1054)))
 }

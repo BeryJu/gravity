@@ -5,6 +5,7 @@
         "DEBUG": "true",
         "INSTANCE_IP": "0.0.0.0"
     },
+    "go.testFlags": ["-count=1"],
     "gitlens.autolinks": [
         {
             "alphanumeric": true,

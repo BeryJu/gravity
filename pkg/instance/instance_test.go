@@ -3,7 +3,6 @@ package instance_test
 import (
 	"encoding/base64"
 	"testing"
-	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
@@ -71,30 +70,26 @@ func TestWatch(t *testing.T) {
 		"api",
 	)
 
+	inst.AddEventListener(types.EventTopicRolesStarted, func(ev *roles.Event) {
+		// once all roles are started, write a new config to trigger a restart
+		inst.KV().Put(
+			ctx,
+			inst.KV().Key(
+				types.KeyInstance,
+				types.KeyRole,
+				"api",
+			).String(),
+			tests.MustJSON(api.RoleConfig{
+				CookieSecret: base64.StdEncoding.EncodeToString([]byte("bar")),
+				Port:         8008,
+			}),
+		)
+	})
 	inst.AddEventListener(types.EventTopicRoleStarted, func(ev *roles.Event) {
 		if ev.Payload.Data["role"] != "api" {
 			return
 		}
 		called += 1
-		if called == 1 {
-			go func() {
-				// Yes this is a bit hacky, but we need to wait for the role to finish starting
-				// and the etcd watcher to start
-				time.Sleep(5 * time.Second)
-				inst.KV().Put(
-					ctx,
-					inst.KV().Key(
-						types.KeyInstance,
-						types.KeyRole,
-						"api",
-					).String(),
-					tests.MustJSON(api.RoleConfig{
-						CookieSecret: base64.StdEncoding.EncodeToString([]byte("bar")),
-						Port:         8008,
-					}),
-				)
-			}()
-		}
 		if called == 2 {
 			defer rootInst.Stop()
 		}

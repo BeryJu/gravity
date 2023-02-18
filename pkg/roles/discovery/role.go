@@ -60,7 +60,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		return roles.ErrRoleNotConfigured
 	}
-	r.startWatchSubnets()
+	go r.startWatchSubnets()
 	return nil
 }
 
