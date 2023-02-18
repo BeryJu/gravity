@@ -2,6 +2,7 @@ package dns
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -54,7 +55,7 @@ func (r *Role) loadInitialZones(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil {
+	if err != nil && !errors.Is(err, context.Canceled) {
 		r.log.Warn("failed to list initial zones", zap.Error(err))
 		time.Sleep(5 * time.Second)
 		r.loadInitialZones(ctx)

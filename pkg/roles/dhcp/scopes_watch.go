@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -47,10 +48,10 @@ func (r *Role) loadInitialScopes(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil {
+	if err != nil && !errors.Is(err, context.Canceled) {
 		r.log.Warn("failed to list initial scopes", zap.Error(err))
 		time.Sleep(5 * time.Second)
-		r.startWatchScopes()
+		r.loadInitialScopes(ctx)
 		return
 	}
 	for _, scope := range scopes.Kvs {

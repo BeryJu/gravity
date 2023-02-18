@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -39,10 +40,10 @@ func (r *Role) loadInitialLeases(ctx context.Context) {
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
 	)
-	if err != nil {
+	if err != nil && !errors.Is(err, context.Canceled) {
 		r.log.Warn("failed to list initial leases", zap.Error(err))
 		time.Sleep(5 * time.Second)
-		r.startWatchLeases()
+		r.loadInitialLeases(ctx)
 		return
 	}
 	for _, lease := range leases.Kvs {
