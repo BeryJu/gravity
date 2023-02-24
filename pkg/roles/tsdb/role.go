@@ -169,7 +169,7 @@ func (r *Role) write(ctx context.Context) {
 			value.Value = 0
 			r.m[rkey] = value
 		}
-		defer ks.Finish()
+		ks.Finish()
 	}
 }
 
