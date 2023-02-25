@@ -30,8 +30,7 @@ jobs:
         run: make test-env-start
       - name: Run tests & coverage
         run: |
-          sudo apt-get install -y nmap
-          make test
+          make install-deps test
       - name: Stop test env
         if: ${{ always() }}
         run: make test-env-stop
@@ -56,6 +55,9 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: Install deps
+        run: |
+          make install-deps
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:

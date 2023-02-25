@@ -99,6 +99,9 @@ test-env-stop:
 	cd hack/tests/
 	docker compose --project-name gravity-test-env down -v
 
+install-deps:
+	sudo apt-get install -y nmap libpcap-dev
+
 test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
 	export ETCD_ENDPOINT="localhost:2379"
