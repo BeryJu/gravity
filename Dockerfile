@@ -51,8 +51,6 @@ RUN apt-get update && \
     echo ". /etc/bash_completion" >> /etc/bash.bashrc
 
 COPY --from=builder /workspace/gravity /bin/gravity
-# For debugging purposes
-COPY --from=quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcdctl /usr/bin/etcdctl
 
 RUN /bin/gravity completion bash > /etc/bash_completion.d/gravity
 
