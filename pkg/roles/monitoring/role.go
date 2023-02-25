@@ -28,7 +28,7 @@ type Role struct {
 }
 
 //go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
-var blockyReg = prometheus.NewRegistry()
+var blockyReg *prometheus.Registry
 
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
