@@ -146,6 +146,7 @@ func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 	status.Size = i.Size
 	status.Filename = fileName
 	status.Duration = int64(finish.Seconds())
+	status.Time = time.Now()
 	return status
 }
 
