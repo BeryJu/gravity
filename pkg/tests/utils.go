@@ -66,6 +66,7 @@ func WaitForPort(port int32) {
 	max := 30
 	try := 0
 	listen := Listen(port)
+	time.Sleep(500 * time.Millisecond)
 	for {
 		ln, err := net.Listen("tcp", listen)
 		if ln != nil {
