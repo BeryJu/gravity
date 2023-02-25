@@ -15,6 +15,5 @@ var etcdctlCommand *cobra.Command
 var globalFlags command.GlobalFlags
 
 func init() {
-	globalFlags.OutputFormat = "table"
 	cliCmd.AddCommand(etcdctlCommand)
 }

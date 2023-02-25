@@ -103,6 +103,6 @@ test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
 	export ETCD_ENDPOINT="localhost:2379"
 	export DEBUG="true"
-	go run -v . cli etcdctl del --prefix / || true
+	go run -v . cli etcdctl del --prefix /
 	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=1 -v ./...
 	go tool cover -html coverage.txt -o coverage.html
