@@ -3,7 +3,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.4.10"
+VERSION = "0.4.11"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -45,6 +45,7 @@ gen-clean:
 	rm -rf gen-ts-api/
 
 gen-tag:
+	git add Makefile
 	cd ${PWD}
 	git commit -m "tag version v${VERSION}"
 	git tag v${VERSION}
