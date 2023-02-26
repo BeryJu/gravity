@@ -127,7 +127,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 
 func (r *Role) newZone(name string) *Zone {
 	return &Zone{
-		Name:        name,
+		Name:        strings.ToLower(name),
 		DefaultTTL:  DefaultTTL,
 		inst:        r.i,
 		h:           make([]Handler, 0),
@@ -243,11 +243,11 @@ func (z *Zone) put(ctx context.Context) error {
 
 	_, err = z.inst.KV().Put(
 		ctx,
-		z.inst.KV().Key(
+		strings.ToLower(z.inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
 			z.Name,
-		).String(),
+		).String()),
 		string(raw),
 	)
 	if err != nil {

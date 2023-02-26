@@ -54,9 +54,9 @@ func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	return rec, nil
 }
 
-func (z *Zone) newRecord(name, t string) *Record {
+func (z *Zone) newRecord(name string, t string) *Record {
 	return &Record{
-		Name: name,
+		Name: strings.ToLower(name),
 		Type: t,
 		inst: z.inst,
 		zone: z,
@@ -130,7 +130,7 @@ func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOptio
 	}
 	_, err = r.inst.KV().Put(
 		ctx,
-		leaseKey.String(),
+		strings.ToLower(leaseKey.String()),
 		string(raw),
 		opts...,
 	)
