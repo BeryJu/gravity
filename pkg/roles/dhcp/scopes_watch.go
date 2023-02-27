@@ -30,10 +30,10 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 			r.log.Warn("failed to convert scope from event", zap.Error(err))
 		} else {
 			s.calculateUsage()
-			r.log.Debug("added scope", zap.String("name", s.Name))
 			r.scopesM.Lock()
-			defer r.scopesM.Unlock()
 			r.scopes[s.Name] = s
+			r.scopesM.Unlock()
+			r.log.Debug("added scope", zap.String("name", s.Name))
 		}
 	}
 	return true

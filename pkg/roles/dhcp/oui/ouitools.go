@@ -248,7 +248,5 @@ type AddressBlock struct {
 
 // Contains reports whether the mac address belongs to the OUI
 func (b *AddressBlock) Contains(address HardwareAddr) bool {
-	//fmt.Println("%v %v %v %v", b.Oui, len(b.Oui), address.Mask(CIDRMask(b.Mask, len(b.Oui)*8)), CIDRMask(b.Mask, len(b.Oui)*8))
-
 	return (bytes.Equal(address.Mask(CIDRMask(b.Mask, len(b.Oui)*8)), b.Oui))
 }

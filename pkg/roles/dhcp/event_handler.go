@@ -1,8 +1,6 @@
 package dhcp
 
 import (
-	"fmt"
-
 	"beryju.io/gravity/pkg/roles"
 	"go.uber.org/zap"
 )
@@ -16,7 +14,10 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 	r.scopesM.RLock()
 	scope := r.scopes[scopeName]
 	r.scopesM.RUnlock()
-	fmt.Println(scope.log)
+	if scope == nil {
+		r.log.Warn("event to create lease with missing scope", zap.String("scopeName", scopeName))
+		return
+	}
 	lease := &Lease{
 		Identifier: ident,
 

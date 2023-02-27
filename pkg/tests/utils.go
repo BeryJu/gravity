@@ -51,6 +51,16 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 	}
 }
 
+func ResetEtcd(t *testing.T) {
+	ctx := Context()
+	_, err := extconfig.Get().EtcdClient().Delete(
+		ctx,
+		"/",
+		clientv3.WithPrefix(),
+	)
+	assert.NoError(t, err)
+}
+
 func HasLocalDocker() bool {
 	return runtime.GOOS == "linux"
 }

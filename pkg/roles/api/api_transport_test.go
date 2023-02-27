@@ -4,8 +4,6 @@ import (
 	"encoding/base64"
 	"testing"
 
-	clientv3 "go.etcd.io/etcd/client/v3"
-
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/api"
@@ -23,11 +21,7 @@ func TestExport(t *testing.T) {
 
 	var output api.APIExportOutput
 
-	extconfig.Get().EtcdClient().Delete(
-		ctx,
-		"/",
-		clientv3.WithPrefix(),
-	)
+	tests.ResetEtcd(t)
 	_, err := extconfig.Get().EtcdClient().Put(
 		ctx,
 		"/foo",
