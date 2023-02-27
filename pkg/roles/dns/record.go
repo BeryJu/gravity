@@ -118,19 +118,19 @@ func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOptio
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
-	leaseKey := r.inst.KV().Key(
+	recordKey := r.inst.KV().Key(
 		types.KeyRole,
 		types.KeyZones,
-		r.zone.Name,
-		r.Name,
+		strings.ToLower(r.zone.Name),
+		strings.ToLower(r.Name),
 		r.Type,
 	)
 	if r.uid != "" {
-		leaseKey.Add(r.uid)
+		recordKey.Add(r.uid)
 	}
 	_, err = r.inst.KV().Put(
 		ctx,
-		strings.ToLower(leaseKey.String()),
+		recordKey.String(),
 		string(raw),
 		opts...,
 	)

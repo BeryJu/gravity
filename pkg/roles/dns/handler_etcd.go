@@ -34,7 +34,7 @@ func (eh *EtcdHandler) answerSingleQuestion(k *storage.Key, question dns.Questio
 	answers := []dns.RR{}
 	es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 	defer es.Finish()
-	key := strings.ToLower(k.String())
+	key := k.String()
 	eh.log.Debug("fetching kv key", zap.String("key", key))
 	es.SetTag("gravity.dns.handler.etcd.key", key)
 	res, err := eh.z.inst.KV().Get(r.Context(), key, clientv3.WithPrefix())
@@ -59,7 +59,7 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 	m.Authoritative = eh.z.Authoritative
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
-		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String())
+		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(relRecordName), dns.Type(question.Qtype).String())
 		m.Answer = append(m.Answer, eh.answerSingleQuestion(fullRecordKey, question, r)...)
 	}
 	if len(m.Answer) < 1 {

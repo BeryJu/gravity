@@ -35,7 +35,7 @@ func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dn
 	defer ms.Finish()
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
-		fullRecordKey := strings.ToLower(eh.z.inst.KV().Key(eh.z.etcdKey, relRecordName, dns.Type(question.Qtype).String()).String())
+		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(relRecordName), dns.Type(question.Qtype).String()).String()
 		eh.z.recordsSync.RLock()
 		recs, ok := eh.z.records[fullRecordKey]
 		eh.z.recordsSync.RUnlock()

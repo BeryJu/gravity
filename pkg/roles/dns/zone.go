@@ -243,11 +243,11 @@ func (z *Zone) put(ctx context.Context) error {
 
 	_, err = z.inst.KV().Put(
 		ctx,
-		strings.ToLower(z.inst.KV().Key(
+		z.inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			z.Name,
-		).String()),
+			strings.ToLower(z.Name),
+		).String(),
 		string(raw),
 	)
 	if err != nil {
