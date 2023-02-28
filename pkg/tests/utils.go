@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 
@@ -30,8 +31,9 @@ func Context() context.Context {
 	return sentry.StartTransaction(ctx, "test").Context()
 }
 
-func RandomString() string {
-	return uuid.New().String()
+func RandomString(prefix ...string) string {
+	str := append(prefix, uuid.New().String())
+	return strings.Join(str, "-")
 }
 
 func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...interface{}) {

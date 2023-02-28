@@ -26,5 +26,5 @@ func TestRoleStartEmptyConfig(t *testing.T) {
 	role := api.New(inst)
 	defer role.Stop()
 	assert.NotNil(t, role)
-	assert.Nil(t, role.Start(ctx, []byte("{}")))
+	assert.Nil(t, role.Start(ctx, []byte(tests.MustJSON(api.RoleConfig{}))))
 }

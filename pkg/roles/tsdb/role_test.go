@@ -12,7 +12,6 @@ import (
 	"beryju.io/gravity/pkg/roles/tsdb/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestRoleStartNoConfig(t *testing.T) {
@@ -56,23 +55,19 @@ func TestRoleStartNotEnabled(t *testing.T) {
 }
 
 func TestRoleWrite(t *testing.T) {
+	tests.ResetEtcd(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
-	assert.NoError(t, role.Start(ctx, []byte("{}")))
+	assert.NoError(t, role.Start(ctx, []byte(tests.MustJSON(tsdb.RoleConfig{
+		Enabled: true,
+		Scrape:  0,
+	}))))
 	defer role.Stop()
-	nameBeforeWrite := tests.RandomString()
-	nameSet := tests.RandomString()
-	nameInc := tests.RandomString()
-
-	inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	)
+	nameBeforeWrite := tests.RandomString("before-write")
+	nameSet := tests.RandomString("set")
+	nameInc := tests.RandomString("inc")
 
 	inst.AddEventListener(types.EventTopicTSDBBeforeWrite, func(ev *roles.Event) {
 		role.SetMetric(

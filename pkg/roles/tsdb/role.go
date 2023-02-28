@@ -115,6 +115,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		val.Value += 1
 		r.m[key] = val
 	})
+	// Don't start interval writer if it's below 1
+	if r.cfg.Scrape < 1 {
+		return nil
+	}
 	go func() {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
