@@ -22,7 +22,7 @@ require (
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
 	github.com/miekg/dns v1.1.51
 	github.com/minio/minio-go/v7 v7.0.49
-	github.com/netdata/go.d.plugin v0.51.1
+	github.com/netdata/go.d.plugin v0.51.2
 	github.com/ori-edge/k8s_gateway v0.3.4-0.20230217114626-7ab994ba6e1d
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
