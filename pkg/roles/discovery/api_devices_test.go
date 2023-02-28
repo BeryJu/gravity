@@ -236,13 +236,6 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
 
-	// Create DNS role to register events
-	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
-	dnsRole.Start(ctx, []byte{})
-	defer dnsRole.Stop()
-
-	role := discovery.New(inst)
-
 	name := tests.RandomString()
 	inst.KV().Put(
 		ctx,
@@ -276,6 +269,12 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 		tests.MustJSON(dns.Zone{}),
 	)
 
+	// Create DNS role to register events
+	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
+	dnsRole.Start(ctx, []byte{})
+	defer dnsRole.Stop()
+
+	role := discovery.New(inst)
 	assert.NoError(t, role.APIDevicesApply().Interact(ctx, discovery.APIDevicesApplyInput{
 		Identifier: name,
 		To:         "dns",
