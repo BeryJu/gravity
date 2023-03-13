@@ -91,7 +91,7 @@ func TestWatch(t *testing.T) {
 		}
 		called += 1
 		if called == 2 {
-			defer rootInst.Stop()
+			rootInst.Stop()
 		}
 	})
 	inst.KV().Put(

@@ -7,6 +7,8 @@ VERSION = "0.4.11"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
+TEST_COUNT = 1
+TEST_FLAGS = ""
 
 ci--env:
 	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
@@ -103,10 +105,15 @@ test-env-stop:
 install-deps:
 	sudo apt-get install -y nmap libpcap-dev
 
+test-local:
+	$(eval TEST_COUNT := 100)
+	$(eval TEST_FLAGS := -shuffle=on -failfast)
+
 test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
 	export ETCD_ENDPOINT="localhost:2379"
 	export DEBUG="true"
+	export LISTEN_ONLY="true"
 	go run -v . cli etcdctl del --prefix /
-	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=1 -v ./...
+	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=${TEST_COUNT} ${TEST_FLAGS} -v ./...
 	go tool cover -html coverage.txt -o coverage.html

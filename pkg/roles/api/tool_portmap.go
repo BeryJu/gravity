@@ -13,8 +13,8 @@ import (
 func (r *Role) Portmap(addr string) (nmap.Host, error) {
 	scanner, err := nmap.NewScanner(
 		nmap.WithTargets(addr),
-		nmap.WithForcedDNSResolution(),
 		nmap.WithCustomDNSServers(extconfig.Get().FallbackDNS),
+		nmap.WithForcedDNSResolution(),
 	)
 	if err != nil {
 		return nmap.Host{}, err
