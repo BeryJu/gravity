@@ -9,7 +9,7 @@ require (
 	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
 	github.com/api7/etcdstore v1.1.0
 	github.com/coreos/go-oidc/v3 v3.5.0
-	github.com/creasty/defaults v1.6.0
+	github.com/creasty/defaults v1.7.0
 	github.com/felixge/fgprof v0.9.3
 	github.com/getsentry/sentry-go v0.19.0
 	github.com/go-ping/ping v1.1.0
