@@ -16,7 +16,7 @@
         "@babel/preset-env": "^7.20.2",
         "@babel/preset-typescript": "^7.21.0",
         "@codemirror/lang-javascript": "^6.1.4",
-        "@codemirror/legacy-modes": "^6.3.1",
+        "@codemirror/legacy-modes": "^6.3.2",
         "@patternfly/patternfly": "^4.224.2",
         "@polymer/iron-form": "^3.0.1",
         "@polymer/paper-input": "^3.2.1",
