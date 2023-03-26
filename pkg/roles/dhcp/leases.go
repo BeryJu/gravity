@@ -21,6 +21,10 @@ import (
 )
 
 type Lease struct {
+	inst roles.Instance
+
+	scope      *Scope
+	log        *zap.Logger
 	Identifier string `json:"-"`
 
 	Address          string `json:"address"`
@@ -29,10 +33,7 @@ type Lease struct {
 	ScopeKey         string `json:"scopeKey"`
 	DNSZone          string `json:"dnsZone,omitempty"`
 
-	scope   *Scope
 	etcdKey string
-	inst    roles.Instance
-	log     *zap.Logger
 }
 
 func (r *Role) NewLease(identifier string) *Lease {

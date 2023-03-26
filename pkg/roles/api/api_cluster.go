@@ -16,8 +16,8 @@ import (
 )
 
 type APIMember struct {
-	ID   uint64 `json:"id"`
 	Name string `json:"name"`
+	ID   uint64 `json:"id"`
 }
 type APIMembersOutput struct {
 	Members []APIMember `json:"members"`

@@ -241,9 +241,9 @@ func CIDRMask(ones, bits int) []byte {
 
 // oui, mask, organization
 type AddressBlock struct {
+	Organization string
 	Oui          HardwareAddr
 	Mask         int
-	Organization string
 }
 
 // Contains reports whether the mac address belongs to the OUI

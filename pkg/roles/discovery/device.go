@@ -17,13 +17,12 @@ import (
 )
 
 type Device struct {
+	inst       roles.Instance
 	Identifier string `json:"-"`
 
 	Hostname string `json:"hostname"`
 	IP       string `json:"ip"`
 	MAC      string `json:"mac"`
-
-	inst roles.Instance
 }
 
 func (r *Role) newDevice() *Device {

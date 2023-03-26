@@ -38,8 +38,8 @@ func (r *Role) APIBackupStart() usecase.Interactor {
 }
 
 type APIBackupStatus struct {
-	BackupStatus
 	Node string `json:"node"`
+	BackupStatus
 }
 
 type APIBackupStatusOutput struct {

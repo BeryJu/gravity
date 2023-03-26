@@ -19,11 +19,10 @@ import (
 const IPForwarderType = "forward_ip"
 
 type IPForwarderHandler struct {
+	r        *net.Resolver
+	z        *Zone
+	log      *zap.Logger
 	CacheTTL int
-
-	r   *net.Resolver
-	z   *Zone
-	log *zap.Logger
 }
 
 func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {

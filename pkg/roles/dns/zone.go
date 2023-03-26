@@ -24,21 +24,23 @@ const (
 )
 
 type Zone struct {
+	inst roles.Instance
+
+	records         map[string]map[string]*Record
+	recordsWatchCtx context.CancelFunc
+
+	log  *zap.Logger
 	Name string `json:"-"`
 
-	Authoritative  bool                `json:"authoritative"`
+	etcdKey        string
 	HandlerConfigs []map[string]string `json:"handlerConfigs"`
-	DefaultTTL     uint32              `json:"defaultTTL"`
 
 	h []Handler
 
-	records         map[string]map[string]*Record
-	recordsSync     sync.RWMutex
-	recordsWatchCtx context.CancelFunc
+	recordsSync sync.RWMutex
+	DefaultTTL  uint32 `json:"defaultTTL"`
 
-	etcdKey string
-	inst    roles.Instance
-	log     *zap.Logger
+	Authoritative bool `json:"authoritative"`
 }
 
 func (z *Zone) soa() *dns.Msg {

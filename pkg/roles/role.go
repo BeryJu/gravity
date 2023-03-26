@@ -17,9 +17,9 @@ type Role interface {
 }
 
 type Event struct {
-	Payload EventPayload
 	Context context.Context
 	topic   string
+	Payload EventPayload
 }
 
 func (ev *Event) WithTopic(topic string) *Event {

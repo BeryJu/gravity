@@ -18,14 +18,13 @@ type APILeaseInfo struct {
 	Vendor string `json:"vendor"`
 }
 type APILease struct {
-	Identifier       string `json:"identifier" required:"true"`
-	Address          string `json:"address" required:"true"`
-	Hostname         string `json:"hostname" required:"true"`
-	AddressLeaseTime string `json:"addressLeaseTime" required:"true"`
-	ScopeKey         string `json:"scopeKey" required:"true"`
-	DNSZone          string `json:"dnsZone"`
-
-	Info *APILeaseInfo `json:"info"`
+	Info             *APILeaseInfo `json:"info"`
+	Identifier       string        `json:"identifier" required:"true"`
+	Address          string        `json:"address" required:"true"`
+	Hostname         string        `json:"hostname" required:"true"`
+	AddressLeaseTime string        `json:"addressLeaseTime" required:"true"`
+	ScopeKey         string        `json:"scopeKey" required:"true"`
+	DNSZone          string        `json:"dnsZone"`
 }
 type APILeasesGetOutput struct {
 	Leases []*APILease `json:"leases" required:"true"`

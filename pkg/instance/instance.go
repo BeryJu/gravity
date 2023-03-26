@@ -38,21 +38,23 @@ type RoleContext struct {
 }
 
 type Instance struct {
-	roles      map[string]RoleContext
-	rolesM     sync.Mutex
-	kv         *storage.Client
-	log        *zap.Logger
-	identifier string
+	rootContext context.Context
+	roles       map[string]RoleContext
+	kv          *storage.Client
+	log         *zap.Logger
 
-	eventHandlers  map[string]map[string][]roles.EventHandler
-	eventHandlersM sync.RWMutex
+	eventHandlers map[string]map[string][]roles.EventHandler
 
 	etcd *etcd.Role
 
-	rootContext       context.Context
 	rootContextCancel context.CancelFunc
 
 	instanceInfoLease *clientv3.LeaseID
+	identifier        string
+
+	eventHandlersM sync.RWMutex
+
+	rolesM sync.Mutex
 }
 
 func New() *Instance {

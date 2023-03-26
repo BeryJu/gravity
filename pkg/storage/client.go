@@ -13,9 +13,9 @@ import (
 
 type Client struct {
 	*clientv3.Client
+	log    *zap.Logger
 	config clientv3.Config
 	prefix string
-	log    *zap.Logger
 	debug  bool
 }
 

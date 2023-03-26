@@ -15,17 +15,18 @@ import (
 const InternalIPAMType = "internal"
 
 type InternalIPAM struct {
-	SubnetCIDR netip.Prefix
-	Start      netip.Addr
-	End        netip.Addr
+	Start netip.Addr
+	End   netip.Addr
 
-	shouldPing bool
-	ips        map[string]bool
+	ips map[string]bool
+
+	log        *zap.Logger
+	role       *Role
+	scope      *Scope
+	SubnetCIDR netip.Prefix
 	ipsy       sync.RWMutex
 
-	log   *zap.Logger
-	role  *Role
-	scope *Scope
+	shouldPing bool
 }
 
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {

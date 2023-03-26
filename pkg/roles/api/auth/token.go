@@ -16,11 +16,10 @@ const (
 )
 
 type Token struct {
+	ap  *AuthProvider
 	Key string `json:"-"`
 
 	Username string `json:"username"`
-
-	ap *AuthProvider
 }
 
 func (token *Token) put(ctx context.Context, opts ...clientv3.OpOption) error {

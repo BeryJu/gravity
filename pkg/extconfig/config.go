@@ -12,28 +12,29 @@ import (
 )
 
 type ExtConfig struct {
-	Debug    bool   `env:"DEBUG,default=false"`
-	LogLevel string `env:"LOG_LEVEL,default=info"`
-	DataPath string `env:"DATA_PATH,default=./data"`
-	Etcd     struct {
+	logger *zap.Logger
+	Etcd   struct {
 		Prefix      string `env:"ETCD_PREFIX,default=/gravity"`
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
-	}
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
-	Sentry         struct {
-		Enabled bool   `env:"SENTRY_ENABLED,default=false"`
-		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
 	}
 	Instance struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
-	ListenOnlyMode bool   `env:"LISTEN_ONLY,default=false"`
+	LogLevel       string `env:"LOG_LEVEL,default=info"`
+	DataPath       string `env:"DATA_PATH,default=./data"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
 	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 
-	logger *zap.Logger
+	Sentry struct {
+		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
+		Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+	}
+
+	Debug          bool `env:"DEBUG,default=false"`
+	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
 }
 
 type ExtConfigDirs struct {

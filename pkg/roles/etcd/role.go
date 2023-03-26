@@ -25,13 +25,13 @@ const (
 )
 
 type Role struct {
+	i roles.Instance
+
+	e       *embed.Etcd
+	cfg     *embed.Config
+	log     *zap.Logger
 	etcdDir string
 	certDir string
-
-	e   *embed.Etcd
-	cfg *embed.Config
-	log *zap.Logger
-	i   roles.Instance
 }
 
 func urlMustParse(raw string) url.URL {

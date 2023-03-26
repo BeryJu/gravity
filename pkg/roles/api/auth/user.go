@@ -11,10 +11,9 @@ import (
 )
 
 type User struct {
+	ap       *AuthProvider
 	Username string `json:"-"`
 	Password string `json:"password"`
-
-	ap *AuthProvider
 }
 
 func (u *User) String() string {

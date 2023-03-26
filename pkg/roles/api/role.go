@@ -29,16 +29,16 @@ const (
 )
 
 type Role struct {
+	i            roles.Instance
+	ctx          context.Context
+	sessions     sessions.Store
 	m            *mux.Router
 	oapi         *web.Service
 	log          *zap.Logger
-	i            roles.Instance
-	ctx          context.Context
 	cfg          *RoleConfig
-	sessions     sessions.Store
+	auth         *auth.AuthProvider
 	httpServer   http.Server
 	socketServer http.Server
-	auth         *auth.AuthProvider
 }
 
 func New(instance roles.Instance) *Role {

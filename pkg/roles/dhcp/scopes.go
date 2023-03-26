@@ -26,21 +26,23 @@ type ScopeDNS struct {
 }
 
 type Scope struct {
+	ipam IPAM
+	inst roles.Instance
+	DNS  *ScopeDNS `json:"dns"`
+
+	IPAM map[string]string `json:"ipam"`
+	role *Role
+	log  *zap.Logger
+
+	cidr netip.Prefix
 	Name string `json:"-"`
 
+	etcdKey string
+
 	SubnetCIDR string              `json:"subnetCidr"`
-	Default    bool                `json:"default"`
 	Options    []*types.DHCPOption `json:"options"`
 	TTL        int64               `json:"ttl"`
-	IPAM       map[string]string   `json:"ipam"`
-	DNS        *ScopeDNS           `json:"dns"`
-
-	cidr    netip.Prefix
-	etcdKey string
-	ipam    IPAM
-	inst    roles.Instance
-	role    *Role
-	log     *zap.Logger
+	Default    bool                `json:"default"`
 }
 
 func (r *Role) NewScope(name string) *Scope {

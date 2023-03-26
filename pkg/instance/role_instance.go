@@ -10,10 +10,10 @@ import (
 )
 
 type RoleInstance struct {
-	log     *zap.Logger
-	roleId  string
-	parent  *Instance
 	context context.Context
+	log     *zap.Logger
+	parent  *Instance
+	roleId  string
 }
 
 func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {

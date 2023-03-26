@@ -19,14 +19,14 @@ import (
 )
 
 type Role struct {
-	servers []*dns.Server
-	zones   map[string]*Zone
-	zonesM  sync.RWMutex
+	i     roles.Instance
+	ctx   context.Context
+	zones map[string]*Zone
 
-	cfg *RoleConfig
-	log *zap.Logger
-	i   roles.Instance
-	ctx context.Context
+	cfg     *RoleConfig
+	log     *zap.Logger
+	servers []*dns.Server
+	zonesM  sync.RWMutex
 }
 
 func New(instance roles.Instance) *Role {

@@ -18,8 +18,8 @@ import (
 
 type Converter struct {
 	a  *api.APIClient
-	in DHCPServer
 	l  *zap.Logger
+	in DHCPServer
 }
 
 func New(api *api.APIClient, input string) (*Converter, error) {

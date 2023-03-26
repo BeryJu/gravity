@@ -17,9 +17,9 @@ type APIZonesGetInput struct {
 }
 type APIZone struct {
 	Name           string              `json:"name" required:"true"`
-	Authoritative  bool                `json:"authoritative" required:"true"`
 	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
+	Authoritative  bool                `json:"authoritative" required:"true"`
 }
 type APIZonesGetOutput struct {
 	Zones []APIZone `json:"zones" required:"true"`
@@ -72,9 +72,9 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 
 type APIZonesPutInput struct {
 	Name           string              `query:"zone" required:"true" maxLength:"255"`
-	Authoritative  bool                `json:"authoritative" required:"true"`
 	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
+	Authoritative  bool                `json:"authoritative" required:"true"`
 }
 
 func (r *Role) APIZonesPut() usecase.Interactor {

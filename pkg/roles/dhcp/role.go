@@ -21,19 +21,20 @@ import (
 )
 
 type Role struct {
-	scopes  map[string]*Scope
-	scopesM sync.RWMutex
-	leases  map[string]*Lease
-	leasesM sync.RWMutex
+	i   roles.Instance
+	ctx context.Context
+
+	scopes map[string]*Scope
+	leases map[string]*Lease
 
 	cfg *RoleConfig
 
 	s4  *handler4
 	log *zap.Logger
-	i   roles.Instance
-	ctx context.Context
 
-	oui *oui.OuiDb
+	oui     *oui.OuiDb
+	scopesM sync.RWMutex
+	leasesM sync.RWMutex
 }
 
 func New(instance roles.Instance) *Role {

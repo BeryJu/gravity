@@ -14,21 +14,20 @@ import (
 )
 
 type Record struct {
+	inst roles.Instance
+	zone *Zone
 	Name string `json:"-"`
 	Type string `json:"-"`
 
-	Data string `json:"data"`
-	TTL  uint32 `json:"ttl,omitempty"`
+	Data      string `json:"data"`
+	uid       string
+	recordKey string
+	TTL       uint32 `json:"ttl,omitempty"`
 
 	MXPreference uint16 `json:"mxPreference,omitempty"`
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
-
-	inst      roles.Instance
-	zone      *Zone
-	uid       string
-	recordKey string
 }
 
 func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {

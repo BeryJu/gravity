@@ -16,16 +16,16 @@ import (
 )
 
 type Subnet struct {
+	inst       roles.Instance
+	log        *zap.Logger
+	role       *Role
 	Identifier string `json:"-"`
 
-	CIDR         string `json:"cidr"`
-	DNSResolver  string `json:"dnsResolver"`
-	DiscoveryTTL int    `json:"discoveryTTL"`
+	CIDR        string `json:"cidr"`
+	DNSResolver string `json:"dnsResolver"`
 
-	etcdKey string
-	inst    roles.Instance
-	log     *zap.Logger
-	role    *Role
+	etcdKey      string
+	DiscoveryTTL int `json:"discoveryTTL"`
 }
 
 func (r *Role) NewSubnet(name string) *Subnet {
