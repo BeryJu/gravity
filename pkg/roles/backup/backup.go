@@ -83,7 +83,7 @@ func (r *Role) snapshotToFile(ctx context.Context) (*os.File, error) {
 		r.log.Warn("failed to snapshot", zap.Error(err))
 		return nil, err
 	}
-	file, err := os.CreateTemp(os.TempDir(), "gravity-snapshot.*.etcd")
+	file, err := os.CreateTemp(extconfig.Get().Dirs().BackupDir, "temp-gravity-snapshot.*.etcd")
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,10 @@ func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 		return status
 	}
 	newPath := path.Join(extconfig.Get().Dirs().BackupDir, "gravity-local-snapshot")
-	os.Rename(file.Name(), newPath)
+	err = os.Rename(file.Name(), newPath)
+	if err != nil {
+		r.log.Warn("failed to move temp snapshot to local snapshot", zap.Error(err))
+	}
 	if r.mc == nil {
 		status.Status = BackupStatusSuccess
 		return status
