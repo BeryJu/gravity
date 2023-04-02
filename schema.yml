@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.4.13
+  version: 0.4.14
 paths:
   /api/v1/auth/config:
     get:
@@ -1584,8 +1584,8 @@ components:
         username:
           type: string
       required:
-      - authenticated
       - username
+      - authenticated
       type: object
     AuthAPIToken:
       properties:
@@ -1656,12 +1656,12 @@ components:
           format: date-time
           type: string
       required:
+      - time
       - status
       - error
       - filename
       - size
       - duration
-      - time
       type: object
     BackupAPIBackupStatusOutput:
       properties:
@@ -1703,12 +1703,12 @@ components:
           format: date-time
           type: string
       required:
+      - time
       - status
       - error
       - filename
       - size
       - duration
-      - time
       type: object
     BackupRoleConfig:
       properties:
@@ -1819,12 +1819,12 @@ components:
         ttl:
           type: integer
       required:
+      - ipam
       - scope
       - subnetCidr
-      - default
       - options
       - ttl
-      - ipam
+      - default
       type: object
     DhcpAPIScopesGetOutput:
       properties:
@@ -1859,9 +1859,9 @@ components:
           type: integer
       required:
       - subnetCidr
-      - default
       - options
       - ttl
+      - default
       type: object
     DhcpRoleConfig:
       properties:
@@ -2075,9 +2075,9 @@ components:
           type: string
       required:
       - name
-      - authoritative
       - handlerConfigs
       - defaultTTL
+      - authoritative
       type: object
     DnsAPIZonesGetOutput:
       properties:
@@ -2104,9 +2104,9 @@ components:
           nullable: true
           type: array
       required:
-      - authoritative
       - handlerConfigs
       - defaultTTL
+      - authoritative
       type: object
     DnsRoleConfig:
       properties:
