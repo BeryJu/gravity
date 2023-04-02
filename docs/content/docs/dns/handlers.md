@@ -65,10 +65,20 @@ Forward queries to another DNS Server using blocky for Ad/Privacy blocking
   - https://v.firebog.net/hosts/Easylist.txt
   - https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
 
-### k8s_gateway
+### CoreDNS
 
-Resolve queries by looking up Kubernetes Ingresses and services, see [k8s_gateway](https://github.com/ori-edge/k8s_gateway) for more info.
+Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredns.io/plugins/) for all plugins.
 
 ##### Configuration
 
-None
+- `config`: String configuration in the caddyfile format that is passed to CoreDNS.
+
+  Example:
+
+  ```
+  .:1053 {
+    whoami
+  }
+  ```
+
+  **Make sure to use a different port in the configuration as the one Gravity uses to prevent any issues**
