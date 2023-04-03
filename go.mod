@@ -23,7 +23,7 @@ require (
 	github.com/miekg/dns v1.1.53
 	github.com/minio/minio-go/v7 v7.0.50
 	github.com/netdata/go.d.plugin v0.51.4
-	github.com/ori-edge/k8s_gateway v0.3.4-0.20230217114626-7ab994ba6e1d
+	github.com/ori-edge/k8s_gateway v0.3.4
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -170,9 +170,9 @@ require (
 	gorm.io/driver/mysql v1.4.5 // indirect
 	gorm.io/driver/postgres v1.4.6 // indirect
 	gorm.io/gorm v1.24.3 // indirect
-	k8s.io/api v0.26.2 // indirect
-	k8s.io/apimachinery v0.26.2 // indirect
-	k8s.io/client-go v0.26.2 // indirect
+	k8s.io/api v0.26.3 // indirect
+	k8s.io/apimachinery v0.26.3 // indirect
+	k8s.io/client-go v0.26.3 // indirect
 	k8s.io/klog/v2 v2.90.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
 	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d // indirect
