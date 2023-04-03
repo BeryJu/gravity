@@ -156,12 +156,12 @@ func (z *Zone) Init(ctx context.Context) {
 		t := handlerCfg["type"]
 		var handler Handler
 		switch t {
+		case CoreDNSType:
+			handler = NewCoreDNS(z, handlerCfg)
 		case BlockyForwarderType:
 			handler = NewBlockyForwarder(z, handlerCfg)
 		case IPForwarderType:
 			handler = NewIPForwarderHandler(z, handlerCfg)
-		case K8sGatewayType:
-			handler = NewK8sGateway(z, handlerCfg)
 		case EtcdType:
 			handler = NewEtcdHandler(z, handlerCfg)
 		case MemoryType:

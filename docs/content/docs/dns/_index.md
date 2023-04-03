@@ -9,7 +9,7 @@ Gravity's DNS Server supports
 - forwarding requests to other DNS Servers
 - caching queries and responses in memory
 - use [Blocky](https://0xerr0r.github.io/blocky/) for Ad and Privacy blocking
-- use [k8s_gateway](https://github.com/ori-edge/k8s_gateway) to resolve kubernetes ingresses
+- use [CoreDNS](https://github.com/coredns/coredns) to resolve use any CoreDNS plugin
 
 ### Concepts
 
