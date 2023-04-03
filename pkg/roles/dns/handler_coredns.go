@@ -28,6 +28,7 @@ func NewCoreDNS(z *Zone, rawConfig map[string]string) *CoreDNS {
 		c: rawConfig,
 	}
 	core.log = z.log.With(zap.String("handler", core.Identifier()))
+	dnsserver.Quiet = true
 	corefile := caddy.CaddyfileInput{
 		Contents:       []byte(core.c["config"]),
 		Filepath:       "in-memory",
