@@ -60,20 +60,16 @@ func New(instance roles.Instance) *Role {
 	)
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
-	// --listen-client-urls
-	cfg.LCUrls = []url.URL{
+	cfg.ListenClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
 	}
-	// --advertise-client-urls
-	cfg.ACUrls = []url.URL{
+	cfg.AdvertiseClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
 	}
-	// --listen-peer-urls
-	cfg.LPUrls = []url.URL{
+	cfg.ListenPeerUrls = []url.URL{
 		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
 	}
-	// --initial-advertise-peer-urls
-	cfg.APUrls = []url.URL{
+	cfg.AdvertisePeerUrls = []url.URL{
 		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
