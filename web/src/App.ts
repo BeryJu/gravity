@@ -1,7 +1,7 @@
 import { RolesApiApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
@@ -75,8 +75,11 @@ export const ROUTES = [
 
 @customElement("gravity-app")
 export class AdminInterface extends AKElement {
-    @property({ type: Boolean })
+    @state()
     showSidebar = true;
+
+    @state()
+    isAuthenticated = false;
 
     static get styles(): CSSResult[] {
         return [
@@ -112,15 +115,18 @@ export class AdminInterface extends AKElement {
         super();
         this.showSidebar = window.innerWidth >= 1280;
         window.addEventListener("resize", () => {
+            if (!this.isAuthenticated) return;
             this.showSidebar = window.innerWidth >= 1280;
         });
         window.addEventListener(EVENT_SIDEBAR_TOGGLE, () => {
+            if (!this.isAuthenticated) return;
             this.showSidebar = !this.showSidebar;
         });
     }
 
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
+            this.isAuthenticated = me.authenticated;
             if (!me.authenticated) {
                 this.showSidebar = false;
                 if (window.location.hash !== "#/login") {

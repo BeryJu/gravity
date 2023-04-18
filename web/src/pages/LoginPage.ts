@@ -18,17 +18,14 @@ import "../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-login-form")
 export class LoginForm extends Form<AuthAPILoginInput> {
-    send = (data: AuthAPILoginInput): Promise<void> => {
-        return new RolesApiApi(DEFAULT_CONFIG)
-            .apiLoginUser({
-                authAPILoginInput: data,
-            })
-            .then((a) => {
-                if (a.successful) {
-                    window.location.hash = "#/";
-                    window.location.reload();
-                }
-            });
+    send = async (data: AuthAPILoginInput): Promise<void> => {
+        const a = await new RolesApiApi(DEFAULT_CONFIG).apiLoginUser({
+            authAPILoginInput: data,
+        });
+        if (a.successful) {
+            window.location.hash = "#/";
+            window.location.reload();
+        }
     };
 
     renderForm(): TemplateResult {
