@@ -38,7 +38,7 @@
         "chartjs-adapter-moment": "^1.0.1",
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.3.1",
-        "eslint": "^8.38.0",
+        "eslint": "^8.39.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-custom-elements": "0.0.8",
         "eslint-plugin-lit": "^1.8.3",
