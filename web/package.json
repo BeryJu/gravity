@@ -45,7 +45,7 @@
         "gravity-api": "^0.5.1",
         "lit": "^2.7.2",
         "moment": "^2.29.4",
-        "prettier": "^2.8.7",
+        "prettier": "^2.8.8",
         "rapidoc": "^9.3.4",
         "rollup": "^2.79.1",
         "rollup-plugin-copy": "^3.4.0",
