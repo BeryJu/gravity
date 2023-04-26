@@ -107,6 +107,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     <option value="NS" ?selected=${this.recordType === "NS"}>NS</option>
                     <option value="MX" ?selected=${this.recordType === "MX"}>MX</option>
                     <option value="SRV" ?selected=${this.recordType === "SRV"}>SRV</option>
+                    <option value="TXT" ?selected=${this.recordType === "TXT"}>TXT</option>
                 </select>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="${this.getLabel()}" ?required=${true} name="data">

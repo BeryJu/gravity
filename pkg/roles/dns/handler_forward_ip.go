@@ -92,6 +92,8 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 		record.Data = v.A.String()
 	case *dns.AAAA:
 		record.Data = v.AAAA.String()
+	case *dns.TXT:
+		record.Data = strings.Join(v.Txt, TXTSeparator)
 	case *dns.PTR:
 		record.Data = v.Ptr
 	case *dns.CNAME:
