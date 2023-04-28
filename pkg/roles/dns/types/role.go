@@ -6,7 +6,8 @@ const (
 )
 
 const (
-	DNSRecordTypeA    = "A"
-	DNSRecordTypeAAAA = "AAAA"
-	DNSRecordTypePTR  = "PTR"
+	DNSRecordTypeA     = "A"
+	DNSRecordTypeAAAA  = "AAAA"
+	DNSRecordTypePTR   = "PTR"
+	DNSRecordTypeCNAME = "CNAME"
 )
