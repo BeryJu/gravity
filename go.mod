@@ -22,7 +22,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/gosimple/slug v1.13.1
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
-	github.com/miekg/dns v1.1.53
+	github.com/miekg/dns v1.1.54
 	github.com/minio/minio-go/v7 v7.0.52
 	github.com/netdata/go.d.plugin v0.52.0
 	github.com/ori-edge/k8s_gateway v0.3.4
