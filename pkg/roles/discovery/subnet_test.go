@@ -3,6 +3,7 @@ package discovery_test
 import (
 	"testing"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/discovery"
 	"beryju.io/gravity/pkg/tests"
@@ -19,6 +20,7 @@ func TestDiscoveryDocker(t *testing.T) {
 	if !tests.HasLocalDocker() {
 		return
 	}
+	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
