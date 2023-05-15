@@ -8,7 +8,7 @@ LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
 TEST_COUNT = 1
-TEST_FLAGS = ""
+TEST_FLAGS = "-v"
 
 ci--env:
 	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
@@ -107,7 +107,7 @@ install-deps:
 
 test-local:
 	$(eval TEST_COUNT := 100)
-	$(eval TEST_FLAGS := -shuffle=on -failfast)
+	$(eval TEST_FLAGS := -v -shuffle=on -failfast)
 
 test:
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
@@ -115,5 +115,5 @@ test:
 	export DEBUG="true"
 	export LISTEN_ONLY="true"
 	go run -v . cli etcdctl del --prefix /
-	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=${TEST_COUNT} ${TEST_FLAGS} -v ./...
+	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=${TEST_COUNT} ${TEST_FLAGS} ./...
 	go tool cover -html coverage.txt -o coverage.html
