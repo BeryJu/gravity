@@ -15,7 +15,7 @@
         "@babel/plugin-transform-runtime": "^7.21.4",
         "@babel/preset-env": "^7.21.5",
         "@babel/preset-typescript": "^7.21.5",
-        "@codemirror/lang-javascript": "^6.1.7",
+        "@codemirror/lang-javascript": "^6.1.8",
         "@codemirror/legacy-modes": "^6.3.2",
         "@patternfly/patternfly": "^4.224.2",
         "@polymer/iron-form": "^3.0.1",
