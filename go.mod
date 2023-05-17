@@ -10,7 +10,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coredns/caddy v1.1.1
 	github.com/coredns/coredns v1.10.1
-	github.com/coreos/go-oidc/v3 v3.5.0
+	github.com/coreos/go-oidc/v3 v3.6.0
 	github.com/creasty/defaults v1.7.0
 	github.com/felixge/fgprof v0.9.3
 	github.com/getsentry/sentry-go v0.21.0
