@@ -8,7 +8,7 @@ LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
 TEST_COUNT = 1
-TEST_FLAGS = "-v"
+TEST_FLAGS = "-v -shuffle=on"
 
 ci--env:
 	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
