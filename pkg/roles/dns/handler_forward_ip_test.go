@@ -95,7 +95,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		),
-		dns.Record{
+		types.Record{
 			Data: "10.0.0.1",
 		},
 	)

@@ -11,25 +11,19 @@ import (
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/proto"
 )
 
 const TXTSeparator = "\n"
 
 type Record struct {
+	*types.Record
+
 	inst roles.Instance
 	zone *ZoneContext
-	Name string `json:"-"`
-	Type string `json:"-"`
 
-	Data      string `json:"data"`
 	uid       string
 	recordKey string
-	TTL       uint32 `json:"ttl,omitempty"`
-
-	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
 }
 
 func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
@@ -48,7 +42,14 @@ func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 		rec.uid = parts[2]
 	}
 	rec.recordKey = strings.TrimSuffix(fullRecordKey, "/"+rec.uid)
-	err := json.Unmarshal(kv.Value, &rec)
+
+	// Try loading protobuf first
+	err := proto.Unmarshal(kv.Value, rec.Record)
+	if err == nil {
+		return rec, nil
+	}
+	// Otherwise try json
+	err = json.Unmarshal(kv.Value, &rec)
 	if err != nil {
 		return rec, err
 	}
@@ -57,8 +58,10 @@ func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 
 func (z *ZoneContext) newRecord(name string, t string) *Record {
 	return &Record{
-		Name: strings.ToLower(name),
-		Type: t,
+		Record: &types.Record{
+			Name: strings.ToLower(name),
+			Type: t,
+		},
 		inst: z.inst,
 		zone: z,
 	}
@@ -69,7 +72,7 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 		Name:   qname,
 		Rrtype: t,
 		Class:  dns.ClassINET,
-		Ttl:    r.TTL,
+		Ttl:    r.Ttl,
 	}
 	var rr dns.RR
 	switch t {
@@ -89,14 +92,14 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 		rr = &dns.SRV{}
 		rr.(*dns.SRV).Hdr = hdr
 		rr.(*dns.SRV).Target = r.Data
-		rr.(*dns.SRV).Port = r.SRVPort
-		rr.(*dns.SRV).Priority = r.SRVPriority
-		rr.(*dns.SRV).Weight = r.SRVWeight
+		rr.(*dns.SRV).Port = uint16(r.SrvPort)
+		rr.(*dns.SRV).Priority = uint16(r.SrvPriority)
+		rr.(*dns.SRV).Weight = uint16(r.SrvWeight)
 	case dns.TypeMX:
 		rr = &dns.MX{}
 		rr.(*dns.MX).Hdr = hdr
 		rr.(*dns.MX).Mx = r.Data
-		rr.(*dns.MX).Preference = r.MXPreference
+		rr.(*dns.MX).Preference = uint16(r.MxPreference)
 	case dns.TypeCNAME:
 		rr = &dns.CNAME{}
 		rr.(*dns.CNAME).Hdr = hdr
@@ -109,7 +112,7 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 }
 
 func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
-	raw, err := json.Marshal(&r)
+	raw, err := proto.Marshal(r.Record)
 	if err != nil {
 		return err
 	}

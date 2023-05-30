@@ -98,12 +98,12 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 		record.Data = v.Target
 	case *dns.MX:
 		record.Data = v.Mx
-		record.MXPreference = v.Preference
+		record.MxPreference = uint32(v.Preference)
 	case *dns.SRV:
 		record.Data = v.Target
-		record.SRVPort = v.Port
-		record.SRVPriority = v.Priority
-		record.SRVWeight = v.Weight
+		record.SrvPort = uint32(v.Port)
+		record.SrvPriority = uint32(v.Priority)
+		record.SrvWeight = uint32(v.Weight)
 	}
 	record.uid = strconv.Itoa(idx)
 	err := record.put(r.Context(), int64(cacheTtl))

@@ -35,7 +35,7 @@ func TestAPIRecordsGet(t *testing.T) {
 			"test",
 			"A",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustJSON(types.Record{
 			Data: "192.0.2.1",
 		}),
 	)
@@ -80,7 +80,7 @@ func TestAPIRecordsPut(t *testing.T) {
 			"test",
 			"A",
 		),
-		dns.Record{
+		types.Record{
 			Data: "192.0.2.1",
 		},
 	)
@@ -111,7 +111,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 			"test",
 			"A",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustJSON(types.Record{
 			Data: "192.0.2.1",
 		}),
 	)

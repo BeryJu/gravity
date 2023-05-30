@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/dns/types";
+
+message Record {
+    string name = 1;
+    string type = 2;
+    uint32 ttl = 3;
+    string data = 4;
+
+    uint32 mxPreference = 10;
+    uint32 srvPort = 11;
+    uint32 srvPriority = 12;
+    uint32 srvWeight = 13;
+}

@@ -44,7 +44,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustJSON(types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -90,7 +90,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustJSON(types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -136,7 +136,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustJSON(types.Record{
 			Data: "10.1.2.3",
 		}),
 	)

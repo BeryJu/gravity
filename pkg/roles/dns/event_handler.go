@@ -43,7 +43,7 @@ func (r *Role) eventCreateForward(ev *roles.Event) {
 		rec = forwardZone.newRecord(hostname, types.DNSRecordTypeA)
 	}
 	rec.Data = ip.String()
-	rec.TTL = forwardZone.DefaultTTL
+	rec.Ttl = forwardZone.DefaultTTL
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
@@ -74,7 +74,7 @@ func (r *Role) eventCreateReverse(ev *roles.Event) {
 	relName := strings.TrimSuffix(rev, utils.EnsureLeadingPeriod(forwardZone.Name))
 	rec := forwardZone.newRecord(relName, types.DNSRecordTypePTR)
 	rec.Data = fqdn
-	rec.TTL = forwardZone.DefaultTTL
+	rec.Ttl = forwardZone.DefaultTTL
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
