@@ -11,3 +11,7 @@ const (
 	DNSRecordTypePTR   = "PTR"
 	DNSRecordTypeCNAME = "CNAME"
 )
+
+const (
+	DNSWildcard = "*"
+)

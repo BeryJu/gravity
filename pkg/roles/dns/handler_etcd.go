@@ -3,6 +3,7 @@ package dns
 import (
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
@@ -30,7 +31,8 @@ func (eh *EtcdHandler) Identifier() string {
 	return EtcdType
 }
 
-func (eh *EtcdHandler) answerSingleQuestion(k *storage.Key, question dns.Question, r *utils.DNSRequest) []dns.RR {
+// lookupKey Lookup direct key and fetch all UID entries below it
+func (eh *EtcdHandler) lookupKey(k *storage.Key, question dns.Question, r *utils.DNSRequest) []dns.RR {
 	answers := []dns.RR{}
 	es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 	defer es.Finish()
@@ -60,7 +62,28 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 	for _, question := range r.Question {
 		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(relRecordName), dns.Type(question.Qtype).String())
-		m.Answer = append(m.Answer, eh.answerSingleQuestion(fullRecordKey, question, r)...)
+		ans := eh.lookupKey(fullRecordKey, question, r)
+		// If we don't find an answer for the direct key lookup, try a wildcard lookup
+		if len(ans) < 1 {
+			// Assuming the question is foo.bar.baz and the zone is baz,
+			// we'll try replacing all names from left to right by starts and query with that
+			wildcardName := relRecordName
+			parts := strings.Split(relRecordName, ".")
+			for _, part := range parts {
+				// Replace the current dot part with a wildcard (make sure to only replace 1 occurrence,
+				// since we replace from left to right)
+				wildcardName = strings.Replace(wildcardName, part, types.DNSWildcard, 1)
+				wildcardKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(wildcardName), dns.Type(question.Qtype).String())
+				wildcardAns := eh.lookupKey(wildcardKey, question, r)
+				// If we do get an answer from this wildcard key, stop going further
+				if len(wildcardAns) > 0 {
+					m.Answer = append(m.Answer, wildcardAns...)
+					break
+				}
+			}
+		} else {
+			m.Answer = append(m.Answer, ans...)
+		}
 	}
 	if len(m.Answer) < 1 {
 		return nil
