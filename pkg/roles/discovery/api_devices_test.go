@@ -210,7 +210,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"test",
 			"A",
 		),
-		dns.Record{
+		dnsTypes.Record{
 			Data: "192.0.2.1",
 		},
 	)
@@ -224,7 +224,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"1.2",
 			"PTR",
 		),
-		dns.Record{
+		dnsTypes.Record{
 			Data: "test.gravity.beryju.io.",
 		},
 	)
@@ -291,7 +291,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"test",
 			"A",
 		),
-		dns.Record{
+		dnsTypes.Record{
 			Data: "192.0.2.1",
 		},
 	)
@@ -305,7 +305,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"1.2",
 			"PTR",
 		),
-		dns.Record{
+		dnsTypes.Record{
 			Data: "test.gravity.beryju.io.",
 		},
 	)

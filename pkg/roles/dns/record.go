@@ -16,7 +16,7 @@ import (
 
 const TXTSeparator = "\n"
 
-type Record struct {
+type RecordContext struct {
 	*types.Record
 
 	inst roles.Instance
@@ -26,7 +26,7 @@ type Record struct {
 	recordKey string
 }
 
-func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
+func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*RecordContext, error) {
 	fullRecordKey := string(kv.Key)
 	// Relative key compared to zone, format of
 	// host/A[/...]
@@ -56,8 +56,8 @@ func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	return rec, nil
 }
 
-func (z *ZoneContext) newRecord(name string, t string) *Record {
-	return &Record{
+func (z *ZoneContext) newRecord(name string, t string) *RecordContext {
+	return &RecordContext{
 		Record: &types.Record{
 			Name: strings.ToLower(name),
 			Type: t,
@@ -67,7 +67,7 @@ func (z *ZoneContext) newRecord(name string, t string) *Record {
 	}
 }
 
-func (r *Record) ToDNS(qname string, t uint16) dns.RR {
+func (r *RecordContext) ToDNS(qname string, t uint16) dns.RR {
 	hdr := dns.RR_Header{
 		Name:   qname,
 		Rrtype: t,
@@ -111,7 +111,7 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 	return rr
 }
 
-func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
+func (r *RecordContext) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := proto.Marshal(r.Record)
 	if err != nil {
 		return err

@@ -36,7 +36,7 @@ func (r *Role) eventCreateForward(ev *roles.Event) {
 		r.log.Warn("failed to parse address to add dns record", zap.Error(err))
 		return
 	}
-	var rec *Record
+	var rec *RecordContext
 	if ip.Is4() {
 		rec = forwardZone.newRecord(hostname, types.DNSRecordTypeA)
 	} else {

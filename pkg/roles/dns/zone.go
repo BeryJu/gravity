@@ -27,7 +27,7 @@ const (
 type ZoneContext struct {
 	*types.Zone
 	inst            roles.Instance
-	records         map[string]map[string]*Record
+	records         map[string]map[string]*RecordContext
 	recordsWatchCtx context.CancelFunc
 	log             *zap.Logger
 	etcdKey         string
@@ -127,7 +127,7 @@ func (r *Role) newZone(name string) *ZoneContext {
 		},
 		inst:        r.i,
 		h:           make([]Handler, 0),
-		records:     make(map[string]map[string]*Record),
+		records:     make(map[string]map[string]*RecordContext),
 		recordsSync: sync.RWMutex{},
 	}
 }
@@ -183,7 +183,7 @@ func (z *ZoneContext) watchZoneRecords(ctx context.Context) {
 		defer z.recordsSync.Unlock()
 		rec, err := z.recordFromKV(ev.Kv)
 		if _, ok := z.records[rec.recordKey]; !ok {
-			z.records[rec.recordKey] = make(map[string]*Record)
+			z.records[rec.recordKey] = make(map[string]*RecordContext)
 		}
 		if ev.Type == clientv3.EventTypeDelete {
 			delete(z.records[rec.recordKey], rec.uid)
