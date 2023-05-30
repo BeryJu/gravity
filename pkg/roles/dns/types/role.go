@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 const (
 	KeyRole  = "dns"
 	KeyZones = "zones"
@@ -14,4 +16,8 @@ const (
 
 const (
 	DNSWildcard = "*"
+)
+
+const (
+	DefaultUpstreamTimeout = time.Second * 2
 )

@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
-	"time"
 
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
@@ -33,7 +33,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 		z: z,
 		c: &dns.Client{
 			Net:     net,
-			Timeout: time.Second * 1,
+			Timeout: types.DefaultUpstreamTimeout,
 		},
 		resolvers: strings.Split(config["to"], ";"),
 	}

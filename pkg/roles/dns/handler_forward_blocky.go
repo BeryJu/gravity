@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
 	"github.com/getsentry/sentry-go"
@@ -84,14 +85,15 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return fmt.Errorf("failed to set config defaults: %w", err)
 	}
+	cfg.UpstreamTimeout = config.Duration(types.DefaultUpstreamTimeout)
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
-	cfg.LogLevel = blockylog.LevelDebug
+	cfg.Log.Level = blockylog.LevelDebug
 	cfg.QueryLog.Type = config.QueryLogTypeNone
 	if !extconfig.Get().Debug {
-		cfg.LogFormat = blockylog.FormatTypeJson
+		cfg.Log.Format = blockylog.FormatTypeJson
 		// Only log errors from blocky to prevent double-logging all queries
-		cfg.LogLevel = blockylog.LevelFatal
+		cfg.Log.Level = blockylog.LevelFatal
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
