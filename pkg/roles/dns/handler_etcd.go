@@ -10,16 +10,17 @@ import (
 	"github.com/miekg/dns"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const EtcdType = "etcd"
 
 type EtcdHandler struct {
 	log *zap.Logger
-	z   *Zone
+	z   *ZoneContext
 }
 
-func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
+func NewEtcdHandler(z *ZoneContext, config map[string]*structpb.Value) *EtcdHandler {
 	eh := &EtcdHandler{
 		z: z,
 	}

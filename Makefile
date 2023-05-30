@@ -25,8 +25,6 @@ run:
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
-	export SENTRY_ENVIRONMENT=testing
-	export SENTRY_ENABLED=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
 	go run ${GO_FLAGS} . server
 
@@ -42,6 +40,12 @@ gen-update-oui:
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
+
+gen-proto:
+	protoc \
+		--proto_path . \
+		--go_out . \
+		protobuf/**
 
 gen-clean:
 	rm -rf gen-ts-api/

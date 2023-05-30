@@ -12,6 +12,7 @@ import (
 	"github.com/creasty/defaults"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/0xERR0R/blocky/config"
 	blockylog "github.com/0xERR0R/blocky/log"
@@ -23,13 +24,13 @@ const BlockyForwarderType = "forward_blocky"
 
 type BlockyForwarder struct {
 	*IPForwarderHandler
-	c   map[string]string
+	c   map[string]*structpb.Value
 	b   *server.Server
 	log *zap.Logger
 	st  time.Time
 }
 
-func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
+func NewBlockyForwarder(z *ZoneContext, rawConfig map[string]*structpb.Value) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
 		c:                  rawConfig,
@@ -56,7 +57,7 @@ func (bfwd *BlockyForwarder) Identifier() string {
 }
 
 func (bfwd *BlockyForwarder) setup() error {
-	forwarders := strings.Split(bfwd.c["to"], ";")
+	forwarders := strings.Split(bfwd.c["to"].GetStringValue(), ";")
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
@@ -76,7 +77,7 @@ func (bfwd *BlockyForwarder) setup() error {
 		"https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
-		lists := strings.Split(bll, ";")
+		lists := strings.Split(bll.GetStringValue(), ";")
 		blockLists = lists
 	}
 

@@ -17,7 +17,7 @@ const TXTSeparator = "\n"
 
 type Record struct {
 	inst roles.Instance
-	zone *Zone
+	zone *ZoneContext
 	Name string `json:"-"`
 	Type string `json:"-"`
 
@@ -32,7 +32,7 @@ type Record struct {
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
 }
 
-func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
+func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	fullRecordKey := string(kv.Key)
 	// Relative key compared to zone, format of
 	// host/A[/...]
@@ -55,7 +55,7 @@ func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 	return rec, nil
 }
 
-func (z *Zone) newRecord(name string, t string) *Record {
+func (z *ZoneContext) newRecord(name string, t string) *Record {
 	return &Record{
 		Name: strings.ToLower(name),
 		Type: t,

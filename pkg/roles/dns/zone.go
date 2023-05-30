@@ -17,33 +17,25 @@ import (
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
 	DefaultTTL = 3600
 )
 
-type Zone struct {
-	inst roles.Instance
-
+type ZoneContext struct {
+	*types.Zone
+	inst            roles.Instance
 	records         map[string]map[string]*Record
 	recordsWatchCtx context.CancelFunc
-
-	log  *zap.Logger
-	Name string `json:"-"`
-
-	etcdKey        string
-	HandlerConfigs []map[string]string `json:"handlerConfigs"`
-
-	h []Handler
-
-	recordsSync sync.RWMutex
-	DefaultTTL  uint32 `json:"defaultTTL"`
-
-	Authoritative bool `json:"authoritative"`
+	log             *zap.Logger
+	etcdKey         string
+	h               []Handler
+	recordsSync     sync.RWMutex
 }
 
-func (z *Zone) soa() *dns.Msg {
+func (z *ZoneContext) soa() *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = z.Authoritative
 	m.Ns = []dns.RR{
@@ -66,7 +58,7 @@ func (z *Zone) soa() *dns.Msg {
 	return m
 }
 
-func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler, rep *dns.Msg) {
+func (z *ZoneContext) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler, rep *dns.Msg) {
 	for _, question := range q.Question {
 		dnsQueries.WithLabelValues(
 			dns.TypeToString[question.Qtype],
@@ -93,7 +85,7 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 	}
 }
 
-func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
+func (z *ZoneContext) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
 	for _, handler := range z.h {
 		ss := span.StartChild("gravity.dns.request.handler")
 		ss.Description = handler.Identifier()
@@ -127,10 +119,12 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 	w.WriteMsg(fallback)
 }
 
-func (r *Role) newZone(name string) *Zone {
-	return &Zone{
-		Name:        strings.ToLower(name),
-		DefaultTTL:  DefaultTTL,
+func (r *Role) newZone(name string) *ZoneContext {
+	return &ZoneContext{
+		Zone: &types.Zone{
+			Name:       strings.ToLower(name),
+			DefaultTTL: DefaultTTL,
+		},
 		inst:        r.i,
 		h:           make([]Handler, 0),
 		records:     make(map[string]map[string]*Record),
@@ -138,34 +132,41 @@ func (r *Role) newZone(name string) *Zone {
 	}
 }
 
-func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
+func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*ZoneContext, error) {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String()
 	name := strings.TrimPrefix(string(raw.Key), prefix)
 	z := r.newZone(name)
+	z.log = r.log.With(zap.String("zone", name))
 	z.etcdKey = string(raw.Key)
-	err := json.Unmarshal(raw.Value, &z)
+
+	// Try loading protobuf first
+	err := proto.Unmarshal(raw.Value, z.Zone)
+	if err == nil {
+		return z, nil
+	}
+	// Otherwise try json
+	err = json.Unmarshal(raw.Value, &z)
 	if err != nil {
 		return nil, err
 	}
-	z.log = r.log.With(zap.String("zone", z.Name))
 	return z, nil
 }
 
-func (z *Zone) Init(ctx context.Context) {
+func (z *ZoneContext) Init(ctx context.Context) {
 	for _, handlerCfg := range z.HandlerConfigs {
-		t := handlerCfg["type"]
+		t := handlerCfg.Fields["type"].GetStringValue()
 		var handler Handler
 		switch t {
 		case CoreDNSType:
-			handler = NewCoreDNS(z, handlerCfg)
+			handler = NewCoreDNS(z, handlerCfg.Fields)
 		case BlockyForwarderType:
-			handler = NewBlockyForwarder(z, handlerCfg)
+			handler = NewBlockyForwarder(z, handlerCfg.Fields)
 		case IPForwarderType:
-			handler = NewIPForwarderHandler(z, handlerCfg)
+			handler = NewIPForwarderHandler(z, handlerCfg.Fields)
 		case EtcdType:
-			handler = NewEtcdHandler(z, handlerCfg)
+			handler = NewEtcdHandler(z, handlerCfg.Fields)
 		case MemoryType:
-			handler = NewMemoryHandler(z, handlerCfg)
+			handler = NewMemoryHandler(z, handlerCfg.Fields)
 		default:
 			z.log.Warn("invalid forwarder type", zap.String("type", t))
 		}
@@ -176,7 +177,7 @@ func (z *Zone) Init(ctx context.Context) {
 	go z.watchZoneRecords(ctx)
 }
 
-func (z *Zone) watchZoneRecords(ctx context.Context) {
+func (z *ZoneContext) watchZoneRecords(ctx context.Context) {
 	evtHandler := func(ev *clientv3.Event) {
 		z.recordsSync.Lock()
 		defer z.recordsSync.Unlock()
@@ -231,18 +232,17 @@ func (z *Zone) watchZoneRecords(ctx context.Context) {
 	}
 }
 
-func (z *Zone) StopWatchingRecords() {
+func (z *ZoneContext) StopWatchingRecords() {
 	if z.recordsWatchCtx != nil {
 		z.recordsWatchCtx()
 	}
 }
 
-func (z *Zone) put(ctx context.Context) error {
-	raw, err := json.Marshal(&z)
+func (z *ZoneContext) put(ctx context.Context) error {
+	raw, err := proto.Marshal(z.Zone)
 	if err != nil {
 		return err
 	}
-
 	_, err = z.inst.KV().Put(
 		ctx,
 		z.inst.KV().Key(

@@ -9,6 +9,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const CoreDNSConfig = `.:1342 {
@@ -29,11 +30,13 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustJSON(types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type":   "coredns",
-					"config": CoreDNSConfig,
+					Fields: map[string]*structpb.Value{
+						"type":   structpb.NewStringValue("coredns"),
+						"config": structpb.NewStringValue(CoreDNSConfig),
+					},
 				},
 			},
 		}),

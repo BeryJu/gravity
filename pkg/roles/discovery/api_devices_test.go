@@ -141,7 +141,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			dnsTypes.KeyZones,
 			"gravity.beryju.io.",
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustJSON(dns.ZoneContext{}),
 	)
 	inst.KV().Put(
 		ctx,
@@ -150,7 +150,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			dnsTypes.KeyZones,
 			"0.192.in-addr.arpa.",
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustJSON(dns.ZoneContext{}),
 	)
 
 	// Create DHCP role to register events
@@ -257,7 +257,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			dnsTypes.KeyZones,
 			"gravity.beryju.io.",
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustJSON(dns.ZoneContext{}),
 	)
 	inst.KV().Put(
 		ctx,
@@ -266,7 +266,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			dnsTypes.KeyZones,
 			"0.192.in-addr.arpa.",
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustJSON(dns.ZoneContext{}),
 	)
 
 	// Create DNS role to register events
