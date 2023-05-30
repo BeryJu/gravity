@@ -1,11 +1,8 @@
 package dns
 
 import (
-	"context"
-	"errors"
+	"fmt"
 	"math/rand"
-	"net"
-	"net/netip"
 	"strconv"
 	"strings"
 	"time"
@@ -19,15 +16,27 @@ import (
 const IPForwarderType = "forward_ip"
 
 type IPForwarderHandler struct {
-	r        *net.Resolver
+	c         *dns.Client
+	resolvers []string
+
 	z        *Zone
 	log      *zap.Logger
 	CacheTTL int
 }
 
 func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
+	net, ok := config["net"]
+	if !ok {
+		net = ""
+	}
+
 	ipf := &IPForwarderHandler{
 		z: z,
+		c: &dns.Client{
+			Net:     net,
+			Timeout: time.Millisecond * 15,
+		},
+		resolvers: strings.Split(config["to"], ";"),
 	}
 	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
@@ -38,22 +47,11 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 		cacheTtl = 0
 	}
 	ipf.CacheTTL = cacheTtl
-
-	forwarders := strings.Split(config["to"], ";")
-	ipf.r = &net.Resolver{
-		PreferGo: true,
-		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			d := net.Dialer{
-				Timeout: time.Millisecond * 5,
-			}
-			resolver := forwarders[rand.Intn(len(forwarders))]
-			if !strings.Contains(resolver, ":") {
-				resolver += ":53"
-			}
-			return d.DialContext(ctx, network, resolver)
-		},
-	}
 	return ipf
+}
+
+func (ipf *IPForwarderHandler) Identifier() string {
+	return IPForwarderType
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Question, ans dns.RR, idx int) {
@@ -107,7 +105,6 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 		record.SRVPriority = v.Priority
 		record.SRVWeight = v.Weight
 	}
-	record.TTL = ans.Header().Ttl
 	record.uid = strconv.Itoa(idx)
 	err := record.put(r.Context(), int64(cacheTtl))
 	if err != nil {
@@ -115,8 +112,12 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 	}
 }
 
-func (ipf *IPForwarderHandler) Identifier() string {
-	return IPForwarderType
+func (ipf *IPForwarderHandler) pickResolver() string {
+	resolver := ipf.resolvers[rand.Intn(len(ipf.resolvers))]
+	if !strings.Contains(resolver, ":") {
+		resolver += ":53"
+	}
+	return resolver
 }
 
 func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
@@ -126,56 +127,27 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 	}
 	question := r.Question[0]
 	fs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.lookup")
-	ips, err := ipf.r.LookupHost(r.Context(), question.Name)
+	resolver := ipf.pickResolver()
+	fs.SetTag("resolver", resolver)
+	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver))
+	m, rtt, err := ipf.c.ExchangeContext(r.Context(), r.Msg, resolver)
+	ipf.log.Debug("dns rtt", zap.Duration("rtt", rtt))
 	fs.Finish()
-	m := new(dns.Msg)
-	m.SetReply(r.Msg)
 
-	var dnsErr *net.DNSError
-	if errors.As(err, &dnsErr) {
-		m.SetRcode(r.Msg, dns.RcodeNameError)
-		return m
-	} else if err != nil {
+	if err != nil {
 		ipf.log.Warn("failed to forward", zap.Error(err))
+		m := new(dns.Msg)
 		m.SetRcode(r.Msg, dns.RcodeServerFailure)
 		return m
 	}
-	m.Answer = make([]dns.RR, 0)
-	for idx, rawIp := range ips {
-		ip, err := netip.ParseAddr(rawIp)
-		if err != nil {
-			ipf.log.Warn("failed to parse response IP", zap.Error(err))
-			continue
-		}
-		var ans dns.RR
-		if ip.Is6() && question.Qtype == dns.TypeAAAA {
-			ans = &dns.AAAA{
-				Hdr: dns.RR_Header{
-					Name:   question.Name,
-					Rrtype: dns.TypeAAAA,
-					Class:  dns.ClassINET,
-					Ttl:    0,
-				},
-				AAAA: net.ParseIP(ip.String()),
-			}
-		} else if ip.Is4() && question.Qtype == dns.TypeA {
-			ans = &dns.A{
-				Hdr: dns.RR_Header{
-					Name:   question.Name,
-					Rrtype: dns.TypeA,
-					Class:  dns.ClassINET,
-					Ttl:    0,
-				},
-				A: net.ParseIP(ip.String()),
-			}
-		}
+	m.RecursionAvailable = true
+	fmt.Println(m.String())
+	for idx, ans := range m.Answer {
 		if ans == nil {
 			continue
 		}
-		m.Answer = append(m.Answer, ans)
 		go ipf.cacheToEtcd(r, question, ans, idx)
 	}
-	m.RecursionAvailable = true
 	if len(m.Answer) < 1 {
 		m.SetRcode(r.Msg, dns.RcodeNameError)
 	} else {
