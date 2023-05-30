@@ -1,7 +1,6 @@
 package dns
 
 import (
-	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -34,7 +33,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 		z: z,
 		c: &dns.Client{
 			Net:     net,
-			Timeout: time.Millisecond * 15,
+			Timeout: time.Second * 1,
 		},
 		resolvers: strings.Split(config["to"], ";"),
 	}
@@ -141,7 +140,6 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 		return m
 	}
 	m.RecursionAvailable = true
-	fmt.Println(m.String())
 	for idx, ans := range m.Answer {
 		if ans == nil {
 			continue
