@@ -5,12 +5,13 @@ import (
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
 
 func RoleConfig() []byte {
-	return []byte(tests.MustJSON(dns.RoleConfig{
+	return []byte(tests.MustPB(&types.DNSRoleConfig{
 		Port: 1054,
 	}))
 }

@@ -24,7 +24,7 @@ type Role struct {
 	ctx   context.Context
 	zones map[string]*ZoneContext
 
-	cfg     *RoleConfig
+	cfg     *types.DNSRoleConfig
 	log     *zap.Logger
 	servers []*dns.Server
 	zonesM  sync.RWMutex

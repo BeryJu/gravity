@@ -2,12 +2,12 @@ package dns
 
 import (
 	"context"
-	"encoding/json"
 	"net"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -43,13 +43,7 @@ func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*RecordContext, error) 
 	}
 	rec.recordKey = strings.TrimSuffix(fullRecordKey, "/"+rec.uid)
 
-	// Try loading protobuf first
-	err := proto.Unmarshal(kv.Value, rec.Record)
-	if err == nil {
-		return rec, nil
-	}
-	// Otherwise try json
-	err = json.Unmarshal(kv.Value, &rec)
+	_, err := storage.Parse(kv.Value, rec.Record)
 	if err != nil {
 		return rec, err
 	}

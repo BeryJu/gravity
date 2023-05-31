@@ -2,41 +2,38 @@ package dns
 
 import (
 	"context"
-	"encoding/json"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
+	"beryju.io/gravity/pkg/storage"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 )
 
-type RoleConfig struct {
-	Port int32 `json:"port"`
-}
-
-func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
-	def := RoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *types.DNSRoleConfig {
+	def := types.DNSRoleConfig{
 		Port: 53,
 	}
 	if len(raw) < 1 {
 		return &def
 	}
-	err := json.Unmarshal(raw, &def)
+	conf, err := storage.Parse(raw, &def)
 	if err != nil {
 		r.log.Warn("failed to decode role config", zap.Error(err))
 	}
-	return &def
+	return conf
 }
 
 type APIRoleConfigOutput struct {
-	Config RoleConfig `json:"config" required:"true"`
+	Config *types.DNSRoleConfig `json:"config" required:"true"`
 }
 
 func (r *Role) APIRoleConfigGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIRoleConfigOutput) error {
-		output.Config = *r.cfg
+		output.Config = r.cfg
 		return nil
 	})
 	u.SetName("dns.get_role_config")
@@ -46,12 +43,12 @@ func (r *Role) APIRoleConfigGet() usecase.Interactor {
 }
 
 type APIRoleConfigInput struct {
-	Config RoleConfig `json:"config" required:"true"`
+	Config *types.DNSRoleConfig `json:"config" required:"true"`
 }
 
 func (r *Role) APIRoleConfigPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleConfigInput, output *struct{}) error {
-		jc, err := json.Marshal(input.Config)
+		jc, err := proto.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}

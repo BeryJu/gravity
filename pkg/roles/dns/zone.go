@@ -2,7 +2,6 @@ package dns
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -12,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -139,13 +139,7 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*ZoneContext, error) {
 	z.log = r.log.With(zap.String("zone", name))
 	z.etcdKey = string(raw.Key)
 
-	// Try loading protobuf first
-	err := proto.Unmarshal(raw.Value, z.Zone)
-	if err == nil {
-		return z, nil
-	}
-	// Otherwise try json
-	err = json.Unmarshal(raw.Value, &z)
+	_, err := storage.Parse(raw.Value, z.Zone)
 	if err != nil {
 		return nil, err
 	}
