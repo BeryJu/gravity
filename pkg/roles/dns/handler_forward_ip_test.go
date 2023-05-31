@@ -25,7 +25,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
@@ -65,7 +65,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
@@ -112,7 +112,7 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{

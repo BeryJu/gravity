@@ -24,7 +24,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
@@ -44,7 +44,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(types.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -70,7 +70,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
@@ -90,7 +90,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(types.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -116,7 +116,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
@@ -136,7 +136,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(types.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)

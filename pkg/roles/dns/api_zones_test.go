@@ -25,7 +25,7 @@ func TestAPIZonesGet(t *testing.T) {
 			types.KeyZones,
 			"test.",
 		).String(),
-		tests.MustJSON(dns.ZoneContext{}),
+		tests.MustPB(&types.Zone{}),
 	)
 
 	var output dns.APIZonesGetOutput
@@ -86,7 +86,7 @@ func TestAPIZonesDelete(t *testing.T) {
 			types.KeyZones,
 			name,
 		).String(),
-		tests.MustJSON(dns.ZoneContext{}),
+		tests.MustPB(&types.Zone{}),
 	)
 
 	assert.NoError(t, role.APIZonesDelete().Interact(ctx, dns.APIZonesDeleteInput{

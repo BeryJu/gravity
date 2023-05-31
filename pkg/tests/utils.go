@@ -16,6 +16,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 func MustJSON(in interface{}) string {
@@ -24,6 +26,14 @@ func MustJSON(in interface{}) string {
 		panic(err)
 	}
 	return string(j)
+}
+
+func MustPB(m protoreflect.ProtoMessage) string {
+	raw, err := proto.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+	return string(raw)
 }
 
 func Context() context.Context {

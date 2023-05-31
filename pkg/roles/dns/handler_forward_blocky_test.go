@@ -32,7 +32,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(types.Zone{
+		tests.MustPB(&types.Zone{
 			HandlerConfigs: []*structpb.Struct{
 				{
 					Fields: map[string]*structpb.Value{
