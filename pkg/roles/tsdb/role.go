@@ -25,7 +25,7 @@ import (
 type Role struct {
 	log *zap.Logger
 	i   roles.Instance
-	cfg *RoleConfig
+	cfg *types.TSDBRoleConfig
 	ctx context.Context
 	m   map[string]types.Metric
 	ms  sync.RWMutex

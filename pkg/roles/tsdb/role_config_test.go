@@ -5,6 +5,7 @@ import (
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/tsdb"
+	"beryju.io/gravity/pkg/roles/tsdb/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +32,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, tsdb.APIRoleConfigInput{
-		Config: tsdb.RoleConfig{
+		Config: &types.TSDBRoleConfig{
 			Enabled: false,
 		},
 	}, &struct{}{}))
