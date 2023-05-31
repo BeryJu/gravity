@@ -320,6 +320,25 @@ paths:
       summary: Instances
       tags:
       - cluster/instances
+  /api/v1/cluster/node/logs:
+    get:
+      operationId: api.get_log_messages
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPILogMessages'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Log messages
+      tags:
+      - roles/api
   /api/v1/cluster/roles/restart:
     post:
       operationId: cluster.instance_role_restart
@@ -1421,6 +1440,14 @@ components:
         entries:
           items:
             $ref: '#/components/schemas/ApiAPITransportEntry'
+          nullable: true
+          type: array
+      type: object
+    ApiAPILogMessages:
+      properties:
+        messages:
+          items:
+            type: string
           nullable: true
           type: array
       type: object
