@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
@@ -108,16 +109,17 @@ func (r *Role) initServer4() error {
 		Port: r.cfg.Port,
 	}
 	var err error
-	udpConn, err := server4.NewIPv4UDPConn(laddr.Zone, laddr)
+	ifName := extconfig.Get().Instance.Interface
+	udpConn, err := server4.NewIPv4UDPConn(ifName, laddr)
 	if err != nil {
 		return err
 	}
 	r.s4.pc = ipv4.NewPacketConn(udpConn)
 	var ifi *net.Interface
-	if laddr.Zone != "" {
-		ifi, err = net.InterfaceByName(laddr.Zone)
+	if ifName != "" {
+		ifi, err = net.InterfaceByName(ifName)
 		if err != nil {
-			return fmt.Errorf("DHCPv4: Listen could not find interface %s: %v", laddr.Zone, err)
+			return fmt.Errorf("DHCPv4: Listen could not find interface %s: %v", ifName, err)
 		}
 		r.s4.iface = *ifi
 	} else {
@@ -149,7 +151,7 @@ func isErrNetClosing(err error) bool {
 }
 
 func (r *Role) startServer4() error {
-	r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port))
+	r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port), zap.String("interface", extconfig.Get().Instance.Interface))
 	err := r.s4.Serve()
 	if !isErrNetClosing(err) {
 		return err

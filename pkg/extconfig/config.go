@@ -2,6 +2,7 @@ package extconfig
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path"
 
@@ -21,6 +22,7 @@ type ExtConfig struct {
 	Instance struct {
 		Identifier string `env:"INSTANCE_IDENTIFIER"`
 		IP         string `env:"INSTANCE_IP"`
+		Interface  string `env:"INSTANCE_INTERFACE"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
 	LogLevel       string `env:"LOG_LEVEL,default=info"`
@@ -138,5 +140,12 @@ func (e *ExtConfig) load() {
 			panic(err)
 		}
 		e.Instance.IP = instIp.String()
+	}
+	if e.Instance.Interface == "" {
+		i, err := e.GetInterfaceForIP(net.ParseIP(e.Instance.IP))
+		if err != nil {
+			panic(err)
+		}
+		e.Instance.Interface = i.Name
 	}
 }
