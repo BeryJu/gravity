@@ -2,37 +2,31 @@ package dns
 
 import (
 	"context"
-	"encoding/json"
 	"net"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/proto"
 )
 
 const TXTSeparator = "\n"
 
-type Record struct {
-	inst roles.Instance
-	zone *Zone
-	Name string `json:"-"`
-	Type string `json:"-"`
+type RecordContext struct {
+	*types.Record
 
-	Data      string `json:"data"`
+	inst roles.Instance
+	zone *ZoneContext
+
 	uid       string
 	recordKey string
-	TTL       uint32 `json:"ttl,omitempty"`
-
-	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
 }
 
-func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
+func (z *ZoneContext) recordFromKV(kv *mvccpb.KeyValue) (*RecordContext, error) {
 	fullRecordKey := string(kv.Key)
 	// Relative key compared to zone, format of
 	// host/A[/...]
@@ -48,28 +42,31 @@ func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
 		rec.uid = parts[2]
 	}
 	rec.recordKey = strings.TrimSuffix(fullRecordKey, "/"+rec.uid)
-	err := json.Unmarshal(kv.Value, &rec)
+
+	_, err := storage.Parse(kv.Value, rec.Record)
 	if err != nil {
 		return rec, err
 	}
 	return rec, nil
 }
 
-func (z *Zone) newRecord(name string, t string) *Record {
-	return &Record{
-		Name: strings.ToLower(name),
-		Type: t,
+func (z *ZoneContext) newRecord(name string, t string) *RecordContext {
+	return &RecordContext{
+		Record: &types.Record{
+			Name: strings.ToLower(name),
+			Type: t,
+		},
 		inst: z.inst,
 		zone: z,
 	}
 }
 
-func (r *Record) ToDNS(qname string, t uint16) dns.RR {
+func (r *RecordContext) ToDNS(qname string, t uint16) dns.RR {
 	hdr := dns.RR_Header{
 		Name:   qname,
 		Rrtype: t,
 		Class:  dns.ClassINET,
-		Ttl:    r.TTL,
+		Ttl:    r.Ttl,
 	}
 	var rr dns.RR
 	switch t {
@@ -89,14 +86,14 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 		rr = &dns.SRV{}
 		rr.(*dns.SRV).Hdr = hdr
 		rr.(*dns.SRV).Target = r.Data
-		rr.(*dns.SRV).Port = r.SRVPort
-		rr.(*dns.SRV).Priority = r.SRVPriority
-		rr.(*dns.SRV).Weight = r.SRVWeight
+		rr.(*dns.SRV).Port = uint16(r.SrvPort)
+		rr.(*dns.SRV).Priority = uint16(r.SrvPriority)
+		rr.(*dns.SRV).Weight = uint16(r.SrvWeight)
 	case dns.TypeMX:
 		rr = &dns.MX{}
 		rr.(*dns.MX).Hdr = hdr
 		rr.(*dns.MX).Mx = r.Data
-		rr.(*dns.MX).Preference = r.MXPreference
+		rr.(*dns.MX).Preference = uint16(r.MxPreference)
 	case dns.TypeCNAME:
 		rr = &dns.CNAME{}
 		rr.(*dns.CNAME).Hdr = hdr
@@ -108,8 +105,8 @@ func (r *Record) ToDNS(qname string, t uint16) dns.RR {
 	return rr
 }
 
-func (r *Record) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
-	raw, err := json.Marshal(&r)
+func (r *RecordContext) put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
+	raw, err := proto.Marshal(r.Record)
 	if err != nil {
 		return err
 	}

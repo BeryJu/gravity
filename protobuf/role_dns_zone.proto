@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/dns/types";
+
+import "google/protobuf/struct.proto";
+
+message Zone {
+    string name = 1;
+    repeated google.protobuf.Struct handlerConfigs = 2;
+    uint32 defaultTTL = 3;
+    bool authoritative = 4;
+}

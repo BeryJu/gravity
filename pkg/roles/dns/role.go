@@ -16,14 +16,15 @@ import (
 	"github.com/miekg/dns"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type Role struct {
 	i     roles.Instance
 	ctx   context.Context
-	zones map[string]*Zone
+	zones map[string]*ZoneContext
 
-	cfg     *RoleConfig
+	cfg     *types.DNSRoleConfig
 	log     *zap.Logger
 	servers []*dns.Server
 	zonesM  sync.RWMutex
@@ -32,7 +33,7 @@ type Role struct {
 func New(instance roles.Instance) *Role {
 	r := &Role{
 		servers: make([]*dns.Server, 0),
-		zones:   make(map[string]*Zone, 0),
+		zones:   make(map[string]*ZoneContext, 0),
 		zonesM:  sync.RWMutex{},
 		log:     instance.Log(),
 		i:       instance,
@@ -44,17 +45,23 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a zone that'll forward to a reasonable default
 		zone := r.newZone(".")
-		zone.HandlerConfigs = []map[string]string{
+		zone.HandlerConfigs = []*structpb.Struct{
 			{
-				"type": "memory",
+				Fields: map[string]*structpb.Value{
+					"type": structpb.NewStringValue("memory"),
+				},
 			},
 			{
-				"type": "etcd",
+				Fields: map[string]*structpb.Value{
+					"type": structpb.NewStringValue("etcd"),
+				},
 			},
 			{
-				"type":      "forward_ip",
-				"to":        extconfig.Get().FallbackDNS,
-				"cache_ttl": "3600",
+				Fields: map[string]*structpb.Value{
+					"type":      structpb.NewStringValue("forward_ip"),
+					"to":        structpb.NewStringValue(extconfig.Get().FallbackDNS),
+					"cache_ttl": structpb.NewStringValue("3600"),
+				},
 			},
 		}
 		zone.put(ev.Context)

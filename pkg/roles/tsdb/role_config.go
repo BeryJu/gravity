@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
+	"beryju.io/gravity/pkg/roles/tsdb/types"
+	"beryju.io/gravity/pkg/storage"
 	"go.uber.org/zap"
 
 	"github.com/swaggest/usecase"
@@ -15,14 +17,8 @@ const (
 	KeyRole = "tsdb"
 )
 
-type RoleConfig struct {
-	Enabled bool  `json:"enabled"`
-	Expire  int64 `json:"expire"`
-	Scrape  int64 `json:"scrape"`
-}
-
-func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
-	def := RoleConfig{
+func (r *Role) decodeRoleConfig(raw []byte) *types.TSDBRoleConfig {
+	def := types.TSDBRoleConfig{
 		Enabled: true,
 		Expire:  60 * 30,
 		Scrape:  30,
@@ -30,20 +26,20 @@ func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
 	if len(raw) < 1 {
 		return &def
 	}
-	err := json.Unmarshal(raw, &def)
+	conf, err := storage.Parse(raw, &def)
 	if err != nil {
 		r.log.Warn("failed to decode role config", zap.Error(err))
 	}
-	return &def
+	return conf
 }
 
 type APIRoleConfigOutput struct {
-	Config RoleConfig `json:"config" required:"true"`
+	Config *types.TSDBRoleConfig `json:"config" required:"true"`
 }
 
 func (r *Role) APIRoleConfigGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIRoleConfigOutput) error {
-		output.Config = *r.cfg
+		output.Config = r.cfg
 		return nil
 	})
 	u.SetName("tsdb.get_role_config")
@@ -53,7 +49,7 @@ func (r *Role) APIRoleConfigGet() usecase.Interactor {
 }
 
 type APIRoleConfigInput struct {
-	Config RoleConfig `json:"config" required:"true"`
+	Config *types.TSDBRoleConfig `json:"config" required:"true"`
 }
 
 func (r *Role) APIRoleConfigPut() usecase.Interactor {

@@ -12,25 +12,26 @@ import (
 	"github.com/miekg/dns"
 	_ "github.com/ori-edge/k8s_gateway"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const CoreDNSType = "coredns"
 
 type CoreDNS struct {
-	c        map[string]string
+	c        map[string]*structpb.Value
 	log      *zap.Logger
 	instance *caddy.Instance
 	srv      *dnsserver.Server
 }
 
-func NewCoreDNS(z *Zone, rawConfig map[string]string) *CoreDNS {
+func NewCoreDNS(z *ZoneContext, rawConfig map[string]*structpb.Value) *CoreDNS {
 	core := &CoreDNS{
 		c: rawConfig,
 	}
 	core.log = z.log.With(zap.String("handler", core.Identifier()))
 	dnsserver.Quiet = true
 	corefile := caddy.CaddyfileInput{
-		Contents:       []byte(core.c["config"]),
+		Contents:       []byte(core.c["config"].GetStringValue()),
 		Filepath:       "in-memory",
 		ServerTypeName: "dns",
 	}

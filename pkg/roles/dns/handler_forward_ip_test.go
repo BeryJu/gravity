@@ -11,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestRoleDNS_IPForwarder_v4(t *testing.T) {
@@ -24,11 +25,13 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "forward_ip",
-					"to":   "127.0.0.1:1053",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("forward_ip"),
+						"to":   structpb.NewStringValue("127.0.0.1:1053"),
+					},
 				},
 			},
 		}),
@@ -62,12 +65,14 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type":      "forward_ip",
-					"to":        "127.0.0.1:1053",
-					"cache_ttl": "-2",
+					Fields: map[string]*structpb.Value{
+						"type":      structpb.NewStringValue("forward_ip"),
+						"to":        structpb.NewStringValue("127.0.0.1:1053"),
+						"cache_ttl": structpb.NewStringValue("-2"),
+					},
 				},
 			},
 		}),
@@ -90,7 +95,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		),
-		dns.Record{
+		types.Record{
 			Data: "10.0.0.1",
 		},
 	)
@@ -107,11 +112,13 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "forward_ip",
-					"to":   "127.0.0.1:1053",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("forward_ip"),
+						"to":   structpb.NewStringValue("127.0.0.1:1053"),
+					},
 				},
 			},
 		}),

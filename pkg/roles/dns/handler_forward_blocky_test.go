@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestRoleDNS_BlockyForwarder(t *testing.T) {
@@ -31,12 +32,14 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type":       "forward_blocky",
-					"blocklists": "http://127.0.0.1:9005/blocky_file.txt",
-					"to":         "127.0.0.1:1053",
+					Fields: map[string]*structpb.Value{
+						"type":       structpb.NewStringValue("forward_blocky"),
+						"blocklists": structpb.NewStringValue("http://127.0.0.1:9005/blocky_file.txt"),
+						"to":         structpb.NewStringValue("127.0.0.1:1053"),
+					},
 				},
 			},
 		}),

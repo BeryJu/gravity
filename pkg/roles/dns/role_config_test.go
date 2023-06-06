@@ -5,6 +5,7 @@ import (
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +32,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	defer role.Stop()
 
 	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, dns.APIRoleConfigInput{
-		Config: dns.RoleConfig{
+		Config: &types.DNSRoleConfig{
 			Port: 1054,
 		},
 	}, &struct{}{}))

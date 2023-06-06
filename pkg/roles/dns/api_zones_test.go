@@ -9,6 +9,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestAPIZonesGet(t *testing.T) {
@@ -24,7 +25,7 @@ func TestAPIZonesGet(t *testing.T) {
 			types.KeyZones,
 			"test.",
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustPB(&types.Zone{}),
 	)
 
 	var output dns.APIZonesGetOutput
@@ -57,11 +58,13 @@ func TestAPIZonesPut(t *testing.T) {
 			types.KeyZones,
 			name,
 		),
-		dns.Zone{
+		types.Zone{
 			Authoritative: true,
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "etcd",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("etcd"),
+					},
 				},
 			},
 		},
@@ -83,7 +86,7 @@ func TestAPIZonesDelete(t *testing.T) {
 			types.KeyZones,
 			name,
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustPB(&types.Zone{}),
 	)
 
 	assert.NoError(t, role.APIZonesDelete().Interact(ctx, dns.APIZonesDeleteInput{

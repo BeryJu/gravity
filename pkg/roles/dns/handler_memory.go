@@ -7,16 +7,17 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const MemoryType = "memory"
 
 type MemoryHandler struct {
 	log *zap.Logger
-	z   *Zone
+	z   *ZoneContext
 }
 
-func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
+func NewMemoryHandler(z *ZoneContext, config map[string]*structpb.Value) *MemoryHandler {
 	eh := &MemoryHandler{
 		z: z,
 	}

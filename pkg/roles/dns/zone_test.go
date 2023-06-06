@@ -8,6 +8,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestRoleDNSZoneFind(t *testing.T) {
@@ -21,11 +22,13 @@ func TestRoleDNSZoneFind(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "forward_ip",
-					"to":   "127.0.0.1:1053",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("forward_ip"),
+						"to":   structpb.NewStringValue("127.0.0.1:1053"),
+					},
 				},
 			},
 		}),

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/dns/types";
+
+message DNSRoleConfig {
+    int32 port = 1;
+}

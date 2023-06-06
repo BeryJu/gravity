@@ -10,6 +10,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const IPForwarderType = "forward_ip"
@@ -18,30 +19,30 @@ type IPForwarderHandler struct {
 	c         *dns.Client
 	resolvers []string
 
-	z        *Zone
+	z        *ZoneContext
 	log      *zap.Logger
 	CacheTTL int
 }
 
-func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
+func NewIPForwarderHandler(z *ZoneContext, config map[string]*structpb.Value) *IPForwarderHandler {
 	net, ok := config["net"]
 	if !ok {
-		net = ""
+		net = structpb.NewStringValue("")
 	}
 
 	ipf := &IPForwarderHandler{
 		z: z,
 		c: &dns.Client{
-			Net:     net,
+			Net:     net.GetStringValue(),
 			Timeout: types.DefaultUpstreamTimeout,
 		},
-		resolvers: strings.Split(config["to"], ";"),
+		resolvers: strings.Split(config["to"].GetStringValue(), ";"),
 	}
 	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
 	rawTtl := config["cache_ttl"]
-	cacheTtl, err := strconv.Atoi(rawTtl)
-	if err != nil && rawTtl != "" {
+	cacheTtl, err := strconv.Atoi(rawTtl.GetStringValue())
+	if err != nil && rawTtl.GetStringValue() != "" {
 		ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
 		cacheTtl = 0
 	}
@@ -97,12 +98,12 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 		record.Data = v.Target
 	case *dns.MX:
 		record.Data = v.Mx
-		record.MXPreference = v.Preference
+		record.MxPreference = uint32(v.Preference)
 	case *dns.SRV:
 		record.Data = v.Target
-		record.SRVPort = v.Port
-		record.SRVPriority = v.Priority
-		record.SRVWeight = v.Weight
+		record.SrvPort = uint32(v.Port)
+		record.SrvPriority = uint32(v.Priority)
+		record.SrvWeight = uint32(v.Weight)
 	}
 	record.uid = strconv.Itoa(idx)
 	err := record.put(r.Context(), int64(cacheTtl))

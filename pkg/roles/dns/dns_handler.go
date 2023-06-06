@@ -12,9 +12,9 @@ import (
 )
 
 // Find a zone for the given fqdn
-func (r *Role) FindZone(fqdn string) *Zone {
+func (r *Role) FindZone(fqdn string) *ZoneContext {
 	lastLongest := 0
-	var longestZone *Zone
+	var longestZone *ZoneContext
 	for name, zone := range r.zones {
 		// Zone doesn't have the correct suffix for the question
 		if !strings.HasSuffix(fqdn, name) {
@@ -30,7 +30,7 @@ func (r *Role) FindZone(fqdn string) *Zone {
 
 func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	lastLongest := 0
-	var longestZone *Zone
+	var longestZone *ZoneContext
 
 	span := sentry.StartTransaction(
 		context.TODO(),

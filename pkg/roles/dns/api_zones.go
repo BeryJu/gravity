@@ -10,6 +10,7 @@ import (
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type APIZonesGetInput struct {
@@ -54,11 +55,19 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 			if strings.Contains(_zone.Name, "/") {
 				continue
 			}
+			handlers := []map[string]string{}
+			for _, h := range _zone.HandlerConfigs {
+				hc := map[string]string{}
+				for key, value := range h.Fields {
+					hc[key] = value.GetStringValue()
+				}
+				handlers = append(handlers, hc)
+			}
 			output.Zones = append(output.Zones, APIZone{
 				Name:           _zone.Name,
 				Authoritative:  _zone.Authoritative,
 				DefaultTTL:     _zone.DefaultTTL,
-				HandlerConfigs: _zone.HandlerConfigs,
+				HandlerConfigs: handlers,
 			})
 		}
 		return nil
@@ -85,7 +94,16 @@ func (r *Role) APIZonesPut() usecase.Interactor {
 			z.Name += "."
 		}
 		z.Authoritative = input.Authoritative
-		z.HandlerConfigs = input.HandlerConfigs
+		z.HandlerConfigs = []*structpb.Struct{}
+		for _, h := range input.HandlerConfigs {
+			fields := make(map[string]*structpb.Value)
+			for key, value := range h {
+				fields[key] = structpb.NewStringValue(value)
+			}
+			z.HandlerConfigs = append(z.HandlerConfigs, &structpb.Struct{
+				Fields: fields,
+			})
+		}
 		z.DefaultTTL = input.DefaultTTL
 		err := z.put(ctx)
 		if err != nil {

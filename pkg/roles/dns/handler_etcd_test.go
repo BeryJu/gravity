@@ -9,6 +9,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestRoleDNS_Etcd(t *testing.T) {
@@ -23,10 +24,12 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "etcd",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("etcd"),
+					},
 				},
 			},
 		}),
@@ -41,7 +44,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -67,10 +70,12 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "etcd",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("etcd"),
+					},
 				},
 			},
 		}),
@@ -85,7 +90,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)
@@ -111,10 +116,12 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			types.KeyZones,
 			".",
 		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+		tests.MustPB(&types.Zone{
+			HandlerConfigs: []*structpb.Struct{
 				{
-					"type": "etcd",
+					Fields: map[string]*structpb.Value{
+						"type": structpb.NewStringValue("etcd"),
+					},
 				},
 			},
 		}),
@@ -129,7 +136,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustPB(&types.Record{
 			Data: "10.1.2.3",
 		}),
 	)

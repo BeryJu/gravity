@@ -24,7 +24,7 @@ func TestAPIRecordsGet(t *testing.T) {
 			types.KeyZones,
 			zone,
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustPB(&types.Zone{}),
 	)
 	inst.KV().Put(
 		ctx,
@@ -35,7 +35,7 @@ func TestAPIRecordsGet(t *testing.T) {
 			"test",
 			"A",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustPB(&types.Record{
 			Data: "192.0.2.1",
 		}),
 	)
@@ -61,7 +61,7 @@ func TestAPIRecordsPut(t *testing.T) {
 			types.KeyZones,
 			name,
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustPB(&types.Zone{}),
 	)
 	assert.NoError(t, role.APIRecordsPut().Interact(ctx, dns.APIRecordsPutInput{
 		Zone:     name,
@@ -80,7 +80,7 @@ func TestAPIRecordsPut(t *testing.T) {
 			"test",
 			"A",
 		),
-		dns.Record{
+		types.Record{
 			Data: "192.0.2.1",
 		},
 	)
@@ -100,7 +100,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 			types.KeyZones,
 			zone,
 		).String(),
-		tests.MustJSON(dns.Zone{}),
+		tests.MustPB(&types.Zone{}),
 	)
 	inst.KV().Put(
 		ctx,
@@ -111,7 +111,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 			"test",
 			"A",
 		).String(),
-		tests.MustJSON(dns.Record{
+		tests.MustPB(&types.Record{
 			Data: "192.0.2.1",
 		}),
 	)

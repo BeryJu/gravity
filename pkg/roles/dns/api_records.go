@@ -73,10 +73,10 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				FQDN:         rec.Name + "." + zone.Name,
 				Type:         rec.Type,
 				Data:         rec.Data,
-				MXPreference: rec.MXPreference,
-				SRVPort:      rec.SRVPort,
-				SRVPriority:  rec.SRVPriority,
-				SRVWeight:    rec.SRVWeight,
+				MXPreference: uint16(rec.MxPreference),
+				SRVPort:      uint16(rec.SrvPort),
+				SRVPriority:  uint16(rec.SrvPriority),
+				SRVWeight:    uint16(rec.SrvWeight),
 			})
 		}
 		return nil
@@ -122,10 +122,10 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 			input.Data = utils.EnsureTrailingPeriod(input.Data)
 		}
 		rec.Data = input.Data
-		rec.MXPreference = input.MXPreference
-		rec.SRVPort = input.SRVPort
-		rec.SRVPriority = input.SRVPriority
-		rec.SRVWeight = input.SRVWeight
+		rec.MxPreference = uint32(input.MXPreference)
+		rec.SrvPort = uint32(input.SRVPort)
+		rec.SrvPriority = uint32(input.SRVPriority)
+		rec.SrvWeight = uint32(input.SRVWeight)
 		err = rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)

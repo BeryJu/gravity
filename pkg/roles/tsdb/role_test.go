@@ -48,7 +48,7 @@ func TestRoleStartNotEnabled(t *testing.T) {
 	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
 	assert.NotNil(t, role)
-	assert.Error(t, roles.ErrRoleNotConfigured, role.Start(ctx, []byte(tests.MustJSON(tsdb.RoleConfig{
+	assert.Error(t, roles.ErrRoleNotConfigured, role.Start(ctx, []byte(tests.MustPB(&types.TSDBRoleConfig{
 		Enabled: false,
 	}))))
 	defer role.Stop()
@@ -60,7 +60,7 @@ func TestRoleWrite(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)
 	role := tsdb.New(inst)
-	assert.NoError(t, role.Start(ctx, []byte(tests.MustJSON(tsdb.RoleConfig{
+	assert.NoError(t, role.Start(ctx, []byte(tests.MustPB(&types.TSDBRoleConfig{
 		Enabled: true,
 		Scrape:  0,
 	}))))
