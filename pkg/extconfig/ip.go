@@ -2,6 +2,7 @@ package extconfig
 
 import (
 	"errors"
+	"fmt"
 	"net"
 
 	"go.uber.org/zap"
@@ -62,7 +63,7 @@ func (e *ExtConfig) GetInterfaceForIP(forIp net.IP) (*net.Interface, error) {
 			}
 		}
 	}
-	return nil, nil
+	return nil, fmt.Errorf("faild to find interface for %s", forIp.String())
 }
 
 func (e *ExtConfig) GetIP() (net.IP, error) {
