@@ -27,7 +27,7 @@ type ExtConfig struct {
 	}
 	LogLevel       string `env:"LOG_LEVEL,default=info"`
 	DataPath       string `env:"DATA_PATH,default=./data"`
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
 	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 
 	Sentry struct {
