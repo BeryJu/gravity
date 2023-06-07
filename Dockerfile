@@ -15,7 +15,7 @@ ENV NODE_ENV=production
 RUN make web-build
 
 # Stage 2: Build
-FROM --platform=${BUILDPLATFORM} golang:1.20.4 as builder
+FROM --platform=${BUILDPLATFORM} golang:1.20.5 as builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
