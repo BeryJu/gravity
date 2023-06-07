@@ -143,7 +143,7 @@ func (e *ExtConfig) load() {
 	}
 	if e.Instance.Interface == "" {
 		i, err := e.GetInterfaceForIP(net.ParseIP(e.Instance.IP))
-		if err != nil && i != nil {
+		if err != nil || i == nil {
 			e.logger.Warn("defaulting to all interfaces", zap.Error(err))
 			e.Instance.Interface = ""
 		} else {
