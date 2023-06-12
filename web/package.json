@@ -24,7 +24,7 @@
         "@polymer/iron-form": "^3.0.1",
         "@polymer/paper-input": "^3.2.1",
         "@rollup/plugin-babel": "^6.0.3",
-        "@rollup/plugin-commonjs": "^25.0.0",
+        "@rollup/plugin-commonjs": "^25.0.1",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.1.0",
         "@rollup/plugin-typescript": "^11.1.1",
