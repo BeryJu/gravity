@@ -106,6 +106,59 @@ html > form > input {
     margin-bottom: 6px;
 }
 
+@media (prefers-color-scheme: light) {
+    .pf-c-page__sidebar {
+        color: var(--pf-global--Color--100);
+        --pf-c-page__sidebar--BackgroundColor: var(--pf-c-page__sidebar--m-light--BackgroundColor);
+        border-right: var(--pf-c-page__sidebar--m-light--BorderRightWidth) solid
+            transparent;
+    }
+    .pf-c-nav {
+        --pf-c-nav__item--before--BorderColor: var(--pf-c-nav--m-light__item--before--BorderColor);
+        --pf-c-nav__item--m-current--not--m-expanded__link--BackgroundColor: var(
+            --pf-c-nav--m-light__item--m-current--not--m-expanded__link--BackgroundColor
+        );
+        --pf-c-nav__link--Color: var(--pf-c-nav--m-light__link--Color);
+        --pf-c-nav__link--hover--Color: var(--pf-c-nav--m-light__link--hover--Color);
+        --pf-c-nav__link--focus--Color: var(--pf-c-nav--m-light__link--focus--Color);
+        --pf-c-nav__link--active--Color: var(--pf-c-nav--m-light__link--active--Color);
+        --pf-c-nav__link--m-current--Color: var(--pf-c-nav--m-light__link--m-current--Color);
+        --pf-c-nav__link--hover--BackgroundColor: var(
+            --pf-c-nav--m-light__link--hover--BackgroundColor
+        );
+        --pf-c-nav__link--focus--BackgroundColor: var(
+            --pf-c-nav--m-light__link--focus--BackgroundColor
+        );
+        --pf-c-nav__link--active--BackgroundColor: var(
+            --pf-c-nav--m-light__link--active--BackgroundColor
+        );
+        --pf-c-nav__link--m-current--BackgroundColor: var(
+            --pf-c-nav--m-light__link--m-current--BackgroundColor
+        );
+        --pf-c-nav__link--before--BorderColor: var(--pf-c-nav--m-light__link--before--BorderColor);
+        --pf-c-nav__link--after--BorderColor: var(--pf-c-nav--m-light__link--after--BorderColor);
+        --pf-c-nav__link--m-current--after--BorderColor: var(
+            --pf-c-nav--m-light__link--m-current--after--BorderColor
+        );
+        --pf-c-nav__subnav__link--hover--after--BorderColor: var(
+            --pf-c-nav--m-light__subnav__link--hover--after--BorderColor
+        );
+        --pf-c-nav__subnav__link--focus--after--BorderColor: var(
+            --pf-c-nav--m-light__subnav__link--focus--after--BorderColor
+        );
+        --pf-c-nav__subnav__link--active--after--BorderColor: var(
+            --pf-c-nav--m-light__subnav__link--active--after--BorderColor
+        );
+        --pf-c-nav__subnav__link--m-current--after--BorderColor: var(
+            --pf-c-nav--m-light__subnav__link--m-current--after--BorderColor
+        );
+        --pf-c-nav__section-title--Color: var(--pf-c-nav--m-light__section-title--Color);
+        --pf-c-nav__section-title--BorderBottomColor: var(
+            --pf-c-nav--m-light__section-title--BorderBottomColor
+        );
+    }
+}
+
 @media (prefers-color-scheme: dark) {
     .ak-static-page h1 {
         color: var(--ak-dark-foreground);
