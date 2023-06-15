@@ -10,6 +10,9 @@ params:
   description: Fully-replicated DNS and DHCP Server with ad-blocking powered by etcd
   copyright: BeryJu.io
   offlineSearch: true
+  ui:
+    readingtime:
+      enable: true
 
 markup:
   tableOfContents:
@@ -21,6 +24,9 @@ menu:
     - name: GitHub
       weight: 50
       url: 'https://github.com/BeryJu/gravity'
+    - name: Documentation
+      weight: 50
+      url: /docs
 module:
   proxy: direct
   imports:

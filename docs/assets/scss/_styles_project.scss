@@ -1,0 +1,6 @@
+.td-overlay.td-overlay--dark {
+    background-position-y: -114px;
+}
+.td-overlay.td-overlay--dark::after {
+    backdrop-filter: blur(5px);
+}
