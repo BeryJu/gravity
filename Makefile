@@ -30,11 +30,29 @@ run:
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
 	go run ${GO_FLAGS} . server
 
+# Web
 web-build:
 	cd web
 	npm ci
 	npm version ${VERSION} || true
 	npm run build
+
+web-watch:
+	cd web
+	npm ci
+	npm version ${VERSION} || true
+	npm run watch
+
+web-lint:
+	cd web
+	npm run prettier
+	npm run lint
+	npm run lit-analyse
+
+# Website
+website-watch:
+	cd docs
+	open http://localhost:1313/ && hugo server --noBuildLock
 
 gen-update-oui:
 	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/macoui/db.txt || true
@@ -93,6 +111,9 @@ gen-client-ts-update: gen-client-ts
 	git add package*.json
 
 gen: gen-build gen-clean gen-client-go gen-client-ts-update gen-tag
+
+lint: web-lint
+	golangci-lint run -v --timeout 5000s
 
 test-env-start:
 	cd hack/tests/
