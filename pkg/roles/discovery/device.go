@@ -97,13 +97,15 @@ func (d *Device) toDNS(ctx context.Context, zone string) error {
 		return errors.New("device hostname has no domain and no zone given")
 	}
 	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateForward, roles.NewEvent(ctx, map[string]interface{}{
-		"fqdn":     fqdn,
-		"hostname": hostname[0],
-		"address":  d.IP,
+		"fqdn":       fqdn,
+		"hostname":   hostname[0],
+		"address":    d.IP,
+		"identifier": d.Identifier,
 	}))
 	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateReverse, roles.NewEvent(ctx, map[string]interface{}{
-		"fqdn":    fqdn,
-		"address": d.IP,
+		"fqdn":       fqdn,
+		"address":    d.IP,
+		"identifier": d.Identifier,
 	}))
 	// Maybe delete device? Mark as applied?
 	return nil

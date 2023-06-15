@@ -106,9 +106,10 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	ev := roles.NewEvent(
 		ctx,
 		map[string]interface{}{
-			"hostname": l.Hostname,
-			"address":  l.Address,
-			"fqdn":     utils.EnsureTrailingPeriod(strings.Join([]string{l.Hostname, zone}, ".")),
+			"hostname":   l.Hostname,
+			"address":    l.Address,
+			"identifier": l.Identifier,
+			"fqdn":       utils.EnsureTrailingPeriod(strings.Join([]string{l.Hostname, zone}, ".")),
 		},
 	)
 	ev.Payload.RelatedObjectKey = leaseKey

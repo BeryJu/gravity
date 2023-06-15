@@ -11,19 +11,27 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) eventHandlerDHCPLeaseGiven(ev *roles.Event) {
+func (r *Role) eventHandlerDHCPLeasePut(ev *roles.Event) {
 	if ev.Payload.Data["hostname"] == "" {
 		return
 	}
 	// Forward record
-	r.eventCreateForward(ev)
+	r.eventHandlerCreateForward(ev)
 	// Reverse record
-	r.eventCreateReverse(ev)
+	r.eventHandlerCreateReverse(ev)
 }
 
-func (r *Role) eventCreateForward(ev *roles.Event) {
+// eventHandlerCreateForward Event handler for `roles.dns.record.create_forward`
+// also used by the DHCP lease put event handler
+// requires these payload data attributes:
+// - hostname for the device name
+// - fqdn for the dns zone to put the record in
+// - identifier for the record UID
+// - address for the actual address
+func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 	hostname := ev.Payload.Data["hostname"].(string)
 	fqdn := ev.Payload.Data["fqdn"].(string)
+	identifier := ev.Payload.Data["identifier"].(string)
 	forwardZone := r.FindZone(fqdn)
 	if forwardZone == nil {
 		r.log.Debug("No zone found for hostname", zap.Any("event", ev), zap.String("fqdn", fqdn))
@@ -40,9 +48,10 @@ func (r *Role) eventCreateForward(ev *roles.Event) {
 	if ip.Is4() {
 		rec = forwardZone.newRecord(hostname, types.DNSRecordTypeA)
 	} else {
-		rec = forwardZone.newRecord(hostname, types.DNSRecordTypeA)
+		rec = forwardZone.newRecord(hostname, types.DNSRecordTypeAAAA)
 	}
 	rec.Data = ip.String()
+	rec.uid = identifier
 	rec.TTL = forwardZone.DefaultTTL
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
@@ -50,9 +59,17 @@ func (r *Role) eventCreateForward(ev *roles.Event) {
 	}
 }
 
-func (r *Role) eventCreateReverse(ev *roles.Event) {
+// eventHandlerCreateReverse Event handler for `roles.dns.record.create_reverse`
+// also used by the DHCP lease put event handler
+// requires these payload data attributes:
+// - hostname for the device name
+// - fqdn for the dns zone to put the record in
+// - identifier for the record UID
+// - address for the actual address
+func (r *Role) eventHandlerCreateReverse(ev *roles.Event) {
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	rawAddr := ev.Payload.Data["address"].(string)
+	identifier := ev.Payload.Data["identifier"].(string)
 	ip, err := netip.ParseAddr(rawAddr)
 	if err != nil {
 		r.log.Warn("failed to parse address to add dns record", zap.Error(err))
@@ -65,16 +82,17 @@ func (r *Role) eventCreateReverse(ev *roles.Event) {
 		return
 	}
 
-	forwardZone := r.FindZone(rev)
-	if forwardZone == nil {
+	reverseZone := r.FindZone(rev)
+	if reverseZone == nil {
 		r.log.Debug("No zone found for hostname", zap.Any("event", ev), zap.String("fqdn", fqdn))
 		return
 	}
 
-	relName := strings.TrimSuffix(rev, utils.EnsureLeadingPeriod(forwardZone.Name))
-	rec := forwardZone.newRecord(relName, types.DNSRecordTypePTR)
+	relName := strings.TrimSuffix(rev, utils.EnsureLeadingPeriod(reverseZone.Name))
+	rec := reverseZone.newRecord(relName, types.DNSRecordTypePTR)
+	rec.uid = identifier
 	rec.Data = fqdn
-	rec.TTL = forwardZone.DefaultTTL
+	rec.TTL = reverseZone.DefaultTTL
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))

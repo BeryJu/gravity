@@ -38,9 +38,9 @@ func New(instance roles.Instance) *Role {
 		i:       instance,
 		ctx:     instance.Context(),
 	}
-	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeaseGiven)
-	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventCreateForward)
-	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventCreateReverse)
+	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeasePut)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventHandlerCreateForward)
+	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventHandlerCreateReverse)
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a zone that'll forward to a reasonable default
 		zone := r.newZone(".")
