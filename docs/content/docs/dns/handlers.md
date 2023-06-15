@@ -1,13 +1,28 @@
 ---
-title: "Handlers"
+title: "Zone Handlers"
 weight: 1
 ---
 
-# Zone Handlers
-
 The order of handler matters, gravity will send the query to each handler in the order the are configured, until one of the handlers returns a response.
 
-### etcd
+The handler configuration consists of a list of individual handler configurations. All list entries require a `type` attributes, which must match with one of the headers listed below, for example:
+
+```yaml
+- cache_ttl: "3600"
+  to: 8.8.8.8:53
+  type: forward_blocky
+- to: 8.8.8.8:53
+  type: forward_ip
+```
+
+or
+
+```yaml
+- type: memory
+- type: etcd
+```
+
+### `etcd`
 
 Attempt to reply to query by looking for records in etcd. Keep in mind because this is configured on zone level, this handler will only look for matching records in the current zone.
 
@@ -15,7 +30,7 @@ Attempt to reply to query by looking for records in etcd. Keep in mind because t
 
 None
 
-### memory
+### `memory`
 
 Gravity watches the etcd database for changes, and keeps all the records in memory. If this handler is enabled for a zone which has records in etcd, this handler will reply from memory.
 
@@ -23,7 +38,7 @@ Gravity watches the etcd database for changes, and keeps all the records in memo
 
 None
 
-### forward_ip
+### `forward_ip`
 
 Forward queries to another DNS Server
 
@@ -38,7 +53,14 @@ Forward queries to another DNS Server
   Defaults to 0. Attempts to cache for the TTL of the response.
   Set to -1 to never cache, and set to -2 to cache without a TTL
 
-### forward_blocky
+##### Example
+
+```yaml
+- type: forward_ip
+  to: 8.8.8.8
+```
+
+### `forward_blocky`
 
 Forward queries to another DNS Server using blocky for Ad/Privacy blocking
 
@@ -65,7 +87,15 @@ Forward queries to another DNS Server using blocky for Ad/Privacy blocking
   - https://v.firebog.net/hosts/Easylist.txt
   - https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
 
-### CoreDNS
+##### Example
+
+```yaml
+- type: forward_blocky
+  to: 8.8.8.8
+  blocklists: https://adaway.org/hosts.txt
+```
+
+### `coredns`
 
 Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredns.io/plugins/) for all plugins.
 
@@ -82,3 +112,13 @@ Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredn
   ```
 
   **Make sure to use a different port in the configuration as the one Gravity uses to prevent any issues**
+
+##### Example
+
+```yaml
+- type: coredns
+  config: |
+    .:1053 {
+      whoami
+    }
+```

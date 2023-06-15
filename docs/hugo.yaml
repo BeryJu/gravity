@@ -1,0 +1,34 @@
+baseURL: 'https://gravity.beryju.io/'
+languageCode: en-us
+title: Gravity
+enableGitInfo: true
+enableRobotsTXT: true
+github_repo: 'https://github.com/BeryJu/gravity'
+github_subdir: docs
+
+params:
+  description: Fully-replicated DNS and DHCP Server with ad-blocking powered by etcd
+  copyright: BeryJu.io
+  offlineSearch: true
+
+markup:
+  tableOfContents:
+    startLevel: 1
+    endLevel: 6
+
+menu:
+  main:
+    - name: GitHub
+      weight: 50
+      url: 'https://github.com/BeryJu/gravity'
+module:
+  proxy: direct
+  imports:
+    - path: github.com/google/docsy
+      disable: false
+    - path: github.com/google/docsy/dependencies
+      disable: false
+imaging:
+  resampleFilter: catmullRom
+  quality: 75
+  anchor: Smart
