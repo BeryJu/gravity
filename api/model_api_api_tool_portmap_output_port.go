@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolPortmapOutputPort type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolPortmapOutputPort{}
+
 // ApiAPIToolPortmapOutputPort struct for ApiAPIToolPortmapOutputPort
 type ApiAPIToolPortmapOutputPort struct {
 	Name     *string `json:"name,omitempty"`
@@ -41,7 +44,7 @@ func NewApiAPIToolPortmapOutputPortWithDefaults() *ApiAPIToolPortmapOutputPort {
 
 // GetName returns the Name field value if set, zero value otherwise.
 func (o *ApiAPIToolPortmapOutputPort) GetName() string {
-	if o == nil || o.Name == nil {
+	if o == nil || IsNil(o.Name) {
 		var ret string
 		return ret
 	}
@@ -51,7 +54,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetName() string {
 // GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPortmapOutputPort) GetNameOk() (*string, bool) {
-	if o == nil || o.Name == nil {
+	if o == nil || IsNil(o.Name) {
 		return nil, false
 	}
 	return o.Name, true
@@ -59,7 +62,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetNameOk() (*string, bool) {
 
 // HasName returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutputPort) HasName() bool {
-	if o != nil && o.Name != nil {
+	if o != nil && !IsNil(o.Name) {
 		return true
 	}
 
@@ -73,7 +76,7 @@ func (o *ApiAPIToolPortmapOutputPort) SetName(v string) {
 
 // GetPort returns the Port field value if set, zero value otherwise.
 func (o *ApiAPIToolPortmapOutputPort) GetPort() int32 {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		var ret int32
 		return ret
 	}
@@ -83,7 +86,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetPort() int32 {
 // GetPortOk returns a tuple with the Port field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPortmapOutputPort) GetPortOk() (*int32, bool) {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		return nil, false
 	}
 	return o.Port, true
@@ -91,7 +94,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetPortOk() (*int32, bool) {
 
 // HasPort returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutputPort) HasPort() bool {
-	if o != nil && o.Port != nil {
+	if o != nil && !IsNil(o.Port) {
 		return true
 	}
 
@@ -105,7 +108,7 @@ func (o *ApiAPIToolPortmapOutputPort) SetPort(v int32) {
 
 // GetProtocol returns the Protocol field value if set, zero value otherwise.
 func (o *ApiAPIToolPortmapOutputPort) GetProtocol() string {
-	if o == nil || o.Protocol == nil {
+	if o == nil || IsNil(o.Protocol) {
 		var ret string
 		return ret
 	}
@@ -115,7 +118,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetProtocol() string {
 // GetProtocolOk returns a tuple with the Protocol field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPortmapOutputPort) GetProtocolOk() (*string, bool) {
-	if o == nil || o.Protocol == nil {
+	if o == nil || IsNil(o.Protocol) {
 		return nil, false
 	}
 	return o.Protocol, true
@@ -123,7 +126,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetProtocolOk() (*string, bool) {
 
 // HasProtocol returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutputPort) HasProtocol() bool {
-	if o != nil && o.Protocol != nil {
+	if o != nil && !IsNil(o.Protocol) {
 		return true
 	}
 
@@ -137,7 +140,7 @@ func (o *ApiAPIToolPortmapOutputPort) SetProtocol(v string) {
 
 // GetReason returns the Reason field value if set, zero value otherwise.
 func (o *ApiAPIToolPortmapOutputPort) GetReason() string {
-	if o == nil || o.Reason == nil {
+	if o == nil || IsNil(o.Reason) {
 		var ret string
 		return ret
 	}
@@ -147,7 +150,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetReason() string {
 // GetReasonOk returns a tuple with the Reason field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPortmapOutputPort) GetReasonOk() (*string, bool) {
-	if o == nil || o.Reason == nil {
+	if o == nil || IsNil(o.Reason) {
 		return nil, false
 	}
 	return o.Reason, true
@@ -155,7 +158,7 @@ func (o *ApiAPIToolPortmapOutputPort) GetReasonOk() (*string, bool) {
 
 // HasReason returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutputPort) HasReason() bool {
-	if o != nil && o.Reason != nil {
+	if o != nil && !IsNil(o.Reason) {
 		return true
 	}
 
@@ -168,20 +171,28 @@ func (o *ApiAPIToolPortmapOutputPort) SetReason(v string) {
 }
 
 func (o ApiAPIToolPortmapOutputPort) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Name != nil {
-		toSerialize["name"] = o.Name
-	}
-	if o.Port != nil {
-		toSerialize["port"] = o.Port
-	}
-	if o.Protocol != nil {
-		toSerialize["protocol"] = o.Protocol
-	}
-	if o.Reason != nil {
-		toSerialize["reason"] = o.Reason
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolPortmapOutputPort) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Name) {
+		toSerialize["name"] = o.Name
+	}
+	if !IsNil(o.Port) {
+		toSerialize["port"] = o.Port
+	}
+	if !IsNil(o.Protocol) {
+		toSerialize["protocol"] = o.Protocol
+	}
+	if !IsNil(o.Reason) {
+		toSerialize["reason"] = o.Reason
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolPortmapOutputPort struct {

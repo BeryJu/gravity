@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolTracerouteInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolTracerouteInput{}
+
 // ApiAPIToolTracerouteInput struct for ApiAPIToolTracerouteInput
 type ApiAPIToolTracerouteInput struct {
 	Host *string `json:"host,omitempty"`
@@ -38,7 +41,7 @@ func NewApiAPIToolTracerouteInputWithDefaults() *ApiAPIToolTracerouteInput {
 
 // GetHost returns the Host field value if set, zero value otherwise.
 func (o *ApiAPIToolTracerouteInput) GetHost() string {
-	if o == nil || o.Host == nil {
+	if o == nil || IsNil(o.Host) {
 		var ret string
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *ApiAPIToolTracerouteInput) GetHost() string {
 // GetHostOk returns a tuple with the Host field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolTracerouteInput) GetHostOk() (*string, bool) {
-	if o == nil || o.Host == nil {
+	if o == nil || IsNil(o.Host) {
 		return nil, false
 	}
 	return o.Host, true
@@ -56,7 +59,7 @@ func (o *ApiAPIToolTracerouteInput) GetHostOk() (*string, bool) {
 
 // HasHost returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteInput) HasHost() bool {
-	if o != nil && o.Host != nil {
+	if o != nil && !IsNil(o.Host) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *ApiAPIToolTracerouteInput) SetHost(v string) {
 }
 
 func (o ApiAPIToolTracerouteInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Host != nil {
-		toSerialize["host"] = o.Host
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolTracerouteInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Host) {
+		toSerialize["host"] = o.Host
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolTracerouteInput struct {

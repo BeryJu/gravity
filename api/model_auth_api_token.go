@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPIToken type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPIToken{}
+
 // AuthAPIToken struct for AuthAPIToken
 type AuthAPIToken struct {
 	Key      string `json:"key"`
@@ -88,14 +91,18 @@ func (o *AuthAPIToken) SetUsername(v string) {
 }
 
 func (o AuthAPIToken) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["key"] = o.Key
-	}
-	if true {
-		toSerialize["username"] = o.Username
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPIToken) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["key"] = o.Key
+	toSerialize["username"] = o.Username
+	return toSerialize, nil
 }
 
 type NullableAuthAPIToken struct {

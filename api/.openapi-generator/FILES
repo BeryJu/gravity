@@ -184,4 +184,13 @@ model_types_api_metrics_record.go
 model_types_dhcp_option.go
 model_types_oidc_config.go
 response.go
+test/api_cluster_instances_test.go
+test/api_roles_api_test.go
+test/api_roles_backup_test.go
+test/api_roles_dhcp_test.go
+test/api_roles_discovery_test.go
+test/api_roles_dns_test.go
+test/api_roles_etcd_test.go
+test/api_roles_monitoring_test.go
+test/api_roles_tsdb_test.go
 utils.go

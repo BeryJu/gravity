@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPIUsersPutInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPIUsersPutInput{}
+
 // AuthAPIUsersPutInput struct for AuthAPIUsersPutInput
 type AuthAPIUsersPutInput struct {
 	Password string `json:"password"`
@@ -62,11 +65,17 @@ func (o *AuthAPIUsersPutInput) SetPassword(v string) {
 }
 
 func (o AuthAPIUsersPutInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["password"] = o.Password
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPIUsersPutInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["password"] = o.Password
+	return toSerialize, nil
 }
 
 type NullableAuthAPIUsersPutInput struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPIConfigOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPIConfigOutput{}
+
 // AuthAPIConfigOutput struct for AuthAPIConfigOutput
 type AuthAPIConfigOutput struct {
 	Bool *bool `json:"bool,omitempty"`
@@ -39,7 +42,7 @@ func NewAuthAPIConfigOutputWithDefaults() *AuthAPIConfigOutput {
 
 // GetBool returns the Bool field value if set, zero value otherwise.
 func (o *AuthAPIConfigOutput) GetBool() bool {
-	if o == nil || o.Bool == nil {
+	if o == nil || IsNil(o.Bool) {
 		var ret bool
 		return ret
 	}
@@ -49,7 +52,7 @@ func (o *AuthAPIConfigOutput) GetBool() bool {
 // GetBoolOk returns a tuple with the Bool field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AuthAPIConfigOutput) GetBoolOk() (*bool, bool) {
-	if o == nil || o.Bool == nil {
+	if o == nil || IsNil(o.Bool) {
 		return nil, false
 	}
 	return o.Bool, true
@@ -57,7 +60,7 @@ func (o *AuthAPIConfigOutput) GetBoolOk() (*bool, bool) {
 
 // HasBool returns a boolean if a field has been set.
 func (o *AuthAPIConfigOutput) HasBool() bool {
-	if o != nil && o.Bool != nil {
+	if o != nil && !IsNil(o.Bool) {
 		return true
 	}
 
@@ -71,7 +74,7 @@ func (o *AuthAPIConfigOutput) SetBool(v bool) {
 
 // GetOidc returns the Oidc field value if set, zero value otherwise.
 func (o *AuthAPIConfigOutput) GetOidc() bool {
-	if o == nil || o.Oidc == nil {
+	if o == nil || IsNil(o.Oidc) {
 		var ret bool
 		return ret
 	}
@@ -81,7 +84,7 @@ func (o *AuthAPIConfigOutput) GetOidc() bool {
 // GetOidcOk returns a tuple with the Oidc field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AuthAPIConfigOutput) GetOidcOk() (*bool, bool) {
-	if o == nil || o.Oidc == nil {
+	if o == nil || IsNil(o.Oidc) {
 		return nil, false
 	}
 	return o.Oidc, true
@@ -89,7 +92,7 @@ func (o *AuthAPIConfigOutput) GetOidcOk() (*bool, bool) {
 
 // HasOidc returns a boolean if a field has been set.
 func (o *AuthAPIConfigOutput) HasOidc() bool {
-	if o != nil && o.Oidc != nil {
+	if o != nil && !IsNil(o.Oidc) {
 		return true
 	}
 
@@ -102,14 +105,22 @@ func (o *AuthAPIConfigOutput) SetOidc(v bool) {
 }
 
 func (o AuthAPIConfigOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Bool != nil {
-		toSerialize["bool"] = o.Bool
-	}
-	if o.Oidc != nil {
-		toSerialize["oidc"] = o.Oidc
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPIConfigOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Bool) {
+		toSerialize["bool"] = o.Bool
+	}
+	if !IsNil(o.Oidc) {
+		toSerialize["oidc"] = o.Oidc
+	}
+	return toSerialize, nil
 }
 
 type NullableAuthAPIConfigOutput struct {

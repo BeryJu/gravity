@@ -31,7 +31,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpDeleteLeases(context.Background()).Identifier(identifier).Scope(scope).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpDeleteLeases(context.Background()).Identifier(identifier).Scope(scope).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpDeleteLeases``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -95,7 +95,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -103,7 +103,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpDeleteScopes(context.Background()).Scope(scope).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpDeleteScopes(context.Background()).Scope(scope).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpDeleteScopes``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -157,7 +157,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -223,7 +223,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -282,7 +282,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -346,7 +346,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -356,7 +356,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpPutLeases(context.Background()).Identifier(identifier).Scope(scope).DhcpAPILeasesPutInput(dhcpAPILeasesPutInput).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpPutLeases(context.Background()).Identifier(identifier).Scope(scope).DhcpAPILeasesPutInput(dhcpAPILeasesPutInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpPutLeases``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -412,7 +412,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -420,7 +420,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpPutRoleConfig(context.Background()).DhcpAPIRoleConfigInput(dhcpAPIRoleConfigInput).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpPutRoleConfig(context.Background()).DhcpAPIRoleConfigInput(dhcpAPIRoleConfigInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpPutRoleConfig``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -474,7 +474,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -483,7 +483,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpPutScopes(context.Background()).Scope(scope).DhcpAPIScopesPutInput(dhcpAPIScopesPutInput).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpPutScopes(context.Background()).Scope(scope).DhcpAPIScopesPutInput(dhcpAPIScopesPutInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpPutScopes``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -538,7 +538,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -547,7 +547,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDhcpApi.DhcpWolLeases(context.Background()).Identifier(identifier).Scope(scope).Execute()
+    r, err := apiClient.RolesDhcpApi.DhcpWolLeases(context.Background()).Identifier(identifier).Scope(scope).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpWolLeases``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

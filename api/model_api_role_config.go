@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiRoleConfig{}
+
 // ApiRoleConfig struct for ApiRoleConfig
 type ApiRoleConfig struct {
 	CookieSecret   *string          `json:"cookieSecret,omitempty"`
@@ -41,7 +44,7 @@ func NewApiRoleConfigWithDefaults() *ApiRoleConfig {
 
 // GetCookieSecret returns the CookieSecret field value if set, zero value otherwise.
 func (o *ApiRoleConfig) GetCookieSecret() string {
-	if o == nil || o.CookieSecret == nil {
+	if o == nil || IsNil(o.CookieSecret) {
 		var ret string
 		return ret
 	}
@@ -51,7 +54,7 @@ func (o *ApiRoleConfig) GetCookieSecret() string {
 // GetCookieSecretOk returns a tuple with the CookieSecret field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiRoleConfig) GetCookieSecretOk() (*string, bool) {
-	if o == nil || o.CookieSecret == nil {
+	if o == nil || IsNil(o.CookieSecret) {
 		return nil, false
 	}
 	return o.CookieSecret, true
@@ -59,7 +62,7 @@ func (o *ApiRoleConfig) GetCookieSecretOk() (*string, bool) {
 
 // HasCookieSecret returns a boolean if a field has been set.
 func (o *ApiRoleConfig) HasCookieSecret() bool {
-	if o != nil && o.CookieSecret != nil {
+	if o != nil && !IsNil(o.CookieSecret) {
 		return true
 	}
 
@@ -73,7 +76,7 @@ func (o *ApiRoleConfig) SetCookieSecret(v string) {
 
 // GetListenOverride returns the ListenOverride field value if set, zero value otherwise.
 func (o *ApiRoleConfig) GetListenOverride() string {
-	if o == nil || o.ListenOverride == nil {
+	if o == nil || IsNil(o.ListenOverride) {
 		var ret string
 		return ret
 	}
@@ -83,7 +86,7 @@ func (o *ApiRoleConfig) GetListenOverride() string {
 // GetListenOverrideOk returns a tuple with the ListenOverride field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiRoleConfig) GetListenOverrideOk() (*string, bool) {
-	if o == nil || o.ListenOverride == nil {
+	if o == nil || IsNil(o.ListenOverride) {
 		return nil, false
 	}
 	return o.ListenOverride, true
@@ -91,7 +94,7 @@ func (o *ApiRoleConfig) GetListenOverrideOk() (*string, bool) {
 
 // HasListenOverride returns a boolean if a field has been set.
 func (o *ApiRoleConfig) HasListenOverride() bool {
-	if o != nil && o.ListenOverride != nil {
+	if o != nil && !IsNil(o.ListenOverride) {
 		return true
 	}
 
@@ -105,7 +108,7 @@ func (o *ApiRoleConfig) SetListenOverride(v string) {
 
 // GetOidc returns the Oidc field value if set, zero value otherwise.
 func (o *ApiRoleConfig) GetOidc() TypesOIDCConfig {
-	if o == nil || o.Oidc == nil {
+	if o == nil || IsNil(o.Oidc) {
 		var ret TypesOIDCConfig
 		return ret
 	}
@@ -115,7 +118,7 @@ func (o *ApiRoleConfig) GetOidc() TypesOIDCConfig {
 // GetOidcOk returns a tuple with the Oidc field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiRoleConfig) GetOidcOk() (*TypesOIDCConfig, bool) {
-	if o == nil || o.Oidc == nil {
+	if o == nil || IsNil(o.Oidc) {
 		return nil, false
 	}
 	return o.Oidc, true
@@ -123,7 +126,7 @@ func (o *ApiRoleConfig) GetOidcOk() (*TypesOIDCConfig, bool) {
 
 // HasOidc returns a boolean if a field has been set.
 func (o *ApiRoleConfig) HasOidc() bool {
-	if o != nil && o.Oidc != nil {
+	if o != nil && !IsNil(o.Oidc) {
 		return true
 	}
 
@@ -137,7 +140,7 @@ func (o *ApiRoleConfig) SetOidc(v TypesOIDCConfig) {
 
 // GetPort returns the Port field value if set, zero value otherwise.
 func (o *ApiRoleConfig) GetPort() int32 {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		var ret int32
 		return ret
 	}
@@ -147,7 +150,7 @@ func (o *ApiRoleConfig) GetPort() int32 {
 // GetPortOk returns a tuple with the Port field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiRoleConfig) GetPortOk() (*int32, bool) {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		return nil, false
 	}
 	return o.Port, true
@@ -155,7 +158,7 @@ func (o *ApiRoleConfig) GetPortOk() (*int32, bool) {
 
 // HasPort returns a boolean if a field has been set.
 func (o *ApiRoleConfig) HasPort() bool {
-	if o != nil && o.Port != nil {
+	if o != nil && !IsNil(o.Port) {
 		return true
 	}
 
@@ -168,20 +171,28 @@ func (o *ApiRoleConfig) SetPort(v int32) {
 }
 
 func (o ApiRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.CookieSecret != nil {
-		toSerialize["cookieSecret"] = o.CookieSecret
-	}
-	if o.ListenOverride != nil {
-		toSerialize["listenOverride"] = o.ListenOverride
-	}
-	if o.Oidc != nil {
-		toSerialize["oidc"] = o.Oidc
-	}
-	if o.Port != nil {
-		toSerialize["port"] = o.Port
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.CookieSecret) {
+		toSerialize["cookieSecret"] = o.CookieSecret
+	}
+	if !IsNil(o.ListenOverride) {
+		toSerialize["listenOverride"] = o.ListenOverride
+	}
+	if !IsNil(o.Oidc) {
+		toSerialize["oidc"] = o.Oidc
+	}
+	if !IsNil(o.Port) {
+		toSerialize["port"] = o.Port
+	}
+	return toSerialize, nil
 }
 
 type NullableApiRoleConfig struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPIDevicesApplyInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPIDevicesApplyInput{}
+
 // DiscoveryAPIDevicesApplyInput struct for DiscoveryAPIDevicesApplyInput
 type DiscoveryAPIDevicesApplyInput struct {
 	DhcpScope string `json:"dhcpScope"`
@@ -114,17 +117,19 @@ func (o *DiscoveryAPIDevicesApplyInput) SetTo(v string) {
 }
 
 func (o DiscoveryAPIDevicesApplyInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["dhcpScope"] = o.DhcpScope
-	}
-	if true {
-		toSerialize["dnsZone"] = o.DnsZone
-	}
-	if true {
-		toSerialize["to"] = o.To
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPIDevicesApplyInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["dhcpScope"] = o.DhcpScope
+	toSerialize["dnsZone"] = o.DnsZone
+	toSerialize["to"] = o.To
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPIDevicesApplyInput struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpScopeDNS type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpScopeDNS{}
+
 // DhcpScopeDNS struct for DhcpScopeDNS
 type DhcpScopeDNS struct {
 	AddZoneInHostname *bool    `json:"addZoneInHostname,omitempty"`
@@ -40,7 +43,7 @@ func NewDhcpScopeDNSWithDefaults() *DhcpScopeDNS {
 
 // GetAddZoneInHostname returns the AddZoneInHostname field value if set, zero value otherwise.
 func (o *DhcpScopeDNS) GetAddZoneInHostname() bool {
-	if o == nil || o.AddZoneInHostname == nil {
+	if o == nil || IsNil(o.AddZoneInHostname) {
 		var ret bool
 		return ret
 	}
@@ -50,7 +53,7 @@ func (o *DhcpScopeDNS) GetAddZoneInHostname() bool {
 // GetAddZoneInHostnameOk returns a tuple with the AddZoneInHostname field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpScopeDNS) GetAddZoneInHostnameOk() (*bool, bool) {
-	if o == nil || o.AddZoneInHostname == nil {
+	if o == nil || IsNil(o.AddZoneInHostname) {
 		return nil, false
 	}
 	return o.AddZoneInHostname, true
@@ -58,7 +61,7 @@ func (o *DhcpScopeDNS) GetAddZoneInHostnameOk() (*bool, bool) {
 
 // HasAddZoneInHostname returns a boolean if a field has been set.
 func (o *DhcpScopeDNS) HasAddZoneInHostname() bool {
-	if o != nil && o.AddZoneInHostname != nil {
+	if o != nil && !IsNil(o.AddZoneInHostname) {
 		return true
 	}
 
@@ -83,7 +86,7 @@ func (o *DhcpScopeDNS) GetSearch() []string {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DhcpScopeDNS) GetSearchOk() ([]string, bool) {
-	if o == nil || o.Search == nil {
+	if o == nil || IsNil(o.Search) {
 		return nil, false
 	}
 	return o.Search, true
@@ -91,7 +94,7 @@ func (o *DhcpScopeDNS) GetSearchOk() ([]string, bool) {
 
 // HasSearch returns a boolean if a field has been set.
 func (o *DhcpScopeDNS) HasSearch() bool {
-	if o != nil && o.Search != nil {
+	if o != nil && IsNil(o.Search) {
 		return true
 	}
 
@@ -105,7 +108,7 @@ func (o *DhcpScopeDNS) SetSearch(v []string) {
 
 // GetZone returns the Zone field value if set, zero value otherwise.
 func (o *DhcpScopeDNS) GetZone() string {
-	if o == nil || o.Zone == nil {
+	if o == nil || IsNil(o.Zone) {
 		var ret string
 		return ret
 	}
@@ -115,7 +118,7 @@ func (o *DhcpScopeDNS) GetZone() string {
 // GetZoneOk returns a tuple with the Zone field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpScopeDNS) GetZoneOk() (*string, bool) {
-	if o == nil || o.Zone == nil {
+	if o == nil || IsNil(o.Zone) {
 		return nil, false
 	}
 	return o.Zone, true
@@ -123,7 +126,7 @@ func (o *DhcpScopeDNS) GetZoneOk() (*string, bool) {
 
 // HasZone returns a boolean if a field has been set.
 func (o *DhcpScopeDNS) HasZone() bool {
-	if o != nil && o.Zone != nil {
+	if o != nil && !IsNil(o.Zone) {
 		return true
 	}
 
@@ -136,17 +139,25 @@ func (o *DhcpScopeDNS) SetZone(v string) {
 }
 
 func (o DhcpScopeDNS) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DhcpScopeDNS) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AddZoneInHostname != nil {
+	if !IsNil(o.AddZoneInHostname) {
 		toSerialize["addZoneInHostname"] = o.AddZoneInHostname
 	}
 	if o.Search != nil {
 		toSerialize["search"] = o.Search
 	}
-	if o.Zone != nil {
+	if !IsNil(o.Zone) {
 		toSerialize["zone"] = o.Zone
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDhcpScopeDNS struct {

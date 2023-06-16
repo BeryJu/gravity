@@ -13,7 +13,7 @@ package api
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -98,10 +98,10 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 		return nil, reportError("type_ is required and must be specified")
 	}
 
-	localVarQueryParams.Add("zone", parameterToString(*r.zone, ""))
-	localVarQueryParams.Add("hostname", parameterToString(*r.hostname, ""))
-	localVarQueryParams.Add("uid", parameterToString(*r.uid, ""))
-	localVarQueryParams.Add("type", parameterToString(*r.type_, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -129,9 +129,9 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -148,6 +148,7 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -158,6 +159,7 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -168,6 +170,7 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -224,7 +227,7 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 	localVarFormParams := url.Values{}
 
 	if r.zone != nil {
-		localVarQueryParams.Add("zone", parameterToString(*r.zone, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -253,9 +256,9 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -272,6 +275,7 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -282,6 +286,7 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -361,9 +366,9 @@ func (a *RolesDnsApiService) DnsGetMetricsExecute(r ApiDnsGetMetricsRequest) (*T
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -380,6 +385,7 @@ func (a *RolesDnsApiService) DnsGetMetricsExecute(r ApiDnsGetMetricsRequest) (*T
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
@@ -455,10 +461,10 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 	localVarFormParams := url.Values{}
 
 	if r.zone != nil {
-		localVarQueryParams.Add("zone", parameterToString(*r.zone, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
 	}
 	if r.hostname != nil {
-		localVarQueryParams.Add("hostname", parameterToString(*r.hostname, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -487,9 +493,9 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -506,6 +512,7 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
@@ -516,6 +523,7 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
@@ -526,6 +534,7 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
@@ -614,9 +623,9 @@ func (a *RolesDnsApiService) DnsGetRoleConfigExecute(r ApiDnsGetRoleConfigReques
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -693,7 +702,7 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -722,9 +731,9 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -741,6 +750,7 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
@@ -835,10 +845,10 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 		return nil, reportError("hostname must have less than 255 elements")
 	}
 
-	localVarQueryParams.Add("zone", parameterToString(*r.zone, ""))
-	localVarQueryParams.Add("hostname", parameterToString(*r.hostname, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
 	if r.uid != nil {
-		localVarQueryParams.Add("uid", parameterToString(*r.uid, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -869,9 +879,9 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -888,6 +898,7 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -898,6 +909,7 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -908,6 +920,7 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -992,9 +1005,9 @@ func (a *RolesDnsApiService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigReques
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1011,6 +1024,7 @@ func (a *RolesDnsApiService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigReques
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -1021,6 +1035,7 @@ func (a *RolesDnsApiService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigReques
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -1088,7 +1103,7 @@ func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.
 		return nil, reportError("zone must have less than 255 elements")
 	}
 
-	localVarQueryParams.Add("zone", parameterToString(*r.zone, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1118,9 +1133,9 @@ func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1137,6 +1152,7 @@ func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -1147,6 +1163,7 @@ func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the MonitoringRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &MonitoringRoleConfig{}
+
 // MonitoringRoleConfig struct for MonitoringRoleConfig
 type MonitoringRoleConfig struct {
 	Port *int32 `json:"port,omitempty"`
@@ -38,7 +41,7 @@ func NewMonitoringRoleConfigWithDefaults() *MonitoringRoleConfig {
 
 // GetPort returns the Port field value if set, zero value otherwise.
 func (o *MonitoringRoleConfig) GetPort() int32 {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		var ret int32
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *MonitoringRoleConfig) GetPort() int32 {
 // GetPortOk returns a tuple with the Port field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MonitoringRoleConfig) GetPortOk() (*int32, bool) {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		return nil, false
 	}
 	return o.Port, true
@@ -56,7 +59,7 @@ func (o *MonitoringRoleConfig) GetPortOk() (*int32, bool) {
 
 // HasPort returns a boolean if a field has been set.
 func (o *MonitoringRoleConfig) HasPort() bool {
-	if o != nil && o.Port != nil {
+	if o != nil && !IsNil(o.Port) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *MonitoringRoleConfig) SetPort(v int32) {
 }
 
 func (o MonitoringRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Port != nil {
-		toSerialize["port"] = o.Port
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o MonitoringRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Port) {
+		toSerialize["port"] = o.Port
+	}
+	return toSerialize, nil
 }
 
 type NullableMonitoringRoleConfig struct {

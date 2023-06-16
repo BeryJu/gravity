@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the InstanceAPIRoleRestartInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InstanceAPIRoleRestartInput{}
+
 // InstanceAPIRoleRestartInput struct for InstanceAPIRoleRestartInput
 type InstanceAPIRoleRestartInput struct {
 	RoleId *string `json:"roleId,omitempty"`
@@ -38,7 +41,7 @@ func NewInstanceAPIRoleRestartInputWithDefaults() *InstanceAPIRoleRestartInput {
 
 // GetRoleId returns the RoleId field value if set, zero value otherwise.
 func (o *InstanceAPIRoleRestartInput) GetRoleId() string {
-	if o == nil || o.RoleId == nil {
+	if o == nil || IsNil(o.RoleId) {
 		var ret string
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *InstanceAPIRoleRestartInput) GetRoleId() string {
 // GetRoleIdOk returns a tuple with the RoleId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *InstanceAPIRoleRestartInput) GetRoleIdOk() (*string, bool) {
-	if o == nil || o.RoleId == nil {
+	if o == nil || IsNil(o.RoleId) {
 		return nil, false
 	}
 	return o.RoleId, true
@@ -56,7 +59,7 @@ func (o *InstanceAPIRoleRestartInput) GetRoleIdOk() (*string, bool) {
 
 // HasRoleId returns a boolean if a field has been set.
 func (o *InstanceAPIRoleRestartInput) HasRoleId() bool {
-	if o != nil && o.RoleId != nil {
+	if o != nil && !IsNil(o.RoleId) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *InstanceAPIRoleRestartInput) SetRoleId(v string) {
 }
 
 func (o InstanceAPIRoleRestartInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.RoleId != nil {
-		toSerialize["roleId"] = o.RoleId
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o InstanceAPIRoleRestartInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.RoleId) {
+		toSerialize["roleId"] = o.RoleId
+	}
+	return toSerialize, nil
 }
 
 type NullableInstanceAPIRoleRestartInput struct {

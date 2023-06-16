@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the TypesOIDCConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &TypesOIDCConfig{}
+
 // TypesOIDCConfig struct for TypesOIDCConfig
 type TypesOIDCConfig struct {
 	ClientID     *string  `json:"clientID,omitempty"`
@@ -42,7 +45,7 @@ func NewTypesOIDCConfigWithDefaults() *TypesOIDCConfig {
 
 // GetClientID returns the ClientID field value if set, zero value otherwise.
 func (o *TypesOIDCConfig) GetClientID() string {
-	if o == nil || o.ClientID == nil {
+	if o == nil || IsNil(o.ClientID) {
 		var ret string
 		return ret
 	}
@@ -52,7 +55,7 @@ func (o *TypesOIDCConfig) GetClientID() string {
 // GetClientIDOk returns a tuple with the ClientID field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TypesOIDCConfig) GetClientIDOk() (*string, bool) {
-	if o == nil || o.ClientID == nil {
+	if o == nil || IsNil(o.ClientID) {
 		return nil, false
 	}
 	return o.ClientID, true
@@ -60,7 +63,7 @@ func (o *TypesOIDCConfig) GetClientIDOk() (*string, bool) {
 
 // HasClientID returns a boolean if a field has been set.
 func (o *TypesOIDCConfig) HasClientID() bool {
-	if o != nil && o.ClientID != nil {
+	if o != nil && !IsNil(o.ClientID) {
 		return true
 	}
 
@@ -74,7 +77,7 @@ func (o *TypesOIDCConfig) SetClientID(v string) {
 
 // GetClientSecret returns the ClientSecret field value if set, zero value otherwise.
 func (o *TypesOIDCConfig) GetClientSecret() string {
-	if o == nil || o.ClientSecret == nil {
+	if o == nil || IsNil(o.ClientSecret) {
 		var ret string
 		return ret
 	}
@@ -84,7 +87,7 @@ func (o *TypesOIDCConfig) GetClientSecret() string {
 // GetClientSecretOk returns a tuple with the ClientSecret field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TypesOIDCConfig) GetClientSecretOk() (*string, bool) {
-	if o == nil || o.ClientSecret == nil {
+	if o == nil || IsNil(o.ClientSecret) {
 		return nil, false
 	}
 	return o.ClientSecret, true
@@ -92,7 +95,7 @@ func (o *TypesOIDCConfig) GetClientSecretOk() (*string, bool) {
 
 // HasClientSecret returns a boolean if a field has been set.
 func (o *TypesOIDCConfig) HasClientSecret() bool {
-	if o != nil && o.ClientSecret != nil {
+	if o != nil && !IsNil(o.ClientSecret) {
 		return true
 	}
 
@@ -106,7 +109,7 @@ func (o *TypesOIDCConfig) SetClientSecret(v string) {
 
 // GetIssuer returns the Issuer field value if set, zero value otherwise.
 func (o *TypesOIDCConfig) GetIssuer() string {
-	if o == nil || o.Issuer == nil {
+	if o == nil || IsNil(o.Issuer) {
 		var ret string
 		return ret
 	}
@@ -116,7 +119,7 @@ func (o *TypesOIDCConfig) GetIssuer() string {
 // GetIssuerOk returns a tuple with the Issuer field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TypesOIDCConfig) GetIssuerOk() (*string, bool) {
-	if o == nil || o.Issuer == nil {
+	if o == nil || IsNil(o.Issuer) {
 		return nil, false
 	}
 	return o.Issuer, true
@@ -124,7 +127,7 @@ func (o *TypesOIDCConfig) GetIssuerOk() (*string, bool) {
 
 // HasIssuer returns a boolean if a field has been set.
 func (o *TypesOIDCConfig) HasIssuer() bool {
-	if o != nil && o.Issuer != nil {
+	if o != nil && !IsNil(o.Issuer) {
 		return true
 	}
 
@@ -138,7 +141,7 @@ func (o *TypesOIDCConfig) SetIssuer(v string) {
 
 // GetRedirectURL returns the RedirectURL field value if set, zero value otherwise.
 func (o *TypesOIDCConfig) GetRedirectURL() string {
-	if o == nil || o.RedirectURL == nil {
+	if o == nil || IsNil(o.RedirectURL) {
 		var ret string
 		return ret
 	}
@@ -148,7 +151,7 @@ func (o *TypesOIDCConfig) GetRedirectURL() string {
 // GetRedirectURLOk returns a tuple with the RedirectURL field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TypesOIDCConfig) GetRedirectURLOk() (*string, bool) {
-	if o == nil || o.RedirectURL == nil {
+	if o == nil || IsNil(o.RedirectURL) {
 		return nil, false
 	}
 	return o.RedirectURL, true
@@ -156,7 +159,7 @@ func (o *TypesOIDCConfig) GetRedirectURLOk() (*string, bool) {
 
 // HasRedirectURL returns a boolean if a field has been set.
 func (o *TypesOIDCConfig) HasRedirectURL() bool {
-	if o != nil && o.RedirectURL != nil {
+	if o != nil && !IsNil(o.RedirectURL) {
 		return true
 	}
 
@@ -181,7 +184,7 @@ func (o *TypesOIDCConfig) GetScopes() []string {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *TypesOIDCConfig) GetScopesOk() ([]string, bool) {
-	if o == nil || o.Scopes == nil {
+	if o == nil || IsNil(o.Scopes) {
 		return nil, false
 	}
 	return o.Scopes, true
@@ -189,7 +192,7 @@ func (o *TypesOIDCConfig) GetScopesOk() ([]string, bool) {
 
 // HasScopes returns a boolean if a field has been set.
 func (o *TypesOIDCConfig) HasScopes() bool {
-	if o != nil && o.Scopes != nil {
+	if o != nil && IsNil(o.Scopes) {
 		return true
 	}
 
@@ -202,23 +205,31 @@ func (o *TypesOIDCConfig) SetScopes(v []string) {
 }
 
 func (o TypesOIDCConfig) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o TypesOIDCConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ClientID != nil {
+	if !IsNil(o.ClientID) {
 		toSerialize["clientID"] = o.ClientID
 	}
-	if o.ClientSecret != nil {
+	if !IsNil(o.ClientSecret) {
 		toSerialize["clientSecret"] = o.ClientSecret
 	}
-	if o.Issuer != nil {
+	if !IsNil(o.Issuer) {
 		toSerialize["issuer"] = o.Issuer
 	}
-	if o.RedirectURL != nil {
+	if !IsNil(o.RedirectURL) {
 		toSerialize["redirectURL"] = o.RedirectURL
 	}
 	if o.Scopes != nil {
 		toSerialize["scopes"] = o.Scopes
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableTypesOIDCConfig struct {

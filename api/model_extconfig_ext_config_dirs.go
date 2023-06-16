@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ExtconfigExtConfigDirs type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ExtconfigExtConfigDirs{}
+
 // ExtconfigExtConfigDirs struct for ExtconfigExtConfigDirs
 type ExtconfigExtConfigDirs struct {
 	BackupDir *string `json:"backupDir,omitempty"`
@@ -40,7 +43,7 @@ func NewExtconfigExtConfigDirsWithDefaults() *ExtconfigExtConfigDirs {
 
 // GetBackupDir returns the BackupDir field value if set, zero value otherwise.
 func (o *ExtconfigExtConfigDirs) GetBackupDir() string {
-	if o == nil || o.BackupDir == nil {
+	if o == nil || IsNil(o.BackupDir) {
 		var ret string
 		return ret
 	}
@@ -50,7 +53,7 @@ func (o *ExtconfigExtConfigDirs) GetBackupDir() string {
 // GetBackupDirOk returns a tuple with the BackupDir field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ExtconfigExtConfigDirs) GetBackupDirOk() (*string, bool) {
-	if o == nil || o.BackupDir == nil {
+	if o == nil || IsNil(o.BackupDir) {
 		return nil, false
 	}
 	return o.BackupDir, true
@@ -58,7 +61,7 @@ func (o *ExtconfigExtConfigDirs) GetBackupDirOk() (*string, bool) {
 
 // HasBackupDir returns a boolean if a field has been set.
 func (o *ExtconfigExtConfigDirs) HasBackupDir() bool {
-	if o != nil && o.BackupDir != nil {
+	if o != nil && !IsNil(o.BackupDir) {
 		return true
 	}
 
@@ -72,7 +75,7 @@ func (o *ExtconfigExtConfigDirs) SetBackupDir(v string) {
 
 // GetCertDir returns the CertDir field value if set, zero value otherwise.
 func (o *ExtconfigExtConfigDirs) GetCertDir() string {
-	if o == nil || o.CertDir == nil {
+	if o == nil || IsNil(o.CertDir) {
 		var ret string
 		return ret
 	}
@@ -82,7 +85,7 @@ func (o *ExtconfigExtConfigDirs) GetCertDir() string {
 // GetCertDirOk returns a tuple with the CertDir field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ExtconfigExtConfigDirs) GetCertDirOk() (*string, bool) {
-	if o == nil || o.CertDir == nil {
+	if o == nil || IsNil(o.CertDir) {
 		return nil, false
 	}
 	return o.CertDir, true
@@ -90,7 +93,7 @@ func (o *ExtconfigExtConfigDirs) GetCertDirOk() (*string, bool) {
 
 // HasCertDir returns a boolean if a field has been set.
 func (o *ExtconfigExtConfigDirs) HasCertDir() bool {
-	if o != nil && o.CertDir != nil {
+	if o != nil && !IsNil(o.CertDir) {
 		return true
 	}
 
@@ -104,7 +107,7 @@ func (o *ExtconfigExtConfigDirs) SetCertDir(v string) {
 
 // GetEtcdDir returns the EtcdDir field value if set, zero value otherwise.
 func (o *ExtconfigExtConfigDirs) GetEtcdDir() string {
-	if o == nil || o.EtcdDir == nil {
+	if o == nil || IsNil(o.EtcdDir) {
 		var ret string
 		return ret
 	}
@@ -114,7 +117,7 @@ func (o *ExtconfigExtConfigDirs) GetEtcdDir() string {
 // GetEtcdDirOk returns a tuple with the EtcdDir field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ExtconfigExtConfigDirs) GetEtcdDirOk() (*string, bool) {
-	if o == nil || o.EtcdDir == nil {
+	if o == nil || IsNil(o.EtcdDir) {
 		return nil, false
 	}
 	return o.EtcdDir, true
@@ -122,7 +125,7 @@ func (o *ExtconfigExtConfigDirs) GetEtcdDirOk() (*string, bool) {
 
 // HasEtcdDir returns a boolean if a field has been set.
 func (o *ExtconfigExtConfigDirs) HasEtcdDir() bool {
-	if o != nil && o.EtcdDir != nil {
+	if o != nil && !IsNil(o.EtcdDir) {
 		return true
 	}
 
@@ -135,17 +138,25 @@ func (o *ExtconfigExtConfigDirs) SetEtcdDir(v string) {
 }
 
 func (o ExtconfigExtConfigDirs) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.BackupDir != nil {
-		toSerialize["backupDir"] = o.BackupDir
-	}
-	if o.CertDir != nil {
-		toSerialize["certDir"] = o.CertDir
-	}
-	if o.EtcdDir != nil {
-		toSerialize["etcdDir"] = o.EtcdDir
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ExtconfigExtConfigDirs) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.BackupDir) {
+		toSerialize["backupDir"] = o.BackupDir
+	}
+	if !IsNil(o.CertDir) {
+		toSerialize["certDir"] = o.CertDir
+	}
+	if !IsNil(o.EtcdDir) {
+		toSerialize["etcdDir"] = o.EtcdDir
+	}
+	return toSerialize, nil
 }
 
 type NullableExtconfigExtConfigDirs struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the MonitoringAPIRoleConfigInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &MonitoringAPIRoleConfigInput{}
+
 // MonitoringAPIRoleConfigInput struct for MonitoringAPIRoleConfigInput
 type MonitoringAPIRoleConfigInput struct {
 	Config MonitoringRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *MonitoringAPIRoleConfigInput) SetConfig(v MonitoringRoleConfig) {
 }
 
 func (o MonitoringAPIRoleConfigInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o MonitoringAPIRoleConfigInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableMonitoringAPIRoleConfigInput struct {

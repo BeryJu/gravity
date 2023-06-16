@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the InstanceAPIInstanceInfo type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InstanceAPIInstanceInfo{}
+
 // InstanceAPIInstanceInfo struct for InstanceAPIInstanceInfo
 type InstanceAPIInstanceInfo struct {
 	BuildHash                 string                 `json:"buildHash"`
@@ -166,23 +169,21 @@ func (o *InstanceAPIInstanceInfo) SetVersion(v string) {
 }
 
 func (o InstanceAPIInstanceInfo) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["buildHash"] = o.BuildHash
-	}
-	if true {
-		toSerialize["currentInstanceIP"] = o.CurrentInstanceIP
-	}
-	if true {
-		toSerialize["currentInstanceIdentifier"] = o.CurrentInstanceIdentifier
-	}
-	if true {
-		toSerialize["dirs"] = o.Dirs
-	}
-	if true {
-		toSerialize["version"] = o.Version
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o InstanceAPIInstanceInfo) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["buildHash"] = o.BuildHash
+	toSerialize["currentInstanceIP"] = o.CurrentInstanceIP
+	toSerialize["currentInstanceIdentifier"] = o.CurrentInstanceIdentifier
+	toSerialize["dirs"] = o.Dirs
+	toSerialize["version"] = o.Version
+	return toSerialize, nil
 }
 
 type NullableInstanceAPIInstanceInfo struct {

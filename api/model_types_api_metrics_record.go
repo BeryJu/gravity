@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the TypesAPIMetricsRecord type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &TypesAPIMetricsRecord{}
+
 // TypesAPIMetricsRecord struct for TypesAPIMetricsRecord
 type TypesAPIMetricsRecord struct {
 	Handler string `json:"handler"`
@@ -140,20 +143,20 @@ func (o *TypesAPIMetricsRecord) SetValue(v int32) {
 }
 
 func (o TypesAPIMetricsRecord) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["handler"] = o.Handler
-	}
-	if true {
-		toSerialize["node"] = o.Node
-	}
-	if true {
-		toSerialize["time"] = o.Time
-	}
-	if true {
-		toSerialize["value"] = o.Value
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o TypesAPIMetricsRecord) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["handler"] = o.Handler
+	toSerialize["node"] = o.Node
+	toSerialize["time"] = o.Time
+	toSerialize["value"] = o.Value
+	return toSerialize, nil
 }
 
 type NullableTypesAPIMetricsRecord struct {

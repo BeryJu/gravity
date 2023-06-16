@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpRoleConfig{}
+
 // DhcpRoleConfig struct for DhcpRoleConfig
 type DhcpRoleConfig struct {
 	LeaseNegotiateTimeout *int32 `json:"leaseNegotiateTimeout,omitempty"`
@@ -39,7 +42,7 @@ func NewDhcpRoleConfigWithDefaults() *DhcpRoleConfig {
 
 // GetLeaseNegotiateTimeout returns the LeaseNegotiateTimeout field value if set, zero value otherwise.
 func (o *DhcpRoleConfig) GetLeaseNegotiateTimeout() int32 {
-	if o == nil || o.LeaseNegotiateTimeout == nil {
+	if o == nil || IsNil(o.LeaseNegotiateTimeout) {
 		var ret int32
 		return ret
 	}
@@ -49,7 +52,7 @@ func (o *DhcpRoleConfig) GetLeaseNegotiateTimeout() int32 {
 // GetLeaseNegotiateTimeoutOk returns a tuple with the LeaseNegotiateTimeout field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpRoleConfig) GetLeaseNegotiateTimeoutOk() (*int32, bool) {
-	if o == nil || o.LeaseNegotiateTimeout == nil {
+	if o == nil || IsNil(o.LeaseNegotiateTimeout) {
 		return nil, false
 	}
 	return o.LeaseNegotiateTimeout, true
@@ -57,7 +60,7 @@ func (o *DhcpRoleConfig) GetLeaseNegotiateTimeoutOk() (*int32, bool) {
 
 // HasLeaseNegotiateTimeout returns a boolean if a field has been set.
 func (o *DhcpRoleConfig) HasLeaseNegotiateTimeout() bool {
-	if o != nil && o.LeaseNegotiateTimeout != nil {
+	if o != nil && !IsNil(o.LeaseNegotiateTimeout) {
 		return true
 	}
 
@@ -71,7 +74,7 @@ func (o *DhcpRoleConfig) SetLeaseNegotiateTimeout(v int32) {
 
 // GetPort returns the Port field value if set, zero value otherwise.
 func (o *DhcpRoleConfig) GetPort() int32 {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		var ret int32
 		return ret
 	}
@@ -81,7 +84,7 @@ func (o *DhcpRoleConfig) GetPort() int32 {
 // GetPortOk returns a tuple with the Port field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpRoleConfig) GetPortOk() (*int32, bool) {
-	if o == nil || o.Port == nil {
+	if o == nil || IsNil(o.Port) {
 		return nil, false
 	}
 	return o.Port, true
@@ -89,7 +92,7 @@ func (o *DhcpRoleConfig) GetPortOk() (*int32, bool) {
 
 // HasPort returns a boolean if a field has been set.
 func (o *DhcpRoleConfig) HasPort() bool {
-	if o != nil && o.Port != nil {
+	if o != nil && !IsNil(o.Port) {
 		return true
 	}
 
@@ -102,14 +105,22 @@ func (o *DhcpRoleConfig) SetPort(v int32) {
 }
 
 func (o DhcpRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.LeaseNegotiateTimeout != nil {
-		toSerialize["leaseNegotiateTimeout"] = o.LeaseNegotiateTimeout
-	}
-	if o.Port != nil {
-		toSerialize["port"] = o.Port
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DhcpRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.LeaseNegotiateTimeout) {
+		toSerialize["leaseNegotiateTimeout"] = o.LeaseNegotiateTimeout
+	}
+	if !IsNil(o.Port) {
+		toSerialize["port"] = o.Port
+	}
+	return toSerialize, nil
 }
 
 type NullableDhcpRoleConfig struct {

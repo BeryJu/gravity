@@ -15,6 +15,9 @@ import (
 	"time"
 )
 
+// checks if the BackupBackupStatus type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &BackupBackupStatus{}
+
 // BackupBackupStatus struct for BackupBackupStatus
 type BackupBackupStatus struct {
 	Duration int32     `json:"duration"`
@@ -193,26 +196,22 @@ func (o *BackupBackupStatus) SetTime(v time.Time) {
 }
 
 func (o BackupBackupStatus) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["duration"] = o.Duration
-	}
-	if true {
-		toSerialize["error"] = o.Error
-	}
-	if true {
-		toSerialize["filename"] = o.Filename
-	}
-	if true {
-		toSerialize["size"] = o.Size
-	}
-	if true {
-		toSerialize["status"] = o.Status
-	}
-	if true {
-		toSerialize["time"] = o.Time
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o BackupBackupStatus) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["duration"] = o.Duration
+	toSerialize["error"] = o.Error
+	toSerialize["filename"] = o.Filename
+	toSerialize["size"] = o.Size
+	toSerialize["status"] = o.Status
+	toSerialize["time"] = o.Time
+	return toSerialize, nil
 }
 
 type NullableBackupBackupStatus struct {

@@ -41,7 +41,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -100,7 +100,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -108,7 +108,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiDeleteTokens(context.Background()).Key(key).Execute()
+    r, err := apiClient.RolesApiApi.ApiDeleteTokens(context.Background()).Key(key).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiDeleteTokens``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -162,7 +162,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -170,7 +170,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiDeleteUsers(context.Background()).Username(username).Execute()
+    r, err := apiClient.RolesApiApi.ApiDeleteUsers(context.Background()).Username(username).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiDeleteUsers``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -224,7 +224,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -283,7 +283,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -342,7 +342,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -401,7 +401,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -460,7 +460,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -519,7 +519,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -578,7 +578,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -642,7 +642,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -650,7 +650,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(apiAPIImportInput).Execute()
+    r, err := apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(apiAPIImportInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiImport``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -704,7 +704,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -768,7 +768,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -776,7 +776,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiPutRoleConfig(context.Background()).ApiAPIRoleConfigInput(apiAPIRoleConfigInput).Execute()
+    r, err := apiClient.RolesApiApi.ApiPutRoleConfig(context.Background()).ApiAPIRoleConfigInput(apiAPIRoleConfigInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiPutRoleConfig``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -830,7 +830,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -894,7 +894,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -903,7 +903,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiPutUsers(context.Background()).Username(username).AuthAPIUsersPutInput(authAPIUsersPutInput).Execute()
+    r, err := apiClient.RolesApiApi.ApiPutUsers(context.Background()).Username(username).AuthAPIUsersPutInput(authAPIUsersPutInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiPutUsers``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -958,7 +958,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -1017,7 +1017,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -1081,7 +1081,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -1145,7 +1145,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {

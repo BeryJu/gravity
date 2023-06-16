@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPIUser type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPIUser{}
+
 // AuthAPIUser struct for AuthAPIUser
 type AuthAPIUser struct {
 	Username string `json:"username"`
@@ -62,11 +65,17 @@ func (o *AuthAPIUser) SetUsername(v string) {
 }
 
 func (o AuthAPIUser) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["username"] = o.Username
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPIUser) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["username"] = o.Username
+	return toSerialize, nil
 }
 
 type NullableAuthAPIUser struct {

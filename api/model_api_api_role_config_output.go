@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIRoleConfigOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIRoleConfigOutput{}
+
 // ApiAPIRoleConfigOutput struct for ApiAPIRoleConfigOutput
 type ApiAPIRoleConfigOutput struct {
 	Config ApiRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *ApiAPIRoleConfigOutput) SetConfig(v ApiRoleConfig) {
 }
 
 func (o ApiAPIRoleConfigOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIRoleConfigOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableApiAPIRoleConfigOutput struct {

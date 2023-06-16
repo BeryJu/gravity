@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPILeaseInfo type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPILeaseInfo{}
+
 // DhcpAPILeaseInfo struct for DhcpAPILeaseInfo
 type DhcpAPILeaseInfo struct {
 	Vendor *string `json:"vendor,omitempty"`
@@ -38,7 +41,7 @@ func NewDhcpAPILeaseInfoWithDefaults() *DhcpAPILeaseInfo {
 
 // GetVendor returns the Vendor field value if set, zero value otherwise.
 func (o *DhcpAPILeaseInfo) GetVendor() string {
-	if o == nil || o.Vendor == nil {
+	if o == nil || IsNil(o.Vendor) {
 		var ret string
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *DhcpAPILeaseInfo) GetVendor() string {
 // GetVendorOk returns a tuple with the Vendor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpAPILeaseInfo) GetVendorOk() (*string, bool) {
-	if o == nil || o.Vendor == nil {
+	if o == nil || IsNil(o.Vendor) {
 		return nil, false
 	}
 	return o.Vendor, true
@@ -56,7 +59,7 @@ func (o *DhcpAPILeaseInfo) GetVendorOk() (*string, bool) {
 
 // HasVendor returns a boolean if a field has been set.
 func (o *DhcpAPILeaseInfo) HasVendor() bool {
-	if o != nil && o.Vendor != nil {
+	if o != nil && !IsNil(o.Vendor) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *DhcpAPILeaseInfo) SetVendor(v string) {
 }
 
 func (o DhcpAPILeaseInfo) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Vendor != nil {
-		toSerialize["vendor"] = o.Vendor
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPILeaseInfo) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Vendor) {
+		toSerialize["vendor"] = o.Vendor
+	}
+	return toSerialize, nil
 }
 
 type NullableDhcpAPILeaseInfo struct {

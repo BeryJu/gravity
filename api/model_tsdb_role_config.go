@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the TsdbRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &TsdbRoleConfig{}
+
 // TsdbRoleConfig struct for TsdbRoleConfig
 type TsdbRoleConfig struct {
 	Enabled *bool  `json:"enabled,omitempty"`
@@ -40,7 +43,7 @@ func NewTsdbRoleConfigWithDefaults() *TsdbRoleConfig {
 
 // GetEnabled returns the Enabled field value if set, zero value otherwise.
 func (o *TsdbRoleConfig) GetEnabled() bool {
-	if o == nil || o.Enabled == nil {
+	if o == nil || IsNil(o.Enabled) {
 		var ret bool
 		return ret
 	}
@@ -50,7 +53,7 @@ func (o *TsdbRoleConfig) GetEnabled() bool {
 // GetEnabledOk returns a tuple with the Enabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TsdbRoleConfig) GetEnabledOk() (*bool, bool) {
-	if o == nil || o.Enabled == nil {
+	if o == nil || IsNil(o.Enabled) {
 		return nil, false
 	}
 	return o.Enabled, true
@@ -58,7 +61,7 @@ func (o *TsdbRoleConfig) GetEnabledOk() (*bool, bool) {
 
 // HasEnabled returns a boolean if a field has been set.
 func (o *TsdbRoleConfig) HasEnabled() bool {
-	if o != nil && o.Enabled != nil {
+	if o != nil && !IsNil(o.Enabled) {
 		return true
 	}
 
@@ -72,7 +75,7 @@ func (o *TsdbRoleConfig) SetEnabled(v bool) {
 
 // GetExpire returns the Expire field value if set, zero value otherwise.
 func (o *TsdbRoleConfig) GetExpire() int32 {
-	if o == nil || o.Expire == nil {
+	if o == nil || IsNil(o.Expire) {
 		var ret int32
 		return ret
 	}
@@ -82,7 +85,7 @@ func (o *TsdbRoleConfig) GetExpire() int32 {
 // GetExpireOk returns a tuple with the Expire field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TsdbRoleConfig) GetExpireOk() (*int32, bool) {
-	if o == nil || o.Expire == nil {
+	if o == nil || IsNil(o.Expire) {
 		return nil, false
 	}
 	return o.Expire, true
@@ -90,7 +93,7 @@ func (o *TsdbRoleConfig) GetExpireOk() (*int32, bool) {
 
 // HasExpire returns a boolean if a field has been set.
 func (o *TsdbRoleConfig) HasExpire() bool {
-	if o != nil && o.Expire != nil {
+	if o != nil && !IsNil(o.Expire) {
 		return true
 	}
 
@@ -104,7 +107,7 @@ func (o *TsdbRoleConfig) SetExpire(v int32) {
 
 // GetScrape returns the Scrape field value if set, zero value otherwise.
 func (o *TsdbRoleConfig) GetScrape() int32 {
-	if o == nil || o.Scrape == nil {
+	if o == nil || IsNil(o.Scrape) {
 		var ret int32
 		return ret
 	}
@@ -114,7 +117,7 @@ func (o *TsdbRoleConfig) GetScrape() int32 {
 // GetScrapeOk returns a tuple with the Scrape field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TsdbRoleConfig) GetScrapeOk() (*int32, bool) {
-	if o == nil || o.Scrape == nil {
+	if o == nil || IsNil(o.Scrape) {
 		return nil, false
 	}
 	return o.Scrape, true
@@ -122,7 +125,7 @@ func (o *TsdbRoleConfig) GetScrapeOk() (*int32, bool) {
 
 // HasScrape returns a boolean if a field has been set.
 func (o *TsdbRoleConfig) HasScrape() bool {
-	if o != nil && o.Scrape != nil {
+	if o != nil && !IsNil(o.Scrape) {
 		return true
 	}
 
@@ -135,17 +138,25 @@ func (o *TsdbRoleConfig) SetScrape(v int32) {
 }
 
 func (o TsdbRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Enabled != nil {
-		toSerialize["enabled"] = o.Enabled
-	}
-	if o.Expire != nil {
-		toSerialize["expire"] = o.Expire
-	}
-	if o.Scrape != nil {
-		toSerialize["scrape"] = o.Scrape
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o TsdbRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Enabled) {
+		toSerialize["enabled"] = o.Enabled
+	}
+	if !IsNil(o.Expire) {
+		toSerialize["expire"] = o.Expire
+	}
+	if !IsNil(o.Scrape) {
+		toSerialize["scrape"] = o.Scrape
+	}
+	return toSerialize, nil
 }
 
 type NullableTsdbRoleConfig struct {

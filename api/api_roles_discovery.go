@@ -13,7 +13,7 @@ package api
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -77,7 +77,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 		return nil, reportError("identifier is required and must be specified")
 	}
 
-	localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -107,9 +107,9 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -126,6 +126,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -136,6 +137,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -146,6 +148,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -202,7 +205,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -231,9 +234,9 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -250,6 +253,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -260,6 +264,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -316,7 +321,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -345,9 +350,9 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -364,6 +369,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -374,6 +380,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -434,7 +441,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -463,9 +470,9 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -482,6 +489,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
@@ -570,9 +578,9 @@ func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfigExecute(r ApiDiscoveryG
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -649,7 +657,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -678,9 +686,9 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -697,6 +705,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
@@ -790,9 +799,9 @@ func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryP
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -809,6 +818,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryP
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -819,6 +829,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryP
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -886,7 +897,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 		return nil, reportError("identifier must have less than 255 elements")
 	}
 
-	localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -916,9 +927,9 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -935,6 +946,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -945,6 +957,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -1003,7 +1016,7 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 		return nil, reportError("identifier is required and must be specified")
 	}
 
-	localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1031,9 +1044,9 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1050,6 +1063,7 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -1060,6 +1074,7 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr

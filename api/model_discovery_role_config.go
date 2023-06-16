@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryRoleConfig{}
+
 // DiscoveryRoleConfig struct for DiscoveryRoleConfig
 type DiscoveryRoleConfig struct {
 	Enabled *bool `json:"enabled,omitempty"`
@@ -38,7 +41,7 @@ func NewDiscoveryRoleConfigWithDefaults() *DiscoveryRoleConfig {
 
 // GetEnabled returns the Enabled field value if set, zero value otherwise.
 func (o *DiscoveryRoleConfig) GetEnabled() bool {
-	if o == nil || o.Enabled == nil {
+	if o == nil || IsNil(o.Enabled) {
 		var ret bool
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *DiscoveryRoleConfig) GetEnabled() bool {
 // GetEnabledOk returns a tuple with the Enabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DiscoveryRoleConfig) GetEnabledOk() (*bool, bool) {
-	if o == nil || o.Enabled == nil {
+	if o == nil || IsNil(o.Enabled) {
 		return nil, false
 	}
 	return o.Enabled, true
@@ -56,7 +59,7 @@ func (o *DiscoveryRoleConfig) GetEnabledOk() (*bool, bool) {
 
 // HasEnabled returns a boolean if a field has been set.
 func (o *DiscoveryRoleConfig) HasEnabled() bool {
-	if o != nil && o.Enabled != nil {
+	if o != nil && !IsNil(o.Enabled) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *DiscoveryRoleConfig) SetEnabled(v bool) {
 }
 
 func (o DiscoveryRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Enabled != nil {
-		toSerialize["enabled"] = o.Enabled
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Enabled) {
+		toSerialize["enabled"] = o.Enabled
+	}
+	return toSerialize, nil
 }
 
 type NullableDiscoveryRoleConfig struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPIDevice type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPIDevice{}
+
 // DiscoveryAPIDevice struct for DiscoveryAPIDevice
 type DiscoveryAPIDevice struct {
 	Hostname   string `json:"hostname"`
@@ -140,20 +143,20 @@ func (o *DiscoveryAPIDevice) SetMac(v string) {
 }
 
 func (o DiscoveryAPIDevice) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["hostname"] = o.Hostname
-	}
-	if true {
-		toSerialize["identifier"] = o.Identifier
-	}
-	if true {
-		toSerialize["ip"] = o.Ip
-	}
-	if true {
-		toSerialize["mac"] = o.Mac
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPIDevice) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["hostname"] = o.Hostname
+	toSerialize["identifier"] = o.Identifier
+	toSerialize["ip"] = o.Ip
+	toSerialize["mac"] = o.Mac
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPIDevice struct {

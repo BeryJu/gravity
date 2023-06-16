@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the RestErrResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &RestErrResponse{}
+
 // RestErrResponse struct for RestErrResponse
 type RestErrResponse struct {
 	// Application-specific error code.
@@ -45,7 +48,7 @@ func NewRestErrResponseWithDefaults() *RestErrResponse {
 
 // GetCode returns the Code field value if set, zero value otherwise.
 func (o *RestErrResponse) GetCode() int32 {
-	if o == nil || o.Code == nil {
+	if o == nil || IsNil(o.Code) {
 		var ret int32
 		return ret
 	}
@@ -55,7 +58,7 @@ func (o *RestErrResponse) GetCode() int32 {
 // GetCodeOk returns a tuple with the Code field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RestErrResponse) GetCodeOk() (*int32, bool) {
-	if o == nil || o.Code == nil {
+	if o == nil || IsNil(o.Code) {
 		return nil, false
 	}
 	return o.Code, true
@@ -63,7 +66,7 @@ func (o *RestErrResponse) GetCodeOk() (*int32, bool) {
 
 // HasCode returns a boolean if a field has been set.
 func (o *RestErrResponse) HasCode() bool {
-	if o != nil && o.Code != nil {
+	if o != nil && !IsNil(o.Code) {
 		return true
 	}
 
@@ -77,7 +80,7 @@ func (o *RestErrResponse) SetCode(v int32) {
 
 // GetContext returns the Context field value if set, zero value otherwise.
 func (o *RestErrResponse) GetContext() map[string]interface{} {
-	if o == nil || o.Context == nil {
+	if o == nil || IsNil(o.Context) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -87,15 +90,15 @@ func (o *RestErrResponse) GetContext() map[string]interface{} {
 // GetContextOk returns a tuple with the Context field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RestErrResponse) GetContextOk() (map[string]interface{}, bool) {
-	if o == nil || o.Context == nil {
-		return nil, false
+	if o == nil || IsNil(o.Context) {
+		return map[string]interface{}{}, false
 	}
 	return o.Context, true
 }
 
 // HasContext returns a boolean if a field has been set.
 func (o *RestErrResponse) HasContext() bool {
-	if o != nil && o.Context != nil {
+	if o != nil && !IsNil(o.Context) {
 		return true
 	}
 
@@ -109,7 +112,7 @@ func (o *RestErrResponse) SetContext(v map[string]interface{}) {
 
 // GetError returns the Error field value if set, zero value otherwise.
 func (o *RestErrResponse) GetError() string {
-	if o == nil || o.Error == nil {
+	if o == nil || IsNil(o.Error) {
 		var ret string
 		return ret
 	}
@@ -119,7 +122,7 @@ func (o *RestErrResponse) GetError() string {
 // GetErrorOk returns a tuple with the Error field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RestErrResponse) GetErrorOk() (*string, bool) {
-	if o == nil || o.Error == nil {
+	if o == nil || IsNil(o.Error) {
 		return nil, false
 	}
 	return o.Error, true
@@ -127,7 +130,7 @@ func (o *RestErrResponse) GetErrorOk() (*string, bool) {
 
 // HasError returns a boolean if a field has been set.
 func (o *RestErrResponse) HasError() bool {
-	if o != nil && o.Error != nil {
+	if o != nil && !IsNil(o.Error) {
 		return true
 	}
 
@@ -141,7 +144,7 @@ func (o *RestErrResponse) SetError(v string) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *RestErrResponse) GetStatus() string {
-	if o == nil || o.Status == nil {
+	if o == nil || IsNil(o.Status) {
 		var ret string
 		return ret
 	}
@@ -151,7 +154,7 @@ func (o *RestErrResponse) GetStatus() string {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RestErrResponse) GetStatusOk() (*string, bool) {
-	if o == nil || o.Status == nil {
+	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
 	return o.Status, true
@@ -159,7 +162,7 @@ func (o *RestErrResponse) GetStatusOk() (*string, bool) {
 
 // HasStatus returns a boolean if a field has been set.
 func (o *RestErrResponse) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !IsNil(o.Status) {
 		return true
 	}
 
@@ -172,20 +175,28 @@ func (o *RestErrResponse) SetStatus(v string) {
 }
 
 func (o RestErrResponse) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Code != nil {
-		toSerialize["code"] = o.Code
-	}
-	if o.Context != nil {
-		toSerialize["context"] = o.Context
-	}
-	if o.Error != nil {
-		toSerialize["error"] = o.Error
-	}
-	if o.Status != nil {
-		toSerialize["status"] = o.Status
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o RestErrResponse) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Code) {
+		toSerialize["code"] = o.Code
+	}
+	if !IsNil(o.Context) {
+		toSerialize["context"] = o.Context
+	}
+	if !IsNil(o.Error) {
+		toSerialize["error"] = o.Error
+	}
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
+	}
+	return toSerialize, nil
 }
 
 type NullableRestErrResponse struct {

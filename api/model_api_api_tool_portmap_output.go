@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolPortmapOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolPortmapOutput{}
+
 // ApiAPIToolPortmapOutput struct for ApiAPIToolPortmapOutput
 type ApiAPIToolPortmapOutput struct {
 	Ports []ApiAPIToolPortmapOutputPort `json:"ports,omitempty"`
@@ -49,7 +52,7 @@ func (o *ApiAPIToolPortmapOutput) GetPorts() []ApiAPIToolPortmapOutputPort {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ApiAPIToolPortmapOutput) GetPortsOk() ([]ApiAPIToolPortmapOutputPort, bool) {
-	if o == nil || o.Ports == nil {
+	if o == nil || IsNil(o.Ports) {
 		return nil, false
 	}
 	return o.Ports, true
@@ -57,7 +60,7 @@ func (o *ApiAPIToolPortmapOutput) GetPortsOk() ([]ApiAPIToolPortmapOutputPort, b
 
 // HasPorts returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutput) HasPorts() bool {
-	if o != nil && o.Ports != nil {
+	if o != nil && IsNil(o.Ports) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *ApiAPIToolPortmapOutput) SetPorts(v []ApiAPIToolPortmapOutputPort) {
 }
 
 func (o ApiAPIToolPortmapOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolPortmapOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Ports != nil {
 		toSerialize["ports"] = o.Ports
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolPortmapOutput struct {

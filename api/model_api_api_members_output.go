@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIMembersOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIMembersOutput{}
+
 // ApiAPIMembersOutput struct for ApiAPIMembersOutput
 type ApiAPIMembersOutput struct {
 	Members []ApiAPIMember `json:"members,omitempty"`
@@ -49,7 +52,7 @@ func (o *ApiAPIMembersOutput) GetMembers() []ApiAPIMember {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ApiAPIMembersOutput) GetMembersOk() ([]ApiAPIMember, bool) {
-	if o == nil || o.Members == nil {
+	if o == nil || IsNil(o.Members) {
 		return nil, false
 	}
 	return o.Members, true
@@ -57,7 +60,7 @@ func (o *ApiAPIMembersOutput) GetMembersOk() ([]ApiAPIMember, bool) {
 
 // HasMembers returns a boolean if a field has been set.
 func (o *ApiAPIMembersOutput) HasMembers() bool {
-	if o != nil && o.Members != nil {
+	if o != nil && IsNil(o.Members) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *ApiAPIMembersOutput) SetMembers(v []ApiAPIMember) {
 }
 
 func (o ApiAPIMembersOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIMembersOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Members != nil {
 		toSerialize["members"] = o.Members
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableApiAPIMembersOutput struct {

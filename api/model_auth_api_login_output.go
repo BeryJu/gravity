@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPILoginOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPILoginOutput{}
+
 // AuthAPILoginOutput struct for AuthAPILoginOutput
 type AuthAPILoginOutput struct {
 	Successful *bool `json:"successful,omitempty"`
@@ -38,7 +41,7 @@ func NewAuthAPILoginOutputWithDefaults() *AuthAPILoginOutput {
 
 // GetSuccessful returns the Successful field value if set, zero value otherwise.
 func (o *AuthAPILoginOutput) GetSuccessful() bool {
-	if o == nil || o.Successful == nil {
+	if o == nil || IsNil(o.Successful) {
 		var ret bool
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *AuthAPILoginOutput) GetSuccessful() bool {
 // GetSuccessfulOk returns a tuple with the Successful field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AuthAPILoginOutput) GetSuccessfulOk() (*bool, bool) {
-	if o == nil || o.Successful == nil {
+	if o == nil || IsNil(o.Successful) {
 		return nil, false
 	}
 	return o.Successful, true
@@ -56,7 +59,7 @@ func (o *AuthAPILoginOutput) GetSuccessfulOk() (*bool, bool) {
 
 // HasSuccessful returns a boolean if a field has been set.
 func (o *AuthAPILoginOutput) HasSuccessful() bool {
-	if o != nil && o.Successful != nil {
+	if o != nil && !IsNil(o.Successful) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *AuthAPILoginOutput) SetSuccessful(v bool) {
 }
 
 func (o AuthAPILoginOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Successful != nil {
-		toSerialize["successful"] = o.Successful
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPILoginOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Successful) {
+		toSerialize["successful"] = o.Successful
+	}
+	return toSerialize, nil
 }
 
 type NullableAuthAPILoginOutput struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPISubnet type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPISubnet{}
+
 // DiscoveryAPISubnet struct for DiscoveryAPISubnet
 type DiscoveryAPISubnet struct {
 	DiscoveryTTL int32  `json:"discoveryTTL"`
@@ -140,20 +143,20 @@ func (o *DiscoveryAPISubnet) SetSubnetCidr(v string) {
 }
 
 func (o DiscoveryAPISubnet) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["discoveryTTL"] = o.DiscoveryTTL
-	}
-	if true {
-		toSerialize["dnsResolver"] = o.DnsResolver
-	}
-	if true {
-		toSerialize["name"] = o.Name
-	}
-	if true {
-		toSerialize["subnetCidr"] = o.SubnetCidr
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPISubnet) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["discoveryTTL"] = o.DiscoveryTTL
+	toSerialize["dnsResolver"] = o.DnsResolver
+	toSerialize["name"] = o.Name
+	toSerialize["subnetCidr"] = o.SubnetCidr
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPISubnet struct {

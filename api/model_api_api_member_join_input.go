@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIMemberJoinInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIMemberJoinInput{}
+
 // ApiAPIMemberJoinInput struct for ApiAPIMemberJoinInput
 type ApiAPIMemberJoinInput struct {
 	Identifier *string `json:"identifier,omitempty"`
@@ -40,7 +43,7 @@ func NewApiAPIMemberJoinInputWithDefaults() *ApiAPIMemberJoinInput {
 
 // GetIdentifier returns the Identifier field value if set, zero value otherwise.
 func (o *ApiAPIMemberJoinInput) GetIdentifier() string {
-	if o == nil || o.Identifier == nil {
+	if o == nil || IsNil(o.Identifier) {
 		var ret string
 		return ret
 	}
@@ -50,7 +53,7 @@ func (o *ApiAPIMemberJoinInput) GetIdentifier() string {
 // GetIdentifierOk returns a tuple with the Identifier field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIMemberJoinInput) GetIdentifierOk() (*string, bool) {
-	if o == nil || o.Identifier == nil {
+	if o == nil || IsNil(o.Identifier) {
 		return nil, false
 	}
 	return o.Identifier, true
@@ -58,7 +61,7 @@ func (o *ApiAPIMemberJoinInput) GetIdentifierOk() (*string, bool) {
 
 // HasIdentifier returns a boolean if a field has been set.
 func (o *ApiAPIMemberJoinInput) HasIdentifier() bool {
-	if o != nil && o.Identifier != nil {
+	if o != nil && !IsNil(o.Identifier) {
 		return true
 	}
 
@@ -72,7 +75,7 @@ func (o *ApiAPIMemberJoinInput) SetIdentifier(v string) {
 
 // GetPeer returns the Peer field value if set, zero value otherwise.
 func (o *ApiAPIMemberJoinInput) GetPeer() string {
-	if o == nil || o.Peer == nil {
+	if o == nil || IsNil(o.Peer) {
 		var ret string
 		return ret
 	}
@@ -82,7 +85,7 @@ func (o *ApiAPIMemberJoinInput) GetPeer() string {
 // GetPeerOk returns a tuple with the Peer field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIMemberJoinInput) GetPeerOk() (*string, bool) {
-	if o == nil || o.Peer == nil {
+	if o == nil || IsNil(o.Peer) {
 		return nil, false
 	}
 	return o.Peer, true
@@ -90,7 +93,7 @@ func (o *ApiAPIMemberJoinInput) GetPeerOk() (*string, bool) {
 
 // HasPeer returns a boolean if a field has been set.
 func (o *ApiAPIMemberJoinInput) HasPeer() bool {
-	if o != nil && o.Peer != nil {
+	if o != nil && !IsNil(o.Peer) {
 		return true
 	}
 
@@ -104,7 +107,7 @@ func (o *ApiAPIMemberJoinInput) SetPeer(v string) {
 
 // GetRoles returns the Roles field value if set, zero value otherwise.
 func (o *ApiAPIMemberJoinInput) GetRoles() string {
-	if o == nil || o.Roles == nil {
+	if o == nil || IsNil(o.Roles) {
 		var ret string
 		return ret
 	}
@@ -114,7 +117,7 @@ func (o *ApiAPIMemberJoinInput) GetRoles() string {
 // GetRolesOk returns a tuple with the Roles field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIMemberJoinInput) GetRolesOk() (*string, bool) {
-	if o == nil || o.Roles == nil {
+	if o == nil || IsNil(o.Roles) {
 		return nil, false
 	}
 	return o.Roles, true
@@ -122,7 +125,7 @@ func (o *ApiAPIMemberJoinInput) GetRolesOk() (*string, bool) {
 
 // HasRoles returns a boolean if a field has been set.
 func (o *ApiAPIMemberJoinInput) HasRoles() bool {
-	if o != nil && o.Roles != nil {
+	if o != nil && !IsNil(o.Roles) {
 		return true
 	}
 
@@ -135,17 +138,25 @@ func (o *ApiAPIMemberJoinInput) SetRoles(v string) {
 }
 
 func (o ApiAPIMemberJoinInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Identifier != nil {
-		toSerialize["identifier"] = o.Identifier
-	}
-	if o.Peer != nil {
-		toSerialize["peer"] = o.Peer
-	}
-	if o.Roles != nil {
-		toSerialize["roles"] = o.Roles
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIMemberJoinInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Identifier) {
+		toSerialize["identifier"] = o.Identifier
+	}
+	if !IsNil(o.Peer) {
+		toSerialize["peer"] = o.Peer
+	}
+	if !IsNil(o.Roles) {
+		toSerialize["roles"] = o.Roles
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIMemberJoinInput struct {

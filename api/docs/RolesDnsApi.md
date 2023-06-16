@@ -31,7 +31,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsDeleteRecords(context.Background()).Zone(zone).Hostname(hostname).Uid(uid).Type_(type_).Execute()
+    r, err := apiClient.RolesDnsApi.DnsDeleteRecords(context.Background()).Zone(zone).Hostname(hostname).Uid(uid).Type_(type_).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsDeleteRecords``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -99,7 +99,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -107,7 +107,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsDeleteZones(context.Background()).Zone(zone).Execute()
+    r, err := apiClient.RolesDnsApi.DnsDeleteZones(context.Background()).Zone(zone).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsDeleteZones``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -161,7 +161,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -220,7 +220,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -286,7 +286,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -345,7 +345,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -409,7 +409,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -420,7 +420,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsPutRecords(context.Background()).Zone(zone).Hostname(hostname).Uid(uid).DnsAPIRecordsPutInput(dnsAPIRecordsPutInput).Execute()
+    r, err := apiClient.RolesDnsApi.DnsPutRecords(context.Background()).Zone(zone).Hostname(hostname).Uid(uid).DnsAPIRecordsPutInput(dnsAPIRecordsPutInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsPutRecords``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -477,7 +477,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -485,7 +485,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsPutRoleConfig(context.Background()).DnsAPIRoleConfigInput(dnsAPIRoleConfigInput).Execute()
+    r, err := apiClient.RolesDnsApi.DnsPutRoleConfig(context.Background()).DnsAPIRoleConfigInput(dnsAPIRoleConfigInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsPutRoleConfig``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -539,7 +539,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -548,7 +548,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsPutZones(context.Background()).Zone(zone).DnsAPIZonesPutInput(dnsAPIZonesPutInput).Execute()
+    r, err := apiClient.RolesDnsApi.DnsPutZones(context.Background()).Zone(zone).DnsAPIZonesPutInput(dnsAPIZonesPutInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsPutZones``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

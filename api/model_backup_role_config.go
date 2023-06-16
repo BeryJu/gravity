@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the BackupRoleConfig type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &BackupRoleConfig{}
+
 // BackupRoleConfig struct for BackupRoleConfig
 type BackupRoleConfig struct {
 	AccessKey *string `json:"accessKey,omitempty"`
@@ -43,7 +46,7 @@ func NewBackupRoleConfigWithDefaults() *BackupRoleConfig {
 
 // GetAccessKey returns the AccessKey field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetAccessKey() string {
-	if o == nil || o.AccessKey == nil {
+	if o == nil || IsNil(o.AccessKey) {
 		var ret string
 		return ret
 	}
@@ -53,7 +56,7 @@ func (o *BackupRoleConfig) GetAccessKey() string {
 // GetAccessKeyOk returns a tuple with the AccessKey field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetAccessKeyOk() (*string, bool) {
-	if o == nil || o.AccessKey == nil {
+	if o == nil || IsNil(o.AccessKey) {
 		return nil, false
 	}
 	return o.AccessKey, true
@@ -61,7 +64,7 @@ func (o *BackupRoleConfig) GetAccessKeyOk() (*string, bool) {
 
 // HasAccessKey returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasAccessKey() bool {
-	if o != nil && o.AccessKey != nil {
+	if o != nil && !IsNil(o.AccessKey) {
 		return true
 	}
 
@@ -75,7 +78,7 @@ func (o *BackupRoleConfig) SetAccessKey(v string) {
 
 // GetBucket returns the Bucket field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetBucket() string {
-	if o == nil || o.Bucket == nil {
+	if o == nil || IsNil(o.Bucket) {
 		var ret string
 		return ret
 	}
@@ -85,7 +88,7 @@ func (o *BackupRoleConfig) GetBucket() string {
 // GetBucketOk returns a tuple with the Bucket field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetBucketOk() (*string, bool) {
-	if o == nil || o.Bucket == nil {
+	if o == nil || IsNil(o.Bucket) {
 		return nil, false
 	}
 	return o.Bucket, true
@@ -93,7 +96,7 @@ func (o *BackupRoleConfig) GetBucketOk() (*string, bool) {
 
 // HasBucket returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasBucket() bool {
-	if o != nil && o.Bucket != nil {
+	if o != nil && !IsNil(o.Bucket) {
 		return true
 	}
 
@@ -107,7 +110,7 @@ func (o *BackupRoleConfig) SetBucket(v string) {
 
 // GetCronExpr returns the CronExpr field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetCronExpr() string {
-	if o == nil || o.CronExpr == nil {
+	if o == nil || IsNil(o.CronExpr) {
 		var ret string
 		return ret
 	}
@@ -117,7 +120,7 @@ func (o *BackupRoleConfig) GetCronExpr() string {
 // GetCronExprOk returns a tuple with the CronExpr field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetCronExprOk() (*string, bool) {
-	if o == nil || o.CronExpr == nil {
+	if o == nil || IsNil(o.CronExpr) {
 		return nil, false
 	}
 	return o.CronExpr, true
@@ -125,7 +128,7 @@ func (o *BackupRoleConfig) GetCronExprOk() (*string, bool) {
 
 // HasCronExpr returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasCronExpr() bool {
-	if o != nil && o.CronExpr != nil {
+	if o != nil && !IsNil(o.CronExpr) {
 		return true
 	}
 
@@ -139,7 +142,7 @@ func (o *BackupRoleConfig) SetCronExpr(v string) {
 
 // GetEndpoint returns the Endpoint field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetEndpoint() string {
-	if o == nil || o.Endpoint == nil {
+	if o == nil || IsNil(o.Endpoint) {
 		var ret string
 		return ret
 	}
@@ -149,7 +152,7 @@ func (o *BackupRoleConfig) GetEndpoint() string {
 // GetEndpointOk returns a tuple with the Endpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetEndpointOk() (*string, bool) {
-	if o == nil || o.Endpoint == nil {
+	if o == nil || IsNil(o.Endpoint) {
 		return nil, false
 	}
 	return o.Endpoint, true
@@ -157,7 +160,7 @@ func (o *BackupRoleConfig) GetEndpointOk() (*string, bool) {
 
 // HasEndpoint returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasEndpoint() bool {
-	if o != nil && o.Endpoint != nil {
+	if o != nil && !IsNil(o.Endpoint) {
 		return true
 	}
 
@@ -171,7 +174,7 @@ func (o *BackupRoleConfig) SetEndpoint(v string) {
 
 // GetPath returns the Path field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetPath() string {
-	if o == nil || o.Path == nil {
+	if o == nil || IsNil(o.Path) {
 		var ret string
 		return ret
 	}
@@ -181,7 +184,7 @@ func (o *BackupRoleConfig) GetPath() string {
 // GetPathOk returns a tuple with the Path field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetPathOk() (*string, bool) {
-	if o == nil || o.Path == nil {
+	if o == nil || IsNil(o.Path) {
 		return nil, false
 	}
 	return o.Path, true
@@ -189,7 +192,7 @@ func (o *BackupRoleConfig) GetPathOk() (*string, bool) {
 
 // HasPath returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasPath() bool {
-	if o != nil && o.Path != nil {
+	if o != nil && !IsNil(o.Path) {
 		return true
 	}
 
@@ -203,7 +206,7 @@ func (o *BackupRoleConfig) SetPath(v string) {
 
 // GetSecretKey returns the SecretKey field value if set, zero value otherwise.
 func (o *BackupRoleConfig) GetSecretKey() string {
-	if o == nil || o.SecretKey == nil {
+	if o == nil || IsNil(o.SecretKey) {
 		var ret string
 		return ret
 	}
@@ -213,7 +216,7 @@ func (o *BackupRoleConfig) GetSecretKey() string {
 // GetSecretKeyOk returns a tuple with the SecretKey field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupRoleConfig) GetSecretKeyOk() (*string, bool) {
-	if o == nil || o.SecretKey == nil {
+	if o == nil || IsNil(o.SecretKey) {
 		return nil, false
 	}
 	return o.SecretKey, true
@@ -221,7 +224,7 @@ func (o *BackupRoleConfig) GetSecretKeyOk() (*string, bool) {
 
 // HasSecretKey returns a boolean if a field has been set.
 func (o *BackupRoleConfig) HasSecretKey() bool {
-	if o != nil && o.SecretKey != nil {
+	if o != nil && !IsNil(o.SecretKey) {
 		return true
 	}
 
@@ -234,26 +237,34 @@ func (o *BackupRoleConfig) SetSecretKey(v string) {
 }
 
 func (o BackupRoleConfig) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.AccessKey != nil {
-		toSerialize["accessKey"] = o.AccessKey
-	}
-	if o.Bucket != nil {
-		toSerialize["bucket"] = o.Bucket
-	}
-	if o.CronExpr != nil {
-		toSerialize["cronExpr"] = o.CronExpr
-	}
-	if o.Endpoint != nil {
-		toSerialize["endpoint"] = o.Endpoint
-	}
-	if o.Path != nil {
-		toSerialize["path"] = o.Path
-	}
-	if o.SecretKey != nil {
-		toSerialize["secretKey"] = o.SecretKey
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o BackupRoleConfig) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.AccessKey) {
+		toSerialize["accessKey"] = o.AccessKey
+	}
+	if !IsNil(o.Bucket) {
+		toSerialize["bucket"] = o.Bucket
+	}
+	if !IsNil(o.CronExpr) {
+		toSerialize["cronExpr"] = o.CronExpr
+	}
+	if !IsNil(o.Endpoint) {
+		toSerialize["endpoint"] = o.Endpoint
+	}
+	if !IsNil(o.Path) {
+		toSerialize["path"] = o.Path
+	}
+	if !IsNil(o.SecretKey) {
+		toSerialize["secretKey"] = o.SecretKey
+	}
+	return toSerialize, nil
 }
 
 type NullableBackupRoleConfig struct {

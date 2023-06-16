@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIImportInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIImportInput{}
+
 // ApiAPIImportInput struct for ApiAPIImportInput
 type ApiAPIImportInput struct {
 	Entries []ApiAPITransportEntry `json:"entries,omitempty"`
@@ -49,7 +52,7 @@ func (o *ApiAPIImportInput) GetEntries() []ApiAPITransportEntry {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ApiAPIImportInput) GetEntriesOk() ([]ApiAPITransportEntry, bool) {
-	if o == nil || o.Entries == nil {
+	if o == nil || IsNil(o.Entries) {
 		return nil, false
 	}
 	return o.Entries, true
@@ -57,7 +60,7 @@ func (o *ApiAPIImportInput) GetEntriesOk() ([]ApiAPITransportEntry, bool) {
 
 // HasEntries returns a boolean if a field has been set.
 func (o *ApiAPIImportInput) HasEntries() bool {
-	if o != nil && o.Entries != nil {
+	if o != nil && IsNil(o.Entries) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *ApiAPIImportInput) SetEntries(v []ApiAPITransportEntry) {
 }
 
 func (o ApiAPIImportInput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIImportInput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Entries != nil {
 		toSerialize["entries"] = o.Entries
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableApiAPIImportInput struct {

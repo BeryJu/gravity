@@ -26,7 +26,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -85,7 +85,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -93,7 +93,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesBackupApi.BackupPutRoleConfig(context.Background()).BackupAPIRoleConfigInput(backupAPIRoleConfigInput).Execute()
+    r, err := apiClient.RolesBackupApi.BackupPutRoleConfig(context.Background()).BackupAPIRoleConfigInput(backupAPIRoleConfigInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupApi.BackupPutRoleConfig``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -147,7 +147,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -211,7 +211,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {

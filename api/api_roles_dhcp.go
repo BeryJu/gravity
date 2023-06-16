@@ -13,7 +13,7 @@ package api
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -75,10 +75,10 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	}
 	if r.scope != nil {
-		localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -107,9 +107,9 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -126,6 +126,7 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -136,6 +137,7 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -194,7 +196,7 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 		return nil, reportError("scope is required and must be specified")
 	}
 
-	localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -222,9 +224,9 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -241,6 +243,7 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -251,6 +254,7 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -317,10 +321,10 @@ func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*
 	localVarFormParams := url.Values{}
 
 	if r.scope != nil {
-		localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	}
 	if r.identifier != nil {
-		localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -349,9 +353,9 @@ func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -447,9 +451,9 @@ func (a *RolesDhcpApiService) DhcpGetRoleConfigExecute(r ApiDhcpGetRoleConfigReq
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -526,7 +530,7 @@ func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		localVarQueryParams.Add("name", parameterToString(*r.name, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -555,9 +559,9 @@ func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -653,8 +657,8 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 		return nil, reportError("scope must have less than 255 elements")
 	}
 
-	localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
-	localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -684,9 +688,9 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -703,6 +707,7 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -713,6 +718,7 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -797,9 +803,9 @@ func (a *RolesDhcpApiService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigReq
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -816,6 +822,7 @@ func (a *RolesDhcpApiService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigReq
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -826,6 +833,7 @@ func (a *RolesDhcpApiService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigReq
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -893,7 +901,7 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 		return nil, reportError("scope must have less than 255 elements")
 	}
 
-	localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -923,9 +931,9 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -942,6 +950,7 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -952,6 +961,7 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr
@@ -1019,8 +1029,8 @@ func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*
 		return nil, reportError("scope is required and must be specified")
 	}
 
-	localVarQueryParams.Add("identifier", parameterToString(*r.identifier, ""))
-	localVarQueryParams.Add("scope", parameterToString(*r.scope, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1048,9 +1058,9 @@ func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1067,6 +1077,7 @@ func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
@@ -1077,6 +1088,7 @@ func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
 		}
 		return localVarHTTPResponse, newErr

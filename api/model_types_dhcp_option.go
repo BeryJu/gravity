@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the TypesDHCPOption type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &TypesDHCPOption{}
+
 // TypesDHCPOption struct for TypesDHCPOption
 type TypesDHCPOption struct {
 	Tag     NullableInt32  `json:"tag,omitempty"`
@@ -41,7 +44,7 @@ func NewTypesDHCPOptionWithDefaults() *TypesDHCPOption {
 
 // GetTag returns the Tag field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *TypesDHCPOption) GetTag() int32 {
-	if o == nil || o.Tag.Get() == nil {
+	if o == nil || IsNil(o.Tag.Get()) {
 		var ret int32
 		return ret
 	}
@@ -84,7 +87,7 @@ func (o *TypesDHCPOption) UnsetTag() {
 
 // GetTagName returns the TagName field value if set, zero value otherwise.
 func (o *TypesDHCPOption) GetTagName() string {
-	if o == nil || o.TagName == nil {
+	if o == nil || IsNil(o.TagName) {
 		var ret string
 		return ret
 	}
@@ -94,7 +97,7 @@ func (o *TypesDHCPOption) GetTagName() string {
 // GetTagNameOk returns a tuple with the TagName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TypesDHCPOption) GetTagNameOk() (*string, bool) {
-	if o == nil || o.TagName == nil {
+	if o == nil || IsNil(o.TagName) {
 		return nil, false
 	}
 	return o.TagName, true
@@ -102,7 +105,7 @@ func (o *TypesDHCPOption) GetTagNameOk() (*string, bool) {
 
 // HasTagName returns a boolean if a field has been set.
 func (o *TypesDHCPOption) HasTagName() bool {
-	if o != nil && o.TagName != nil {
+	if o != nil && !IsNil(o.TagName) {
 		return true
 	}
 
@@ -116,7 +119,7 @@ func (o *TypesDHCPOption) SetTagName(v string) {
 
 // GetValue returns the Value field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *TypesDHCPOption) GetValue() string {
-	if o == nil || o.Value.Get() == nil {
+	if o == nil || IsNil(o.Value.Get()) {
 		var ret string
 		return ret
 	}
@@ -170,7 +173,7 @@ func (o *TypesDHCPOption) GetValue64() []string {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *TypesDHCPOption) GetValue64Ok() ([]string, bool) {
-	if o == nil || o.Value64 == nil {
+	if o == nil || IsNil(o.Value64) {
 		return nil, false
 	}
 	return o.Value64, true
@@ -178,7 +181,7 @@ func (o *TypesDHCPOption) GetValue64Ok() ([]string, bool) {
 
 // HasValue64 returns a boolean if a field has been set.
 func (o *TypesDHCPOption) HasValue64() bool {
-	if o != nil && o.Value64 != nil {
+	if o != nil && IsNil(o.Value64) {
 		return true
 	}
 
@@ -191,11 +194,19 @@ func (o *TypesDHCPOption) SetValue64(v []string) {
 }
 
 func (o TypesDHCPOption) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o TypesDHCPOption) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Tag.IsSet() {
 		toSerialize["tag"] = o.Tag.Get()
 	}
-	if o.TagName != nil {
+	if !IsNil(o.TagName) {
 		toSerialize["tagName"] = o.TagName
 	}
 	if o.Value.IsSet() {
@@ -204,7 +215,7 @@ func (o TypesDHCPOption) MarshalJSON() ([]byte, error) {
 	if o.Value64 != nil {
 		toSerialize["value64"] = o.Value64
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableTypesDHCPOption struct {

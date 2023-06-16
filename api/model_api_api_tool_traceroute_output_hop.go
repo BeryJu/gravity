@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolTracerouteOutputHop type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolTracerouteOutputHop{}
+
 // ApiAPIToolTracerouteOutputHop struct for ApiAPIToolTracerouteOutputHop
 type ApiAPIToolTracerouteOutputHop struct {
 	Address     *string `json:"address,omitempty"`
@@ -40,7 +43,7 @@ func NewApiAPIToolTracerouteOutputHopWithDefaults() *ApiAPIToolTracerouteOutputH
 
 // GetAddress returns the Address field value if set, zero value otherwise.
 func (o *ApiAPIToolTracerouteOutputHop) GetAddress() string {
-	if o == nil || o.Address == nil {
+	if o == nil || IsNil(o.Address) {
 		var ret string
 		return ret
 	}
@@ -50,7 +53,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetAddress() string {
 // GetAddressOk returns a tuple with the Address field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolTracerouteOutputHop) GetAddressOk() (*string, bool) {
-	if o == nil || o.Address == nil {
+	if o == nil || IsNil(o.Address) {
 		return nil, false
 	}
 	return o.Address, true
@@ -58,7 +61,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetAddressOk() (*string, bool) {
 
 // HasAddress returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteOutputHop) HasAddress() bool {
-	if o != nil && o.Address != nil {
+	if o != nil && !IsNil(o.Address) {
 		return true
 	}
 
@@ -72,7 +75,7 @@ func (o *ApiAPIToolTracerouteOutputHop) SetAddress(v string) {
 
 // GetElapsedTime returns the ElapsedTime field value if set, zero value otherwise.
 func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int32 {
-	if o == nil || o.ElapsedTime == nil {
+	if o == nil || IsNil(o.ElapsedTime) {
 		var ret int32
 		return ret
 	}
@@ -82,7 +85,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int32 {
 // GetElapsedTimeOk returns a tuple with the ElapsedTime field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int32, bool) {
-	if o == nil || o.ElapsedTime == nil {
+	if o == nil || IsNil(o.ElapsedTime) {
 		return nil, false
 	}
 	return o.ElapsedTime, true
@@ -90,7 +93,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int32, bool) {
 
 // HasElapsedTime returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteOutputHop) HasElapsedTime() bool {
-	if o != nil && o.ElapsedTime != nil {
+	if o != nil && !IsNil(o.ElapsedTime) {
 		return true
 	}
 
@@ -104,7 +107,7 @@ func (o *ApiAPIToolTracerouteOutputHop) SetElapsedTime(v int32) {
 
 // GetSuccess returns the Success field value if set, zero value otherwise.
 func (o *ApiAPIToolTracerouteOutputHop) GetSuccess() bool {
-	if o == nil || o.Success == nil {
+	if o == nil || IsNil(o.Success) {
 		var ret bool
 		return ret
 	}
@@ -114,7 +117,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetSuccess() bool {
 // GetSuccessOk returns a tuple with the Success field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolTracerouteOutputHop) GetSuccessOk() (*bool, bool) {
-	if o == nil || o.Success == nil {
+	if o == nil || IsNil(o.Success) {
 		return nil, false
 	}
 	return o.Success, true
@@ -122,7 +125,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetSuccessOk() (*bool, bool) {
 
 // HasSuccess returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteOutputHop) HasSuccess() bool {
-	if o != nil && o.Success != nil {
+	if o != nil && !IsNil(o.Success) {
 		return true
 	}
 
@@ -135,17 +138,25 @@ func (o *ApiAPIToolTracerouteOutputHop) SetSuccess(v bool) {
 }
 
 func (o ApiAPIToolTracerouteOutputHop) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Address != nil {
-		toSerialize["address"] = o.Address
-	}
-	if o.ElapsedTime != nil {
-		toSerialize["elapsedTime"] = o.ElapsedTime
-	}
-	if o.Success != nil {
-		toSerialize["success"] = o.Success
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolTracerouteOutputHop) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Address) {
+		toSerialize["address"] = o.Address
+	}
+	if !IsNil(o.ElapsedTime) {
+		toSerialize["elapsedTime"] = o.ElapsedTime
+	}
+	if !IsNil(o.Success) {
+		toSerialize["success"] = o.Success
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolTracerouteOutputHop struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPILease type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPILease{}
+
 // DhcpAPILease struct for DhcpAPILease
 type DhcpAPILease struct {
 	Address          string            `json:"address"`
@@ -97,7 +100,7 @@ func (o *DhcpAPILease) SetAddressLeaseTime(v string) {
 
 // GetDnsZone returns the DnsZone field value if set, zero value otherwise.
 func (o *DhcpAPILease) GetDnsZone() string {
-	if o == nil || o.DnsZone == nil {
+	if o == nil || IsNil(o.DnsZone) {
 		var ret string
 		return ret
 	}
@@ -107,7 +110,7 @@ func (o *DhcpAPILease) GetDnsZone() string {
 // GetDnsZoneOk returns a tuple with the DnsZone field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpAPILease) GetDnsZoneOk() (*string, bool) {
-	if o == nil || o.DnsZone == nil {
+	if o == nil || IsNil(o.DnsZone) {
 		return nil, false
 	}
 	return o.DnsZone, true
@@ -115,7 +118,7 @@ func (o *DhcpAPILease) GetDnsZoneOk() (*string, bool) {
 
 // HasDnsZone returns a boolean if a field has been set.
 func (o *DhcpAPILease) HasDnsZone() bool {
-	if o != nil && o.DnsZone != nil {
+	if o != nil && !IsNil(o.DnsZone) {
 		return true
 	}
 
@@ -177,7 +180,7 @@ func (o *DhcpAPILease) SetIdentifier(v string) {
 
 // GetInfo returns the Info field value if set, zero value otherwise.
 func (o *DhcpAPILease) GetInfo() DhcpAPILeaseInfo {
-	if o == nil || o.Info == nil {
+	if o == nil || IsNil(o.Info) {
 		var ret DhcpAPILeaseInfo
 		return ret
 	}
@@ -187,7 +190,7 @@ func (o *DhcpAPILease) GetInfo() DhcpAPILeaseInfo {
 // GetInfoOk returns a tuple with the Info field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpAPILease) GetInfoOk() (*DhcpAPILeaseInfo, bool) {
-	if o == nil || o.Info == nil {
+	if o == nil || IsNil(o.Info) {
 		return nil, false
 	}
 	return o.Info, true
@@ -195,7 +198,7 @@ func (o *DhcpAPILease) GetInfoOk() (*DhcpAPILeaseInfo, bool) {
 
 // HasInfo returns a boolean if a field has been set.
 func (o *DhcpAPILease) HasInfo() bool {
-	if o != nil && o.Info != nil {
+	if o != nil && !IsNil(o.Info) {
 		return true
 	}
 
@@ -232,29 +235,27 @@ func (o *DhcpAPILease) SetScopeKey(v string) {
 }
 
 func (o DhcpAPILease) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["address"] = o.Address
-	}
-	if true {
-		toSerialize["addressLeaseTime"] = o.AddressLeaseTime
-	}
-	if o.DnsZone != nil {
-		toSerialize["dnsZone"] = o.DnsZone
-	}
-	if true {
-		toSerialize["hostname"] = o.Hostname
-	}
-	if true {
-		toSerialize["identifier"] = o.Identifier
-	}
-	if o.Info != nil {
-		toSerialize["info"] = o.Info
-	}
-	if true {
-		toSerialize["scopeKey"] = o.ScopeKey
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPILease) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["address"] = o.Address
+	toSerialize["addressLeaseTime"] = o.AddressLeaseTime
+	if !IsNil(o.DnsZone) {
+		toSerialize["dnsZone"] = o.DnsZone
+	}
+	toSerialize["hostname"] = o.Hostname
+	toSerialize["identifier"] = o.Identifier
+	if !IsNil(o.Info) {
+		toSerialize["info"] = o.Info
+	}
+	toSerialize["scopeKey"] = o.ScopeKey
+	return toSerialize, nil
 }
 
 type NullableDhcpAPILease struct {

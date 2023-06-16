@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DnsAPIZonesGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIZonesGetOutput{}
+
 // DnsAPIZonesGetOutput struct for DnsAPIZonesGetOutput
 type DnsAPIZonesGetOutput struct {
 	Zones []DnsAPIZone `json:"zones"`
@@ -52,7 +55,7 @@ func (o *DnsAPIZonesGetOutput) GetZones() []DnsAPIZone {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DnsAPIZonesGetOutput) GetZonesOk() ([]DnsAPIZone, bool) {
-	if o == nil || o.Zones == nil {
+	if o == nil || IsNil(o.Zones) {
 		return nil, false
 	}
 	return o.Zones, true
@@ -64,11 +67,19 @@ func (o *DnsAPIZonesGetOutput) SetZones(v []DnsAPIZone) {
 }
 
 func (o DnsAPIZonesGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DnsAPIZonesGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Zones != nil {
 		toSerialize["zones"] = o.Zones
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDnsAPIZonesGetOutput struct {

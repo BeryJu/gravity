@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIMemberJoinOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIMemberJoinOutput{}
+
 // ApiAPIMemberJoinOutput struct for ApiAPIMemberJoinOutput
 type ApiAPIMemberJoinOutput struct {
 	EtcdInitialCluster *string `json:"etcdInitialCluster,omitempty"`
@@ -38,7 +41,7 @@ func NewApiAPIMemberJoinOutputWithDefaults() *ApiAPIMemberJoinOutput {
 
 // GetEtcdInitialCluster returns the EtcdInitialCluster field value if set, zero value otherwise.
 func (o *ApiAPIMemberJoinOutput) GetEtcdInitialCluster() string {
-	if o == nil || o.EtcdInitialCluster == nil {
+	if o == nil || IsNil(o.EtcdInitialCluster) {
 		var ret string
 		return ret
 	}
@@ -48,7 +51,7 @@ func (o *ApiAPIMemberJoinOutput) GetEtcdInitialCluster() string {
 // GetEtcdInitialClusterOk returns a tuple with the EtcdInitialCluster field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIMemberJoinOutput) GetEtcdInitialClusterOk() (*string, bool) {
-	if o == nil || o.EtcdInitialCluster == nil {
+	if o == nil || IsNil(o.EtcdInitialCluster) {
 		return nil, false
 	}
 	return o.EtcdInitialCluster, true
@@ -56,7 +59,7 @@ func (o *ApiAPIMemberJoinOutput) GetEtcdInitialClusterOk() (*string, bool) {
 
 // HasEtcdInitialCluster returns a boolean if a field has been set.
 func (o *ApiAPIMemberJoinOutput) HasEtcdInitialCluster() bool {
-	if o != nil && o.EtcdInitialCluster != nil {
+	if o != nil && !IsNil(o.EtcdInitialCluster) {
 		return true
 	}
 
@@ -69,11 +72,19 @@ func (o *ApiAPIMemberJoinOutput) SetEtcdInitialCluster(v string) {
 }
 
 func (o ApiAPIMemberJoinOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.EtcdInitialCluster != nil {
-		toSerialize["etcdInitialCluster"] = o.EtcdInitialCluster
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIMemberJoinOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.EtcdInitialCluster) {
+		toSerialize["etcdInitialCluster"] = o.EtcdInitialCluster
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIMemberJoinOutput struct {

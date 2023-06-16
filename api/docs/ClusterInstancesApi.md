@@ -25,7 +25,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -84,7 +84,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -143,7 +143,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -151,7 +151,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ClusterInstancesApi.ClusterInstanceRoleRestart(context.Background()).InstanceAPIRoleRestartInput(instanceAPIRoleRestartInput).Execute()
+    r, err := apiClient.ClusterInstancesApi.ClusterInstanceRoleRestart(context.Background()).InstanceAPIRoleRestartInput(instanceAPIRoleRestartInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ClusterInstancesApi.ClusterInstanceRoleRestart``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

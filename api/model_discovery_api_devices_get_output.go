@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPIDevicesGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPIDevicesGetOutput{}
+
 // DiscoveryAPIDevicesGetOutput struct for DiscoveryAPIDevicesGetOutput
 type DiscoveryAPIDevicesGetOutput struct {
 	Devices []DiscoveryAPIDevice `json:"devices,omitempty"`
@@ -49,7 +52,7 @@ func (o *DiscoveryAPIDevicesGetOutput) GetDevices() []DiscoveryAPIDevice {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DiscoveryAPIDevicesGetOutput) GetDevicesOk() ([]DiscoveryAPIDevice, bool) {
-	if o == nil || o.Devices == nil {
+	if o == nil || IsNil(o.Devices) {
 		return nil, false
 	}
 	return o.Devices, true
@@ -57,7 +60,7 @@ func (o *DiscoveryAPIDevicesGetOutput) GetDevicesOk() ([]DiscoveryAPIDevice, boo
 
 // HasDevices returns a boolean if a field has been set.
 func (o *DiscoveryAPIDevicesGetOutput) HasDevices() bool {
-	if o != nil && o.Devices != nil {
+	if o != nil && IsNil(o.Devices) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *DiscoveryAPIDevicesGetOutput) SetDevices(v []DiscoveryAPIDevice) {
 }
 
 func (o DiscoveryAPIDevicesGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPIDevicesGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Devices != nil {
 		toSerialize["devices"] = o.Devices
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPIDevicesGetOutput struct {

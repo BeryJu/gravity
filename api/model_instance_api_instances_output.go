@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the InstanceAPIInstancesOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InstanceAPIInstancesOutput{}
+
 // InstanceAPIInstancesOutput struct for InstanceAPIInstancesOutput
 type InstanceAPIInstancesOutput struct {
 	Instances []InstanceInstanceInfo `json:"instances"`
@@ -52,7 +55,7 @@ func (o *InstanceAPIInstancesOutput) GetInstances() []InstanceInstanceInfo {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *InstanceAPIInstancesOutput) GetInstancesOk() ([]InstanceInstanceInfo, bool) {
-	if o == nil || o.Instances == nil {
+	if o == nil || IsNil(o.Instances) {
 		return nil, false
 	}
 	return o.Instances, true
@@ -64,11 +67,19 @@ func (o *InstanceAPIInstancesOutput) SetInstances(v []InstanceInstanceInfo) {
 }
 
 func (o InstanceAPIInstancesOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o InstanceAPIInstancesOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Instances != nil {
 		toSerialize["instances"] = o.Instances
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableInstanceAPIInstancesOutput struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the BackupAPIBackupStatusOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &BackupAPIBackupStatusOutput{}
+
 // BackupAPIBackupStatusOutput struct for BackupAPIBackupStatusOutput
 type BackupAPIBackupStatusOutput struct {
 	Status []BackupAPIBackupStatus `json:"status"`
@@ -52,7 +55,7 @@ func (o *BackupAPIBackupStatusOutput) GetStatus() []BackupAPIBackupStatus {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *BackupAPIBackupStatusOutput) GetStatusOk() ([]BackupAPIBackupStatus, bool) {
-	if o == nil || o.Status == nil {
+	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
 	return o.Status, true
@@ -64,11 +67,19 @@ func (o *BackupAPIBackupStatusOutput) SetStatus(v []BackupAPIBackupStatus) {
 }
 
 func (o BackupAPIBackupStatusOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o BackupAPIBackupStatusOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Status != nil {
 		toSerialize["status"] = o.Status
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableBackupAPIBackupStatusOutput struct {

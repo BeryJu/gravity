@@ -24,7 +24,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -83,7 +83,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
@@ -91,7 +91,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesMonitoringApi.MonitoringPutRoleConfig(context.Background()).MonitoringAPIRoleConfigInput(monitoringAPIRoleConfigInput).Execute()
+    r, err := apiClient.RolesMonitoringApi.MonitoringPutRoleConfig(context.Background()).MonitoringAPIRoleConfigInput(monitoringAPIRoleConfigInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesMonitoringApi.MonitoringPutRoleConfig``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

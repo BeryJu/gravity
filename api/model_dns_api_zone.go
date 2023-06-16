@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DnsAPIZone type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIZone{}
+
 // DnsAPIZone struct for DnsAPIZone
 type DnsAPIZone struct {
 	Authoritative  bool                `json:"authoritative"`
@@ -106,7 +109,7 @@ func (o *DnsAPIZone) GetHandlerConfigs() []map[string]string {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DnsAPIZone) GetHandlerConfigsOk() ([]map[string]string, bool) {
-	if o == nil || o.HandlerConfigs == nil {
+	if o == nil || IsNil(o.HandlerConfigs) {
 		return nil, false
 	}
 	return o.HandlerConfigs, true
@@ -142,20 +145,22 @@ func (o *DnsAPIZone) SetName(v string) {
 }
 
 func (o DnsAPIZone) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DnsAPIZone) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["authoritative"] = o.Authoritative
-	}
-	if true {
-		toSerialize["defaultTTL"] = o.DefaultTTL
-	}
+	toSerialize["authoritative"] = o.Authoritative
+	toSerialize["defaultTTL"] = o.DefaultTTL
 	if o.HandlerConfigs != nil {
 		toSerialize["handlerConfigs"] = o.HandlerConfigs
 	}
-	if true {
-		toSerialize["name"] = o.Name
-	}
-	return json.Marshal(toSerialize)
+	toSerialize["name"] = o.Name
+	return toSerialize, nil
 }
 
 type NullableDnsAPIZone struct {

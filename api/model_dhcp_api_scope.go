@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPIScope type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPIScope{}
+
 // DhcpAPIScope struct for DhcpAPIScope
 type DhcpAPIScope struct {
 	Default    bool              `json:"default"`
@@ -74,7 +77,7 @@ func (o *DhcpAPIScope) SetDefault(v bool) {
 
 // GetDns returns the Dns field value if set, zero value otherwise.
 func (o *DhcpAPIScope) GetDns() DhcpScopeDNS {
-	if o == nil || o.Dns == nil {
+	if o == nil || IsNil(o.Dns) {
 		var ret DhcpScopeDNS
 		return ret
 	}
@@ -84,7 +87,7 @@ func (o *DhcpAPIScope) GetDns() DhcpScopeDNS {
 // GetDnsOk returns a tuple with the Dns field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpAPIScope) GetDnsOk() (*DhcpScopeDNS, bool) {
-	if o == nil || o.Dns == nil {
+	if o == nil || IsNil(o.Dns) {
 		return nil, false
 	}
 	return o.Dns, true
@@ -92,7 +95,7 @@ func (o *DhcpAPIScope) GetDnsOk() (*DhcpScopeDNS, bool) {
 
 // HasDns returns a boolean if a field has been set.
 func (o *DhcpAPIScope) HasDns() bool {
-	if o != nil && o.Dns != nil {
+	if o != nil && !IsNil(o.Dns) {
 		return true
 	}
 
@@ -119,7 +122,7 @@ func (o *DhcpAPIScope) GetIpam() map[string]string {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DhcpAPIScope) GetIpamOk() (*map[string]string, bool) {
-	if o == nil || o.Ipam == nil {
+	if o == nil || IsNil(o.Ipam) {
 		return nil, false
 	}
 	return &o.Ipam, true
@@ -145,7 +148,7 @@ func (o *DhcpAPIScope) GetOptions() []TypesDHCPOption {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DhcpAPIScope) GetOptionsOk() ([]TypesDHCPOption, bool) {
-	if o == nil || o.Options == nil {
+	if o == nil || IsNil(o.Options) {
 		return nil, false
 	}
 	return o.Options, true
@@ -229,11 +232,17 @@ func (o *DhcpAPIScope) SetTtl(v int32) {
 }
 
 func (o DhcpAPIScope) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["default"] = o.Default
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
-	if o.Dns != nil {
+	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPIScope) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["default"] = o.Default
+	if !IsNil(o.Dns) {
 		toSerialize["dns"] = o.Dns
 	}
 	if o.Ipam != nil {
@@ -242,16 +251,10 @@ func (o DhcpAPIScope) MarshalJSON() ([]byte, error) {
 	if o.Options != nil {
 		toSerialize["options"] = o.Options
 	}
-	if true {
-		toSerialize["scope"] = o.Scope
-	}
-	if true {
-		toSerialize["subnetCidr"] = o.SubnetCidr
-	}
-	if true {
-		toSerialize["ttl"] = o.Ttl
-	}
-	return json.Marshal(toSerialize)
+	toSerialize["scope"] = o.Scope
+	toSerialize["subnetCidr"] = o.SubnetCidr
+	toSerialize["ttl"] = o.Ttl
+	return toSerialize, nil
 }
 
 type NullableDhcpAPIScope struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPIMeOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPIMeOutput{}
+
 // AuthAPIMeOutput struct for AuthAPIMeOutput
 type AuthAPIMeOutput struct {
 	Authenticated bool   `json:"authenticated"`
@@ -88,14 +91,18 @@ func (o *AuthAPIMeOutput) SetUsername(v string) {
 }
 
 func (o AuthAPIMeOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["authenticated"] = o.Authenticated
-	}
-	if true {
-		toSerialize["username"] = o.Username
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPIMeOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["authenticated"] = o.Authenticated
+	toSerialize["username"] = o.Username
+	return toSerialize, nil
 }
 
 type NullableAuthAPIMeOutput struct {

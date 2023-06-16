@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolTracerouteOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolTracerouteOutput{}
+
 // ApiAPIToolTracerouteOutput struct for ApiAPIToolTracerouteOutput
 type ApiAPIToolTracerouteOutput struct {
 	Hops []ApiAPIToolTracerouteOutputHop `json:"hops,omitempty"`
@@ -49,7 +52,7 @@ func (o *ApiAPIToolTracerouteOutput) GetHops() []ApiAPIToolTracerouteOutputHop {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ApiAPIToolTracerouteOutput) GetHopsOk() ([]ApiAPIToolTracerouteOutputHop, bool) {
-	if o == nil || o.Hops == nil {
+	if o == nil || IsNil(o.Hops) {
 		return nil, false
 	}
 	return o.Hops, true
@@ -57,7 +60,7 @@ func (o *ApiAPIToolTracerouteOutput) GetHopsOk() ([]ApiAPIToolTracerouteOutputHo
 
 // HasHops returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteOutput) HasHops() bool {
-	if o != nil && o.Hops != nil {
+	if o != nil && IsNil(o.Hops) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *ApiAPIToolTracerouteOutput) SetHops(v []ApiAPIToolTracerouteOutputHop) 
 }
 
 func (o ApiAPIToolTracerouteOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolTracerouteOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Hops != nil {
 		toSerialize["hops"] = o.Hops
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolTracerouteOutput struct {

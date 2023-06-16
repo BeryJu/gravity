@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPIScopesGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPIScopesGetOutput{}
+
 // DhcpAPIScopesGetOutput struct for DhcpAPIScopesGetOutput
 type DhcpAPIScopesGetOutput struct {
 	Scopes []DhcpAPIScope `json:"scopes"`
@@ -52,7 +55,7 @@ func (o *DhcpAPIScopesGetOutput) GetScopes() []DhcpAPIScope {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DhcpAPIScopesGetOutput) GetScopesOk() ([]DhcpAPIScope, bool) {
-	if o == nil || o.Scopes == nil {
+	if o == nil || IsNil(o.Scopes) {
 		return nil, false
 	}
 	return o.Scopes, true
@@ -64,11 +67,19 @@ func (o *DhcpAPIScopesGetOutput) SetScopes(v []DhcpAPIScope) {
 }
 
 func (o DhcpAPIScopesGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPIScopesGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Scopes != nil {
 		toSerialize["scopes"] = o.Scopes
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDhcpAPIScopesGetOutput struct {

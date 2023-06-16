@@ -15,6 +15,9 @@ import (
 	"time"
 )
 
+// checks if the BackupAPIBackupStatus type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &BackupAPIBackupStatus{}
+
 // BackupAPIBackupStatus struct for BackupAPIBackupStatus
 type BackupAPIBackupStatus struct {
 	Duration int32     `json:"duration"`
@@ -123,7 +126,7 @@ func (o *BackupAPIBackupStatus) SetFilename(v string) {
 
 // GetNode returns the Node field value if set, zero value otherwise.
 func (o *BackupAPIBackupStatus) GetNode() string {
-	if o == nil || o.Node == nil {
+	if o == nil || IsNil(o.Node) {
 		var ret string
 		return ret
 	}
@@ -133,7 +136,7 @@ func (o *BackupAPIBackupStatus) GetNode() string {
 // GetNodeOk returns a tuple with the Node field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BackupAPIBackupStatus) GetNodeOk() (*string, bool) {
-	if o == nil || o.Node == nil {
+	if o == nil || IsNil(o.Node) {
 		return nil, false
 	}
 	return o.Node, true
@@ -141,7 +144,7 @@ func (o *BackupAPIBackupStatus) GetNodeOk() (*string, bool) {
 
 // HasNode returns a boolean if a field has been set.
 func (o *BackupAPIBackupStatus) HasNode() bool {
-	if o != nil && o.Node != nil {
+	if o != nil && !IsNil(o.Node) {
 		return true
 	}
 
@@ -226,29 +229,25 @@ func (o *BackupAPIBackupStatus) SetTime(v time.Time) {
 }
 
 func (o BackupAPIBackupStatus) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["duration"] = o.Duration
-	}
-	if true {
-		toSerialize["error"] = o.Error
-	}
-	if true {
-		toSerialize["filename"] = o.Filename
-	}
-	if o.Node != nil {
-		toSerialize["node"] = o.Node
-	}
-	if true {
-		toSerialize["size"] = o.Size
-	}
-	if true {
-		toSerialize["status"] = o.Status
-	}
-	if true {
-		toSerialize["time"] = o.Time
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o BackupAPIBackupStatus) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["duration"] = o.Duration
+	toSerialize["error"] = o.Error
+	toSerialize["filename"] = o.Filename
+	if !IsNil(o.Node) {
+		toSerialize["node"] = o.Node
+	}
+	toSerialize["size"] = o.Size
+	toSerialize["status"] = o.Status
+	toSerialize["time"] = o.Time
+	return toSerialize, nil
 }
 
 type NullableBackupAPIBackupStatus struct {

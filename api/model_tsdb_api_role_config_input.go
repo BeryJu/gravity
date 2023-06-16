@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the TsdbAPIRoleConfigInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &TsdbAPIRoleConfigInput{}
+
 // TsdbAPIRoleConfigInput struct for TsdbAPIRoleConfigInput
 type TsdbAPIRoleConfigInput struct {
 	Config TsdbRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *TsdbAPIRoleConfigInput) SetConfig(v TsdbRoleConfig) {
 }
 
 func (o TsdbAPIRoleConfigInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o TsdbAPIRoleConfigInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableTsdbAPIRoleConfigInput struct {

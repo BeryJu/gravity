@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPILeasesPutInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPILeasesPutInput{}
+
 // DhcpAPILeasesPutInput struct for DhcpAPILeasesPutInput
 type DhcpAPILeasesPutInput struct {
 	Address          string  `json:"address"`
@@ -92,7 +95,7 @@ func (o *DhcpAPILeasesPutInput) SetAddressLeaseTime(v string) {
 
 // GetDnsZone returns the DnsZone field value if set, zero value otherwise.
 func (o *DhcpAPILeasesPutInput) GetDnsZone() string {
-	if o == nil || o.DnsZone == nil {
+	if o == nil || IsNil(o.DnsZone) {
 		var ret string
 		return ret
 	}
@@ -102,7 +105,7 @@ func (o *DhcpAPILeasesPutInput) GetDnsZone() string {
 // GetDnsZoneOk returns a tuple with the DnsZone field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DhcpAPILeasesPutInput) GetDnsZoneOk() (*string, bool) {
-	if o == nil || o.DnsZone == nil {
+	if o == nil || IsNil(o.DnsZone) {
 		return nil, false
 	}
 	return o.DnsZone, true
@@ -110,7 +113,7 @@ func (o *DhcpAPILeasesPutInput) GetDnsZoneOk() (*string, bool) {
 
 // HasDnsZone returns a boolean if a field has been set.
 func (o *DhcpAPILeasesPutInput) HasDnsZone() bool {
-	if o != nil && o.DnsZone != nil {
+	if o != nil && !IsNil(o.DnsZone) {
 		return true
 	}
 
@@ -147,20 +150,22 @@ func (o *DhcpAPILeasesPutInput) SetHostname(v string) {
 }
 
 func (o DhcpAPILeasesPutInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["address"] = o.Address
-	}
-	if true {
-		toSerialize["addressLeaseTime"] = o.AddressLeaseTime
-	}
-	if o.DnsZone != nil {
-		toSerialize["dnsZone"] = o.DnsZone
-	}
-	if true {
-		toSerialize["hostname"] = o.Hostname
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPILeasesPutInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["address"] = o.Address
+	toSerialize["addressLeaseTime"] = o.AddressLeaseTime
+	if !IsNil(o.DnsZone) {
+		toSerialize["dnsZone"] = o.DnsZone
+	}
+	toSerialize["hostname"] = o.Hostname
+	return toSerialize, nil
 }
 
 type NullableDhcpAPILeasesPutInput struct {

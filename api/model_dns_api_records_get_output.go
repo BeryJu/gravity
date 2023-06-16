@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DnsAPIRecordsGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIRecordsGetOutput{}
+
 // DnsAPIRecordsGetOutput struct for DnsAPIRecordsGetOutput
 type DnsAPIRecordsGetOutput struct {
 	Records []DnsAPIRecord `json:"records"`
@@ -52,7 +55,7 @@ func (o *DnsAPIRecordsGetOutput) GetRecords() []DnsAPIRecord {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DnsAPIRecordsGetOutput) GetRecordsOk() ([]DnsAPIRecord, bool) {
-	if o == nil || o.Records == nil {
+	if o == nil || IsNil(o.Records) {
 		return nil, false
 	}
 	return o.Records, true
@@ -64,11 +67,19 @@ func (o *DnsAPIRecordsGetOutput) SetRecords(v []DnsAPIRecord) {
 }
 
 func (o DnsAPIRecordsGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DnsAPIRecordsGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Records != nil {
 		toSerialize["records"] = o.Records
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDnsAPIRecordsGetOutput struct {

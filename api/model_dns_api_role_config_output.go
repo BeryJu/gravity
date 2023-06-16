@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DnsAPIRoleConfigOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIRoleConfigOutput{}
+
 // DnsAPIRoleConfigOutput struct for DnsAPIRoleConfigOutput
 type DnsAPIRoleConfigOutput struct {
 	Config DnsRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *DnsAPIRoleConfigOutput) SetConfig(v DnsRoleConfig) {
 }
 
 func (o DnsAPIRoleConfigOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DnsAPIRoleConfigOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableDnsAPIRoleConfigOutput struct {

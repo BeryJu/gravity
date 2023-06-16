@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPILeasesGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPILeasesGetOutput{}
+
 // DhcpAPILeasesGetOutput struct for DhcpAPILeasesGetOutput
 type DhcpAPILeasesGetOutput struct {
 	Leases []DhcpAPILease `json:"leases"`
@@ -52,7 +55,7 @@ func (o *DhcpAPILeasesGetOutput) GetLeases() []DhcpAPILease {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DhcpAPILeasesGetOutput) GetLeasesOk() ([]DhcpAPILease, bool) {
-	if o == nil || o.Leases == nil {
+	if o == nil || IsNil(o.Leases) {
 		return nil, false
 	}
 	return o.Leases, true
@@ -64,11 +67,19 @@ func (o *DhcpAPILeasesGetOutput) SetLeases(v []DhcpAPILease) {
 }
 
 func (o DhcpAPILeasesGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPILeasesGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Leases != nil {
 		toSerialize["leases"] = o.Leases
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDhcpAPILeasesGetOutput struct {

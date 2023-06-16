@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPISubnetsPutInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPISubnetsPutInput{}
+
 // DiscoveryAPISubnetsPutInput struct for DiscoveryAPISubnetsPutInput
 type DiscoveryAPISubnetsPutInput struct {
 	DiscoveryTTL int32  `json:"discoveryTTL"`
@@ -114,17 +117,19 @@ func (o *DiscoveryAPISubnetsPutInput) SetSubnetCidr(v string) {
 }
 
 func (o DiscoveryAPISubnetsPutInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["discoveryTTL"] = o.DiscoveryTTL
-	}
-	if true {
-		toSerialize["dnsResolver"] = o.DnsResolver
-	}
-	if true {
-		toSerialize["subnetCidr"] = o.SubnetCidr
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPISubnetsPutInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["discoveryTTL"] = o.DiscoveryTTL
+	toSerialize["dnsResolver"] = o.DnsResolver
+	toSerialize["subnetCidr"] = o.SubnetCidr
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPISubnetsPutInput struct {

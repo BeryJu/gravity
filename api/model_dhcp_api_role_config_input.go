@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DhcpAPIRoleConfigInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPIRoleConfigInput{}
+
 // DhcpAPIRoleConfigInput struct for DhcpAPIRoleConfigInput
 type DhcpAPIRoleConfigInput struct {
 	Config DhcpRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *DhcpAPIRoleConfigInput) SetConfig(v DhcpRoleConfig) {
 }
 
 func (o DhcpAPIRoleConfigInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DhcpAPIRoleConfigInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableDhcpAPIRoleConfigInput struct {

@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPISubnetsGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPISubnetsGetOutput{}
+
 // DiscoveryAPISubnetsGetOutput struct for DiscoveryAPISubnetsGetOutput
 type DiscoveryAPISubnetsGetOutput struct {
 	Subnets []DiscoveryAPISubnet `json:"subnets,omitempty"`
@@ -49,7 +52,7 @@ func (o *DiscoveryAPISubnetsGetOutput) GetSubnets() []DiscoveryAPISubnet {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DiscoveryAPISubnetsGetOutput) GetSubnetsOk() ([]DiscoveryAPISubnet, bool) {
-	if o == nil || o.Subnets == nil {
+	if o == nil || IsNil(o.Subnets) {
 		return nil, false
 	}
 	return o.Subnets, true
@@ -57,7 +60,7 @@ func (o *DiscoveryAPISubnetsGetOutput) GetSubnetsOk() ([]DiscoveryAPISubnet, boo
 
 // HasSubnets returns a boolean if a field has been set.
 func (o *DiscoveryAPISubnetsGetOutput) HasSubnets() bool {
-	if o != nil && o.Subnets != nil {
+	if o != nil && IsNil(o.Subnets) {
 		return true
 	}
 
@@ -70,11 +73,19 @@ func (o *DiscoveryAPISubnetsGetOutput) SetSubnets(v []DiscoveryAPISubnet) {
 }
 
 func (o DiscoveryAPISubnetsGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPISubnetsGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Subnets != nil {
 		toSerialize["subnets"] = o.Subnets
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPISubnetsGetOutput struct {

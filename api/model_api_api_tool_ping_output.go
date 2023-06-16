@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ApiAPIToolPingOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ApiAPIToolPingOutput{}
+
 // ApiAPIToolPingOutput struct for ApiAPIToolPingOutput
 type ApiAPIToolPingOutput struct {
 	AvgRtt                *int32   `json:"avgRtt,omitempty"`
@@ -45,7 +48,7 @@ func NewApiAPIToolPingOutputWithDefaults() *ApiAPIToolPingOutput {
 
 // GetAvgRtt returns the AvgRtt field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetAvgRtt() int32 {
-	if o == nil || o.AvgRtt == nil {
+	if o == nil || IsNil(o.AvgRtt) {
 		var ret int32
 		return ret
 	}
@@ -55,7 +58,7 @@ func (o *ApiAPIToolPingOutput) GetAvgRtt() int32 {
 // GetAvgRttOk returns a tuple with the AvgRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int32, bool) {
-	if o == nil || o.AvgRtt == nil {
+	if o == nil || IsNil(o.AvgRtt) {
 		return nil, false
 	}
 	return o.AvgRtt, true
@@ -63,7 +66,7 @@ func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int32, bool) {
 
 // HasAvgRtt returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasAvgRtt() bool {
-	if o != nil && o.AvgRtt != nil {
+	if o != nil && !IsNil(o.AvgRtt) {
 		return true
 	}
 
@@ -77,7 +80,7 @@ func (o *ApiAPIToolPingOutput) SetAvgRtt(v int32) {
 
 // GetMaxRtt returns the MaxRtt field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetMaxRtt() int32 {
-	if o == nil || o.MaxRtt == nil {
+	if o == nil || IsNil(o.MaxRtt) {
 		var ret int32
 		return ret
 	}
@@ -87,7 +90,7 @@ func (o *ApiAPIToolPingOutput) GetMaxRtt() int32 {
 // GetMaxRttOk returns a tuple with the MaxRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int32, bool) {
-	if o == nil || o.MaxRtt == nil {
+	if o == nil || IsNil(o.MaxRtt) {
 		return nil, false
 	}
 	return o.MaxRtt, true
@@ -95,7 +98,7 @@ func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int32, bool) {
 
 // HasMaxRtt returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasMaxRtt() bool {
-	if o != nil && o.MaxRtt != nil {
+	if o != nil && !IsNil(o.MaxRtt) {
 		return true
 	}
 
@@ -109,7 +112,7 @@ func (o *ApiAPIToolPingOutput) SetMaxRtt(v int32) {
 
 // GetMinRtt returns the MinRtt field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetMinRtt() int32 {
-	if o == nil || o.MinRtt == nil {
+	if o == nil || IsNil(o.MinRtt) {
 		var ret int32
 		return ret
 	}
@@ -119,7 +122,7 @@ func (o *ApiAPIToolPingOutput) GetMinRtt() int32 {
 // GetMinRttOk returns a tuple with the MinRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int32, bool) {
-	if o == nil || o.MinRtt == nil {
+	if o == nil || IsNil(o.MinRtt) {
 		return nil, false
 	}
 	return o.MinRtt, true
@@ -127,7 +130,7 @@ func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int32, bool) {
 
 // HasMinRtt returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasMinRtt() bool {
-	if o != nil && o.MinRtt != nil {
+	if o != nil && !IsNil(o.MinRtt) {
 		return true
 	}
 
@@ -141,7 +144,7 @@ func (o *ApiAPIToolPingOutput) SetMinRtt(v int32) {
 
 // GetPacketLoss returns the PacketLoss field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetPacketLoss() float32 {
-	if o == nil || o.PacketLoss == nil {
+	if o == nil || IsNil(o.PacketLoss) {
 		var ret float32
 		return ret
 	}
@@ -151,7 +154,7 @@ func (o *ApiAPIToolPingOutput) GetPacketLoss() float32 {
 // GetPacketLossOk returns a tuple with the PacketLoss field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float32, bool) {
-	if o == nil || o.PacketLoss == nil {
+	if o == nil || IsNil(o.PacketLoss) {
 		return nil, false
 	}
 	return o.PacketLoss, true
@@ -159,7 +162,7 @@ func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float32, bool) {
 
 // HasPacketLoss returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasPacketLoss() bool {
-	if o != nil && o.PacketLoss != nil {
+	if o != nil && !IsNil(o.PacketLoss) {
 		return true
 	}
 
@@ -173,7 +176,7 @@ func (o *ApiAPIToolPingOutput) SetPacketLoss(v float32) {
 
 // GetPacketsRecv returns the PacketsRecv field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetPacketsRecv() int32 {
-	if o == nil || o.PacketsRecv == nil {
+	if o == nil || IsNil(o.PacketsRecv) {
 		var ret int32
 		return ret
 	}
@@ -183,7 +186,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsRecv() int32 {
 // GetPacketsRecvOk returns a tuple with the PacketsRecv field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetPacketsRecvOk() (*int32, bool) {
-	if o == nil || o.PacketsRecv == nil {
+	if o == nil || IsNil(o.PacketsRecv) {
 		return nil, false
 	}
 	return o.PacketsRecv, true
@@ -191,7 +194,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsRecvOk() (*int32, bool) {
 
 // HasPacketsRecv returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasPacketsRecv() bool {
-	if o != nil && o.PacketsRecv != nil {
+	if o != nil && !IsNil(o.PacketsRecv) {
 		return true
 	}
 
@@ -205,7 +208,7 @@ func (o *ApiAPIToolPingOutput) SetPacketsRecv(v int32) {
 
 // GetPacketsRecvDuplicates returns the PacketsRecvDuplicates field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetPacketsRecvDuplicates() int32 {
-	if o == nil || o.PacketsRecvDuplicates == nil {
+	if o == nil || IsNil(o.PacketsRecvDuplicates) {
 		var ret int32
 		return ret
 	}
@@ -215,7 +218,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsRecvDuplicates() int32 {
 // GetPacketsRecvDuplicatesOk returns a tuple with the PacketsRecvDuplicates field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetPacketsRecvDuplicatesOk() (*int32, bool) {
-	if o == nil || o.PacketsRecvDuplicates == nil {
+	if o == nil || IsNil(o.PacketsRecvDuplicates) {
 		return nil, false
 	}
 	return o.PacketsRecvDuplicates, true
@@ -223,7 +226,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsRecvDuplicatesOk() (*int32, bool) {
 
 // HasPacketsRecvDuplicates returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasPacketsRecvDuplicates() bool {
-	if o != nil && o.PacketsRecvDuplicates != nil {
+	if o != nil && !IsNil(o.PacketsRecvDuplicates) {
 		return true
 	}
 
@@ -237,7 +240,7 @@ func (o *ApiAPIToolPingOutput) SetPacketsRecvDuplicates(v int32) {
 
 // GetPacketsSent returns the PacketsSent field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetPacketsSent() int32 {
-	if o == nil || o.PacketsSent == nil {
+	if o == nil || IsNil(o.PacketsSent) {
 		var ret int32
 		return ret
 	}
@@ -247,7 +250,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsSent() int32 {
 // GetPacketsSentOk returns a tuple with the PacketsSent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetPacketsSentOk() (*int32, bool) {
-	if o == nil || o.PacketsSent == nil {
+	if o == nil || IsNil(o.PacketsSent) {
 		return nil, false
 	}
 	return o.PacketsSent, true
@@ -255,7 +258,7 @@ func (o *ApiAPIToolPingOutput) GetPacketsSentOk() (*int32, bool) {
 
 // HasPacketsSent returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasPacketsSent() bool {
-	if o != nil && o.PacketsSent != nil {
+	if o != nil && !IsNil(o.PacketsSent) {
 		return true
 	}
 
@@ -269,7 +272,7 @@ func (o *ApiAPIToolPingOutput) SetPacketsSent(v int32) {
 
 // GetStdDevRtt returns the StdDevRtt field value if set, zero value otherwise.
 func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32 {
-	if o == nil || o.StdDevRtt == nil {
+	if o == nil || IsNil(o.StdDevRtt) {
 		var ret int32
 		return ret
 	}
@@ -279,7 +282,7 @@ func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32 {
 // GetStdDevRttOk returns a tuple with the StdDevRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int32, bool) {
-	if o == nil || o.StdDevRtt == nil {
+	if o == nil || IsNil(o.StdDevRtt) {
 		return nil, false
 	}
 	return o.StdDevRtt, true
@@ -287,7 +290,7 @@ func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int32, bool) {
 
 // HasStdDevRtt returns a boolean if a field has been set.
 func (o *ApiAPIToolPingOutput) HasStdDevRtt() bool {
-	if o != nil && o.StdDevRtt != nil {
+	if o != nil && !IsNil(o.StdDevRtt) {
 		return true
 	}
 
@@ -300,32 +303,40 @@ func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int32) {
 }
 
 func (o ApiAPIToolPingOutput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.AvgRtt != nil {
-		toSerialize["avgRtt"] = o.AvgRtt
-	}
-	if o.MaxRtt != nil {
-		toSerialize["maxRtt"] = o.MaxRtt
-	}
-	if o.MinRtt != nil {
-		toSerialize["minRtt"] = o.MinRtt
-	}
-	if o.PacketLoss != nil {
-		toSerialize["packetLoss"] = o.PacketLoss
-	}
-	if o.PacketsRecv != nil {
-		toSerialize["packetsRecv"] = o.PacketsRecv
-	}
-	if o.PacketsRecvDuplicates != nil {
-		toSerialize["packetsRecvDuplicates"] = o.PacketsRecvDuplicates
-	}
-	if o.PacketsSent != nil {
-		toSerialize["packetsSent"] = o.PacketsSent
-	}
-	if o.StdDevRtt != nil {
-		toSerialize["stdDevRtt"] = o.StdDevRtt
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ApiAPIToolPingOutput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.AvgRtt) {
+		toSerialize["avgRtt"] = o.AvgRtt
+	}
+	if !IsNil(o.MaxRtt) {
+		toSerialize["maxRtt"] = o.MaxRtt
+	}
+	if !IsNil(o.MinRtt) {
+		toSerialize["minRtt"] = o.MinRtt
+	}
+	if !IsNil(o.PacketLoss) {
+		toSerialize["packetLoss"] = o.PacketLoss
+	}
+	if !IsNil(o.PacketsRecv) {
+		toSerialize["packetsRecv"] = o.PacketsRecv
+	}
+	if !IsNil(o.PacketsRecvDuplicates) {
+		toSerialize["packetsRecvDuplicates"] = o.PacketsRecvDuplicates
+	}
+	if !IsNil(o.PacketsSent) {
+		toSerialize["packetsSent"] = o.PacketsSent
+	}
+	if !IsNil(o.StdDevRtt) {
+		toSerialize["stdDevRtt"] = o.StdDevRtt
+	}
+	return toSerialize, nil
 }
 
 type NullableApiAPIToolPingOutput struct {

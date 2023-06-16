@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the AuthAPITokensGetOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AuthAPITokensGetOutput{}
+
 // AuthAPITokensGetOutput struct for AuthAPITokensGetOutput
 type AuthAPITokensGetOutput struct {
 	Tokens []AuthAPIToken `json:"tokens"`
@@ -52,7 +55,7 @@ func (o *AuthAPITokensGetOutput) GetTokens() []AuthAPIToken {
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *AuthAPITokensGetOutput) GetTokensOk() ([]AuthAPIToken, bool) {
-	if o == nil || o.Tokens == nil {
+	if o == nil || IsNil(o.Tokens) {
 		return nil, false
 	}
 	return o.Tokens, true
@@ -64,11 +67,19 @@ func (o *AuthAPITokensGetOutput) SetTokens(v []AuthAPIToken) {
 }
 
 func (o AuthAPITokensGetOutput) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o AuthAPITokensGetOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if o.Tokens != nil {
 		toSerialize["tokens"] = o.Tokens
 	}
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 type NullableAuthAPITokensGetOutput struct {

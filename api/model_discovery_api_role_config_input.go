@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DiscoveryAPIRoleConfigInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DiscoveryAPIRoleConfigInput{}
+
 // DiscoveryAPIRoleConfigInput struct for DiscoveryAPIRoleConfigInput
 type DiscoveryAPIRoleConfigInput struct {
 	Config DiscoveryRoleConfig `json:"config"`
@@ -62,11 +65,17 @@ func (o *DiscoveryAPIRoleConfigInput) SetConfig(v DiscoveryRoleConfig) {
 }
 
 func (o DiscoveryAPIRoleConfigInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["config"] = o.Config
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DiscoveryAPIRoleConfigInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["config"] = o.Config
+	return toSerialize, nil
 }
 
 type NullableDiscoveryAPIRoleConfigInput struct {

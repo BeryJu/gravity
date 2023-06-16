@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the DnsAPIRecord type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIRecord{}
+
 // DnsAPIRecord struct for DnsAPIRecord
 type DnsAPIRecord struct {
 	Data         string `json:"data"`
@@ -123,7 +126,7 @@ func (o *DnsAPIRecord) SetHostname(v string) {
 
 // GetMxPreference returns the MxPreference field value if set, zero value otherwise.
 func (o *DnsAPIRecord) GetMxPreference() int32 {
-	if o == nil || o.MxPreference == nil {
+	if o == nil || IsNil(o.MxPreference) {
 		var ret int32
 		return ret
 	}
@@ -133,7 +136,7 @@ func (o *DnsAPIRecord) GetMxPreference() int32 {
 // GetMxPreferenceOk returns a tuple with the MxPreference field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DnsAPIRecord) GetMxPreferenceOk() (*int32, bool) {
-	if o == nil || o.MxPreference == nil {
+	if o == nil || IsNil(o.MxPreference) {
 		return nil, false
 	}
 	return o.MxPreference, true
@@ -141,7 +144,7 @@ func (o *DnsAPIRecord) GetMxPreferenceOk() (*int32, bool) {
 
 // HasMxPreference returns a boolean if a field has been set.
 func (o *DnsAPIRecord) HasMxPreference() bool {
-	if o != nil && o.MxPreference != nil {
+	if o != nil && !IsNil(o.MxPreference) {
 		return true
 	}
 
@@ -155,7 +158,7 @@ func (o *DnsAPIRecord) SetMxPreference(v int32) {
 
 // GetSrvPort returns the SrvPort field value if set, zero value otherwise.
 func (o *DnsAPIRecord) GetSrvPort() int32 {
-	if o == nil || o.SrvPort == nil {
+	if o == nil || IsNil(o.SrvPort) {
 		var ret int32
 		return ret
 	}
@@ -165,7 +168,7 @@ func (o *DnsAPIRecord) GetSrvPort() int32 {
 // GetSrvPortOk returns a tuple with the SrvPort field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DnsAPIRecord) GetSrvPortOk() (*int32, bool) {
-	if o == nil || o.SrvPort == nil {
+	if o == nil || IsNil(o.SrvPort) {
 		return nil, false
 	}
 	return o.SrvPort, true
@@ -173,7 +176,7 @@ func (o *DnsAPIRecord) GetSrvPortOk() (*int32, bool) {
 
 // HasSrvPort returns a boolean if a field has been set.
 func (o *DnsAPIRecord) HasSrvPort() bool {
-	if o != nil && o.SrvPort != nil {
+	if o != nil && !IsNil(o.SrvPort) {
 		return true
 	}
 
@@ -187,7 +190,7 @@ func (o *DnsAPIRecord) SetSrvPort(v int32) {
 
 // GetSrvPriority returns the SrvPriority field value if set, zero value otherwise.
 func (o *DnsAPIRecord) GetSrvPriority() int32 {
-	if o == nil || o.SrvPriority == nil {
+	if o == nil || IsNil(o.SrvPriority) {
 		var ret int32
 		return ret
 	}
@@ -197,7 +200,7 @@ func (o *DnsAPIRecord) GetSrvPriority() int32 {
 // GetSrvPriorityOk returns a tuple with the SrvPriority field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DnsAPIRecord) GetSrvPriorityOk() (*int32, bool) {
-	if o == nil || o.SrvPriority == nil {
+	if o == nil || IsNil(o.SrvPriority) {
 		return nil, false
 	}
 	return o.SrvPriority, true
@@ -205,7 +208,7 @@ func (o *DnsAPIRecord) GetSrvPriorityOk() (*int32, bool) {
 
 // HasSrvPriority returns a boolean if a field has been set.
 func (o *DnsAPIRecord) HasSrvPriority() bool {
-	if o != nil && o.SrvPriority != nil {
+	if o != nil && !IsNil(o.SrvPriority) {
 		return true
 	}
 
@@ -219,7 +222,7 @@ func (o *DnsAPIRecord) SetSrvPriority(v int32) {
 
 // GetSrvWeight returns the SrvWeight field value if set, zero value otherwise.
 func (o *DnsAPIRecord) GetSrvWeight() int32 {
-	if o == nil || o.SrvWeight == nil {
+	if o == nil || IsNil(o.SrvWeight) {
 		var ret int32
 		return ret
 	}
@@ -229,7 +232,7 @@ func (o *DnsAPIRecord) GetSrvWeight() int32 {
 // GetSrvWeightOk returns a tuple with the SrvWeight field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DnsAPIRecord) GetSrvWeightOk() (*int32, bool) {
-	if o == nil || o.SrvWeight == nil {
+	if o == nil || IsNil(o.SrvWeight) {
 		return nil, false
 	}
 	return o.SrvWeight, true
@@ -237,7 +240,7 @@ func (o *DnsAPIRecord) GetSrvWeightOk() (*int32, bool) {
 
 // HasSrvWeight returns a boolean if a field has been set.
 func (o *DnsAPIRecord) HasSrvWeight() bool {
-	if o != nil && o.SrvWeight != nil {
+	if o != nil && !IsNil(o.SrvWeight) {
 		return true
 	}
 
@@ -298,35 +301,33 @@ func (o *DnsAPIRecord) SetUid(v string) {
 }
 
 func (o DnsAPIRecord) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["data"] = o.Data
-	}
-	if true {
-		toSerialize["fqdn"] = o.Fqdn
-	}
-	if true {
-		toSerialize["hostname"] = o.Hostname
-	}
-	if o.MxPreference != nil {
-		toSerialize["mxPreference"] = o.MxPreference
-	}
-	if o.SrvPort != nil {
-		toSerialize["srvPort"] = o.SrvPort
-	}
-	if o.SrvPriority != nil {
-		toSerialize["srvPriority"] = o.SrvPriority
-	}
-	if o.SrvWeight != nil {
-		toSerialize["srvWeight"] = o.SrvWeight
-	}
-	if true {
-		toSerialize["type"] = o.Type
-	}
-	if true {
-		toSerialize["uid"] = o.Uid
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o DnsAPIRecord) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["data"] = o.Data
+	toSerialize["fqdn"] = o.Fqdn
+	toSerialize["hostname"] = o.Hostname
+	if !IsNil(o.MxPreference) {
+		toSerialize["mxPreference"] = o.MxPreference
+	}
+	if !IsNil(o.SrvPort) {
+		toSerialize["srvPort"] = o.SrvPort
+	}
+	if !IsNil(o.SrvPriority) {
+		toSerialize["srvPriority"] = o.SrvPriority
+	}
+	if !IsNil(o.SrvWeight) {
+		toSerialize["srvWeight"] = o.SrvWeight
+	}
+	toSerialize["type"] = o.Type
+	toSerialize["uid"] = o.Uid
+	return toSerialize, nil
 }
 
 type NullableDnsAPIRecord struct {
