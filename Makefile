@@ -97,7 +97,7 @@ gen-client-ts:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v6.0.0 generate \
+		openapitools/openapi-generator-cli:v6.6.0 generate \
 		-i /local/${SCHEMA_FILE} \
 		-g typescript-fetch \
 		-o /local/gen-ts-api \

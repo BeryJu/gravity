@@ -7,7 +7,8 @@
         "watch": "rm -rf dist/ && rollup -c -w",
         "prettier": "prettier --write .",
         "lint": "eslint . --max-warnings 0 --fix",
-        "lit-analyse": "lit-analyzer src"
+        "lit-analyse": "lit-analyzer src",
+        "tsc": "tsc --noEmit -p ."
     },
     "dependencies": {
         "@babel/core": "^7.22.5",

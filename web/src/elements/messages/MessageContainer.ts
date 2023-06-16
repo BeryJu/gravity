@@ -6,7 +6,6 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_MESSAGE, EVENT_WS_MESSAGE, WS_MSG_TYPE_MESSAGE } from "../../common/constants";
 import { SentryIgnoredError } from "../../common/errors";
-import { WSMessage } from "../../common/ws";
 import { AKElement } from "../Base";
 import "../messages/Message";
 import { APIMessage } from "../messages/Message";
@@ -40,10 +39,6 @@ export class MessageContainer extends AKElement {
 
     constructor() {
         super();
-        this.addEventListener(EVENT_WS_MESSAGE, ((e: CustomEvent<WSMessage>) => {
-            if (e.detail.message_type !== WS_MSG_TYPE_MESSAGE) return;
-            this.addMessage(e.detail as unknown as APIMessage);
-        }) as EventListener);
         this.addEventListener(EVENT_MESSAGE, ((e: CustomEvent<APIMessage>) => {
             this.addMessage(e.detail);
         }) as EventListener);
