@@ -1,10 +1,9 @@
-name: Build
+name: Build (Tag)
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -26,9 +25,8 @@ jobs:
         uses: docker/build-push-action@v4.1.1
         with:
           tags: |
-            ghcr.io/beryju/gravity:latest
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}
+          push: true
           platforms: linux/amd64,linux/arm64
           context: .
           build-args: |
