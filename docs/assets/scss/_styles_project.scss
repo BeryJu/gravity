@@ -4,17 +4,3 @@
 .td-overlay.td-overlay--dark::after {
     backdrop-filter: blur(5px);
 }
-.navbar-brand__name {
-    display: none;
-}
-.navbar-brand__logo svg {
-    display: none !important;
-}
-.navbar-brand__logo {
-    background-image: url("/images/logo-color.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    min-height: 3em;
-    display: block;
-    min-width: 20em;
-}
