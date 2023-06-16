@@ -25,7 +25,8 @@ jobs:
         uses: docker/build-push-action@v4.1.1
         with:
           tags: |
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.version }}
+            ghcr.io/beryju/gravity:stable
+            ghcr.io/beryju/gravity:v${{ steps.vars.outputs.version }}
           push: true
           platforms: linux/amd64,linux/arm64
           context: .

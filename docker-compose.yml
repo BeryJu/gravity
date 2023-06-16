@@ -5,7 +5,7 @@ services:
   gravity:
     # Important for this to be static and unique
     hostname: gravity1
-    image: ghcr.io/beryju/gravity:latest
+    image: ghcr.io/beryju/gravity:stable
     restart: unless-stopped
     network_mode: host
     user: root

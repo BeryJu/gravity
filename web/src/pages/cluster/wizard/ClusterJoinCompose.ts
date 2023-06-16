@@ -29,7 +29,7 @@ export class ClusterJoinCompose extends WizardFormPage {
             services: {
                 gravity: {
                     hostname: this.host.state["identifier"],
-                    image: "ghcr.io/beryju/gravity:latest",
+                    image: "ghcr.io/beryju/gravity:stable",
                     restart: "unless-stopped",
                     network_mode: "host",
                     user: "root",
