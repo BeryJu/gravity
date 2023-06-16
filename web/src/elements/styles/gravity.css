@@ -110,7 +110,7 @@ html > form > input {
     .pf-c-page__sidebar {
         color: var(--pf-global--Color--100);
         --pf-c-page__sidebar--BackgroundColor: var(--pf-c-page__sidebar--m-light--BackgroundColor);
-        border-right: var(--pf-c-page__sidebar--m-light--BorderRightWidth) solid transparent;
+        border-right: 0px solid transparent;
     }
     .pf-c-nav {
         --pf-c-nav__item--before--BorderColor: var(--pf-c-nav--m-light__item--before--BorderColor);
