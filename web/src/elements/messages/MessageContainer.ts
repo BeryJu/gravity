@@ -4,7 +4,7 @@ import { customElement, property } from "lit/decorators.js";
 import PFAlertGroup from "@patternfly/patternfly/components/AlertGroup/alert-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_MESSAGE, EVENT_WS_MESSAGE, WS_MSG_TYPE_MESSAGE } from "../../common/constants";
+import { EVENT_MESSAGE } from "../../common/constants";
 import { SentryIgnoredError } from "../../common/errors";
 import { AKElement } from "../Base";
 import "../messages/Message";

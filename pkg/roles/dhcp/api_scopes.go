@@ -96,6 +96,17 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		s.SubnetCIDR = input.SubnetCIDR
 		s.Default = input.Default
 		s.Options = input.Options
+		// validate options
+		for _, opt := range s.Options {
+			if opt.Tag != nil && opt.TagName == "" {
+				continue
+			}
+			_, ok := types.TagMap[types.OptionTagName(opt.TagName)]
+			if !ok {
+				return status.InvalidArgument
+			}
+		}
+
 		s.TTL = input.TTL
 		s.IPAM = input.IPAM
 		s.DNS = input.DNS

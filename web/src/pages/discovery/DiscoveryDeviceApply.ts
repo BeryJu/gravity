@@ -117,9 +117,10 @@ export class DiscoveryDeviceApply extends DeleteBulkForm {
                 </form>
             </section>
             <section class="pf-c-modal-box__body pf-c-page__main-section pf-m-light">
-                <gravity-discover-apply-form> </gravity-discover-apply-form>
+                <gravity-discover-apply-form></gravity-discover-apply-form>
             </section>
             <section class="pf-c-modal-box__body pf-c-page__main-section pf-m-light">
+                <!-- @ts-ignore -->
                 <ak-delete-objects-table .objects=${this.objects} .metadata=${this.metadata}>
                 </ak-delete-objects-table>
             </section>

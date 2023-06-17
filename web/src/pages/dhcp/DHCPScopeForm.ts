@@ -1,4 +1,5 @@
 import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
+import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -44,9 +45,11 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 value: (data as unknown as KV)["router"],
             });
         }
-        routerOpts.forEach((op) => {
-            op.value = (data as unknown as KV)["router"];
-        });
+        routerOpts
+            .filter((op) => op.tagName === "router")
+            .forEach((op) => {
+                op.value = (data as unknown as KV)["router"];
+            });
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
             scope: this.instance?.scope || data.scope,
             dhcpAPIScopesPutInput: data,
@@ -152,6 +155,18 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                             If the configured zone does not exist in Gravity, it is only used as
                             domain for the leases.
                         </p>
+                    </ak-form-element-horizontal>
+                </div>
+            </ak-form-group>
+            <ak-form-group>
+                <span slot="header">Advanced settings</span>
+                <div slot="body" class="pf-c-form">
+                    <ak-form-element-horizontal label=${"DHCP Options"} name="options">
+                        <ak-codemirror
+                            mode="yaml"
+                            value="${YAML.stringify(this.instance?.options)}"
+                        >
+                        </ak-codemirror>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
