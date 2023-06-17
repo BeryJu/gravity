@@ -25,7 +25,7 @@ func New(instance roles.Instance) *Role {
 		i:   instance,
 		ctx: instance.Context(),
 	}
-	s := tftp.NewServer(r.readHandler, r.writeLogger)
+	s := tftp.NewServer(r.readLogger, r.writeLogger)
 	r.s = s
 	s.SetTimeout(5 * time.Second) // optional
 	return r
@@ -34,7 +34,7 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	listen := extconfig.Get().Listen(69)
 
-	r.log.Info("starting debug server", zap.String("listen", listen))
+	r.log.Info("starting tftp server", zap.String("listen", listen))
 	go func() {
 		err := r.s.ListenAndServe(listen)
 		if err != nil && err != http.ErrServerClosed {
