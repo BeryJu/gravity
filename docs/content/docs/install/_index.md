@@ -1,4 +1,3 @@
-
 ---
 title: "Installation"
 weight: 5
@@ -7,6 +6,7 @@ weight: 5
 ### Installation
 
 #### docker-compose
+
 Create a file called `docker-compose.yml` in a new directory with the following content:
 
 ```yaml
@@ -36,10 +36,12 @@ volumes:
   data:
     driver: local
 ```
-Run with `docker compose up -d`
+
+Run `docker compose up -d` to start gravity.
 
 ## First time use
-A default admin user is created on the first startup. You can find the credentials printed to stdout. You can access these by running `docker logs <docker container name>`
+
+A default admin user is created on the first startup. You can find the credentials printed to stdout. You can access these by running `docker compose logs`.
 
 You can reach Gravity by going to `http://<server IP or hostname>:8008` in your browser.
 
@@ -69,6 +71,7 @@ The following environment variables can be set
 - `SENTRY_DSN`: Configure a custom sentry DSN
 
 ##### Changing Environmental variables
+
 Environmental variables can be added by modifying the `environment:` options in the compose file. Gravity is made so you ideally don't have to set these.
 
 Example:
@@ -76,5 +79,5 @@ Example:
     environment:
       INSTANCE_IP: 192.168.2.8
       BOOTSTRAP_ROLES: dns;api;etcd;discovery;monitoring;tsdb
-      INSTANCE_IDENTIFIER: My-DNS-Server
+      INSTANCE_IDENTIFIER: my-gravity-server
 ```
