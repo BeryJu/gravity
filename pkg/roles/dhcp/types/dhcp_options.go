@@ -26,6 +26,14 @@ var TagMap map[OptionTagName]uint8 = map[OptionTagName]uint8{
 	TagNameTFTPserver: dhcpv4.OptionTFTPServerName.Code(),
 }
 
+var IPTags = map[uint8]bool{
+	dhcpv4.OptionRouter.Code():           true,
+	dhcpv4.OptionSubnetMask.Code():       true,
+	dhcpv4.OptionNameServer.Code():       true,
+	dhcpv4.OptionDomainNameServer.Code(): true,
+	dhcpv4.OptionTimeServer.Code():       true,
+}
+
 type DHCPOption struct {
 	Tag     *uint8   `json:"tag"`
 	TagName string   `json:"tagName"`

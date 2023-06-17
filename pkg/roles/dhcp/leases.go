@@ -177,6 +177,10 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		// Values which are directly converted from string to byte
 		if opt.Value != nil {
 			finalVal = []byte(*opt.Value)
+			if _, ok := types.IPTags[*opt.Tag]; ok {
+				i := net.ParseIP(*opt.Value)
+				finalVal = dhcpv4.IPs([]net.IP{i}).ToBytes()
+			}
 		}
 
 		// For non-stringable values, get b64 decoded values
