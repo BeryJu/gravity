@@ -7,6 +7,8 @@ weight: 5
 
 #### docker-compose
 
+Create a file called `docker-compose.yml` in a new directory with the following content:
+
 ```yaml
 ---
 version: "3.4"
@@ -35,9 +37,13 @@ volumes:
     driver: local
 ```
 
+Run `docker compose up -d` to start gravity.
+
 ## First time use
 
-A default admin user is created on the first startup. You can find the credentials printed to stdout.
+A default admin user is created on the first startup. You can find the credentials printed to stdout. You can access these by running `docker compose logs`.
+
+You can reach Gravity by going to `http://<server IP or hostname>:8008` in your browser.
 
 ### Configuration
 
@@ -45,7 +51,7 @@ The following environment variables can be set
 
 ##### Common
 
-- `BOOTSTRAP_ROLES`: Configure while roles this instance should bootstrap, defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
+- `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap, defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
 - `LOG_LEVEL`: Log level, defaults to `info`.
 - `DATA_PATH`: Path to store etcd data, defaults to `./data`
 - `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to hostname. When running in docker, this is configured via the `hostname` attribute.
@@ -63,3 +69,15 @@ The following environment variables can be set
 - `ADMIN_TOKEN`: Optionally set a token to be created on first start, if not set no token will be created
 - `SENTRY_ENABLED`: Enable sentry error reporting and tracing
 - `SENTRY_DSN`: Configure a custom sentry DSN
+
+##### Changing Environmental variables
+
+Environmental variables can be added by modifying the `environment:` options in the compose file. Gravity is made so you ideally don't have to set these.
+
+Example:
+```yaml
+    environment:
+      INSTANCE_IP: 192.168.2.8
+      BOOTSTRAP_ROLES: dns;api;etcd;discovery;monitoring;tsdb
+      INSTANCE_IDENTIFIER: my-gravity-server
+```
