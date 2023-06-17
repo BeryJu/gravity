@@ -14,6 +14,8 @@ const (
 	TagNameTFTPserver = "tftp_server"
 )
 
+// https://datatracker.ietf.org/doc/html/rfc2131
+// https://datatracker.ietf.org/doc/html/rfc2132
 var TagMap map[OptionTagName]uint8 = map[OptionTagName]uint8{
 	TagNameSubnetMask: dhcpv4.OptionSubnetMask.Code(),
 	TagNameRouter:     dhcpv4.OptionRouter.Code(),
