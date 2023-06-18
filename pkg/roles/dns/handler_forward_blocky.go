@@ -49,17 +49,8 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		bfwd.log.Warn("Failed to build blocky config", zap.Error(err))
 	}
 	bfwd.cfg = cfg
-	// Check if all configured block lists use the internal cache server
-	// if so, blocky will start fast enough that we can do it sync
-	// otherwise, start blocky in the background
-	internalLists := true
-	for _, b := range cfg.Blocking.BlackLists["block"] {
-		if !strings.HasPrefix(b, blockyListBase) {
-			internalLists = false
-		}
-	}
 
-	if extconfig.Get().Debug || internalLists {
+	if extconfig.Get().Debug {
 		bfwd.log.Info("starting blocky sync")
 		waitForStart()
 	} else {
