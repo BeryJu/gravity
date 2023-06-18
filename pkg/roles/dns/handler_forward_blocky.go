@@ -27,6 +27,7 @@ type BlockyForwarder struct {
 	b   *server.Server
 	log *zap.Logger
 	st  time.Time
+	cfg *config.Config
 }
 
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
@@ -35,17 +36,34 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		c:                  rawConfig,
 		st:                 time.Now(),
 	}
+	go startBlockyListServer()
 	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
-	bfwd.log.Debug("starting blocky setup")
 	waitForStart := func() {
 		err := bfwd.setup()
 		if err != nil {
 			bfwd.log.Warn("failed to setup blocky, queries will fallthrough", zap.Error(err))
 		}
 	}
-	if extconfig.Get().Debug {
+	cfg, err := bfwd.getConfig()
+	if err != nil {
+		bfwd.log.Warn("Failed to build blocky config", zap.Error(err))
+	}
+	bfwd.cfg = cfg
+	// Check if all configured block lists use the internal cache server
+	// if so, blocky will start fast enough that we can do it sync
+	// otherwise, start blocky in the background
+	internalLists := true
+	for _, b := range cfg.Blocking.BlackLists["block"] {
+		if !strings.HasPrefix(b, blockyListBase) {
+			internalLists = false
+		}
+	}
+
+	if extconfig.Get().Debug || internalLists {
+		bfwd.log.Info("starting blocky sync")
 		waitForStart()
 	} else {
+		bfwd.log.Info("starting blocky async")
 		go waitForStart()
 	}
 	return bfwd
@@ -55,7 +73,7 @@ func (bfwd *BlockyForwarder) Identifier() string {
 	return BlockyForwarderType
 }
 
-func (bfwd *BlockyForwarder) setup() error {
+func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	forwarders := strings.Split(bfwd.c["to"], ";")
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
@@ -68,12 +86,12 @@ func (bfwd *BlockyForwarder) setup() error {
 	}
 
 	blockLists := []string{
-		"https://adaway.org/hosts.txt",
-		"https://dbl.oisd.nl/",
-		"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-		"https://v.firebog.net/hosts/AdguardDNS.txt",
-		"https://v.firebog.net/hosts/Easylist.txt",
-		"https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
+		blockyListBase + "AdGuardSDNSFilter.txt",
+		blockyListBase + "AdguardDNS.txt",
+		blockyListBase + "Easylist.txt",
+		blockyListBase + "StevenBlack.hosts.txt",
+		blockyListBase + "adaway.org.txt",
+		blockyListBase + "dbl.oisd.nl.txt",
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
 		lists := strings.Split(bll, ";")
@@ -83,7 +101,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	cfg := config.Config{}
 	err := defaults.Set(&cfg)
 	if err != nil {
-		return fmt.Errorf("failed to set config defaults: %w", err)
+		return nil, fmt.Errorf("failed to set config defaults: %w", err)
 	}
 	cfg.UpstreamTimeout = config.Duration(types.DefaultUpstreamTimeout)
 	// Blocky uses a custom registry, so this doesn't work as expected
@@ -97,7 +115,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	cfg.BootstrapDNS = []config.BootstrappedUpstreamConfig{
 		{
@@ -123,9 +141,13 @@ func (bfwd *BlockyForwarder) setup() error {
 			"default": {"block"},
 		},
 	}
-	bfwd.log.Debug("blocky config", zap.Any("config", cfg))
+	return &cfg, nil
+}
 
-	srv, err := server.NewServer(&cfg)
+func (bfwd *BlockyForwarder) setup() error {
+	bfwd.log.Debug("blocky config", zap.Any("config", bfwd.cfg))
+
+	srv, err := server.NewServer(bfwd.cfg)
 	if err != nil {
 		return fmt.Errorf("can't start server: %w", err)
 	}

@@ -55,7 +55,15 @@ website-watch:
 	open http://localhost:1313/ && hugo server --noBuildLock
 
 gen-update-oui:
-	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/macoui/db.txt || true
+	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/macoui/db.txt
+
+gen-update-blocklist:
+	curl -L https://adaway.org/hosts.txt -o ./internal/blocky/adaway.org.txt
+	curl -L https://dbl.oisd.nl/ -o ./internal/blocky/dbl.oisd.nl.txt
+	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ./internal/blocky/StevenBlack.hosts.txt
+	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/blocky/AdguardDNS.txt
+	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/blocky/Easylist.txt
+	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ./internal/blocky/AdGuardSDNSFilter.txt
 
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}

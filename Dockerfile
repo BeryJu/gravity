@@ -14,8 +14,17 @@ COPY ./web /work/web
 ENV NODE_ENV=production
 RUN make web-build
 
-# Stage 2: Build
-FROM --platform=${BUILDPLATFORM} golang:1.20.5 as builder
+# Stage 2: Prepare external files
+FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim
+
+WORKDIR /workspace
+COPY Makefile .
+
+RUN mkdir -p ./internal/macoui ./internal/blocky && \
+    make gen-update-oui gen-update-blocklist
+
+# Stage 3: Build
+FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.20.5 as builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
@@ -37,7 +46,7 @@ COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
 RUN make docker-build
 
-# Stage 3: Run
+# Stage 4: Run
 FROM docker.io/library/debian:stable-slim
 
 WORKDIR /
