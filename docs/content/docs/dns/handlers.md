@@ -81,11 +81,12 @@ Forward queries to another DNS Server using blocky for Ad/Privacy blocking
 
   - https://adaway.org/hosts.txt
   - https://dbl.oisd.nl/
-  - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
   - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
   - https://v.firebog.net/hosts/AdguardDNS.txt
   - https://v.firebog.net/hosts/Easylist.txt
   - https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+
+  (These default lists are downloaded at compile time and embedded into Gravity, in order to speed up the startup of Blocky)
 
 ##### Example
 

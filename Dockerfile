@@ -23,7 +23,7 @@ COPY Makefile .
 RUN apt-get update && \
     apt-get install -y --no-install-recommends make curl ca-certificates && \
     mkdir -p ./internal/macoui ./internal/blocky && \
-    make gen-update-oui gen-update-blocklist
+    make internal/resources/macoui internal/resources/blocky
 
 # Stage 3: Build
 FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.20.5 as builder

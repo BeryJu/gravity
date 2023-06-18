@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"beryju.io/gravity/internal/blocky"
+	"beryju.io/gravity/internal/resources"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +18,7 @@ func startBlockyListServer() {
 		return
 	}
 	s := mux.NewRouter()
-	s.Methods("GET").Handler(http.FileServer(http.FS(blocky.Lists)))
+	s.Methods("GET").Handler(http.FileServer(http.FS(resources.BlockyLists)))
 	blockyListListening = true
 	go func() {
 		err := http.ListenAndServe(blockyListAddr, s)

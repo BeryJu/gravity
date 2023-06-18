@@ -2,3 +2,5 @@ web/node_modules/
 web/dist/
 data/
 Dockerfile
+internal/resources/blocky
+internal/resources/macoui

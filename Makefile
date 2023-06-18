@@ -16,12 +16,12 @@ ci--env:
 	echo "timestamp=$(shell date +%s)" >> ${GITHUB_OUTPUT}
 	echo "version=${VERSION}" >> ${GITHUB_OUTPUT}
 
-docker-build:
+docker-build: internal/resources/macoui internal/resources/blocky
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		-v -a -o gravity .
 
-run:
+run: internal/resources/macoui internal/resources/blocky
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
@@ -54,16 +54,18 @@ website-watch:
 	cd docs
 	open http://localhost:1313/ && hugo server --noBuildLock
 
-gen-update-oui:
-	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/macoui/db.txt
+internal/resources/macoui:
+	mkdir -p internal/resources/macoui
+	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/resources/macoui/db.txt
 
-gen-update-blocklist:
-	curl -L https://adaway.org/hosts.txt -o ./internal/blocky/adaway.org.txt
-	curl -L https://dbl.oisd.nl/ -o ./internal/blocky/dbl.oisd.nl.txt
-	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ./internal/blocky/StevenBlack.hosts.txt
-	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/blocky/AdguardDNS.txt
-	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/blocky/Easylist.txt
-	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ./internal/blocky/AdGuardSDNSFilter.txt
+internal/resources/blocky:
+	mkdir -p internal/resources/blocky
+	curl -L https://adaway.org/hosts.txt -o ./internal/resources/blocky/adaway.org.txt
+	curl -L https://dbl.oisd.nl/ -o ./internal/resources/blocky/dbl.oisd.nl.txt
+	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ./internal/resources/blocky/StevenBlack.hosts.txt
+	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/resources/blocky/AdguardDNS.txt
+	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/resources/blocky/Easylist.txt
+	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ./internal/resources/blocky/AdGuardSDNSFilter.txt
 
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
@@ -135,14 +137,14 @@ test-env-stop:
 	cd hack/tests/
 	docker compose --project-name gravity-test-env down -v
 
-install-deps:
+install-deps: internal/resources/macoui internal/resources/blocky
 	sudo apt-get install -y nmap libpcap-dev
 
 test-local:
 	$(eval TEST_COUNT := 100)
 	$(eval TEST_FLAGS := -v -shuffle=on -failfast)
 
-test:
+test: internal/resources/macoui internal/resources/blocky
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
 	export ETCD_ENDPOINT="localhost:2379"
 	export DEBUG="true"
