@@ -52,19 +52,23 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
     }
     row(item: ApiAPILogMessage): TemplateResult[] {
         if (this.isStructured) {
-            const payload: LogMessage = JSON.parse(item.message || "");
-            const otherFields: { [key: string]: unknown } = { ...payload };
-            delete otherFields.level;
-            delete otherFields.logger;
-            delete otherFields.msg;
-            delete otherFields.ts;
-            return [
-                html`${payload.level}`,
-                html`${new Date(payload.ts * 1000).toLocaleTimeString()}`,
-                html`${payload.logger}`,
-                html`${payload.msg}`,
-                html`<pre>${JSON.stringify(otherFields)}</pre>`,
-            ];
+            try {
+                const payload: LogMessage = JSON.parse(item.message || "");
+                const otherFields: { [key: string]: unknown } = { ...payload };
+                delete otherFields.level;
+                delete otherFields.logger;
+                delete otherFields.msg;
+                delete otherFields.ts;
+                return [
+                    html`${payload.level}`,
+                    html`${new Date(payload.ts * 1000).toLocaleTimeString()}`,
+                    html`${payload.logger}`,
+                    html`${payload.msg}`,
+                    html`<pre>${JSON.stringify(otherFields)}</pre>`,
+                ];
+            } catch (error) {
+                this.isStructured = false;
+            }
         }
         return [html`${unsafeHTML(this.converter.toHtml(item.message || ""))}`];
     }
