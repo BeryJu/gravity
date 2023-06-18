@@ -1443,11 +1443,20 @@ components:
           nullable: true
           type: array
       type: object
+    ApiAPILogMessage:
+      properties:
+        message:
+          type: string
+        node:
+          type: string
+      type: object
     ApiAPILogMessages:
       properties:
+        isJSON:
+          type: boolean
         messages:
           items:
-            type: string
+            $ref: '#/components/schemas/ApiAPILogMessage'
           nullable: true
           type: array
       type: object

@@ -36,6 +36,7 @@
         "@typescript-eslint/eslint-plugin": "^5.59.11",
         "@typescript-eslint/parser": "^5.59.11",
         "@webcomponents/webcomponentsjs": "^2.8.0",
+        "ansi-to-html": "^0.7.2",
         "babel-plugin-macros": "^3.1.0",
         "babel-plugin-tsconfig-paths": "^1.0.3",
         "chart.js": "^4.3.0",

@@ -105,6 +105,7 @@ gen-client-ts:
 		--git-repo-id BeryJu \
 		--git-user-id gravity
 	cd gen-ts-api && npm i
+	\cp -rfv gen-ts-api/* web/node_modules/gravity-api/
 
 gen-client-ts-update: gen-client-ts
 	cd ${PWD}/gen-ts-api
