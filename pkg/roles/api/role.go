@@ -62,6 +62,7 @@ func New(instance roles.Instance) *Role {
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/cluster/node/logs", r.APIClusterNodeLogMessages())
 		svc.Get("/api/v1/cluster/export", r.APIClusterExport())
 		svc.Post("/api/v1/cluster/import", r.APIClusterImport())
 		svc.Get("/api/v1/roles/api", r.APIRoleConfigGet())

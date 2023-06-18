@@ -55,6 +55,10 @@ export const ROUTES = [
         await import("./pages/cluster/RolesPage");
         return html`<gravity-cluster-roles></gravity-cluster-roles>`;
     }),
+    new Route(new RegExp("^/cluster/nodes/logs$"), async () => {
+        await import("./pages/cluster/ClusterNodeLogsPage");
+        return html`<gravity-cluster-node-logs></gravity-cluster-node-logs>`;
+    }),
     new Route(new RegExp("^/cluster/nodes$"), async () => {
         await import("./pages/cluster/ClusterNodesPage");
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
@@ -191,6 +195,9 @@ export class AdminInterface extends AKElement {
                 </ak-sidebar-item>
                 <ak-sidebar-item path="/cluster/nodes">
                     <span slot="label">Nodes</span>
+                </ak-sidebar-item>
+                <ak-sidebar-item path="/cluster/nodes/logs">
+                    <span slot="label">Logs</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
             <ak-sidebar-item>
