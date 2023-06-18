@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.7
+  version: 0.6.8
 servers:
 - url: /
 paths:
@@ -335,6 +335,25 @@ paths:
       summary: Instances
       tags:
       - cluster/instances
+  /api/v1/cluster/node/logs:
+    get:
+      operationId: api.get_log_messages
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAPILogMessages'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Log messages
+      tags:
+      - roles/api
   /api/v1/cluster/roles/restart:
     post:
       operationId: cluster.instance_role_restart
@@ -1522,6 +1541,33 @@ components:
         entries:
           items:
             $ref: '#/components/schemas/ApiAPITransportEntry'
+          nullable: true
+          type: array
+      type: object
+    ApiAPILogMessage:
+      example:
+        node: node
+        message: message
+      properties:
+        message:
+          type: string
+        node:
+          type: string
+      type: object
+    ApiAPILogMessages:
+      example:
+        isJSON: true
+        messages:
+        - node: node
+          message: message
+        - node: node
+          message: message
+      properties:
+        isJSON:
+          type: boolean
+        messages:
+          items:
+            $ref: '#/components/schemas/ApiAPILogMessage'
           nullable: true
           type: array
       type: object

@@ -3,7 +3,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.6.7"
+VERSION = "0.6.8"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -105,7 +105,6 @@ gen-client-ts:
 		--git-repo-id BeryJu \
 		--git-user-id gravity
 	cd gen-ts-api && npm i
-	\cp -rfv gen-ts-api/* web/node_modules/gravity-api/
 
 gen-client-ts-update: gen-client-ts
 	cd ${PWD}/gen-ts-api

@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**ApiDeleteTokens**](RolesApiApi.md#ApiDeleteTokens) | **Delete** /api/v1/auth/tokens | Tokens
 [**ApiDeleteUsers**](RolesApiApi.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
 [**ApiExport**](RolesApiApi.md#ApiExport) | **Get** /api/v1/cluster/export | Export Cluster
+[**ApiGetLogMessages**](RolesApiApi.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
 [**ApiGetMembers**](RolesApiApi.md#ApiGetMembers) | **Get** /api/v1/etcd/members | Etcd members
 [**ApiGetMetricsCpu**](RolesApiApi.md#ApiGetMetricsCpu) | **Get** /api/v1/system/metrics/cpu | System Metrics
 [**ApiGetMetricsMemory**](RolesApiApi.md#ApiGetMetricsMemory) | **Get** /api/v1/system/metrics/memory | System Metrics
@@ -253,6 +254,65 @@ Other parameters are passed through a pointer to a apiApiExportRequest struct vi
 ### Return type
 
 [**ApiAPIExportOutput**](ApiAPIExportOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApiGetLogMessages
+
+> ApiAPILogMessages ApiGetLogMessages(ctx).Execute()
+
+Log messages
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "beryju.io/gravity/api"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesApiApi.ApiGetLogMessages(context.Background()).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetLogMessages``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ApiGetLogMessages`: ApiAPILogMessages
+    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetLogMessages`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiApiGetLogMessagesRequest struct via the builder pattern
+
+
+### Return type
+
+[**ApiAPILogMessages**](ApiAPILogMessages.md)
 
 ### Authorization
 
