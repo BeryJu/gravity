@@ -1,30 +1,40 @@
 package log_iml
 
 import (
+	"bytes"
 	"net/url"
+	"strings"
 	"sync"
 
 	"go.uber.org/zap"
 )
 
 type inMemoryLogger struct {
-	msgs []string
-	msgM sync.RWMutex
-	max  int
+	msgs    []string
+	msgM    sync.RWMutex
+	lineBuf *bytes.Buffer
+	max     int
 }
 
 func (iml *inMemoryLogger) Close() error { return nil }
 func (iml *inMemoryLogger) Sync() error  { return nil }
-func (iml *inMemoryLogger) Write(log []byte) (int, error) {
+func (iml *inMemoryLogger) flush() {
 	go func() {
 		iml.msgM.Lock()
-		iml.msgs = append(iml.msgs, string(log))
+		iml.msgs = append(iml.msgs, iml.lineBuf.String())
+		iml.lineBuf.Reset()
 		if len(iml.msgs) > iml.max {
 			iml.msgs = iml.msgs[1:]
 		}
 		iml.msgM.Unlock()
 	}()
-	return 0, nil
+}
+func (iml *inMemoryLogger) Write(log []byte) (int, error) {
+	n, err := iml.lineBuf.Write(log)
+	if strings.Contains(string(log), "\n") {
+		iml.flush()
+	}
+	return n, err
 }
 func (iml *inMemoryLogger) Messages() []string {
 	iml.msgM.RLock()
@@ -36,8 +46,9 @@ var iml *inMemoryLogger
 
 func init() {
 	iml = &inMemoryLogger{
-		msgs: make([]string, 0),
-		max:  300,
+		msgs:    make([]string, 0),
+		max:     300,
+		lineBuf: new(bytes.Buffer),
 	}
 	zap.RegisterSink("gravity-in-memory", func(u *url.URL) (zap.Sink, error) {
 		return iml, nil
