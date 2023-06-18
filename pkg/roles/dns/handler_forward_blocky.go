@@ -36,8 +36,8 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		c:                  rawConfig,
 		st:                 time.Now(),
 	}
-	go startBlockyListServer()
 	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
+	go bfwd.startBlockyListServer()
 	waitForStart := func() {
 		err := bfwd.setup()
 		if err != nil {
@@ -128,6 +128,7 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		BlackLists: map[string][]string{
 			"block": blockLists,
 		},
+		DownloadAttempts: 3,
 		ClientGroupsBlock: map[string][]string{
 			"default": {"block"},
 		},

@@ -6,14 +6,15 @@ import (
 
 	"beryju.io/gravity/internal/resources"
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 )
 
 var blockyListListening = false
 
 const blockyListAddr = "127.0.0.1:8100"
-const blockyListBase = "http://" + blockyListAddr + "/"
+const blockyListBase = "http://" + blockyListAddr + "/blocky/"
 
-func startBlockyListServer() {
+func (bfwd *BlockyForwarder) startBlockyListServer() {
 	if blockyListListening {
 		return
 	}
@@ -21,10 +22,12 @@ func startBlockyListServer() {
 	s.Methods("GET").Handler(http.FileServer(http.FS(resources.BlockyLists)))
 	blockyListListening = true
 	go func() {
+		bfwd.log.Info("starting blocky list server")
 		err := http.ListenAndServe(blockyListAddr, s)
 		if err != nil {
+			bfwd.log.Warn("failed to start blocky list server", zap.Error(err))
 			time.Sleep(5 * time.Millisecond)
-			startBlockyListServer()
+			bfwd.startBlockyListServer()
 		}
 	}()
 }
