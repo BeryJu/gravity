@@ -1,5 +1,5 @@
 # Stage 1: Build web
-FROM --platform=${BUILDPLATFORM} docker.io/node:20 as web-builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/node:20 as web-builder
 
 WORKDIR /work
 
@@ -15,12 +15,14 @@ ENV NODE_ENV=production
 RUN make web-build
 
 # Stage 2: Prepare external files
-FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim
+FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim as downloader
 
 WORKDIR /workspace
 COPY Makefile .
 
-RUN mkdir -p ./internal/macoui ./internal/blocky && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends make curl ca-certificates && \
+    mkdir -p ./internal/macoui ./internal/blocky && \
     make gen-update-oui gen-update-blocklist
 
 # Stage 3: Build
@@ -42,6 +44,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 COPY . .
+COPY --from=downloader /workspace/ /workspace/
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
 RUN make docker-build
