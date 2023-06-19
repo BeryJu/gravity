@@ -38,6 +38,7 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyFiles,
+			it.RemoteAddr().IP.String(),
 			filename,
 		).String(),
 		buf.String(),
