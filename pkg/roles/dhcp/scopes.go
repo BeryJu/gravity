@@ -162,6 +162,7 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 		}
 		lease.Address = ip.String()
 	}
+	s.log.Info("creating new DHCP lease", zap.String("ip", requestedIP.String()), zap.String("lease", ident))
 	return lease
 }
 
