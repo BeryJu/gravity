@@ -16,7 +16,7 @@ ci--env:
 	echo "timestamp=$(shell date +%s)" >> ${GITHUB_OUTPUT}
 	echo "version=${VERSION}" >> ${GITHUB_OUTPUT}
 
-docker-build: internal/resources/macoui internal/resources/blocky
+docker-build: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		-v -a -o gravity .
@@ -24,7 +24,7 @@ docker-build: internal/resources/macoui internal/resources/blocky
 clean:
 	rm -rf ${PWD}/data/
 
-run: internal/resources/macoui internal/resources/blocky
+run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
@@ -65,6 +65,13 @@ internal/resources/blocky:
 	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/resources/blocky/AdguardDNS.txt
 	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/resources/blocky/Easylist.txt
 	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ./internal/resources/blocky/AdGuardSDNSFilter.txt
+
+internal/resources/tftp:
+	mkdir -p internal/resources/tftp
+	curl -L http://boot.ipxe.org/undionly.kpxe -o ./internal/resources/tftp/undionly.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe -o ./internal/resources/tftp/netboot.xyz.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz-undionly.kpxe -o ./internal/resources/tftp/netboot.xyz-undionly.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ./internal/resources/tftp/netboot.xyz.efi
 
 gen-build:
 	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
@@ -139,7 +146,7 @@ test-env-stop:
 	cd ${PWD}/hack/tests/
 	docker compose --project-name gravity-test-env down -v
 
-install-deps: internal/resources/macoui internal/resources/blocky
+install-deps: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	sudo apt-get install -y nmap libpcap-dev
 	sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
 
@@ -147,7 +154,7 @@ test-local:
 	$(eval TEST_COUNT := 100)
 	$(eval TEST_FLAGS := -v -shuffle=on -failfast)
 
-test: internal/resources/macoui internal/resources/blocky
+test: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
 	export ETCD_ENDPOINT="localhost:2379"
 	export DEBUG="true"
