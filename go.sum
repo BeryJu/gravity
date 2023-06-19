@@ -144,7 +144,7 @@ github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJm
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/blang/semver v3.5.1+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
 github.com/bool64/dev v0.2.25/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
-github.com/bool64/dev v0.2.27 h1:mFT+B74mFVgUeUmm/EbfM6ELPA55lEXBjQ/AOHCwCOc=
+github.com/bool64/dev v0.2.28 h1:6ayDfrB/jnNr2iQAZHI+uT3Qi6rErSbJYQs1y8rSrwM=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/cenkalti/backoff/v4 v4.1.1/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
 github.com/cenkalti/backoff/v4 v4.2.0 h1:HN5dHm3WBOgndBH6E8V0q2jIYIR3s9yglV8k/+MN3u4=
@@ -793,14 +793,14 @@ github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69
 github.com/swaggest/assertjson v1.8.1 h1:Be2EHY9S2qwKWV+xWZB747Cd7Y79YK6JLdeyrgFvyMo=
 github.com/swaggest/form/v5 v5.0.4 h1:hTg+gjUEZG0vgsDdXOPi7I0Xu5OowXKoLZIGYZsoddg=
 github.com/swaggest/form/v5 v5.0.4/go.mod h1:X1hraaoONee20PMnGNLQpO32f9zbQ0Czfm7iZThuEKg=
-github.com/swaggest/jsonschema-go v0.3.51 h1:Cl0hFQ/jtBIP8NlHNuwW6ka3J7zzW5r2jxbLSCUByGY=
-github.com/swaggest/jsonschema-go v0.3.51/go.mod h1:QfUB5HaZ8y5TiFtCPhM7QwvPNKxTsYxDJaLHTLq6jgU=
+github.com/swaggest/jsonschema-go v0.3.52 h1:cFk0Ma34MuZvA+JJ8S5WuQMedwxzUa+9+qrGwtoE39U=
+github.com/swaggest/jsonschema-go v0.3.52/go.mod h1:sRly7iaIIvbheAqsyvnKU3H7ogWbF0wtUBXyGpRXNm4=
 github.com/swaggest/openapi-go v0.2.30 h1:Gt7OsuBZ1rwmOWpwhzDuP1s6egoWpArIICCAi/3fcQo=
 github.com/swaggest/openapi-go v0.2.30/go.mod h1:H7ZYe1c/BuYH7xBgw8OmpHKnTmBJC2XeSGf49KvSaRg=
 github.com/swaggest/refl v1.1.0 h1:a+9a75Kv6ciMozPjVbOfcVTEQe81t2R3emvaD9oGQGc=
 github.com/swaggest/refl v1.1.0/go.mod h1:g3Qa6ki0A/L2yxiuUpT+cuBURuRaltF5SDQpg1kMZSY=
-github.com/swaggest/rest v0.2.51 h1:k2spDdp2D1Mrpxxm6elAXJKfysk1H8YuJatMTVN4bwY=
-github.com/swaggest/rest v0.2.51/go.mod h1:4jXRFIttbKNoyw4H5u4MWFMGLegZP5sMbRaP0AHvvl4=
+github.com/swaggest/rest v0.2.52 h1:nLJj4ZUu51E6qVoBo78azL30T4lGf6Kux3UfsEq5ngk=
+github.com/swaggest/rest v0.2.52/go.mod h1:7goUXIQE+UHZMl6DRa+5fk6yNu7palQklExtoVnTwFI=
 github.com/swaggest/usecase v1.2.1 h1:XYVdK9tK2KCPglTflUi7aWBrVwIyb58D5mvGWED7pNs=
 github.com/swaggest/usecase v1.2.1/go.mod h1:5ccwVsLJ9eQpU4m0AGTM444pdqSPQBiocIwMmdRH9lQ=
 github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7/go.mod h1:q4W45IWZaF22tdD+VEXcAWRA037jwmWEB5VWYORlTpc=
