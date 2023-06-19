@@ -131,7 +131,7 @@ func (i *Instance) startSentry() {
 		Release:            release,
 		EnableTracing:      true,
 		TracesSampleRate:   rate,
-		ProfilesSampleRate: rate,
+		ProfilesSampleRate: rate / 2,
 		Transport:          transport,
 		Debug:              extconfig.Get().Debug,
 		DebugWriter:        NewSentryWriter(i.log.Named("sentry")),
