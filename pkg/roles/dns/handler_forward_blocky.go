@@ -37,7 +37,7 @@ func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 		st:                 time.Now(),
 	}
 	bfwd.log = z.log.With(zap.String("handler", bfwd.Identifier()))
-	go bfwd.startBlockyListServer()
+	bfwd.startBlockyListServer()
 	waitForStart := func() {
 		err := bfwd.setup()
 		if err != nil {
@@ -143,7 +143,7 @@ func (bfwd *BlockyForwarder) setup() error {
 	if err != nil {
 		return fmt.Errorf("can't start server: %w", err)
 	}
-	bfwd.log.Debug("finished blocky setup", zap.Duration("took", time.Since(bfwd.st)))
+	bfwd.log.Info("finished blocky setup", zap.Duration("took", time.Since(bfwd.st)))
 	bfwd.b = srv
 	return nil
 }
