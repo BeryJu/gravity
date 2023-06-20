@@ -28,6 +28,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.78
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/ori-edge/k8s_gateway v0.4.0
+	github.com/pin/tftp/v3 v3.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-community/pro-bing v0.4.1
 	github.com/prometheus/client_golang v1.20.5

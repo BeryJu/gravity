@@ -2,7 +2,9 @@ package tftp
 
 import (
 	"context"
+	"io/fs"
 	"net/http"
+	"os"
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -12,18 +14,20 @@ import (
 )
 
 type Role struct {
-	s      *tftp.Server
-	log    *zap.Logger
-	i      roles.Instance
-	ctx    context.Context
-	server *http.Server
+	s       *tftp.Server
+	log     *zap.Logger
+	i       roles.Instance
+	ctx     context.Context
+	server  *http.Server
+	localfs fs.FS
 }
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log: instance.Log(),
-		i:   instance,
-		ctx: instance.Context(),
+		log:     instance.Log(),
+		i:       instance,
+		ctx:     instance.Context(),
+		localfs: os.DirFS(extconfig.Get().Dirs().TFTPLocalDir),
 	}
 	s := tftp.NewServer(r.readLogger, r.writeLogger)
 	r.s = s
