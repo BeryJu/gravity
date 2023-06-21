@@ -127,14 +127,13 @@ func (i *Instance) startSentry() {
 		rate = 1
 	}
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:                extconfig.Get().Sentry.DSN,
-		Release:            release,
-		EnableTracing:      true,
-		TracesSampleRate:   rate,
-		ProfilesSampleRate: rate / 2,
-		Transport:          transport,
-		Debug:              extconfig.Get().Debug,
-		DebugWriter:        NewSentryWriter(i.log.Named("sentry")),
+		Dsn:              extconfig.Get().Sentry.DSN,
+		Release:          release,
+		EnableTracing:    true,
+		TracesSampleRate: rate,
+		Transport:        transport,
+		Debug:            extconfig.Get().Debug,
+		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
 	})
 	if err != nil {
 		i.log.Warn("failed to init sentry", zap.Error(err))
