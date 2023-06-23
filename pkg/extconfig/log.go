@@ -42,5 +42,9 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	if err != nil {
 		panic(err)
 	}
-	return log
+	return log.With(
+		zap.String("app", "gravity.beryju.io"),
+		zap.String("instance", e.Instance.Identifier),
+		zap.String("version", FullVersion()),
+	)
 }

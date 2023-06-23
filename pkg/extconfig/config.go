@@ -110,4 +110,5 @@ func (e *ExtConfig) load() {
 			e.Instance.Interface = i.Name
 		}
 	}
+	e.logger = e.BuildLogger()
 }
