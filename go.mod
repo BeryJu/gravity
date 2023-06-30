@@ -23,7 +23,7 @@ require (
 	github.com/gosimple/slug v1.13.1
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
 	github.com/miekg/dns v1.1.55
-	github.com/minio/minio-go/v7 v7.0.58
+	github.com/minio/minio-go/v7 v7.0.59
 	github.com/netdata/go.d.plugin v0.52.0
 	github.com/ori-edge/k8s_gateway v0.3.4
 	github.com/pkg/errors v0.9.1
