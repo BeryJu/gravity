@@ -3,7 +3,10 @@ name: Build (Tag)
 on:
   push:
     tags:
-      - "v*"
+      - v*
+
+permissions:
+  packages: write
 
 jobs:
   build:
@@ -33,3 +36,31 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.vars.outputs.version }}
+          draft: true
+          prerelease: false
+          body: |
+            Upgrade to this version of gravity by using this container image:
+
+            ```
+            ghcr.io/beryju/gravity:v${{ steps.vars.outputs.version }}
+            ```
+
+            Upgrade to the current JS API Client using
+
+            ```
+            npm i gravity-api@${{ steps.vars.outputs.version }}
+            ```
+
+            Upgrade to the current Golang API Client using
+
+            ```
+            go get beryju.io/gravity@v${{ steps.vars.outputs.version }}
+            ```

@@ -2,9 +2,14 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
+permissions:
+  packages: write
 
 jobs:
   build:
