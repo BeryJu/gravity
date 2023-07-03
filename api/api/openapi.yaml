@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.8
+  version: 0.6.9
 servers:
 - url: /
 paths:
@@ -1666,19 +1666,17 @@ components:
       type: object
     ApiAPIToolPingOutput:
       example:
-        maxRtt: 6
-        avgRtt: 0
-        packetLoss: 5.962133916683182
-        packetsRecvDuplicates: 2
-        stdDevRtt: 9
-        packetsRecv: 5
-        packetsSent: 7
-        minRtt: 1
+        maxRtt: ""
+        avgRtt: ""
+        packetLoss: 6.027456183070403
+        packetsRecvDuplicates: 5
+        stdDevRtt: ""
+        packetsRecv: 1
+        packetsSent: 5
+        minRtt: 0
       properties:
-        avgRtt:
-          type: integer
-        maxRtt:
-          type: integer
+        avgRtt: {}
+        maxRtt: {}
         minRtt:
           type: integer
         packetLoss:
@@ -1689,8 +1687,7 @@ components:
           type: integer
         packetsSent:
           type: integer
-        stdDevRtt:
-          type: integer
+        stdDevRtt: {}
       type: object
     ApiAPIToolPortmapInput:
       example:
@@ -2846,8 +2843,7 @@ components:
           description: Status text.
           type: string
       type: object
-    TimeDuration:
-      type: integer
+    TimeDuration: {}
     TsdbAPIRoleConfigInput:
       example:
         config:

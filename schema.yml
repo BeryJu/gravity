@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.8
+  version: 0.6.9
 paths:
   /api/v1/auth/config:
     get:
@@ -1517,7 +1517,7 @@ components:
         maxRtt:
           $ref: '#/components/schemas/TimeDuration'
         minRtt:
-          $ref: '#/components/schemas/TimeDuration'
+          type: integer
         packetLoss:
           type: number
         packetsRecv:
@@ -1572,7 +1572,7 @@ components:
         address:
           type: string
         elapsedTime:
-          $ref: '#/components/schemas/TimeDuration'
+          type: integer
         success:
           type: boolean
       type: object
@@ -2243,8 +2243,7 @@ components:
           description: Status text.
           type: string
       type: object
-    TimeDuration:
-      type: integer
+    TimeDuration: {}
     TsdbAPIRoleConfigInput:
       properties:
         config:
