@@ -53,9 +53,6 @@ func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dn
 		}
 	}
 	if len(m.Answer) < 1 {
-		if eh.z.Authoritative {
-			return eh.z.soa()
-		}
 		return nil
 	}
 	return m
