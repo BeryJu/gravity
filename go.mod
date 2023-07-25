@@ -33,8 +33,8 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	github.com/struCoder/pidusage v0.2.1
-	github.com/swaggest/openapi-go v0.2.32
-	github.com/swaggest/rest v0.2.52
+	github.com/swaggest/openapi-go v0.2.33
+	github.com/swaggest/rest v0.2.53
 	github.com/swaggest/usecase v1.2.1
 	go.etcd.io/etcd/api/v3 v3.5.9
 	go.etcd.io/etcd/client/v3 v3.5.9
@@ -89,7 +89,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/farsightsec/golang-framestream v0.3.0 // indirect
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
-	github.com/go-chi/chi/v5 v5.0.8 // indirect
+	github.com/go-chi/chi/v5 v5.0.10 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -169,9 +169,9 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/swaggest/form/v5 v5.0.4 // indirect
+	github.com/swaggest/form/v5 v5.1.1 // indirect
 	github.com/swaggest/jsonschema-go v0.3.52 // indirect
-	github.com/swaggest/refl v1.1.0 // indirect
+	github.com/swaggest/refl v1.2.0 // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect
