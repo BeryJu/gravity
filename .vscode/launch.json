@@ -11,7 +11,7 @@
                 "server",
             ],
             "env": {
-                "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb",
+                "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb;tftp",
                 "DEBUG": "true",
                 "INSTANCE_IP": "0.0.0.0"
             }

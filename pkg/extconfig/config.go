@@ -26,7 +26,7 @@ type ExtConfig struct {
 	}
 	LogLevel       string `env:"LOG_LEVEL,default=info"`
 	DataPath       string `env:"DATA_PATH,default=./data"`
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb"`
+	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
 	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 
 	Sentry struct {
@@ -39,9 +39,10 @@ type ExtConfig struct {
 }
 
 type ExtConfigDirs struct {
-	EtcdDir   string `json:"etcdDir"`
-	CertDir   string `json:"certDir"`
-	BackupDir string `json:"backupDir"`
+	EtcdDir      string `json:"etcdDir"`
+	CertDir      string `json:"certDir"`
+	BackupDir    string `json:"backupDir"`
+	TFTPLocalDir string `json:"tftpLocalDir"`
 }
 
 var globalExtConfig *ExtConfig
@@ -62,9 +63,10 @@ func Get() *ExtConfig {
 
 func (e *ExtConfig) Dirs() *ExtConfigDirs {
 	return &ExtConfigDirs{
-		EtcdDir:   path.Join(e.DataPath, "etcd/"),
-		CertDir:   path.Join(e.DataPath, "cert/"),
-		BackupDir: path.Join(e.DataPath, "backup/"),
+		EtcdDir:      path.Join(e.DataPath, "etcd/"),
+		CertDir:      path.Join(e.DataPath, "cert/"),
+		BackupDir:    path.Join(e.DataPath, "backup/"),
+		TFTPLocalDir: path.Join(e.DataPath, "tftp/"),
 	}
 }
 

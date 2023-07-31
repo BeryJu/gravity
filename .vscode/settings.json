@@ -1,6 +1,6 @@
 {
     "go.testEnvVars": {
-        "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb",
+        "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb;tftp",
         "ETCD_ENDPOINT": "localhost:2379",
         "DEBUG": "true",
         "INSTANCE_IP": "0.0.0.0"
