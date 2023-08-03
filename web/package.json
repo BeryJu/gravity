@@ -48,7 +48,7 @@
         "eslint-plugin-custom-elements": "0.0.8",
         "eslint-plugin-lit": "^1.8.3",
         "gravity-api": "^0.6.10",
-        "lit": "^2.7.6",
+        "lit": "^2.8.0",
         "moment": "^2.29.4",
         "prettier": "^3.0.0",
         "rapidoc": "^9.3.4",
