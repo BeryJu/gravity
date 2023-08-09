@@ -26,7 +26,7 @@ RUN apt-get update && \
     make internal/resources/macoui internal/resources/blocky
 
 # Stage 3: Build
-FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.20.7 as builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.21.0 as builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
