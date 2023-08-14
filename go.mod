@@ -34,7 +34,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.39
-	github.com/swaggest/rest v0.2.56
+	github.com/swaggest/rest v0.2.57
 	github.com/swaggest/usecase v1.2.1
 	go.etcd.io/etcd/api/v3 v3.5.9
 	go.etcd.io/etcd/client/v3 v3.5.9
@@ -177,7 +177,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggest/form/v5 v5.1.1 // indirect
 	github.com/swaggest/jsonschema-go v0.3.57 // indirect
-	github.com/swaggest/refl v1.2.0 // indirect
+	github.com/swaggest/refl v1.2.1 // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
 	github.com/u-root/uio v0.0.0-20210528114334-82958018845c // indirect

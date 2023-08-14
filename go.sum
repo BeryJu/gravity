@@ -819,10 +819,10 @@ github.com/swaggest/jsonschema-go v0.3.57 h1:n6D/2K9557Yqn/NohXoszmjuN0Lp5n0DyHl
 github.com/swaggest/jsonschema-go v0.3.57/go.mod h1:5WFFGBBte5JAWAV8gDpNRJ/tlQnb1AHDdf/ghgsVUik=
 github.com/swaggest/openapi-go v0.2.39 h1:GfICsAAFnQuyxfywsGyCbPqDKeMXxots4N/9j6+qSCk=
 github.com/swaggest/openapi-go v0.2.39/go.mod h1:g+AfRIkPCHdhqfW8zOD1Sk3PwLhxpWW8SNWHXrmA08c=
-github.com/swaggest/refl v1.2.0 h1:Qqqhfwi7REXF6/4cwJmj3gQMzl0Q0cYquxTYdD0kvi0=
-github.com/swaggest/refl v1.2.0/go.mod h1:CkC6g7h1PW33KprTuYRSw8UUOslRUt4lF3oe7tTIgNU=
-github.com/swaggest/rest v0.2.56 h1:+mpKAhHJNDtP3znhisfsz8OPcUNUw8fPHCdXkLKLXcI=
-github.com/swaggest/rest v0.2.56/go.mod h1:fONNZn4NRMMRMbgUq91Jk5txIzqUPgCn0jgl5q2uMA0=
+github.com/swaggest/refl v1.2.1 h1:1meX9NaXjM5lmb4kk4RP3OZsXFRke9B1EHAP/pCEKO0=
+github.com/swaggest/refl v1.2.1/go.mod h1:CkC6g7h1PW33KprTuYRSw8UUOslRUt4lF3oe7tTIgNU=
+github.com/swaggest/rest v0.2.57 h1:u+4vtiO1up037sH0bAofuPYKSN1hwAXfYX6fJKet0gY=
+github.com/swaggest/rest v0.2.57/go.mod h1:l58aZPLCplHw20pJY0dWI0K5/Qo/iEmTpU6vQa7Au/U=
 github.com/swaggest/usecase v1.2.1 h1:XYVdK9tK2KCPglTflUi7aWBrVwIyb58D5mvGWED7pNs=
 github.com/swaggest/usecase v1.2.1/go.mod h1:5ccwVsLJ9eQpU4m0AGTM444pdqSPQBiocIwMmdRH9lQ=
 github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7/go.mod h1:q4W45IWZaF22tdD+VEXcAWRA037jwmWEB5VWYORlTpc=
