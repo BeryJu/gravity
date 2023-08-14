@@ -60,7 +60,7 @@ The following environment variables can be set
 
 ##### Advanced
 
-- `DEBUG`: Enable debug mode
+- `DEBUG`: Enable debug mode, shouldn't be set manually in most cases and is only intended for development environments.
 - `ETCD_PREFIX`: Global etcd prefix, defaults to `/gravity`
 - `ETCD_ENDPOINT`: etcd Client endpoint, defaults to `localhost:2379` when using embedded etcd
 - `ETCD_JOIN_CLUSTER`: Used when joining a node to a cluster, value is given by join API endpoint
