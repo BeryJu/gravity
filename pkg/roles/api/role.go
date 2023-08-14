@@ -118,9 +118,9 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 	if r.oapi != nil {
 		return
 	}
-	r.oapi = web.DefaultService()
-	r.oapi.OpenAPI.Info.Title = "gravity"
-	r.oapi.OpenAPI.Info.Version = extconfig.Version
+	r.oapi = web.NewService(openapi3.NewReflector())
+	r.oapi.OpenAPISchema().SetTitle("gravity")
+	r.oapi.OpenAPISchema().SetVersion(extconfig.Version)
 	r.oapi.Method(http.MethodGet, "/api/v1/openapi.json", r.oapi.OpenAPICollector)
 
 	apiRouter := r.m.PathPrefix("/api").Name("api").Subrouter()
