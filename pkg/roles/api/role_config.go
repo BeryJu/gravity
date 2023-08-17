@@ -34,7 +34,7 @@ func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
 			return
 		}
 		_, err = r.i.KV().Put(
-			r.ctx,
+			context.Background(),
 			r.i.KV().Key(
 				instanceTypes.KeyInstance,
 				instanceTypes.KeyRole,

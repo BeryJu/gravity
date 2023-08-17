@@ -21,6 +21,9 @@ docker-build: internal/resources/macoui internal/resources/blocky
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		-v -a -o gravity .
 
+clean:
+	rm -rf data/
+
 run: internal/resources/macoui internal/resources/blocky
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
