@@ -70,10 +70,10 @@ func New(instance roles.Instance) *Role {
 		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
 	}
 	cfg.AdvertisePeerUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s:2380", extconfig.Get().Instance.IP)),
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Listen(extconfig.Get().Instance.IP, 2380))),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = fmt.Sprintf("%s=https://%s:2380", cfg.Name, extconfig.Get().Instance.IP)
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().Instance.IP, 2380))
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, "peer", relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, "peer", relInstKeyPath)

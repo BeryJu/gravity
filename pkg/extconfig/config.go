@@ -77,12 +77,20 @@ func (e *ExtConfig) EtcdClient() *storage.Client {
 	)
 }
 
+func Listen(addr string, port int32) string {
+	ip := net.ParseIP(addr)
+	if ip.To4() != nil {
+		return fmt.Sprintf("%s:%d", ip.String(), port)
+	}
+	return fmt.Sprintf("[%s]:%d", ip.String(), port)
+}
+
 func (e *ExtConfig) Listen(port int32) string {
 	listen := e.Instance.IP
 	if e.Instance.Listen != "" {
 		listen = e.Instance.Listen
 	}
-	return fmt.Sprintf("%s:%d", listen, port)
+	return Listen(listen, port)
 }
 
 func (e *ExtConfig) load() {
