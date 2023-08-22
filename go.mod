@@ -16,7 +16,7 @@ require (
 	github.com/getsentry/sentry-go v0.23.0
 	github.com/go-ping/ping v1.1.0
 	github.com/google/gopacket v1.1.19
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.3.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.1
