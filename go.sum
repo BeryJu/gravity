@@ -145,7 +145,7 @@ github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJm
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/blang/semver v3.5.1+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
 github.com/bool64/dev v0.2.25/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
-github.com/bool64/dev v0.2.29 h1:x+syGyh+0eWtOzQ1ItvLzOGIWyNWnyjXpHIcpF2HvL4=
+github.com/bool64/dev v0.2.31 h1:OS57EqYaYe2M/2bw9uhDCIFiZZwywKFS/4qMLN6JUmQ=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/cenkalti/backoff/v4 v4.1.1/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
 github.com/cenkalti/backoff/v4 v4.2.0 h1:HN5dHm3WBOgndBH6E8V0q2jIYIR3s9yglV8k/+MN3u4=
@@ -808,14 +808,14 @@ github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69
 github.com/swaggest/assertjson v1.9.0 h1:dKu0BfJkIxv/xe//mkCrK5yZbs79jL7OVf9Ija7o2xQ=
 github.com/swaggest/form/v5 v5.1.1 h1:ct6/rOQBGrqWUQ0FUv3vW5sHvTUb31AwTUWj947N6cY=
 github.com/swaggest/form/v5 v5.1.1/go.mod h1:X1hraaoONee20PMnGNLQpO32f9zbQ0Czfm7iZThuEKg=
-github.com/swaggest/jsonschema-go v0.3.57 h1:n6D/2K9557Yqn/NohXoszmjuN0Lp5n0DyHlVLRZXbOM=
-github.com/swaggest/jsonschema-go v0.3.57/go.mod h1:5WFFGBBte5JAWAV8gDpNRJ/tlQnb1AHDdf/ghgsVUik=
+github.com/swaggest/jsonschema-go v0.3.58 h1:OPixN4HW9H3FTh9BSomH2i0bdJi3V646TfSihzt9QBc=
+github.com/swaggest/jsonschema-go v0.3.58/go.mod h1:5WFFGBBte5JAWAV8gDpNRJ/tlQnb1AHDdf/ghgsVUik=
 github.com/swaggest/openapi-go v0.2.39 h1:GfICsAAFnQuyxfywsGyCbPqDKeMXxots4N/9j6+qSCk=
 github.com/swaggest/openapi-go v0.2.39/go.mod h1:g+AfRIkPCHdhqfW8zOD1Sk3PwLhxpWW8SNWHXrmA08c=
 github.com/swaggest/refl v1.2.1 h1:1meX9NaXjM5lmb4kk4RP3OZsXFRke9B1EHAP/pCEKO0=
 github.com/swaggest/refl v1.2.1/go.mod h1:CkC6g7h1PW33KprTuYRSw8UUOslRUt4lF3oe7tTIgNU=
-github.com/swaggest/rest v0.2.57 h1:u+4vtiO1up037sH0bAofuPYKSN1hwAXfYX6fJKet0gY=
-github.com/swaggest/rest v0.2.57/go.mod h1:l58aZPLCplHw20pJY0dWI0K5/Qo/iEmTpU6vQa7Au/U=
+github.com/swaggest/rest v0.2.58 h1:1QWLNree0kyqW3HYk4X6cKqycRVPj/w7exXM6lg6mN8=
+github.com/swaggest/rest v0.2.58/go.mod h1:M6G4XRNytiBZNB7IbkolfQnhZDdGIXWCYELQrWrRVvw=
 github.com/swaggest/usecase v1.2.1 h1:XYVdK9tK2KCPglTflUi7aWBrVwIyb58D5mvGWED7pNs=
 github.com/swaggest/usecase v1.2.1/go.mod h1:5ccwVsLJ9eQpU4m0AGTM444pdqSPQBiocIwMmdRH9lQ=
 github.com/tinylib/msgp v1.1.8 h1:FCXC1xanKO4I8plpHGH2P7koL/RzZs12l/+r7vakfm0=
