@@ -40,3 +40,11 @@ updates:
     open-pull-requests-limit: 10
     assignees:
       - BeryJu
+    groups:
+      sentry:
+        patterns:
+          - "@sentry/*"
+      babel:
+        patterns:
+          - "@babel/*"
+          - "babel-*"
