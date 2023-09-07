@@ -18,9 +18,17 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
-		match.Put(req.Context, int64(r.cfg.LeaseNegotiateTimeout))
+		err := match.Put(req.Context, int64(r.cfg.LeaseNegotiateTimeout))
+		if err != nil {
+			r.log.Warn("failed to update lease", zap.Error(err))
+		}
 	} else {
-		go match.Put(req.Context, match.scope.TTL)
+		go func() {
+			err := match.Put(req.Context, match.scope.TTL)
+			if err != nil {
+				r.log.Warn("failed to update lease", zap.Error(err))
+			}
+		}()
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()

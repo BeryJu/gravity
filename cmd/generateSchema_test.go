@@ -14,7 +14,8 @@ func TestGenerateSchema(t *testing.T) {
 	cmd.GenerateSchema(tests.Context(), "json", func(schema []byte) {
 		assert.NotEqual(t, "", string(schema))
 		var out interface{}
-		json.Unmarshal(schema, &out)
+		err := json.Unmarshal(schema, &out)
+		assert.NoError(t, err)
 		assert.NotNil(t, out)
 		called = true
 	})

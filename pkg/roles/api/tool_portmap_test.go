@@ -14,12 +14,12 @@ func TestAPIToolPortmap(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	var output api.APIToolPortmapOutput
-	role.APIToolPortmap().Interact(ctx, api.APIToolPortmapInput{
+	tests.PanicIfError(role.APIToolPortmap().Interact(ctx, api.APIToolPortmapInput{
 		Host: "localhost",
-	}, &output)
+	}, &output))
 	assert.NotNil(t, output)
 }

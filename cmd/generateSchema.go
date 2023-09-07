@@ -57,7 +57,11 @@ var generateSchemaCmd = &cobra.Command{
 				}
 				logger.Info("successfully wrote schema", zap.String("to", args[0]))
 			} else {
-				cmd.OutOrStdout().Write(schema)
+				_, err := cmd.OutOrStdout().Write(schema)
+				if err != nil {
+					logger.Warn("failed to write schema", zap.Error(err))
+					return
+				}
 				logger.Info("Successfully wrote schema to stdout")
 			}
 		})

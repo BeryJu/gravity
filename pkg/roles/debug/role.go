@@ -80,17 +80,26 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 func (r *Role) Stop() {
 	if r.server != nil {
-		r.server.Shutdown(r.ctx)
+		err := r.server.Shutdown(r.ctx)
+		if err != nil {
+			r.log.Warn("failed to shutdown server", zap.Error(err))
+		}
 	}
 }
 
 func (r *Role) Index(w http.ResponseWriter, re *http.Request) {
-	r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+	err := r.m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		tpl, err := route.GetPathTemplate()
 		if err != nil {
 			return nil
 		}
-		w.Write([]byte(fmt.Sprintf("<a href='%[1]s'>%[1]s</a><br>", tpl)))
+		_, err = w.Write([]byte(fmt.Sprintf("<a href='%[1]s'>%[1]s</a><br>", tpl)))
+		if err != nil {
+			r.log.Warn("failed to write index overview link")
+		}
 		return nil
 	})
+	if err != nil {
+		r.log.Warn("failed to walk routes for index", zap.Error(err))
+	}
 }

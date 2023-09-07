@@ -38,13 +38,13 @@ func TestFirstStart(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("test", ctx)
-	inst.KV().Delete(
+	tests.PanicIfError(inst.KV().Delete(
 		ctx,
 		inst.KV().Key(
 			types.KeyCluster,
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
-	)
+	))
 	inst.AddEventListener(types.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		defer rootInst.Stop()
 
@@ -60,7 +60,7 @@ func TestWatch(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("test", ctx)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyInstance,
@@ -68,11 +68,11 @@ func TestWatch(t *testing.T) {
 			"roles",
 		).String(),
 		"api",
-	)
+	))
 
 	inst.AddEventListener(types.EventTopicRolesStarted, func(ev *roles.Event) {
 		// once all roles are started, write a new config to trigger a restart
-		inst.KV().Put(
+		tests.PanicIfError(inst.KV().Put(
 			ctx,
 			inst.KV().Key(
 				types.KeyInstance,
@@ -83,7 +83,7 @@ func TestWatch(t *testing.T) {
 				CookieSecret: base64.StdEncoding.EncodeToString([]byte("bar")),
 				Port:         8008,
 			}),
-		)
+		))
 	})
 	inst.AddEventListener(types.EventTopicRoleStarted, func(ev *roles.Event) {
 		if ev.Payload.Data["role"] != "api" {
@@ -94,7 +94,7 @@ func TestWatch(t *testing.T) {
 			rootInst.Stop()
 		}
 	})
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyInstance,
@@ -105,7 +105,7 @@ func TestWatch(t *testing.T) {
 			CookieSecret: base64.StdEncoding.EncodeToString([]byte("foo")),
 			Port:         8008,
 		}),
-	)
+	))
 
 	rootInst.Start()
 	assert.Equal(t, 2, called)

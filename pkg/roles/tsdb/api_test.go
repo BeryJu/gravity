@@ -17,13 +17,13 @@ func TestAPIMetricsMemory(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("metrics", ctx)
-	inst.KV().Delete(
+	tests.PanicIfError(inst.KV().Delete(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
-	)
+	))
 
 	role := tsdb.New(inst)
 	assert.NoError(t, role.Start(ctx, []byte{}))
@@ -39,13 +39,13 @@ func TestAPIMetricsCPU(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("metrics", ctx)
-	inst.KV().Delete(
+	tests.PanicIfError(inst.KV().Delete(
 		tests.Context(),
 		inst.KV().Key(
 			types.KeyRole,
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
-	)
+	))
 
 	role := tsdb.New(inst)
 	assert.NoError(t, role.Start(ctx, []byte{}))

@@ -50,7 +50,11 @@ func New(instance roles.Instance) *Role {
 		subnet.CIDR = prefix.String()
 		subnet.DNSResolver = extconfig.Get().FallbackDNS
 		subnet.DiscoveryTTL = 86400
-		subnet.put(ev.Context)
+		err = subnet.put(ev.Context)
+		if err != nil {
+			r.log.Warn("failed to put subnet", zap.Error(err))
+			return
+		}
 	})
 	return r
 }

@@ -31,17 +31,17 @@ func (ap *AuthProvider) APILogin() usecase.Interactor {
 			).String(),
 		)
 		if err != nil {
-			bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
+			_ = bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
 			ap.log.Warn("failed to get users", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
 		if len(rawUsers.Kvs) < 1 {
-			bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
+			_ = bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
 			return status.Unauthenticated
 		}
 		user, err := ap.userFromKV(rawUsers.Kvs[0])
 		if err != nil {
-			bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
+			_ = bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
 			ap.log.Warn("failed to parse user", zap.Error(err), zap.String("user", input.Username))
 			return status.Wrap(err, status.Internal)
 		}

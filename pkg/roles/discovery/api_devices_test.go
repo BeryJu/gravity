@@ -21,7 +21,7 @@ func TestAPIDevicesGet(t *testing.T) {
 	inst := rootInst.ForRole("discovery", ctx)
 	role := discovery.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -29,7 +29,7 @@ func TestAPIDevicesGet(t *testing.T) {
 			tests.RandomString(),
 		).String(),
 		tests.MustJSON(discovery.Device{}),
-	)
+	))
 
 	var output discovery.APIDevicesGetOutput
 	assert.NoError(t, role.APIDevicesGet().Interact(ctx, discovery.APIDevicesGetInput{}, &output))
@@ -43,7 +43,7 @@ func TestDeviceApplyDHCP(t *testing.T) {
 	inst := rootInst.ForRole("discovery", ctx)
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dhcpTypes.KeyRole,
@@ -61,18 +61,18 @@ func TestDeviceApplyDHCP(t *testing.T) {
 				Zone: "gravity.beryju.io.",
 			},
 		}),
-	)
+	))
 
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp", ctx))
-	dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+	tests.PanicIfError(dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
 		Port: 1067,
-	})))
+	}))))
 	defer dhcpRole.Stop()
 
 	role := discovery.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -84,7 +84,7 @@ func TestDeviceApplyDHCP(t *testing.T) {
 			IP:       "192.0.2.1",
 			MAC:      "aa:bb:cc",
 		}),
-	)
+	))
 
 	assert.NoError(t, role.APIDevicesApply().Interact(ctx, discovery.APIDevicesApplyInput{
 		Identifier: name,
@@ -115,7 +115,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 	inst := rootInst.ForRole("discovery", ctx)
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dhcpTypes.KeyRole,
@@ -133,8 +133,8 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 				Zone: "gravity.beryju.io.",
 			},
 		}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dnsTypes.KeyRole,
@@ -142,8 +142,8 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"gravity.beryju.io.",
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dnsTypes.KeyRole,
@@ -151,22 +151,22 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"0.192.in-addr.arpa.",
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
+	))
 
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp", ctx))
-	dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+	tests.PanicIfError(dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
 		Port: 1067,
-	})))
+	}))))
 	defer dhcpRole.Stop()
 	// Create DNS role to register events
 	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
-	dnsRole.Start(ctx, []byte{})
+	tests.PanicIfError(dnsRole.Start(ctx, []byte{}))
 	defer dnsRole.Stop()
 
 	role := discovery.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -178,7 +178,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			IP:       "192.0.2.1",
 			MAC:      "aa:bb:cc",
 		}),
-	)
+	))
 
 	assert.NoError(t, role.APIDevicesApply().Interact(ctx, discovery.APIDevicesApplyInput{
 		Identifier: name,
@@ -237,7 +237,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 	inst := rootInst.ForRole("discovery", ctx)
 
 	name := tests.RandomString()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -249,8 +249,8 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			IP:       "192.0.2.1",
 			MAC:      "aa:bb:cc",
 		}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dnsTypes.KeyRole,
@@ -258,8 +258,8 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"gravity.beryju.io.",
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			dnsTypes.KeyRole,
@@ -267,11 +267,11 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"0.192.in-addr.arpa.",
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
+	))
 
 	// Create DNS role to register events
 	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
-	dnsRole.Start(ctx, []byte{})
+	tests.PanicIfError(dnsRole.Start(ctx, []byte{}))
 	defer dnsRole.Stop()
 
 	role := discovery.New(inst)
@@ -320,7 +320,7 @@ func TestAPIDevicesDelete(t *testing.T) {
 
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -332,7 +332,7 @@ func TestAPIDevicesDelete(t *testing.T) {
 			IP:       "192.0.2.1",
 			MAC:      "aa:bb:cc",
 		}),
-	)
+	))
 
 	assert.NoError(t, role.APIDevicesDelete().Interact(ctx, discovery.APIDevicesDeleteInput{
 		Name: name,

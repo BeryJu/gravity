@@ -21,7 +21,7 @@ func TestDHCPDiscover(t *testing.T) {
 	role := dhcp.New(inst)
 	Cleanup()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -38,8 +38,8 @@ func TestDHCPDiscover(t *testing.T) {
 				"range_end":   "10.100.0.250",
 			},
 		}),
-	)
-	role.Start(ctx, []byte{})
+	))
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
@@ -62,7 +62,7 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 	role := dhcp.New(inst)
 	Cleanup()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -83,9 +83,9 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 				"range_end":   "10.100.0.250",
 			},
 		}),
-	)
+	))
 
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)

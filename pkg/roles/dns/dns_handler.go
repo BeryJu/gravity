@@ -74,7 +74,10 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		ro.log.Error("no matching zone and no global zone")
 		m := new(dns.Msg)
 		m.SetRcode(r, dns.RcodeNameError)
-		w.WriteMsg(m)
+		err := w.WriteMsg(m)
+		if err != nil {
+			ro.log.Warn("failed to send answer", zap.Error(err))
+		}
 		return
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))

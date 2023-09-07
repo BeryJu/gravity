@@ -17,7 +17,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -32,7 +32,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 				},
 			},
 		}),
-	)
+	))
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
@@ -46,7 +46,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Delete(
+	tests.PanicIfError(inst.KV().Delete(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -54,8 +54,8 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 			".",
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -71,7 +71,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 				},
 			},
 		}),
-	)
+	))
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
@@ -100,7 +100,7 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -115,7 +115,7 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 				},
 			},
 		}),
-	)
+	))
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, RoleConfig()))

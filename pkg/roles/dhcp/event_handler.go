@@ -29,5 +29,8 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 		log:   scope.log.With(zap.String("lease", ident)),
 		scope: scope,
 	}
-	lease.Put(ev.Context, -1)
+	err := lease.Put(ev.Context, -1)
+	if err != nil {
+		r.log.Warn("failed to put lease in event handler", zap.Error(err))
+	}
 }

@@ -14,7 +14,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	var output monitoring.APIRoleConfigOutput
@@ -27,7 +27,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)
 	role := monitoring.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, monitoring.APIRoleConfigInput{

@@ -29,7 +29,7 @@ func getRole() *backup.Role {
 		Path:      "foo",
 		CronExpr:  "",
 	})
-	role.Start(ctx, []byte(cfg))
+	tests.PanicIfError(role.Start(ctx, []byte(cfg)))
 	return role
 }
 

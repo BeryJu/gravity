@@ -19,7 +19,7 @@ func TestAPITokensGet(t *testing.T) {
 	defer role.Stop()
 	prov := auth.NewAuthProvider(role, inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -27,7 +27,7 @@ func TestAPITokensGet(t *testing.T) {
 			tests.RandomString(),
 		).String(),
 		tests.MustJSON(auth.Token{}),
-	)
+	))
 
 	var output auth.APITokensGetOutput
 	assert.NoError(t, prov.APITokensGet().Interact(ctx, struct{}{}, &output))
@@ -72,7 +72,7 @@ func TestAPITokensDelete(t *testing.T) {
 
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -80,7 +80,7 @@ func TestAPITokensDelete(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(auth.Token{}),
-	)
+	))
 
 	assert.NoError(t, prov.APITokensDelete().Interact(ctx, auth.APITokensDeleteInput{
 		Key: name,

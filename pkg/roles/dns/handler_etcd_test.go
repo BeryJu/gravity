@@ -16,7 +16,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -30,8 +30,8 @@ func TestRoleDNS_Etcd(t *testing.T) {
 				},
 			},
 		}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -44,7 +44,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 		tests.MustJSON(dns.Record{
 			Data: "10.1.2.3",
 		}),
-	)
+	))
 
 	role := dns.New(inst)
 	assert.NotNil(t, role)
@@ -60,7 +60,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -74,8 +74,8 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 				},
 			},
 		}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -88,7 +88,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 		tests.MustJSON(dns.Record{
 			Data: "10.1.2.3",
 		}),
-	)
+	))
 
 	role := dns.New(inst)
 	assert.NotNil(t, role)
@@ -104,7 +104,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -118,8 +118,8 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 				},
 			},
 		}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -132,7 +132,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 		tests.MustJSON(dns.Record{
 			Data: "10.1.2.3",
 		}),
-	)
+	))
 
 	role := dns.New(inst)
 	assert.NotNil(t, role)

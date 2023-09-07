@@ -34,7 +34,7 @@ func TestAPIScopesGet(t *testing.T) {
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -42,7 +42,7 @@ func TestAPIScopesGet(t *testing.T) {
 			"test",
 		).String(),
 		tests.MustJSON(testScope()),
-	)
+	))
 
 	var output dhcp.APIScopesGetOutput
 	assert.NoError(t, role.APIScopesGet().Interact(ctx, dhcp.APIScopesGetInput{}, &output))
@@ -107,7 +107,7 @@ func TestAPIScopesDelete(t *testing.T) {
 
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -115,7 +115,7 @@ func TestAPIScopesDelete(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(testScope()),
-	)
+	))
 
 	assert.NoError(t, role.APIScopesDelete().Interact(ctx, dhcp.APIScopesDeleteInput{
 		Scope: name,

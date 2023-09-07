@@ -17,20 +17,20 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := roleAPI.New(inst)
-	role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
 		ListenOverride: "localhost:8008",
-	})))
+	}))))
 
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
 
-	inst.KV().Put(ctx, inst.KV().Key(
+	tests.PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
 		token,
 	).String(), tests.MustJSON(auth.Token{
 		Key:      token,
 		Username: "foo",
-	}))
+	})))
 
 	config := api.NewConfiguration()
 	config.Debug = true

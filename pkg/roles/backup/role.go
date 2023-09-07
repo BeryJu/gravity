@@ -51,7 +51,10 @@ func New(instance roles.Instance) *Role {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	os.MkdirAll(extconfig.Get().Dirs().BackupDir, os.ModeSticky|os.ModePerm)
+	err := os.MkdirAll(extconfig.Get().Dirs().BackupDir, os.ModeSticky|os.ModePerm)
+	if err != nil {
+		return err
+	}
 	r.cfg = r.decodeRoleConfig(config)
 	if r.cfg.Endpoint == "" {
 		return roles.ErrRoleNotConfigured
