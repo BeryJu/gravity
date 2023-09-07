@@ -81,7 +81,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 				}
 			}
 		}
-		r.i.KV().Put(
+		_, err = r.i.KV().Put(
 			ctx,
 			r.i.KV().Key(
 				types.KeyInstance,
@@ -90,6 +90,9 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			).String(),
 			strings.Join(roles, ","),
 		)
+		if err != nil {
+			r.log.Warn("failed to put roles for node", zap.Error(err))
+		}
 
 		go func() {
 			_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})

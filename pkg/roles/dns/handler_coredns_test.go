@@ -22,7 +22,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -37,7 +37,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 				},
 			},
 		}),
-	)
+	))
 
 	role := dns.New(inst)
 	assert.NotNil(t, role)

@@ -17,7 +17,7 @@ func TestAPIRecordsGet(t *testing.T) {
 	role := dns.New(inst)
 
 	zone := tests.RandomString() + "."
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -25,8 +25,8 @@ func TestAPIRecordsGet(t *testing.T) {
 			zone,
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -38,7 +38,7 @@ func TestAPIRecordsGet(t *testing.T) {
 		tests.MustJSON(dns.Record{
 			Data: "192.0.2.1",
 		}),
-	)
+	))
 
 	var output dns.APIRecordsGetOutput
 	assert.NoError(t, role.APIRecordsGet().Interact(ctx, dns.APIRecordsGetInput{
@@ -54,7 +54,7 @@ func TestAPIRecordsPut(t *testing.T) {
 	role := dns.New(inst)
 
 	name := tests.RandomString() + "."
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -62,7 +62,7 @@ func TestAPIRecordsPut(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
+	))
 	assert.NoError(t, role.APIRecordsPut().Interact(ctx, dns.APIRecordsPutInput{
 		Zone:     name,
 		Hostname: "test",
@@ -93,7 +93,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 	role := dns.New(inst)
 
 	zone := tests.RandomString() + "."
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -101,8 +101,8 @@ func TestAPIRecordsDelete(t *testing.T) {
 			zone,
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
-	inst.KV().Put(
+	))
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -114,7 +114,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 		tests.MustJSON(dns.Record{
 			Data: "192.0.2.1",
 		}),
-	)
+	))
 
 	assert.NoError(t, role.APIRecordsDelete().Interact(ctx, dns.APIRecordsDeleteInput{
 		Zone:     zone,

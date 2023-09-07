@@ -50,9 +50,12 @@ func init() {
 		max:     300,
 		lineBuf: new(bytes.Buffer),
 	}
-	zap.RegisterSink("gravity-in-memory", func(u *url.URL) (zap.Sink, error) {
+	err := zap.RegisterSink("gravity-in-memory", func(u *url.URL) (zap.Sink, error) {
 		return iml, nil
 	})
+	if err != nil {
+		panic(err)
+	}
 }
 
 type InMemoryLogger interface {

@@ -28,7 +28,10 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			fallback := new(dns.Msg)
 			fallback.SetReply(m)
 			fallback.SetRcode(m, dns.RcodeServerFailure)
-			w.WriteMsg(fallback)
+			er := w.WriteMsg(fallback)
+			if er != nil {
+				r.log.Error("failed to send fallback response", zap.Error(er))
+			}
 		}()
 		inner(w, m)
 	}
@@ -68,7 +71,10 @@ func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 		start := time.Now()
 		inner(fw, m)
 		finish := time.Since(start)
-		w.WriteMsg(fw.Msg())
+		err := w.WriteMsg(fw.Msg())
+		if err != nil {
+			r.log.Warn("failed to write response", zap.Error(err))
+		}
 
 		queryNames := make([]string, len(m.Question))
 		queryTypes := make([]string, len(m.Question))

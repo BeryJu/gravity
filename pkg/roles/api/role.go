@@ -187,6 +187,12 @@ func (r *Role) Schema(ctx context.Context) *openapi3.Spec {
 }
 
 func (r *Role) Stop() {
-	r.httpServer.Shutdown(r.ctx)
-	r.socketServer.Shutdown(r.ctx)
+	err := r.httpServer.Shutdown(r.ctx)
+	if err != nil {
+		r.log.Warn("failed to shutdown http server", zap.Error(err))
+	}
+	err = r.socketServer.Shutdown(r.ctx)
+	if err != nil {
+		r.log.Warn("failed to shutdown socket server", zap.Error(err))
+	}
 }

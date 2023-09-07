@@ -17,7 +17,7 @@ func TestRoleStartNoConfig(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	api := api.New(rootInst.ForRole("api", ctx))
-	api.Start(ctx, []byte{})
+	tests.PanicIfError(api.Start(ctx, []byte{}))
 	defer api.Stop()
 	role := monitoring.New(rootInst.ForRole("monitoring", ctx))
 	assert.NotNil(t, role)

@@ -38,13 +38,13 @@ func TestAPIBackupStatus(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("backup", ctx)
-	inst.KV().Delete(
+	tests.PanicIfError(inst.KV().Delete(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 		).Prefix(true).String(),
 		clientv3.WithPrefix(),
-	)
+	))
 
 	TestAPIBackupStart(t)
 

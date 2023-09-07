@@ -14,12 +14,12 @@ func TestAPIToolPing(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	var output api.APIToolPingOutput
-	role.APIToolPing().Interact(ctx, api.APIToolPingInput{
+	tests.PanicIfError(role.APIToolPing().Interact(ctx, api.APIToolPingInput{
 		Host: "localhost",
-	}, &output)
+	}, &output))
 	assert.NotNil(t, output)
 }

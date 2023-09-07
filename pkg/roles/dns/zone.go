@@ -108,7 +108,10 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
 			handlerReply.SetReply(r.Msg)
-			w.WriteMsg(handlerReply)
+			err := w.WriteMsg(handlerReply)
+			if err != nil {
+				z.log.Warn("failed to write response", zap.Error(err))
+			}
 			z.resolveUpdateMetrics(ss.EndTime.Sub(ss.StartTime), r, handler, handlerReply)
 			return
 		}
@@ -117,14 +120,20 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 	if z.Authoritative {
 		soa := z.soa()
 		soa.SetReply(r.Msg)
-		w.WriteMsg(soa)
+		err := w.WriteMsg(soa)
+		if err != nil {
+			z.log.Warn("failed to write response", zap.Error(err))
+		}
 		return
 	}
 	z.log.Debug("no handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
 	fallback.SetReply(r.Msg)
 	fallback.SetRcode(r.Msg, dns.RcodeNameError)
-	w.WriteMsg(fallback)
+	err := w.WriteMsg(fallback)
+	if err != nil {
+		z.log.Warn("failed to write response", zap.Error(err))
+	}
 }
 
 func (r *Role) newZone(name string) *Zone {

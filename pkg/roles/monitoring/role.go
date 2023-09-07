@@ -100,6 +100,9 @@ func (r *Role) IsRunning() bool {
 
 func (r *Role) Stop() {
 	if r.server != nil {
-		r.server.Shutdown(r.ctx)
+		err := r.server.Shutdown(r.ctx)
+		if err != nil {
+			r.log.Warn("failed to shutdown server", zap.Error(err))
+		}
 	}
 }

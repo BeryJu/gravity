@@ -17,7 +17,7 @@ func TestAPIZonesGet(t *testing.T) {
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -25,7 +25,7 @@ func TestAPIZonesGet(t *testing.T) {
 			"test.",
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
+	))
 
 	var output dns.APIZonesGetOutput
 	assert.NoError(t, role.APIZonesGet().Interact(ctx, dns.APIZonesGetInput{}, &output))
@@ -76,7 +76,7 @@ func TestAPIZonesDelete(t *testing.T) {
 
 	name := tests.RandomString() + "."
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -84,7 +84,7 @@ func TestAPIZonesDelete(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(dns.Zone{}),
-	)
+	))
 
 	assert.NoError(t, role.APIZonesDelete().Interact(ctx, dns.APIZonesDeleteInput{
 		Zone: name,

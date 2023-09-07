@@ -57,7 +57,10 @@ func New(instance roles.Instance) *Role {
 				"cache_ttl": "3600",
 			},
 		}
-		zone.put(ev.Context)
+		err := zone.put(ev.Context)
+		if err != nil {
+			r.log.Warn("failed to write startup zone config", zap.Error(err))
+		}
 	})
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -125,6 +128,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 func (r *Role) Stop() {
 	for _, server := range r.servers {
-		server.Shutdown()
+		err := server.Shutdown()
+		if err != nil {
+			r.log.Warn("failed to stop server", zap.Error(err))
+		}
 	}
 }

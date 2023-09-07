@@ -25,7 +25,7 @@ func TestAPILeasesGet(t *testing.T) {
 	role := dhcp.New(inst)
 
 	scope := testScope()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -33,9 +33,9 @@ func TestAPILeasesGet(t *testing.T) {
 			scope.Name,
 		).String(),
 		tests.MustJSON(scope),
-	)
+	))
 	lease := testLease()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -43,7 +43,7 @@ func TestAPILeasesGet(t *testing.T) {
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
-	)
+	))
 
 	var output dhcp.APILeasesGetOutput
 	assert.NoError(t, role.APILeasesGet().Interact(ctx, dhcp.APILeasesGetInput{
@@ -60,7 +60,7 @@ func TestAPILeasesPut(t *testing.T) {
 
 	scope := testScope()
 	name := tests.RandomString()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -68,7 +68,7 @@ func TestAPILeasesPut(t *testing.T) {
 			scope.Name,
 		).String(),
 		tests.MustJSON(scope),
-	)
+	))
 	assert.NoError(t, role.APILeasesPut().Interact(ctx, dhcp.APILeasesPutInput{
 		Identifier: name,
 		Scope:      scope.Name,
@@ -99,7 +99,7 @@ func TestAPILeasesDelete(t *testing.T) {
 	role := dhcp.New(inst)
 
 	scope := testScope()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -107,9 +107,9 @@ func TestAPILeasesDelete(t *testing.T) {
 			scope.Name,
 		).String(),
 		tests.MustJSON(scope),
-	)
+	))
 	lease := testLease()
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -117,7 +117,7 @@ func TestAPILeasesDelete(t *testing.T) {
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
-	)
+	))
 
 	assert.NoError(t, role.APILeasesDelete().Interact(ctx, dhcp.APILeasesDeleteInput{
 		Scope:      scope.Name,

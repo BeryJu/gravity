@@ -130,7 +130,11 @@ func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 		status.Status = BackupStatusSuccess
 		return status
 	}
-	file.Seek(0, io.SeekStart)
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		status.Error = err.Error()
+		return status
+	}
 	stat, err := file.Stat()
 	if err != nil {
 		status.Error = err.Error()

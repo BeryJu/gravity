@@ -22,10 +22,14 @@ func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 					l.Error("recover in API Handler", zap.Any("panic", err))
 				}
 				w.WriteHeader(http.StatusInternalServerError)
+				var er error
 				if r.Header.Get("Accept") == "application/json" {
-					w.Write([]byte("{\"error\": \"internal error\"}"))
+					_, er = w.Write([]byte("{\"error\": \"internal error\"}"))
 				} else {
-					w.Write([]byte("internal error"))
+					_, er = w.Write([]byte("internal error"))
+				}
+				if err != nil {
+					l.Warn("failed to write error message", zap.Error(er))
 				}
 			}()
 			h.ServeHTTP(w, r)

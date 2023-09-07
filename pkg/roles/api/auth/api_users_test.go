@@ -21,7 +21,7 @@ func TestAPIUsersGet(t *testing.T) {
 	defer role.Stop()
 	prov := auth.NewAuthProvider(role, inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -29,7 +29,7 @@ func TestAPIUsersGet(t *testing.T) {
 			tests.RandomString(),
 		).String(),
 		tests.MustJSON(auth.User{}),
-	)
+	))
 
 	var output auth.APIUsersGetOutput
 	assert.NoError(t, prov.APIUsersGet().Interact(ctx, auth.APIUsersGetInput{}, &output))
@@ -82,7 +82,7 @@ func TestAPIUsersDelete(t *testing.T) {
 
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -90,7 +90,7 @@ func TestAPIUsersDelete(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(auth.User{}),
-	)
+	))
 
 	assert.NoError(t, prov.APIUsersDelete().Interact(ctx, auth.APIUsersDeleteInput{
 		Username: name,

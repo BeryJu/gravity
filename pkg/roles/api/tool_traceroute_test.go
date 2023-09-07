@@ -14,12 +14,12 @@ func TestAPIToolTraceroute(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	var output api.APIToolTracerouteOutput
-	role.APIToolTraceroute().Interact(ctx, api.APIToolTracerouteInput{
+	tests.PanicIfError(role.APIToolTraceroute().Interact(ctx, api.APIToolTracerouteInput{
 		Host: "localhost",
-	}, &output)
+	}, &output))
 	assert.NotNil(t, output)
 }

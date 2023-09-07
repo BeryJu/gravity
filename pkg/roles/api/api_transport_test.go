@@ -16,7 +16,7 @@ func TestExport(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	var output api.APIExportOutput
@@ -46,7 +46,7 @@ func TestImport(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := api.New(inst)
-	role.Start(ctx, []byte{})
+	tests.PanicIfError(role.Start(ctx, []byte{}))
 	defer role.Stop()
 
 	entries := api.APIImportInput{

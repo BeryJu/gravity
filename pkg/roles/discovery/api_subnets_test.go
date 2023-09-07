@@ -16,7 +16,7 @@ func TestAPISubnetsGet(t *testing.T) {
 	inst := rootInst.ForRole("discovery", ctx)
 	role := discovery.New(inst)
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -24,7 +24,7 @@ func TestAPISubnetsGet(t *testing.T) {
 			tests.RandomString(),
 		).String(),
 		tests.MustJSON(discovery.Subnet{}),
-	)
+	))
 
 	var output discovery.APISubnetsGetOutput
 	assert.NoError(t, role.APISubnetsGet().Interact(ctx, discovery.APISubnetsGetInput{}, &output))
@@ -62,7 +62,7 @@ func TestAPISubnetsDelete(t *testing.T) {
 
 	name := tests.RandomString()
 
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -70,7 +70,7 @@ func TestAPISubnetsDelete(t *testing.T) {
 			name,
 		).String(),
 		tests.MustJSON(discovery.Subnet{}),
-	)
+	))
 
 	assert.NoError(t, role.APISubnetsDelete().Interact(ctx, discovery.APISubnetsDeleteInput{
 		Name: name,

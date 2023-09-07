@@ -14,7 +14,7 @@ func TestRoleDNSZoneFind(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
@@ -29,7 +29,7 @@ func TestRoleDNSZoneFind(t *testing.T) {
 				},
 			},
 		}),
-	)
+	))
 	role := dns.New(inst)
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, RoleConfig()))

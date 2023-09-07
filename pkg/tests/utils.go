@@ -18,6 +18,14 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+func PanicIfError(args ...interface{}) {
+	for _, arg := range args {
+		if e, ok := arg.(error); ok && e != nil {
+			panic(arg)
+		}
+	}
+}
+
 func MustJSON(in interface{}) string {
 	j, err := json.Marshal(in)
 	if err != nil {
