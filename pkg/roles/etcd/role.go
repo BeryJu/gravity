@@ -67,13 +67,13 @@ func New(instance roles.Instance) *Role {
 		urlMustParse("http://localhost:2379"),
 	}
 	cfg.ListenPeerUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(2380))),
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.PeerPort)))),
 	}
 	cfg.AdvertisePeerUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Listen(extconfig.Get().Instance.IP, 2380))),
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.PeerPort))),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().Instance.IP, 2380))
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.PeerPort))
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, "peer", relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, "peer", relInstKeyPath)
@@ -122,8 +122,9 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 		api.ApiAPIMemberJoinInput{
 			Peer: api.PtrString(
 				fmt.Sprintf(
-					"https://%s:2380",
+					"https://%s:%d",
 					extconfig.Get().Instance.IP,
+					extconfig.Get().Etcd.PeerPort,
 				),
 			),
 			Identifier: &extconfig.Get().Instance.Identifier,

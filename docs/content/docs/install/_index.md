@@ -61,14 +61,15 @@ The following environment variables can be set
 ##### Advanced
 
 - `DEBUG`: Enable debug mode, shouldn't be set manually in most cases and is only intended for development environments.
-- `ETCD_PREFIX`: Global etcd prefix, defaults to `/gravity`
-- `ETCD_ENDPOINT`: etcd Client endpoint, defaults to `localhost:2379` when using embedded etcd
-- `ETCD_JOIN_CLUSTER`: Used when joining a node to a cluster, value is given by join API endpoint
 - `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but can be set to override that (set to 0.0.0.0 in docker)
 - `ADMIN_PASSWORD`: Optionally set a default password for the admin user, if not set a random one will be generated
 - `ADMIN_TOKEN`: Optionally set a token to be created on first start, if not set no token will be created
 - `SENTRY_ENABLED`: Enable sentry error reporting and tracing
 - `SENTRY_DSN`: Configure a custom sentry DSN
+- `ETCD_PREFIX`: Global etcd prefix, defaults to `/gravity`
+- `ETCD_PEER_PORT`: Port used for etcd peer traffic, defaults to `2380`, this might need to be changed when running in Kubernetes.
+- `ETCD_ENDPOINT`: etcd Client endpoint, defaults to `localhost:2379` when using embedded etcd
+- `ETCD_JOIN_CLUSTER`: Used when joining a node to a cluster, value is given by join API endpoint
 
 ##### Changing Environmental variables
 
