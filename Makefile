@@ -59,7 +59,7 @@ website-watch:
 
 internal/resources/macoui:
 	mkdir -p internal/resources/macoui
-	curl -L https://gitlab.com/wireshark/wireshark/-/raw/master/manuf -o ./internal/resources/macoui/db.txt
+	curl -L https://raw.githubusercontent.com/wireshark/wireshark/6885d787fda5f74a2d1f9eeea443fecf8dd58528/manuf -o ./internal/resources/macoui/db.txt
 
 internal/resources/blocky:
 	mkdir -p internal/resources/blocky
