@@ -114,14 +114,10 @@ func (i *Instance) startEtcd(ctx context.Context) bool {
 }
 
 func (i *Instance) startSentry() {
-	if !extconfig.Get().Sentry.Enabled {
-		return
+	if extconfig.Get().Sentry.Enabled {
+		extconfig.Get().Sentry.DSN = ""
 	}
-	transport := sentry.NewHTTPTransport()
 	release := fmt.Sprintf("gravity@%s", extconfig.FullVersion())
-	transport.Configure(sentry.ClientOptions{
-		HTTPTransport: extconfig.NewUserAgentTransport(release, extconfig.Transport()),
-	})
 	rate := 0.5
 	if extconfig.Get().Debug {
 		rate = 1
@@ -131,7 +127,7 @@ func (i *Instance) startSentry() {
 		Release:          release,
 		EnableTracing:    true,
 		TracesSampleRate: rate,
-		Transport:        transport,
+		HTTPTransport:    extconfig.NewUserAgentTransport(release, extconfig.Transport()),
 		Debug:            extconfig.Get().Debug,
 		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
 	})
