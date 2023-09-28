@@ -27,7 +27,7 @@ require (
 	github.com/netdata/go.d.plugin v0.54.1
 	github.com/ori-edge/k8s_gateway v0.3.4
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.16.0
+	github.com/prometheus/client_golang v1.17.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
 	github.com/spf13/cobra v1.7.0
@@ -163,9 +163,9 @@ require (
 	github.com/outcaste-io/ristretto v0.2.1 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_model v0.4.0 // indirect
+	github.com/prometheus/client_model v0.4.1-0.20230718164431-9a2bf3000d16 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.10.1 // indirect
+	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/quic-go/qtls-go1-20 v0.3.1 // indirect
 	github.com/quic-go/quic-go v0.37.4 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
