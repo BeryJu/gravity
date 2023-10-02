@@ -35,10 +35,11 @@ var IPTags = map[uint8]bool{
 }
 
 type DHCPOption struct {
-	Tag     *uint8   `json:"tag"`
-	TagName string   `json:"tagName"`
-	Value   *string  `json:"value"`
-	Value64 []string `json:"value64"`
+	Tag      *uint8   `json:"tag"`
+	TagName  string   `json:"tagName"`
+	Value    *string  `json:"value"`
+	Value64  []string `json:"value64"`
+	ValueHex []string `json:"valueHex"`
 }
 
 func OptionValue(input string) *string {

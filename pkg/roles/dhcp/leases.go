@@ -3,6 +3,7 @@ package dhcp
 import (
 	"context"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -190,11 +191,23 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 				va, err := base64.StdEncoding.DecodeString(v)
 				if err != nil {
 					req.log.Warn("failed to convert base64 value to byte", zap.Error(err))
-				} else {
-					values64 = append(values64, va...)
+					continue
 				}
+				values64 = append(values64, va...)
 			}
 			finalVal = values64
+		}
+		if len(opt.ValueHex) > 0 {
+			valuesHex := make([]byte, 0)
+			for _, v := range opt.ValueHex {
+				va, err := hex.DecodeString(v)
+				if err != nil {
+					req.log.Warn("failed to convert hex value to byte", zap.Error(err))
+					continue
+				}
+				valuesHex = append(valuesHex, va...)
+			}
+			finalVal = valuesHex
 		}
 		dopt := dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(*opt.Tag), finalVal)
 		rep.UpdateOption(dopt)

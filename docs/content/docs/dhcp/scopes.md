@@ -27,26 +27,12 @@ List of dictionaries to set DHCP options.
 
 Example options:
 
-```json
-{
-  "options": [
-    {
-      "tagName": "router",
-      "value": "10.1.2.3"
-    }
-  ]
-}
+```yaml
+- tagName: router
+  value: 10.1.2.3
 ```
 
-Any of these tag names can be used:
-
-- `subnet_mask`
-- `router`
-- `time_server`
-- `name_server`
-- `domain_name`
-- `bootfile`
-- `tftp_server`
+More info [here](./scopes.md).
 
 #### `ttl`
 
