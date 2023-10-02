@@ -20,7 +20,7 @@ var TagMap map[OptionTagName]uint8 = map[OptionTagName]uint8{
 	TagNameSubnetMask: dhcpv4.OptionSubnetMask.Code(),
 	TagNameRouter:     dhcpv4.OptionRouter.Code(),
 	TagNameTimeServer: dhcpv4.OptionTimeServer.Code(),
-	TagNameNameServer: dhcpv4.OptionNameServer.Code(),
+	TagNameNameServer: dhcpv4.OptionDomainNameServer.Code(),
 	TagNameDomainName: dhcpv4.OptionDomainName.Code(),
 	TagNameBootfile:   dhcpv4.OptionBootfileName.Code(),
 	TagNameTFTPserver: dhcpv4.OptionTFTPServerName.Code(),
