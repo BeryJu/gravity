@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **TagName** | Pointer to **string** |  | [optional] 
 **Value** | Pointer to **NullableString** |  | [optional] 
 **Value64** | Pointer to **[]string** |  | [optional] 
+**ValueHex** | Pointer to **[]string** |  | [optional] 
 
 ## Methods
 
@@ -158,6 +159,41 @@ HasValue64 returns a boolean if a field has been set.
 `func (o *TypesDHCPOption) UnsetValue64()`
 
 UnsetValue64 ensures that no value is present for Value64, not even an explicit nil
+### GetValueHex
+
+`func (o *TypesDHCPOption) GetValueHex() []string`
+
+GetValueHex returns the ValueHex field if non-nil, zero value otherwise.
+
+### GetValueHexOk
+
+`func (o *TypesDHCPOption) GetValueHexOk() (*[]string, bool)`
+
+GetValueHexOk returns a tuple with the ValueHex field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetValueHex
+
+`func (o *TypesDHCPOption) SetValueHex(v []string)`
+
+SetValueHex sets ValueHex field to given value.
+
+### HasValueHex
+
+`func (o *TypesDHCPOption) HasValueHex() bool`
+
+HasValueHex returns a boolean if a field has been set.
+
+### SetValueHexNil
+
+`func (o *TypesDHCPOption) SetValueHexNil(b bool)`
+
+ SetValueHexNil sets the value for ValueHex to be an explicit nil
+
+### UnsetValueHex
+`func (o *TypesDHCPOption) UnsetValueHex()`
+
+UnsetValueHex ensures that no value is present for ValueHex, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

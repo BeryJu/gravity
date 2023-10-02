@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.13
+  version: 0.6.14
 servers:
 - url: /
 paths:
@@ -2181,12 +2181,18 @@ components:
         - value64:
           - value64
           - value64
+          valueHex:
+          - valueHex
+          - valueHex
           tag: 0
           tagName: tagName
           value: value
         - value64:
           - value64
           - value64
+          valueHex:
+          - valueHex
+          - valueHex
           tag: 0
           tagName: tagName
           value: value
@@ -2238,12 +2244,18 @@ components:
           - value64:
             - value64
             - value64
+            valueHex:
+            - valueHex
+            - valueHex
             tag: 0
             tagName: tagName
             value: value
           - value64:
             - value64
             - value64
+            valueHex:
+            - valueHex
+            - valueHex
             tag: 0
             tagName: tagName
             value: value
@@ -2263,12 +2275,18 @@ components:
           - value64:
             - value64
             - value64
+            valueHex:
+            - valueHex
+            - valueHex
             tag: 0
             tagName: tagName
             value: value
           - value64:
             - value64
             - value64
+            valueHex:
+            - valueHex
+            - valueHex
             tag: 0
             tagName: tagName
             value: value
@@ -2298,12 +2316,18 @@ components:
         - value64:
           - value64
           - value64
+          valueHex:
+          - valueHex
+          - valueHex
           tag: 0
           tagName: tagName
           value: value
         - value64:
           - value64
           - value64
+          valueHex:
+          - valueHex
+          - valueHex
           tag: 0
           tagName: tagName
           value: value
@@ -2927,6 +2951,9 @@ components:
         value64:
         - value64
         - value64
+        valueHex:
+        - valueHex
+        - valueHex
         tag: 0
         tagName: tagName
         value: value
@@ -2941,6 +2968,11 @@ components:
           nullable: true
           type: string
         value64:
+          items:
+            type: string
+          nullable: true
+          type: array
+        valueHex:
           items:
             type: string
           nullable: true
