@@ -34,7 +34,7 @@
         "@types/codemirror": "5.60.10",
         "@types/sha.js": "^2.4.2",
         "@typescript-eslint/eslint-plugin": "^6.7.4",
-        "@typescript-eslint/parser": "^6.7.3",
+        "@typescript-eslint/parser": "^6.7.4",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "ansi-to-html": "^0.7.2",
         "babel-plugin-macros": "^3.1.0",
