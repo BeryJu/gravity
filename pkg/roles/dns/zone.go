@@ -177,6 +177,7 @@ func (z *Zone) Init(ctx context.Context) {
 			handler = NewMemoryHandler(z, handlerCfg)
 		default:
 			z.log.Warn("invalid forwarder type", zap.String("type", t))
+			continue
 		}
 		z.h = append(z.h, handler)
 	}
