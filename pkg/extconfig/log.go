@@ -25,8 +25,8 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	config := zap.Config{
 		Encoding:         "json",
 		Development:      false,
-		OutputPaths:      []string{"stderr", "gravity-in-memory://"},
-		ErrorOutputPaths: []string{"stderr", "gravity-in-memory://"},
+		OutputPaths:      []string{"stderr"},
+		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
 	}
 	config.Level = zap.NewAtomicLevelAt(l)
