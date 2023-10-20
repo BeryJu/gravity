@@ -10,7 +10,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coredns/caddy v1.1.1
 	github.com/coredns/coredns v1.11.1
-	github.com/coreos/go-oidc/v3 v3.6.0
+	github.com/coreos/go-oidc/v3 v3.7.0
 	github.com/creasty/defaults v1.7.0
 	github.com/felixge/fgprof v0.9.3
 	github.com/getsentry/sentry-go v0.25.0
@@ -209,7 +209,7 @@ require (
 	golang.org/x/tools v0.13.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.136.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20230803162519-f966b187b2e5 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230803162519-f966b187b2e5 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect
