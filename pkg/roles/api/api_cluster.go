@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -12,7 +13,6 @@ import (
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	"go.uber.org/zap"
-	"golang.org/x/exp/slices"
 )
 
 type APIMember struct {
@@ -75,11 +75,9 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 		if input.Roles == "" {
 			roles = strings.Split(extconfig.Get().BootstrapRoles, ",")
 			// If we're copying our roles, exclude backup
-			for idx, role := range roles {
-				if role == "backup" {
-					slices.Delete(roles, idx, idx+1)
-				}
-			}
+			roles = slices.DeleteFunc(roles, func(role string) bool {
+				return role == "backup"
+			})
 		}
 		_, err = r.i.KV().Put(
 			ctx,

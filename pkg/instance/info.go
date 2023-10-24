@@ -3,6 +3,7 @@ package instance
 import (
 	"context"
 	"encoding/json"
+	"slices"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -10,7 +11,6 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
 )
 
 type InstanceInfo struct {
