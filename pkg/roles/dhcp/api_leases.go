@@ -55,7 +55,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 		if input.Identifier == "" {
 			leaseKey = leaseKey.Prefix(true)
 		} else {
-			leaseKey = leaseKey.Add(input.Identifier).Prefix(true)
+			leaseKey = leaseKey.Add(input.Identifier)
 		}
 		rawLeases, err := r.i.KV().Get(ctx, leaseKey.String(), clientv3.WithPrefix())
 		if err != nil {
