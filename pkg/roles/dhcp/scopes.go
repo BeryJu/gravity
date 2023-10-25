@@ -93,18 +93,21 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	longestBits := 0
 	r.scopesM.RLock()
 	defer r.scopesM.RUnlock()
+	// To prioritise requests from a DHCP relay being matched correctly, give their subnet
+	// match a 1 bit more priority
+	const dhcpRelayBias = 1
 	for _, scope := range r.scopes {
 		// Check based on gateway IP (highest priority)
-		gatewayMatchBits := scope.match(req.GatewayIPAddr, req)
-		if gatewayMatchBits > -1 && gatewayMatchBits > longestBits {
+		gatewayMatchBits := scope.match(req.GatewayIPAddr)
+		if gatewayMatchBits > -1 && gatewayMatchBits+dhcpRelayBias > longestBits {
 			req.log.Debug("selected scope based on cidr match (gateway IP)", zap.String("scope", scope.Name))
 			match = scope
-			longestBits = gatewayMatchBits
+			longestBits = gatewayMatchBits + dhcpRelayBias
 		}
 		// Handle local broadcast, check with the instance's listening IP
 		// Only consider local scopes if we don't have a match already
-		localMatchBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), req)
-		if match == nil && localMatchBits > -1 && localMatchBits > longestBits {
+		localMatchBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP))
+		if localMatchBits > -1 && localMatchBits > longestBits {
 			req.log.Debug("selected scope based on cidr match (instance IP)", zap.String("scope", scope.Name))
 			match = scope
 			longestBits = localMatchBits
@@ -118,7 +121,7 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	return match
 }
 
-func (s *Scope) match(peer net.IP, req *Request4) int {
+func (s *Scope) match(peer net.IP) int {
 	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
 		s.log.Warn("failed to parse client ip", zap.Error(err))

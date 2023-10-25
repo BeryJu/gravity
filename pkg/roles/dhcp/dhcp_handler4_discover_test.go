@@ -1,6 +1,7 @@
 package dhcp_test
 
 import (
+	"net"
 	"testing"
 	"time"
 
@@ -57,7 +58,7 @@ func TestDHCPDiscover(t *testing.T) {
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 }
 
-func TestDHCPDiscoverGateway(t *testing.T) {
+func TestDHCPDiscover_Gateway(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -120,6 +121,82 @@ func TestDHCPDiscoverGateway(t *testing.T) {
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverGatewayPayload)
+	assert.NoError(t, err)
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.82.2.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "00:50:56:9b:2d:73", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+}
+
+func TestDHCPDiscover_RequestedIP_WrongSubnet(t *testing.T) {
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+	Cleanup()
+	extconfig.Get().Instance.IP = "10.82.7.103"
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.82.7.0/24",
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.82.7.100",
+				"range_end":   "10.82.7.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test2",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.82.2.0/24",
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.82.2.100",
+				"range_end":   "10.82.2.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test_larger",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.82.0.0/16",
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.82.0.100",
+				"range_end":   "10.82.0.250",
+			},
+		}),
+	))
+	tests.PanicIfError(role.Start(ctx, []byte{}))
+	defer role.Stop()
+
+	req, err := dhcpv4.FromBytes(DHCPDiscoverGatewayPayload)
+	req.UpdateOption(dhcpv4.OptRequestedIPAddress(net.ParseIP("10.82.7.200")))
 	assert.NoError(t, err)
 	req4 := role.NewRequest4(req)
 	res := role.Handler4(req4)
