@@ -1,6 +1,7 @@
 package dhcp_test
 
 import (
+	"net"
 	"testing"
 	"time"
 
@@ -48,6 +49,64 @@ func TestDHCPDiscover(t *testing.T) {
 	res := role.Handler4(req4)
 	assert.NotNil(t, res)
 	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "b2:b7:86:2c:d3:fa", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+}
+
+func TestDHCPDiscoverGateway(t *testing.T) {
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+	Cleanup()
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test2",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.32.0/24",
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.32.100",
+				"range_end":   "10.100.32.250",
+			},
+		}),
+	))
+	tests.PanicIfError(role.Start(ctx, []byte{}))
+	defer role.Stop()
+
+	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
+	req.GatewayIPAddr = net.ParseIP("10.100.32.1")
+	assert.NoError(t, err)
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.32.100", res.YourIPAddr.String())
 	ones, bits := res.SubnetMask().Size()
 	assert.Equal(t, 24, ones)
 	assert.Equal(t, 32, bits)

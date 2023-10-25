@@ -95,20 +95,18 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	defer r.scopesM.RUnlock()
 	for _, scope := range r.scopes {
 		// Handle local broadcast, check with the instance's listening IP
-		if match == nil {
-			subBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), req)
-			if subBits > -1 && subBits > longestBits {
-				req.log.Debug("selected scope based on cidr match (instance IP)", zap.String("scope", scope.Name))
-				match = scope
-				longestBits = subBits
-			}
+		localMatchBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP), req)
+		if localMatchBits > -1 && localMatchBits > longestBits {
+			req.log.Debug("selected scope based on cidr match (instance IP)", zap.String("scope", scope.Name))
+			match = scope
+			longestBits = localMatchBits
 		}
 		// Check based on gateway IP
-		subBits := scope.match(req.GatewayIPAddr, req)
-		if subBits > -1 && subBits > longestBits {
-			req.log.Debug("selected scope based on cidr match (peer IP)", zap.String("scope", scope.Name))
+		gatewayMatchBits := scope.match(req.GatewayIPAddr, req)
+		if gatewayMatchBits > -1 && gatewayMatchBits > longestBits {
+			req.log.Debug("selected scope based on cidr match (gateway IP)", zap.String("scope", scope.Name))
 			match = scope
-			longestBits = subBits
+			longestBits = gatewayMatchBits
 		}
 		// Handle default scope
 		if match == nil && scope.Default {
