@@ -3,6 +3,7 @@ package discovery_test
 import (
 	"testing"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/discovery"
 	"beryju.io/gravity/pkg/tests"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestAPIRoleConfigGet(t *testing.T) {
+	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -23,6 +25,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
+	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
