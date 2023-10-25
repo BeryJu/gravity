@@ -17,6 +17,9 @@ export class SpinnerButton extends AKElement {
     @property()
     callAction?: () => Promise<unknown>;
 
+    @property({type: Boolean})
+    disabled = false;
+
     static get styles(): CSSResult[] {
         return [
             PFBase,
@@ -57,6 +60,7 @@ export class SpinnerButton extends AKElement {
     render(): TemplateResult {
         return html`<button
             class="pf-c-button pf-m-progress ${this.classList.toString()}"
+            ?disabled=${this.disabled}
             @click=${() => {
                 if (this.isRunning === true) {
                     return;

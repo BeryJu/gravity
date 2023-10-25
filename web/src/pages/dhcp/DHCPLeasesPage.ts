@@ -61,26 +61,83 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${"DHCP Lease(s)"}
-            .objects=${this.selectedElements}
-            .metadata=${(item: DhcpAPILease) => {
-                return [
-                    { key: "Scope", value: item.scopeKey },
-                    { key: "Name", value: item.hostname },
-                    { key: "Address", value: item.address },
-                ];
-            }}
-            .delete=${(item: DhcpAPILease) => {
-                return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
-                    identifier: item.identifier,
-                    scope: item.scopeKey,
-                });
-            }}
-        >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
-                ${"Delete"}
-            </button>
-        </ak-forms-delete-bulk>`;
+                objectLabel=${"DHCP Lease(s)"}
+                .objects=${this.selectedElements}
+                .metadata=${(item: DhcpAPILease) => {
+                    return [
+                        { key: "Scope", value: item.scopeKey },
+                        { key: "Name", value: item.hostname },
+                        { key: "Address", value: item.address },
+                    ];
+                }}
+                .delete=${(item: DhcpAPILease) => {
+                    return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
+                        identifier: item.identifier,
+                        scope: item.scopeKey,
+                    });
+                }}
+            >
+                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                    ${"Delete"}
+                </button> </ak-forms-delete-bulk
+            >&nbsp;
+            <ak-spinner-button
+                ?disabled=${disabled}
+                .callAction=${async () => {
+                    // To convert to a reservation, we just re-save the lease
+                    // which will auto-convert it
+                    return Promise.all(
+                        this.selectedElements.map((item) => {
+                            return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
+                                identifier: item.identifier,
+                                scope: this.scope,
+                                dhcpAPILeasesPutInput: item,
+                            });
+                        }),
+                    )
+                        .then(() => {
+                            showMessage({
+                                message: `Successfully converted ${this.selectedElements.length} lease(s) to reservation(s).`,
+                                level: MessageLevel.success,
+                            });
+                            this.fetch();
+                        })
+                        .catch((exc: Error) => {
+                            showMessage({
+                                message: (exc as Error).toString(),
+                                level: MessageLevel.error,
+                            });
+                        });
+                }}
+                class="pf-m-secondary"
+                >Turn to reservation </ak-spinner-button
+            >&nbsp;<ak-spinner-button
+                .callAction=${() => {
+                    return Promise.all(
+                        this.selectedElements.map((item) => {
+                            return new RolesDhcpApi(DEFAULT_CONFIG).dhcpWolLeases({
+                                identifier: item.identifier,
+                                scope: this.scope,
+                            });
+                        }),
+                    )
+                        .then(() => {
+                            showMessage({
+                                message: `Successfully sent ${this.selectedElements.length} WOL packet(s).`,
+                                level: MessageLevel.success,
+                            });
+                        })
+                        .catch((exc) => {
+                            showMessage({
+                                message: exc.toString(),
+                                level: MessageLevel.error,
+                            });
+                        });
+                }}
+                ?disabled=${disabled}
+                class="pf-m-secondary"
+                >WOL
+            </ak-spinner-button>`;
     }
 
     row(item: DhcpAPILease): TemplateResult[] {
@@ -90,40 +147,18 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`<pre>${item.identifier}</pre>
                 ${item.info ? html` (${item.info.vendor})` : html``}`,
             html`<ak-forms-modal>
-                    <span slot="submit"> ${"Update"} </span>
-                    <span slot="header"> ${"Update Zone"} </span>
-                    <gravity-dhcp-lease-form
-                        slot="form"
-                        scope=${this.scope}
-                        .instancePk=${item.identifier}
-                    >
-                    </gravity-dhcp-lease-form>
-                    <button slot="trigger" class="pf-c-button pf-m-plain">
-                        <i class="fas fa-edit"></i>
-                    </button> </ak-forms-modal
-                ><ak-spinner-button
-                    .callAction=${() => {
-                        return new RolesDhcpApi(DEFAULT_CONFIG)
-                            .dhcpWolLeases({
-                                identifier: item.identifier || "",
-                                scope: this.scope,
-                            })
-                            .then(() => {
-                                showMessage({
-                                    message: "Successfully sent WOL.",
-                                    level: MessageLevel.success,
-                                });
-                            })
-                            .catch((exc) => {
-                                showMessage({
-                                    message: exc.toString(),
-                                    level: MessageLevel.error,
-                                });
-                            });
-                    }}
-                    class="pf-m-primary"
-                    >WOL
-                </ak-spinner-button>`,
+                <span slot="submit"> ${"Update"} </span>
+                <span slot="header"> ${"Update Zone"} </span>
+                <gravity-dhcp-lease-form
+                    slot="form"
+                    scope=${this.scope}
+                    .instancePk=${item.identifier}
+                >
+                </gravity-dhcp-lease-form>
+                <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </ak-forms-modal>`,
         ];
     }
 
