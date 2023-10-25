@@ -294,7 +294,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"gravity.beryju.io.",
 			"test",
 			"A",
-			"aa:bb:cc",
+			name,
 		),
 		dns.Record{
 			Data: "192.0.2.1",
@@ -309,7 +309,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 			"0.192.in-addr.arpa.",
 			"1.2",
 			"PTR",
-			"aa:bb:cc",
+			name,
 		),
 		dns.Record{
 			Data: "test.gravity.beryju.io.",
