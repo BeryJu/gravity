@@ -145,12 +145,12 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 	}
 	requestedIP := req.RequestedIPAddress()
 	if requestedIP != nil {
-		s.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
+		req.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
 		ip, err := netip.ParseAddr(requestedIP.String())
 		if err != nil {
-			s.log.Warn("failed to parse requested ip", zap.Error(err))
+			req.log.Warn("failed to parse requested ip", zap.Error(err))
 		} else if s.ipam.IsIPFree(ip) {
-			s.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
+			req.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
 			lease.Address = requestedIP.String()
 		}
 	}
@@ -161,7 +161,7 @@ func (s *Scope) createLeaseFor(req *Request4) *Lease {
 		}
 		lease.Address = ip.String()
 	}
-	s.log.Info("creating new DHCP lease", zap.String("ip", requestedIP.String()), zap.String("lease", ident))
+	req.log.Info("creating new DHCP lease", zap.String("ip", requestedIP.String()), zap.String("lease", ident))
 	return lease
 }
 
