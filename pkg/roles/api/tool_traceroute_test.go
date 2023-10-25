@@ -1,7 +1,7 @@
 package api_test
 
 import (
-	"runtime"
+	"syscall"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
@@ -11,8 +11,8 @@ import (
 )
 
 func TestAPIToolTraceroute(t *testing.T) {
-	if runtime.GOOS == "darwin" {
-		t.Skip("Traceroute requires root permissions on macOS")
+	if syscall.Getuid() != 0 {
+		t.Skip("Traceroute requires root permissions")
 	}
 	rootInst := instance.New()
 	ctx := tests.Context()

@@ -161,7 +161,9 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 	defer dhcpRole.Stop()
 	// Create DNS role to register events
 	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
-	tests.PanicIfError(dnsRole.Start(ctx, []byte{}))
+	tests.PanicIfError(dnsRole.Start(ctx, []byte(tests.MustJSON(dns.RoleConfig{
+		Port: 12123,
+	}))))
 	defer dnsRole.Stop()
 
 	role := discovery.New(inst)
@@ -209,6 +211,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"gravity.beryju.io.",
 			"test",
 			"A",
+			"aa:bb:cc",
 		),
 		dns.Record{
 			Data: "192.0.2.1",
@@ -223,6 +226,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 			"0.192.in-addr.arpa.",
 			"1.2",
 			"PTR",
+			"aa:bb:cc",
 		),
 		dns.Record{
 			Data: "test.gravity.beryju.io.",

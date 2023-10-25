@@ -56,7 +56,9 @@ func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
+		return
 	}
+	r.log.Debug("put record", zap.String("record", rec.Name), zap.String("zone", forwardZone.Name))
 }
 
 // eventHandlerCreateReverse Event handler for `roles.dns.record.create_reverse`
@@ -96,5 +98,7 @@ func (r *Role) eventHandlerCreateReverse(ev *roles.Event) {
 	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
+		return
 	}
+	r.log.Debug("put record", zap.String("record", rec.Name), zap.String("zone", reverseZone.Name))
 }
