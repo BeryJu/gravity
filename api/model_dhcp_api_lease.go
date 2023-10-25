@@ -22,6 +22,7 @@ type DhcpAPILease struct {
 	Address          string            `json:"address"`
 	AddressLeaseTime string            `json:"addressLeaseTime"`
 	DnsZone          *string           `json:"dnsZone,omitempty"`
+	Expiry           *int32            `json:"expiry,omitempty"`
 	Hostname         string            `json:"hostname"`
 	Identifier       string            `json:"identifier"`
 	Info             *DhcpAPILeaseInfo `json:"info,omitempty"`
@@ -128,6 +129,38 @@ func (o *DhcpAPILease) HasDnsZone() bool {
 // SetDnsZone gets a reference to the given string and assigns it to the DnsZone field.
 func (o *DhcpAPILease) SetDnsZone(v string) {
 	o.DnsZone = &v
+}
+
+// GetExpiry returns the Expiry field value if set, zero value otherwise.
+func (o *DhcpAPILease) GetExpiry() int32 {
+	if o == nil || IsNil(o.Expiry) {
+		var ret int32
+		return ret
+	}
+	return *o.Expiry
+}
+
+// GetExpiryOk returns a tuple with the Expiry field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DhcpAPILease) GetExpiryOk() (*int32, bool) {
+	if o == nil || IsNil(o.Expiry) {
+		return nil, false
+	}
+	return o.Expiry, true
+}
+
+// HasExpiry returns a boolean if a field has been set.
+func (o *DhcpAPILease) HasExpiry() bool {
+	if o != nil && !IsNil(o.Expiry) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpiry gets a reference to the given int32 and assigns it to the Expiry field.
+func (o *DhcpAPILease) SetExpiry(v int32) {
+	o.Expiry = &v
 }
 
 // GetHostname returns the Hostname field value
@@ -248,6 +281,9 @@ func (o DhcpAPILease) ToMap() (map[string]interface{}, error) {
 	toSerialize["addressLeaseTime"] = o.AddressLeaseTime
 	if !IsNil(o.DnsZone) {
 		toSerialize["dnsZone"] = o.DnsZone
+	}
+	if !IsNil(o.Expiry) {
+		toSerialize["expiry"] = o.Expiry
 	}
 	toSerialize["hostname"] = o.Hostname
 	toSerialize["identifier"] = o.Identifier

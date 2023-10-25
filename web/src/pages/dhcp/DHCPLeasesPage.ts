@@ -54,6 +54,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             new TableColumn("Hostname"),
             new TableColumn("Address"),
             new TableColumn("Identifier"),
+            new TableColumn("Expiry"),
             new TableColumn("Actions"),
         ];
     }
@@ -146,6 +147,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`<pre>${item.address}</pre>`,
             html`<pre>${item.identifier}</pre>
                 ${item.info ? html` (${item.info.vendor})` : html``}`,
+            html`${item.expiry <= 0 ? html`Reservation` :  new Date((item.expiry || 0) * 1000).toLocaleString()}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Zone"} </span>

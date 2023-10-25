@@ -26,6 +26,7 @@ type APILease struct {
 	AddressLeaseTime string        `json:"addressLeaseTime" required:"true"`
 	ScopeKey         string        `json:"scopeKey" required:"true"`
 	DNSZone          string        `json:"dnsZone"`
+	Expiry           int64         `json:"expiry"`
 }
 type APILeasesGetOutput struct {
 	Leases []*APILease `json:"leases" required:"true"`
@@ -76,6 +77,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 				AddressLeaseTime: l.AddressLeaseTime,
 				ScopeKey:         l.ScopeKey,
 				DNSZone:          l.DNSZone,
+				Expiry:           l.Expiry.Unix(),
 			}
 			if r.oui != nil {
 				entry, err := r.oui.LookupString(l.Identifier)

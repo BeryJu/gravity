@@ -28,11 +28,12 @@ type Lease struct {
 	log        *zap.Logger
 	Identifier string `json:"-"`
 
-	Address          string `json:"address"`
-	Hostname         string `json:"hostname"`
-	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
-	ScopeKey         string `json:"scopeKey"`
-	DNSZone          string `json:"dnsZone,omitempty"`
+	Address          string    `json:"address"`
+	Hostname         string    `json:"hostname"`
+	AddressLeaseTime string    `json:"addressLeaseTime,omitempty"`
+	ScopeKey         string    `json:"scopeKey"`
+	DNSZone          string    `json:"dnsZone,omitempty"`
+	Expiry           time.Time `json:"expiration"`
 
 	etcdKey string
 }
@@ -75,6 +76,8 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	}
 
 	if expiry > 0 {
+		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second)
+
 		exp, err := l.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
 			return err

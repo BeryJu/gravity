@@ -493,6 +493,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/DhcpAPILeasesGetOutput'
           description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
       summary: DHCP Leases
       tags:
       - roles/dhcp
@@ -1769,6 +1775,8 @@ components:
           type: string
         dnsZone:
           type: string
+        expiry:
+          type: integer
         hostname:
           type: string
         identifier:
