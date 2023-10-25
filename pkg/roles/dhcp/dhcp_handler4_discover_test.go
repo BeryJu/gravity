@@ -42,7 +42,9 @@ func TestDHCPDiscover(t *testing.T) {
 			},
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
@@ -117,7 +119,9 @@ func TestDHCPDiscover_Gateway(t *testing.T) {
 			},
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverGatewayPayload)
@@ -192,7 +196,9 @@ func TestDHCPDiscover_RequestedIP_WrongSubnet(t *testing.T) {
 			},
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverGatewayPayload)
@@ -239,7 +245,9 @@ func TestDHCPDiscoverDNS(t *testing.T) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPDiscoverPayload)
