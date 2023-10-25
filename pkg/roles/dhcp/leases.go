@@ -138,6 +138,8 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		pl, err := time.ParseDuration(l.AddressLeaseTime)
 		if err != nil {
 			req.log.Warn("failed to parse address lease duration, defaulting", zap.Error(err), zap.String("default", pl.String()))
+		} else if pl.Seconds() < 1 {
+			req.log.Warn("invalid duration: less than 1", zap.String("duration", l.AddressLeaseTime))
 		} else {
 			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
 		}
