@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
 
@@ -32,13 +33,40 @@ type APILeasesGetOutput struct {
 
 func (r *Role) APILeasesGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesGetInput, output *APILeasesGetOutput) error {
-		r.leasesM.RLock()
-		defer r.leasesM.RUnlock()
-		for _, l := range r.leases {
-			if l.ScopeKey != input.ScopeName {
+		// Validate that the scope name exists
+		rawScope, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyScopes,
+				input.ScopeName,
+			).String(),
+		)
+		if err != nil || len(rawScope.Kvs) < 1 {
+			r.log.Warn("failed to get scope", zap.Error(err))
+			return status.Wrap(errors.New("failed to get scope"), status.Internal)
+		}
+
+		leaseKey := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		)
+		if input.Identifier == "" {
+			leaseKey = leaseKey.Prefix(true)
+		} else {
+			leaseKey = leaseKey.Add(input.Identifier).Prefix(true)
+		}
+		rawLeases, err := r.i.KV().Get(ctx, leaseKey.String(), clientv3.WithPrefix())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		for _, lease := range rawLeases.Kvs {
+			l, err := r.leaseFromKV(lease)
+			if err != nil {
+				r.log.Warn("failed to parse lease", zap.Error(err))
 				continue
 			}
-			if input.Identifier != "" && input.Identifier != l.Identifier {
+			if l.ScopeKey != input.ScopeName {
 				continue
 			}
 			al := &APILease{
@@ -64,6 +92,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 	u.SetName("dhcp.get_leases")
 	u.SetTitle("DHCP Leases")
 	u.SetTags("roles/dhcp")
+	u.SetExpectedErrors(status.Internal)
 	return u
 }
 
