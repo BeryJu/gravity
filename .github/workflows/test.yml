@@ -16,7 +16,7 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - uses: actions/setup-node@v4.0.0
+      - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
@@ -45,7 +45,7 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - uses: actions/setup-node@v4.0.0
+      - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
