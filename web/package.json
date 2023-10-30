@@ -58,7 +58,7 @@
         "rollup-plugin-minify-html-literals": "^1.2.6",
         "rollup-plugin-terser": "^7.0.2",
         "sha.js": "^2.4.11",
-        "ts-lit-plugin": "^2.0.0",
+        "ts-lit-plugin": "^2.0.1",
         "yaml": "^2.3.3"
     }
 }
