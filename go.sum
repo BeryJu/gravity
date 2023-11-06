@@ -832,8 +832,8 @@ github.com/swaggest/form/v5 v5.1.1 h1:ct6/rOQBGrqWUQ0FUv3vW5sHvTUb31AwTUWj947N6c
 github.com/swaggest/form/v5 v5.1.1/go.mod h1:X1hraaoONee20PMnGNLQpO32f9zbQ0Czfm7iZThuEKg=
 github.com/swaggest/jsonschema-go v0.3.62 h1:eIE0aRklWa2eLJg2L/zqyWpKvgUPbq2oKOtrJGJkPH0=
 github.com/swaggest/jsonschema-go v0.3.62/go.mod h1:DYuKqdpms/edvywsX6p1zHXCZkdwB28wRaBdFCe3Duw=
-github.com/swaggest/openapi-go v0.2.41 h1:aO8Q5ZugBmbd16YcppG18e3T+tgU8NJrXA3HLPgnANI=
-github.com/swaggest/openapi-go v0.2.41/go.mod h1:Ww0uMQS11bz3jftWFi6+CA82yl6DHqTv9AE/LLVxzAs=
+github.com/swaggest/openapi-go v0.2.42 h1:pM/1WRIyU3JV9YUXqPEn6JLmc8CaEgSe507uV0RVPy4=
+github.com/swaggest/openapi-go v0.2.42/go.mod h1:Ww0uMQS11bz3jftWFi6+CA82yl6DHqTv9AE/LLVxzAs=
 github.com/swaggest/refl v1.3.0 h1:PEUWIku+ZznYfsoyheF97ypSduvMApYyGkYF3nabS0I=
 github.com/swaggest/refl v1.3.0/go.mod h1:3Ujvbmh1pfSbDYjC6JGG7nMgPvpG0ehQL4iNonnLNbg=
 github.com/swaggest/rest v0.2.59 h1:4bso9zu7bYCs7M+zjrd2e75DByAAA+wwWM3/fKfooHI=
