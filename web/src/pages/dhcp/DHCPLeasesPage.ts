@@ -150,7 +150,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`${item.expiry <= 0 ? html`Reservation` :  new Date((item.expiry || 0) * 1000).toLocaleString()}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
-                <span slot="header"> ${"Update Zone"} </span>
+                <span slot="header"> ${"Update Lease"} </span>
                 <gravity-dhcp-lease-form
                     slot="form"
                     scope=${this.scope}
