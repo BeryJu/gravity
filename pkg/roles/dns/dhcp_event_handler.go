@@ -32,7 +32,7 @@ func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 	hostname := ev.Payload.Data["hostname"].(string)
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	identifier := ev.Payload.Data["identifier"].(string)
-	forwardZone := r.FindZone(fqdn)
+	forwardZone := r.FindZone(utils.EnsureTrailingPeriod(fqdn))
 	if forwardZone == nil {
 		r.log.Debug("No zone found for hostname", zap.Any("event", ev), zap.String("fqdn", fqdn))
 		return
@@ -84,7 +84,7 @@ func (r *Role) eventHandlerCreateReverse(ev *roles.Event) {
 		return
 	}
 
-	reverseZone := r.FindZone(rev)
+	reverseZone := r.FindZone(utils.EnsureTrailingPeriod(rev))
 	if reverseZone == nil {
 		r.log.Debug("No zone found for hostname", zap.Any("event", ev), zap.String("fqdn", fqdn))
 		return
