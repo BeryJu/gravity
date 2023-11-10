@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math"
 	"net"
 	"strings"
 	"time"
@@ -140,6 +141,8 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 			req.log.Warn("failed to parse address lease duration, defaulting", zap.Error(err), zap.String("default", pl.String()))
 		} else if pl.Seconds() < 1 {
 			req.log.Warn("invalid duration: less than 1", zap.String("duration", l.AddressLeaseTime))
+		} else if pl.Seconds() > math.MaxInt32 {
+			req.log.Warn("invalid duration: duration too long", zap.String("duration", l.AddressLeaseTime))
 		} else {
 			rep.UpdateOption(dhcpv4.OptIPAddressLeaseTime(pl))
 		}
