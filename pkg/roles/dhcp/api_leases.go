@@ -77,7 +77,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 				AddressLeaseTime: l.AddressLeaseTime,
 				ScopeKey:         l.ScopeKey,
 				DNSZone:          l.DNSZone,
-				Expiry:           l.Expiry.Unix(),
+				Expiry:           l.Expiry,
 			}
 			if r.oui != nil {
 				entry, err := r.oui.LookupString(l.Identifier)

@@ -29,12 +29,12 @@ type Lease struct {
 	log        *zap.Logger
 	Identifier string `json:"-"`
 
-	Address          string    `json:"address"`
-	Hostname         string    `json:"hostname"`
-	AddressLeaseTime string    `json:"addressLeaseTime,omitempty"`
-	ScopeKey         string    `json:"scopeKey"`
-	DNSZone          string    `json:"dnsZone,omitempty"`
-	Expiry           time.Time `json:"expiration"`
+	Address          string `json:"address"`
+	Hostname         string `json:"hostname"`
+	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
+	ScopeKey         string `json:"scopeKey"`
+	DNSZone          string `json:"dnsZone,omitempty"`
+	Expiry           int64  `json:"expiration"`
 
 	etcdKey string
 }
@@ -44,6 +44,7 @@ func (r *Role) NewLease(identifier string) *Lease {
 		inst:       r.i,
 		Identifier: identifier,
 		log:        r.log.With(zap.String("identifier", identifier)),
+		Expiry:     0,
 	}
 }
 
@@ -57,6 +58,10 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
 		return l, err
+	}
+	// Temporary: We used to store `Expiry` as time.Time but switched to int64
+	if l.Expiry < 0 {
+		l.Expiry = 0
 	}
 	l.etcdKey = string(raw.Key)
 
@@ -77,7 +82,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	}
 
 	if expiry > 0 {
-		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second)
+		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
 		exp, err := l.inst.KV().Lease.Grant(ctx, expiry)
 		if err != nil {
