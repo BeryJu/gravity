@@ -208,6 +208,8 @@ func (s *Scope) calculateUsage() {
 	usable := ips.Size()
 	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
 	used := big.NewInt(0)
+	s.role.leasesM.RLock()
+	defer s.role.leasesM.RUnlock()
 	for _, lease := range s.role.leases {
 		if lease.ScopeKey != s.Name {
 			continue
