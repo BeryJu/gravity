@@ -76,11 +76,6 @@ func (l *Lease) IsReservation() bool {
 }
 
 func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
-	raw, err := json.Marshal(&l)
-	if err != nil {
-		return err
-	}
-
 	if expiry > 0 && !l.IsReservation() {
 		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
@@ -89,6 +84,11 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 			return err
 		}
 		opts = append(opts, clientv3.WithLease(exp.ID))
+	}
+
+	raw, err := json.Marshal(&l)
+	if err != nil {
+		return err
 	}
 
 	leaseKey := l.inst.KV().Key(
