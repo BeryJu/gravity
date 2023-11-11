@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.17
+  version: 0.6.18
 servers:
 - url: /
 paths:
@@ -2134,6 +2134,7 @@ components:
         hostname: hostname
         address: address
         dnsZone: dnsZone
+        expiry: 0
         addressLeaseTime: addressLeaseTime
       properties:
         address:
@@ -2145,6 +2146,8 @@ components:
         dnsZone:
           maxLength: 255
           type: string
+        expiry:
+          type: integer
         hostname:
           maxLength: 255
           type: string

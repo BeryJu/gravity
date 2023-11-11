@@ -106,6 +106,7 @@ type APILeasesPutInput struct {
 	Hostname         string `json:"hostname" required:"true" maxLength:"255"`
 	AddressLeaseTime string `json:"addressLeaseTime" required:"true" maxLength:"40"`
 	DNSZone          string `json:"dnsZone" maxLength:"255"`
+	Expiry           int64  `json:"expiry"`
 }
 
 func (r *Role) APILeasesPut() usecase.Interactor {
@@ -134,6 +135,7 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 		l.AddressLeaseTime = input.AddressLeaseTime
 		l.ScopeKey = input.Scope
 		l.DNSZone = input.DNSZone
+		l.Expiry = input.Expiry
 		l.scope = scope
 		err = l.Put(ctx, -1)
 		if err != nil {

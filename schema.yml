@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.17
+  version: 0.6.18
 paths:
   /api/v1/auth/config:
     get:
@@ -1818,6 +1818,8 @@ components:
         dnsZone:
           maxLength: 255
           type: string
+        expiry:
+          type: integer
         hostname:
           maxLength: 255
           type: string
