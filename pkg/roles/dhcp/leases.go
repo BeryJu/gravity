@@ -34,7 +34,7 @@ type Lease struct {
 	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
 	DNSZone          string `json:"dnsZone,omitempty"`
-	Expiry           int64  `json:"expiration"`
+	Expiry           int64  `json:"expiry"`
 
 	etcdKey string
 }
@@ -59,10 +59,6 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	if err != nil {
 		return l, err
 	}
-	// Temporary: We used to store `Expiry` as time.Time but switched to int64
-	if l.Expiry < 0 {
-		l.Expiry = 0
-	}
 	l.etcdKey = string(raw.Key)
 
 	r.scopesM.RLock()
@@ -75,13 +71,17 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	return l, nil
 }
 
+func (l *Lease) IsReservation() bool {
+	return l.Expiry == -1
+}
+
 func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	raw, err := json.Marshal(&l)
 	if err != nil {
 		return err
 	}
 
-	if expiry > 0 {
+	if expiry > 0 && !l.IsReservation() {
 		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
 		exp, err := l.inst.KV().Lease.Grant(ctx, expiry)

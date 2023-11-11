@@ -85,10 +85,9 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             <ak-spinner-button
                 ?disabled=${disabled}
                 .callAction=${async () => {
-                    // To convert to a reservation, we just re-save the lease
-                    // which will auto-convert it
                     return Promise.all(
                         this.selectedElements.map((item) => {
+                            item.expiry = -1;
                             return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
                                 identifier: item.identifier,
                                 scope: this.scope,
@@ -147,7 +146,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`<pre>${item.address}</pre>`,
             html`<pre>${item.identifier}</pre>
                 ${item.info ? html` (${item.info.vendor})` : html``}`,
-            html`${(item.expiry || 0) <= 0
+            html`${(item.expiry || 0) <= -1
                 ? html`Reservation`
                 : new Date((item.expiry || 0) * 1000).toLocaleString()}`,
             html`<ak-forms-modal>
