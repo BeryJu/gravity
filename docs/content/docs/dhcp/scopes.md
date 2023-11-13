@@ -15,11 +15,13 @@ Afterwards, all matching scopes are sorted by the length of the Scope's CIDR Pre
 
 #### `subnetCidr`
 
-The CIDR this subnet is responsible for
+The subnet for which this scope is responsible.
 
 #### `default`
 
-Use this Subnet as a fallback scope when no match can be found
+Use this subnet as a fallback scope when no match can be found.
+
+Default: `false`
 
 #### `options`
 
@@ -36,7 +38,9 @@ More info and default values can be found [here](../options).
 
 #### `ttl`
 
-TTL for the leases created from the scope
+TTL in seconds for the leases created from the scope.
+
+Default: `86400`
 
 #### `ipam`
 
@@ -46,7 +50,7 @@ Key:value settings for the IPAM
 
 - `range_start`: Start of the range to give IPs from
 - `range_end`: End of the range to give IPs from
-- `should_ping`: Set to `"true"` to make gravity ping an IP before giving it out.
+- `should_ping`: Set to `"true"` to make Gravity ping an IP before giving it out.
 
 #### `dns`
 

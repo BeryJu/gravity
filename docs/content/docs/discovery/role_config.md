@@ -2,4 +2,4 @@
 title: "Role configuration"
 ---
 
-- `enabled`: Enable discovery (defaults to true)
+- `enabled`: Enable discovery (defaults to true).

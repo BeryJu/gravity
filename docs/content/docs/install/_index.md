@@ -5,7 +5,7 @@ weight: 5
 
 ### Installation
 
-#### docker-compose
+#### Docker Compose
 
 Create a file called `docker-compose.yml` in a new directory with the following content:
 
@@ -41,39 +41,39 @@ Run `docker compose up -d` to start gravity.
 
 ## First time use
 
-A default admin user is created on the first startup. You can find the credentials printed to stdout. You can access these by running `docker compose logs`.
+A default admin user is created on the first startup. You can find the credentials printed to stdout (accessible with `docker compose logs`).
 
 You can reach Gravity by going to `http://<server IP or hostname>:8008` in your browser.
 
 ### Configuration
 
-The following environment variables can be set
+The following environment variables can be set.
 
 ##### Common
 
-- `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap, defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
-- `LOG_LEVEL`: Log level, defaults to `info`.
-- `DATA_PATH`: Path to store etcd data, defaults to `./data`
-- `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to hostname. When running in docker, this is configured via the `hostname` attribute.
-- `INSTANCE_IP`: This instance's reachable IP, when running in docker and not using `network_mode: host`, this should be the hosts IP
-- `LISTEN_ONLY`: Enable listen-only mode which will not reply to any DHCP packets and not run discovery
+- `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
+- `LOG_LEVEL`: Log level. Defaults to `info`.
+- `DATA_PATH`: Path to store etcd data. Defaults to `./data`.
+- `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to the detected hostname. When running in Docker, this is configured via the `hostname` attribute.
+- `INSTANCE_IP`: This instance's reachable IP. When running in Docker and not using `network_mode: host`, this should be the host's IP.
+- `LISTEN_ONLY`: Enable listen-only mode. In listen-only mode, Gravity will not reply to any DHCP packets and will not run [discovery](../discovery).
 
 ##### Advanced
 
-- `DEBUG`: Enable debug mode, shouldn't be set manually in most cases and is only intended for development environments.
-- `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but can be set to override that (set to 0.0.0.0 in docker)
-- `ADMIN_PASSWORD`: Optionally set a default password for the admin user, if not set a random one will be generated
-- `ADMIN_TOKEN`: Optionally set a token to be created on first start, if not set no token will be created
-- `SENTRY_ENABLED`: Enable sentry error reporting and tracing
-- `SENTRY_DSN`: Configure a custom sentry DSN
-- `ETCD_PREFIX`: Global etcd prefix, defaults to `/gravity`
-- `ETCD_PEER_PORT`: Port used for etcd peer traffic, defaults to `2380`, this might need to be changed when running in Kubernetes.
-- `ETCD_ENDPOINT`: etcd Client endpoint, defaults to `localhost:2379` when using embedded etcd
-- `ETCD_JOIN_CLUSTER`: Used when joining a node to a cluster, value is given by join API endpoint
+- `DEBUG`: Enable debug mode. This should not be set manually in most cases and is only intended for development environments.
+- `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but this option will override that. Set to 0.0.0.0 when using Docker.
+- `ADMIN_PASSWORD`: Optionally set a default password for the admin user. If unset, a random password will be generated as described [above](#first-time-use).
+- `ADMIN_TOKEN`: Optionally set a token to be created on first start. If unset, no token will be created.
+- `SENTRY_ENABLED`: Enable Sentry error reporting and tracing. Defaults to `false`.
+- `SENTRY_DSN`: Configure a custom Sentry DSN.
+- `ETCD_PREFIX`: Global etcd prefix. Defaults to `/gravity`.
+- `ETCD_PEER_PORT`: Port used for etcd peer traffic. Defaults to `2380`. This may need to be changed when running in Kubernetes.
+- `ETCD_ENDPOINT`: etcd Client endpoint. Defaults to `localhost:2379` when using embedded etcd.
+- `ETCD_JOIN_CLUSTER`: Set to a join cluster token to join the node to a cluster. See [Clustering](./cluster).
 
-##### Changing Environmental variables
+##### Changing Environment Variables
 
-Environmental variables can be added by modifying the `environment:` options in the compose file. Gravity is made so you ideally don't have to set these.
+Gravity is designed so that you ideally don't have to explicitly define environment variables, but if necessary, environment variables can be added or changed by modifying the `environment:` options in the Docker Compose file.
 
 Example:
 ```yaml

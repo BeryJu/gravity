@@ -17,13 +17,13 @@ linkTitle = "Gravity"
 {{< /blocks/cover >}}
 
 {{% blocks/lead color="primary" %}}
-Gravity offers DNS with Ad-blocking, DHCP with automatic DNS integration, and network discovery. Built on the same code as CoreDNS and Blocky, the code is battle-tested. Additionally, Gravity's data is fully replicated, allowing you to have a simple multi-site setup without needing to managed external databases, or worry about primary-secondary setups.
+Gravity offers DNS with optional ad-blocking, DHCP with automatic DNS integration, and network discovery. Built on the same code as CoreDNS and Blocky, the code is battle-tested. Additionally, Gravity's data is fully replicated, allowing you to have a simple multi-site setup without needing to managed external databases, or worry about primary-secondary setups.
 {{% /blocks/lead %}}
 
 {{< blocks/section >}}
 <div class="col">
 	<h1 class="text-center">DNS</h1>
-	<p>DNS with built-in caching and ad/privacy blocking. The cache is replicated across all instances in a cluster, further increasing its effectiveness. Migration is also made very easy as Gravity can be setup as forwarder to forward requests to an existing DNS server, while also adding the records to its own database.</p>
+	<p>DNS with built-in caching and configurable ad/privacy blocking. The cache is replicated across all instances in a cluster, further increasing its effectiveness. Migration is also made very easy as Gravity can be setup as forwarder to forward requests to an existing DNS server, while also adding the records to its own database.</p>
 </div>
 <div class="col">
 	<img style="max-width: 100%;" src="./images/dns_zones.png" alt="">
@@ -33,17 +33,17 @@ Gravity offers DNS with Ad-blocking, DHCP with automatic DNS integration, and ne
 {{< blocks/section color="dark" >}}
 <div class="col">
 	<h1 class="text-center">DHCP</h1>
-	<img style="max-width: 100%;" src="./images/dhcp_leases.png" alt="">
+	<p>DHCP with automatic DNS registration, and as with the other features, full replication to all cluster members. Gravity can also import DHCP leases and reservations from Microsoft's DHCP server. Additionally, Gravity allows you to send WOL signals to devices right from its UI.</p>
 </div>
 <div class="col">
-	<p>DHCP with automatic DNS registration, and as with the other features, fully replicated. Gravity can also import DHCP leases and reservations from Microsoft's DHCP server. Additionally, Gravity allows you to send WOL signals to devices right from its UI.</p>
+	<img style="max-width: 100%;" src="./images/dhcp_leases.png" alt="">
 </div>
 {{< /blocks/section >}}
 
 {{< blocks/section >}}
 <div class="col">
 	<h1 class="text-center">Metrics</h1>
-	<p>Everyone loves graphs. Gravity keeps its own metrics of all instances in a cluster, giving you insight into the load and what clients are doing without requiring any extra setup.</p>
+	<p>Everyone loves graphs. Gravity keeps its own metrics for all instances in a cluster, giving you an insight into the load and what clients are doing without requiring any extra setup.</p>
 </div>
 <div class="col">
 	<img style="max-width: 100%;" src="./images/grafana.png" alt="">

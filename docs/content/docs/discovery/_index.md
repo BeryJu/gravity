@@ -2,7 +2,7 @@
 title: "Discovery"
 ---
 
-Gravity can run periodical scans of your network(s) to discover devices. These discovered devices can then be turned into DHCP Leases or DNS Records.
+Gravity can run periodical scans of your network(s) to discover devices. Once Gravity has discovered a device, you can create a DHCP lease and/or DNS record based on the discovered information.
 
 ### Concepts
 
@@ -10,10 +10,14 @@ Gravity can run periodical scans of your network(s) to discover devices. These d
 
 ##### Subnets
 
-Each subnet is a Layer3 network that Gravity will scan. A subnet defines a CIDR which will be scanned, and a TTL for how long discovered devices should be saved for.
+Each subnet is a layer 3 network. For each subnet, Gravity initiates a `nmap` ping scan to discover devices.
+
+A subnet defines a CIDR to be scanned, a TTL indicating how long discovered devices should be saved for, and an optional DNS resolver for the subnet.
 
 ##### Devices
 
-Each discovery is saved as a Device, which contains a MAC address, an IP Address and possibly a hostname.
+Each discovery is saved as a device. A device contains a MAC address, an IP address, and, if found, a hostname.
 
-Devices can be _applied_ to convert them into DHCP Leases, which will also create DNS Records if the DHCP scope has the DNS integration eanbled, or just DNS records without DHCP.
+Devices can be "applied" to initiate the creation of either a DHCP lease or a DNS record (or possibly both, see below) based on the discovered information.
+
+When you opt to create a DHCP lease while applying a device, a corresponding DNS record will also be generated, provided that the DHCP scope has the DNS integration configured (see [Scopes](../dhcp/scopes/#dns)).

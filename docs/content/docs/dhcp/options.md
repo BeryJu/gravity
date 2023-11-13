@@ -9,13 +9,13 @@ weight: 5
 
 The `tagName` corresponds to a human-readable name for a DHCP option tag; any of these tag names can be used:
 
-- `subnet_mask`
-- `router`
-- `time_server`
-- `name_server`
-- `domain_name`
-- `bootfile`
-- `tftp_server`
+- `subnet_mask` *(DHCP option 1)*
+- `router` *(DHCP option 3)*
+- `time_server` *(DHCP option 4)*
+- `name_server` *(DHCP option 6)*
+- `domain_name` *(DHCP option 15)*
+- `tftp_server` *(DHCP option 66)*
+- `bootfile` *(DHCP option 67)*
 
 *Conflicts with `tag`*
 
@@ -48,7 +48,7 @@ Set the value this option should be set to, encoded in base64. This allows for p
 
 ### `valueHex`:
 
-Set the value this option should be set to, encoded in Hexadecimal. This value should be set to an array of hex-strings, all of which are concatenated.
+Set the value this option should be set to, encoded in hexadecimal. This value should be set to an array of hex-strings, all of which are concatenated.
 
 Example:
 
