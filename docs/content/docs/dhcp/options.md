@@ -59,3 +59,25 @@ Example:
 ```
 
 *Conflicts with `value`*
+
+## Defaults
+
+Gravity applies some default options when not explicitly configured in the scope settings, but will always prefer user-configured settings if available.
+
+### DNS server
+
+- Tag name: `name_server`
+- Tag: `6`
+
+This option defaults to the IP address of the Gravity instance responding to a DHCPREQUEST.
+
+### Hostname
+
+- Tag: `12`
+
+This option defaults to the hostname provided by the client in the DHCPREQUEST.
+
+If the scope is configured with a domain name and `addZoneInHostname` is `true`, the domain name is appended to the client-provided hostname to form a fully qualified domain name (FQDN), as described [here](../scopes/#dns).
+
+- Example with scope default options: `somehost`
+- Example when scope has `addZoneInHostname` enabled: `somehost.example.com`
