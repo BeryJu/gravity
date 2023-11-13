@@ -69,7 +69,7 @@ Gravity applies some default options when not explicitly configured in the scope
 - Tag name: `subnet_mask`
 - Tag: `1`
 
-This option defaults to the CIDR configured for the scope.
+This option defaults to the subnet mask from the CIDR configured for the scope.
 
 ### DNS Server
 
