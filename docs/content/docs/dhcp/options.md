@@ -48,7 +48,7 @@ Set the value this option should be set to, encoded in base64. This allows for p
 
 ### `valueHex`:
 
-Set the value this option should be set to, encoded in Hexadecimal. This value should be set to an array of hex-strings, all of which are concatenated.
+Set the value this option should be set to, encoded in hexadecimal. This value should be set to an array of hex-strings, all of which are concatenated.
 
 Example:
 
