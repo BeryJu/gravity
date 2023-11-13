@@ -64,7 +64,14 @@ Example:
 
 Gravity applies some default options when not explicitly configured in the scope settings, but will always prefer user-configured settings if available.
 
-### DNS server
+### Subnet Mask
+
+- Tag name: `subnet_mask`
+- Tag: `1`
+
+This option defaults to the CIDR configured for the scope.
+
+### DNS Server
 
 - Tag name: `name_server`
 - Tag: `6`
@@ -81,3 +88,9 @@ If the scope is configured with a domain name and `addZoneInHostname` is `true`,
 
 - Example with scope default options: `somehost`
 - Example when scope has `addZoneInHostname` enabled: `somehost.example.com`
+
+### IP Address Lease Time
+
+- Tag: `51`
+
+This option defaults to the TTL configured for the scope.
