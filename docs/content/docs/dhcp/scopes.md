@@ -32,7 +32,7 @@ Example options:
   value: 10.1.2.3
 ```
 
-More info [here](./scopes.md).
+More info and default values can be found [here](../options).
 
 #### `ttl`
 
