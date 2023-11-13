@@ -50,7 +50,7 @@ Key:value settings for the IPAM
 
 - `range_start`: Start of the range to give IPs from
 - `range_end`: End of the range to give IPs from
-- `should_ping`: Set to `"true"` to make gravity ping an IP before giving it out.
+- `should_ping`: Set to `"true"` to make Gravity ping an IP before giving it out.
 
 #### `dns`
 

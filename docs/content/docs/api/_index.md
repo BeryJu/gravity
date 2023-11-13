@@ -14,7 +14,7 @@ A default admin user is created on the first startup. You can find the credentia
 
 #### CLI
 
-To create a new user, run the following command in the gravity container:
+To create a new user, run the following command in the Gravity container:
 
 ```
 gravity cli users add myusername

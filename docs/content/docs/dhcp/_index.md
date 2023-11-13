@@ -16,7 +16,7 @@ Gravity's DHCP Server supports:
 
 ##### Scopes
 
-A scope represents a single layer 2 network. Within a scope, gravity assumes to be the main and only DHCP server, when not in listen-only mode.
+A scope represents a single layer 2 network. Within a scope, Gravity assumes to be the main and only DHCP server, when not in listen-only mode.
 
 The scope for any particular request is found in the following way:
 

@@ -3,7 +3,7 @@ title: "Zone Handlers"
 weight: 1
 ---
 
-The order of handler matters, gravity will send the query to each handler in the order the are configured, until one of the handlers returns a response.
+The order of handler matters, Gravity will send the query to each handler in the order the are configured, until one of the handlers returns a response.
 
 The handler configuration consists of a list of individual handler configurations. All list entries require a `type` attributes, which must match with one of the headers listed below, for example:
 
