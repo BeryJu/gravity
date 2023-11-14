@@ -33,7 +33,7 @@
         "@types/chart.js": "^2.9.40",
         "@types/codemirror": "5.60.13",
         "@types/sha.js": "^2.4.4",
-        "@typescript-eslint/eslint-plugin": "^6.10.0",
+        "@typescript-eslint/eslint-plugin": "^6.11.0",
         "@typescript-eslint/parser": "^6.10.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "ansi-to-html": "^0.7.2",
