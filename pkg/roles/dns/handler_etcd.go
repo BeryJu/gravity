@@ -60,7 +60,7 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
 	for _, question := range r.Question {
-		relRecordName := strings.TrimSuffix(question.Name, utils.EnsureLeadingPeriod(eh.z.Name))
+		relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
 		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(relRecordName), dns.Type(question.Qtype).String())
 		ans := eh.lookupKey(fullRecordKey, question, r)
 		// If we don't find an answer for the direct key lookup, try a wildcard lookup
