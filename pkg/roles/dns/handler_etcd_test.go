@@ -142,3 +142,47 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	tests.WaitForPort(1054)
 	assert.Equal(t, []string{"10.1.2.3"}, tests.DNSLookup("foo.bar.", extconfig.Get().Listen(1054)))
 }
+
+func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
+	tests.ResetEtcd(t)
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			"TesT.",
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			"TesT.",
+			"bar",
+			types.DNSRecordTypeA,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data: "10.1.2.3",
+		}),
+	))
+
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	tests.WaitForPort(1054)
+	assert.Equal(t, []string{"10.1.2.3"}, tests.DNSLookup("bar.test.", extconfig.Get().Listen(1054)))
+}

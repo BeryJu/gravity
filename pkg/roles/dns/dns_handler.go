@@ -57,7 +57,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		ro.zonesM.RLock()
 		for name, zone := range ro.zones {
 			// Zone doesn't have the correct suffix for the question
-			if !strings.HasSuffix(question.Name, strings.ToLower(name)) {
+			if !strings.HasSuffix(strings.ToLower(question.Name), strings.ToLower(name)) {
 				continue
 			}
 			if len(name) > lastLongest {
