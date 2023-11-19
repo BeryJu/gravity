@@ -48,6 +48,17 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     required
                 />
             </ak-form-element-horizontal>
+            <ak-form-element-horizontal label="Cookie Secret" ?required=${true} name="cookieSecret">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.cookieSecret)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">
+                    Secret used to sign cookies.
+                </p>
+            </ak-form-element-horizontal>
             <ak-form-group ?expanded=${true}>
                 <span slot="header">OIDC</span>
                 <div slot="body" class="pf-c-form">

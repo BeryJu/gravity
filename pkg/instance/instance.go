@@ -343,7 +343,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 		i.log.Warn("failed to start role", zap.String("roleId", id), zap.Error(err))
 		return false
 	}
-	i.log.Debug("started role", zap.String("roleId", id))
+	i.log.Info("started role", zap.String("roleId", id))
 	i.DispatchEvent(types.EventTopicRoleStarted, roles.NewEvent(
 		srs.Context(),
 		map[string]interface{}{

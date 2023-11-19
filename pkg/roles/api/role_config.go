@@ -87,6 +87,9 @@ type APIRoleConfigInput struct {
 
 func (r *Role) APIRoleConfigPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleConfigInput, output *struct{}) error {
+		if input.Config.CookieSecret == "" {
+			input.Config.CookieSecret = r.cfg.CookieSecret
+		}
 		jc, err := json.Marshal(input.Config)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
