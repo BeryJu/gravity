@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"net"
+	"net/netip"
 	"strings"
 	"time"
 
@@ -34,9 +35,34 @@ type Lease struct {
 	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
 	DNSZone          string `json:"dnsZone,omitempty"`
-	Expiry           int64  `json:"expiry"`
+	// Set to -1 for a reservation
+	Expiry int64 `json:"expiry"`
 
 	etcdKey string
+}
+
+func (r *Role) FindLease(req *Request4) *Lease {
+	r.leasesM.RLock()
+	defer r.leasesM.RUnlock()
+	lease, ok := r.leases[r.DeviceIdentifier(req.DHCPv4)]
+	if !ok {
+		return nil
+	}
+	// Check if the leases's scope matches the expected scope to handle this request
+	expectedScope := r.findScopeForRequest(req)
+	if expectedScope != nil && lease.scope != expectedScope {
+		// We have a specific scope to handle this request but it doesn't match the lease
+		lease.scope = expectedScope
+		lease.setLeaseIP(req)
+		lease.log.Info("Re-assigning address for lease due to changed request scope", zap.String("newIP", lease.Address))
+		go func() {
+			err := lease.Put(req.Context, lease.scope.TTL)
+			if err != nil {
+				r.log.Warn("failed to update lease", zap.Error(err))
+			}
+		}()
+	}
+	return lease
 }
 
 func (r *Role) NewLease(identifier string) *Lease {
@@ -46,6 +72,27 @@ func (r *Role) NewLease(identifier string) *Lease {
 		log:        r.log.With(zap.String("identifier", identifier)),
 		Expiry:     0,
 	}
+}
+
+func (l *Lease) setLeaseIP(req *Request4) {
+	requestedIP := req.RequestedIPAddress()
+	if requestedIP != nil {
+		req.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
+		ip, err := netip.ParseAddr(requestedIP.String())
+		if err != nil {
+			req.log.Warn("failed to parse requested ip", zap.Error(err))
+		} else if l.scope.ipam.IsIPFree(ip) {
+			req.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
+			l.Address = requestedIP.String()
+			return
+		}
+	}
+	ip := l.scope.ipam.NextFreeAddress()
+	if ip == nil {
+		return
+	}
+	req.log.Debug("using next free IP from IPAM")
+	l.Address = ip.String()
 }
 
 func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
