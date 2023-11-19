@@ -6,12 +6,17 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	apiTypes "beryju.io/gravity/pkg/roles/api/types"
+	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
 
+type APIExportInput struct {
+	Safe bool `json:"safe"`
+}
 type APIExportOutput struct {
 	Entries []APITransportEntry `json:"entries"`
 }
@@ -20,17 +25,39 @@ type APITransportEntry struct {
 	Value string `json:"value"`
 }
 
+func (r *Role) ignoredPrefixes() []string {
+	return []string{
+		// Sensitive data (tokens, hashed passwords, sessions)
+		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeySessions).String(),
+		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeyTokens).String(),
+		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeyUsers).String(),
+		// Noisy data we don't need
+		r.i.KV().Key(tsdbTypes.KeyRole, tsdbTypes.KeySystem).String(),
+	}
+}
+
 func (r *Role) APIClusterExport() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIExportOutput) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIExportInput, output *APIExportOutput) error {
 		exps, err := r.i.KV().Get(ctx, "/", clientv3.WithPrefix())
 		if err != nil {
 			return err
 		}
-		output.Entries = make([]APITransportEntry, len(exps.Kvs))
-		for idx, exp := range exps.Kvs {
-			output.Entries[idx] = APITransportEntry{
-				Key:   strings.TrimPrefix(string(exp.Key), extconfig.Get().Etcd.Prefix),
-				Value: base64.StdEncoding.EncodeToString(exp.Value),
+		output.Entries = make([]APITransportEntry, 0)
+		for _, exp := range exps.Kvs {
+			relKey := strings.TrimPrefix(string(exp.Key), extconfig.Get().Etcd.Prefix)
+			shouldExport := true
+			if input.Safe {
+				for _, k := range r.ignoredPrefixes() {
+					if strings.HasPrefix(strings.ToLower(relKey), k) {
+						shouldExport = false
+					}
+				}
+			}
+			if shouldExport {
+				output.Entries = append(output.Entries, APITransportEntry{
+					Key:   relKey,
+					Value: base64.StdEncoding.EncodeToString(exp.Value),
+				})
 			}
 		}
 		return nil

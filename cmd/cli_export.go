@@ -4,15 +4,20 @@ import (
 	"encoding/json"
 	"os"
 
+	"beryju.io/gravity/api"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
+
+var exportSafe = false
 
 var exportCmd = &cobra.Command{
 	Use:   "export [file]",
 	Short: "Output entire database into JSON file",
 	Run: func(cmd *cobra.Command, args []string) {
-		exp, _, err := apiClient.RolesApiApi.ApiExport(cmd.Context()).Execute()
+		exp, _, err := apiClient.RolesApiApi.ApiExport(cmd.Context()).ApiAPIExportInput(api.ApiAPIExportInput{
+			Safe: &exportSafe,
+		}).Execute()
 		if err != nil {
 			logger.Error("failed to export", zap.Error(err))
 			return
@@ -37,5 +42,6 @@ var exportCmd = &cobra.Command{
 }
 
 func init() {
+	exportCmd.Flags().BoolVar(&exportSafe, "safe", false, "Export only safe values")
 	cliCmd.AddCommand(exportCmd)
 }

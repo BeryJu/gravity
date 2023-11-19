@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**ApiAuthConfig**](RolesApiApi.md#ApiAuthConfig) | **Get** /api/v1/auth/config | API Users
 [**ApiDeleteTokens**](RolesApiApi.md#ApiDeleteTokens) | **Delete** /api/v1/auth/tokens | Tokens
 [**ApiDeleteUsers**](RolesApiApi.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
-[**ApiExport**](RolesApiApi.md#ApiExport) | **Get** /api/v1/cluster/export | Export Cluster
+[**ApiExport**](RolesApiApi.md#ApiExport) | **Post** /api/v1/cluster/export | Export Cluster
 [**ApiGetLogMessages**](RolesApiApi.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
 [**ApiGetMembers**](RolesApiApi.md#ApiGetMembers) | **Get** /api/v1/etcd/members | Etcd members
 [**ApiGetMetricsCpu**](RolesApiApi.md#ApiGetMetricsCpu) | **Get** /api/v1/system/metrics/cpu | System Metrics
@@ -212,7 +212,7 @@ No authorization required
 
 ## ApiExport
 
-> ApiAPIExportOutput ApiExport(ctx).Execute()
+> ApiAPIExportOutput ApiExport(ctx).ApiAPIExportInput(apiAPIExportInput).Execute()
 
 Export Cluster
 
@@ -229,10 +229,11 @@ import (
 )
 
 func main() {
+    apiAPIExportInput := *openapiclient.NewApiAPIExportInput() // ApiAPIExportInput |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiExport(context.Background()).Execute()
+    resp, r, err := apiClient.RolesApiApi.ApiExport(context.Background()).ApiAPIExportInput(apiAPIExportInput).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiExport``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -244,12 +245,16 @@ func main() {
 
 ### Path Parameters
 
-This endpoint does not need any parameter.
+
 
 ### Other Parameters
 
 Other parameters are passed through a pointer to a apiApiExportRequest struct via the builder pattern
 
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **apiAPIExportInput** | [**ApiAPIExportInput**](ApiAPIExportInput.md) |  | 
 
 ### Return type
 
@@ -261,7 +266,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

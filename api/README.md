@@ -83,7 +83,7 @@ Class | Method | HTTP request | Description
 *RolesApiApi* | [**ApiAuthConfig**](docs/RolesApiApi.md#apiauthconfig) | **Get** /api/v1/auth/config | API Users
 *RolesApiApi* | [**ApiDeleteTokens**](docs/RolesApiApi.md#apideletetokens) | **Delete** /api/v1/auth/tokens | Tokens
 *RolesApiApi* | [**ApiDeleteUsers**](docs/RolesApiApi.md#apideleteusers) | **Delete** /api/v1/auth/users | API Users
-*RolesApiApi* | [**ApiExport**](docs/RolesApiApi.md#apiexport) | **Get** /api/v1/cluster/export | Export Cluster
+*RolesApiApi* | [**ApiExport**](docs/RolesApiApi.md#apiexport) | **Post** /api/v1/cluster/export | Export Cluster
 *RolesApiApi* | [**ApiGetLogMessages**](docs/RolesApiApi.md#apigetlogmessages) | **Get** /api/v1/cluster/node/logs | Log messages
 *RolesApiApi* | [**ApiGetMembers**](docs/RolesApiApi.md#apigetmembers) | **Get** /api/v1/etcd/members | Etcd members
 *RolesApiApi* | [**ApiGetMetricsCpu**](docs/RolesApiApi.md#apigetmetricscpu) | **Get** /api/v1/system/metrics/cpu | System Metrics
@@ -140,6 +140,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [ApiAPIExportInput](docs/ApiAPIExportInput.md)
  - [ApiAPIExportOutput](docs/ApiAPIExportOutput.md)
  - [ApiAPIImportInput](docs/ApiAPIImportInput.md)
  - [ApiAPILogMessage](docs/ApiAPILogMessage.md)

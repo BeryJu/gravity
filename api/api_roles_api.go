@@ -342,8 +342,14 @@ func (a *RolesApiApiService) ApiDeleteUsersExecute(r ApiApiDeleteUsersRequest) (
 }
 
 type ApiApiExportRequest struct {
-	ctx        context.Context
-	ApiService *RolesApiApiService
+	ctx               context.Context
+	ApiService        *RolesApiApiService
+	apiAPIExportInput *ApiAPIExportInput
+}
+
+func (r ApiApiExportRequest) ApiAPIExportInput(apiAPIExportInput ApiAPIExportInput) ApiApiExportRequest {
+	r.apiAPIExportInput = &apiAPIExportInput
+	return r
 }
 
 func (r ApiApiExportRequest) Execute() (*ApiAPIExportOutput, *http.Response, error) {
@@ -368,7 +374,7 @@ func (a *RolesApiApiService) ApiExport(ctx context.Context) ApiApiExportRequest 
 //	@return ApiAPIExportOutput
 func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExportOutput, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
+		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
 		localVarReturnValue *ApiAPIExportOutput
@@ -386,7 +392,7 @@ func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExp
 	localVarFormParams := url.Values{}
 
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
+	localVarHTTPContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -402,6 +408,8 @@ func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	// body params
+	localVarPostBody = r.apiAPIExportInput
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

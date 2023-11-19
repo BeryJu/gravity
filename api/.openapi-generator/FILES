@@ -13,6 +13,7 @@ api_roles_monitoring.go
 api_roles_tsdb.go
 client.go
 configuration.go
+docs/ApiAPIExportInput.md
 docs/ApiAPIExportOutput.md
 docs/ApiAPIImportInput.md
 docs/ApiAPILogMessage.md
@@ -106,6 +107,7 @@ docs/TypesOIDCConfig.md
 git_push.sh
 go.mod
 go.sum
+model_api_api_export_input.go
 model_api_api_export_output.go
 model_api_api_import_input.go
 model_api_api_log_message.go

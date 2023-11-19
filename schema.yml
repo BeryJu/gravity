@@ -244,8 +244,13 @@ paths:
       tags:
       - roles/backup
   /api/v1/cluster/export:
-    get:
+    post:
       operationId: api.export
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiAPIExportInput'
       responses:
         "200":
           content:
@@ -1433,6 +1438,11 @@ paths:
       - roles/api
 components:
   schemas:
+    ApiAPIExportInput:
+      properties:
+        safe:
+          type: boolean
+      type: object
     ApiAPIExportOutput:
       properties:
         entries:
