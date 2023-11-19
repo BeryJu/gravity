@@ -29,7 +29,7 @@ func TestExport(t *testing.T) {
 	)
 	assert.NoError(t, err)
 
-	err = role.APIClusterExport().Interact(ctx, struct{}{}, &output)
+	err = role.APIClusterExport().Interact(ctx, api.APIExportInput{}, &output)
 	assert.NoError(t, err)
 	assert.Equal(t, api.APIExportOutput{
 		Entries: []api.APITransportEntry{
