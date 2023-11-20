@@ -36,7 +36,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		context.TODO(),
 		"gravity.dns.request",
 	)
-	var clientIP = ""
+	clientIP := ""
 	switch addr := w.RemoteAddr().(type) {
 	case *net.UDPAddr:
 		clientIP = addr.IP.String()

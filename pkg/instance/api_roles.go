@@ -12,8 +12,7 @@ import (
 type APIRoleRestartInput struct {
 	ID string `json:"roleId"`
 }
-type APIRoleRestartOutput struct {
-}
+type APIRoleRestartOutput struct{}
 
 func (i *Instance) APIClusterRoleRestart() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleRestartInput, output *APIRoleRestartOutput) error {
