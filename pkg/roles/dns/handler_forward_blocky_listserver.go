@@ -11,8 +11,10 @@ import (
 
 var blockyListListening = false
 
-const blockyListAddr = "127.0.0.1:8100"
-const blockyListBase = "http://" + blockyListAddr + "/blocky/"
+const (
+	blockyListAddr = "127.0.0.1:8100"
+	blockyListBase = "http://" + blockyListAddr + "/blocky/"
+)
 
 func (bfwd *BlockyForwarder) startBlockyListServer() {
 	if blockyListListening {

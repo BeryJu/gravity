@@ -29,6 +29,7 @@ func (iml *inMemoryLogger) flush() {
 		iml.msgM.Unlock()
 	}()
 }
+
 func (iml *inMemoryLogger) Write(log []byte) (int, error) {
 	n, err := iml.lineBuf.Write(log)
 	if strings.Contains(string(log), "\n") {
@@ -36,6 +37,7 @@ func (iml *inMemoryLogger) Write(log []byte) (int, error) {
 	}
 	return n, err
 }
+
 func (iml *inMemoryLogger) Messages() []string {
 	iml.msgM.RLock()
 	defer iml.msgM.RUnlock()
