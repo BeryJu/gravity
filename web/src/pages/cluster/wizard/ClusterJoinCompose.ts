@@ -57,11 +57,9 @@ export class ClusterJoinCompose extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`
-            <form class="pf-c-form pf-m-horizontal">
-                <p>Use the compose file below to deploy the new gravity node.</p>
-                <ak-codemirror mode="yaml" value="${YAML.stringify(this.renderCompose())}">
-                </ak-codemirror>
-            </form>
+            <p>Use the compose file below to deploy the new gravity node.</p>
+            <ak-codemirror mode="yaml" value="${YAML.stringify(this.renderCompose())}">
+            </ak-codemirror>
         `;
     }
 }

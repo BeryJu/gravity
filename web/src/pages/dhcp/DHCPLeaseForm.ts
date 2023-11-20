@@ -58,8 +58,11 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label="Identifier" ?required=${true} name="identifier">
+        return html` <ak-form-element-horizontal
+                label="Identifier"
+                ?required=${true}
+                name="identifier"
+            >
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.identifier)}"
@@ -82,7 +85,6 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
                     class="pf-c-form-control"
                     required
                 />
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }

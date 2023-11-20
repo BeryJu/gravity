@@ -32,8 +32,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal name="enabled">
+        return html` <ak-form-element-horizontal name="enabled">
                 <div class="pf-c-check">
                     <input
                         type="checkbox"
@@ -65,7 +64,6 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
                     Interval in seconds of how often metrics are collected and written to the
                     database.
                 </p>
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }

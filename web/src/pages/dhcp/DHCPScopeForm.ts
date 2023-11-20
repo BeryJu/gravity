@@ -57,8 +57,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            ${this.instance
+        return html` ${this.instance
                 ? html``
                 : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
                       <input type="text" class="pf-c-form-control" required />
@@ -169,7 +168,6 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         </ak-codemirror>
                     </ak-form-element-horizontal>
                 </div>
-            </ak-form-group>
-        </form>`;
+            </ak-form-group>`;
     }
 }

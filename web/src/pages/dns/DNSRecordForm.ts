@@ -72,8 +72,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     }
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label="Hostname" ?required=${true} name="hostname">
+        return html` <ak-form-element-horizontal label="Hostname" ?required=${true} name="hostname">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.hostname)}"
@@ -169,7 +168,6 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                           />
                       </ak-form-element-horizontal>
                   `
-                : html``}
-        </form>`;
+                : html``}`;
     }
 }
