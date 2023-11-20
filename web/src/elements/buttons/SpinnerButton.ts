@@ -17,7 +17,7 @@ export class SpinnerButton extends AKElement {
     @property()
     callAction?: () => Promise<unknown>;
 
-    @property({type: Boolean})
+    @property({ type: Boolean })
     disabled = false;
 
     static get styles(): CSSResult[] {
