@@ -1,6 +1,6 @@
 {
     "name": "@beryju/gravity-web",
-    "version": "0.6.19",
+    "version": "0.7.0",
     "description": "",
     "scripts": {
         "build": "rm -rf dist/ && rollup -c",
@@ -47,7 +47,7 @@
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-custom-elements": "0.0.8",
         "eslint-plugin-lit": "^1.10.1",
-        "gravity-api": "^0.6.19",
+        "gravity-api": "^0.7.0",
         "lit": "^2.8.0",
         "moment": "^2.29.4",
         "prettier": "^3.1.0",
