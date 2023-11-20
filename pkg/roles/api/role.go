@@ -135,6 +135,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 }
 
 func (r *Role) ListenAndServeHTTP() {
+	r.httpServer = http.Server{}
 	r.httpServer.Handler = r.m
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	if r.cfg.ListenOverride != "" {
@@ -154,6 +155,7 @@ func (r *Role) ListenAndServeSocket() {
 		r.log.Info("/var/run doesn't exist or is not a dir, not starting socket API server")
 		return
 	}
+	r.socketServer = http.Server{}
 	r.socketServer.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		ctx := context.WithValue(req.Context(), types.RequestSession, &sessions.Session{
 			Values: map[interface{}]interface{}{
@@ -195,4 +197,9 @@ func (r *Role) Stop() {
 	if err != nil {
 		r.log.Warn("failed to shutdown socket server", zap.Error(err))
 	}
+	socketPath := path.Join(VAR_RUN, GRAVITY_SOCK)
+	if extconfig.Get().Debug {
+		socketPath = path.Join("./", GRAVITY_SOCK)
+	}
+	os.Remove(socketPath)
 }
