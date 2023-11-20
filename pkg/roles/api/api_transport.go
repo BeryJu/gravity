@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"github.com/swaggest/usecase"
@@ -31,6 +32,8 @@ func (r *Role) ignoredPrefixes() []string {
 		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeySessions).String(),
 		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeyTokens).String(),
 		r.i.KV().Key(apiTypes.KeyRole, apiTypes.KeyUsers).String(),
+		// Contains API role config (cookie secret, OIDC config)
+		r.i.KV().Key(instanceTypes.KeyInstance, instanceTypes.KeyRole, apiTypes.KeyRole).String(),
 		// Noisy data we don't need
 		r.i.KV().Key(tsdbTypes.KeyRole, tsdbTypes.KeySystem).String(),
 	}

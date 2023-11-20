@@ -29,7 +29,9 @@ func TestExport(t *testing.T) {
 	)
 	assert.NoError(t, err)
 
-	err = role.APIClusterExport().Interact(ctx, api.APIExportInput{}, &output)
+	err = role.APIClusterExport().Interact(ctx, api.APIExportInput{
+		Safe: true,
+	}, &output)
 	assert.NoError(t, err)
 	assert.Equal(t, api.APIExportOutput{
 		Entries: []api.APITransportEntry{
