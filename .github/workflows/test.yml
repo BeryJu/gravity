@@ -26,13 +26,10 @@ jobs:
         run: |
           npm ci
           npm run build
-      - name: Setup test env
-        run: make test-env-start
-      - name: Run tests & coverage
-        run: |
-          make install-deps test
-      - name: Stop test env
-        if: ${{ always() }}
+      - run: make test-env-start
+      - run: make install-deps
+      - run: make test
+      - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
         uses: codecov/codecov-action@v3
@@ -55,10 +52,7 @@ jobs:
         run: |
           npm ci
           npm run build
-      - name: Install deps
-        run: |
-          make install-deps
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+      - run: make install-deps
+      - uses: golangci/golangci-lint-action@v3
         with:
           args: --timeout 5000s
