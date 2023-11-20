@@ -37,6 +37,7 @@ type ExtConfig struct {
 
 	Debug          bool `env:"DEBUG,default=false"`
 	ListenOnlyMode bool `env:"LISTEN_ONLY,default=false"`
+	CI             bool `env:"CI"`
 }
 
 type ExtConfigDirs struct {

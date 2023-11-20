@@ -114,8 +114,8 @@ func (i *Instance) startEtcd(ctx context.Context) bool {
 }
 
 func (i *Instance) startSentry() {
-	if extconfig.Get().Sentry.Enabled {
-		extconfig.Get().Sentry.DSN = ""
+	if !extconfig.Get().Sentry.Enabled || extconfig.Get().CI {
+		return
 	}
 	release := fmt.Sprintf("gravity@%s", extconfig.FullVersion())
 	rate := 0.5
