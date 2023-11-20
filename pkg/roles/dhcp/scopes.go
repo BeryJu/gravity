@@ -135,35 +135,13 @@ func (s *Scope) match(peer net.IP) int {
 
 func (s *Scope) createLeaseFor(req *Request4) *Lease {
 	ident := s.role.DeviceIdentifier(req.DHCPv4)
-	lease := &Lease{
-		Identifier: ident,
+	lease := s.role.NewLease(ident)
+	lease.Hostname = req.HostName()
 
-		Hostname: req.HostName(),
-		ScopeKey: s.Name,
-
-		inst:  s.inst,
-		log:   req.log.With(zap.String("lease", ident)),
-		scope: s,
-	}
-	requestedIP := req.RequestedIPAddress()
-	if requestedIP != nil {
-		req.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
-		ip, err := netip.ParseAddr(requestedIP.String())
-		if err != nil {
-			req.log.Warn("failed to parse requested ip", zap.Error(err))
-		} else if s.ipam.IsIPFree(ip) {
-			req.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
-			lease.Address = requestedIP.String()
-		}
-	}
-	if lease.Address == "" {
-		ip := s.ipam.NextFreeAddress()
-		if ip == nil {
-			return nil
-		}
-		lease.Address = ip.String()
-	}
-	req.log.Info("creating new DHCP lease", zap.String("ip", requestedIP.String()), zap.String("lease", ident))
+	lease.scope = s
+	lease.ScopeKey = s.Name
+	lease.setLeaseIP(req)
+	req.log.Info("creating new DHCP lease", zap.String("ip", lease.Address), zap.String("identifier", ident))
 	return lease
 }
 

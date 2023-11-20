@@ -1,6 +1,7 @@
 package dhcp_test
 
 import (
+	"net"
 	"testing"
 	"time"
 
@@ -127,4 +128,88 @@ func TestDHCPRequestDNS(t *testing.T) {
 	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 	assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
+}
+
+func TestDHCPRequestDNS_ChangedScope(t *testing.T) {
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+	Cleanup()
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			DNS: &dhcp.ScopeDNS{
+				Zone:              "test.gravity.beryju.io",
+				AddZoneInHostname: true,
+			},
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test2",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.200.0.0/24",
+			TTL:        86400,
+			DNS: &dhcp.ScopeDNS{
+				Zone:              "test2.gravity.beryju.io",
+				AddZoneInHostname: true,
+			},
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.200.0.100",
+				"range_end":   "10.200.0.250",
+			},
+		}),
+	))
+
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
+	defer role.Stop()
+
+	// First ensure the lease is created as we expect
+	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
+	assert.NoError(t, err)
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+	assert.Equal(t, "test.gravity.beryju.io", res.DomainName())
+
+	// Now we're requesting an IP from another subnet, so the lease should move
+	req.GatewayIPAddr = net.ParseIP("10.200.0.1")
+	req4 = role.NewRequest4(req)
+	res = role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.200.0.100", res.YourIPAddr.String())
+	ones, bits = res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+	assert.Equal(t, "test2.gravity.beryju.io", res.DomainName())
 }

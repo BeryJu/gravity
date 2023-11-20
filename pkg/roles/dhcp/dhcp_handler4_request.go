@@ -31,13 +31,3 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 	rep.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 	return rep
 }
-
-func (r *Role) FindLease(req *Request4) *Lease {
-	r.leasesM.RLock()
-	defer r.leasesM.RUnlock()
-	lease, ok := r.leases[r.DeviceIdentifier(req.DHCPv4)]
-	if !ok {
-		return nil
-	}
-	return lease
-}
