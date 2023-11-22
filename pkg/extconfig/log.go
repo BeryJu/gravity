@@ -7,7 +7,7 @@ import (
 )
 
 func (e *ExtConfig) Logger() *zap.Logger {
-	return e.logger.Named("extconfig")
+	return e.logger
 }
 
 func (e *ExtConfig) BuildLogger() *zap.Logger {
