@@ -14,8 +14,6 @@ import (
 
 const EtcdType = "etcd"
 
-const CNameRecursionMax = 10
-
 type EtcdHandler struct {
 	log *zap.Logger
 	z   *Zone
@@ -34,7 +32,7 @@ func (eh *EtcdHandler) Identifier() string {
 }
 
 // lookupKey Lookup direct key and fetch all UID entries below it
-func (eh *EtcdHandler) lookupKey(k *storage.Key, question dns.Question, r *utils.DNSRequest) []dns.RR {
+func (eh *EtcdHandler) lookupKey(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 	answers := []dns.RR{}
 	es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 	defer es.Finish()
@@ -50,7 +48,7 @@ func (eh *EtcdHandler) lookupKey(k *storage.Key, question dns.Question, r *utils
 		if err != nil {
 			continue
 		}
-		ans := rec.ToDNS(question.Name)
+		ans := rec.ToDNS(qname)
 		if ans != nil {
 			answers = append(answers, ans)
 		}
@@ -68,7 +66,7 @@ func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, q
 		// since we replace from left to right)
 		wildcardName = strings.Replace(wildcardName, part, types.DNSWildcard, 1)
 		wildcardKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(wildcardName), dns.Type(question.Qtype).String())
-		wildcardAns := eh.lookupKey(wildcardKey, question, r)
+		wildcardAns := eh.lookupKey(wildcardKey, question.Name, r)
 		// If we do get an answer from this wildcard key, stop going further
 		if len(wildcardAns) > 0 {
 			return wildcardAns
@@ -77,12 +75,8 @@ func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, q
 	return []dns.RR{}
 }
 
-func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSRequest, level int) []dns.RR {
+func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSRequest) []dns.RR {
 	answers := []dns.RR{}
-	if level >= CNameRecursionMax {
-		eh.log.Info("stopping cname recursion at level", zap.Int("max", CNameRecursionMax))
-		return answers
-	}
 	relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
 	directRecordKey := eh.z.inst.KV().Key(
 		eh.z.etcdKey,
@@ -101,33 +95,9 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 	// Look for direct matches first
 	answers = append(answers, eh.lookupKey(
 		directRecordKey,
-		question,
+		question.Name,
 		r,
 	)...)
-	// Look for CNAMEs
-	// This section has room for optimization, as for we currently check for the existence
-	// of CNAMEs for each question, which is a bit pointless if there are questions for foo.bar/A
-	// and foo.bar/AAAA, and we also do the recursion for each question
-	cnames := eh.lookupKey(
-		eh.z.inst.KV().Key(
-			eh.z.etcdKey,
-			strings.ToLower(relRecordName),
-			dns.Type(dns.TypeCNAME).String(),
-		),
-		question,
-		r,
-	)
-	if len(cnames) > 0 {
-		answers = append(answers, cnames...)
-		// For each cname, lookup the actual record
-		for _, _cn := range cnames {
-			cn := _cn.(*dns.CNAME)
-			nq := dns.Question{
-				Name: cn.Target,
-			}
-			answers = append(answers, eh.handleSingleQuestion(nq, r, level+1)...)
-		}
-	}
 	// If we don't find an answer for the direct key lookup, try a wildcard lookup
 	if len(answers) < 1 {
 		answers = append(answers, eh.findWildcard(r, relRecordName, question)...)
@@ -138,8 +108,34 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
 	m := new(dns.Msg)
 	m.Authoritative = eh.z.Authoritative
+	uniqueQuestionNames := map[string]struct{}{}
 	for _, question := range r.Question {
-		m.Answer = append(m.Answer, eh.handleSingleQuestion(question, r, 0)...)
+		m.Answer = append(m.Answer, eh.handleSingleQuestion(question, r)...)
+		uniqueQuestionNames[question.Name] = struct{}{}
+	}
+	for un := range uniqueQuestionNames {
+		// Look for CNAMEs
+		relRecordName := strings.TrimSuffix(strings.ToLower(un), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
+		cnames := eh.lookupKey(
+			eh.z.inst.KV().Key(
+				eh.z.etcdKey,
+				strings.ToLower(relRecordName),
+				dns.Type(dns.TypeCNAME).String(),
+			),
+			un,
+			r,
+		)
+		if len(cnames) > 0 {
+			m.Answer = append(m.Answer, cnames...)
+			// For each cname, lookup the actual record
+			for _, _cn := range cnames {
+				cn := _cn.(*dns.CNAME)
+				nq := dns.Question{
+					Name: cn.Target,
+				}
+				m.Answer = append(m.Answer, eh.handleSingleQuestion(nq, r)...)
+			}
+		}
 	}
 	if len(m.Answer) < 1 {
 		return nil
