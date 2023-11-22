@@ -105,6 +105,9 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 		r,
 	)...)
 	// Look for CNAMEs
+	// This section has room for optimization, as for we currently check for the existence
+	// of CNAMEs for each question, which is a bit pointless if there are questions for foo.bar/A
+	// and foo.bar/AAAA, and we also do the recursion for each question
 	cnames := eh.lookupKey(
 		eh.z.inst.KV().Key(
 			eh.z.etcdKey,
@@ -122,7 +125,6 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 			nq := dns.Question{
 				Name: cn.Target,
 			}
-			eh.log.Debug(cn.Header().Name)
 			answers = append(answers, eh.handleSingleQuestion(nq, r, level+1)...)
 		}
 	}
