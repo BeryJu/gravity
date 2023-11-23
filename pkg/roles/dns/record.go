@@ -64,15 +64,35 @@ func (z *Zone) newRecord(name string, t string) *Record {
 	}
 }
 
-func (r *Record) ToDNS(qname string, t uint16) dns.RR {
+func (r *Record) RRType() uint16 {
+	switch strings.ToLower(r.Type) {
+	case "a":
+		return dns.TypeA
+	case "aaaa":
+		return dns.TypeAAAA
+	case "ptr":
+		return dns.TypePTR
+	case "srv":
+		return dns.TypeSRV
+	case "mx":
+		return dns.TypeMX
+	case "cname":
+		return dns.TypeCNAME
+	case "txt":
+		return dns.TypeTXT
+	}
+	return dns.TypeNone
+}
+
+func (r *Record) ToDNS(qname string) dns.RR {
 	hdr := dns.RR_Header{
 		Name:   qname,
-		Rrtype: t,
+		Rrtype: r.RRType(),
 		Class:  dns.ClassINET,
 		Ttl:    r.TTL,
 	}
 	var rr dns.RR
-	switch t {
+	switch r.RRType() {
 	case dns.TypeA:
 		rr = &dns.A{}
 		rr.(*dns.A).Hdr = hdr

@@ -45,7 +45,7 @@ func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dn
 			}
 			eh.log.Debug("got record in in-memory cache", zap.String("key", fullRecordKey))
 			for _, rec := range recs {
-				ans := rec.ToDNS(question.Name, question.Qtype)
+				ans := rec.ToDNS(question.Name)
 				if ans != nil {
 					m.Answer = append(m.Answer, ans)
 				}

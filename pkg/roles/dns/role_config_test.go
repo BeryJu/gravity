@@ -14,7 +14,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	var output dns.APIRoleConfigOutput
@@ -27,7 +27,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
-	tests.PanicIfError(role.Start(ctx, []byte{}))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, dns.APIRoleConfigInput{

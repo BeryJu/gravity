@@ -99,6 +99,65 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	assert.Equal(t, []string{"10.1.2.3"}, tests.DNSLookup("foo.", extconfig.Get().Listen(1054)))
 }
 
+func TestRoleDNS_Etcd_CNAME(t *testing.T) {
+	tests.ResetEtcd(t)
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			"test.",
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			"test.",
+			"foo",
+			types.DNSRecordTypeCNAME,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data: "bar.test.",
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			"test.",
+			"bar",
+			types.DNSRecordTypeA,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data: "10.2.3.4",
+		}),
+	))
+
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	tests.WaitForPort(1054)
+	assert.Equal(t, []string{"10.2.3.4"}, tests.DNSLookup("bar.test.", extconfig.Get().Listen(1054)))
+	assert.Equal(t, []string{"10.2.3.4"}, tests.DNSLookup("foo.test.", extconfig.Get().Listen(1054)))
+}
+
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	tests.ResetEtcd(t)
 	rootInst := instance.New()

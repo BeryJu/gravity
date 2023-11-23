@@ -21,7 +21,7 @@ func TestRoleDNSStartNoConfig(t *testing.T) {
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 	assert.NotNil(t, role)
-	assert.Nil(t, role.Start(ctx, []byte{}))
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	role.Stop()
 }
 
