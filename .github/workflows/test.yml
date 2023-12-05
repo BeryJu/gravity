@@ -30,6 +30,11 @@ jobs:
       - run: make install-deps
       - run: make test
       - if: ${{ always() }}
+        uses: guyarb/golang-test-annotations@v0.5.1
+        with:
+          test-results: tests.json
+          package-name: beryju.io/gravity
+      - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
         uses: codecov/codecov-action@v3

@@ -4,3 +4,4 @@ coverage.txt
 coverage.html
 *.pcap
 *.sock
+tests.json

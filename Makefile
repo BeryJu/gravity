@@ -154,5 +154,5 @@ test: internal/resources/macoui internal/resources/blocky
 	export DEBUG="true"
 	export LISTEN_ONLY="true"
 	go run -v . cli etcdctl del --prefix /
-	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=${TEST_COUNT} ${TEST_FLAGS} ./...
+	go test -p 1 -coverprofile=coverage.txt -covermode=atomic -count=${TEST_COUNT} ${TEST_FLAGS} -json ./... > tests.json
 	go tool cover -html coverage.txt -o coverage.html
