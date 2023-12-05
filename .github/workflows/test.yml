@@ -30,6 +30,12 @@ jobs:
       - run: make install-deps
       - run: make test
       - if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-test-result
+          path: |
+            tests.json
+      - if: ${{ always() }}
         uses: guyarb/golang-test-annotations@v0.5.1
         with:
           test-results: tests.json
