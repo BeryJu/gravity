@@ -30,16 +30,16 @@ jobs:
       - run: make install-deps
       - run: make test
       - if: ${{ always() }}
+        run: |
+          go get -u github.com/vakenbolt/go-test-report
+          cat tests.json | go-test-report
+      - if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: go-test-result
           path: |
             tests.json
-      - if: ${{ always() }}
-        uses: guyarb/golang-test-annotations@v0.7.0
-        with:
-          test-results: tests.json
-          package-name: beryju.io/gravity
+            test_report.html
       - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
