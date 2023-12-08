@@ -31,8 +31,8 @@ jobs:
       - run: make test
       - if: ${{ always() }}
         run: |
-          go get -u github.com/vakenbolt/go-test-report
-          cat tests.json | go-test-report
+          go install github.com/vakenbolt/go-test-report@latest
+          cat tests.json | $(go env GOPATH)/bin/go-test-report
       - if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:

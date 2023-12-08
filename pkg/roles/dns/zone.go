@@ -242,7 +242,7 @@ func (z *Zone) watchZoneRecords(ctx context.Context) {
 }
 
 func (z *Zone) StopWatchingRecords() {
-	if z.recordsWatchCtx != nil {
+	if z != nil && z.recordsWatchCtx != nil {
 		z.recordsWatchCtx()
 	}
 }
