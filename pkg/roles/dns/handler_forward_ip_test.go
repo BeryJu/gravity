@@ -14,6 +14,7 @@ import (
 )
 
 func TestRoleDNS_IPForwarder_v4(t *testing.T) {
+	tests.ResetEtcd(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
