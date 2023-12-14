@@ -33,6 +33,7 @@ jobs:
         run: |
           go install github.com/vakenbolt/go-test-report@latest
           cat tests.json | $(go env GOPATH)/bin/go-test-report
+          cat test_report.html > $GITHUB_STEP_SUMMARY
       - if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
