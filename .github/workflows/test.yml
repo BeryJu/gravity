@@ -35,7 +35,7 @@ jobs:
           cat tests.json | $(go env GOPATH)/bin/go-test-report
           cat test_report.html > $GITHUB_STEP_SUMMARY
       - if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: go-test-result
           path: |
