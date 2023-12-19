@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.6.18
+  version: 0.8.0
 paths:
   /api/v1/auth/config:
     get:
@@ -1529,9 +1529,9 @@ components:
     ApiAPIToolPingOutput:
       properties:
         avgRtt:
-          $ref: '#/components/schemas/TimeDuration'
+          type: integer
         maxRtt:
-          $ref: '#/components/schemas/TimeDuration'
+          type: integer
         minRtt:
           type: integer
         packetLoss:
@@ -1543,7 +1543,7 @@ components:
         packetsSent:
           type: integer
         stdDevRtt:
-          $ref: '#/components/schemas/TimeDuration'
+          type: integer
       type: object
     ApiAPIToolPortmapInput:
       properties:
@@ -2263,7 +2263,6 @@ components:
           description: Status text.
           type: string
       type: object
-    TimeDuration: {}
     TsdbAPIRoleConfigInput:
       properties:
         config:

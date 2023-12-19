@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AvgRtt** | Pointer to **interface{}** |  | [optional] 
-**MaxRtt** | Pointer to **interface{}** |  | [optional] 
+**AvgRtt** | Pointer to **int32** |  | [optional] 
+**MaxRtt** | Pointer to **int32** |  | [optional] 
 **MinRtt** | Pointer to **int32** |  | [optional] 
 **PacketLoss** | Pointer to **float32** |  | [optional] 
 **PacketsRecv** | Pointer to **int32** |  | [optional] 
 **PacketsRecvDuplicates** | Pointer to **int32** |  | [optional] 
 **PacketsSent** | Pointer to **int32** |  | [optional] 
-**StdDevRtt** | Pointer to **interface{}** |  | [optional] 
+**StdDevRtt** | Pointer to **int32** |  | [optional] 
 
 ## Methods
 
@@ -34,20 +34,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAvgRtt
 
-`func (o *ApiAPIToolPingOutput) GetAvgRtt() interface{}`
+`func (o *ApiAPIToolPingOutput) GetAvgRtt() int32`
 
 GetAvgRtt returns the AvgRtt field if non-nil, zero value otherwise.
 
 ### GetAvgRttOk
 
-`func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*interface{}, bool)`
+`func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int32, bool)`
 
 GetAvgRttOk returns a tuple with the AvgRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAvgRtt
 
-`func (o *ApiAPIToolPingOutput) SetAvgRtt(v interface{})`
+`func (o *ApiAPIToolPingOutput) SetAvgRtt(v int32)`
 
 SetAvgRtt sets AvgRtt field to given value.
 
@@ -57,32 +57,22 @@ SetAvgRtt sets AvgRtt field to given value.
 
 HasAvgRtt returns a boolean if a field has been set.
 
-### SetAvgRttNil
-
-`func (o *ApiAPIToolPingOutput) SetAvgRttNil(b bool)`
-
- SetAvgRttNil sets the value for AvgRtt to be an explicit nil
-
-### UnsetAvgRtt
-`func (o *ApiAPIToolPingOutput) UnsetAvgRtt()`
-
-UnsetAvgRtt ensures that no value is present for AvgRtt, not even an explicit nil
 ### GetMaxRtt
 
-`func (o *ApiAPIToolPingOutput) GetMaxRtt() interface{}`
+`func (o *ApiAPIToolPingOutput) GetMaxRtt() int32`
 
 GetMaxRtt returns the MaxRtt field if non-nil, zero value otherwise.
 
 ### GetMaxRttOk
 
-`func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*interface{}, bool)`
+`func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int32, bool)`
 
 GetMaxRttOk returns a tuple with the MaxRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMaxRtt
 
-`func (o *ApiAPIToolPingOutput) SetMaxRtt(v interface{})`
+`func (o *ApiAPIToolPingOutput) SetMaxRtt(v int32)`
 
 SetMaxRtt sets MaxRtt field to given value.
 
@@ -92,16 +82,6 @@ SetMaxRtt sets MaxRtt field to given value.
 
 HasMaxRtt returns a boolean if a field has been set.
 
-### SetMaxRttNil
-
-`func (o *ApiAPIToolPingOutput) SetMaxRttNil(b bool)`
-
- SetMaxRttNil sets the value for MaxRtt to be an explicit nil
-
-### UnsetMaxRtt
-`func (o *ApiAPIToolPingOutput) UnsetMaxRtt()`
-
-UnsetMaxRtt ensures that no value is present for MaxRtt, not even an explicit nil
 ### GetMinRtt
 
 `func (o *ApiAPIToolPingOutput) GetMinRtt() int32`
@@ -229,20 +209,20 @@ HasPacketsSent returns a boolean if a field has been set.
 
 ### GetStdDevRtt
 
-`func (o *ApiAPIToolPingOutput) GetStdDevRtt() interface{}`
+`func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32`
 
 GetStdDevRtt returns the StdDevRtt field if non-nil, zero value otherwise.
 
 ### GetStdDevRttOk
 
-`func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*interface{}, bool)`
+`func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int32, bool)`
 
 GetStdDevRttOk returns a tuple with the StdDevRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetStdDevRtt
 
-`func (o *ApiAPIToolPingOutput) SetStdDevRtt(v interface{})`
+`func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int32)`
 
 SetStdDevRtt sets StdDevRtt field to given value.
 
@@ -252,16 +232,6 @@ SetStdDevRtt sets StdDevRtt field to given value.
 
 HasStdDevRtt returns a boolean if a field has been set.
 
-### SetStdDevRttNil
-
-`func (o *ApiAPIToolPingOutput) SetStdDevRttNil(b bool)`
-
- SetStdDevRttNil sets the value for StdDevRtt to be an explicit nil
-
-### UnsetStdDevRtt
-`func (o *ApiAPIToolPingOutput) UnsetStdDevRtt()`
-
-UnsetStdDevRtt ensures that no value is present for StdDevRtt, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
