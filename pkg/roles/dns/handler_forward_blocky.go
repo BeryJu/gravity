@@ -129,9 +129,7 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	cfg.Blocking = config.Blocking{
 		BlockType: "zeroIP",
 		BlackLists: map[string][]config.BytesSource{
-			"block": {
-				config.TextBytesSource(),
-			},
+			"block": blockLists,
 		},
 		Loading: config.SourceLoadingConfig{
 			Downloads: config.DownloaderConfig{
