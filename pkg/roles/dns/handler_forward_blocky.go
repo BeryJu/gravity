@@ -76,17 +76,20 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		upstreams[idx] = us
 	}
 
-	blockLists := []string{
-		blockyListBase + "AdGuardSDNSFilter.txt",
-		blockyListBase + "AdguardDNS.txt",
-		blockyListBase + "Easylist.txt",
-		blockyListBase + "StevenBlack.hosts.txt",
-		blockyListBase + "adaway.org.txt",
-		blockyListBase + "dbl.oisd.nl.txt",
+	blockLists := []config.BytesSource{
+		config.TextBytesSource(blockyListBase + "AdGuardSDNSFilter.txt"),
+		config.TextBytesSource(blockyListBase + "AdguardDNS.txt"),
+		config.TextBytesSource(blockyListBase + "Easylist.txt"),
+		config.TextBytesSource(blockyListBase + "StevenBlack.hosts.txt"),
+		config.TextBytesSource(blockyListBase + "adaway.org.txt"),
+		config.TextBytesSource(blockyListBase + "dbl.oisd.nl.txt"),
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
 		lists := strings.Split(bll, ";")
-		blockLists = lists
+		blockLists = []config.BytesSource{}
+		for _, list := range lists {
+			blockLists = append(blockLists, config.TextBytesSource(list))
+		}
 	}
 
 	cfg := config.Config{}
@@ -94,7 +97,6 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to set config defaults: %w", err)
 	}
-	cfg.UpstreamTimeout = config.Duration(types.DefaultUpstreamTimeout)
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
 	cfg.Log.Level = blockylog.LevelDebug
@@ -117,18 +119,25 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 			},
 		},
 	}
-	cfg.Upstream = config.UpstreamConfig{
-		ExternalResolvers: map[string][]config.Upstream{
+	cfg.Upstreams = config.Upstreams{
+		Groups: map[string][]config.Upstream{
 			"default": upstreams,
 		},
+		Timeout: config.Duration(types.DefaultUpstreamTimeout),
 	}
 	// TODO: Blocky config
-	cfg.Blocking = config.BlockingConfig{
+	cfg.Blocking = config.Blocking{
 		BlockType: "zeroIP",
-		BlackLists: map[string][]string{
-			"block": blockLists,
+		BlackLists: map[string][]config.BytesSource{
+			"block": {
+				config.TextBytesSource(),
+			},
 		},
-		DownloadAttempts: 3,
+		Loading: config.SourceLoadingConfig{
+			Downloads: config.DownloaderConfig{
+				Attempts: 3,
+			},
+		},
 		ClientGroupsBlock: map[string][]string{
 			"default": {"block"},
 		},
@@ -139,7 +148,7 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 func (bfwd *BlockyForwarder) setup() error {
 	bfwd.log.Debug("blocky config", zap.Any("config", bfwd.cfg))
 
-	srv, err := server.NewServer(bfwd.cfg)
+	srv, err := server.NewServer(bfwd.z.inst.Context(), bfwd.cfg)
 	if err != nil {
 		return fmt.Errorf("can't start server: %w", err)
 	}
@@ -154,7 +163,7 @@ func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest)
 		return nil
 	}
 	bs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_blocky.handle")
-	bfwd.b.OnRequest(w, r.Msg)
+	bfwd.b.OnRequest(r.Context(), w, r.Msg)
 	bs.Finish()
 	// fall to next handler when no record is found
 	if w.Msg().Rcode == dns.RcodeNameError {
