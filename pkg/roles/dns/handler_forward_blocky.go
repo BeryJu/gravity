@@ -30,6 +30,13 @@ type BlockyForwarder struct {
 	cfg *config.Config
 }
 
+func HTTPByteSource(url string) config.BytesSource {
+	return config.BytesSource{
+		Type: config.BytesSourceTypeHttp,
+		From: url,
+	}
+}
+
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
@@ -77,18 +84,18 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	}
 
 	blockLists := []config.BytesSource{
-		config.TextBytesSource(blockyListBase + "AdGuardSDNSFilter.txt"),
-		config.TextBytesSource(blockyListBase + "AdguardDNS.txt"),
-		config.TextBytesSource(blockyListBase + "Easylist.txt"),
-		config.TextBytesSource(blockyListBase + "StevenBlack.hosts.txt"),
-		config.TextBytesSource(blockyListBase + "adaway.org.txt"),
-		config.TextBytesSource(blockyListBase + "dbl.oisd.nl.txt"),
+		HTTPByteSource(blockyListBase + "AdGuardSDNSFilter.txt"),
+		HTTPByteSource(blockyListBase + "AdguardDNS.txt"),
+		HTTPByteSource(blockyListBase + "Easylist.txt"),
+		HTTPByteSource(blockyListBase + "StevenBlack.hosts.txt"),
+		HTTPByteSource(blockyListBase + "adaway.org.txt"),
+		HTTPByteSource(blockyListBase + "dbl.oisd.nl.txt"),
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
 		lists := strings.Split(bll, ";")
 		blockLists = []config.BytesSource{}
 		for _, list := range lists {
-			blockLists = append(blockLists, config.TextBytesSource(list))
+			blockLists = append(blockLists, HTTPByteSource(list))
 		}
 	}
 
