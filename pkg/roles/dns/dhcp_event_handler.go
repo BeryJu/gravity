@@ -28,10 +28,12 @@ func (r *Role) eventHandlerDHCPLeasePut(ev *roles.Event) {
 // - fqdn for the dns zone to put the record in
 // - identifier for the record UID
 // - address for the actual address
+// - expiry for the record
 func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 	hostname := ev.Payload.Data["hostname"].(string)
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	identifier := ev.Payload.Data["identifier"].(string)
+	expiry := ev.Payload.Data["expiry"].(int64)
 	forwardZone := r.FindZone(utils.EnsureTrailingPeriod(fqdn))
 	if forwardZone == nil {
 		r.log.Debug("No zone found for hostname", zap.Any("event", ev), zap.String("fqdn", fqdn))
@@ -53,7 +55,7 @@ func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 	rec.Data = ip.String()
 	rec.uid = identifier
 	rec.TTL = forwardZone.DefaultTTL
-	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
+	err = rec.put(ev.Context, expiry, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
 		return
@@ -68,10 +70,12 @@ func (r *Role) eventHandlerCreateForward(ev *roles.Event) {
 // - fqdn for the dns zone to put the record in
 // - identifier for the record UID
 // - address for the actual address
+// - expiry for the record
 func (r *Role) eventHandlerCreateReverse(ev *roles.Event) {
 	fqdn := ev.Payload.Data["fqdn"].(string)
 	rawAddr := ev.Payload.Data["address"].(string)
 	identifier := ev.Payload.Data["identifier"].(string)
+	expiry := ev.Payload.Data["expiry"].(int64)
 	ip, err := netip.ParseAddr(rawAddr)
 	if err != nil {
 		r.log.Warn("failed to parse address to add dns record", zap.Error(err))
@@ -95,7 +99,7 @@ func (r *Role) eventHandlerCreateReverse(ev *roles.Event) {
 	rec.uid = identifier
 	rec.Data = fqdn
 	rec.TTL = reverseZone.DefaultTTL
-	err = rec.put(ev.Context, 0, ev.Payload.RelatedObjectOptions...)
+	err = rec.put(ev.Context, expiry, ev.Payload.RelatedObjectOptions...)
 	if err != nil {
 		r.log.Warn("failed to save dns record", zap.Error(err))
 		return

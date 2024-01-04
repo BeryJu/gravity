@@ -167,6 +167,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 			"address":    l.Address,
 			"identifier": l.Identifier,
 			"fqdn":       utils.EnsureTrailingPeriod(strings.Join([]string{l.Hostname, zone}, ".")),
+			"expiry":     expiry,
 		},
 	)
 	ev.Payload.RelatedObjectKey = leaseKey
