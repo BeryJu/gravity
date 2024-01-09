@@ -33,7 +33,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	github.com/struCoder/pidusage v0.2.1
-	github.com/swaggest/openapi-go v0.2.44
+	github.com/swaggest/openapi-go v0.2.45
 	github.com/swaggest/rest v0.2.61
 	github.com/swaggest/usecase v1.3.1
 	go.etcd.io/etcd/api/v3 v3.5.11
