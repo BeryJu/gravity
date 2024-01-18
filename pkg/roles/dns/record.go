@@ -123,6 +123,7 @@ func (r *Record) ToDNS(qname string) dns.RR {
 		rr.(*dns.CNAME).Target = r.Data
 	case dns.TypeTXT:
 		rr = &dns.TXT{}
+		rr.(*dns.TXT).Hdr = hdr
 		rr.(*dns.TXT).Txt = strings.Split(r.Data, TXTSeparator)
 	}
 	return rr
