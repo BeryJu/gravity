@@ -18,16 +18,6 @@ import { AKElement } from "../Base";
 import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { showMessage } from "../messages/MessageContainer";
 
-export interface ValidationError {
-    [key: string]: string;
-}
-
-export class APIError extends Error {
-    constructor(public response: ValidationError) {
-        super();
-    }
-}
-
 export interface KeyUnknown {
     [key: string]: unknown;
 }
