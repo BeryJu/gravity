@@ -33,8 +33,7 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            ${this.instance
+        return html` ${this.instance
                 ? html``
                 : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
                       <input type="text" class="pf-c-form-control" required />
@@ -63,7 +62,6 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
                     required
                 />
                 <p class="pf-c-form__helper-text">Default TTL of discovered devices, in seconds.</p>
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }

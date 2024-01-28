@@ -29,8 +29,7 @@ export class LoginForm extends Form<AuthAPILoginInput> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label=${"Username"} name="username">
+        return html` <ak-form-element-horizontal label=${"Username"} name="username">
                 <input type="text" class="pf-c-form-control" autocomplete="username" />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Password"} name="password">
@@ -44,8 +43,7 @@ export class LoginForm extends Form<AuthAPILoginInput> {
                 }}
             >
                 Log in
-            </button>
-        </form>`;
+            </button>`;
     }
 }
 

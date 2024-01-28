@@ -25,8 +25,7 @@ export class WizardForm extends Form<KeyUnknown> {
         if (!data) {
             return;
         }
-        const files = this.getFormFiles();
-        const finalData = Object.assign({}, data, files);
+        const finalData = Object.assign({}, data);
         return this.nextDataCallback(finalData);
     }
 }

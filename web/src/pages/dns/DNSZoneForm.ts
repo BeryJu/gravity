@@ -50,8 +50,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            ${this.instance
+        return html` ${this.instance
                 ? html``
                 : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
                       <input type="text" class="pf-c-form-control" required />
@@ -85,7 +84,6 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                     )}"
                 >
                 </ak-codemirror>
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }

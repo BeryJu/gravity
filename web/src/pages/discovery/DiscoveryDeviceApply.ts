@@ -20,8 +20,7 @@ import "../../elements/forms/HorizontalFormElement";
 @customElement("gravity-discover-apply-form")
 export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput> {
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label="To" ?required=${true} name="to">
+        return html` <ak-form-element-horizontal label="To" ?required=${true} name="to">
                 <select class="pf-c-form-control">
                     <option value="dhcp">
                         DHCP (will also create a DNS record if the DHCP Scope is DNS integrated)
@@ -54,8 +53,7 @@ export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput
                         }),
                     )}
                 </select>
-            </ak-form-element-horizontal>
-        </form> `;
+            </ak-form-element-horizontal>`;
     }
 }
 

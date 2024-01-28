@@ -22,7 +22,7 @@ export class CodeMirrorTextarea extends AKElement {
     @property()
     mode = "yaml";
 
-    @property()
+    @property({ reflect: true })
     name?: string;
 
     editor?: EditorView;

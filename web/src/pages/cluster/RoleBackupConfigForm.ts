@@ -32,8 +32,11 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label="Cron Schedule" ?required=${true} name="cronExpr">
+        return html` <ak-form-element-horizontal
+                label="Cron Schedule"
+                ?required=${true}
+                name="cronExpr"
+            >
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.cronExpr)}"
@@ -82,7 +85,6 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
                     class="pf-c-form-control"
                     required
                 />
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }

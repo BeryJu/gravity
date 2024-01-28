@@ -32,8 +32,7 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
-            <ak-form-element-horizontal label="Port" ?required=${true} name="port">
+        return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
                 <input
                     type="number"
                     value="${first(this.instance?.port, 67)}"
@@ -55,7 +54,6 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
                 <p class="pf-c-form__helper-text">
                     Time in seconds a client has to acknowledge an IP after it has been offered.
                 </p>
-            </ak-form-element-horizontal>
-        </form>`;
+            </ak-form-element-horizontal>`;
     }
 }
