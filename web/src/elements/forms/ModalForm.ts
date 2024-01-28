@@ -10,19 +10,19 @@ import { Form } from "../forms/Form";
 @customElement("ak-forms-modal")
 export class ModalForm extends ModalButton {
     @property({ type: Boolean })
-    closeAfterSuccessfulSubmit = true;
+    accessor closeAfterSuccessfulSubmit = true;
 
     @property({ type: Boolean })
-    showSubmitButton = true;
+    accessor showSubmitButton = true;
 
     @property()
-    submitKeepOpen?: string;
+    accessor submitKeepOpen: string | undefined;
 
     @property({ type: Boolean })
-    loading = false;
+    accessor loading = false;
 
     @property({ type: String })
-    cancelText = "Cancel";
+    accessor cancelText = "Cancel";
 
     async confirm(): Promise<void> {
         const form = this.querySelector<Form<unknown>>("[slot=form]");

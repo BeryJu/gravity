@@ -13,7 +13,7 @@ export class WizardPage extends AKElement {
     }
 
     @property()
-    sidebarLabel: () => string = () => {
+    accessor sidebarLabel: () => string = () => {
         return "UNNAMED";
     };
 

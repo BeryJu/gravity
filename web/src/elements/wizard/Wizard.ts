@@ -21,26 +21,26 @@ export const ApplyActionsSlot = "apply-actions";
 @customElement("ak-wizard")
 export class Wizard extends ModalButton {
     @property({ type: Boolean })
-    canCancel = true;
+    accessor canCancel = true;
 
     @property({ type: Boolean })
-    canBack = true;
+    accessor canBack = true;
 
     @property()
-    header?: string;
+    accessor header: string | undefined;
 
     @property()
-    description?: string;
+    accessor description: string | undefined;
 
     @property({ type: Boolean })
-    isValid = false;
+    accessor isValid = false;
 
     static get styles(): CSSResult[] {
         return super.styles.concat(PFWizard);
     }
 
     @state()
-    _steps: string[] = [];
+    accessor _steps: string[] = [];
 
     get steps(): string[] {
         return this._steps;
@@ -67,10 +67,10 @@ export class Wizard extends ModalButton {
     _initialSteps: string[] = [];
 
     @property({ attribute: false })
-    actions: WizardAction[] = [];
+    accessor actions: WizardAction[] = [];
 
     @state()
-    _currentStep?: WizardPage;
+    accessor _currentStep: WizardPage | undefined;
 
     set currentStep(value: WizardPage | undefined) {
         this._currentStep = value;
@@ -85,12 +85,12 @@ export class Wizard extends ModalButton {
     }
 
     @property({ attribute: false })
-    finalHandler: () => Promise<void> = () => {
+    accessor finalHandler: () => Promise<void> = () => {
         return Promise.resolve();
     };
 
     @property({ attribute: false })
-    state: { [key: string]: unknown } = {};
+    accessor state: { [key: string]: unknown } = {};
 
     firstUpdated(): void {
         this._initialSteps = this._steps;

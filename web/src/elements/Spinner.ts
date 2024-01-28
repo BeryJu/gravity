@@ -15,7 +15,7 @@ export enum PFSize {
 @customElement("ak-spinner")
 export class Spinner extends AKElement {
     @property()
-    size: PFSize = PFSize.Medium;
+    accessor size: PFSize = PFSize.Medium;
 
     static get styles(): CSSResult[] {
         return [PFSpinner];

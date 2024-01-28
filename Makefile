@@ -22,7 +22,7 @@ docker-build: internal/resources/macoui internal/resources/blocky
 		-v -a -o gravity .
 
 clean:
-	rm -rf data/
+	rm -rf ${PWD}/data/
 
 run: internal/resources/macoui internal/resources/blocky
 	export INSTANCE_LISTEN=0.0.0.0
@@ -35,26 +35,26 @@ run: internal/resources/macoui internal/resources/blocky
 
 # Web
 web-build:
-	cd web
+	cd ${PWD}/web
 	npm ci
 	npm version ${VERSION} || true
 	npm run build
 
 web-watch:
-	cd web
+	cd ${PWD}/web
 	npm ci
 	npm version ${VERSION} || true
 	npm run watch
 
 web-lint:
-	cd web
+	cd ${PWD}/web
 	npm run prettier
 	npm run lint
 	npm run lit-analyse
 
 # Website
 website-watch:
-	cd docs
+	cd ${PWD}/docs
 	open http://localhost:1313/ && hugo server --noBuildLock
 
 internal/resources/macoui:
@@ -118,7 +118,7 @@ gen-client-ts:
 		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=${VERSION} \
 		--git-repo-id BeryJu \
 		--git-user-id gravity
-	cd gen-ts-api && npm i
+	cd ${PWD}/gen-ts-api && npm i
 
 gen-client-ts-update: gen-client-ts
 	cd ${PWD}/gen-ts-api
@@ -134,11 +134,11 @@ lint: web-lint
 	golangci-lint run -v --timeout 5000s
 
 test-env-start:
-	cd hack/tests/
+	cd ${PWD}/hack/tests/
 	docker compose --project-name gravity-test-env up -d
 
 test-env-stop:
-	cd hack/tests/
+	cd ${PWD}/hack/tests/
 	docker compose --project-name gravity-test-env down -v
 
 install-deps: internal/resources/macoui internal/resources/blocky

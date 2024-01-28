@@ -26,13 +26,13 @@ const LEVEL_ICON_MAP: { [key: string]: string } = {
 @customElement("ak-message")
 export class Message extends AKElement {
     @property({ attribute: false })
-    message?: APIMessage;
+    accessor message: APIMessage | undefined;
 
     @property({ type: Number })
-    removeAfter = 8000;
+    accessor removeAfter = 8000;
 
     @property({ attribute: false })
-    onRemove?: (m: APIMessage) => void;
+    accessor onRemove: ((m: APIMessage) => void) | undefined;
 
     static get styles(): CSSResult[] {
         return [PFBase, PFButton, PFAlert, PFAlertGroup];

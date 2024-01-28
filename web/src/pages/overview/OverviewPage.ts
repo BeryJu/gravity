@@ -24,7 +24,7 @@ import "./charts/MemoryUsageChart";
 @customElement("gravity-overview")
 export class OverviewPage extends AKElement {
     @state()
-    me?: AuthAPIMeOutput;
+    accessor me: AuthAPIMeOutput | undefined;
 
     static get styles(): CSSResult[] {
         return [

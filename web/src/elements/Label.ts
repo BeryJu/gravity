@@ -16,13 +16,13 @@ export enum PFColor {
 @customElement("ak-label")
 export class Label extends AKElement {
     @property()
-    color: PFColor = PFColor.Grey;
+    accessor color: PFColor = PFColor.Grey;
 
     @property()
-    icon?: string;
+    accessor icon: string | undefined;
 
     @property({ type: Boolean })
-    compact = false;
+    accessor compact = false;
 
     static get styles(): CSSResult[] {
         return [PFBase, PFLabel, AKElement.GlobalStyle];

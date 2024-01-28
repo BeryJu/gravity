@@ -20,13 +20,13 @@ export class DNSZoneWizard extends AKElement {
     }
 
     @property({ type: Boolean })
-    open = false;
+    accessor open = false;
 
     @property()
-    createText = "Create";
+    accessor createText = "Create";
 
     @property({ type: Boolean })
-    showButton = true;
+    accessor showButton = true;
 
     render(): TemplateResult {
         return html`

@@ -18,7 +18,7 @@ export class WizardForm extends Form<KeyUnknown> {
     viewportCheck = false;
 
     @property({ attribute: false })
-    nextDataCallback!: (data: KeyUnknown) => Promise<boolean>;
+    accessor nextDataCallback!: (data: KeyUnknown) => Promise<boolean>;
 
     submit(): Promise<boolean> | undefined {
         const data = this.serializeForm();

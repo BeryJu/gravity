@@ -11,16 +11,16 @@ import { AKElement } from "../Base";
 @customElement("ak-aggregate-card")
 export class AggregateCard extends AKElement {
     @property()
-    icon?: string;
+    accessor icon: string | undefined;
 
     @property()
-    header?: string;
+    accessor header: string | undefined;
 
     @property()
-    headerLink?: string;
+    accessor headerLink: string | undefined;
 
     @property({ type: Boolean })
-    isCenter = true;
+    accessor isCenter = true;
 
     static get styles(): CSSResult[] {
         return [PFBase, PFCard, PFFlex, AKElement.GlobalStyle].concat([

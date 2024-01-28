@@ -10,7 +10,7 @@ import { AKElement } from "../Base";
 @customElement("ak-router-404")
 export class Router404 extends AKElement {
     @property()
-    url = "";
+    accessor url = "";
 
     static get styles(): CSSResult[] {
         return [PFBase, PFEmptyState, PFTitle];

@@ -15,10 +15,10 @@ import "./DNSRecordForm";
 @customElement("gravity-dns-records")
 export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     @property()
-    zone?: string;
+    accessor zone: string | undefined;
 
     @state()
-    isReverseZone = false;
+    accessor isReverseZone = false;
 
     pageTitle(): string {
         return `DNS Records for ${this.zone === "." ? "Root Zone" : this.zone}`;
