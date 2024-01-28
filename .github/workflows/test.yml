@@ -31,16 +31,12 @@ jobs:
       - run: make test
       - if: ${{ always() }}
         run: |
-          go install github.com/vakenbolt/go-test-report@latest
-          cat tests.json | $(go env GOPATH)/bin/go-test-report
-          cat test_report.html > $GITHUB_STEP_SUMMARY
+          go install github.com/jstemmer/go-junit-report/v2@latest
+          cat test-output | $(go env GOPATH)/bin/go-junit-report > report.xml
       - if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: test-summary/action@v2
         with:
-          name: go-test-result
-          path: |
-            tests.json
-            test_report.html
+          paths: report.xml
       - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
