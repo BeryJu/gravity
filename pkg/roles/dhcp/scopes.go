@@ -74,18 +74,21 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 
 	s.etcdKey = string(raw.Key)
 
-	var ipamInst IPAM
-	switch s.IPAM["type"] {
-	case InternalIPAMType:
-		fallthrough
-	default:
-		ipamInst, err = NewInternalIPAM(r, s)
-	}
+	ipamInst, err := s.ipamType()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create ipam: %w", err)
 	}
 	s.ipam = ipamInst
 	return s, nil
+}
+
+func (s *Scope) ipamType() (IPAM, error) {
+	switch s.IPAM["type"] {
+	case InternalIPAMType:
+		fallthrough
+	default:
+		return NewInternalIPAM(s.role, s)
+	}
 }
 
 func (r *Role) findScopeForRequest(req *Request4) *Scope {
