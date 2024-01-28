@@ -53,6 +53,7 @@ func (r *Role) FindLease(req *Request4) *Lease {
 	if expectedScope != nil && lease.scope != expectedScope {
 		// We have a specific scope to handle this request but it doesn't match the lease
 		lease.scope = expectedScope
+		lease.ScopeKey = expectedScope.Name
 		lease.setLeaseIP(req)
 		lease.log.Info("Re-assigning address for lease due to changed request scope", zap.String("newIP", lease.Address))
 		go func() {
