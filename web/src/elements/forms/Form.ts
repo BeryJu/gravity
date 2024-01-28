@@ -99,6 +99,11 @@ export function serializeForm<T extends KeyUnknown>(
             inputElement.type === "checkbox"
         ) {
             assignValue(inputElement, inputElement.checked, json);
+        } else if (
+            inputElement.tagName.toLowerCase() === "input" &&
+            inputElement.type === "number"
+        ) {
+            assignValue(inputElement, parseInt(inputElement.value, 10), json);
         } else if ("selectedFlow" in inputElement) {
             assignValue(inputElement, inputElement.value, json);
         } else {
