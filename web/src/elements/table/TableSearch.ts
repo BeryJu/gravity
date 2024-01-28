@@ -13,10 +13,10 @@ import { AKElement } from "../Base";
 @customElement("ak-table-search")
 export class TableSearch extends AKElement {
     @property()
-    value?: string;
+    accessor value: string | undefined;
 
     @property()
-    onSearch?: (value: string) => void;
+    accessor onSearch: ((value: string) => void) | undefined;
 
     static get styles(): CSSResult[] {
         return [

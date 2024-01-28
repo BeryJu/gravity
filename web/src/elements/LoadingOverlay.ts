@@ -9,7 +9,7 @@ import { PFSize } from "./Spinner";
 @customElement("ak-loading-overlay")
 export class LoadingOverlay extends AKElement {
     @property({ type: Boolean })
-    topMost = false;
+    accessor topMost = false;
 
     static get styles(): CSSResult[] {
         return [

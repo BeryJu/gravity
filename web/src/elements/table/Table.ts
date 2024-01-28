@@ -33,7 +33,7 @@ export class TableColumn {
         this.orderBy = orderBy;
     }
 
-    headerClickHandler(table: Table<unknown>): void {
+    headerClickHandler(table: Table<object>): void {
         if (!this.orderBy) {
             return;
         }
@@ -45,7 +45,7 @@ export class TableColumn {
         table.fetch();
     }
 
-    private getSortIndicator(table: Table<unknown>): string {
+    private getSortIndicator(table: Table<object>): string {
         switch (table.order) {
             case this.orderBy:
                 return "fa-long-arrow-alt-down";
@@ -56,7 +56,7 @@ export class TableColumn {
         }
     }
 
-    renderSortable(table: Table<unknown>): TemplateResult {
+    renderSortable(table: Table<object>): TemplateResult {
         return html` <button
             class="pf-c-table__button"
             @click=${() => this.headerClickHandler(table)}
@@ -70,7 +70,7 @@ export class TableColumn {
         </button>`;
     }
 
-    render(table: Table<unknown>): TemplateResult {
+    render(table: Table<object>): TemplateResult {
         return html`<th
             role="columnheader"
             scope="col"
@@ -92,7 +92,7 @@ export interface PaginatedResponse<T> {
     results: Array<T>;
 }
 
-export abstract class Table<T> extends AKElement {
+export abstract class Table<T extends object> extends AKElement {
     abstract apiEndpoint(page: number): Promise<PaginatedResponse<T>>;
     abstract columns(): TableColumn[];
     abstract row(item: T): TemplateResult[];
@@ -111,37 +111,37 @@ export abstract class Table<T> extends AKElement {
     }
 
     @property({ attribute: false })
-    data?: PaginatedResponse<T>;
+    accessor data: PaginatedResponse<T> | undefined;
 
     @property({ type: Number })
-    page = 1;
+    accessor page = 1;
 
     @property({ type: String })
-    order?: string;
+    accessor order: string | undefined;
 
     @property({ type: String })
-    search: string = getURLParam("search", "");
+    accessor search: string = getURLParam("search", "");
 
     @property({ type: Boolean })
-    checkbox = false;
+    accessor checkbox = false;
 
     @property({ type: Boolean })
-    checkboxChip = false;
+    accessor checkboxChip = false;
 
     @property({ attribute: false })
-    selectedElements: T[] = [];
+    accessor selectedElements: T[] = [];
 
     @property({ type: Boolean })
-    paginated = true;
+    accessor paginated = true;
 
     @property({ type: Boolean })
-    expandable = false;
+    accessor expandable = false;
 
     @property({ attribute: false })
-    expandedElements: T[] = [];
+    accessor expandedElements: T[] = [];
 
     @state()
-    hasError?: Error;
+    accessor hasError: Error | undefined;
 
     static get styles(): CSSResult[] {
         return [

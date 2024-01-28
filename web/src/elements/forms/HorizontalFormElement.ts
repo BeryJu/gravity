@@ -33,22 +33,22 @@ export class HorizontalFormElement extends AKElement {
     }
 
     @property()
-    label = "";
+    accessor label = "";
 
     @property({ type: Boolean })
-    required = false;
+    accessor required = false;
 
     @property({ type: Boolean })
-    writeOnly = false;
+    accessor writeOnly = false;
 
     @property({ type: Boolean })
-    writeOnlyActivated = false;
+    accessor writeOnlyActivated = false;
 
     @property({ attribute: false })
-    errorMessages: string[] = [];
+    accessor errorMessages: string[] = [];
 
     @property({ type: Boolean })
-    slugMode = false;
+    accessor slugMode = false;
 
     _invalid = false;
 
@@ -66,7 +66,7 @@ export class HorizontalFormElement extends AKElement {
     }
 
     @property()
-    name = "";
+    accessor name = "";
 
     updated(): void {
         this.querySelectorAll<HTMLInputElement>("input[autofocus]").forEach((input) => {

@@ -43,7 +43,7 @@ export class ClusterJoinInitial extends WizardFormPage {
     };
 
     @state()
-    roles: string[] = [
+    accessor roles: string[] = [
         "DNS",
         "DHCP",
         "API",

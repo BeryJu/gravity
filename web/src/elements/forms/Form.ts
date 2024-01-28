@@ -108,13 +108,13 @@ export class Form<T> extends AKElement {
     viewportCheck = true;
 
     @property()
-    successMessage = "";
+    accessor successMessage = "";
 
     @property()
-    send!: (data: T) => Promise<unknown>;
+    accessor send!: (data: T) => Promise<unknown>;
 
     @property({ attribute: false })
-    nonFieldErrors?: string[];
+    accessor nonFieldErrors: string[] | undefined;
 
     static get styles(): CSSResult[] {
         return [

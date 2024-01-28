@@ -10,10 +10,10 @@ import { AKElement } from "../Base";
 @customElement("ak-chip")
 export class Chip extends AKElement {
     @property()
-    value?: number | string;
+    accessor value: number | string | undefined;
 
     @property({ type: Boolean })
-    removable = false;
+    accessor removable = false;
 
     static get styles(): CSSResult[] {
         return [PFBase, PFButton, PFChip, AKElement.GlobalStyle];

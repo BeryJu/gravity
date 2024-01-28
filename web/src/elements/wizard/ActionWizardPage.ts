@@ -39,10 +39,10 @@ export class ActionWizardPage extends WizardPage {
     }
 
     @property({ attribute: false })
-    states: ActionStateBundle[] = [];
+    accessor states: ActionStateBundle[] = [];
 
     @property({ attribute: false })
-    currentStep?: ActionStateBundle;
+    accessor currentStep: ActionStateBundle | undefined;
 
     activeCallback = async (): Promise<void> => {
         this.states = [];

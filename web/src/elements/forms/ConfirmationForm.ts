@@ -10,15 +10,16 @@ import { showMessage } from "../messages/MessageContainer";
 @customElement("ak-forms-confirm")
 export class ConfirmationForm extends ModalButton {
     @property()
-    successMessage!: string;
-    @property()
-    errorMessage!: string;
+    accessor successMessage!: string;
 
     @property()
-    action!: string;
+    accessor errorMessage!: string;
+
+    @property()
+    accessor action!: string;
 
     @property({ attribute: false })
-    onConfirm!: () => Promise<unknown>;
+    accessor onConfirm!: () => Promise<unknown>;
 
     confirm(): Promise<void> {
         return this.onConfirm()

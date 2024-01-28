@@ -14,17 +14,20 @@ import { Table, TableColumn } from "../table/Table";
 type BulkDeleteMetadata = { key: string; value: string }[];
 
 @customElement("ak-delete-objects-table")
-export class DeleteObjectsTable<T> extends Table<T> {
-    paginated = false;
+export class DeleteObjectsTable<T extends object> extends Table<T> {
+    @property({ attribute: false })
+    accessor objects: T[] = [];
 
     @property({ attribute: false })
-    objects: T[] = [];
-
-    @property({ attribute: false })
-    metadata!: (item: T) => BulkDeleteMetadata;
+    accessor metadata!: (item: T) => BulkDeleteMetadata;
 
     static get styles(): CSSResult[] {
         return super.styles.concat(PFList);
+    }
+
+    constructor() {
+        super();
+        this.paginated = false;
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<T>> {
@@ -61,14 +64,14 @@ export class DeleteObjectsTable<T> extends Table<T> {
 export class DeleteBulkForm extends ModalButton {
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    objects: any[] = [];
+    accessor objects: any[] = [];
 
     @property()
-    objectLabel?: string;
+    accessor objectLabel: string | undefined;
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    metadata: (item: any) => BulkDeleteMetadata = (item: any) => {
+    accessor metadata: (item: any) => BulkDeleteMetadata = (item: any) => {
         const rec = item as Record<string, unknown>;
         const meta = [];
         if (Object.prototype.hasOwnProperty.call(rec, "name")) {
@@ -82,11 +85,11 @@ export class DeleteBulkForm extends ModalButton {
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete!: (item: any, extraData: any) => Promise<any>;
+    accessor delete!: (item: any, extraData: any) => Promise<any>;
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    preDelete: () => Promise<any> = () => {
+    accessor preDelete: () => Promise<any> = () => {
         return Promise.resolve();
     };
 

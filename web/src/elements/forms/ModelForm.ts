@@ -24,7 +24,7 @@ export abstract class ModelForm<T, PKT extends string | number> extends Form<T> 
     private _initialLoad = false;
 
     @property({ attribute: false })
-    instance?: T = this.defaultInstance;
+    accessor instance: T | undefined = this.defaultInstance;
 
     get defaultInstance(): T | undefined {
         return undefined;

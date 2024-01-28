@@ -7,20 +7,21 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "./Base";
 import { PFSize } from "./Spinner";
+import "./Spinner";
 
 @customElement("ak-empty-state")
 export class EmptyState extends AKElement {
     @property({ type: String })
-    icon = "";
+    accessor icon = "";
 
     @property({ type: Boolean })
-    loading = false;
+    accessor loading = false;
 
     @property({ type: Boolean })
-    fullHeight = false;
+    accessor fullHeight = false;
 
     @property()
-    header = "";
+    accessor header = "";
 
     static get styles(): CSSResult[] {
         return [PFBase, PFEmptyState, PFTitle, AKElement.GlobalStyle];

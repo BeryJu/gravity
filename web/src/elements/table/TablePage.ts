@@ -10,7 +10,7 @@ import "../PageHeader";
 import { updateURLParams } from "../router/RouteMatch";
 import { Table } from "../table/Table";
 
-export abstract class TablePage<T> extends Table<T> {
+export abstract class TablePage<T extends object> extends Table<T> {
     abstract pageTitle(): string;
     abstract pageDescription(): string | undefined;
     abstract pageIcon(): string;

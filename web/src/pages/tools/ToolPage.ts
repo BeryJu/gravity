@@ -45,16 +45,16 @@ export class ToolPage extends AKElement {
     }
 
     @state()
-    host?: string = getURLParam("host", undefined);
+    accessor host: string | undefined = getURLParam("host", undefined);
 
     @state()
-    pingOutput?: ApiAPIToolPingOutput;
+    accessor pingOutput: ApiAPIToolPingOutput | undefined;
 
     @state()
-    tracerouteOutput?: ApiAPIToolTracerouteOutput;
+    accessor tracerouteOutput: ApiAPIToolTracerouteOutput | undefined;
 
     @state()
-    portmapOutput?: ApiAPIToolPortmapOutput;
+    accessor portmapOutput: ApiAPIToolPortmapOutput | undefined;
 
     renderPing(): TemplateResult {
         if (!this.pingOutput) return html``;

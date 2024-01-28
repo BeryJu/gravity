@@ -12,13 +12,16 @@ import { AKElement } from "./Base";
 @customElement("ak-page-header")
 export class PageHeader extends AKElement {
     @property()
-    icon?: string;
+    accessor icon: string | undefined;
 
     @property({ type: Boolean })
-    iconImage = false;
+    accessor iconImage = false;
 
     @property({ type: Boolean })
-    hasNotifications = false;
+    accessor hasNotifications = false;
+
+    @property()
+    accessor description: string | undefined;
 
     @property()
     set header(value: string) {
@@ -34,9 +37,6 @@ export class PageHeader extends AKElement {
     get header(): string {
         return this._header;
     }
-
-    @property()
-    description?: string;
 
     _header = "";
 

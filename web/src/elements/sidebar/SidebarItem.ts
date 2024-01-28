@@ -71,24 +71,24 @@ export class SidebarItem extends AKElement {
     }
 
     @property()
-    path?: string;
+    accessor path: string | undefined;
 
     @property({ attribute: false })
-    condition: () => Promise<boolean> = async () => true;
+    accessor condition: () => Promise<boolean> = async () => true;
 
     activeMatchers: RegExp[] = [];
 
     @property({ type: Boolean })
-    expanded = true;
+    accessor expanded = true;
 
     @property({ type: Boolean })
-    isActive = false;
+    accessor isActive = false;
 
     @property({ type: Boolean })
-    isAbsoluteLink?: boolean;
+    accessor isAbsoluteLink: boolean | undefined;
 
     @property({ type: Boolean })
-    highlight?: boolean;
+    accessor highlight: boolean | undefined;
 
     parent?: SidebarItem;
 

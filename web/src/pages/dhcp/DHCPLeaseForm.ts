@@ -12,7 +12,7 @@ import { first } from "../../utils";
 @customElement("gravity-dhcp-lease-form")
 export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     @property()
-    scope?: string;
+    accessor scope: string | undefined;
 
     async loadInstance(pk: string): Promise<DhcpAPILease> {
         const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({

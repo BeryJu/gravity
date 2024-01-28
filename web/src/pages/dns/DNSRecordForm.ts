@@ -11,10 +11,10 @@ import { ModelForm } from "../../elements/forms/ModelForm";
 @customElement("gravity-dns-record-form")
 export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     @property()
-    zone?: string;
+    accessor zone: string | undefined;
 
     @property()
-    recordType = "A";
+    accessor recordType = "A";
 
     async loadInstance(pk: string): Promise<DnsAPIRecord> {
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
