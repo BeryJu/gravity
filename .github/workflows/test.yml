@@ -37,6 +37,7 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: report.xml
+          show: "fail, skip"
       - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
