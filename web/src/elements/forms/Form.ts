@@ -1,4 +1,4 @@
-import { ResponseError } from "gravity-api";
+import { ResponseError, RestErrResponse } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -13,7 +13,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
-import { camelToSnake, convertToSlug } from "../../common/utils";
+import { convertToSlug } from "../../common/utils";
 import { AKElement } from "../Base";
 import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { showMessage } from "../messages/MessageContainer";
@@ -226,35 +226,14 @@ export class Form<T> extends AKElement {
                 }
                 let msg = ex.response.statusText;
                 if (ex.response.status > 399 && ex.response.status < 500) {
-                    const errorMessage: ValidationError = await ex.response.json();
+                    const errorMessage: RestErrResponse = await ex.response.json();
                     if (!errorMessage) return errorMessage;
                     if (errorMessage instanceof Error) {
                         throw errorMessage;
                     }
-                    // assign all input-related errors to their elements
-                    const elements =
-                        this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
-                            "ak-form-element-horizontal",
-                        ) || [];
-                    elements.forEach((element) => {
-                        element.requestUpdate();
-                        const elementName = element.name;
-                        if (!elementName) return;
-                        if (camelToSnake(elementName) in errorMessage) {
-                            element.errorMessages = [errorMessage[camelToSnake(elementName)]];
-                            element.invalid = true;
-                        } else {
-                            element.errorMessages = [];
-                            element.invalid = false;
-                        }
-                    });
-                    if (errorMessage.nonFieldErrors) {
-                        this.nonFieldErrors = [errorMessage.nonFieldErrors];
-                    }
-                    // Only change the message when we have `detail`.
-                    // Everything else is handled in the form.
-                    if ("detail" in errorMessage) {
-                        msg = errorMessage.detail;
+                    if (errorMessage.error) {
+                        this.nonFieldErrors = [errorMessage.error];
+                        msg = errorMessage.error;
                     }
                 }
                 // error is local or not from rest_framework
