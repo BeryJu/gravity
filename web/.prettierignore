@@ -6,3 +6,4 @@ dist
 coverage
 # don't lint generated code
 api/
+tsconfig.json
