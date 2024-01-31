@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/netdata/go.d.plugin/pkg/iprange"
@@ -109,9 +108,9 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 		}
 		// Handle local broadcast, check with the instance's listening IP
 		// Only consider local scopes if we don't have a match already
-		localMatchBits := scope.match(net.ParseIP(extconfig.Get().Instance.IP))
+		localMatchBits := scope.match(net.ParseIP(req.LocalIP()))
 		if localMatchBits > -1 && localMatchBits > longestBits {
-			req.log.Debug("selected scope based on cidr match (instance IP)", zap.String("scope", scope.Name))
+			req.log.Debug("selected scope based on cidr match (instance/interface IP)", zap.String("scope", scope.Name))
 			match = scope
 			longestBits = localMatchBits
 		}

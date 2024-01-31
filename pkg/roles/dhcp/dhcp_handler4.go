@@ -56,6 +56,29 @@ func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
 	}
 }
 
+// Use the instance ip unless the the interface is not bound
+func (req *Request4) LocalIP() string {
+	ip := extconfig.Get().Instance.IP
+	if req.oob != nil {
+		ief, err := net.InterfaceByIndex(req.oob.IfIndex)
+		if err != nil {
+			return ip
+		}
+		addrs, err := ief.Addrs()
+		if err != nil {
+			return ip
+		}
+		for _, addr := range addrs {
+			if ipv4Addr := addr.(*net.IPNet).IP.To4(); ipv4Addr != nil {
+				ip = ipv4Addr.String()
+				req.log.Debug("Unbound interface found", zap.String("ifname", ief.Name), zap.String("ip", ip))
+				return ip
+			}
+		}
+	}
+	return ip
+}
+
 func (h *handler4) Serve() error {
 	for {
 		b := *bufpool.Get().(*[]byte)
