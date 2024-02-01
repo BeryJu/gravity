@@ -41,7 +41,7 @@ jobs:
       - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
   lint:
     name: Lint
     runs-on: ubuntu-latest
