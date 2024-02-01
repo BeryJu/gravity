@@ -36,7 +36,7 @@ require (
 	github.com/swaggest/openapi-go v0.2.45
 	github.com/swaggest/rest v0.2.61
 	github.com/swaggest/usecase v1.3.1
-	go.etcd.io/etcd/api/v3 v3.5.11
+	go.etcd.io/etcd/api/v3 v3.5.12
 	go.etcd.io/etcd/client/v3 v3.5.11
 	go.etcd.io/etcd/etcdctl/v3 v3.5.11
 	go.etcd.io/etcd/etcdutl/v3 v3.5.11
