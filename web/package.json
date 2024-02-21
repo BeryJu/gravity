@@ -21,7 +21,7 @@
         "@babel/preset-typescript": "^7.23.3",
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/legacy-modes": "^6.3.3",
-        "@patternfly/patternfly": "^4.224.2",
+        "@patternfly/patternfly": "^5.2.0",
         "@rollup/plugin-babel": "^6.0.4",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-json": "^6.1.0",
