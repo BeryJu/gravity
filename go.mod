@@ -34,7 +34,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.46
-	github.com/swaggest/rest v0.2.61
+	github.com/swaggest/rest v0.2.62
 	github.com/swaggest/usecase v1.3.1
 	go.etcd.io/etcd/api/v3 v3.5.12
 	go.etcd.io/etcd/client/v3 v3.5.12
@@ -93,7 +93,7 @@ require (
 	github.com/farsightsec/golang-framestream v0.3.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
-	github.com/go-chi/chi/v5 v5.0.10 // indirect
+	github.com/go-chi/chi/v5 v5.0.12 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.1 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
