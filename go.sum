@@ -582,8 +582,8 @@ github.com/swaggest/openapi-go v0.2.47 h1:qBh28FHz0M1QSJmGRCcY/Xt9WKRkECKXGUbw/U
 github.com/swaggest/openapi-go v0.2.47/go.mod h1:MK5O26lG289kFgMOyXK1VXDoTZ89KJ8Vt0v0ic23zZw=
 github.com/swaggest/refl v1.3.0 h1:PEUWIku+ZznYfsoyheF97ypSduvMApYyGkYF3nabS0I=
 github.com/swaggest/refl v1.3.0/go.mod h1:3Ujvbmh1pfSbDYjC6JGG7nMgPvpG0ehQL4iNonnLNbg=
-github.com/swaggest/rest v0.2.62 h1:zQwM5PuL/aNhgiKv8dmtDUeEJhGpYZuOIONC9od1vf4=
-github.com/swaggest/rest v0.2.62/go.mod h1:Nxr2bDEH9fUwRcwuBOW7SalVTDdbVM0Eb6T91UJ62UE=
+github.com/swaggest/rest v0.2.63 h1:IDE0KFzuLHxciNq52MnIV6rRXd+rpj8o2oft9BULWqg=
+github.com/swaggest/rest v0.2.63/go.mod h1:8IPF88P/mz83GCPEvIZrvg47RAVQhI6be6DT/kHz4t4=
 github.com/swaggest/usecase v1.3.1 h1:JdKV30MTSsDxAXxkldLNcEn8O2uf565khyo6gr5sS+w=
 github.com/swaggest/usecase v1.3.1/go.mod h1:cae3lDd5VDmM36OQcOOOdAlEDg40TiQYIp99S9ejWqA=
 github.com/tinylib/msgp v1.1.8 h1:FCXC1xanKO4I8plpHGH2P7koL/RzZs12l/+r7vakfm0=
