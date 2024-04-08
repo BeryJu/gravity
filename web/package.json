@@ -20,7 +20,7 @@
         "@babel/preset-env": "^7.24.4",
         "@babel/preset-typescript": "^7.24.1",
         "@codemirror/lang-javascript": "^6.2.2",
-        "@codemirror/legacy-modes": "^6.3.3",
+        "@codemirror/legacy-modes": "^6.4.0",
         "@patternfly/patternfly": "^4.224.2",
         "@rollup/plugin-babel": "^6.0.4",
         "@rollup/plugin-commonjs": "^25.0.7",
