@@ -38,7 +38,7 @@
             },
             "id": 17,
             "panels": [],
-            "title": "Etcd",
+            "title": "etcd",
             "type": "row"
         },
         {
@@ -92,7 +92,6 @@
                 "y": 1
             },
             "id": 3,
-            "links": [],
             "maxDataPoints": 100,
             "options": {
                 "colorMode": "value",
@@ -106,10 +105,11 @@
                     "fields": "",
                     "values": false
                 },
+                "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
             },
-            "pluginVersion": "10.2.2",
+            "pluginVersion": "10.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -197,7 +197,6 @@
                 "y": 1
             },
             "id": 5,
-            "links": [],
             "options": {
                 "legend": {
                     "calcs": [],
@@ -314,7 +313,6 @@
                 "y": 1
             },
             "id": 11,
-            "links": [],
             "options": {
                 "legend": {
                     "calcs": [],
@@ -432,7 +430,6 @@
                 "y": 1
             },
             "id": 15,
-            "links": [],
             "maxDataPoints": 100,
             "options": {
                 "colorMode": "none",
@@ -446,22 +443,25 @@
                     "fields": "",
                     "values": false
                 },
+                "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
             },
-            "pluginVersion": "10.2.2",
+            "pluginVersion": "10.4.1",
             "targets": [
                 {
                     "datasource": {
                         "type": "prometheus",
                         "uid": "F7UOe0CGz"
                     },
+                    "editorMode": "code",
                     "exemplar": true,
-                    "expr": "sum(etcd_network_active_peers{instance=~\"$cluster\"})",
+                    "expr": "sum(etcd_server_id{instance=~\"$cluster\"})",
                     "format": "time_series",
                     "interval": "",
                     "intervalFactor": 2,
                     "legendFormat": "",
+                    "range": true,
                     "refId": "A",
                     "step": 600
                 }
@@ -550,7 +550,6 @@
                 "y": 8
             },
             "id": 9,
-            "links": [],
             "options": {
                 "legend": {
                     "calcs": [],
@@ -654,7 +653,6 @@
                 "y": 8
             },
             "id": 12,
-            "links": [],
             "options": {
                 "legend": {
                     "calcs": [],
@@ -756,7 +754,6 @@
                 "y": 8
             },
             "id": 7,
-            "links": [],
             "options": {
                 "legend": {
                     "calcs": [],
@@ -1534,7 +1531,7 @@
         }
     ],
     "refresh": "30s",
-    "schemaVersion": 38,
+    "schemaVersion": 39,
     "tags": [],
     "templating": {
         "list": [
@@ -1654,6 +1651,6 @@
     "timezone": "",
     "title": "Gravity",
     "uid": "pCn7Oe6nz",
-    "version": 37,
+    "version": 38,
     "weekStart": ""
 }
