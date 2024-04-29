@@ -56,6 +56,6 @@
         "rollup-plugin-cssimport": "^1.0.3",
         "sha.js": "^2.4.11",
         "ts-lit-plugin": "^2.0.2",
-        "yaml": "^2.4.1"
+        "yaml": "^2.4.2"
     }
 }
