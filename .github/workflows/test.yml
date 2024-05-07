@@ -62,6 +62,6 @@ jobs:
           npm ci
           npm run build
       - run: make install-deps
-      - uses: golangci/golangci-lint-action@v5
+      - uses: golangci/golangci-lint-action@v6
         with:
           args: --timeout 5000s
