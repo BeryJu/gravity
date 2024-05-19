@@ -1,3 +1,4 @@
+import { codecovRollupPlugin } from "@codecov/rollup-plugin";
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
@@ -57,6 +58,13 @@ export default {
         copy({
             targets: [...resources],
             copyOnce: false,
+        }),
+        codecovRollupPlugin({
+            // eslint-disable-next-line no-undef
+            enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+            bundleName: "gravity-web",
+            // eslint-disable-next-line no-undef
+            uploadToken: process.env.CODECOV_TOKEN,
         }),
     ].filter((p) => p),
     watch: {

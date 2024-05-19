@@ -37,3 +37,4 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
+            CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }}
