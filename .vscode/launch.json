@@ -6,7 +6,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": ".",
+            "program": "${workspaceFolder}",
             "args": [
                 "server",
             ],
