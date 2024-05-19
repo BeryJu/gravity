@@ -32,7 +32,7 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	config.Level = zap.NewAtomicLevelAt(l)
 	config.DisableCaller = !e.Debug
 	if e.Debug {
-		config.Development = true
+		config.Development = false
 		config.Encoding = "console"
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
