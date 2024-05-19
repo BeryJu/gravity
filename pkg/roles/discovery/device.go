@@ -101,11 +101,13 @@ func (d *Device) toDNS(ctx context.Context, zone string) error {
 		"hostname":   hostname[0],
 		"address":    d.IP,
 		"identifier": d.Identifier,
+		"expiry":     int64(-1),
 	}))
 	d.inst.DispatchEvent(dnstypes.EventTopicDNSRecordCreateReverse, roles.NewEvent(ctx, map[string]interface{}{
 		"fqdn":       fqdn,
 		"address":    d.IP,
 		"identifier": d.Identifier,
+		"expiry":     int64(-1),
 	}))
 	// Maybe delete device? Mark as applied?
 	return nil
