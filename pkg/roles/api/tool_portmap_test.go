@@ -10,6 +10,7 @@ import (
 )
 
 func TestAPIToolPortmap(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)

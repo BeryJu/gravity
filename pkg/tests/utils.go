@@ -18,6 +18,11 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+var (
+	testSpan          *sentry.Span
+	testContextCancel context.CancelFunc
+)
+
 func PanicIfError(args ...interface{}) {
 	for _, arg := range args {
 		if e, ok := arg.(error); ok && e != nil {
@@ -35,8 +40,7 @@ func MustJSON(in interface{}) string {
 }
 
 func Context() context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second) //nolint
-	return sentry.StartTransaction(ctx, "test").Context()
+	return testSpan.Context()
 }
 
 func RandomString(prefix ...string) string {
@@ -69,6 +73,16 @@ func ResetEtcd(t *testing.T) {
 		clientv3.WithPrefix(),
 	)
 	assert.NoError(t, err)
+}
+
+func Setup(t *testing.T) func() {
+	ctx, cn := context.WithCancel(context.Background())
+	testSpan = sentry.StartTransaction(ctx, "test")
+	testContextCancel = cn
+	ResetEtcd(t)
+	return func() {
+		testContextCancel()
+	}
 }
 
 func HasLocalDocker() bool {

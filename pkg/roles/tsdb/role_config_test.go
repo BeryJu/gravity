@@ -10,6 +10,7 @@ import (
 )
 
 func TestAPIRoleConfigGet(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)
@@ -23,6 +24,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)

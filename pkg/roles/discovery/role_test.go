@@ -11,6 +11,7 @@ import (
 )
 
 func TestRoleStartNoConfig(t *testing.T) {
+	defer tests.Setup(t)()
 	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -22,6 +23,7 @@ func TestRoleStartNoConfig(t *testing.T) {
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
+	defer tests.Setup(t)()
 	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()

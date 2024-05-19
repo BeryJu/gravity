@@ -11,6 +11,7 @@ import (
 )
 
 func TestRoleDNSZoneFind(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

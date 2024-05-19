@@ -9,6 +9,7 @@ import (
 )
 
 func TestAPIRoleConfigGet(t *testing.T) {
+	defer tests.Setup(t)()
 	role := getRole()
 	defer role.Stop()
 
@@ -18,6 +19,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
+	defer tests.Setup(t)()
 	role := getRole()
 	defer role.Stop()
 

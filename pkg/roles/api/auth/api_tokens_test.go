@@ -12,6 +12,7 @@ import (
 )
 
 func TestAPITokensGet(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -35,6 +36,7 @@ func TestAPITokensGet(t *testing.T) {
 }
 
 func TestAPITokensPut(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -63,6 +65,7 @@ func TestAPITokensPut(t *testing.T) {
 }
 
 func TestAPITokensDelete(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)

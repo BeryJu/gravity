@@ -12,7 +12,7 @@ import (
 )
 
 func TestRoleDNS_Etcd(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -56,7 +56,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -100,7 +100,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_CNAME(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -159,7 +159,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -203,7 +203,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -247,7 +247,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

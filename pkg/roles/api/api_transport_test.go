@@ -12,6 +12,7 @@ import (
 )
 
 func TestExport(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -21,7 +22,6 @@ func TestExport(t *testing.T) {
 
 	var output api.APIExportOutput
 
-	tests.ResetEtcd(t)
 	_, err := extconfig.Get().EtcdClient().Put(
 		ctx,
 		"/foo",
@@ -44,6 +44,7 @@ func TestExport(t *testing.T) {
 }
 
 func TestImport(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)

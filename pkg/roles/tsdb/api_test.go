@@ -14,6 +14,7 @@ import (
 )
 
 func TestAPIMetricsMemory(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("metrics", ctx)
@@ -36,6 +37,7 @@ func TestAPIMetricsMemory(t *testing.T) {
 }
 
 func TestAPIMetricsCPU(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("metrics", ctx)

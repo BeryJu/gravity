@@ -5,3 +5,4 @@ coverage.html
 *.pcap
 *.sock
 tests.json
+test-output

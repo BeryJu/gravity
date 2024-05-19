@@ -17,6 +17,7 @@ const (
 )
 
 func TestDiscoveryDocker(t *testing.T) {
+	defer tests.Setup(t)()
 	if !tests.HasLocalDocker() {
 		return
 	}

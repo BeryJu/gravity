@@ -20,6 +20,7 @@ var (
 )
 
 func TestDHCPDiscover(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -63,6 +64,7 @@ func TestDHCPDiscover(t *testing.T) {
 }
 
 func TestDHCPDiscover_Gateway(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -140,6 +142,7 @@ func TestDHCPDiscover_Gateway(t *testing.T) {
 }
 
 func TestDHCPDiscover_RequestedIP_WrongSubnet(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -218,6 +221,7 @@ func TestDHCPDiscover_RequestedIP_WrongSubnet(t *testing.T) {
 }
 
 func TestDHCPDiscoverDNS(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)

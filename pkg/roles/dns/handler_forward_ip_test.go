@@ -14,7 +14,7 @@ import (
 )
 
 func TestRoleDNS_IPForwarder_v4(t *testing.T) {
-	tests.ResetEtcd(t)
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -44,6 +44,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 }
 
 func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -98,6 +99,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 }
 
 func TestRoleDNS_IPForwarder_v6(t *testing.T) {
+	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

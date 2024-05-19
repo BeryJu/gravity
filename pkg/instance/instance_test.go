@@ -15,6 +15,7 @@ import (
 )
 
 func TestStart(t *testing.T) {
+	defer tests.Setup(t)()
 	called := false
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -34,6 +35,7 @@ func TestStart(t *testing.T) {
 }
 
 func TestFirstStart(t *testing.T) {
+	defer tests.Setup(t)()
 	called := false
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -55,6 +57,7 @@ func TestFirstStart(t *testing.T) {
 }
 
 func TestWatch(t *testing.T) {
+	defer tests.Setup(t)()
 	called := 0
 	rootInst := instance.New()
 	ctx := tests.Context()
