@@ -42,6 +42,8 @@ jobs:
         run: make test-env-stop
       - if: ${{ always() }}
         uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   lint:
     name: Lint
     runs-on: ubuntu-latest
