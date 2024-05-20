@@ -1,10 +1,9 @@
-import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
 import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
+import esbuild from "rollup-plugin-esbuild";
 
 export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
@@ -48,17 +47,14 @@ export default {
         json(),
         nodeResolve({ extensions, browser: true, preferBuiltins: false }),
         commonjs(),
-        babel({
-            extensions,
-            babelHelpers: "runtime",
-            include: ["src/**/*"],
+        esbuild({
+            minify: isProdBuild,
         }),
-        isProdBuild && terser(),
         copy({
             targets: [...resources],
             copyOnce: false,
         }),
-    ].filter((p) => p),
+    ],
     watch: {
         clearScreen: false,
     },

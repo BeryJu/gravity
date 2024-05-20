@@ -41,13 +41,6 @@ updates:
     assignees:
       - BeryJu
     groups:
-      sentry:
-        patterns:
-          - "@sentry/*"
-      babel:
-        patterns:
-          - "@babel/*"
-          - "babel-*"
       eslint:
         patterns:
           - "@typescript-eslint/*"
