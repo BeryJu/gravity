@@ -11,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
 	"github.com/getsentry/sentry-go"
+	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 
 	"github.com/0xERR0R/blocky/config"
@@ -106,18 +107,18 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	}
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
-	cfg.Log.Level = blockylog.LevelDebug
+	cfg.Log.Level = logrus.DebugLevel
 	cfg.QueryLog.Type = config.QueryLogTypeNone
 	if !extconfig.Get().Debug {
 		cfg.Log.Format = blockylog.FormatTypeJson
 		// Only log errors from blocky to prevent double-logging all queries
-		cfg.Log.Level = blockylog.LevelFatal
+		cfg.Log.Level = logrus.FatalLevel
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
 		return nil, err
 	}
-	cfg.BootstrapDNS = []config.BootstrappedUpstreamConfig{
+	cfg.BootstrapDNS = config.BootstrapDNS{
 		{
 			Upstream: config.Upstream{
 				Net:  config.NetProtocolTcpUdp,
@@ -135,11 +136,11 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	// TODO: Blocky config
 	cfg.Blocking = config.Blocking{
 		BlockType: "zeroIP",
-		BlackLists: map[string][]config.BytesSource{
+		Denylists: map[string][]config.BytesSource{
 			"block": blockLists,
 		},
-		Loading: config.SourceLoadingConfig{
-			Downloads: config.DownloaderConfig{
+		Loading: config.SourceLoading{
+			Downloads: config.Downloader{
 				Attempts: 3,
 			},
 		},
