@@ -35,37 +35,45 @@ type InternalIPAM struct {
 }
 
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
+	ipam := &InternalIPAM{
+		log:   role.log.With(zap.String("ipam", "internal")),
+		role:  role,
+		scope: s,
+		ips:   make(map[string]*IPUse),
+		ipsm:  sync.RWMutex{},
+	}
+	err := ipam.UpdateConfig(s)
+	if err != nil {
+		return nil, err
+	}
+	return ipam, nil
+}
+
+func (i *InternalIPAM) UpdateConfig(s *Scope) error {
 	sub, err := netip.ParsePrefix(s.SubnetCIDR)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to parse scope cidr")
+		return errors.Wrap(err, "failed to parse scope cidr")
 	}
 	start, err := netip.ParseAddr(s.IPAM["range_start"])
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to parse 'range_start'")
+		return errors.Wrap(err, "failed to parse 'range_start'")
 	}
 	end, err := netip.ParseAddr(s.IPAM["range_end"])
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to parse 'range_end'")
+		return errors.Wrap(err, "failed to parse 'range_end'")
 	}
-	ipam := &InternalIPAM{
-		SubnetCIDR: sub,
-		Start:      start,
-		End:        end,
-		log:        role.log.With(zap.String("ipam", "internal")),
-		role:       role,
-		scope:      s,
-		ips:        make(map[string]*IPUse),
-		ipsm:       sync.RWMutex{},
-	}
+	i.SubnetCIDR = sub
+	i.Start = start
+	i.End = end
 	sp := s.IPAM["should_ping"]
 	if sp != "" {
 		shouldPing, err := strconv.ParseBool(sp)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		ipam.shouldPing = shouldPing
+		i.shouldPing = shouldPing
 	}
-	return ipam, nil
+	return nil
 }
 
 func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
@@ -117,7 +125,7 @@ func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 	i.ipsm.RLock()
 	mem := i.ips[ip.String()]
-	i.ipsm.RUnlock()
+	defer i.ipsm.RUnlock()
 	if mem != nil {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
 		return false
@@ -143,6 +151,7 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 		}
 		if identifier != nil && l.Identifier == *identifier {
 			i.UseIP(ip, *identifier)
+			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing matching lease"))
 			return true
 		}
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "existing lease"))
@@ -158,6 +167,7 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 			unknown:    true,
 		}, false)
 	}
+	i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "free"))
 	return true
 }
 

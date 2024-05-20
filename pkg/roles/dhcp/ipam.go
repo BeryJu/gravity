@@ -17,4 +17,6 @@ type IPAM interface {
 	GetSubnetMask() net.IPMask
 	// Mark an IP as used
 	UseIP(addr netip.Addr, identifier string)
+	// Update config when scope is updated
+	UpdateConfig(s *Scope) error
 }

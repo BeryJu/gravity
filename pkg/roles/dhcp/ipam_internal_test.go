@@ -94,7 +94,7 @@ func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 		wg.Done()
 	}
 	for i := 0; i < iter; i++ {
-		tester(i)
+		go tester(i)
 	}
 	wg.Wait()
 	close(addrs)
