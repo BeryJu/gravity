@@ -79,21 +79,21 @@ func (l *Lease) setLeaseIP(req *Request4) {
 	requestedIP := req.RequestedIPAddress()
 	if requestedIP != nil {
 		req.log.Debug("checking requested IP", zap.String("ip", requestedIP.String()))
-		ip, err := netip.ParseAddr(requestedIP.String())
-		if err != nil {
-			req.log.Warn("failed to parse requested ip", zap.Error(err))
-		} else if l.scope.ipam.IsIPFree(ip) {
+		ip, _ := netip.AddrFromSlice(requestedIP)
+		if l.scope.ipam.IsIPFree(ip, &l.Identifier) {
 			req.log.Debug("requested IP is free", zap.String("ip", requestedIP.String()))
 			l.Address = requestedIP.String()
+			l.scope.ipam.UseIP(ip, l.Identifier)
 			return
 		}
 	}
-	ip := l.scope.ipam.NextFreeAddress()
+	ip := l.scope.ipam.NextFreeAddress(l.Identifier)
 	if ip == nil {
 		return
 	}
 	req.log.Debug("using next free IP from IPAM")
 	l.Address = ip.String()
+	l.scope.ipam.UseIP(*ip, l.Identifier)
 }
 
 func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {

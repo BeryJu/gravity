@@ -12,6 +12,7 @@ import (
 
 func testScope() dhcp.Scope {
 	return dhcp.Scope{
+		Name:       tests.RandomString(),
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
 		Options: []*types.DHCPOption{
