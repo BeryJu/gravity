@@ -111,37 +111,37 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     @property({ attribute: false })
-    accessor data: PaginatedResponse<T> | undefined;
+    data: PaginatedResponse<T> | undefined;
 
     @property({ type: Number })
-    accessor page = 1;
+    page = 1;
 
     @property({ type: String })
-    accessor order: string | undefined;
+    order: string | undefined;
 
     @property({ type: String })
-    accessor search: string = getURLParam("search", "");
+    search: string = getURLParam("search", "");
 
     @property({ type: Boolean })
-    accessor checkbox = false;
+    checkbox = false;
 
     @property({ type: Boolean })
-    accessor checkboxChip = false;
+    checkboxChip = false;
 
     @property({ attribute: false })
-    accessor selectedElements: T[] = [];
+    selectedElements: T[] = [];
 
     @property({ type: Boolean })
-    accessor paginated = true;
+    paginated = true;
 
     @property({ type: Boolean })
-    accessor expandable = false;
+    expandable = false;
 
     @property({ attribute: false })
-    accessor expandedElements: T[] = [];
+    expandedElements: T[] = [];
 
     @state()
-    accessor hasError: Error | undefined;
+    hasError: Error | undefined;
 
     static get styles(): CSSResult[] {
         return [

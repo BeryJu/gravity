@@ -16,10 +16,10 @@ type BulkDeleteMetadata = { key: string; value: string }[];
 @customElement("ak-delete-objects-table")
 export class DeleteObjectsTable<T extends object> extends Table<T> {
     @property({ attribute: false })
-    accessor objects: T[] = [];
+    objects: T[] = [];
 
     @property({ attribute: false })
-    accessor metadata!: (item: T) => BulkDeleteMetadata;
+    metadata!: (item: T) => BulkDeleteMetadata;
 
     static get styles(): CSSResult[] {
         return super.styles.concat(PFList);
@@ -64,14 +64,14 @@ export class DeleteObjectsTable<T extends object> extends Table<T> {
 export class DeleteBulkForm extends ModalButton {
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accessor objects: any[] = [];
+    objects: any[] = [];
 
     @property()
-    accessor objectLabel: string | undefined;
+    objectLabel: string | undefined;
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accessor metadata: (item: any) => BulkDeleteMetadata = (item: any) => {
+    metadata: (item: any) => BulkDeleteMetadata = (item: any) => {
         const rec = item as Record<string, unknown>;
         const meta = [];
         if (Object.prototype.hasOwnProperty.call(rec, "name")) {
@@ -85,11 +85,11 @@ export class DeleteBulkForm extends ModalButton {
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accessor delete!: (item: any, extraData: any) => Promise<any>;
+    delete!: (item: any, extraData: any) => Promise<any>;
 
     @property({ attribute: false })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accessor preDelete: () => Promise<any> = () => {
+    preDelete: () => Promise<any> = () => {
         return Promise.resolve();
     };
 

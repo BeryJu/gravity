@@ -45,13 +45,13 @@ export function navigate(url: string, params?: { [key: string]: unknown }): void
 @customElement("ak-router-outlet")
 export class RouterOutlet extends AKElement {
     @property({ attribute: false })
-    accessor current: RouteMatch | undefined;
+    current: RouteMatch | undefined;
 
     @property()
-    accessor defaultUrl: string | undefined;
+    defaultUrl: string | undefined;
 
     @property({ attribute: false })
-    accessor routes: Route[] = [];
+    routes: Route[] = [];
 
     static get styles(): CSSResult[] {
         return [

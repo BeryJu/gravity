@@ -80,10 +80,10 @@ export const ROUTES = [
 @customElement("gravity-app")
 export class AdminInterface extends AKElement {
     @state()
-    accessor showSidebar = true;
+    showSidebar = true;
 
     @state()
-    accessor isAuthenticated = false;
+    isAuthenticated = false;
 
     static get styles(): CSSResult[] {
         return [

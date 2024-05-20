@@ -1,16 +1,15 @@
 {
     "compilerOptions": {
         "strict": true,
-        "rootDir": ".",
+        "baseUrl": ".",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true,
         "sourceMap": true,
-        "useDefineForClassFields": true,
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "node",
-        "inlineSources": true,
         "lib": [
             "ES5",
             "ES2015",
@@ -24,10 +23,28 @@
             "DOM.Iterable",
             "WebWorker"
         ],
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "useDefineForClassFields": false,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
         "plugins": [
             {
                 "name": "ts-lit-plugin",
-                "strict": true
+                "strict": true,
+                "rules": {
+                    "no-unknown-tag-name": "off",
+                    "no-missing-import": "off",
+                    "no-incompatible-type-binding": "off",
+                    "no-unknown-property": "off",
+                    "no-unknown-attribute": "off"
+                }
             }
         ]
     }

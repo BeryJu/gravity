@@ -12,13 +12,13 @@ import { PFSize } from "../Spinner";
 @customElement("ak-spinner-button")
 export class SpinnerButton extends AKElement {
     @property({ type: Boolean })
-    accessor isRunning = false;
+    isRunning = false;
 
     @property()
-    accessor callAction: (() => Promise<unknown>) | undefined;
+    callAction: (() => Promise<unknown>) | undefined;
 
     @property({ type: Boolean })
-    accessor disabled = false;
+    disabled = false;
 
     static get styles(): CSSResult[] {
         return [

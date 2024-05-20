@@ -18,13 +18,13 @@ export class ClusterJoinWizard extends AKElement {
     }
 
     @property({ type: Boolean })
-    accessor open = false;
+    open = false;
 
     @property()
-    accessor createText = "Join";
+    createText = "Join";
 
     @property({ type: Boolean })
-    accessor showButton = true;
+    showButton = true;
 
     render(): TemplateResult {
         return html`

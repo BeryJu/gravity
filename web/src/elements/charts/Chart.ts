@@ -54,7 +54,7 @@ export abstract class AKChart<T> extends AKElement {
     chart?: Chart;
 
     @property()
-    accessor centerText: string | undefined;
+    centerText: string | undefined;
 
     fontColour = FONT_COLOUR_LIGHT_MODE;
 

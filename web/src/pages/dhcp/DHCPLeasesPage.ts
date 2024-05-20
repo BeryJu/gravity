@@ -17,7 +17,7 @@ import "./DHCPLeaseForm";
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
     @property()
-    accessor scope = "";
+    scope = "";
 
     pageTitle(): string {
         return `DHCP Leases for ${this.scope}`;

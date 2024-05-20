@@ -50,7 +50,7 @@ export class LoginForm extends Form<AuthAPILoginInput> {
 @customElement("gravity-login")
 export class LoginPage extends AKElement {
     @state()
-    accessor authConfig: AuthAPIConfigOutput | undefined;
+    authConfig: AuthAPIConfigOutput | undefined;
 
     static get styles(): CSSResult[] {
         return [
