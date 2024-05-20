@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"net/netip"
 	"runtime"
 	"strings"
 	"testing"
@@ -37,6 +38,12 @@ func MustJSON(in interface{}) string {
 		panic(err)
 	}
 	return string(j)
+}
+
+func MustParseNetIP(t *testing.T, r string) netip.Addr {
+	i, err := netip.ParseAddr(r)
+	assert.NoError(t, err)
+	return i
 }
 
 func Context() context.Context {

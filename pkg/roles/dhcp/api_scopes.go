@@ -117,7 +117,7 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		}
 		s.cidr = cidr
 
-		_, err = s.ipamType()
+		_, err = s.ipamType(nil)
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}
