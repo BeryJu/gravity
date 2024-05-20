@@ -23,13 +23,14 @@ type InternalIPAM struct {
 	Start netip.Addr
 	End   netip.Addr
 
-	ips map[string]*IPUse
+	ips  map[string]*IPUse
+	ipsm sync.RWMutex
+	ipf  sync.Mutex
 
 	log        *zap.Logger
 	role       *Role
 	scope      *Scope
 	SubnetCIDR netip.Prefix
-	ipsm       sync.RWMutex
 
 	shouldPing bool
 }
@@ -41,6 +42,7 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 		scope: s,
 		ips:   make(map[string]*IPUse),
 		ipsm:  sync.RWMutex{},
+		ipf:   sync.Mutex{},
 	}
 	err := ipam.UpdateConfig(s)
 	if err != nil {
@@ -123,9 +125,11 @@ func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
+	i.ipf.Lock()
+	defer i.ipf.Unlock()
 	i.ipsm.RLock()
 	mem := i.ips[ip.String()]
-	defer i.ipsm.RUnlock()
+	i.ipsm.RUnlock()
 	if mem != nil {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
 		return false
