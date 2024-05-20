@@ -1,6 +1,4 @@
 ---
-version: '3.4'
-
 services:
   gravity:
     # Important for this to be static and unique

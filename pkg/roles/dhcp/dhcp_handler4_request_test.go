@@ -11,30 +11,7 @@ import (
 	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
-
-func Cleanup() {
-	rootInst := instance.New()
-	ctx := tests.Context()
-	inst := rootInst.ForRole("dhcp", ctx)
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyScopes,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyLeases,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
-}
 
 var DHCPRequestPayload = []byte{1, 1, 6, 0, 136, 9, 170, 249, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 144, 187, 102, 50, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 130, 83, 99, 53, 1, 3, 55, 9, 1, 121, 3, 6, 15, 108, 114, 119, 252, 57, 2, 5, 220, 61, 7, 1, 68, 144, 187, 102, 50, 4, 50, 4, 10, 120, 20, 64, 51, 4, 0, 118, 167, 0, 12, 14, 106, 101, 110, 115, 45, 105, 112, 104, 111, 110, 101, 45, 49, 50, 255, 0, 0, 0, 0}
 
@@ -44,7 +21,6 @@ func TestDHCPRequest(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
-	Cleanup()
 
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
@@ -88,7 +64,6 @@ func TestDHCPRequestDNS(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
-	Cleanup()
 
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
@@ -138,7 +113,6 @@ func TestDHCPRequestDNS_ChangedScope(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
-	Cleanup()
 
 	tests.PanicIfError(inst.KV().Put(
 		ctx,

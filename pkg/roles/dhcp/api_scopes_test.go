@@ -22,7 +22,7 @@ func testScope() dhcp.Scope {
 		},
 		IPAM: map[string]string{
 			"range_start": "10.200.0.100",
-			"range_end":   "10.200.0.150",
+			"range_end":   "10.200.0.250",
 		},
 		DNS: &dhcp.ScopeDNS{},
 	}
