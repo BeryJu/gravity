@@ -9,7 +9,7 @@ import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-backup")
 export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
-    header = "Backup";
+    accessor header = "Backup";
 
     getPrimaryValue(): Promise<BackupAPIBackupStatusOutput> {
         return new RolesBackupApi(DEFAULT_CONFIG).backupStatus();
@@ -17,7 +17,7 @@ export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
 
     getLatestBackup(): BackupAPIBackupStatus | undefined {
         const statuses = (this.value?.status || []).sort(
-            (a, b) => a.time.getTime() - b.time.getTime(),
+            (a, b) => b.time.getTime() - a.time.getTime(),
         );
         if (statuses.length < 1) {
             return undefined;
