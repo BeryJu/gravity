@@ -22,11 +22,11 @@ export interface Pagination {
 @customElement("ak-table-pagination")
 export class TablePagination extends AKElement {
     @property({ attribute: false })
-    accessor pages: Pagination | undefined;
+    pages: Pagination | undefined;
 
     @property({ attribute: false })
     // eslint-disable-next-line
-    accessor pageChangeHandler: (page: number) => void = (page: number) => {};
+    pageChangeHandler: (page: number) => void = (page: number) => {};
 
     static get styles(): CSSResult[] {
         return [PFBase, PFButton, PFPagination, AKElement.GlobalStyle];

@@ -37,7 +37,7 @@ export const roles: Role[] = [
 @customElement("gravity-cluster-roles")
 export class RolesPage extends TablePage<Role> {
     @state()
-    accessor instances: InstanceInstanceInfo[] = [];
+    instances: InstanceInstanceInfo[] = [];
 
     pageTitle(): string {
         return "Cluster Role configurations";

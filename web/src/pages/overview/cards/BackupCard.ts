@@ -9,7 +9,7 @@ import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-backup")
 export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {
-    accessor header = "Backup";
+    header = "Backup";
 
     getPrimaryValue(): Promise<BackupAPIBackupStatusOutput> {
         return new RolesBackupApi(DEFAULT_CONFIG).backupStatus();

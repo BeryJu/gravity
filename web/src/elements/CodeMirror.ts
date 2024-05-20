@@ -17,13 +17,13 @@ import { AKElement } from "./Base";
 @customElement("ak-codemirror")
 export class CodeMirrorTextarea extends AKElement {
     @property({ type: Boolean })
-    accessor readOnly = false;
+    readOnly = false;
 
     @property()
-    accessor mode = "yaml";
+    mode = "yaml";
 
     @property({ reflect: true })
-    accessor name: string | undefined;
+    name: string | undefined;
 
     editor?: EditorView;
 

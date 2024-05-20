@@ -18,7 +18,7 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
     converter = new Convert();
 
     @state()
-    accessor isStructured = false;
+    isStructured = false;
 
     pageTitle(): string {
         return "Node logs";

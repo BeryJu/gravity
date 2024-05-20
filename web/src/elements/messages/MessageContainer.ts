@@ -22,7 +22,7 @@ export function showMessage(message: APIMessage, unique = false): void {
 @customElement("ak-message-container")
 export class MessageContainer extends AKElement {
     @property({ attribute: false })
-    accessor messages: APIMessage[] = [];
+    messages: APIMessage[] = [];
 
     static get styles(): CSSResult[] {
         return [

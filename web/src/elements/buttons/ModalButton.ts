@@ -36,13 +36,13 @@ export const MODAL_BUTTON_STYLES = css`
 @customElement("ak-modal-button")
 export class ModalButton extends AKElement {
     @property()
-    accessor size: PFSize = PFSize.Large;
+    size: PFSize = PFSize.Large;
 
     @property({ type: Boolean })
-    accessor open = false;
+    open = false;
 
     @property({ type: Boolean })
-    accessor locked = false;
+    locked = false;
 
     handlerBound = false;
 

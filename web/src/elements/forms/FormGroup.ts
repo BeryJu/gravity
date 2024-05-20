@@ -11,7 +11,7 @@ import { AKElement } from "../Base";
 @customElement("ak-form-group")
 export class FormGroup extends AKElement {
     @property({ type: Boolean })
-    accessor expanded = false;
+    expanded = false;
 
     static get styles(): CSSResult[] {
         return [

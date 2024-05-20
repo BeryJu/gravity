@@ -7,7 +7,7 @@ import { SpinnerButton } from "./SpinnerButton";
 @customElement("ak-action-button")
 export class ActionButton extends SpinnerButton {
     @property({ attribute: false })
-    accessor apiRequest: () => Promise<unknown> = () => {
+    apiRequest: () => Promise<unknown> = () => {
         throw new Error();
     };
 

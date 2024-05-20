@@ -12,16 +12,16 @@ import "./Spinner";
 @customElement("ak-empty-state")
 export class EmptyState extends AKElement {
     @property({ type: String })
-    accessor icon = "";
+    icon = "";
 
     @property({ type: Boolean })
-    accessor loading = false;
+    loading = false;
 
     @property({ type: Boolean })
-    accessor fullHeight = false;
+    fullHeight = false;
 
     @property()
-    accessor header = "";
+    header = "";
 
     static get styles(): CSSResult[] {
         return [PFBase, PFEmptyState, PFTitle, AKElement.GlobalStyle];
