@@ -76,6 +76,10 @@ func New(instance roles.Instance) *Role {
 	return r
 }
 
+func (r *Role) Mux() *mux.Router {
+	return r.m
+}
+
 func (r *Role) SessionStore() sessions.Store {
 	return r.sessions
 }
