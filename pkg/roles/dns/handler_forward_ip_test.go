@@ -1,10 +1,12 @@
 package dns_test
 
 import (
+	"net"
 	"testing"
 	"time"
 
-	"beryju.io/gravity/pkg/extconfig"
+	d "github.com/miekg/dns"
+
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/dns/types"
@@ -39,8 +41,18 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	tests.WaitForPort(1054)
-	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+	fw := NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   "gravity.beryju.io.",
+				Qtype:  d.TypeA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("10.0.0.1").String(), ans.(*d.A).A.String())
 }
 
 func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
@@ -78,8 +90,22 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 	assert.NotNil(t, role)
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
-	tests.WaitForPort(1054)
-	assert.Equal(t, []string{"10.0.0.1"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+
+	fw := NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   "gravity.beryju.io.",
+				Qtype:  d.TypeA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("10.0.0.1").String(), ans.(*d.A).A.String())
+
+	// We don't have a signal for when a record is persisted to the cache
+	// so wait for things to settle
 	time.Sleep(3 * time.Second)
 	tests.AssertEtcd(
 		t,
@@ -124,6 +150,16 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	tests.WaitForPort(1054)
-	assert.Equal(t, []string{"fe80::1"}, tests.DNSLookup("ipv6.t.gravity.beryju.io.", extconfig.Get().Listen(1054)))
+	fw := NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   "ipv6.t.gravity.beryju.io.",
+				Qtype:  d.TypeAAAA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("fe80::1").String(), ans.(*d.AAAA).AAAA.String())
 }

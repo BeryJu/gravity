@@ -1,10 +1,8 @@
 package dns
 
 import (
-	"strings"
-
 	"beryju.io/gravity/pkg/roles/dns/utils"
-	"github.com/getsentry/sentry-go"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 )
@@ -12,48 +10,36 @@ import (
 const MemoryType = "memory"
 
 type MemoryHandler struct {
+	*EtcdHandler
 	log *zap.Logger
 	z   *Zone
 }
 
 func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
-	eh := &MemoryHandler{
-		z: z,
+	mh := &MemoryHandler{
+		EtcdHandler: &EtcdHandler{z: z},
+		z:           z,
 	}
-	eh.log = z.log.With(zap.String("handler", eh.Identifier()))
-	return eh
-}
-
-func (eh *MemoryHandler) Identifier() string {
-	return MemoryType
-}
-
-func (eh *MemoryHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.Msg {
-	m := new(dns.Msg)
-	m.Authoritative = eh.z.Authoritative
-	ms := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.memory.get")
-	defer ms.Finish()
-	for _, question := range r.Question {
-		relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
-		fullRecordKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(relRecordName), dns.Type(question.Qtype).String()).String()
-		eh.z.recordsSync.RLock()
-		recs, ok := eh.z.records[fullRecordKey]
-		eh.z.recordsSync.RUnlock()
-		if ok {
-			if len(recs) < 1 {
-				continue
-			}
-			eh.log.Debug("got record in in-memory cache", zap.String("key", fullRecordKey))
-			for _, rec := range recs {
-				ans := rec.ToDNS(question.Name)
-				if ans != nil {
-					m.Answer = append(m.Answer, ans)
-				}
+	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
+		mh.z.recordsSync.RLock()
+		recs, ok := mh.z.records[k.String()]
+		mh.z.recordsSync.RUnlock()
+		answers := []dns.RR{}
+		if !ok {
+			return answers
+		}
+		for _, rec := range recs {
+			ans := rec.ToDNS(qname)
+			if ans != nil {
+				answers = append(answers, ans)
 			}
 		}
+		return answers
 	}
-	if len(m.Answer) < 1 {
-		return nil
-	}
-	return m
+	mh.log = z.log.With(zap.String("handler", mh.Identifier()))
+	return mh
+}
+
+func (mh *MemoryHandler) Identifier() string {
+	return MemoryType
 }

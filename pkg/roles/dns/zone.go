@@ -183,7 +183,7 @@ func (z *Zone) Init(ctx context.Context) {
 	}
 
 	// start watching all records in this zone, in case etcd goes down
-	go z.watchZoneRecords(ctx)
+	z.watchZoneRecords(ctx)
 }
 
 func (z *Zone) watchZoneRecords(ctx context.Context) {
@@ -234,11 +234,13 @@ func (z *Zone) watchZoneRecords(ctx context.Context) {
 		prefix,
 		clientv3.WithPrefix(),
 	)
-	for watchResp := range watchChan {
-		for _, event := range watchResp.Events {
-			go evtHandler(event)
+	go func() {
+		for watchResp := range watchChan {
+			for _, event := range watchResp.Events {
+				go evtHandler(event)
+			}
 		}
-	}
+	}()
 }
 
 func (z *Zone) StopWatchingRecords() {

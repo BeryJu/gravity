@@ -15,13 +15,37 @@ import (
 const EtcdType = "etcd"
 
 type EtcdHandler struct {
-	log *zap.Logger
-	z   *Zone
+	log       *zap.Logger
+	z         *Zone
+	lookupKey func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR
 }
 
 func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
 	eh := &EtcdHandler{
 		z: z,
+	}
+	eh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
+		answers := []dns.RR{}
+		es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
+		defer es.Finish()
+		key := k.String()
+		eh.log.Debug("fetching kv key", zap.String("key", key))
+		es.SetTag("gravity.dns.handler.etcd.key", key)
+		res, err := eh.z.inst.KV().Get(r.Context(), key, clientv3.WithPrefix())
+		if err != nil || len(res.Kvs) < 1 {
+			return answers
+		}
+		for _, kv := range res.Kvs {
+			rec, err := eh.z.recordFromKV(kv)
+			if err != nil {
+				continue
+			}
+			ans := rec.ToDNS(qname)
+			if ans != nil {
+				answers = append(answers, ans)
+			}
+		}
+		return answers
 	}
 	eh.log = z.log.With(zap.String("handler", eh.Identifier()))
 	return eh
@@ -29,31 +53,6 @@ func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
 
 func (eh *EtcdHandler) Identifier() string {
 	return EtcdType
-}
-
-// lookupKey Lookup direct key and fetch all UID entries below it
-func (eh *EtcdHandler) lookupKey(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
-	answers := []dns.RR{}
-	es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
-	defer es.Finish()
-	key := k.String()
-	eh.log.Debug("fetching kv key", zap.String("key", key))
-	es.SetTag("gravity.dns.handler.etcd.key", key)
-	res, err := eh.z.inst.KV().Get(r.Context(), key, clientv3.WithPrefix())
-	if err != nil || len(res.Kvs) < 1 {
-		return answers
-	}
-	for _, kv := range res.Kvs {
-		rec, err := eh.z.recordFromKV(kv)
-		if err != nil {
-			continue
-		}
-		ans := rec.ToDNS(qname)
-		if ans != nil {
-			answers = append(answers, ans)
-		}
-	}
-	return answers
 }
 
 func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, question dns.Question) []dns.RR {

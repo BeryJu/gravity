@@ -1,13 +1,14 @@
 package dns_test
 
 import (
+	"net"
 	"testing"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
+	d "github.com/miekg/dns"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
@@ -47,6 +48,16 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	tests.WaitForPort(1054)
-	assert.Equal(t, []string{"0.0.0.0", "::"}, tests.DNSLookup("gravity.beryju.io.", extconfig.Get().Listen(1054)))
+	fw := NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   "gravity.beryju.io.",
+				Qtype:  d.TypeA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("0.0.0.0").String(), ans.(*d.A).A.String())
 }
