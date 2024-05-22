@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoleDNS_Etcd(t *testing.T) {
+func TestRoleDNS_Memory(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -27,7 +27,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
@@ -66,7 +66,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
+func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -81,7 +81,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
@@ -120,7 +120,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Etcd_CNAME(t *testing.T) {
+func TestRoleDNS_Memory_CNAME(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -135,7 +135,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
@@ -201,7 +201,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	assert.Equal(t, "bar.test.", ans.(*d.CNAME).Target)
 }
 
-func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
+func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -216,7 +216,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
@@ -255,7 +255,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
+func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -270,7 +270,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
@@ -309,7 +309,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
+func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -324,7 +324,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "etcd",
+					"type": "memory",
 				},
 			},
 		}),
