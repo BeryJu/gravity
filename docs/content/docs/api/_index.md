@@ -21,3 +21,5 @@ gravity cli users add myusername
 ```
 
 This will prompt you for a password which will be hashed and stored in the database.
+
+The above command can also be used to reset a users' password, as it will overwrite any data for the given username.
