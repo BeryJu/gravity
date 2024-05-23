@@ -210,6 +210,18 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 			rep.UpdateOption(dhcpv4.OptDomainSearch(&rfc1035label.Labels{Labels: l.scope.DNS.Search}))
 		}
 	}
+
+	// Check if the request has a different hostname, and update the lease
+	if req.HostName() != l.Hostname {
+		l.Hostname = req.HostName()
+		// Update lease with new hostname
+		go func() {
+			err := l.Put(req.Context, l.Expiry)
+			if err != nil {
+				l.log.Warn("failed to update lease", zap.Error(err))
+			}
+		}()
+	}
 	if l.Hostname != "" {
 		hostname := l.Hostname
 		if l.scope.DNS != nil && l.scope.DNS.AddZoneInHostname {
