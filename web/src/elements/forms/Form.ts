@@ -13,7 +13,6 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
-import { convertToSlug } from "../../common/utils";
 import { AKElement } from "../Base";
 import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { showMessage } from "../messages/MessageContainer";
@@ -141,34 +140,6 @@ export class Form<T> extends AKElement {
 
     getSuccessMessage(): string {
         return this.successMessage;
-    }
-
-    updated(): void {
-        this.shadowRoot
-            ?.querySelectorAll("ak-form-element-horizontal[name=name]")
-            .forEach((nameInput) => {
-                const input = nameInput.firstElementChild as HTMLInputElement;
-                const form = nameInput.closest("form");
-                if (form === null) {
-                    return;
-                }
-                const slugFieldWrapper = form.querySelector(
-                    "ak-form-element-horizontal[name=slug]",
-                );
-                if (!slugFieldWrapper) {
-                    return;
-                }
-                const slugField = slugFieldWrapper.firstElementChild as HTMLInputElement;
-                // Only attach handler if the slug is already equal to the name
-                // if not, they are probably completely different and shouldn't update
-                // each other
-                if (convertToSlug(input.value) !== slugField.value) {
-                    return;
-                }
-                nameInput.addEventListener("input", () => {
-                    slugField.value = convertToSlug(input.value);
-                });
-            });
     }
 
     resetForm(): void {

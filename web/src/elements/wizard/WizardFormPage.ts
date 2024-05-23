@@ -1,3 +1,5 @@
+import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement";
+
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -10,7 +12,7 @@ import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-gro
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
-import { Form, KeyUnknown } from "../forms/Form";
+import { Form, KeyUnknown, serializeForm } from "../forms/Form";
 import { WizardPage } from "./WizardPage";
 
 @customElement("ak-wizard-form")
@@ -27,6 +29,14 @@ export class WizardForm extends Form<KeyUnknown> {
         }
         const finalData = Object.assign({}, data);
         return this.nextDataCallback(finalData);
+    }
+
+    serializeForm(): KeyUnknown | undefined {
+        const elements = this.querySelectorAll<HorizontalFormElement>("ak-form-element-horizontal");
+        if (!elements) {
+            return {} as KeyUnknown;
+        }
+        return serializeForm(elements) as KeyUnknown;
     }
 }
 
@@ -85,7 +95,14 @@ export class WizardFormPage extends WizardPage {
                 .nextDataCallback=${this.nextDataCallback}
                 @input=${() => this.inputCallback()}
             >
-                ${this.renderForm()}
+                <form
+                    class="pf-c-form pf-m-horizontal"
+                    @submit=${(ev: Event) => {
+                        ev.preventDefault();
+                    }}
+                >
+                    ${this.renderForm()}
+                </form>
             </ak-wizard-form>
         `;
     }

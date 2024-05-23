@@ -25,7 +25,6 @@ export class ClusterJoinCompose extends WizardFormPage {
 
     renderCompose(): KeyUnknown {
         return {
-            version: "3.4",
             services: {
                 gravity: {
                     hostname: this.host.state["identifier"],
