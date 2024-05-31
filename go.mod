@@ -40,7 +40,7 @@ require (
 	go.etcd.io/etcd/api/v3 v3.5.14
 	go.etcd.io/etcd/client/v3 v3.5.14
 	go.etcd.io/etcd/etcdctl/v3 v3.5.13
-	go.etcd.io/etcd/etcdutl/v3 v3.5.13
+	go.etcd.io/etcd/etcdutl/v3 v3.5.14
 	go.etcd.io/etcd/server/v3 v3.5.14
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.23.0
