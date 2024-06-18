@@ -19,14 +19,14 @@ type APIBackupStartInput struct {
 func (r *Role) APIBackupStart() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIBackupStartInput, output *BackupStatus) error {
 		if input.Wait {
-			o := r.SaveSnapshot(ctx)
+			o := r.SaveSnapshot(context.Background())
 			output.Duration = o.Duration
 			output.Error = o.Error
 			output.Filename = o.Filename
 			output.Size = o.Size
 			output.Status = o.Status
 		} else {
-			go r.SaveSnapshot(ctx)
+			go r.SaveSnapshot(context.Background())
 			output.Status = BackupStatusStarted
 		}
 		return nil
