@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: vars
         run: make ci--env
-      - uses: docker/build-push-action@v6.1.0
+      - uses: docker/build-push-action@v6.2.0
         with:
           tags: |
             ghcr.io/beryju/gravity:stable
