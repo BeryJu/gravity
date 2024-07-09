@@ -10,7 +10,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coredns/caddy v1.1.1
 	github.com/coredns/coredns v1.11.3
-	github.com/coreos/go-oidc/v3 v3.10.0
+	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/creasty/defaults v1.7.0
 	github.com/felixge/fgprof v0.9.4
 	github.com/getsentry/sentry-go v0.28.1
@@ -43,9 +43,9 @@ require (
 	go.etcd.io/etcd/etcdutl/v3 v3.5.14
 	go.etcd.io/etcd/server/v3 v3.5.14
 	go.uber.org/zap v1.27.0
-	golang.org/x/crypto v0.24.0
+	golang.org/x/crypto v0.25.0
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
-	golang.org/x/net v0.26.0
+	golang.org/x/net v0.27.0
 	golang.org/x/oauth2 v0.21.0
 	golang.org/x/term v0.22.0
 )
@@ -96,7 +96,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.2 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.20.0 // indirect
