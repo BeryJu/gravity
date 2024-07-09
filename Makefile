@@ -64,7 +64,7 @@ internal/resources/macoui:
 internal/resources/blocky:
 	mkdir -p internal/resources/blocky
 	curl -L https://adaway.org/hosts.txt -o ./internal/resources/blocky/adaway.org.txt
-	curl -L https://dbl.oisd.nl/ -o ./internal/resources/blocky/dbl.oisd.nl.txt
+	curl -L https://big.oisd.nl/domainswild -o ./internal/resources/blocky/big.oisd.nl.txt
 	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ./internal/resources/blocky/StevenBlack.hosts.txt
 	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/resources/blocky/AdguardDNS.txt
 	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/resources/blocky/Easylist.txt

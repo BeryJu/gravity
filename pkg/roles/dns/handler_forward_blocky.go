@@ -90,7 +90,7 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		HTTPByteSource(blockyListBase + "Easylist.txt"),
 		HTTPByteSource(blockyListBase + "StevenBlack.hosts.txt"),
 		HTTPByteSource(blockyListBase + "adaway.org.txt"),
-		HTTPByteSource(blockyListBase + "dbl.oisd.nl.txt"),
+		HTTPByteSource(blockyListBase + "big.oisd.nl.txt"),
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
 		lists := strings.Split(bll, ";")
