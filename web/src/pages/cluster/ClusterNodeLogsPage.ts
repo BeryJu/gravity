@@ -67,6 +67,7 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
                     html`<pre>${JSON.stringify(otherFields)}</pre>`,
                 ];
             } catch (error) {
+                console.log(error);
                 this.isStructured = false;
             }
         }

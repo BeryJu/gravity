@@ -35,7 +35,7 @@ export class CodeMirrorTextarea extends AKElement {
     themeDark: Extension;
 
     @property()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set value(v: any) {
         if (v === null || v === undefined) return;
         // Value might be an object if within an iron-form, as that calls the getter of value
@@ -75,6 +75,7 @@ export class CodeMirrorTextarea extends AKElement {
                     return this.getInnerValue();
             }
         } catch (e) {
+            console.warn(e);
             return this.getInnerValue();
         }
     }
