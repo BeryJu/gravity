@@ -1,5 +1,5 @@
 # Stage 1: Build web
-FROM --platform=${BUILDPLATFORM} docker.io/library/node:22 as web-builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/node:22 AS web-builder
 
 WORKDIR /work
 
@@ -15,7 +15,7 @@ ENV NODE_ENV=production
 RUN make web-build
 
 # Stage 2: Prepare external files
-FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim as downloader
+FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim AS downloader
 
 WORKDIR /workspace
 COPY Makefile .
@@ -26,7 +26,7 @@ RUN apt-get update && \
     make internal/resources/macoui internal/resources/blocky
 
 # Stage 3: Build
-FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.23rc1 as builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.23rc1 AS builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
