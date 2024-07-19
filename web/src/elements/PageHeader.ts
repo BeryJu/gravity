@@ -53,6 +53,9 @@ export class PageHeader extends AKElement {
                     flex-direction: row;
                     min-height: 114px;
                 }
+                .sidebar-trigger, .pf-c-page__main-section {
+                    background-color: transparent;
+                }
                 .pf-c-button.pf-m-plain {
                     background-color: var(--pf-c-page__main-section--m-light--BackgroundColor);
                     border-radius: 0px;
