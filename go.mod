@@ -1,10 +1,10 @@
 module beryju.io/gravity
 
-go 1.22.3
+go 1.22.5
 
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20240508095927-d51d39929f34
-	github.com/Netflix/go-env v0.0.0-20220526054621-78278af1949d
+	github.com/Netflix/go-env v0.0.1
 	github.com/Ullaakut/nmap/v2 v2.2.2
 	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
 	github.com/api7/etcdstore v1.1.0
