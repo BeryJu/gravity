@@ -1,6 +1,7 @@
 module beryju.io/gravity
 
-go 1.22.3
+go 1.22.5
+
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20240508095927-d51d39929f34
 	github.com/Netflix/go-env v0.0.1
