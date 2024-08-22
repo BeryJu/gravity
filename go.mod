@@ -1,6 +1,8 @@
 module beryju.io/gravity
 
-go 1.22.5
+go 1.23
+
+toolchain go1.23.0
 
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20240508095927-d51d39929f34
@@ -19,7 +21,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/securecookie v1.1.2
-	github.com/gorilla/sessions v1.3.0
+	github.com/gorilla/sessions v1.4.0
 	github.com/gosimple/slug v1.14.0
 	github.com/insomniacslk/dhcp v0.0.0-20220504074936-1ca156eafb9f
 	github.com/miekg/dns v1.1.62
