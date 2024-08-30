@@ -53,8 +53,8 @@ github.com/DataDog/sketches-go v1.4.2/go.mod h1:xJIXldczJyyjnbDop7ZZcLxJdV3+7Kra
 github.com/Microsoft/go-winio v0.5.0/go.mod h1:JPGBdM1cNvN/6ISo+n8V5iA4v8pBzdOpzfwIujj1a84=
 github.com/Microsoft/go-winio v0.6.1 h1:9/kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migciow=
 github.com/Microsoft/go-winio v0.6.1/go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
-github.com/Netflix/go-env v0.0.1 h1:8qIjVK5eR54CmAvRiS4VXy/tkhi/KeOKjpAHO0990oM=
-github.com/Netflix/go-env v0.0.1/go.mod h1:XTo6a/MzolfKW0be/DjOtzUpNvmmc72g2I7dso3OjUk=
+github.com/Netflix/go-env v0.1.0 h1:qSMk2A4D6urE/YqOKpLeOkaATGmFmMLo56E7kNNKypk=
+github.com/Netflix/go-env v0.1.0/go.mod h1:9IRTAm+pQDPMpUtMLR26JOrjHnAWz3KUbhaegqTdhfY=
 github.com/RaveNoX/go-jsoncommentstrip v1.0.0/go.mod h1:78ihd09MekBnJnxpICcwzCMzGrKSKYe4AqU6PDYYpjk=
 github.com/ThinkChaos/parcour v0.0.0-20230710171753-fbf917c9eaef h1:lg6zRor4+PZN1Pxqtieo/NMhd61ZdV1Z/+bFURWIVfU=
 github.com/ThinkChaos/parcour v0.0.0-20230710171753-fbf917c9eaef/go.mod h1:hkcYs23P9zbezt09v8168B4lt69PGuoxRPQ6IJHKpHo=
