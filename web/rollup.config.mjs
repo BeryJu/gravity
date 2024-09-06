@@ -13,22 +13,14 @@ export const resources = [
         dest: "dist/",
     },
     {
-        src: "node_modules/@patternfly/patternfly/patternfly.min.css",
-        dest: "dist/",
-    },
-    {
-        src: "node_modules/@patternfly/patternfly/patternfly-base.css",
-        dest: "dist/",
-    },
-    {
         src: "node_modules/@patternfly/patternfly-v6/patternfly.min.css",
-        dest: "dist/patternfly-v6.min.css",
+        dest: "dist/",
     },
     {
         src: "node_modules/@patternfly/patternfly-v6/patternfly-base.css",
-        dest: "dist/patternfly-v6-base.css",
+        dest: "dist/",
     },
-    { src: "src/elements/styles/gravity.css", dest: "dist/" },
+    // { src: "src/elements/styles/gravity.css", dest: "dist/" },
     {
         src: "node_modules/@patternfly/patternfly/assets/*",
         dest: "dist/assets/",
