@@ -28,16 +28,11 @@ export class SpinnerButton extends AKElement {
             AKElement.GlobalStyle,
             css`
                 button {
-                    height: 100%;
                     /* Have to use !important here, as buttons with pf-m-progress have transition already */
                     transition: all var(--pf-c-button--m-progress--TransitionDuration) ease 0s !important;
                 }
             `,
         ];
-    }
-
-    constructor() {
-        super();
     }
 
     setLoading(): void {
@@ -61,7 +56,7 @@ export class SpinnerButton extends AKElement {
 
     render(): TemplateResult {
         return html`<button
-            class="pf-v6-c-button pf-m-progress ${this.classList.toString()}"
+            class="pf-v6-c-button ${this.classList.toString()}"
             ?disabled=${this.disabled}
             @click=${() => {
                 if (this.isRunning === true) {

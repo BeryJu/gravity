@@ -1,11 +1,11 @@
 :root {
     --ak-accent: #3873e0;
-    --pf-t--global--border--radius--large: 3px;
-    --pf-t--global--border--radius--medium: 3px;
-    --pf-t--global--border--radius--pill: 3px;
-    --pf-t--global--border--radius--sharp: 3px;
-    --pf-t--global--border--radius--small: 3px;
-    --pf-t--global--border--radius--tiny: 3px;
+    --pf-t--global--border--radius--large: 3px !important;
+    --pf-t--global--border--radius--medium: 3px !important;
+    --pf-t--global--border--radius--pill: 3px !important;
+    --pf-t--global--border--radius--sharp: 3px !important;
+    --pf-t--global--border--radius--small: 3px !important;
+    --pf-t--global--border--radius--tiny: 3px !important;
     --pf-c-background-image--BackgroundImage: var(--ak-flow-background);
     --pf-c-background-image--BackgroundImage-2x: var(--ak-flow-background);
     --pf-c-background-image--BackgroundImage--sm: var(--ak-flow-background);
@@ -27,7 +27,6 @@ html > form > input {
 }
 
 .pf-c-page__header {
-    z-index: 0;
     /* background-color: var(--ak-dark-background-light); */
     box-shadow: var(--pf-global--BoxShadow--lg-bottom);
 }

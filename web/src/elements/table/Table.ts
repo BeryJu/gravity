@@ -219,9 +219,9 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     private renderLoading(): TemplateResult {
-        return html`<tr role="row" class="pf-v6-c-table__tr">
+        return html`<tr class="pf-v6-c-table__tr" role="row">
             <td class="pf-v6-c-table__td" role="cell" colspan="25">
-                <div class="pf-l-bullseye">
+                <div class="pf-v6-l-bullseye">
                     <ak-empty-state ?loading="${true}" header=${"Loading"}> </ak-empty-state>
                 </div>
             </td>
@@ -230,9 +230,9 @@ export abstract class Table<T extends object> extends AKElement {
 
     renderEmpty(inner?: TemplateResult): TemplateResult {
         return html`<tbody role="rowgroup">
-            <tr role="row" class="pf-v6-c-table__tr">
+            <tr class="pf-v6-c-table__tr" role="row">
                 <td class="pf-v6-c-table__td" role="cell" colspan="8">
-                    <div class="pf-l-bullseye">
+                    <div class="pf-v6-l-bullseye">
                         ${inner
                             ? inner
                             : html`<ak-empty-state

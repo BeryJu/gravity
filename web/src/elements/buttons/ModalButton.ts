@@ -110,23 +110,27 @@ export class ModalButton extends AKElement {
 
     renderModal(): TemplateResult {
         return html`<div class="pf-v6-c-backdrop">
-            <div class="pf-l-bullseye">
+            <div class="pf-v6-l-bullseye">
                 <div
                     class="pf-v6-c-modal-box ${this.size} ${this.locked ? "locked" : ""}"
                     role="dialog"
                     aria-modal="true"
                 >
-                    <button
-                        @click=${() => {
-                            this.resetForms();
-                            this.open = false;
-                        }}
-                        class="pf-v6-c-button pf-m-plain"
-                        type="button"
-                        aria-label="Close dialog"
-                    >
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
+                    <div class="pf-v6-c-modal-box__close">
+                        <button
+                            class="pf-v6-c-button pf-m-plain"
+                            type="button"
+                            aria-label="Close"
+                            @click=${() => {
+                                this.resetForms();
+                                this.open = false;
+                            }}
+                        >
+                            <span class="pf-v6-c-button__icon">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
                     ${this.renderModalInner()}
                 </div>
             </div>

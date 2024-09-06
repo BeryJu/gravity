@@ -59,16 +59,14 @@ export class ModalForm extends ModalButton {
         return html`${this.loading
                 ? html`<ak-loading-overlay ?topMost=${true}></ak-loading-overlay>`
                 : html``}
-            <section class="pf-v6-c-modal-box__header pf-v6-c-page__main-section pf-m-light">
-                <div class="pf-v6-c-content">
-                    <h1 class="pf-v6-c-title pf-m-2xl">
-                        <slot name="header"></slot>
-                    </h1>
+            <header class="pf-v6-c-modal-box__header">
+                <div class="pf-v6-c-modal-box__header-main">
+                    <h1 class="pf-v6-c-modal-box__title"><slot name="header"></slot></h1>
                 </div>
-            </section>
-            <section class="pf-v6-c-modal-box__body pf-v6-c-page__main-section pf-m-light">
+            </header>
+            <div class="pf-v6-c-modal-box__body">
                 <slot name="form"></slot>
-            </section>
+            </div>
             <footer class="pf-v6-c-modal-box__footer">
                 ${this.showSubmitButton
                     ? html`<ak-spinner-button
