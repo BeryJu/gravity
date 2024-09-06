@@ -33,7 +33,7 @@ export class FormGroup extends AKElement {
             <div class="pf-c-form__field-group-toggle">
                 <div class="pf-c-form__field-group-toggle-button">
                     <button
-                        class="pf-c-button pf-m-plain"
+                        class="pf-v6-c-button pf-m-plain"
                         type="button"
                         aria-expanded="${this.expanded}"
                         aria-label="Details"

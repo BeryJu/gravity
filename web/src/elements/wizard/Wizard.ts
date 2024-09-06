@@ -135,7 +135,7 @@ export class Wizard extends ModalButton {
             <div class="pf-c-wizard__header">
                 ${this.canCancel
                     ? html`<button
-                          class="pf-c-button pf-m-plain pf-c-wizard__close"
+                          class="pf-v6-c-button pf-m-plain pf-c-wizard__close"
                           type="button"
                           aria-label="${"Close"}"
                           @click=${() => {
@@ -189,7 +189,7 @@ export class Wizard extends ModalButton {
                 </div>
                 <footer class="pf-c-wizard__footer">
                     <button
-                        class="pf-c-button pf-m-primary"
+                        class="pf-v6-c-button pf-m-primary"
                         type="submit"
                         ?disabled=${!this.isValid}
                         @click=${async () => {

@@ -34,7 +34,9 @@ export class ClusterJoinWizard extends AKElement {
                 header=${"Join a node"}
                 description=${"Join a gravity node to the cluster."}
             >
-                <button slot="trigger" class="pf-c-button pf-m-primary">${this.createText}</button>
+                <button slot="trigger" class="pf-v6-c-button pf-m-primary">
+                    ${this.createText}
+                </button>
             </ak-wizard>
         `;
     }

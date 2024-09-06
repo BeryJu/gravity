@@ -20,9 +20,8 @@ export const resources = [
         src: "node_modules/@patternfly/patternfly-v6/patternfly-base.css",
         dest: "dist/",
     },
-    // { src: "src/elements/styles/gravity.css", dest: "dist/" },
     {
-        src: "node_modules/@patternfly/patternfly/assets/*",
+        src: "node_modules/@patternfly/patternfly-v6/assets/*",
         dest: "dist/assets/",
     },
     { src: "src/assets/*", dest: "dist/assets" },

@@ -64,7 +64,7 @@ export class Message extends AKElement {
                 </div>`}
                 <div class="pf-c-alert__action">
                     <button
-                        class="pf-c-button pf-m-plain"
+                        class="pf-v6-c-button pf-m-plain"
                         type="button"
                         @click=${() => {
                             if (!this.message) return;

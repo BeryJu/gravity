@@ -1,12 +1,11 @@
 import { CSSResult } from "lit";
 import { TemplateResult, html } from "lit";
 
-import PFContent from "@patternfly/patternfly/components/Content/content.css";
-import PFPage from "@patternfly/patternfly/components/Page/page.css";
-import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
+import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
+import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
+import PFSidebar from "@patternfly/patternfly-v6/components/Sidebar/sidebar.css";
 
 import { EVENT_TMP_TITLE } from "../../common/constants";
-import "../PageHeader";
 import { updateURLParams } from "../router/RouteMatch";
 import { Table } from "../table/Table";
 
@@ -53,7 +52,7 @@ export abstract class TablePage<T extends object> extends Table<T> {
                     search: "",
                 });
             }}
-            class="pf-c-button pf-m-link"
+            class="pf-v6-c-button pf-m-link"
         >
             ${"Clear search"}
         </button>`;
@@ -79,12 +78,14 @@ export abstract class TablePage<T extends object> extends Table<T> {
                 },
             }),
         );
-        return html` <section class="pf-c-page__main-section pf-m-no-padding-mobile">
-            <div class="pf-c-sidebar pf-m-gutter">
-                <div class="pf-c-sidebar__main">
+        return html`<section class="pf-v6-c-page__main-section pf-m-no-padding-mobile">
+            <div class="pf-v6-c-sidebar pf-m-gutter">
+                <div class="pf-v6-c-sidebar__main">
                     ${this.renderSidebarBefore()}
-                    <div class="pf-c-sidebar__content">
-                        <div class="pf-c-card">${this.renderTable()}</div>
+                    <div class="pf-v6-c-sidebar__content">
+                        <div class="pf-v6-c-card">
+                            <div class="pf-v6-c-card__body">${this.renderTable()}</div>
+                        </div>
                     </div>
                     ${this.renderSidebarAfter()}
                 </div>

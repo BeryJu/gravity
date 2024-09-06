@@ -22,7 +22,7 @@ export class Router404 extends AKElement {
                 <i class="fas fa-question-circle pf-c-empty-state__icon" aria-hidden="true"></i>
                 <h1 class="pf-c-title pf-m-lg">${"Not found"}</h1>
                 <div class="pf-c-empty-state__body">${`The URL "${this.url}" was not found.`}</div>
-                <a href="#/" class="pf-c-button pf-m-primary" type="button">${"Return home"}</a>
+                <a href="#/" class="pf-v6-c-button pf-m-primary" type="button">${"Return home"}</a>
             </div>
         </div>`;
     }

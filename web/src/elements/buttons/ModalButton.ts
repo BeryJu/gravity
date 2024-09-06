@@ -1,17 +1,17 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFBackdrop from "@patternfly/patternfly/components/Backdrop/backdrop.css";
-import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFCard from "@patternfly/patternfly/components/Card/card.css";
-import PFContent from "@patternfly/patternfly/components/Content/content.css";
-import PFForm from "@patternfly/patternfly/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFModalBox from "@patternfly/patternfly/components/ModalBox/modal-box.css";
-import PFPage from "@patternfly/patternfly/components/Page/page.css";
-import PFTitle from "@patternfly/patternfly/components/Title/title.css";
-import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFBackdrop from "@patternfly/patternfly-v6/components/Backdrop/backdrop.css";
+import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
+import PFCard from "@patternfly/patternfly-v6/components/Card/card.css";
+import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
+import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
+import PFModalBox from "@patternfly/patternfly-v6/components/ModalBox/modal-box.css";
+import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
+import PFTitle from "@patternfly/patternfly-v6/components/Title/title.css";
+import PFBullseye from "@patternfly/patternfly-v6/layouts/Bullseye/bullseye.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { AKElement } from "../Base";
 import { PFSize } from "../Spinner";
@@ -21,10 +21,10 @@ export const MODAL_BUTTON_STYLES = css`
         text-align: left;
         font-size: var(--pf-global--FontSize--md);
     }
-    .pf-c-modal-box.pf-m-lg {
+    .pf-v6-c-modal-box.pf-m-lg {
         overflow-y: auto;
     }
-    .pf-c-modal-box > .pf-c-button + * {
+    .pf-v6-c-modal-box > .pf-v6-c-button + * {
         margin-right: 0;
     }
     /* fix multiple selects height */
@@ -109,10 +109,10 @@ export class ModalButton extends AKElement {
     }
 
     renderModal(): TemplateResult {
-        return html`<div class="pf-c-backdrop">
+        return html`<div class="pf-v6-c-backdrop">
             <div class="pf-l-bullseye">
                 <div
-                    class="pf-c-modal-box ${this.size} ${this.locked ? "locked" : ""}"
+                    class="pf-v6-c-modal-box ${this.size} ${this.locked ? "locked" : ""}"
                     role="dialog"
                     aria-modal="true"
                 >
@@ -121,7 +121,7 @@ export class ModalButton extends AKElement {
                             this.resetForms();
                             this.open = false;
                         }}
-                        class="pf-c-button pf-m-plain"
+                        class="pf-v6-c-button pf-m-plain"
                         type="button"
                         aria-label="Close dialog"
                     >

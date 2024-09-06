@@ -57,7 +57,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
                     <span slot="header"> ${"Update Subnet"} </span>
                     <gravity-discovery-subnet-form slot="form" .instancePk=${item.name}>
                     </gravity-discovery-subnet-form>
-                    <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <button slot="trigger" class="pf-v6-c-button pf-m-plain">
                         <i class="fas fa-edit"></i>
                     </button>
                 </ak-forms-modal>
@@ -84,7 +84,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="header"> ${"Create Subnet"} </span>
                 <gravity-discovery-subnet-form slot="form"> </gravity-discovery-subnet-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }
@@ -103,7 +103,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;

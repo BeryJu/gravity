@@ -27,7 +27,7 @@ export class Chip extends AKElement {
                 </span>
                 ${this.removable
                     ? html`<button
-                          class="pf-c-button pf-m-plain"
+                          class="pf-v6-c-button pf-m-plain"
                           type="button"
                           @click=${() => {
                               this.dispatchEvent(

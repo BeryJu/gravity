@@ -36,7 +36,7 @@ export class LoginForm extends Form<AuthAPILoginInput> {
                 <input type="password" class="pf-c-form-control" autocomplete="current-password" />
             </ak-form-element-horizontal>
             <button
-                class="pf-c-button pf-m-primary pf-m-block"
+                class="pf-v6-c-button pf-m-primary pf-m-block"
                 @click=${(e: MouseEvent) => {
                     e.preventDefault();
                     this.submit(e);
@@ -129,7 +129,7 @@ export class LoginPage extends AKElement {
                             ? html`
                                   <div class="pf-c-login__main-body">
                                       <a
-                                          class="pf-c-button pf-m-primary pf-m-block"
+                                          class="pf-v6-c-button pf-m-primary pf-m-block"
                                           href="/auth/oidc"
                                           >Login with SSO</a
                                       >

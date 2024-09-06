@@ -22,7 +22,6 @@ import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { AKElement } from "../../elements/Base";
 import { PFColor } from "../../elements/Label";
-import "../../elements/PageHeader";
 import "../../elements/buttons/SpinnerButton";
 import { getURLParam, updateURLParams } from "../../elements/router/RouteMatch";
 

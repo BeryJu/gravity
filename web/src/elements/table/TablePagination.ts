@@ -1,9 +1,9 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFPagination from "@patternfly/patternfly/components/Pagination/pagination.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
+import PFPagination from "@patternfly/patternfly-v6/components/Pagination/pagination.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { AKElement } from "../Base";
 
@@ -33,19 +33,21 @@ export class TablePagination extends AKElement {
     }
 
     render(): TemplateResult {
-        return html` <div class="pf-c-pagination pf-m-compact pf-m-hidden pf-m-visible-on-md">
-            <div class="pf-c-pagination pf-m-compact pf-m-compact pf-m-hidden pf-m-visible-on-md">
-                <div class="pf-c-options-menu">
-                    <div class="pf-c-options-menu__toggle pf-m-text pf-m-plain">
-                        <span class="pf-c-options-menu__toggle-text">
+        return html`<div class="pf-v6-c-pagination pf-m-compact pf-m-hidden pf-m-visible-on-md">
+            <div
+                class="pf-v6-c-pagination pf-m-compact pf-m-compact pf-m-hidden pf-m-visible-on-md"
+            >
+                <div class="pf-v6-c-options-menu">
+                    <div class="pf-v6-c-options-menu__toggle pf-m-text pf-m-plain">
+                        <span class="pf-v6-c-options-menu__toggle-text">
                             ${`${this.pages?.startIndex} - ${this.pages?.endIndex} of ${this.pages?.count}`}
                         </span>
                     </div>
                 </div>
-                <nav class="pf-c-pagination__nav" aria-label="Pagination">
-                    <div class="pf-c-pagination__nav-control pf-m-prev">
+                <nav class="pf-v6-c-pagination__nav" aria-label="Pagination">
+                    <div class="pf-v6-c-pagination__nav-control pf-m-prev">
                         <button
-                            class="pf-c-button pf-m-plain"
+                            class="pf-v6-c-button pf-m-plain"
                             @click=${() => {
                                 this.pageChangeHandler(this.pages?.previous || 0);
                             }}
@@ -55,9 +57,9 @@ export class TablePagination extends AKElement {
                             <i class="fas fa-angle-left" aria-hidden="true"></i>
                         </button>
                     </div>
-                    <div class="pf-c-pagination__nav-control pf-m-next">
+                    <div class="pf-v6-c-pagination__nav-control pf-m-next">
                         <button
-                            class="pf-c-button pf-m-plain"
+                            class="pf-v6-c-button pf-m-plain"
                             @click=${() => {
                                 this.pageChangeHandler(this.pages?.next || 0);
                             }}

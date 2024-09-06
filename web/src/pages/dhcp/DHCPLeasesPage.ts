@@ -78,7 +78,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                     });
                 }}
             >
-                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                     ${"Delete"}
                 </button> </ak-forms-delete-bulk
             >&nbsp;
@@ -158,7 +158,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                     .instancePk=${item.identifier}
                 >
                 </gravity-dhcp-lease-form>
-                <button slot="trigger" class="pf-c-button pf-m-plain">
+                <button slot="trigger" class="pf-v6-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
             </ak-forms-modal>`,
@@ -171,7 +171,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="header"> ${"Create lease"} </span>
                 <gravity-dhcp-lease-form slot="form" scope=${this.scope}> </gravity-dhcp-lease-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }
