@@ -1,4 +1,4 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
@@ -48,7 +48,9 @@ export class SpinnerButton extends AKElement {
 
     setDone(statusClass: string): void {
         this.isRunning = false;
-        this.classList.remove(PROGRESS_CLASS);
+        setTimeout(() => {
+            this.classList.remove(PROGRESS_CLASS);
+        }, 2500);
         this.classList.add(statusClass);
         this.requestUpdate();
         setTimeout(() => {
@@ -81,8 +83,8 @@ export class SpinnerButton extends AKElement {
                 ? html`<span class="pf-v6-c-button__progress">
                       <ak-spinner size=${PFSize.Medium}></ak-spinner>
                   </span>`
-                : ""}
-            <slot></slot>
+                : nothing}
+            <slot class="pf-v6-c-button__text"></slot>
         </button>`;
     }
 }

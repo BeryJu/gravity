@@ -1,7 +1,7 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
+import PFSpinner from "@patternfly/patternfly-v6/components/Spinner/spinner.css";
 
 import { AKElement } from "./Base";
 
@@ -22,14 +22,13 @@ export class Spinner extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<span
-            class="pf-c-spinner ${this.size.toString()}"
+        return html`<svg
+            class="pf-v6-c-spinner ${this.size.toString()}"
             role="progressbar"
-            aria-valuetext="${"Loading..."}"
+            viewBox="0 0 100 100"
+            aria-label="Loading..."
         >
-            <span class="pf-c-spinner__clipper"></span>
-            <span class="pf-c-spinner__lead-ball"></span>
-            <span class="pf-c-spinner__tail-ball"></span>
-        </span>`;
+            <circle class="pf-v6-c-spinner__path" cx="50" cy="50" r="45" fill="none" />
+        </svg> `;
     }
 }

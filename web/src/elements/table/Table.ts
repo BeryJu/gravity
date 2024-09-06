@@ -406,25 +406,23 @@ export abstract class Table<T extends object> extends AKElement {
         return html`<div class="pf-v6-c-toolbar">
             <div class="pf-v6-c-toolbar__content">
                 <div class="pf-v6-c-toolbar__content-section pf-m-nowrap">
-                    <div class="pf-v6-c-toolbar__group pf-m-show-on-xl pf-m-toggle-group">
-                        <div class="pf-v6-c-toolbar__item pf-m-search-filter">
-                            ${this.renderSearch()}
-                        </div>
-                        <div class="pf-v6-c-toolbar__bulk-select">${this.renderToolbar()}</div>
-                        <div class="pf-v6-c-toolbar__group">${this.renderToolbarAfter()}</div>
-                        <div class="pf-v6-c-toolbar__group">${this.renderToolbarSelected()}</div>
-                        ${this.paginated
-                            ? html`<ak-table-pagination
-                                  class="pf-v6-c-toolbar__item pf-m-pagination"
-                                  .pages=${this.data?.pagination}
-                                  .pageChangeHandler=${(page: number) => {
-                                      this.page = page;
-                                      this.fetch();
-                                  }}
-                              >
-                              </ak-table-pagination>`
-                            : html``}
+                    <div class="pf-v6-c-toolbar__item pf-m-search-filter">
+                        ${this.renderSearch()}
                     </div>
+                    <div class="pf-v6-c-toolbar__bulk-select">${this.renderToolbar()}</div>
+                    <div class="pf-v6-c-toolbar__group">${this.renderToolbarAfter()}</div>
+                    <div class="pf-v6-c-toolbar__group">${this.renderToolbarSelected()}</div>
+                    ${this.paginated
+                        ? html`<ak-table-pagination
+                              class="pf-v6-c-toolbar__item pf-m-pagination"
+                              .pages=${this.data?.pagination}
+                              .pageChangeHandler=${(page: number) => {
+                                  this.page = page;
+                                  this.fetch();
+                              }}
+                          >
+                          </ak-table-pagination>`
+                        : html``}
                 </div>
             </div>
         </div>`;
