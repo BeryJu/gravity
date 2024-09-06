@@ -24,6 +24,7 @@ export const resources = [
         src: "node_modules/@patternfly/patternfly-v6/assets/*",
         dest: "dist/assets/",
     },
+    { src: "src/elements/styles/gravity.css", dest: "dist/" },
     { src: "src/assets/*", dest: "dist/assets" },
     { src: "./icons/*", dest: "dist/assets/icons" },
 ];

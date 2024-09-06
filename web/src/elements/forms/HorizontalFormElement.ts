@@ -1,10 +1,10 @@
-import { CSSResult, css } from "lit";
+import { CSSResult, css, nothing } from "lit";
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFForm from "@patternfly/patternfly/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { convertToSlug } from "../../common/utils";
 import { AKElement } from "../Base";
@@ -13,23 +13,7 @@ import { FormGroup } from "../forms/FormGroup";
 @customElement("ak-form-element-horizontal")
 export class HorizontalFormElement extends AKElement {
     static get styles(): CSSResult[] {
-        return [
-            PFBase,
-            PFForm,
-            PFFormControl,
-            AKElement.GlobalStyle,
-            css`
-                .pf-c-form__group {
-                    display: grid;
-                    grid-template-columns:
-                        var(--pf-c-form--m-horizontal__group-label--md--GridColumnWidth)
-                        var(--pf-c-form--m-horizontal__group-control--md--GridColumnWidth);
-                }
-                .pf-c-form__group-label {
-                    padding-top: var(--pf-c-form--m-horizontal__group-label--md--PaddingTop);
-                }
-            `,
-        ];
+        return [PFBase, PFForm, PFFormControl, AKElement.GlobalStyle, css``];
     }
 
     @property()
@@ -67,6 +51,11 @@ export class HorizontalFormElement extends AKElement {
 
     @property()
     name = "";
+
+    constructor() {
+        super();
+        this.classList.add("pf-v6-c-form__group");
+    }
 
     updated(): void {
         this.querySelectorAll<HTMLInputElement>("input[autofocus]").forEach((input) => {
@@ -108,38 +97,35 @@ export class HorizontalFormElement extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-c-form__group">
-            <div class="pf-c-form__group-label">
-                <label class="pf-c-form__label">
-                    <span class="pf-c-form__label-text">${this.label}</span>
+        return html`<div class="pf-v6-c-form__group">
+            <div class="pf-v6-c-form__group-label">
+                <label class="pf-v6-c-form__label">
+                    <span class="pf-v6-c-form__label-text">${this.label}</span>
                     ${this.required
-                        ? html`<span class="pf-c-form__label-required" aria-hidden="true">*</span>`
-                        : html``}
+                        ? html`&nbsp;<span class="pf-v6-c-form__label-required" aria-hidden="true"
+                                  >*</span
+                              >`
+                        : nothing}
                 </label>
             </div>
-            <div class="pf-c-form__group-control">
-                ${this.writeOnly && !this.writeOnlyActivated
-                    ? html`<div class="pf-c-form__horizontal-group">
-                          <input
-                              class="pf-c-form-control"
-                              type="password"
-                              disabled
-                              value="**************"
-                          />
-                      </div>`
-                    : html``}
-                <slot class="pf-c-form__horizontal-group"></slot>
-                <div class="pf-c-form__horizontal-group">
-                    ${this.writeOnly
-                        ? html`<p class="pf-c-form__helper-text" aria-live="polite">
-                              ${"Click to change value"}
-                          </p>`
-                        : html``}
-                    ${this.errorMessages.map((message) => {
-                        return html`<p class="pf-c-form__helper-text pf-m-error" aria-live="polite">
-                            ${message}
-                        </p>`;
-                    })}
+            <div class="pf-v6-c-form__group-control">
+                <span class="pf-v6-c-form-control ${this.required ? "pf-m-required" : ""}">
+                    <slot></slot>
+                </span>
+                <div class="pf-v6-c-form__helper-text" aria-live="polite">
+                    <div class="pf-v6-c-helper-text">
+                        ${this.errorMessages.map((message) => {
+                            return html`<div class="pf-v6-c-helper-text__item pf-m-error">
+                                <span class="pf-v6-c-helper-text__item-icon">
+                                    <i
+                                        class="fas fa-fw fa-exclamation-circle"
+                                        aria-hidden="true"
+                                    ></i>
+                                </span>
+                                <span class="pf-v6-c-helper-text__item-text">${message}</span>
+                            </div>`;
+                        })}
+                    </div>
                 </div>
             </div>
         </div>`;
