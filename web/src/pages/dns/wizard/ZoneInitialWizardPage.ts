@@ -52,6 +52,7 @@ export class ZoneInitialWizardPage extends WizardFormPage {
             <ak-form-element-horizontal
                 name="authoritative"
                 helperText="Determines whether Gravity holds the source of truth for the domain specified."
+                checkbox
             >
                 <div class="pf-v6-c-check">
                     <input type="checkbox" class="pf-v6-c-check__input" />

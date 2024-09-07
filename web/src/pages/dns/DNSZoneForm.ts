@@ -55,7 +55,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                 : html` <ak-form-element-horizontal label="Name" required name="name">
                       <input type="text" required />
                   </ak-form-element-horizontal>`}
-            <ak-form-element-horizontal name="authoritative">
+            <ak-form-element-horizontal name="authoritative" checkbox>
                 <div class="pf-v6-c-check">
                     <input
                         type="checkbox"

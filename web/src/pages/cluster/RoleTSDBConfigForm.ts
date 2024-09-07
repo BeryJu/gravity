@@ -32,7 +32,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal name="enabled">
+        return html` <ak-form-element-horizontal name="enabled" checkbox>
                 <div class="pf-v6-c-check">
                     <input
                         type="checkbox"

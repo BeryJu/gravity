@@ -68,6 +68,7 @@ export class ClusterJoinInitial extends WizardFormPage {
                 label=${"Roles"}
                 required
                 helperText="Select which roles the new node should provide."
+                checkbox
             >
                 ${this.roles.map((role) => {
                     return html`<div class="pf-v6-c-check">
