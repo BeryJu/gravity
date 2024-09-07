@@ -1,9 +1,9 @@
 import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFSpinner from "@patternfly/patternfly-v6/components/Spinner/spinner.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { ERROR_CLASS, PROGRESS_CLASS, SUCCESS_CLASS } from "../../common/constants";
 import { AKElement } from "../Base";

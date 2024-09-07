@@ -8,16 +8,16 @@ import {
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFCard from "@patternfly/patternfly-v6/components/Card/card.css";
-import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
-import PFDataList from "@patternfly/patternfly-v6/components/DataList/data-list.css";
-import PFDescriptionList from "@patternfly/patternfly-v6/components/DescriptionList/description-list.css";
-import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
-import PFInputGroup from "@patternfly/patternfly-v6/components/InputGroup/input-group.css";
-import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
-import PFSidebar from "@patternfly/patternfly-v6/components/Sidebar/sidebar.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFContent from "@patternfly/patternfly/components/Content/content.css";
+import PFDataList from "@patternfly/patternfly/components/DataList/data-list.css";
+import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { AKElement } from "../../elements/Base";

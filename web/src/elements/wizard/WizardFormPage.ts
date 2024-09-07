@@ -3,13 +3,13 @@ import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement"
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFAlert from "@patternfly/patternfly-v6/components/Alert/alert.css";
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFCard from "@patternfly/patternfly-v6/components/Card/card.css";
-import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
-import PFInputGroup from "@patternfly/patternfly-v6/components/InputGroup/input-group.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 import { Form, KeyUnknown, serializeForm } from "../forms/Form";

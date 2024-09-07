@@ -1,10 +1,10 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 

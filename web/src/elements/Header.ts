@@ -1,13 +1,13 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
-import PFMasthead from "@patternfly/patternfly-v6/components/Masthead/masthead.css";
-import PFMenuToggle from "@patternfly/patternfly-v6/components/MenuToggle/menu-toggle.css";
-import PFToggleGroup from "@patternfly/patternfly-v6/components/ToggleGroup/toggle-group.css";
-import PFToolbar from "@patternfly/patternfly-v6/components/Toolbar/toolbar.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFContent from "@patternfly/patternfly/components/Content/content.css";
+import PFMasthead from "@patternfly/patternfly/components/Masthead/masthead.css";
+import PFMenuToggle from "@patternfly/patternfly/components/MenuToggle/menu-toggle.css";
+import PFToggleGroup from "@patternfly/patternfly/components/ToggleGroup/toggle-group.css";
+import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_SIDEBAR_TOGGLE, EVENT_TMP_TITLE } from "../common/constants";
 import { AKElement } from "../elements/Base";

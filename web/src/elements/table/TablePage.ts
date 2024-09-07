@@ -1,9 +1,9 @@
 import { CSSResult } from "lit";
 import { TemplateResult, html } from "lit";
 
-import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
-import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
-import PFSidebar from "@patternfly/patternfly-v6/components/Sidebar/sidebar.css";
+import PFContent from "@patternfly/patternfly/components/Content/content.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 
 import { EVENT_TMP_TITLE } from "../../common/constants";
 import { updateURLParams } from "../router/RouteMatch";

@@ -2,9 +2,9 @@ import { customElement } from "@lit/reactive-element/decorators/custom-element.j
 import { CSSResult, TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFRadio from "@patternfly/patternfly-v6/components/Radio/radio.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFRadio from "@patternfly/patternfly/components/Radio/radio.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../../../elements/Base";
 import "../../../elements/wizard/Wizard";

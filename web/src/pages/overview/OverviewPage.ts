@@ -3,10 +3,10 @@ import { AuthAPIMeOutput, RolesApiApi } from "gravity-api";
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
-import PFList from "@patternfly/patternfly-v6/components/List/list.css";
-import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
-import PFGrid from "@patternfly/patternfly-v6/layouts/Grid/grid.css";
+import PFContent from "@patternfly/patternfly/components/Content/content.css";
+import PFList from "@patternfly/patternfly/components/List/list.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { EVENT_TMP_TITLE } from "../../common/constants";

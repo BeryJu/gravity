@@ -2,9 +2,9 @@ import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import PFCard from "@patternfly/patternfly-v6/components/Card/card.css";
-import PFFlex from "@patternfly/patternfly-v6/layouts/Flex/flex.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFFlex from "@patternfly/patternfly/layouts/Flex/flex.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 

@@ -1,7 +1,7 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFSpinner from "@patternfly/patternfly-v6/components/Spinner/spinner.css";
+import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
 
 import { AKElement } from "./Base";
 

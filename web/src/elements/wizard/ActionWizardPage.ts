@@ -1,11 +1,11 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFEmptyState from "@patternfly/patternfly-v6/components/EmptyState/empty-state.css";
-import PFProgressStepper from "@patternfly/patternfly-v6/components/ProgressStepper/progress-stepper.css";
-import PFTitle from "@patternfly/patternfly-v6/components/Title/title.css";
-import PFBullseye from "@patternfly/patternfly-v6/layouts/Bullseye/bullseye.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFEmptyState from "@patternfly/patternfly/components/EmptyState/empty-state.css";
+import PFProgressStepper from "@patternfly/patternfly/components/ProgressStepper/progress-stepper.css";
+import PFTitle from "@patternfly/patternfly/components/Title/title.css";
+import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { AKElement } from "../Base";

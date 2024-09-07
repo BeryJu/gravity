@@ -1,9 +1,9 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFPagination from "@patternfly/patternfly-v6/components/Pagination/pagination.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFPagination from "@patternfly/patternfly/components/Pagination/pagination.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 

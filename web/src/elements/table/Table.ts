@@ -2,13 +2,13 @@ import { CSSResult, TemplateResult, html } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-// import PFDropdown from "@patternfly/patternfly-v6/components/Dropdown/dropdown.css";
-import PFPagination from "@patternfly/patternfly-v6/components/Pagination/pagination.css";
-import PFTable from "@patternfly/patternfly-v6/components/Table/table.css";
-import PFToolbar from "@patternfly/patternfly-v6/components/Toolbar/toolbar.css";
-import PFBullseye from "@patternfly/patternfly-v6/layouts/Bullseye/bullseye.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+// import PFDropdown from "@patternfly/patternfly/components/Dropdown/dropdown.css";
+import PFPagination from "@patternfly/patternfly/components/Pagination/pagination.css";
+import PFTable from "@patternfly/patternfly/components/Table/table.css";
+import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
+import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { groupBy } from "../../common/utils";

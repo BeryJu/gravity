@@ -3,8 +3,8 @@ import { property } from "@lit/reactive-element/decorators/property.js";
 import { CSSResult, TemplateResult, html } from "lit";
 import { state } from "lit/decorators.js";
 
-import PFActionList from "@patternfly/patternfly-v6/components/ActionList/action-list.css";
-import PFWizard from "@patternfly/patternfly-v6/components/Wizard/wizard.css";
+import PFActionList from "@patternfly/patternfly/components/ActionList/action-list.css";
+import PFWizard from "@patternfly/patternfly/components/Wizard/wizard.css";
 
 import { ModalButton } from "../buttons/ModalButton";
 import "./ActionWizardPage";

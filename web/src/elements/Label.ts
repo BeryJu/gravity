@@ -1,8 +1,8 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFLabel from "@patternfly/patternfly-v6/components/Label/label.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFLabel from "@patternfly/patternfly/components/Label/label.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "./Base";
 

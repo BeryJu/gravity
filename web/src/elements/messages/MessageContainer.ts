@@ -1,8 +1,8 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFAlertGroup from "@patternfly/patternfly-v6/components/Alert/alert-group.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFAlertGroup from "@patternfly/patternfly/components/Alert/alert-group.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_MESSAGE } from "../../common/constants";
 import { SentryIgnoredError } from "../../common/errors";

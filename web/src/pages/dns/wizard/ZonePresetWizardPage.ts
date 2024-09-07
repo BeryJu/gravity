@@ -1,10 +1,10 @@
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { CSSResult, TemplateResult, html } from "lit";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
-import PFRadio from "@patternfly/patternfly-v6/components/Radio/radio.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFRadio from "@patternfly/patternfly/components/Radio/radio.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../../../elements/Base";
 import { Wizard } from "../../../elements/wizard/Wizard";

@@ -1,10 +1,10 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFAlert from "@patternfly/patternfly-v6/components/Alert/alert.css";
-import PFAlertGroup from "@patternfly/patternfly-v6/components/Alert/alert-group.css";
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
+import PFAlertGroup from "@patternfly/patternfly/components/Alert/alert-group.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { MessageLevel } from "../../common/messages";
 import { AKElement } from "../Base";

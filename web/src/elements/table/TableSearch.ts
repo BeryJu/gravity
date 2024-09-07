@@ -2,12 +2,12 @@ import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
-import PFInputGroup from "@patternfly/patternfly-v6/components/InputGroup/input-group.css";
-import PFTextInputGroup from "@patternfly/patternfly-v6/components/TextInputGroup/text-input-group.css";
-import PFToolbar from "@patternfly/patternfly-v6/components/Toolbar/toolbar.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
+import PFTextInputGroup from "@patternfly/patternfly/components/TextInputGroup/text-input-group.css";
+import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 

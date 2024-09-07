@@ -3,10 +3,10 @@ import { RolesApiApi } from "gravity-api";
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFDrawer from "@patternfly/patternfly-v6/components/Drawer/drawer.css";
-import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { DEFAULT_CONFIG } from "./api/Config";
 import { EVENT_SIDEBAR_TOGGLE } from "./common/constants";

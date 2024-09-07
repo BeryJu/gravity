@@ -1,9 +1,9 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFEmptyState from "@patternfly/patternfly-v6/components/EmptyState/empty-state.css";
-import PFTitle from "@patternfly/patternfly-v6/components/Title/title.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFEmptyState from "@patternfly/patternfly/components/EmptyState/empty-state.css";
+import PFTitle from "@patternfly/patternfly/components/Title/title.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 

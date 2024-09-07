@@ -2,9 +2,9 @@ import { CSSResult, css, nothing } from "lit";
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFForm from "@patternfly/patternfly/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { convertToSlug } from "../../common/utils";
 import { AKElement } from "../Base";

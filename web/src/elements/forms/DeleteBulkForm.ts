@@ -1,7 +1,7 @@
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFList from "@patternfly/patternfly-v6/components/List/list.css";
+import PFList from "@patternfly/patternfly/components/List/list.css";
 
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";

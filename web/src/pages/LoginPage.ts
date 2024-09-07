@@ -3,13 +3,13 @@ import { AuthAPIConfigOutput, AuthAPILoginInput, RolesApiApi } from "gravity-api
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFBackgroundImage from "@patternfly/patternfly-v6/components/BackgroundImage/background-image.css";
-import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
-import PFDrawer from "@patternfly/patternfly-v6/components/Drawer/drawer.css";
-import PFList from "@patternfly/patternfly-v6/components/List/list.css";
-import PFLogin from "@patternfly/patternfly-v6/components/Login/login.css";
-import PFTitle from "@patternfly/patternfly-v6/components/Title/title.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFBackgroundImage from "@patternfly/patternfly/components/BackgroundImage/background-image.css";
+import PFButton from "@patternfly/patternfly/components/Button/button.css";
+import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
+import PFList from "@patternfly/patternfly/components/List/list.css";
+import PFLogin from "@patternfly/patternfly/components/Login/login.css";
+import PFTitle from "@patternfly/patternfly/components/Title/title.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { DEFAULT_CONFIG } from "../api/Config";
 import { AKElement } from "../elements/Base";

@@ -1,9 +1,9 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import PFNav from "@patternfly/patternfly-v6/components/Nav/nav.css";
-import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
-import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
+import PFNav from "@patternfly/patternfly/components/Nav/nav.css";
+import PFPage from "@patternfly/patternfly/components/Page/page.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 
