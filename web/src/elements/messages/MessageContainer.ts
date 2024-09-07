@@ -1,8 +1,8 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFAlertGroup from "@patternfly/patternfly/components/AlertGroup/alert-group.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFAlertGroup from "@patternfly/patternfly-v6/components/Alert/alert-group.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { EVENT_MESSAGE } from "../../common/constants";
 import { SentryIgnoredError } from "../../common/errors";
@@ -55,7 +55,7 @@ export class MessageContainer extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<ul class="pf-c-alert-group pf-m-toast">
+        return html`<ul class="pf-v6-c-alert-group pf-m-toast" role="list">
             ${this.messages.map((m) => {
                 return html`<ak-message
                     .message=${m}
