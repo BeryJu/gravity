@@ -124,6 +124,10 @@ export class AdminInterface extends AKElement {
     }
 
     firstUpdated(): void {
+        const matcher = window.matchMedia("(prefers-color-scheme: light)");
+        if (!matcher.matches) {
+            document.querySelector("html")?.classList.add("pf-v6-theme-dark");
+        }
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             this.isAuthenticated = me.authenticated;
             if (!me.authenticated) {
@@ -137,6 +141,17 @@ export class AdminInterface extends AKElement {
     }
 
     render(): TemplateResult {
+        if (!this.isAuthenticated) {
+            return html`<ak-router-outlet
+                role="main"
+                class="pf-v6-c-page__main"
+                tabindex="-1"
+                id="main-content"
+                defaultUrl="/overview"
+                .routes=${ROUTES}
+            >
+            </ak-router-outlet>`;
+        }
         return html`<div class="pf-v6-c-page">
             <ak-header class="pf-v6-c-masthead"></ak-header>
             <ak-sidebar

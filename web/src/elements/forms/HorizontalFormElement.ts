@@ -1,4 +1,4 @@
-import { CSSResult, css, nothing } from "lit";
+import { CSSResult, nothing } from "lit";
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -13,7 +13,7 @@ import { FormGroup } from "../forms/FormGroup";
 @customElement("ak-form-element-horizontal")
 export class HorizontalFormElement extends AKElement {
     static get styles(): CSSResult[] {
-        return [PFBase, PFForm, PFFormControl, AKElement.GlobalStyle, css``];
+        return [PFBase, PFForm, PFFormControl, AKElement.GlobalStyle];
     }
 
     @property()
