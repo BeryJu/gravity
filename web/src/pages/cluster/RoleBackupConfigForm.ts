@@ -34,7 +34,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal
                 label="Cron Schedule"
-                ?required=${true}
+                required
                 name="cronExpr"
                 helperText="Cron backup schedule"
             >
@@ -42,22 +42,22 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Endpoint"
-                ?required=${true}
+                required
                 name="endpoint"
                 helperText="S3 Endpoint, including schema."
             >
                 <input type="text" value="${ifDefined(this.instance?.endpoint)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Bucket" ?required=${true} name="bucket">
+            <ak-form-element-horizontal label="Bucket" required name="bucket">
                 <input type="text" value="${ifDefined(this.instance?.bucket)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Access key" ?required=${true} name="accessKey">
+            <ak-form-element-horizontal label="Access key" required name="accessKey">
                 <input type="text" value="${ifDefined(this.instance?.accessKey)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Secret Key" ?required=${true} name="secretKey">
+            <ak-form-element-horizontal label="Secret Key" required name="secretKey">
                 <input type="text" value="${ifDefined(this.instance?.secretKey)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Path" ?required=${true} name="path">
+            <ak-form-element-horizontal label="Path" required name="path">
                 <input type="text" value="${ifDefined(this.instance?.path)}" required />
             </ak-form-element-horizontal>`;
     }

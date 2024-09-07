@@ -39,7 +39,7 @@ export class ZoneCacheWizardPage extends WizardFormPage {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${"Cache TTL"}
-                ?required=${true}
+                required
                 name="cacheTTL"
                 helperText="Duration in seconds the records will be cached for."
             >

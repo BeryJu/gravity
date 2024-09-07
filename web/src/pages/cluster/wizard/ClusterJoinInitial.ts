@@ -58,7 +58,7 @@ export class ClusterJoinInitial extends WizardFormPage {
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal
                 label=${"Name"}
-                ?required=${true}
+                required
                 name="name"
                 helperText="The unique identifier of the node being added to the cluster."
             >
@@ -66,7 +66,7 @@ export class ClusterJoinInitial extends WizardFormPage {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label=${"Roles"}
-                ?required=${true}
+                required
                 helperText="Select which roles the new node should provide."
             >
                 ${this.roles.map((role) => {

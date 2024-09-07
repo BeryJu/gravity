@@ -59,12 +59,12 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     renderForm(): TemplateResult {
         return html` ${this.instance
                 ? html``
-                : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
+                : html`<ak-form-element-horizontal label="Name" required name="scope">
                       <input type="text" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal
                 label="Subnet CIDR"
-                ?required=${true}
+                required
                 name="subnetCidr"
                 helperText="CIDR for which this scope is authoritative for."
             >
@@ -101,7 +101,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="TTL"
-                ?required=${true}
+                required
                 name="ttl"
                 helperText="Default TTL of leases, in seconds."
             >
@@ -112,7 +112,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label="IP Range Start"
-                        ?required=${true}
+                        required
                         name="ipam.range_start"
                         helperText="Start of the IP range, inclusive."
                     >
@@ -124,7 +124,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="IP Range End"
-                        ?required=${true}
+                        required
                         name="ipam.range_end"
                         helperText="End of the IP range, exclusive."
                     >

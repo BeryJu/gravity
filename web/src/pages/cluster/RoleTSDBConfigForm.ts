@@ -44,7 +44,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Metrics expiry"
-                ?required=${true}
+                required
                 name="expire"
                 helperText="Time in seconds before oldest metrics are deleted. Defaults to 30 minutes."
             >
@@ -52,7 +52,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Scrape interval"
-                ?required=${true}
+                required
                 name="scrape"
                 helperText="Interval in seconds of how often metrics are collected and written to the database."
             >

@@ -40,12 +40,12 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
+        return html` <ak-form-element-horizontal label="Port" required name="port">
                 <input type="number" value="${first(this.instance?.port, 8008)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Cookie Secret"
-                ?required=${true}
+                required
                 name="cookieSecret"
                 helperText="Secret used to sign cookies."
             >
@@ -56,7 +56,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label="Issuer"
-                        ?required=${true}
+                        required
                         name="oidc.issuer"
                         helperText='OpenID Issuer, sometimes also called "Configuration URL". Ensure "".well-known/openid-configuration" suffix is removed."'
                     >
@@ -66,11 +66,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             required
                         />
                     </ak-form-element-horizontal>
-                    <ak-form-element-horizontal
-                        label="Client ID"
-                        ?required=${true}
-                        name="oidc.clientID"
-                    >
+                    <ak-form-element-horizontal label="Client ID" required name="oidc.clientID">
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.clientID)}"
@@ -79,7 +75,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Client Secret"
-                        ?required=${true}
+                        required
                         name="oidc.clientSecret"
                     >
                         <input
@@ -90,7 +86,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Redirect URL"
-                        ?required=${true}
+                        required
                         name="oidc.redirectURL"
                         helperText="Redirect URL Gravity is reachable under, should end in
                             '/auth/oidc/callback'. The placeholder '$INSTANCE_IDENTIFIER' will be replaced by the
@@ -104,7 +100,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Scopes"
-                        ?required=${true}
+                        required
                         name="oidc.scopesList"
                         helperText="Space-separated list of OpenID scopes to request"
                     >
