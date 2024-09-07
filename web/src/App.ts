@@ -97,11 +97,14 @@ export class AdminInterface extends AKElement {
                 .pf-v6-c-page__main,
                 .pf-v6-c-drawer__content,
                 .pf-v6-c-page__drawer {
-                    z-index: auto !important;
                     background-color: transparent;
                 }
                 .display-none {
                     display: none;
+                }
+                ak-header,
+                ak-sidebar {
+                    z-index: 100 !important;
                 }
             `,
         ];
