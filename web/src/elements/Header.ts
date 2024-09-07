@@ -1,6 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
+
+
 import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
 import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
 import PFMasthead from "@patternfly/patternfly-v6/components/Masthead/masthead.css";
@@ -9,8 +11,11 @@ import PFToggleGroup from "@patternfly/patternfly-v6/components/ToggleGroup/togg
 import PFToolbar from "@patternfly/patternfly-v6/components/Toolbar/toolbar.css";
 import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
+
+
 import { EVENT_SIDEBAR_TOGGLE, EVENT_TMP_TITLE } from "../common/constants";
 import { AKElement } from "../elements/Base";
+
 
 export interface Title {
     title: string;
@@ -27,12 +32,33 @@ export function WithHeaderTitle<T extends AbstractConstructor<LitElement>>(super
     return WithHeader;
 }
 
+enum Theme {
+    Automatic,
+    Light,
+    Dark
+}
+
 @customElement("ak-header")
 export class Header extends AKElement {
     @state()
     _title: Title = {
         title: "Loading",
     };
+
+    @state()
+    _theme: Theme = Theme.Automatic;
+
+    get theme(): Theme {
+        return this._theme;
+    }
+    set theme(v: Theme) {
+        this._theme = v;
+        if (v === Theme.Dark) {
+            document.querySelector("html")?.classList.add("pf-v6-theme-dark");
+        } else {
+            document.querySelector("html")?.classList.remove("pf-v6-theme-dark");
+        }
+    }
 
     static get styles() {
         return [
@@ -59,6 +85,15 @@ export class Header extends AKElement {
         document.addEventListener(EVENT_TMP_TITLE, ((ev: CustomEvent<Title>) => {
             this._title = ev.detail;
         }) as EventListener);
+        if (this.theme !== Theme.Automatic) {
+            return;
+        }
+        const matcher = window.matchMedia("(prefers-color-scheme: light)");
+        const handler = (ev?: MediaQueryListEvent) => {
+            this.theme = ev?.matches ? Theme.Light : Theme.Dark;
+        };
+        handler();
+        matcher.addEventListener("change", handler);
     }
 
     render() {
@@ -108,9 +143,11 @@ export class Header extends AKElement {
                                     <div class="pf-v6-c-toggle-group__item">
                                         <button
                                             type="button"
-                                            class="pf-v6-c-toggle-group__button pf-m-selected"
-                                            aria-pressed="true"
+                                            class="pf-v6-c-toggle-group__button ${this.theme === Theme.Light ? "pf-m-selected" : ""}"
                                             aria-label="light theme toggle"
+                                            @click=${() => {
+                                                this.theme = Theme.Light;
+                                            }}
                                         >
                                             <span class="pf-v6-c-toggle-group__icon"
                                                 ><svg
@@ -131,9 +168,11 @@ export class Header extends AKElement {
                                     <div class="pf-v6-c-toggle-group__item">
                                         <button
                                             type="button"
-                                            class="pf-v6-c-toggle-group__button"
-                                            aria-pressed="false"
+                                            class="pf-v6-c-toggle-group__button ${this.theme === Theme.Dark ? "pf-m-selected" : ""}"
                                             aria-label="dark theme toggle"
+                                            @click=${() => {
+                                                this.theme = Theme.Dark;
+                                            }}
                                         >
                                             <span class="pf-v6-c-toggle-group__icon"
                                                 ><svg

@@ -3,10 +3,10 @@ import { AuthAPIMeOutput, RolesApiApi } from "gravity-api";
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import PFContent from "@patternfly/patternfly/components/Content/content.css";
-import PFList from "@patternfly/patternfly/components/List/list.css";
-import PFPage from "@patternfly/patternfly/components/Page/page.css";
-import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
+import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
+import PFList from "@patternfly/patternfly-v6/components/List/list.css";
+import PFPage from "@patternfly/patternfly-v6/components/Page/page.css";
+import PFGrid from "@patternfly/patternfly-v6/layouts/Grid/grid.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { EVENT_TMP_TITLE } from "../../common/constants";
@@ -55,25 +55,25 @@ export class OverviewPage extends AKElement {
                 },
             }),
         );
-        return html`<section class="pf-c-page__main-section">
-            <div class="pf-l-grid pf-m-gutter">
-                <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+        return html`<section class="pf-v6-c-page__main-section">
+            <div class="pf-v6-l-grid pf-m-gutter">
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                     <gravity-overview-card-dhcp-scopes></gravity-overview-card-dhcp-scopes>
                 </div>
-                <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                     <gravity-overview-card-dns-zones></gravity-overview-card-dns-zones>
                 </div>
-                <div class="pf-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
                     <gravity-overview-card-backup></gravity-overview-card-backup>
                 </div>
-                <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
                     <gravity-overview-card-version></gravity-overview-card-version>
                 </div>
-                <div class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-2xl">
+                <div class="pf-v6-l-grid__item pf-m-12-col pf-m-3-col-on-2xl">
                     <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
                 </div>
                 <div
-                    class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
                 >
                     <ak-aggregate-card
                         icon="pf-icon pf-icon-server"
@@ -83,7 +83,7 @@ export class OverviewPage extends AKElement {
                     </ak-aggregate-card>
                 </div>
                 <div
-                    class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
                 >
                     <ak-aggregate-card
                         icon="pf-icon pf-icon-server"
@@ -93,7 +93,7 @@ export class OverviewPage extends AKElement {
                     </ak-aggregate-card>
                 </div>
                 <div
-                    class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
                 >
                     <ak-aggregate-card
                         icon="pf-icon pf-icon-server"

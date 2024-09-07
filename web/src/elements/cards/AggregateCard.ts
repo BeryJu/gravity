@@ -25,13 +25,19 @@ export class AggregateCard extends AKElement {
     static get styles(): CSSResult[] {
         return [PFBase, PFCard, PFFlex, AKElement.GlobalStyle].concat([
             css`
+                .pf-v6-c-card.pf-v6-c-card-aggregate {
+                    height: 100%;
+                }
+                .pf-c-card__header {
+                    flex-wrap: nowrap;
+                }
                 .center-value {
-                    font-size: var(--pf-global--icon--FontSize--lg);
+                    font-size: var(--pf-t--global--font--size--heading--h1);
                     text-align: center;
                     color: var(--pf-global--Color--100);
                 }
                 .subtext {
-                    font-size: var(--pf-global--FontSize--sm);
+                    font-size: var(--pf-t--global--font--size--heading--h4);
                 }
             `,
         ]);
