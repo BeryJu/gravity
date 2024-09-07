@@ -44,13 +44,17 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
             <ak-form-element-horizontal label="DNS Resolver" ?required=${true} name="dnsResolver">
                 <input type="text" value="${ifDefined(this.instance?.dnsResolver)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="discoveryTTL">
+            <ak-form-element-horizontal
+                label="Default TTL"
+                ?required=${true}
+                name="discoveryTTL"
+                helperText="Default TTL of discovered devices, in seconds."
+            >
                 <input
                     type="number"
                     value="${ifDefined(this.instance?.discoveryTTL || 86400)}"
                     required
                 />
-                <p class="pf-c-form__helper-text">Default TTL of discovered devices, in seconds.</p>
             </ak-form-element-horizontal>`;
     }
 }

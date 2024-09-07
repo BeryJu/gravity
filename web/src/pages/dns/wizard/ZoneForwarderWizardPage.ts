@@ -22,14 +22,13 @@ export class ZoneForwarderWizardPage extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${"To"} ?required=${true} name="to">
+        return html`<ak-form-element-horizontal
+            label=${"To"}
+            ?required=${true}
+            name="to"
+            helperText="DNS Server to forward queries to, optionally specifying the port. To specify multiple servers, separate their IPs with a semicolon."
+        >
             <input type="text" value="8.8.8.8:53" required />
-            <p class="pf-c-form__helper-text">
-                DNS Server to forward queries to, optionally specifying the port.
-            </p>
-            <p class="pf-c-form__helper-text">
-                To specify multiple servers, separate their IPs with a semicolon.
-            </p>
         </ak-form-element-horizontal>`;
     }
 }

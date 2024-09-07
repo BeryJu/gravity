@@ -39,15 +39,13 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
                 label="Lease negotiation timeout"
                 ?required=${true}
                 name="leaseNegotiateTimeout"
+                helperText="Time in seconds a client has to acknowledge an IP after it has been offered."
             >
                 <input
                     type="number"
                     value="${first(this.instance?.leaseNegotiateTimeout, 30)}"
                     required
                 />
-                <p class="pf-c-form__helper-text">
-                    Time in seconds a client has to acknowledge an IP after it has been offered.
-                </p>
             </ak-form-element-horizontal>`;
     }
 }

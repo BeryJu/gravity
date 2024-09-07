@@ -1,10 +1,10 @@
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFForm from "@patternfly/patternfly/components/Form/form.css";
-import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
+import PFForm from "@patternfly/patternfly-v6/components/Form/form.css";
+import PFFormControl from "@patternfly/patternfly-v6/components/FormControl/form-control.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { AKElement } from "../Base";
 
@@ -29,9 +29,9 @@ export class FormGroup extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-c-form__field-group ${this.expanded ? "pf-m-expanded" : ""}">
-            <div class="pf-c-form__field-group-toggle">
-                <div class="pf-c-form__field-group-toggle-button">
+        return html`<div class="pf-v6-c-form__field-group ${this.expanded ? "pf-m-expanded" : ""}">
+            <div class="pf-v6-c-form__field-group-toggle">
+                <div class="pf-v6-c-form__field-group-toggle-button">
                     <button
                         class="pf-v6-c-button pf-m-plain"
                         type="button"
@@ -41,25 +41,31 @@ export class FormGroup extends AKElement {
                             this.expanded = !this.expanded;
                         }}
                     >
-                        <span class="pf-c-form__field-group-toggle-icon">
-                            <i class="fas fa-angle-right" aria-hidden="true"></i>
+                        <span class="pf-v6-c-button__icon">
+                            <span class="pf-v6-c-form__field-group-toggle-icon">
+                                <i class="fas fa-angle-right" aria-hidden="true"></i>
+                            </span>
                         </span>
                     </button>
                 </div>
             </div>
-            <div class="pf-c-form__field-group-header">
-                <div class="pf-c-form__field-group-header-main">
-                    <div class="pf-c-form__field-group-header-title">
-                        <div class="pf-c-form__field-group-header-title-text">
+            <div class="pf-v6-c-form__field-group-header">
+                <div class="pf-v6-c-form__field-group-header-main">
+                    <div class="pf-v6-c-form__field-group-header-title">
+                        <div class="pf-v6-c-form__field-group-header-title-text">
                             <slot name="header"></slot>
                         </div>
                     </div>
-                    <div class="pf-c-form__field-group-header-description">
+                    <div class="pf-v6-c-form__field-group-header-description">
                         <slot name="description"></slot>
                     </div>
                 </div>
             </div>
-            <slot ?hidden=${!this.expanded} class="pf-c-form__field-group-body" name="body"></slot>
+            <slot
+                ?hidden=${!this.expanded}
+                class="pf-v6-c-form__field-group-body"
+                name="body"
+            ></slot>
         </div>`;
     }
 }

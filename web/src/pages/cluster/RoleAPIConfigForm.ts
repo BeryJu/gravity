@@ -43,23 +43,28 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
         return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
                 <input type="number" value="${first(this.instance?.port, 8008)}" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Cookie Secret" ?required=${true} name="cookieSecret">
+            <ak-form-element-horizontal
+                label="Cookie Secret"
+                ?required=${true}
+                name="cookieSecret"
+                helperText="Secret used to sign cookies."
+            >
                 <input type="text" value="${ifDefined(this.instance?.cookieSecret)}" required />
-                <p class="pf-c-form__helper-text">Secret used to sign cookies.</p>
             </ak-form-element-horizontal>
             <ak-form-group ?expanded=${true}>
                 <span slot="header">OIDC</span>
                 <div slot="body" class="pf-c-form">
-                    <ak-form-element-horizontal label="Issuer" ?required=${true} name="oidc.issuer">
+                    <ak-form-element-horizontal
+                        label="Issuer"
+                        ?required=${true}
+                        name="oidc.issuer"
+                        helperText='OpenID Issuer, sometimes also called "Configuration URL". Ensure "".well-known/openid-configuration" suffix is removed."'
+                    >
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.issuer)}"
                             required
                         />
-                        <p class="pf-c-form__helper-text">
-                            OpenID Issuer, sometimes also called "Configuration URL". Ensure
-                            "".well-known/openid-configuration" suffix is removed.
-                        </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Client ID"
@@ -87,25 +92,21 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         label="Redirect URL"
                         ?required=${true}
                         name="oidc.redirectURL"
+                        helperText="Redirect URL Gravity is reachable under, should end in
+                            '/auth/oidc/callback'. The placeholder '$INSTANCE_IDENTIFIER' will be replaced by the
+                            instance's name and '$INSTANCE_IP' will be replaced by the instances IP."
                     >
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.redirectURL)}"
                             required
                         />
-                        <p class="pf-c-form__helper-text">
-                            Redirect URL Gravity is reachable under, should end in
-                            "/auth/oidc/callback".
-                        </p>
-                        <p class="pf-c-form__helper-text">
-                            The placeholder '$INSTANCE_IDENTIFIER' will be replaced by the
-                            instance's name and '$INSTANCE_IP' will be replaced by the instances IP.
-                        </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Scopes"
                         ?required=${true}
                         name="oidc.scopesList"
+                        helperText="Space-separated list of OpenID scopes to request"
                     >
                         <input
                             type="text"
@@ -115,9 +116,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             )}"
                             required
                         />
-                        <p class="pf-c-form__helper-text">
-                            Space-separated list of OpenID scopes to request
-                        </p>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;

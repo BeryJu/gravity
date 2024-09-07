@@ -56,20 +56,22 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                       <input type="text" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal name="authoritative">
-                <div class="pf-c-check">
+                <div class="pf-v6-c-check">
                     <input
                         type="checkbox"
-                        class="pf-c-check__input"
+                        class="pf-v6-c-check__input"
                         ?checked=${this.instance?.authoritative}
                     />
-                    <label class="pf-c-check__label"> ${"Authoritative"} </label>
+                    <label class="pf-v6-c-check__label"> ${"Authoritative"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="defaultTTL">
+            <ak-form-element-horizontal
+                label="Default TTL"
+                ?required=${true}
+                name="defaultTTL"
+                helperText="Default TTL for records which don't specify a non-zero value."
+            >
                 <input type="number" value="${this.instance?.defaultTTL || 0}" required />
-                <p class="pf-c-form__helper-text">
-                    Default TTL for records which don't specify a non-zero value.
-                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
                 <ak-codemirror

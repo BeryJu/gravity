@@ -34,6 +34,12 @@ export class HorizontalFormElement extends AKElement {
     @property({ type: Boolean })
     slugMode = false;
 
+    @property()
+    helperText?: string;
+
+    @property({ type: Boolean })
+    checkbox = false;
+
     _invalid = false;
 
     @property({ type: Boolean })
@@ -51,11 +57,6 @@ export class HorizontalFormElement extends AKElement {
 
     @property()
     name = "";
-
-    constructor() {
-        super();
-        this.classList.add("pf-v6-c-form__group");
-    }
 
     updated(): void {
         this.querySelectorAll<HTMLInputElement>("input[autofocus]").forEach((input) => {
@@ -97,34 +98,59 @@ export class HorizontalFormElement extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-v6-c-form__group">
-            <div class="pf-v6-c-form__group-label">
-                <label class="pf-v6-c-form__label">
-                    <span class="pf-v6-c-form__label-text">${this.label}</span>
-                    ${this.required
-                        ? html`&nbsp;<span class="pf-v6-c-form__label-required" aria-hidden="true"
-                                  >*</span
-                              >`
-                        : nothing}
-                </label>
-            </div>
-            <div class="pf-v6-c-form__group-control">
-                <span class="pf-v6-c-form-control ${this.required ? "pf-m-required" : ""}">
-                    <slot></slot>
-                </span>
-                <div class="pf-v6-c-form__helper-text" aria-live="polite">
-                    <div class="pf-v6-c-helper-text">
-                        ${this.errorMessages.map((message) => {
-                            return html`<div class="pf-v6-c-helper-text__item pf-m-error">
-                                <span class="pf-v6-c-helper-text__item-icon">
-                                    <i
-                                        class="fas fa-fw fa-exclamation-circle"
-                                        aria-hidden="true"
-                                    ></i>
-                                </span>
-                                <span class="pf-v6-c-helper-text__item-text">${message}</span>
-                            </div>`;
-                        })}
+        return html`<div class="pf-v6-c-form pf-m-horizontal">
+            <div class="pf-v6-c-form__group">
+                <div class="pf-v6-c-form__group-label">
+                    <label class="pf-v6-c-form__label">
+                        <span class="pf-v6-c-form__label-text">${this.label}</span>
+                        ${this.required
+                            ? html`&nbsp;<span
+                                      class="pf-v6-c-form__label-required"
+                                      aria-hidden="true"
+                                      >*</span
+                                  >`
+                            : nothing}
+                    </label>
+                </div>
+                <div class="pf-v6-c-form__group-control">
+                    ${this.checkbox
+                        ? html`<slot></slot>`
+                        : html`
+                              <span
+                                  class="pf-v6-c-form-control ${this.required
+                                      ? "pf-m-required"
+                                      : ""}"
+                              >
+                                  <slot></slot>
+                              </span>
+                          `}
+                    <div class="pf-v6-c-form__helper-text" aria-live="polite">
+                        <div class="pf-v6-c-helper-text">
+                            ${this.helperText
+                                ? html`
+                                      <div class="pf-v6-c-form__helper-text">
+                                          <div class="pf-v6-c-helper-text">
+                                              <div class="pf-v6-c-helper-text__item">
+                                                  <span class="pf-v6-c-helper-text__item-text"
+                                                      >${this.helperText}</span
+                                                  >
+                                              </div>
+                                          </div>
+                                      </div>
+                                  `
+                                : nothing}
+                            ${this.errorMessages.map((message) => {
+                                return html`<div class="pf-v6-c-helper-text__item pf-m-error">
+                                    <span class="pf-v6-c-helper-text__item-icon">
+                                        <i
+                                            class="fas fa-fw fa-exclamation-circle"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </span>
+                                    <span class="pf-v6-c-helper-text__item-text">${message}</span>
+                                </div>`;
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>

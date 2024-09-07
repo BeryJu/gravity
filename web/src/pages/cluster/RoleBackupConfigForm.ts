@@ -36,13 +36,17 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
                 label="Cron Schedule"
                 ?required=${true}
                 name="cronExpr"
+                helperText="Cron backup schedule"
             >
                 <input type="text" value="${ifDefined(this.instance?.cronExpr)}" required />
-                <p class="pf-c-form__helper-text">Cron backup schedule</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Endpoint" ?required=${true} name="endpoint">
+            <ak-form-element-horizontal
+                label="Endpoint"
+                ?required=${true}
+                name="endpoint"
+                helperText="S3 Endpoint, including schema."
+            >
                 <input type="text" value="${ifDefined(this.instance?.endpoint)}" required />
-                <p class="pf-c-form__helper-text">S3 Endpoint, including schema.</p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Bucket" ?required=${true} name="bucket">
                 <input type="text" value="${ifDefined(this.instance?.bucket)}" required />
