@@ -28,7 +28,7 @@ export class AuthTokenForm extends Form<AuthAPIToken> {
 
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal label="User" ?required=${true} name="username">
-            <select class="pf-c-form-control">
+            <select>
                 ${until(
                     new RolesApiApi(DEFAULT_CONFIG).apiGetUsers().then((users) => {
                         return users.users?.map((user) => {

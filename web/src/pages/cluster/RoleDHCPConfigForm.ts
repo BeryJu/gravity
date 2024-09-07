@@ -33,12 +33,7 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
 
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
-                <input
-                    type="number"
-                    value="${first(this.instance?.port, 67)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="number" value="${first(this.instance?.port, 67)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Lease negotiation timeout"
@@ -48,7 +43,6 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
                 <input
                     type="number"
                     value="${first(this.instance?.leaseNegotiateTimeout, 30)}"
-                    class="pf-c-form-control"
                     required
                 />
                 <p class="pf-c-form__helper-text">

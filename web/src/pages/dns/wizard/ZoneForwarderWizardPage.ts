@@ -23,7 +23,7 @@ export class ZoneForwarderWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label=${"To"} ?required=${true} name="to">
-            <input type="text" value="8.8.8.8:53" class="pf-c-form-control" required />
+            <input type="text" value="8.8.8.8:53" required />
             <p class="pf-c-form__helper-text">
                 DNS Server to forward queries to, optionally specifying the port.
             </p>

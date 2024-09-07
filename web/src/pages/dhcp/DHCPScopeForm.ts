@@ -60,15 +60,10 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
         return html` ${this.instance
                 ? html``
                 : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
-                      <input type="text" class="pf-c-form-control" required />
+                      <input type="text" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal label="Subnet CIDR" ?required=${true} name="subnetCidr">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.subnetCidr)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="text" value="${ifDefined(this.instance?.subnetCidr)}" required />
                 <p class="pf-c-form__helper-text">
                     CIDR for which this scope is authoritative for.
                 </p>
@@ -82,7 +77,6 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                             .map((op) => op.value || "")
                             .join(""),
                     )}"
-                    class="pf-c-form-control"
                 />
                 <p class="pf-c-form__helper-text">Router for the subnet.</p>
             </ak-form-element-horizontal>
@@ -101,12 +95,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="TTL" ?required=${true} name="ttl">
-                <input
-                    type="number"
-                    value="${this.instance?.ttl || 86400}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="number" value="${this.instance?.ttl || 86400}" required />
                 <p class="pf-c-form__helper-text">Default TTL of leases, in seconds.</p>
             </ak-form-element-horizontal>
             <ak-form-group ?expanded=${true}>
@@ -120,7 +109,6 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.ipam?.range_start)}"
-                            class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">Start of the IP range, inclusive.</p>
@@ -133,7 +121,6 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.ipam?.range_end)}"
-                            class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">End of the IP range, exclusive.</p>
@@ -144,11 +131,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 <span slot="header">DNS settings</span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal label="DNS Zone" name="dns.zone">
-                        <input
-                            type="text"
-                            value="${ifDefined(this.instance?.dns?.zone)}"
-                            class="pf-c-form-control"
-                        />
+                        <input type="text" value="${ifDefined(this.instance?.dns?.zone)}" />
                         <p class="pf-c-form__helper-text">
                             Optional, set to a DNS zone configured in Gravity to create DNS records.
                             If the configured zone does not exist in Gravity, it is only used as

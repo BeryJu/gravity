@@ -57,7 +57,7 @@ export class ClusterJoinInitial extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
-                <input type="text" value="" class="pf-c-form-control" required />
+                <input type="text" value="" required />
                 <p class="pf-c-form__helper-text">
                     The unique identifier of the node being added to the cluster.
                 </p>

@@ -40,7 +40,7 @@ export class ZoneInitialWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
-                <input type="text" value="" class="pf-c-form-control" required />
+                <input type="text" value="" required />
                 <p class="pf-c-form__helper-text">
                     The zone name specifies which DNS namespace this zone is responsible for. This
                     might be a domain name (beryju.io), a subdomain (gravity.beryju.io), or

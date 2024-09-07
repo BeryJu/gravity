@@ -43,23 +43,13 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
                 </div>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Metrics expiry" ?required=${true} name="expire">
-                <input
-                    type="number"
-                    value="${first(this.instance?.expire, 60 * 30)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="number" value="${first(this.instance?.expire, 60 * 30)}" required />
                 <p class="pf-c-form__helper-text">
                     Time in seconds before oldest metrics are deleted. Defaults to 30 minutes.
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Scrape interval" ?required=${true} name="scrape">
-                <input
-                    type="number"
-                    value="${first(this.instance?.scrape, 30)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="number" value="${first(this.instance?.scrape, 30)}" required />
                 <p class="pf-c-form__helper-text">
                     Interval in seconds of how often metrics are collected and written to the
                     database.

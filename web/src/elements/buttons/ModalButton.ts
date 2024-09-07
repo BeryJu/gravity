@@ -108,6 +108,24 @@ export class ModalButton extends AKElement {
         return html`<slot name="modal"></slot>`;
     }
 
+    renderClose() {
+        return html`<div class="pf-v6-c-modal-box__close">
+            <button
+                class="pf-v6-c-button pf-m-plain"
+                type="button"
+                aria-label="Close"
+                @click=${() => {
+                    this.resetForms();
+                    this.open = false;
+                }}
+            >
+                <span class="pf-v6-c-button__icon">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>`;
+    }
+
     renderModal(): TemplateResult {
         return html`<div class="pf-v6-c-backdrop">
             <div class="pf-v6-l-bullseye">
@@ -116,22 +134,7 @@ export class ModalButton extends AKElement {
                     role="dialog"
                     aria-modal="true"
                 >
-                    <div class="pf-v6-c-modal-box__close">
-                        <button
-                            class="pf-v6-c-button pf-m-plain"
-                            type="button"
-                            aria-label="Close"
-                            @click=${() => {
-                                this.resetForms();
-                                this.open = false;
-                            }}
-                        >
-                            <span class="pf-v6-c-button__icon">
-                                <i class="fas fa-times" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </div>
-                    ${this.renderModalInner()}
+                    ${this.renderClose()} ${this.renderModalInner()}
                 </div>
             </div>
         </div>`;

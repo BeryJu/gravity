@@ -63,28 +63,13 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
                 ?required=${true}
                 name="identifier"
             >
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.identifier)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="text" value="${ifDefined(this.instance?.identifier)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Address" ?required=${true} name="address">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.address)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="text" value="${ifDefined(this.instance?.address)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Hostname" ?required=${true} name="hostname">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.hostname)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="text" value="${ifDefined(this.instance?.hostname)}" required />
             </ak-form-element-horizontal>`;
     }
 }

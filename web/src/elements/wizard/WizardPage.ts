@@ -1,7 +1,7 @@
 import { CSSResult, PropertyDeclaration, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
+import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
 import { AKElement } from "../Base";
 import { Wizard } from "./Wizard";

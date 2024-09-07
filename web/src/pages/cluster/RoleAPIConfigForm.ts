@@ -41,20 +41,10 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
 
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
-                <input
-                    type="number"
-                    value="${first(this.instance?.port, 8008)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="number" value="${first(this.instance?.port, 8008)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Cookie Secret" ?required=${true} name="cookieSecret">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.cookieSecret)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <input type="text" value="${ifDefined(this.instance?.cookieSecret)}" required />
                 <p class="pf-c-form__helper-text">Secret used to sign cookies.</p>
             </ak-form-element-horizontal>
             <ak-form-group ?expanded=${true}>
@@ -64,7 +54,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.issuer)}"
-                            class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">
@@ -80,7 +69,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.clientID)}"
-                            class="pf-c-form-control"
                             required
                         />
                     </ak-form-element-horizontal>
@@ -92,7 +80,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.clientSecret)}"
-                            class="pf-c-form-control"
                             required
                         />
                     </ak-form-element-horizontal>
@@ -104,7 +91,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.redirectURL)}"
-                            class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">
@@ -127,7 +113,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                                 this.instance?.oidc?.scopes?.join(" "),
                                 "openid profile email",
                             )}"
-                            class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">

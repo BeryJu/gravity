@@ -44,10 +44,10 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
                       ?required=${true}
                       name="username"
                   >
-                      <input type="text" class="pf-c-form-control" required />
+                      <input type="text" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal label="Password" ?required=${true} name="password">
-                <input type="password" class="pf-c-form-control" required />
+                <input type="password" required />
             </ak-form-element-horizontal>`;
     }
 }

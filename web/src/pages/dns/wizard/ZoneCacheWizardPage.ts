@@ -38,7 +38,7 @@ export class ZoneCacheWizardPage extends WizardFormPage {
                 </div>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Cache TTL"} ?required=${true} name="cacheTTL">
-                <input type="number" class="pf-c-form-control" required value=${3600} />
+                <input type="number" required value=${3600} />
                 <p class="pf-c-form__helper-text">
                     Duration in seconds the records will be cached for.
                 </p>

@@ -79,7 +79,9 @@ export class ToolPage extends AKElement {
             </div>
             <div class="pf-v6-c-description-list__group">
                 <dt class="pf-v6-c-description-list__term">
-                    <span class="pf-v6-c-description-list__text">Packets received (duplicates)</span>
+                    <span class="pf-v6-c-description-list__text"
+                        >Packets received (duplicates)</span
+                    >
                 </dt>
                 <dd class="pf-v6-c-description-list__description">
                     <div class="pf-v6-c-description-list__text">
@@ -134,9 +136,7 @@ export class ToolPage extends AKElement {
         if (!this.portmapOutput) return html``;
         return html`<ul class="pf-v6-c-data-list">
             ${this.portmapOutput.ports?.map((port) => {
-                return html`<li
-                    class="pf-v6-c-data-list__item"
-                >
+                return html`<li class="pf-v6-c-data-list__item">
                     <div class="pf-v6-c-data-list__item-row">
                         <div class="pf-v6-c-data-list__item-content">
                             <div class="pf-v6-c-data-list__cell">${port.reason}</div>
@@ -186,7 +186,8 @@ export class ToolPage extends AKElement {
                                             this.pingOutput = out;
                                             this.tracerouteOutput = undefined;
                                             this.portmapOutput = undefined;
-                                        }).catch(exc => {
+                                        })
+                                        .catch((exc) => {
                                             this.errorOutput = exc;
                                         });
                                 }}
@@ -206,7 +207,8 @@ export class ToolPage extends AKElement {
                                             this.pingOutput = undefined;
                                             this.tracerouteOutput = out;
                                             this.portmapOutput = undefined;
-                                        }).catch(exc => {
+                                        })
+                                        .catch((exc) => {
                                             this.errorOutput = exc;
                                         });
                                 }}

@@ -1,8 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-
-
 import PFButton from "@patternfly/patternfly-v6/components/Button/button.css";
 import PFContent from "@patternfly/patternfly-v6/components/Content/content.css";
 import PFMasthead from "@patternfly/patternfly-v6/components/Masthead/masthead.css";
@@ -11,11 +9,8 @@ import PFToggleGroup from "@patternfly/patternfly-v6/components/ToggleGroup/togg
 import PFToolbar from "@patternfly/patternfly-v6/components/Toolbar/toolbar.css";
 import PFBase from "@patternfly/patternfly-v6/patternfly-base.css";
 
-
-
 import { EVENT_SIDEBAR_TOGGLE, EVENT_TMP_TITLE } from "../common/constants";
 import { AKElement } from "../elements/Base";
-
 
 export interface Title {
     title: string;
@@ -35,7 +30,7 @@ export function WithHeaderTitle<T extends AbstractConstructor<LitElement>>(super
 enum Theme {
     Automatic,
     Light,
-    Dark
+    Dark,
 }
 
 @customElement("ak-header")
@@ -143,7 +138,10 @@ export class Header extends AKElement {
                                     <div class="pf-v6-c-toggle-group__item">
                                         <button
                                             type="button"
-                                            class="pf-v6-c-toggle-group__button ${this.theme === Theme.Light ? "pf-m-selected" : ""}"
+                                            class="pf-v6-c-toggle-group__button ${this.theme ===
+                                            Theme.Light
+                                                ? "pf-m-selected"
+                                                : ""}"
                                             aria-label="light theme toggle"
                                             @click=${() => {
                                                 this.theme = Theme.Light;
@@ -168,7 +166,10 @@ export class Header extends AKElement {
                                     <div class="pf-v6-c-toggle-group__item">
                                         <button
                                             type="button"
-                                            class="pf-v6-c-toggle-group__button ${this.theme === Theme.Dark ? "pf-m-selected" : ""}"
+                                            class="pf-v6-c-toggle-group__button ${this.theme ===
+                                            Theme.Dark
+                                                ? "pf-m-selected"
+                                                : ""}"
                                             aria-label="dark theme toggle"
                                             @click=${() => {
                                                 this.theme = Theme.Dark;
