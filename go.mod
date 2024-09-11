@@ -15,7 +15,7 @@ require (
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/creasty/defaults v1.8.0
 	github.com/felixge/fgprof v0.9.5
-	github.com/getsentry/sentry-go v0.28.1
+	github.com/getsentry/sentry-go v0.29.0
 	github.com/go-ping/ping v1.1.0
 	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.6.0
