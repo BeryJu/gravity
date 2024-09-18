@@ -1,5 +1,5 @@
 # Stage 1: Build web
-FROM --platform=${BUILDPLATFORM} docker.io/library/node:22.8 AS web-builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/node:22.9 AS web-builder
 
 WORKDIR /work
 
