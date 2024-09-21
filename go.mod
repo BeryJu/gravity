@@ -5,7 +5,7 @@ go 1.23
 toolchain go1.23.0
 
 require (
-	github.com/0xERR0R/blocky v0.9.2-0.20240508095927-d51d39929f34
+	github.com/0xERR0R/blocky v0.9.2-0.20240524080222-3ab04562fe1e
 	github.com/Netflix/go-env v0.1.0
 	github.com/Ullaakut/nmap/v2 v2.2.2
 	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
@@ -161,7 +161,7 @@ require (
 	github.com/nginxinc/kubernetes-ingress v1.12.5 // indirect
 	github.com/oapi-codegen/runtime v1.1.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/onsi/ginkgo/v2 v2.17.3 // indirect
+	github.com/onsi/ginkgo/v2 v2.18.0 // indirect
 	github.com/opentracing-contrib/go-observer v0.0.0-20170622124052-a52f23424492 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/openzipkin-contrib/zipkin-go-opentracing v0.5.0 // indirect
