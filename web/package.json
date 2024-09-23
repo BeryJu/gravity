@@ -16,7 +16,7 @@
         "@patternfly/patternfly": "^4.224.2",
         "@rollup/plugin-commonjs": "^26.0.1",
         "@rollup/plugin-json": "^6.1.0",
-        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-node-resolve": "^15.2.4",
         "@rollup/plugin-typescript": "^11.1.6",
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/chart.js": "^2.9.41",
