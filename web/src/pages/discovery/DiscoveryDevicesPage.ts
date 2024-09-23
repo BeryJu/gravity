@@ -69,7 +69,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
                 objectLabel=${"Discovered Device(s)"}
                 .objects=${this.selectedElements}
             >
-                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-primary">
+                <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-primary">
                     ${"Apply"}
                 </button> </gravity-discovery-apply
             >&nbsp;
@@ -89,7 +89,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
                     });
                 }}
             >
-                <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                     ${"Delete"}
                 </button>
             </ak-forms-delete-bulk> `;

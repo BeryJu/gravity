@@ -52,29 +52,26 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
     renderForm(): TemplateResult {
         return html` ${this.instance
                 ? html``
-                : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
-                      <input type="text" class="pf-c-form-control" required />
+                : html` <ak-form-element-horizontal label="Name" required name="name">
+                      <input type="text" required />
                   </ak-form-element-horizontal>`}
-            <ak-form-element-horizontal name="authoritative">
-                <div class="pf-c-check">
+            <ak-form-element-horizontal name="authoritative" checkbox>
+                <div class="pf-v6-c-check">
                     <input
                         type="checkbox"
-                        class="pf-c-check__input"
+                        class="pf-v6-c-check__input"
                         ?checked=${this.instance?.authoritative}
                     />
-                    <label class="pf-c-check__label"> ${"Authoritative"} </label>
+                    <label class="pf-v6-c-check__label"> ${"Authoritative"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="defaultTTL">
-                <input
-                    type="number"
-                    value="${this.instance?.defaultTTL || 0}"
-                    class="pf-c-form-control"
-                    required
-                />
-                <p class="pf-c-form__helper-text">
-                    Default TTL for records which don't specify a non-zero value.
-                </p>
+            <ak-form-element-horizontal
+                label="Default TTL"
+                required
+                name="defaultTTL"
+                helperText="Default TTL for records which don't specify a non-zero value."
+            >
+                <input type="number" value="${this.instance?.defaultTTL || 0}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
                 <ak-codemirror

@@ -39,22 +39,25 @@ export class ZoneInitialWizardPage extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
-                <input type="text" value="" class="pf-c-form-control" required />
-                <p class="pf-c-form__helper-text">
-                    The zone name specifies which DNS namespace this zone is responsible for. This
+        return html`<ak-form-element-horizontal
+                label=${"Name"}
+                required
+                name="name"
+                helperText="The zone name specifies which DNS namespace this zone is responsible for. This
                     might be a domain name (beryju.io), a subdomain (gravity.beryju.io), or
-                    everything (.).
-                </p>
+                    everything (.)."
+            >
+                <input type="text" value="" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal name="authoritative">
-                <div class="pf-c-check">
-                    <input type="checkbox" class="pf-c-check__input" />
-                    <label class="pf-c-check__label"> ${"Authoritative"} </label>
+            <ak-form-element-horizontal
+                name="authoritative"
+                helperText="Determines whether Gravity holds the source of truth for the domain specified."
+                checkbox
+            >
+                <div class="pf-v6-c-check">
+                    <input type="checkbox" class="pf-v6-c-check__input" />
+                    <label class="pf-v6-c-check__label"> ${"Authoritative"} </label>
                 </div>
-                <p class="pf-c-form__helper-text">
-                    Determines whether Gravity holds the source of truth for the domain specified.
-                </p>
             </ak-form-element-horizontal>`;
     }
 }

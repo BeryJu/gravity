@@ -30,14 +30,14 @@ export class RoleDiscoveryConfigForm extends ModelForm<DiscoveryRoleConfig, stri
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal name="enabled">
-            <div class="pf-c-check">
+        return html` <ak-form-element-horizontal name="enabled" checkbox>
+            <div class="pf-v6-c-check">
                 <input
                     type="checkbox"
-                    class="pf-c-check__input"
+                    class="pf-v6-c-check__input"
                     ?checked=${first(this.instance?.enabled, true)}
                 />
-                <label class="pf-c-check__label"> ${"Enabled"} </label>
+                <label class="pf-v6-c-check__label"> ${"Enabled"} </label>
             </div>
         </ak-form-element-horizontal>`;
     }

@@ -9,8 +9,8 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import { EVENT_TMP_TITLE } from "../../common/constants";
 import { AKElement } from "../../elements/Base";
-import "../../elements/PageHeader";
 import "../../elements/cards/AggregateCard";
 import "./cards/BackupCard";
 import "./cards/CurrentInstanceCard";
@@ -46,57 +46,63 @@ export class OverviewPage extends AKElement {
     }
 
     render(): TemplateResult {
-        return html` <ak-page-header>
-                <span slot="header"> ${this.me ? html`Hello, ${this.me.username}` : html``} </span>
-            </ak-page-header>
-            <section class="pf-c-page__main-section">
-                <div class="pf-l-grid pf-m-gutter">
-                    <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
-                        <gravity-overview-card-dhcp-scopes></gravity-overview-card-dhcp-scopes>
-                    </div>
-                    <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
-                        <gravity-overview-card-dns-zones></gravity-overview-card-dns-zones>
-                    </div>
-                    <div class="pf-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
-                        <gravity-overview-card-backup></gravity-overview-card-backup>
-                    </div>
-                    <div class="pf-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
-                        <gravity-overview-card-version></gravity-overview-card-version>
-                    </div>
-                    <div class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-2xl">
-                        <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
-                    </div>
-                    <div
-                        class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
-                    >
-                        <ak-aggregate-card
-                            icon="pf-icon pf-icon-server"
-                            header="DNS requests per handler over the last 30 minutes"
-                        >
-                            <gravity-overview-charts-dns-requests></gravity-overview-charts-dns-requests>
-                        </ak-aggregate-card>
-                    </div>
-                    <div
-                        class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
-                    >
-                        <ak-aggregate-card
-                            icon="pf-icon pf-icon-server"
-                            header="Memory usage per node (MB)"
-                        >
-                            <gravity-overview-charts-memory-usage></gravity-overview-charts-memory-usage>
-                        </ak-aggregate-card>
-                    </div>
-                    <div
-                        class="pf-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
-                    >
-                        <ak-aggregate-card
-                            icon="pf-icon pf-icon-server"
-                            header="CPU usage per node (%)"
-                        >
-                            <gravity-overview-charts-cpu-usage></gravity-overview-charts-cpu-usage>
-                        </ak-aggregate-card>
-                    </div>
+        this.dispatchEvent(
+            new CustomEvent(EVENT_TMP_TITLE, {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    title: `Hello, ${this.me?.username}`,
+                },
+            }),
+        );
+        return html`<section class="pf-v6-c-page__main-section">
+            <div class="pf-v6-l-grid pf-m-gutter">
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+                    <gravity-overview-card-dhcp-scopes></gravity-overview-card-dhcp-scopes>
                 </div>
-            </section>`;
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+                    <gravity-overview-card-dns-zones></gravity-overview-card-dns-zones>
+                </div>
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-3-col-on-2xl">
+                    <gravity-overview-card-backup></gravity-overview-card-backup>
+                </div>
+                <div class="pf-v6-l-grid__item pf-m-6-col pf-m-2-col-on-2xl">
+                    <gravity-overview-card-version></gravity-overview-card-version>
+                </div>
+                <div class="pf-v6-l-grid__item pf-m-12-col pf-m-3-col-on-2xl">
+                    <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
+                </div>
+                <div
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                >
+                    <ak-aggregate-card
+                        icon="pf-icon pf-icon-server"
+                        header="DNS requests per handler over the last 30 minutes"
+                    >
+                        <gravity-overview-charts-dns-requests></gravity-overview-charts-dns-requests>
+                    </ak-aggregate-card>
+                </div>
+                <div
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                >
+                    <ak-aggregate-card
+                        icon="pf-icon pf-icon-server"
+                        header="Memory usage per node (MB)"
+                    >
+                        <gravity-overview-charts-memory-usage></gravity-overview-charts-memory-usage>
+                    </ak-aggregate-card>
+                </div>
+                <div
+                    class="pf-v6-l-grid__item pf-m-12-col pf-m-6-col-on-xl pf-m-6-col-on-2xl big-graph-container"
+                >
+                    <ak-aggregate-card
+                        icon="pf-icon pf-icon-server"
+                        header="CPU usage per node (%)"
+                    >
+                        <gravity-overview-charts-cpu-usage></gravity-overview-charts-cpu-usage>
+                    </ak-aggregate-card>
+                </div>
+            </div>
+        </section>`;
     }
 }

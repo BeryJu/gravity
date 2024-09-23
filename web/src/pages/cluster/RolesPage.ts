@@ -117,7 +117,7 @@ export class RolesPage extends TablePage<Role> {
                       <span slot="submit"> ${"Update"} </span>
                       <span slot="header"> ${"Update Role config"} </span>
                       ${this.renderRoleConfigForm(item)}
-                      <button slot="trigger" class="pf-c-button pf-m-plain">
+                      <button slot="trigger" class="pf-v6-c-button pf-m-plain">
                           <i class="fas fa-edit"></i>
                       </button>
                   </ak-forms-modal>`}`,
