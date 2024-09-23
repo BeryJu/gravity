@@ -79,7 +79,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                     .instancePk=${item.hostname + item.uid}
                 >
                 </gravity-dns-record-form>
-                <button slot="trigger" class="pf-c-button pf-m-plain">
+                <button slot="trigger" class="pf-v6-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
             </ak-forms-modal>`,
@@ -107,7 +107,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
@@ -125,7 +125,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                     recordType=${this.isReverseZone ? "PTR" : "A"}
                 >
                 </gravity-dns-record-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

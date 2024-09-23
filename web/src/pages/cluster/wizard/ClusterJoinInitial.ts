@@ -30,8 +30,8 @@ export class ClusterJoinInitial extends WizardFormPage {
         });
         this.host.state["roles"] = roles.join(";");
 
-        const info = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo();
-        this.host.state["node_ip"] = info.currentInstanceIP;
+        const info = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstanceInfo();
+        this.host.state["node_ip"] = info.instanceIP;
 
         const user = await new RolesApiApi(DEFAULT_CONFIG).apiUsersMe();
 
@@ -43,25 +43,31 @@ export class ClusterJoinInitial extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
-                <input type="text" value="" class="pf-c-form-control" required />
-                <p class="pf-c-form__helper-text">
-                    The unique identifier of the node being added to the cluster.
-                </p>
+        return html`<ak-form-element-horizontal
+                label=${"Name"}
+                required
+                name="name"
+                helperText="The unique identifier of the node being added to the cluster."
+            >
+                <input type="text" value="" required />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${"Roles"} ?required=${true}>
+            <ak-form-element-horizontal
+                label=${"Roles"}
+                required
+                helperText="Select which roles the new node should provide."
+                checkbox
+            >
                 ${Roles.map((role) => {
-                    return html`<div class="pf-c-check">
+                    return html`<div class="pf-v6-c-check">
                         <input
                             type="checkbox"
-                            class="pf-c-check__input"
+                            class="pf-v6-c-check__input"
                             ?checked=${true}
                             name=${`role_${role.id}`}
                         />
-                        <label class="pf-c-check__label"> ${role.name} </label>
+                        <label class="pf-v6-c-check__label"> ${role.name} </label>
                     </div>`;
                 })}
-                <p class="pf-c-form__helper-text">Select which roles the new node should provide</p>
             </ak-form-element-horizontal>`;
     }
 }

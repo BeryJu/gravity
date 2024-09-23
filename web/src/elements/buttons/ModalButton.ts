@@ -21,10 +21,10 @@ export const MODAL_BUTTON_STYLES = css`
         text-align: left;
         font-size: var(--pf-global--FontSize--md);
     }
-    .pf-c-modal-box.pf-m-lg {
+    .pf-v6-c-modal-box.pf-m-lg {
         overflow-y: auto;
     }
-    .pf-c-modal-box > .pf-c-button + * {
+    .pf-v6-c-modal-box > .pf-v6-c-button + * {
         margin-right: 0;
     }
     /* fix multiple selects height */
@@ -108,26 +108,33 @@ export class ModalButton extends AKElement {
         return html`<slot name="modal"></slot>`;
     }
 
+    renderClose() {
+        return html`<div class="pf-v6-c-modal-box__close">
+            <button
+                class="pf-v6-c-button pf-m-plain"
+                type="button"
+                aria-label="Close"
+                @click=${() => {
+                    this.resetForms();
+                    this.open = false;
+                }}
+            >
+                <span class="pf-v6-c-button__icon">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>`;
+    }
+
     renderModal(): TemplateResult {
-        return html`<div class="pf-c-backdrop">
-            <div class="pf-l-bullseye">
+        return html`<div class="pf-v6-c-backdrop">
+            <div class="pf-v6-l-bullseye">
                 <div
-                    class="pf-c-modal-box ${this.size} ${this.locked ? "locked" : ""}"
+                    class="pf-v6-c-modal-box ${this.size} ${this.locked ? "locked" : ""}"
                     role="dialog"
                     aria-modal="true"
                 >
-                    <button
-                        @click=${() => {
-                            this.resetForms();
-                            this.open = false;
-                        }}
-                        class="pf-c-button pf-m-plain"
-                        type="button"
-                        aria-label="Close dialog"
-                    >
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
-                    ${this.renderModalInner()}
+                    ${this.renderClose()} ${this.renderModalInner()}
                 </div>
             </div>
         </div>`;

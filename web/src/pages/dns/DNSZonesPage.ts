@@ -63,7 +63,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
                 <span slot="header"> ${"Update Zone"} </span>
                 <gravity-dns-zone-form slot="form" .instancePk=${item.name}>
                 </gravity-dns-zone-form>
-                <button slot="trigger" class="pf-c-button pf-m-plain">
+                <button slot="trigger" class="pf-v6-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
             </ak-forms-modal>`,
@@ -88,7 +88,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;

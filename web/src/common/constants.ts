@@ -15,6 +15,8 @@ export const EVENT_FLOW_ADVANCE = "ak-flow-advance";
 export const EVENT_REQUEST_POST = "ak-request-post";
 export const EVENT_MESSAGE = "ak-message";
 
+export const EVENT_TMP_TITLE = "ak-title";
+
 export const WS_MSG_TYPE_MESSAGE = "message";
 export const WS_MSG_TYPE_REFRESH = "refresh";
 
