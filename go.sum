@@ -94,8 +94,8 @@ github.com/bgentry/speakeasy v0.1.0 h1:ByYyxL9InA1OWqxJqqp2A5pYHUrCiAL6K3J+LKSsQ
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/bmatcuk/doublestar v1.1.1/go.mod h1:UD6OnuiIn0yFxxA2le/rnRU1G4RaI4UvFv1sNto9p6w=
 github.com/bool64/dev v0.2.25/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
-github.com/bool64/dev v0.2.35 h1:M17TLsO/pV2J7PYI/gpe3Ua26ETkzZGb+dC06eoMqlk=
-github.com/bool64/dev v0.2.35/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
+github.com/bool64/dev v0.2.36 h1:yU3bbOTujoxhWnt8ig8t94PVmZXIkCaRj9C57OtqJBY=
+github.com/bool64/dev v0.2.36/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/bool64/shared v0.1.5/go.mod h1:081yz68YC9jeFB3+Bbmno2RFWvGKv1lPKkMP6MHJlPs=
 github.com/cenkalti/backoff/v4 v4.2.1 h1:y4OZtCnogmCPw98Zjyt5a6+QwPLGkiQsYW5oUqylYbM=
@@ -173,8 +173,8 @@ github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyT
 github.com/getsentry/sentry-go v0.29.0 h1:YtWluuCFg9OfcqnaujpY918N/AhCCwarIDWOYSBAjCA=
 github.com/getsentry/sentry-go v0.29.0/go.mod h1:jhPesDAL0Q0W2+2YEuVOvdWmVtdsr1+jtBrlDEVWwLY=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
-github.com/go-chi/chi/v5 v5.0.12 h1:9euLV5sTrTNTRUU9POmDUvfxyj6LAABLUcEWO+JJb4s=
-github.com/go-chi/chi/v5 v5.0.12/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/go-chi/chi/v5 v5.1.0 h1:acVI1TYaD+hhedDJ3r54HyA6sExp3HfXq7QWEEY/xMw=
+github.com/go-chi/chi/v5 v5.1.0/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
 github.com/go-chi/cors v1.2.1 h1:xEC8UT3Rlp2QuWNEr4Fs/c2EAGVKBwy/1vHx3bppil4=
 github.com/go-chi/cors v1.2.1/go.mod h1:sSbTewc+6wYHBBCW7ytsFSn836hqM7JxpglAy2Vzc58=
 github.com/go-errors/errors v1.4.2 h1:J6MZopCL4uSllY1OfXM374weqZFFItUbrImctkmUxIA=
@@ -579,8 +579,8 @@ github.com/swaggest/openapi-go v0.2.54 h1:WnFKIHAgR2RIOiYys3qvSuYmsFd2a17MIoC9Tc
 github.com/swaggest/openapi-go v0.2.54/go.mod h1:2Q7NpuG9NgpGeTaNOo852GSR6cCzSP4IznA9DNdUTQw=
 github.com/swaggest/refl v1.3.0 h1:PEUWIku+ZznYfsoyheF97ypSduvMApYyGkYF3nabS0I=
 github.com/swaggest/refl v1.3.0/go.mod h1:3Ujvbmh1pfSbDYjC6JGG7nMgPvpG0ehQL4iNonnLNbg=
-github.com/swaggest/rest v0.2.66 h1:7jLlNVwzBbDMR/EUfO12wvWN8nKPwWKgqiQfUZYziyQ=
-github.com/swaggest/rest v0.2.66/go.mod h1:bvqmwxq5B15OIGeHuENEpOCUglznT2gZKsacmY2Bt8E=
+github.com/swaggest/rest v0.2.67 h1:ILaz1ko+Ahr2PjCEhik11P6KjD39lxKHIbdqa9mYD0Y=
+github.com/swaggest/rest v0.2.67/go.mod h1:jf/wNhDFY7TPEsSGooy2ZEimtaNEnvpaU6SPlTaWTO4=
 github.com/swaggest/usecase v1.3.1 h1:JdKV30MTSsDxAXxkldLNcEn8O2uf565khyo6gr5sS+w=
 github.com/swaggest/usecase v1.3.1/go.mod h1:cae3lDd5VDmM36OQcOOOdAlEDg40TiQYIp99S9ejWqA=
 github.com/tinylib/msgp v1.1.8 h1:FCXC1xanKO4I8plpHGH2P7koL/RzZs12l/+r7vakfm0=
