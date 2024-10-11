@@ -76,7 +76,16 @@ func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, q
 
 func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSRequest) []dns.RR {
 	answers := []dns.RR{}
-	relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
+	// Remove zone from query name
+	relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(eh.z.Name))
+	if relRecordName == "" {
+		// If the query name was the zone, the query should look for a record at the root
+		relRecordName = types.DNSRoot
+	} else {
+		// Otherwise the relative record name still has a dot at the end which is not what we store
+		// in the database
+		relRecordName = strings.TrimSuffix(relRecordName, ".")
+	}
 	directRecordKey := eh.z.inst.KV().Key(
 		eh.z.etcdKey,
 		strings.ToLower(relRecordName),

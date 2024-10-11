@@ -29,6 +29,8 @@ Each zone has its individual configuration for how to handle queries, see [Handl
 
 A record belongs to one zone and stores one response. To support multiple responses (i.e. multiple IP addresses for an A record), record UIDs are used. A UID is optional, and records with UID can be combined with a record without UID (all their results will be returned). Records created by the DHCP role will automatically have the UID assigned based on the DHCP device's identifier (the MAC address in most cases).
 
+To create a record at the root of the zone, set the name of the record to `@`.
+
 A single record holds the following data:
 
 - `data`: The actual response, an IP for A/AAAA records, text for TXT records, etc.

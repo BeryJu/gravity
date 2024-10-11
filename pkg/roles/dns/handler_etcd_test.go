@@ -12,6 +12,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const TestZone = "example.com."
+
 func TestRoleDNS_Etcd(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
@@ -57,6 +59,61 @@ func TestRoleDNS_Etcd(t *testing.T) {
 		Question: []d.Question{
 			{
 				Name:   "foo.",
+				Qtype:  d.TypeA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+}
+
+// Test DNS Entry at root of zone
+func TestRoleDNS_Etcd_Root(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+			"@",
+			types.DNSRecordTypeA,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data: "10.1.2.3",
+		}),
+	))
+
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	fw := NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   TestZone,
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},

@@ -16,6 +16,7 @@ const (
 
 const (
 	DNSWildcard = "*"
+	DNSRoot     = "@"
 )
 
 const (
