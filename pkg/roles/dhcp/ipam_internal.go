@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-ping/ping"
 	"github.com/pkg/errors"
+	probing "github.com/prometheus-community/pro-bing"
 	"go.uber.org/zap"
 )
 
@@ -178,7 +178,7 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 // Attempt to ping the IP. If we can ping the IP successfully, return true, and if we fail
 // for any reason return false
 func (i *InternalIPAM) ping(ip netip.Addr) bool {
-	pinger, err := ping.NewPinger(ip.String())
+	pinger, err := probing.NewPinger(ip.String())
 	if err != nil {
 		i.log.Warn("failed to ping IP", zap.Error(err))
 		return false
@@ -186,7 +186,7 @@ func (i *InternalIPAM) ping(ip netip.Addr) bool {
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
 	pings := false
-	pinger.OnRecv = func(pkt *ping.Packet) {
+	pinger.OnRecv = func(pkt *probing.Packet) {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "pings"))
 		pings = false
 	}

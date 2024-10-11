@@ -32,7 +32,7 @@ jobs:
       - if: ${{ always() }}
         run: |
           go install github.com/jstemmer/go-junit-report/v2@latest
-          cat test-output | $(go env GOPATH)/bin/go-junit-report -set-exit-code > report.xml
+          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out report.xml
       - if: ${{ always() }}
         uses: test-summary/action@v2
         with:

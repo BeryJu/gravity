@@ -5,14 +5,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-ping/ping"
 	"github.com/pkg/errors"
+	probing "github.com/prometheus-community/pro-bing"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 )
 
-func (r *Role) Ping(addr string) (*ping.Statistics, error) {
-	pinger, err := ping.NewPinger(addr)
+func (r *Role) Ping(addr string) (*probing.Statistics, error) {
+	pinger, err := probing.NewPinger(addr)
 	if err != nil {
 		return nil, err
 	}
