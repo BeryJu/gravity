@@ -129,7 +129,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 func (r *Role) Stop() {
 	for _, server := range r.servers {
 		err := server.Shutdown()
-		if err != nil {
+		if err != nil && err.Error() != "dns: server not started" {
 			r.log.Warn("failed to stop server", zap.Error(err))
 		}
 	}
