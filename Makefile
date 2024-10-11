@@ -143,6 +143,7 @@ test-env-stop:
 
 install-deps: internal/resources/macoui internal/resources/blocky
 	sudo apt-get install -y nmap libpcap-dev
+	sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
 
 test-local:
 	$(eval TEST_COUNT := 100)
