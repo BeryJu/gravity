@@ -31,6 +31,9 @@ A record belongs to one zone and stores one response. To support multiple respon
 
 To create a record at the root of the zone, set the name of the record to `@`.
 
+To create a wildcard record, set the name of the record to `*`. Note that if a more specific record exists for the queried name, it will have a higher priority and the wildcard record will not be returned.
+Wildcard records can also be used for multiple levels, for example creating a record called `*.*` in a zone `example.com` will be matched for a query to `foo.bar.example.com`. Here the first wildcard record, sorted by the least amount of depth (amount of `.`) will be returned, and no other records will be returned.
+
 A single record holds the following data:
 
 - `data`: The actual response, an IP for A/AAAA records, text for TXT records, etc.

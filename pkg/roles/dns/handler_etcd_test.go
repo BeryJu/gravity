@@ -24,7 +24,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -39,7 +39,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 			"foo",
 			types.DNSRecordTypeA,
 			"0",
@@ -58,7 +58,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -133,7 +133,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -148,7 +148,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 			"*",
 			types.DNSRecordTypeA,
 			"0",
@@ -167,7 +167,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -187,7 +187,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -202,13 +202,13 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"foo",
 			types.DNSRecordTypeCNAME,
 			"0",
 		).String(),
 		tests.MustJSON(dns.Record{
-			Data: "bar.test.",
+			Data: "bar.example.com.",
 		}),
 	))
 	tests.PanicIfError(inst.KV().Put(
@@ -216,7 +216,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -235,7 +235,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.test.",
+				Name:   "bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -248,14 +248,14 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.test.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeCNAME,
 				Qclass: d.ClassINET,
 			},
 		},
 	})
 	ans = fw.Msg().Answer[0]
-	assert.Equal(t, "bar.test.", ans.(*d.CNAME).Target)
+	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
@@ -268,7 +268,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -283,7 +283,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 			"*.*",
 			types.DNSRecordTypeA,
 			"0",
@@ -302,7 +302,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.bar.",
+				Name:   "foo.bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -322,7 +322,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"TesT.",
+			"eXaMpLe.CoM.",
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -337,7 +337,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"TesT.",
+			"eXaMpLe.CoM.",
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -356,7 +356,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.test.",
+				Name:   "bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -376,7 +376,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
@@ -391,7 +391,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -410,7 +410,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.TesT.",
+				Name:   "bar.eXaMpLe.CoM.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
