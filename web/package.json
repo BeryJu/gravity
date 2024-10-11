@@ -13,7 +13,7 @@
     "dependencies": {
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/legacy-modes": "^6.4.1",
-        "@patternfly/patternfly": "^6.0.0-prerelease.15",
+        "@patternfly/patternfly": "^6.0.0-prerelease.13",
         "@rollup/plugin-commonjs": "^28.0.0",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.3.0",
