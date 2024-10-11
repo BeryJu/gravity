@@ -25,6 +25,7 @@ func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
 	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
 		mh.z.recordsSync.RLock()
+		defer mh.z.recordsSync.RUnlock()
 		var recs map[string]*Record = make(map[string]*Record)
 		var ok bool
 		if k.IsPrefix() {
@@ -45,7 +46,6 @@ func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
 				return answers
 			}
 		}
-		mh.z.recordsSync.RUnlock()
 		for _, rec := range recs {
 			ans := rec.ToDNS(qname)
 			if ans != nil {
