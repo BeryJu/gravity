@@ -8,9 +8,11 @@ Gravity's API is also available on the socket `/var/run/gravity.sock` with no au
 
 ### Authentication
 
+A default admin user is created on the first startup. You can find the credentials printed to stdout. See [Installation](../install).
+
 Session authentication using local users and OIDC is supported for browser usage. API keys can also be created for automation.
 
-A default admin user is created on the first startup. You can find the credentials printed to stdout. See [Installation](../install).
+To authenticate to the API using a token, create the token either using [ADMIN_TOKEN](../install/_index.md#advanced), or in the Web Interface under __Auth -> Tokens__. Upon creation, the token will be shown in the browser. Afterwards, add the `Authorization` header to API requests with the value of `Bearer <token>`.
 
 #### CLI
 
