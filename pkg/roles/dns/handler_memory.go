@@ -1,6 +1,8 @@
 package dns
 
 import (
+	"strings"
+
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/miekg/dns"
@@ -21,13 +23,29 @@ func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
 		z:           z,
 	}
 	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
-		mh.z.recordsSync.RLock()
-		recs, ok := mh.z.records[k.String()]
-		mh.z.recordsSync.RUnlock()
 		answers := []dns.RR{}
-		if !ok {
-			return answers
+		mh.z.recordsSync.RLock()
+		var recs map[string]*Record = make(map[string]*Record)
+		var ok bool
+		if k.IsPrefix() {
+			prefix := k.String()
+			// If the key is a prefix, we can't just directly look it up in the map,
+			// and have to fall back to a "slightly" slower method of iterating through the map
+			for key, rr := range mh.z.records {
+				if !strings.HasPrefix(key, prefix) {
+					continue
+				}
+				for ikey, r := range rr {
+					recs[ikey] = r
+				}
+			}
+		} else {
+			recs, ok = mh.z.records[k.String()]
+			if !ok {
+				return answers
+			}
 		}
+		mh.z.recordsSync.RUnlock()
 		for _, rec := range recs {
 			ans := rec.ToDNS(qname)
 			if ans != nil {
