@@ -57,7 +57,7 @@ export class PageHeader extends AKElement {
                     background-color: transparent;
                 }
                 .pf-c-button.pf-m-plain {
-                    background-color: var(--pf-c-page__main-section--m-light--BackgroundColor);
+                    background-color: transparent;
                     border-radius: 0px;
                 }
                 .pf-c-page__main-section {
