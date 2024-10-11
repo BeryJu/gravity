@@ -6,6 +6,7 @@ import { customElement, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/PageHeader";
 import "../../elements/Spinner";
 import "../../elements/buttons/SpinnerButton";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";

@@ -31,19 +31,17 @@ export class ZoneCacheWizardPage extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal name="enableCache" checkbox>
-                <div class="pf-v6-c-check">
-                    <input type="checkbox" class="pf-v6-c-check__input" ?checked=${true} />
-                    <label class="pf-v6-c-check__label"> ${"Enable cache"} </label>
+        return html`<ak-form-element-horizontal name="enableCache">
+                <div class="pf-c-check">
+                    <input type="checkbox" class="pf-c-check__input" ?checked=${true} />
+                    <label class="pf-c-check__label"> ${"Enable cache"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal
-                label=${"Cache TTL"}
-                required
-                name="cacheTTL"
-                helperText="Duration in seconds the records will be cached for."
-            >
-                <input type="number" required value=${3600} />
+            <ak-form-element-horizontal label=${"Cache TTL"} ?required=${true} name="cacheTTL">
+                <input type="number" class="pf-c-form-control" required value=${3600} />
+                <p class="pf-c-form__helper-text">
+                    Duration in seconds the records will be cached for.
+                </p>
             </ak-form-element-horizontal>`;
     }
 }

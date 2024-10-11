@@ -22,13 +22,14 @@ export class Spinner extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<svg
-            class="pf-v6-c-spinner ${this.size.toString()}"
+        return html`<span
+            class="pf-c-spinner ${this.size.toString()}"
             role="progressbar"
-            viewBox="0 0 100 100"
-            aria-label="Loading..."
+            aria-valuetext="${"Loading..."}"
         >
-            <circle class="pf-v6-c-spinner__path" cx="50" cy="50" r="45" fill="none" />
-        </svg> `;
+            <span class="pf-c-spinner__clipper"></span>
+            <span class="pf-c-spinner__lead-ball"></span>
+            <span class="pf-c-spinner__tail-ball"></span>
+        </span>`;
     }
 }

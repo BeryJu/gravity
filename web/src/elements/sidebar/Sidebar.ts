@@ -6,6 +6,8 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
+import "../sidebar/SidebarBrand";
+import "../sidebar/SidebarUser";
 
 @customElement("ak-sidebar")
 export class Sidebar extends AKElement {
@@ -19,30 +21,53 @@ export class Sidebar extends AKElement {
                 :host {
                     z-index: 100;
                 }
-                .pf-v6-c-nav__link.pf-m-current::after,
-                .pf-v6-c-nav__link.pf-m-current:hover::after,
-                .pf-v6-c-nav__item.pf-m-current:not(.pf-m-expanded) .pf-v6-c-nav__link::after {
-                    --pf-v6-c-nav__link--m-current--after--BorderColor: var(--ak-accent);
+                .pf-c-nav__link.pf-m-current::after,
+                .pf-c-nav__link.pf-m-current:hover::after,
+                .pf-c-nav__item.pf-m-current:not(.pf-m-expanded) .pf-c-nav__link::after {
+                    --pf-c-nav__link--m-current--after--BorderColor: var(--ak-accent);
                 }
 
-                .pf-v6-c-nav__section + .pf-v6-c-nav__section {
-                    --pf-v6-c-nav__section--section--MarginTop: var(--pf-global--spacer--sm);
+                .pf-c-nav__section + .pf-c-nav__section {
+                    --pf-c-nav__section--section--MarginTop: var(--pf-global--spacer--sm);
                 }
-                .pf-v6-c-nav__list .sidebar-brand {
+                .pf-c-nav__list .sidebar-brand {
                     max-height: 82px;
                     margin-bottom: -0.5rem;
+                }
+                nav {
+                    display: flex;
+                    flex-direction: column;
+                    max-height: 100vh;
+                    height: 100%;
+                    overflow-y: hidden;
+                }
+                .pf-c-nav__list {
+                    flex-grow: 1;
+                    overflow-y: auto;
+                }
+
+                .pf-c-nav__link {
+                    --pf-c-nav__link--PaddingTop: 0.5rem;
+                    --pf-c-nav__link--PaddingRight: 0.5rem;
+                    --pf-c-nav__link--PaddingBottom: 0.5rem;
+                }
+                .pf-c-nav__section-title {
+                    font-size: 12px;
+                }
+                .pf-c-nav__item {
+                    --pf-c-nav__item--MarginTop: 0px;
                 }
             `,
         ];
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-v6-c-page__sidebar-body">
-            <nav class="pf-v6-c-nav" aria-label="Global">
-                <ul class="pf-v6-c-nav__list">
-                    <slot></slot>
-                </ul>
-            </nav>
-        </div>`;
+        return html`<nav class="pf-c-nav" aria-label="Global">
+            <ak-sidebar-brand></ak-sidebar-brand>
+            <ul class="pf-c-nav__list">
+                <slot></slot>
+            </ul>
+            <ak-sidebar-user></ak-sidebar-user>
+        </nav>`;
     }
 }

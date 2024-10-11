@@ -63,7 +63,7 @@ export class AuthTokensPage extends TablePage<AuthAPIToken> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
@@ -75,7 +75,7 @@ export class AuthTokensPage extends TablePage<AuthAPIToken> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="header"> ${"Create Token"} </span>
                 <gravity-auth-token-form slot="form"> </gravity-auth-token-form>
-                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

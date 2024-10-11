@@ -3,7 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
-// import PFDropdown from "@patternfly/patternfly/components/Dropdown/dropdown.css";
+import PFDropdown from "@patternfly/patternfly/components/Dropdown/dropdown.css";
 import PFPagination from "@patternfly/patternfly/components/Pagination/pagination.css";
 import PFTable from "@patternfly/patternfly/components/Table/table.css";
 import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
@@ -58,12 +58,12 @@ export class TableColumn {
 
     renderSortable(table: Table<object>): TemplateResult {
         return html` <button
-            class="pf-v6-c-table__button"
+            class="pf-c-table__button"
             @click=${() => this.headerClickHandler(table)}
         >
-            <div class="pf-v6-c-table__button-content">
-                <span class="pf-v6-c-table__text">${this.title}</span>
-                <span class="pf-v6-c-table__sort-indicator">
+            <div class="pf-c-table__button-content">
+                <span class="pf-c-table__text">${this.title}</span>
+                <span class="pf-c-table__sort-indicator">
                     <i class="fas ${this.getSortIndicator(table)}"></i>
                 </span>
             </div>
@@ -75,8 +75,7 @@ export class TableColumn {
             role="columnheader"
             scope="col"
             class="
-                pf-v6-c-table__th
-                ${this.orderBy ? "pf-v6-c-table__sort " : " "}
+                ${this.orderBy ? "pf-c-table__sort " : " "}
                 ${table.order === this.orderBy || table.order === `-${this.orderBy}`
                 ? "pf-m-selected "
                 : ""}
@@ -151,7 +150,7 @@ export abstract class Table<T extends object> extends AKElement {
             PFBullseye,
             PFButton,
             PFToolbar,
-            // PFDropdown,
+            PFDropdown,
             PFPagination,
             AKElement.GlobalStyle,
         ];
@@ -219,9 +218,9 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     private renderLoading(): TemplateResult {
-        return html`<tr class="pf-v6-c-table__tr" role="row">
-            <td class="pf-v6-c-table__td" role="cell" colspan="25">
-                <div class="pf-v6-l-bullseye">
+        return html`<tr role="row">
+            <td role="cell" colspan="25">
+                <div class="pf-l-bullseye">
                     <ak-empty-state ?loading="${true}" header=${"Loading"}> </ak-empty-state>
                 </div>
             </td>
@@ -230,9 +229,9 @@ export abstract class Table<T extends object> extends AKElement {
 
     renderEmpty(inner?: TemplateResult): TemplateResult {
         return html`<tbody role="rowgroup">
-            <tr class="pf-v6-c-table__tr" role="row">
-                <td class="pf-v6-c-table__td" role="cell" colspan="8">
-                    <div class="pf-v6-l-bullseye">
+            <tr role="row">
+                <td role="cell" colspan="8">
+                    <div class="pf-l-bullseye">
                         ${inner
                             ? inner
                             : html`<ak-empty-state
@@ -265,11 +264,9 @@ export abstract class Table<T extends object> extends AKElement {
             return this.renderRowGroup(groupedResults[0][1]);
         }
         return groupedResults.map(([group, items]) => {
-            return html`<thead class="pf-v6-c-table__thead">
-                    <tr role="row" class="pf-v6-c-table__tr">
-                        <th class="pf-v6-c-table__th" role="columnheader" scope="row" colspan="200">
-                            ${group}
-                        </th>
+            return html`<thead>
+                    <tr role="row">
+                        <th role="columnheader" scope="row" colspan="200">${group}</th>
                     </tr>
                 </thead>
                 ${this.renderRowGroup(items)}`;
@@ -280,13 +277,11 @@ export abstract class Table<T extends object> extends AKElement {
         return items.map((item) => {
             return html`<tbody
                 role="rowgroup"
-                class="pf-v6-c-table__tbody ${this.expandedElements.indexOf(item) > -1
-                    ? "pf-m-expanded"
-                    : ""}"
+                class="${this.expandedElements.indexOf(item) > -1 ? "pf-m-expanded" : ""}"
             >
-                <tr role="row" class="pf-v6-c-table__tr">
+                <tr role="row">
                     ${this.checkbox
-                        ? html`<td class="pf-v6-c-table__td pf-v6-c-table__check" role="cell">
+                        ? html`<td class="pf-c-table__check" role="cell">
                               <input
                                   type="checkbox"
                                   .checked=${this.selectedElements.indexOf(item) >= 0}
@@ -318,9 +313,9 @@ export abstract class Table<T extends object> extends AKElement {
                           </td>`
                         : html``}
                     ${this.expandable
-                        ? html`<td class="pf-v6-c-table__td pf-v6-c-table__toggle" role="cell">
+                        ? html`<td class="pf-c-table__toggle" role="cell">
                               <button
-                                  class="pf-v6-c-button pf-m-plain ${this.expandedElements.indexOf(
+                                  class="pf-c-button pf-m-plain ${this.expandedElements.indexOf(
                                       item,
                                   ) > -1
                                       ? "pf-m-expanded"
@@ -337,7 +332,7 @@ export abstract class Table<T extends object> extends AKElement {
                                       this.requestUpdate();
                                   }}
                               >
-                                  <div class="pf-v6-c-table__toggle-icon">
+                                  <div class="pf-c-table__toggle-icon">
                                       &nbsp;<i class="fas fa-angle-down" aria-hidden="true"></i
                                       >&nbsp;
                                   </div>
@@ -345,11 +340,11 @@ export abstract class Table<T extends object> extends AKElement {
                           </td>`
                         : html``}
                     ${this.row(item).map((col) => {
-                        return html`<td class="pf-v6-c-table__td" role="cell">${col}</td>`;
+                        return html`<td role="cell">${col}</td>`;
                     })}
                 </tr>
                 <tr
-                    class="pf-v6-c-table__expandable-row ${this.expandedElements.indexOf(item) > -1
+                    class="pf-c-table__expandable-row ${this.expandedElements.indexOf(item) > -1
                         ? "pf-m-expanded"
                         : ""}"
                     role="row"
@@ -385,7 +380,7 @@ export abstract class Table<T extends object> extends AKElement {
             return html``;
         }
         return html`<ak-table-search
-            class="pf-v6-c-toolbar__item pf-m-search-filter"
+            class="pf-c-toolbar__item pf-m-search-filter"
             value=${ifDefined(this.search)}
             .onSearch=${(value: string) => {
                 this.search = value;
@@ -403,27 +398,23 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     renderToolbarContainer(): TemplateResult {
-        return html`<div class="pf-v6-c-toolbar">
-            <div class="pf-v6-c-toolbar__content">
-                <div class="pf-v6-c-toolbar__content-section pf-m-nowrap">
-                    <div class="pf-v6-c-toolbar__item pf-m-search-filter">
-                        ${this.renderSearch()}
-                    </div>
-                    <div class="pf-v6-c-toolbar__bulk-select">${this.renderToolbar()}</div>
-                    <div class="pf-v6-c-toolbar__group">${this.renderToolbarAfter()}</div>
-                    <div class="pf-v6-c-toolbar__group">${this.renderToolbarSelected()}</div>
-                    ${this.paginated
-                        ? html`<ak-table-pagination
-                              class="pf-v6-c-toolbar__item pf-m-pagination"
-                              .pages=${this.data?.pagination}
-                              .pageChangeHandler=${(page: number) => {
-                                  this.page = page;
-                                  this.fetch();
-                              }}
-                          >
-                          </ak-table-pagination>`
-                        : html``}
-                </div>
+        return html`<div class="pf-c-toolbar">
+            <div class="pf-c-toolbar__content">
+                <div class="pf-c-toolbar__group pf-m-search-filter">${this.renderSearch()}</div>
+                <div class="pf-c-toolbar__bulk-select">${this.renderToolbar()}</div>
+                <div class="pf-c-toolbar__group">${this.renderToolbarAfter()}</div>
+                <div class="pf-c-toolbar__group">${this.renderToolbarSelected()}</div>
+                ${this.paginated
+                    ? html`<ak-table-pagination
+                          class="pf-c-toolbar__item pf-m-pagination"
+                          .pages=${this.data?.pagination}
+                          .pageChangeHandler=${(page: number) => {
+                              this.page = page;
+                              this.fetch();
+                          }}
+                      >
+                      </ak-table-pagination>`
+                    : html``}
             </div>
         </div>`;
     }
@@ -441,11 +432,11 @@ export abstract class Table<T extends object> extends AKElement {
                   </ak-chip-group>`
                 : html``}
             ${this.renderToolbarContainer()}
-            <table class="pf-v6-c-table pf-m-compact pf-m-grid-md pf-m-expandable">
-                <thead class="pf-v6-c-table__thead">
-                    <tr role="row" class="pf-v6-c-table__tr">
+            <table class="pf-c-table pf-m-compact pf-m-grid-md pf-m-expandable">
+                <thead>
+                    <tr role="row">
                         ${this.checkbox
-                            ? html`<td class="pf-v6-c-table__td pf-v6-c-table__check" role="cell">
+                            ? html`<td class="pf-c-table__check" role="cell">
                                   <input
                                       name="select-all"
                                       type="checkbox"
@@ -461,18 +452,16 @@ export abstract class Table<T extends object> extends AKElement {
                                   />
                               </td>`
                             : html``}
-                        ${this.expandable
-                            ? html`<td class="pf-v6-c-table__td" role="cell"></td>`
-                            : html``}
+                        ${this.expandable ? html`<td role="cell"></td>` : html``}
                         ${this.columns().map((col) => col.render(this))}
                     </tr>
                 </thead>
                 ${this.isLoading || !this.data ? this.renderLoading() : this.renderRows()}
             </table>
             ${this.paginated
-                ? html` <div class="pf-v6-c-pagination pf-m-bottom">
+                ? html` <div class="pf-c-pagination pf-m-bottom">
                       <ak-table-pagination
-                          class="pf-v6-c-toolbar__item pf-m-pagination"
+                          class="pf-c-toolbar__item pf-m-pagination"
                           .pages=${this.data?.pagination}
                           .pageChangeHandler=${(page: number) => {
                               this.page = page;

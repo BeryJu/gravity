@@ -1,4 +1,4 @@
-import { CSSResult, nothing } from "lit";
+import { CSSResult, css } from "lit";
 import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -13,7 +13,23 @@ import { FormGroup } from "../forms/FormGroup";
 @customElement("ak-form-element-horizontal")
 export class HorizontalFormElement extends AKElement {
     static get styles(): CSSResult[] {
-        return [PFBase, PFForm, PFFormControl, AKElement.GlobalStyle];
+        return [
+            PFBase,
+            PFForm,
+            PFFormControl,
+            AKElement.GlobalStyle,
+            css`
+                .pf-c-form__group {
+                    display: grid;
+                    grid-template-columns:
+                        var(--pf-c-form--m-horizontal__group-label--md--GridColumnWidth)
+                        var(--pf-c-form--m-horizontal__group-control--md--GridColumnWidth);
+                }
+                .pf-c-form__group-label {
+                    padding-top: var(--pf-c-form--m-horizontal__group-label--md--PaddingTop);
+                }
+            `,
+        ];
     }
 
     @property()
@@ -33,12 +49,6 @@ export class HorizontalFormElement extends AKElement {
 
     @property({ type: Boolean })
     slugMode = false;
-
-    @property()
-    helperText?: string;
-
-    @property({ type: Boolean })
-    checkbox = false;
 
     _invalid = false;
 
@@ -98,60 +108,38 @@ export class HorizontalFormElement extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-v6-c-form pf-m-horizontal">
-            <div class="pf-v6-c-form__group">
-                <div class="pf-v6-c-form__group-label">
-                    <label class="pf-v6-c-form__label">
-                        <span class="pf-v6-c-form__label-text">${this.label}</span>
-                        ${this.required
-                            ? html`&nbsp;<span
-                                      class="pf-v6-c-form__label-required"
-                                      aria-hidden="true"
-                                      >*</span
-                                  >`
-                            : nothing}
-                    </label>
-                </div>
-                <div class="pf-v6-c-form__group-control">
-                    ${this.checkbox
-                        ? html`<slot></slot>`
-                        : html`
-                              <span
-                                  class="pf-v6-c-form-control ${this.required
-                                      ? "pf-m-required"
-                                      : ""}"
-                              >
-                                  <slot></slot>
-                              </span>
-                          `}
-                    <div class="pf-v6-c-form__helper-text" aria-live="polite">
-                        <div class="pf-v6-c-helper-text">
-                            ${this.helperText
-                                ? html`
-                                      <div class="pf-v6-c-form__helper-text">
-                                          <div class="pf-v6-c-helper-text">
-                                              <div class="pf-v6-c-helper-text__item">
-                                                  <span class="pf-v6-c-helper-text__item-text"
-                                                      >${this.helperText}</span
-                                                  >
-                                              </div>
-                                          </div>
-                                      </div>
-                                  `
-                                : nothing}
-                            ${this.errorMessages.map((message) => {
-                                return html`<div class="pf-v6-c-helper-text__item pf-m-error">
-                                    <span class="pf-v6-c-helper-text__item-icon">
-                                        <i
-                                            class="fas fa-fw fa-exclamation-circle"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </span>
-                                    <span class="pf-v6-c-helper-text__item-text">${message}</span>
-                                </div>`;
-                            })}
-                        </div>
-                    </div>
+        return html`<div class="pf-c-form__group">
+            <div class="pf-c-form__group-label">
+                <label class="pf-c-form__label">
+                    <span class="pf-c-form__label-text">${this.label}</span>
+                    ${this.required
+                        ? html`<span class="pf-c-form__label-required" aria-hidden="true">*</span>`
+                        : html``}
+                </label>
+            </div>
+            <div class="pf-c-form__group-control">
+                ${this.writeOnly && !this.writeOnlyActivated
+                    ? html`<div class="pf-c-form__horizontal-group">
+                          <input
+                              class="pf-c-form-control"
+                              type="password"
+                              disabled
+                              value="**************"
+                          />
+                      </div>`
+                    : html``}
+                <slot class="pf-c-form__horizontal-group"></slot>
+                <div class="pf-c-form__horizontal-group">
+                    ${this.writeOnly
+                        ? html`<p class="pf-c-form__helper-text" aria-live="polite">
+                              ${"Click to change value"}
+                          </p>`
+                        : html``}
+                    ${this.errorMessages.map((message) => {
+                        return html`<p class="pf-c-form__helper-text pf-m-error" aria-live="polite">
+                            ${message}
+                        </p>`;
+                    })}
                 </div>
             </div>
         </div>`;

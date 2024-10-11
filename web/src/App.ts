@@ -11,7 +11,6 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 import { DEFAULT_CONFIG } from "./api/Config";
 import { EVENT_SIDEBAR_TOGGLE } from "./common/constants";
 import { AKElement } from "./elements/Base";
-import "./elements/Header";
 import { Route } from "./elements/router/Route";
 import "./elements/router/RouterOutlet";
 import "./elements/sidebar/Sidebar";
@@ -94,17 +93,23 @@ export class AdminInterface extends AKElement {
             PFDrawer,
             AKElement.GlobalStyle,
             css`
-                .pf-v6-c-page__main,
-                .pf-v6-c-drawer__content,
-                .pf-v6-c-page__drawer {
+                .pf-c-page__main,
+                .pf-c-drawer__content,
+                .pf-c-page__drawer {
+                    z-index: auto !important;
                     background-color: transparent;
                 }
                 .display-none {
                     display: none;
                 }
-                ak-header,
-                ak-sidebar {
-                    z-index: 100 !important;
+                .pf-c-page {
+                    background-color: var(--pf-c-page--BackgroundColor) !important;
+                }
+                @media (prefers-color-scheme: dark) {
+                    /* Global page background colour */
+                    .pf-c-page {
+                        --pf-c-page--BackgroundColor: var(--ak-dark-background);
+                    }
                 }
             `,
         ];
@@ -124,10 +129,6 @@ export class AdminInterface extends AKElement {
     }
 
     firstUpdated(): void {
-        const matcher = window.matchMedia("(prefers-color-scheme: light)");
-        if (!matcher.matches) {
-            document.querySelector("html")?.classList.add("pf-v6-theme-dark");
-        }
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             this.isAuthenticated = me.authenticated;
             if (!me.authenticated) {
@@ -141,37 +142,23 @@ export class AdminInterface extends AKElement {
     }
 
     render(): TemplateResult {
-        if (!this.isAuthenticated) {
-            return html`<ak-router-outlet
-                role="main"
-                class="pf-v6-c-page__main"
-                tabindex="-1"
-                id="main-content"
-                defaultUrl="/overview"
-                .routes=${ROUTES}
-            >
-            </ak-router-outlet>`;
-        }
-        return html`<div class="pf-v6-c-page">
-            <ak-header class="pf-v6-c-masthead"></ak-header>
+        return html`<div class="pf-c-page">
             <ak-sidebar
-                class="pf-v6-c-page__sidebar ${this.showSidebar
-                    ? "pf-m-expanded"
-                    : "pf-m-collapsed"}"
+                class="pf-c-page__sidebar ${this.showSidebar ? "pf-m-expanded" : "pf-m-collapsed"}"
             >
                 ${this.renderSidebarItems()}
             </ak-sidebar>
-            <div class="pf-v6-c-page__main-container">
+            <main class="pf-c-page__main">
                 <ak-router-outlet
                     role="main"
-                    class="pf-v6-c-page__main"
+                    class="pf-c-page__main"
                     tabindex="-1"
                     id="main-content"
                     defaultUrl="/overview"
                     .routes=${ROUTES}
                 >
                 </ak-router-outlet>
-            </div>
+            </main>
         </div>`;
     }
 
