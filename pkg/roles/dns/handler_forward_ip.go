@@ -82,7 +82,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 			}
 		}
 	}
-	name := strings.TrimSuffix(query.Name, utils.EnsureLeadingPeriod(ipf.z.Name))
+	name := strings.TrimSuffix(ans.Header().Name, utils.EnsureLeadingPeriod(ipf.z.Name))
 	record := ipf.z.newRecord(name, dns.TypeToString[ans.Header().Rrtype])
 	switch v := ans.(type) {
 	case *dns.A:
@@ -105,6 +105,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 		record.SRVWeight = v.Weight
 	}
 	record.uid = strconv.Itoa(idx)
+	ipf.log.Debug("caching record", zap.String("record", ans.String()))
 	err := record.put(r.Context(), int64(cacheTtl))
 	if err != nil {
 		ipf.log.Warn("failed to cache answer", zap.Error(err))
@@ -128,7 +129,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 	fs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.lookup")
 	resolver := ipf.pickResolver()
 	fs.SetTag("resolver", resolver)
-	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver))
+	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver), zap.String("msg", r.Msg.String()))
 	m, rtt, err := ipf.c.ExchangeContext(r.Context(), r.Msg, resolver)
 	ipf.log.Debug("dns rtt", zap.Duration("rtt", rtt))
 	fs.Finish()
