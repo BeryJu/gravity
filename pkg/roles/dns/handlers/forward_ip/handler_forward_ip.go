@@ -1,10 +1,11 @@
-package dns
+package forward_ip
 
 import (
 	"math/rand"
 	"strconv"
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/handlers"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
@@ -18,12 +19,12 @@ type IPForwarderHandler struct {
 	c         *dns.Client
 	resolvers []string
 
-	z        *Zone
+	z        handlers.HandlerZoneContext
 	log      *zap.Logger
 	CacheTTL int
 }
 
-func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
+func NewIPForwarderHandler(z handlers.HandlerZoneContext, config map[string]string) *IPForwarderHandler {
 	net, ok := config["net"]
 	if !ok {
 		net = ""
@@ -37,7 +38,7 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 		},
 		resolvers: strings.Split(config["to"], ";"),
 	}
-	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
+	ipf.log = z.Log().With(zap.String("handler", ipf.Identifier()))
 
 	rawTtl := config["cache_ttl"]
 	cacheTtl, err := strconv.Atoi(rawTtl)

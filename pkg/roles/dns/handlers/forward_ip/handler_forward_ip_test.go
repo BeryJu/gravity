@@ -1,4 +1,4 @@
-package dns_test
+package forward_ip_test
 
 import (
 	"net"
