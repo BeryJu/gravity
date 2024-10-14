@@ -10,6 +10,8 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/handlers/coredns"
+	"beryju.io/gravity/pkg/roles/dns/handlers/etcd"
+	"beryju.io/gravity/pkg/roles/dns/handlers/memory"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
@@ -187,10 +189,10 @@ func (z *Zone) Init(ctx context.Context) {
 			handler = NewBlockyForwarder(z, handlerCfg)
 		case IPForwarderType:
 			handler = NewIPForwarderHandler(z, handlerCfg)
-		case EtcdType:
-			handler = NewEtcdHandler(z, handlerCfg)
-		case MemoryType:
-			handler = NewMemoryHandler(z, handlerCfg)
+		case etcd.EtcdType:
+			handler = etcd.NewEtcdHandler(z, handlerCfg)
+		case memory.MemoryType:
+			handler = memory.NewMemoryHandler(z, handlerCfg)
 		default:
 			z.log.Warn("invalid forwarder type", zap.String("type", t))
 			continue

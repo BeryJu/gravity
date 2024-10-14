@@ -1,8 +1,9 @@
-package dns
+package etcd
 
 import (
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/handlers"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/storage"
@@ -15,28 +16,28 @@ import (
 const EtcdType = "etcd"
 
 type EtcdHandler struct {
-	log       *zap.Logger
-	z         *Zone
-	lookupKey func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR
+	log           *zap.Logger
+	z             handlers.HandlerZoneContext
+	LookupKeyFunc func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR
 }
 
-func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
+func NewEtcdHandler(z handlers.HandlerZoneContext, config map[string]string) *EtcdHandler {
 	eh := &EtcdHandler{
 		z: z,
 	}
-	eh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
+	eh.LookupKeyFunc = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
 		es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
 		defer es.Finish()
 		key := k.String()
 		eh.log.Debug("fetching kv key", zap.String("key", key))
 		es.SetTag("gravity.dns.handler.etcd.key", key)
-		res, err := eh.z.inst.KV().Get(r.Context(), key, clientv3.WithPrefix())
+		res, err := eh.z.RoleInstance().KV().Get(r.Context(), key, clientv3.WithPrefix())
 		if err != nil || len(res.Kvs) < 1 {
 			return answers
 		}
 		for _, kv := range res.Kvs {
-			rec, err := eh.z.recordFromKV(kv)
+			rec, err := eh.z.RecordFromKV(kv)
 			if err != nil {
 				continue
 			}
@@ -47,7 +48,7 @@ func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
 		}
 		return answers
 	}
-	eh.log = z.log.With(zap.String("handler", eh.Identifier()))
+	eh.log = z.Log().With(zap.String("handler", eh.Identifier()))
 	return eh
 }
 
@@ -64,8 +65,8 @@ func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, q
 		// Replace the current dot part with a wildcard (make sure to only replace 1 occurrence,
 		// since we replace from left to right)
 		wildcardName = strings.Replace(wildcardName, part, types.DNSWildcard, 1)
-		wildcardKey := eh.z.inst.KV().Key(eh.z.etcdKey, strings.ToLower(wildcardName), dns.Type(question.Qtype).String())
-		wildcardAns := eh.lookupKey(wildcardKey, question.Name, r)
+		wildcardKey := eh.z.RoleInstance().KV().Key(eh.z.EtcdKey(), strings.ToLower(wildcardName), dns.Type(question.Qtype).String())
+		wildcardAns := eh.LookupKeyFunc(wildcardKey, question.Name, r)
 		// If we do get an answer from this wildcard key, stop going further
 		if len(wildcardAns) > 0 {
 			return wildcardAns
@@ -86,8 +87,8 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 		// in the database
 		relRecordName = strings.TrimSuffix(relRecordName, ".")
 	}
-	directRecordKey := eh.z.inst.KV().Key(
-		eh.z.etcdKey,
+	directRecordKey := eh.z.RoleInstance().KV().Key(
+		eh.z.EtcdKey(),
 		strings.ToLower(relRecordName),
 	)
 	if question.Qtype != dns.TypeNone {
@@ -101,7 +102,7 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 		directRecordKey = directRecordKey.Prefix(true)
 	}
 	// Look for direct matches first
-	answers = append(answers, eh.lookupKey(
+	answers = append(answers, eh.LookupKeyFunc(
 		directRecordKey,
 		question.Name,
 		r,
@@ -137,9 +138,9 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 	for un := range uniqueQuestionNames {
 		// Look for CNAMEs
 		relRecordName := strings.TrimSuffix(strings.ToLower(un), strings.ToLower(utils.EnsureLeadingPeriod(eh.z.Name)))
-		cnames := eh.lookupKey(
-			eh.z.inst.KV().Key(
-				eh.z.etcdKey,
+		cnames := eh.LookupKeyFunc(
+			eh.z.RoleInstance().KV().Key(
+				eh.z.EtcdKey(),
 				strings.ToLower(relRecordName),
 				dns.Type(dns.TypeCNAME).String(),
 			),

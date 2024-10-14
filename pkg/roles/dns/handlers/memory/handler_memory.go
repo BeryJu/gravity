@@ -1,8 +1,10 @@
-package dns
+package memory
 
 import (
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/handlers"
+	"beryju.io/gravity/pkg/roles/dns/handlers/etcd"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/miekg/dns"
@@ -12,17 +14,17 @@ import (
 const MemoryType = "memory"
 
 type MemoryHandler struct {
-	*EtcdHandler
+	*etcd.EtcdHandler
 	log *zap.Logger
-	z   *Zone
+	z   handlers.HandlerZoneContext
 }
 
-func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
+func NewMemoryHandler(z handlers.HandlerZoneContext, config map[string]string) *MemoryHandler {
 	mh := &MemoryHandler{
-		EtcdHandler: &EtcdHandler{z: z},
+		EtcdHandler: etcd.NewEtcdHandler(z, config),
 		z:           z,
 	}
-	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
+	mh.LookupKeyFunc = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
 		mh.z.recordsSync.RLock()
 		defer mh.z.recordsSync.RUnlock()

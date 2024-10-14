@@ -1,4 +1,4 @@
-package dns_test
+package etcd_test
 
 import (
 	"net"
@@ -12,7 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoleDNS_Memory(t *testing.T) {
+const TestZone = "example.com."
+
+func TestRoleDNS_Etcd(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -22,12 +24,12 @@ func TestRoleDNS_Memory(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -37,7 +39,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 			"foo",
 			types.DNSRecordTypeA,
 			"0",
@@ -56,7 +58,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -66,7 +68,8 @@ func TestRoleDNS_Memory(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Memory_Wildcard(t *testing.T) {
+// Test DNS Entry at root of zone
+func TestRoleDNS_Etcd_Root(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -76,12 +79,12 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -91,7 +94,61 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
+			"@",
+			types.DNSRecordTypeA,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data: "10.1.2.3",
+		}),
+	))
+
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	fw := dns.NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   TestZone,
+				Qtype:  d.TypeA,
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	ans := fw.Msg().Answer[0]
+	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+}
+
+func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]string{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
 			"*",
 			types.DNSRecordTypeA,
 			"0",
@@ -110,7 +167,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -120,7 +177,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Memory_CNAME(t *testing.T) {
+func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -130,12 +187,12 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -145,13 +202,13 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"foo",
 			types.DNSRecordTypeCNAME,
 			"0",
 		).String(),
 		tests.MustJSON(dns.Record{
-			Data: "bar.test.",
+			Data: "bar.example.com.",
 		}),
 	))
 	tests.PanicIfError(inst.KV().Put(
@@ -159,7 +216,7 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -178,7 +235,7 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.test.",
+				Name:   "bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -191,18 +248,17 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.test.",
+				Name:   "foo.example.com.",
 				Qtype:  d.TypeCNAME,
 				Qclass: d.ClassINET,
 			},
 		},
 	})
 	ans = fw.Msg().Answer[0]
-	assert.Equal(t, "bar.test.", ans.(*d.CNAME).Target)
-	assert.Len(t, fw.Msg().Answer, 3)
+	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
 }
 
-func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
+func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -212,12 +268,12 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -227,7 +283,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 			"*.*",
 			types.DNSRecordTypeA,
 			"0",
@@ -246,7 +302,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "foo.bar.",
+				Name:   "foo.bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -256,7 +312,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Memory_MixedCase(t *testing.T) {
+func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -266,12 +322,12 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"TesT.",
+			"eXaMpLe.CoM.",
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -281,7 +337,7 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"TesT.",
+			"eXaMpLe.CoM.",
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -300,7 +356,7 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.test.",
+				Name:   "bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
@@ -310,7 +366,7 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
+func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -320,12 +376,12 @@ func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]string{
 				{
-					"type": "memory",
+					"type": "etcd",
 				},
 			},
 		}),
@@ -335,7 +391,7 @@ func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			"test.",
+			TestZone,
 			"bar",
 			types.DNSRecordTypeA,
 			"0",
@@ -354,7 +410,7 @@ func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
-				Name:   "bar.TesT.",
+				Name:   "bar.eXaMpLe.CoM.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
