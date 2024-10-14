@@ -161,5 +161,18 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 	if len(m.Answer) < 1 {
 		return nil
 	}
+	// If none of our answers match the types that were queried for, and we have more handlers in the chain
+	// don't return an answer
+	answerForType := false
+	for _, a := range m.Answer {
+		for _, q := range r.Question {
+			if a.Header().Rrtype == q.Qtype {
+				answerForType = true
+			}
+		}
+	}
+	if !answerForType && r.Meta().HasMoreHandlers {
+		return nil
+	}
 	return m
 }

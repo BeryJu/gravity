@@ -82,5 +82,5 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
 	span.SetTag("gravity.dns.zone", longestZone.Name)
-	longestZone.resolve(w, utils.NewRequest(r, span.Context()), span)
+	longestZone.resolve(w, utils.NewRequest(r, span.Context(), utils.DNSRoutingMeta{}), span)
 }
