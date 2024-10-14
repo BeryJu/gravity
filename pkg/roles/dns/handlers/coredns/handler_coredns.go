@@ -1,9 +1,10 @@
-package dns
+package coredns
 
 import (
 	"reflect"
 	"unsafe"
 
+	"beryju.io/gravity/pkg/roles/dns/handlers"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/coredns/caddy"
 	"github.com/coredns/coredns/core/dnsserver"
@@ -23,11 +24,11 @@ type CoreDNS struct {
 	srv      *dnsserver.Server
 }
 
-func NewCoreDNS(z *Zone, rawConfig map[string]string) *CoreDNS {
+func NewCoreDNS(z handlers.HandlerZoneContext, rawConfig map[string]string) *CoreDNS {
 	core := &CoreDNS{
 		c: rawConfig,
 	}
-	core.log = z.log.With(zap.String("handler", core.Identifier()))
+	core.log = z.Log().With(zap.String("handler", core.Identifier()))
 	dnsserver.Quiet = true
 	corefile := caddy.CaddyfileInput{
 		Contents:       []byte(core.c["config"]),

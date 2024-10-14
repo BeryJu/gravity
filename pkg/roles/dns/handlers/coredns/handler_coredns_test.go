@@ -1,4 +1,4 @@
-package dns_test
+package coredns_test
 
 import (
 	"net"
@@ -18,6 +18,12 @@ const CoreDNSConfig = `.:1342 {
         fallthrough
     }
 }`
+
+func RoleConfig() []byte {
+	return []byte(tests.MustJSON(dns.RoleConfig{
+		Port: 1054,
+	}))
+}
 
 func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 	defer tests.Setup(t)()
@@ -46,7 +52,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
+	fw := dns.NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{

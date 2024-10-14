@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/handlers/coredns"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
@@ -163,13 +164,25 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 	return z, nil
 }
 
+func (z *Zone) EtcdKey() string {
+	return z.etcdKey
+}
+
+func (z *Zone) Log() *zap.Logger {
+	return z.log
+}
+
+func (z *Zone) RoleInstance() roles.Instance {
+	return z.inst
+}
+
 func (z *Zone) Init(ctx context.Context) {
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"]
 		var handler Handler
 		switch t {
-		case CoreDNSType:
-			handler = NewCoreDNS(z, handlerCfg)
+		case coredns.CoreDNSType:
+			handler = coredns.NewCoreDNS(z, handlerCfg)
 		case BlockyForwarderType:
 			handler = NewBlockyForwarder(z, handlerCfg)
 		case IPForwarderType:
