@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js";
-import { RolesApiApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
+import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -11,7 +11,7 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-memory-usage")
 export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetrics({
+        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
             role: TypesAPIMetricsRole.System,
             category: "memory",
         });

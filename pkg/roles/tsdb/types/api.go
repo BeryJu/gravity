@@ -18,7 +18,8 @@ func (APIMetricsRole) Enum() []interface{} {
 
 type APIMetricsGetInput struct {
 	Role     APIMetricsRole `query:"role" required:"true"`
-	Category *string        `query:"category"`
+	Category string         `query:"category"`
+	Node     string         `query:"node"`
 	Since    *time.Time     `query:"since" description:"Optionally set a start time for which to return datapoints after"`
 }
 

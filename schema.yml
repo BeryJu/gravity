@@ -1391,7 +1391,10 @@ paths:
       - in: query
         name: category
         schema:
-          nullable: true
+          type: string
+      - in: query
+        name: node
+        schema:
           type: string
       - description: Optionally set a start time for which to return datapoints after
         in: query

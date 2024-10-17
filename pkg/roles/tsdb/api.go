@@ -19,8 +19,8 @@ func (r *Role) APIMetrics() usecase.Interactor {
 			types.KeyRole,
 			string(input.Role),
 		)
-		if input.Category != nil {
-			pf = pf.Add(*input.Category)
+		if input.Category != "" {
+			pf = pf.Add(input.Category)
 		}
 		prefix := pf.Prefix(true).String()
 		rawMetrics, err := r.i.KV().Get(
@@ -38,7 +38,11 @@ func (r *Role) APIMetrics() usecase.Interactor {
 				r.log.Warn("failed to parse timestamp", zap.Error(err), zap.String("key", string(kv.Key)))
 				continue
 			}
+			node := keyParts[len(keyParts)-2]
 			if input.Since != nil && ts < int(input.Since.Unix()) {
+				continue
+			}
+			if input.Node != "" && input.Node != node {
 				continue
 			}
 			value, err := strconv.ParseInt(string(kv.Value), 10, 0)
@@ -49,7 +53,7 @@ func (r *Role) APIMetrics() usecase.Interactor {
 			output.Records = append(output.Records, types.APIMetricsRecord{
 				Keys:  keyParts[:2],
 				Time:  time.Unix(int64(ts), 0),
-				Node:  keyParts[len(keyParts)-2],
+				Node:  node,
 				Value: value,
 			})
 		}

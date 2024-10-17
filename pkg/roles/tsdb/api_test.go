@@ -3,7 +3,6 @@ package tsdb_test
 import (
 	"testing"
 
-	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles"
@@ -34,7 +33,7 @@ func TestAPIMetrics_Memory(t *testing.T) {
 	var output types.APIMetricsGetOutput
 	assert.NoError(t, role.APIMetrics().Interact(ctx, types.APIMetricsGetInput{
 		Role:     "system",
-		Category: api.PtrString("memory"),
+		Category: "memory",
 	}, &output))
 	assert.Equal(t, extconfig.Get().Instance.Identifier, output.Records[0].Node)
 	assert.Equal(t, 1, len(output.Records))
