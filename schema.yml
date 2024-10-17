@@ -777,25 +777,6 @@ paths:
       summary: Discovery Subnets
       tags:
       - roles/discovery
-  /api/v1/dns/metrics:
-    get:
-      operationId: dns.get_metrics
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: DNS Metrics
-      tags:
-      - roles/dns
   /api/v1/dns/zones:
     delete:
       operationId: dns.delete_zones
@@ -1326,44 +1307,6 @@ paths:
       summary: TSDB role config
       tags:
       - roles/tsdb
-  /api/v1/system/metrics/cpu:
-    get:
-      operationId: api.get_metrics_cpu
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: System Metrics
-      tags:
-      - roles/api
-  /api/v1/system/metrics/memory:
-    get:
-      operationId: api.get_metrics_memory
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: System Metrics
-      tags:
-      - roles/api
   /api/v1/tools/ping:
     post:
       operationId: tools.ping
@@ -1436,6 +1379,45 @@ paths:
       summary: Traceroute tool
       tags:
       - roles/api
+  /api/v1/tsdb/metrics:
+    get:
+      operationId: tsdb.get_metrics
+      parameters:
+      - in: query
+        name: role
+        required: true
+        schema:
+          $ref: '#/components/schemas/TypesAPIMetricsRole'
+      - in: query
+        name: category
+        schema:
+          nullable: true
+          type: string
+      - description: Optionally set a start time for which to return datapoints after
+        in: query
+        name: since
+        schema:
+          description: Optionally set a start time for which to return datapoints
+            after
+          format: date-time
+          nullable: true
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Retrieve Metrics
+      tags:
+      - roles/tsdb
 components:
   schemas:
     ApiAPIExportInput:
@@ -2298,20 +2280,29 @@ components:
       type: object
     TypesAPIMetricsRecord:
       properties:
-        handler:
-          type: string
+        keys:
+          items:
+            type: string
+          nullable: true
+          type: array
         node:
           type: string
         time:
+          format: date-time
           type: string
         value:
           type: integer
       required:
       - time
+      - keys
       - node
-      - handler
       - value
       type: object
+    TypesAPIMetricsRole:
+      enum:
+      - system
+      - dns
+      type: string
     TypesDHCPOption:
       properties:
         tag:

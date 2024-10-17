@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js";
-import { RolesApiApi, TypesAPIMetricsGetOutput } from "gravity-api";
+import { RolesApiApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -11,7 +11,10 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-cpu-usage")
 export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetricsCpu();
+        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetrics({
+            role: TypesAPIMetricsRole.System,
+            category: "cpu",
+        });
     }
 
     getChartType(): string {
@@ -35,7 +38,7 @@ export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
                 tension: 0.4,
                 data: records.map((record) => {
                     return {
-                        x: parseInt(record.time, 10) * 1000,
+                        x: record.time.getTime(),
                         y: Math.round(record.value),
                     };
                 }),

@@ -14,7 +14,7 @@ import (
 
 type APIRecordsGetInput struct {
 	Zone     string `query:"zone"`
-	Hostname string `query:"hostname"  description:"Optionally get DNS Records for hostname"`
+	Hostname string `query:"hostname" description:"Optionally get DNS Records for hostname"`
 }
 type APIRecord struct {
 	UID      string `json:"uid" required:"true"`

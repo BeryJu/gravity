@@ -43,8 +43,7 @@ func New(instance roles.Instance) *Role {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/roles/tsdb", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/tsdb", r.APIRoleConfigPut())
-		svc.Get("/api/v1/system/metrics/memory", r.APIMetricsMemory())
-		svc.Get("/api/v1/system/metrics/cpu", r.APIMetricsCPU())
+		svc.Get("/api/v1/tsdb/metrics", r.APIMetrics())
 	})
 	r.i.AddEventListener(debugTypes.EventTopicDebugMuxSetup, func(ev *roles.Event) {
 		mux := ev.Payload.Data["mux"].(*mux.Router)

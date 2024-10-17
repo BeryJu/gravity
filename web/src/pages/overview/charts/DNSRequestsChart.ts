@@ -1,5 +1,5 @@
 import { ChartData } from "chart.js";
-import { RolesDnsApi, TypesAPIMetricsGetOutput } from "gravity-api";
+import { RolesApiApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
 
@@ -11,7 +11,9 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-dns-requests")
 export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesDnsApi(DEFAULT_CONFIG).dnsGetMetrics();
+        return new RolesApiApi(DEFAULT_CONFIG).apiGetMetrics({
+            role: TypesAPIMetricsRole.Dns,
+        });
     }
 
     getChartType(): string {
@@ -22,7 +24,7 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
-        groupBy(data?.records || [], (record) => record.handler).forEach(([handler, records]) => {
+        groupBy(data?.records || [], (record) => record.keys![1]).forEach(([handler, records]) => {
             const background = getColorFromString(handler);
             background.a = 0.3;
             chartData.datasets.push({
@@ -35,7 +37,7 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
                 tension: 0.4,
                 data: records.map((record) => {
                     return {
-                        x: parseInt(record.time, 10) * 1000,
+                        x: record.time.getTime(),
                         y: record.value,
                     };
                 }),
