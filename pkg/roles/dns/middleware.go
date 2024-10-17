@@ -1,7 +1,6 @@
 package dns
 
 import (
-	"net"
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dns/utils"
@@ -55,17 +54,6 @@ func (r *Role) dnsRRToValue(ro dns.RR) string {
 }
 
 func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
-	getIP := func(addr net.Addr) string {
-		clientIP := ""
-		switch addr := addr.(type) {
-		case *net.UDPAddr:
-			clientIP = addr.IP.String()
-		case *net.TCPAddr:
-			clientIP = addr.IP.String()
-		}
-		return clientIP
-	}
-
 	return func(w dns.ResponseWriter, m *dns.Msg) {
 		fw := utils.NewFakeDNSWriter(w)
 		start := time.Now()
@@ -88,9 +76,13 @@ func (r *Role) loggingMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			answerRecords[idx] = r.dnsRRToValue(a)
 			answerTypes[idx] = dns.TypeToString[a.Header().Rrtype]
 		}
+		ip := ""
+		if i := getIP(w.RemoteAddr()); i != nil {
+			ip = i.String()
+		}
 		f := []zap.Field{
 			zap.Duration("runtime", finish),
-			zap.String("client", getIP(w.RemoteAddr())),
+			zap.String("client", ip),
 			zap.String("response", dns.RcodeToString[fw.Msg().Rcode]),
 			zap.Strings("queryNames", queryNames),
 			zap.Strings("queryTypes", queryTypes),

@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
+	"net/netip"
 	"strings"
 	"sync"
 	"time"
@@ -93,6 +95,21 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 	}
 }
 
+func getIP(addr net.Addr) *netip.Addr {
+	clientIP := ""
+	switch addr := addr.(type) {
+	case *net.UDPAddr:
+		clientIP = addr.IP.String()
+	case *net.TCPAddr:
+		clientIP = addr.IP.String()
+	}
+	i, err := netip.ParseAddr(clientIP)
+	if err != nil {
+		return nil
+	}
+	return &i
+}
+
 func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
 	for idx, handler := range z.h {
 		ss := span.StartChild("gravity.dns.request.handler")
@@ -110,6 +127,9 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
+			if i := getIP(w.RemoteAddr()); i != nil && i.IsPrivate() {
+				r.RecursionAvailable = r.RecursionDesired
+			}
 			handlerReply.SetReply(r.Msg)
 			err := w.WriteMsg(handlerReply)
 			if err != nil {
