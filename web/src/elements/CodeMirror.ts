@@ -1,3 +1,4 @@
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import {
     LanguageSupport,
@@ -7,7 +8,8 @@ import {
 } from "@codemirror/language";
 import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
-import { EditorView, lineNumbers } from "@codemirror/view";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { EditorView, drawSelection, keymap, lineNumbers } from "@codemirror/view";
 import YAML from "yaml";
 
 import { customElement, property } from "lit/decorators.js";
@@ -91,14 +93,7 @@ export class CodeMirrorTextarea extends AKElement {
             },
             { dark: false },
         );
-        this.themeDark = EditorView.theme(
-            {
-                "&": {
-                    backgroundColor: "var(--ak-dark-background-light)",
-                },
-            },
-            { dark: true },
-        );
+        this.themeDark = oneDark;
     }
 
     private getInnerValue(): string {
@@ -132,9 +127,12 @@ export class CodeMirrorTextarea extends AKElement {
             });
         };
         const extensions = [
+            history(),
+            keymap.of([...defaultKeymap, ...historyKeymap]),
             syntaxHighlighting(defaultHighlightStyle),
             this.getLanguageExtension(),
             lineNumbers(),
+            drawSelection(),
             EditorView.lineWrapping,
             EditorState.readOnly.of(this.readOnly),
             EditorState.tabSize.of(2),
