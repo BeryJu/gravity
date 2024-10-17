@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dns/handlers"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -30,6 +31,10 @@ type Record struct {
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+}
+
+func (z *Zone) RecordFromKV(kv *mvccpb.KeyValue) (handlers.HandlerRecord, error) {
+	return z.recordFromKV(kv)
 }
 
 func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
