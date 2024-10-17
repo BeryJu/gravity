@@ -10,8 +10,6 @@ Method | HTTP request | Description
 [**ApiExport**](RolesApiApi.md#ApiExport) | **Post** /api/v1/cluster/export | Export Cluster
 [**ApiGetLogMessages**](RolesApiApi.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
 [**ApiGetMembers**](RolesApiApi.md#ApiGetMembers) | **Get** /api/v1/etcd/members | Etcd members
-[**ApiGetMetricsCpu**](RolesApiApi.md#ApiGetMetricsCpu) | **Get** /api/v1/system/metrics/cpu | System Metrics
-[**ApiGetMetricsMemory**](RolesApiApi.md#ApiGetMetricsMemory) | **Get** /api/v1/system/metrics/memory | System Metrics
 [**ApiGetRoleConfig**](RolesApiApi.md#ApiGetRoleConfig) | **Get** /api/v1/roles/api | API role config
 [**ApiGetTokens**](RolesApiApi.md#ApiGetTokens) | **Get** /api/v1/auth/tokens | Tokens
 [**ApiGetUsers**](RolesApiApi.md#ApiGetUsers) | **Get** /api/v1/auth/users | API Users
@@ -377,124 +375,6 @@ Other parameters are passed through a pointer to a apiApiGetMembersRequest struc
 ### Return type
 
 [**ApiAPIMembersOutput**](ApiAPIMembersOutput.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ApiGetMetricsCpu
-
-> TypesAPIMetricsGetOutput ApiGetMetricsCpu(ctx).Execute()
-
-System Metrics
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetMetricsCpu(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetMetricsCpu``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetMetricsCpu`: TypesAPIMetricsGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetMetricsCpu`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiApiGetMetricsCpuRequest struct via the builder pattern
-
-
-### Return type
-
-[**TypesAPIMetricsGetOutput**](TypesAPIMetricsGetOutput.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ApiGetMetricsMemory
-
-> TypesAPIMetricsGetOutput ApiGetMetricsMemory(ctx).Execute()
-
-System Metrics
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetMetricsMemory(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetMetricsMemory``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetMetricsMemory`: TypesAPIMetricsGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetMetricsMemory`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiApiGetMetricsMemoryRequest struct via the builder pattern
-
-
-### Return type
-
-[**TypesAPIMetricsGetOutput**](TypesAPIMetricsGetOutput.md)
 
 ### Authorization
 

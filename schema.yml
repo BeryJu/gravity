@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.9.2
+  version: 0.9.3
 paths:
   /api/v1/auth/config:
     get:

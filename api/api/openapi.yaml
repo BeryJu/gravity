@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.9.2
+  version: 0.9.3
 servers:
 - url: /
 paths:
@@ -837,25 +837,6 @@ paths:
       summary: Discovery Subnets
       tags:
       - roles/discovery
-  /api/v1/dns/metrics:
-    get:
-      operationId: dns.get_metrics
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: DNS Metrics
-      tags:
-      - roles/dns
   /api/v1/dns/zones:
     delete:
       operationId: dns.delete_zones
@@ -1415,44 +1396,6 @@ paths:
       summary: TSDB role config
       tags:
       - roles/tsdb
-  /api/v1/system/metrics/cpu:
-    get:
-      operationId: api.get_metrics_cpu
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: System Metrics
-      tags:
-      - roles/api
-  /api/v1/system/metrics/memory:
-    get:
-      operationId: api.get_metrics_memory
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: System Metrics
-      tags:
-      - roles/api
   /api/v1/tools/ping:
     post:
       operationId: tools.ping
@@ -1525,6 +1468,59 @@ paths:
       summary: Traceroute tool
       tags:
       - roles/api
+  /api/v1/tsdb/metrics:
+    get:
+      operationId: tsdb.get_metrics
+      parameters:
+      - explode: true
+        in: query
+        name: role
+        required: true
+        schema:
+          $ref: '#/components/schemas/TypesAPIMetricsRole'
+        style: form
+      - explode: true
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: node
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Optionally set a start time for which to return datapoints after
+        explode: true
+        in: query
+        name: since
+        required: false
+        schema:
+          description: Optionally set a start time for which to return datapoints
+            after
+          format: date-time
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Retrieve Metrics
+      tags:
+      - roles/tsdb
 components:
   schemas:
     ApiAPIExportInput:
@@ -2936,13 +2932,17 @@ components:
     TypesAPIMetricsGetOutput:
       example:
         records:
-        - handler: handler
-          node: node
-          time: time
+        - node: node
+          keys:
+          - keys
+          - keys
+          time: 2000-01-23T04:56:07.000+00:00
           value: 0
-        - handler: handler
-          node: node
-          time: time
+        - node: node
+          keys:
+          - keys
+          - keys
+          time: 2000-01-23T04:56:07.000+00:00
           value: 0
       properties:
         records:
@@ -2955,25 +2955,36 @@ components:
       type: object
     TypesAPIMetricsRecord:
       example:
-        handler: handler
         node: node
-        time: time
+        keys:
+        - keys
+        - keys
+        time: 2000-01-23T04:56:07.000+00:00
         value: 0
       properties:
-        handler:
-          type: string
+        keys:
+          items:
+            type: string
+          nullable: true
+          type: array
         node:
           type: string
         time:
+          format: date-time
           type: string
         value:
           type: integer
       required:
-      - handler
+      - keys
       - node
       - time
       - value
       type: object
+    TypesAPIMetricsRole:
+      enum:
+      - system
+      - dns
+      type: string
     TypesDHCPOption:
       example:
         value64:

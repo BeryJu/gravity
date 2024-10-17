@@ -6,7 +6,6 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**DnsDeleteRecords**](RolesDnsApi.md#DnsDeleteRecords) | **Delete** /api/v1/dns/zones/records | DNS Records
 [**DnsDeleteZones**](RolesDnsApi.md#DnsDeleteZones) | **Delete** /api/v1/dns/zones | DNS Zones
-[**DnsGetMetrics**](RolesDnsApi.md#DnsGetMetrics) | **Get** /api/v1/dns/metrics | DNS Metrics
 [**DnsGetRecords**](RolesDnsApi.md#DnsGetRecords) | **Get** /api/v1/dns/zones/records | DNS Records
 [**DnsGetRoleConfig**](RolesDnsApi.md#DnsGetRoleConfig) | **Get** /api/v1/roles/dns | DNS role config
 [**DnsGetZones**](RolesDnsApi.md#DnsGetZones) | **Get** /api/v1/dns/zones | DNS Zones
@@ -131,65 +130,6 @@ Name | Type | Description  | Notes
 ### Return type
 
  (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## DnsGetMetrics
-
-> TypesAPIMetricsGetOutput DnsGetMetrics(ctx).Execute()
-
-DNS Metrics
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsGetMetrics(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsGetMetrics``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `DnsGetMetrics`: TypesAPIMetricsGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesDnsApi.DnsGetMetrics`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiDnsGetMetricsRequest struct via the builder pattern
-
-
-### Return type
-
-[**TypesAPIMetricsGetOutput**](TypesAPIMetricsGetOutput.md)
 
 ### Authorization
 

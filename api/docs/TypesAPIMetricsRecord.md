@@ -4,16 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Handler** | **string** |  | 
+**Keys** | **[]string** |  | 
 **Node** | **string** |  | 
-**Time** | **string** |  | 
+**Time** | **time.Time** |  | 
 **Value** | **int32** |  | 
 
 ## Methods
 
 ### NewTypesAPIMetricsRecord
 
-`func NewTypesAPIMetricsRecord(handler string, node string, time string, value int32, ) *TypesAPIMetricsRecord`
+`func NewTypesAPIMetricsRecord(keys []string, node string, time time.Time, value int32, ) *TypesAPIMetricsRecord`
 
 NewTypesAPIMetricsRecord instantiates a new TypesAPIMetricsRecord object
 This constructor will assign default values to properties that have it defined,
@@ -28,26 +28,36 @@ NewTypesAPIMetricsRecordWithDefaults instantiates a new TypesAPIMetricsRecord ob
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetHandler
+### GetKeys
 
-`func (o *TypesAPIMetricsRecord) GetHandler() string`
+`func (o *TypesAPIMetricsRecord) GetKeys() []string`
 
-GetHandler returns the Handler field if non-nil, zero value otherwise.
+GetKeys returns the Keys field if non-nil, zero value otherwise.
 
-### GetHandlerOk
+### GetKeysOk
 
-`func (o *TypesAPIMetricsRecord) GetHandlerOk() (*string, bool)`
+`func (o *TypesAPIMetricsRecord) GetKeysOk() (*[]string, bool)`
 
-GetHandlerOk returns a tuple with the Handler field if it's non-nil, zero value otherwise
+GetKeysOk returns a tuple with the Keys field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetHandler
+### SetKeys
 
-`func (o *TypesAPIMetricsRecord) SetHandler(v string)`
+`func (o *TypesAPIMetricsRecord) SetKeys(v []string)`
 
-SetHandler sets Handler field to given value.
+SetKeys sets Keys field to given value.
 
 
+### SetKeysNil
+
+`func (o *TypesAPIMetricsRecord) SetKeysNil(b bool)`
+
+ SetKeysNil sets the value for Keys to be an explicit nil
+
+### UnsetKeys
+`func (o *TypesAPIMetricsRecord) UnsetKeys()`
+
+UnsetKeys ensures that no value is present for Keys, not even an explicit nil
 ### GetNode
 
 `func (o *TypesAPIMetricsRecord) GetNode() string`
@@ -70,20 +80,20 @@ SetNode sets Node field to given value.
 
 ### GetTime
 
-`func (o *TypesAPIMetricsRecord) GetTime() string`
+`func (o *TypesAPIMetricsRecord) GetTime() time.Time`
 
 GetTime returns the Time field if non-nil, zero value otherwise.
 
 ### GetTimeOk
 
-`func (o *TypesAPIMetricsRecord) GetTimeOk() (*string, bool)`
+`func (o *TypesAPIMetricsRecord) GetTimeOk() (*time.Time, bool)`
 
 GetTimeOk returns a tuple with the Time field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTime
 
-`func (o *TypesAPIMetricsRecord) SetTime(v string)`
+`func (o *TypesAPIMetricsRecord) SetTime(v time.Time)`
 
 SetTime sets Time field to given value.
 
