@@ -73,7 +73,11 @@ gen-build:
 	git add ${SCHEMA_FILE}
 
 gen-clean:
-	rm -rf gen-ts-api/
+	rm -rf ${PWD}/gen-ts-api/
+	rm -rf ${PWD}/api/api/
+	rm -rf ${PWD}/api/docs/
+	rm -rf ${PWD}/api/test/
+	rm -rf ${PWD}/api/*.go
 
 gen-tag:
 	git add Makefile
@@ -82,9 +86,6 @@ gen-tag:
 	git tag v${VERSION}
 
 gen-client-go:
-	cd ${PWD}/api
-	rm *.go
-	cd ${PWD}
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \

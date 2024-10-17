@@ -61,30 +61,20 @@ func Test_api_RolesApiApiService(t *testing.T) {
 		assert.Equal(t, 200, httpRes.StatusCode)
 	})
 
+	t.Run("Test RolesApiApiService ApiGetLogMessages", func(t *testing.T) {
+		t.Skip("skip test") // remove to run test
+
+		resp, httpRes, err := apiClient.RolesApiApi.ApiGetLogMessages(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+	})
+
 	t.Run("Test RolesApiApiService ApiGetMembers", func(t *testing.T) {
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.RolesApiApi.ApiGetMembers(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-	})
-
-	t.Run("Test RolesApiApiService ApiGetMetricsCpu", func(t *testing.T) {
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.RolesApiApi.ApiGetMetricsCpu(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-	})
-
-	t.Run("Test RolesApiApiService ApiGetMetricsMemory", func(t *testing.T) {
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.RolesApiApi.ApiGetMetricsMemory(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
