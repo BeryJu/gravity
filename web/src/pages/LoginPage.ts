@@ -146,9 +146,6 @@ export class LoginPage extends AKElement {
                                     >${"Powered by Gravity"}</a
                                 >
                             </li>
-                            <li>
-                                <a href="https://unsplash.com/@nasa">${"Background image"}</a>
-                            </li>
                         </ul>
                     </footer>
                 </div>
