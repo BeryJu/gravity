@@ -110,19 +110,6 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 	if len(answers) < 1 {
 		answers = append(answers, eh.findWildcard(r, relRecordName, question)...)
 	}
-	// If not explicitly looking for CNAME and
-	// any of the answers are a CNAME, look those up too
-	if question.Qtype != dns.TypeCNAME {
-		for _, ans := range answers {
-			if cn, ok := ans.(*dns.CNAME); ok {
-				answers = append(answers, eh.handleSingleQuestion(dns.Question{
-					Name:   cn.Header().Name,
-					Qtype:  question.Qtype,
-					Qclass: question.Qclass,
-				}, r)...)
-			}
-		}
-	}
 	return answers
 }
 

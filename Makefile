@@ -28,8 +28,6 @@ run: internal/resources/macoui internal/resources/blocky
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
-	export SENTRY_ENVIRONMENT=testing
-	export SENTRY_ENABLED=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
 	go run ${GO_FLAGS} . server
 
