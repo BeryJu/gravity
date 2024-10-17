@@ -22,23 +22,24 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
-        groupBy(data?.records || [], (record) => record.keys![1]).forEach(([handler, records]) => {
-            const background = getColorFromString(handler);
-            background.a = 0.3;
-            chartData.datasets.push({
-                label: handler,
-                borderColor: getColorFromString(handler).toString(),
-                backgroundColor: background.toString(),
-                spanGaps: true,
-                fill: "origin",
-                cubicInterpolationMode: "monotone",
-                tension: 0.4,
-                data: records.map((record) => {
-                    return {
-                        x: record.time.getTime(),
-                        y: record.value,
-                    };
-                }),
+        groupBy(data.records || [], (record) => record.node).forEach(([node, records]) => {
+            groupBy(records, (record) => record.keys![1]).forEach(([handler, records]) => {
+                const background = getColorFromString(handler);
+                background.a = 0.3;
+                chartData.datasets.push({
+                    label: `${node} - ${handler}`,
+                    borderColor: getColorFromString(handler).toString(),
+                    spanGaps: true,
+                    fill: "origin",
+                    cubicInterpolationMode: "monotone",
+                    tension: 0.4,
+                    data: records.map((record) => {
+                        return {
+                            x: record.time.getTime(),
+                            y: record.value,
+                        };
+                    }),
+                });
             });
         });
         return chartData;
