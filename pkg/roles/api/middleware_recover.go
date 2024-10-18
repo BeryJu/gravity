@@ -28,7 +28,7 @@ func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 				} else {
 					_, er = w.Write([]byte("internal error"))
 				}
-				if err != nil {
+				if er != nil {
 					l.Warn("failed to write error message", zap.Error(er))
 				}
 			}()

@@ -9,10 +9,12 @@ import (
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gorilla/mux"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/oauth2"
 )
 
 type AuthProvider struct {
@@ -20,6 +22,8 @@ type AuthProvider struct {
 	inst         roles.Instance
 	log          *zap.Logger
 	oidc         *types.OIDCConfig
+	oidcConfig   oauth2.Config
+	oidcVerifier *oidc.IDTokenVerifier
 	inner        http.Handler
 	allowedPaths []string
 }
@@ -52,6 +56,9 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 		svc.Get("/api/v1/auth/tokens", ap.APITokensGet())
 		svc.Post("/api/v1/auth/tokens", ap.APITokensPut())
 		svc.Delete("/api/v1/auth/tokens", ap.APITokensDelete())
+
+		mux.Path("/auth/oidc").HandlerFunc(ap.oidcInit)
+		mux.Path("/auth/oidc/callback").HandlerFunc(ap.oidcCallback)
 	})
 	inst.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, ap.FirstStart)
 	return ap
