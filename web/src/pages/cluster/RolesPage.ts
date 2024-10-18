@@ -1,12 +1,17 @@
 import { ClusterInstancesApi, InstanceInstanceInfo } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
+
 import { DEFAULT_CONFIG } from "../../api/Config";
+import { AKElement } from "../../elements/Base";
 import "../../elements/chips/Chip";
 import "../../elements/chips/ChipGroup";
 import "../../elements/forms/ModalForm";
+import { ModalForm } from "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
@@ -21,17 +26,18 @@ import "./RoleTSDBConfigForm";
 export interface Role {
     id: string;
     name: string;
+    settingsAvailable: boolean;
 }
 
 export const roles: Role[] = [
-    { id: "api", name: "API" },
-    { id: "backup", name: "Backup" },
-    { id: "dhcp", name: "DHCP" },
-    { id: "discovery", name: "Discovery" },
-    { id: "dns", name: "DNS" },
-    { id: "etcd", name: "etcd" },
-    { id: "monitoring", name: "Monitoring" },
-    { id: "tsdb", name: "TSDB" },
+    { id: "api", name: "API", settingsAvailable: true },
+    { id: "backup", name: "Backup", settingsAvailable: true },
+    { id: "dhcp", name: "DHCP", settingsAvailable: true },
+    { id: "discovery", name: "Discovery", settingsAvailable: true },
+    { id: "dns", name: "DNS", settingsAvailable: true },
+    { id: "etcd", name: "etcd", settingsAvailable: false },
+    { id: "monitoring", name: "Monitoring", settingsAvailable: true },
+    { id: "tsdb", name: "TSDB", settingsAvailable: true },
 ];
 
 @customElement("gravity-cluster-roles")
@@ -49,6 +55,19 @@ export class RolesPage extends TablePage<Role> {
         return "";
     }
 
+    static get styles(): CSSResult[] {
+        return super.styles.concat(
+            PFGrid,
+            PFCard,
+            css`
+                .pf-c-sidebar__content {
+                    background-color: transparent;
+                }
+            `,
+            AKElement.GlobalStyle,
+        );
+    }
+
     async apiEndpoint(): Promise<PaginatedResponse<Role>> {
         const inst = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
         this.instances = inst.instances || [];
@@ -56,7 +75,7 @@ export class RolesPage extends TablePage<Role> {
     }
 
     columns(): TableColumn[] {
-        return [new TableColumn("Name"), new TableColumn("Nodes"), new TableColumn("Actions")];
+        return [];
     }
 
     renderRoleConfigForm(role: Role): TemplateResult {
@@ -101,26 +120,63 @@ export class RolesPage extends TablePage<Role> {
         }
     }
 
-    row(item: Role): TemplateResult[] {
-        return [
-            html`${item.name}`,
-            html`<ak-chip-group
-                >${this.instances
-                    .filter((inst) => inst.roles?.includes(item.id))
-                    .map((inst) => {
-                        return html`<ak-chip>${inst.identifier}</ak-chip>`;
-                    })}</ak-chip-group
-            >`,
-            html`${item.id === "etcd"
-                ? html``
-                : html`<ak-forms-modal>
-                      <span slot="submit"> ${"Update"} </span>
-                      <span slot="header"> ${"Update Role config"} </span>
-                      ${this.renderRoleConfigForm(item)}
-                      <button slot="trigger" class="pf-c-button pf-m-plain">
-                          <i class="fas fa-edit"></i>
-                      </button>
-                  </ak-forms-modal>`}`,
-        ];
+    row(): TemplateResult[] {
+        return [];
+    }
+
+    render(): TemplateResult {
+        return html`<ak-page-header icon=${this.pageIcon()} header=${this.pageTitle()}>
+            </ak-page-header>
+            <section class="pf-c-page__main-section pf-m-no-padding-mobile">
+                <div class="pf-c-sidebar pf-m-gutter">
+                    <div class="pf-c-sidebar__main">
+                        ${this.renderSidebarBefore()}
+                        <a class="pf-c-sidebar__content pf-l-grid pf-m-gutter">
+                            ${this.data?.results.map((role) => {
+                                const card = html` <div
+                                    class="pf-c-card ${role.settingsAvailable
+                                        ? "pf-m-hoverable-raised"
+                                        : ""} pf-l-grid__item pf-m-3-col"
+                                    @click=${() => {
+                                        if (!role.settingsAvailable) {
+                                            return;
+                                        }
+                                        const form = this.shadowRoot?.querySelector<ModalForm>(
+                                            `#${role.id}`,
+                                        );
+                                        if (!form) {
+                                            return;
+                                        }
+                                        form.onClick();
+                                    }}
+                                    slot="trigger"
+                                >
+                                    <div class="pf-c-card__title">${role.name}</div>
+                                    <div class="pf-c-card__body">
+                                        <ak-chip-group
+                                            >${this.instances
+                                                .filter((inst) => inst.roles?.includes(role.id))
+                                                .map((inst) => {
+                                                    return html`<ak-chip
+                                                        >${inst.identifier}</ak-chip
+                                                    >`;
+                                                })}</ak-chip-group
+                                        >
+                                    </div>
+                                </div>`;
+                                return card;
+                            })}
+                        </a>
+                        ${this.renderSidebarAfter()}
+                    </div>
+                    ${this.data?.results.map((role) => {
+                        return html`<ak-forms-modal id="${role.id}">
+                            <span slot="submit"> ${"Update"} </span>
+                            <span slot="header"> ${`Update ${role.name} Role config`} </span>
+                            ${this.renderRoleConfigForm(role)}
+                        </ak-forms-modal>`;
+                    })}
+                </div>
+            </section>`;
     }
 }
