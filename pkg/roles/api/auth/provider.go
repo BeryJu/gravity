@@ -49,6 +49,8 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 
 		svc.Post("/api/v1/auth/login", ap.APILogin())
 		mux.Path("/auth/logout").HandlerFunc(ap.APILogout)
+		mux.Path("/auth/oidc").HandlerFunc(ap.oidcInit)
+		mux.Path("/auth/oidc/callback").HandlerFunc(ap.oidcCallback)
 
 		svc.Get("/api/v1/auth/users", ap.APIUsersGet())
 		svc.Post("/api/v1/auth/users", ap.APIUsersPut())
@@ -56,9 +58,6 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 		svc.Get("/api/v1/auth/tokens", ap.APITokensGet())
 		svc.Post("/api/v1/auth/tokens", ap.APITokensPut())
 		svc.Delete("/api/v1/auth/tokens", ap.APITokensDelete())
-
-		mux.Path("/auth/oidc").HandlerFunc(ap.oidcInit)
-		mux.Path("/auth/oidc/callback").HandlerFunc(ap.oidcCallback)
 	})
 	inst.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, ap.FirstStart)
 	return ap

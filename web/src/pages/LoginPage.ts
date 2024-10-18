@@ -79,6 +79,9 @@ export class LoginPage extends AKElement {
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiAuthConfig().then((config) => {
             this.authConfig = config;
+            if (this.authConfig.oidc && !window.location.search.includes("local")) {
+                window.location.assign("/auth/oidc");
+            }
         });
     }
 
