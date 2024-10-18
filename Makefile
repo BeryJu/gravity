@@ -40,8 +40,6 @@ web-build:
 
 web-watch:
 	cd ${PWD}/web
-	npm ci
-	npm version ${VERSION} || true
 	npm run watch
 
 web-lint:

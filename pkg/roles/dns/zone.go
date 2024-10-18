@@ -42,7 +42,8 @@ type Zone struct {
 	recordsSync sync.RWMutex
 	DefaultTTL  uint32 `json:"defaultTTL"`
 
-	Authoritative bool `json:"authoritative"`
+	Authoritative bool   `json:"authoritative"`
+	Hook          string `json:"hook"`
 }
 
 func (z *Zone) soa() *dns.Msg {
@@ -79,7 +80,7 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 			dns.TypeToString[question.Qtype],
 			h.Identifier(),
 			z.Name,
-		).Observe(float64(dur.Milliseconds()))
+		).Observe(dur.Seconds())
 		go z.inst.DispatchEvent(tsdbTypes.EventTopicTSDBInc, roles.NewEvent(
 			context.Background(),
 			map[string]interface{}{
@@ -131,6 +132,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 				r.RecursionAvailable = r.RecursionDesired
 			}
 			handlerReply.SetReply(r.Msg)
+			z.inst.HookMeth(z.Hook, "onDNSRequest", r, handlerReply)
 			err := w.WriteMsg(handlerReply)
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))

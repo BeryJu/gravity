@@ -35,5 +35,6 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 
 	rep := match.createReply(req)
 	rep.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeOffer))
+	r.i.HookMeth(match.scope.Hook, "onDHCPDiscover", req, rep)
 	return rep
 }

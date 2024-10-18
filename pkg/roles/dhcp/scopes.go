@@ -42,6 +42,7 @@ type Scope struct {
 	Options    []*types.DHCPOption `json:"options"`
 	TTL        int64               `json:"ttl"`
 	Default    bool                `json:"default"`
+	Hook       string              `json:"hook"`
 }
 
 func (r *Role) NewScope(name string) *Scope {

@@ -24,6 +24,7 @@ type APIScope struct {
 	Options    []*types.DHCPOption `json:"options" required:"true"`
 	TTL        int64               `json:"ttl" required:"true"`
 	Default    bool                `json:"default" required:"true"`
+	Hook       string              `json:"hook" required:"true"`
 }
 type APIScopesGetOutput struct {
 	Scopes []*APIScope `json:"scopes" required:"true"`
@@ -66,6 +67,7 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 				TTL:        sc.TTL,
 				IPAM:       sc.IPAM,
 				DNS:        sc.DNS,
+				Hook:       sc.Hook,
 			})
 		}
 		return nil
@@ -85,6 +87,7 @@ type APIScopesPutInput struct {
 	Options    []*types.DHCPOption `json:"options" required:"true"`
 	TTL        int64               `json:"ttl" required:"true"`
 	Default    bool                `json:"default" required:"true"`
+	Hook       string              `json:"hook" required:"true"`
 }
 
 func (r *Role) APIScopesPut() usecase.Interactor {
@@ -110,6 +113,7 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		s.TTL = input.TTL
 		s.IPAM = input.IPAM
 		s.DNS = input.DNS
+		s.Hook = input.Hook
 
 		cidr, err := netip.ParsePrefix(s.SubnetCIDR)
 		if err != nil {

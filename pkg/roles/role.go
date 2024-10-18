@@ -55,4 +55,5 @@ type Instance interface {
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 	Context() context.Context
+	HookMeth(src string, meth string, args ...interface{})
 }
