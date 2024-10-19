@@ -21,8 +21,8 @@ services:
   minio:
     image: minio/minio
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9001:9000
+      - 9002:9001
     networks:
       default:
         ipv4_address: 10.200.0.3

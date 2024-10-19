@@ -22,7 +22,7 @@ func getRole() *backup.Role {
 	role := backup.New(inst)
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
-		Endpoint:  "http://localhost:9000",
+		Endpoint:  "http://localhost:9001",
 		AccessKey: TestingMinioAccessKey,
 		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
@@ -58,7 +58,7 @@ func TestSaveBackup(t *testing.T) {
 	assert.NotNil(t, role)
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
-		Endpoint:  "http://localhost:9000",
+		Endpoint:  "http://localhost:9001",
 		AccessKey: TestingMinioAccessKey,
 		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
