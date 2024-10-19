@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"math/big"
 	"net"
 	"net/netip"
 )
@@ -19,4 +20,6 @@ type IPAM interface {
 	UseIP(addr netip.Addr, identifier string)
 	// Update config when scope is updated
 	UpdateConfig(s *Scope) error
+	// Amount of usable IPs excluding any exclusions
+	UsableSize() *big.Int
 }

@@ -1857,6 +1857,8 @@ components:
           type: array
         scope:
           type: string
+        statistics:
+          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
         subnetCidr:
           type: string
         ttl:
@@ -1869,6 +1871,19 @@ components:
       - ttl
       - default
       - hook
+      - statistics
+      type: object
+    DhcpAPIScopeStatistics:
+      properties:
+        usable:
+          minimum: 0
+          type: integer
+        used:
+          minimum: 0
+          type: integer
+      required:
+      - usable
+      - used
       type: object
     DhcpAPIScopesGetOutput:
       properties:
@@ -1877,8 +1892,11 @@ components:
             $ref: '#/components/schemas/DhcpAPIScope'
           nullable: true
           type: array
+        statistics:
+          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
       required:
       - scopes
+      - statistics
       type: object
     DhcpAPIScopesPutInput:
       properties:

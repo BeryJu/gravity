@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/netip"
-	"strings"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
@@ -16,6 +15,11 @@ import (
 type APIScopesGetInput struct {
 	Name string `query:"name" description:"Optionally get DHCP Scope by name"`
 }
+
+type APIScopeStatistics struct {
+	Usable uint64 `json:"usable" required:"true"`
+	Used   uint64 `json:"used" required:"true"`
+}
 type APIScope struct {
 	IPAM       map[string]string   `json:"ipam" required:"true"`
 	DNS        *ScopeDNS           `json:"dns"`
@@ -25,9 +29,11 @@ type APIScope struct {
 	TTL        int64               `json:"ttl" required:"true"`
 	Default    bool                `json:"default" required:"true"`
 	Hook       string              `json:"hook" required:"true"`
+	Statistics APIScopeStatistics  `json:"statistics" required:"true"`
 }
 type APIScopesGetOutput struct {
-	Scopes []*APIScope `json:"scopes" required:"true"`
+	Scopes     []*APIScope        `json:"scopes" required:"true"`
+	Statistics APIScopeStatistics `json:"statistics" required:"true"`
 }
 
 func (r *Role) APIScopesGet() usecase.Interactor {
@@ -50,15 +56,50 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 			r.log.Warn("failed to get scopes", zap.Error(err))
 			return status.Wrap(errors.New("failed to get scopes"), status.Internal)
 		}
+		// Fetch all leases for statistics
+		rawLeases, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyLeases,
+			).String(),
+			clientv3.WithPrefix(),
+		)
+		if err != nil {
+			r.log.Warn("failed to get leases", zap.Error(err))
+			return status.Wrap(errors.New("failed to get leases"), status.Internal)
+		}
+		leases := []*Lease{}
+		for _, rl := range rawLeases.Kvs {
+			l, err := r.leaseFromKV(rl)
+			if err != nil {
+				r.log.Warn("failed to parse lease", zap.Error(err))
+				continue
+			}
+			leases = append(leases, l)
+		}
+
+		// Generate summarized statistics
+		sum := APIScopeStatistics{}
+
 		for _, rawScope := range rawScopes.Kvs {
 			sc, err := r.scopeFromKV(rawScope)
 			if err != nil {
 				r.log.Warn("failed to parse scope", zap.Error(err))
 				continue
 			}
-			if strings.Contains(sc.Name, "/") {
-				continue
+			stat := APIScopeStatistics{
+				Usable: sc.ipam.UsableSize().Uint64(),
+				Used:   0,
 			}
+			for _, l := range leases {
+				if l.ScopeKey != sc.Name {
+					continue
+				}
+				stat.Used += 1
+			}
+			sum.Usable += stat.Usable
+			sum.Used += stat.Used
 			output.Scopes = append(output.Scopes, &APIScope{
 				Name:       sc.Name,
 				SubnetCIDR: sc.SubnetCIDR,
@@ -68,8 +109,10 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 				IPAM:       sc.IPAM,
 				DNS:        sc.DNS,
 				Hook:       sc.Hook,
+				Statistics: stat,
 			})
 		}
+		output.Statistics = sum
 		return nil
 	})
 	u.SetName("dhcp.get_scopes")

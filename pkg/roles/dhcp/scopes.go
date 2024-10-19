@@ -12,7 +12,6 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
-	"github.com/netdata/go.d.plugin/pkg/iprange"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -187,12 +186,7 @@ func (s *Scope) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 
 // calculateUsage Calculate scope usage for prometheus metrics
 func (s *Scope) calculateUsage() {
-	if s.IPAM["type"] != InternalIPAMType {
-		return
-	}
-	ii := s.ipam.(*InternalIPAM)
-	ips := iprange.New(ii.Start.AsSlice(), ii.End.AsSlice())
-	usable := ips.Size()
+	usable := s.ipam.UsableSize()
 	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
 	used := big.NewInt(0)
 	s.role.leasesM.RLock()
