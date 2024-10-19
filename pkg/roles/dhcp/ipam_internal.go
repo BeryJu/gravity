@@ -1,12 +1,14 @@
 package dhcp
 
 import (
+	"math/big"
 	"net"
 	"net/netip"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/netdata/go.d.plugin/pkg/iprange"
 	"github.com/pkg/errors"
 	probing "github.com/prometheus-community/pro-bing"
 	"go.uber.org/zap"
@@ -205,4 +207,9 @@ func (i *InternalIPAM) GetSubnetMask() net.IPMask {
 		panic(err)
 	}
 	return cidr.Mask
+}
+
+func (i *InternalIPAM) UsableSize() *big.Int {
+	ips := iprange.New(i.Start.AsSlice(), i.End.AsSlice())
+	return ips.Size()
 }

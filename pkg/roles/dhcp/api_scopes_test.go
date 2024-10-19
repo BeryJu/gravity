@@ -45,6 +45,17 @@ func TestAPIScopesGet(t *testing.T) {
 		).String(),
 		tests.MustJSON(testScope()),
 	))
+	lease := testLease()
+	lease.ScopeKey = "test"
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+			lease.Identifier,
+		).String(),
+		tests.MustJSON(lease),
+	))
 
 	var output dhcp.APIScopesGetOutput
 	assert.NoError(t, role.APIScopesGet().Interact(ctx, dhcp.APIScopesGetInput{}, &output))

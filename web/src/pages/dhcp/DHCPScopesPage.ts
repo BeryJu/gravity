@@ -1,7 +1,9 @@
 import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { CSSResult, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import PFProgress from "@patternfly/patternfly/components/Progress/progress.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
@@ -28,6 +30,10 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
         return true;
     }
 
+    static get styles(): CSSResult[] {
+        return super.styles.concat(PFProgress);
+    }
+
     async apiEndpoint(): Promise<PaginatedResponse<DhcpAPIScope>> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
         const data = (scopes.scopes || []).filter(
@@ -45,13 +51,34 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     }
 
     columns(): TableColumn[] {
-        return [new TableColumn("Scope"), new TableColumn("Subnet"), new TableColumn("Actions")];
+        return [
+            new TableColumn("Scope"),
+            new TableColumn("Subnet"),
+            new TableColumn("Usage"),
+            new TableColumn("Actions"),
+        ];
     }
 
     row(item: DhcpAPIScope): TemplateResult[] {
+        const usage = Math.round(item.statistics.used/(100 / item.statistics.usable));
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`<pre>${item.subnetCidr}</pre>`,
+            html`<div class="pf-c-progress pf-m-sm">
+                <div class="pf-c-progress__status" aria-hidden="true">
+                    <span class="pf-c-progress__measure">${usage}%</span>
+                </div>
+                <div
+                    class="pf-c-progress__bar"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="${usage}"
+                    aria-labelledby="progress-sm-example-description"
+                >
+                    <div class="pf-c-progress__indicator" style="width:${usage}%;"></div>
+                </div>
+            </div>`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Scope"} </span>

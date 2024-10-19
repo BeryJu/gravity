@@ -18,6 +18,7 @@ import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
 import "./charts/CPUUsageChart";
+import "./charts/DHCPUsageChart";
 import "./charts/DNSRequestsChart";
 import "./charts/MemoryUsageChart";
 
@@ -67,13 +68,23 @@ export class OverviewPage extends AKElement {
                         <gravity-overview-card-current-instance></gravity-overview-card-current-instance>
                     </div>
                     <div
-                        class="pf-l-grid__item pf-m-12-col pf-m-12-col-on-xl pf-m-12-col-on-2xl big-graph-container"
+                        class="pf-l-grid__item pf-m-12-col pf-m-9-col-on-xl pf-m-9-col-on-2xl big-graph-container"
                     >
                         <ak-aggregate-card
                             icon="pf-icon pf-icon-server"
                             header="DNS requests per handler over the last 30 minutes"
                         >
                             <gravity-overview-charts-dns-requests></gravity-overview-charts-dns-requests>
+                        </ak-aggregate-card>
+                    </div>
+                    <div
+                        class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-xl pf-m-3-col-on-2xl big-graph-container"
+                    >
+                        <ak-aggregate-card
+                            icon="pf-icon pf-icon-server"
+                            header="DHCP Scope usage"
+                        >
+                            <gravity-overview-charts-dhcp-usage></gravity-overview-charts-dhcp-usage>
                         </ak-aggregate-card>
                     </div>
                     <div
