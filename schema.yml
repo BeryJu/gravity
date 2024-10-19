@@ -1791,10 +1791,16 @@ components:
       type: object
     AuthAPIUser:
       properties:
+        permissions:
+          items:
+            $ref: '#/components/schemas/AuthPermission'
+          nullable: true
+          type: array
         username:
           type: string
       required:
       - username
+      - permissions
       type: object
     AuthAPIUsersGetOutput:
       properties:
@@ -1810,8 +1816,24 @@ components:
       properties:
         password:
           type: string
+        permissions:
+          items:
+            $ref: '#/components/schemas/AuthPermission'
+          nullable: true
+          type: array
       required:
       - password
+      - permissions
+      type: object
+    AuthPermission:
+      properties:
+        methods:
+          items:
+            type: string
+          nullable: true
+          type: array
+        path:
+          type: string
       type: object
     BackupAPIBackupStatus:
       properties:

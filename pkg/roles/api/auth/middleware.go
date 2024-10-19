@@ -21,22 +21,20 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	if ap.isAllowedPath(r) {
 		return true
 	}
-	if ap.checkToken(r) {
-		return true
-	}
+	ap.checkToken(r)
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	u, ok := session.Values[types.SessionKeyUser]
-	if u != nil && ok {
-		hub := sentry.GetHubFromContext(r.Context())
-		if hub == nil {
-			hub = sentry.CurrentHub()
-		}
-		hub.Scope().SetUser(sentry.User{
-			Username: u.(User).Username,
-		})
-		return true
+	if u == nil || !ok {
+		return false
 	}
-	return false
+	hub := sentry.GetHubFromContext(r.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		Username: u.(User).Username,
+	})
+	return ap.checkPermission(r, u.(User))
 }
 
 func (ap *AuthProvider) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
