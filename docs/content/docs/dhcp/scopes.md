@@ -34,7 +34,7 @@ Example options:
   value: 10.1.2.3
 ```
 
-More info and default values can be found [here](../options).
+More info and default values can be found [here](./options).
 
 #### `ttl`
 
@@ -67,3 +67,7 @@ Additionally, `addZoneInHostname` can be set to make Gravity append the zone to 
   }
 }
 ```
+
+#### `hook`
+
+Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks.md)
