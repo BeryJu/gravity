@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -68,4 +69,12 @@ func init() {
 	cliCmd.PersistentFlags().StringVarP(&apiUrl, "host", "s", defUrl, "API Host")
 	cliCmd.PersistentFlags().StringVarP(&apiToken, "token", "t", "", "API Token")
 	rootCmd.AddCommand(cliCmd)
+}
+
+func checkApiError(hr *http.Response, err error) {
+	if err == nil {
+		return
+	}
+	b, _ := io.ReadAll(hr.Body)
+	logger.Error("failed to send request", zap.String("response", string(b)), zap.Error(err))
 }

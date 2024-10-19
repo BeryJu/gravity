@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 )
 
 var cliTokensAddCmd = &cobra.Command{
@@ -19,9 +18,9 @@ var cliTokensAddCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		username := args[0]
-		token, _, err := apiClient.RolesApiApi.ApiPutTokens(cmd.Context()).Username(username).Execute()
+		token, hr, err := apiClient.RolesApiApi.ApiPutTokens(cmd.Context()).Username(username).Execute()
 		if err != nil {
-			logger.Error("failed to add token", zap.Error(err))
+			checkApiError(hr, err)
 			return
 		}
 		fmt.Println(token)

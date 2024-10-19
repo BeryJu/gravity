@@ -6,7 +6,6 @@ import (
 
 	"beryju.io/gravity/api"
 	"github.com/spf13/cobra"
-	"go.uber.org/zap"
 	"golang.org/x/term"
 )
 
@@ -28,13 +27,10 @@ var cliUsersAddCmd = &cobra.Command{
 			panic(err)
 		}
 		fmt.Println("")
-		_, err = apiClient.RolesApiApi.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
+		hr, err := apiClient.RolesApiApi.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
 			Password: string(bytePassword),
 		}).Execute()
-		if err != nil {
-			logger.Error("failed to add user", zap.Error(err))
-			return
-		}
+		checkApiError(hr, err)
 	},
 }
 
