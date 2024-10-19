@@ -22,17 +22,19 @@ type DnsAPIZonesPutInput struct {
 	Authoritative  bool                `json:"authoritative"`
 	DefaultTTL     int32               `json:"defaultTTL"`
 	HandlerConfigs []map[string]string `json:"handlerConfigs"`
+	Hook           string              `json:"hook"`
 }
 
 // NewDnsAPIZonesPutInput instantiates a new DnsAPIZonesPutInput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDnsAPIZonesPutInput(authoritative bool, defaultTTL int32, handlerConfigs []map[string]string) *DnsAPIZonesPutInput {
+func NewDnsAPIZonesPutInput(authoritative bool, defaultTTL int32, handlerConfigs []map[string]string, hook string) *DnsAPIZonesPutInput {
 	this := DnsAPIZonesPutInput{}
 	this.Authoritative = authoritative
 	this.DefaultTTL = defaultTTL
 	this.HandlerConfigs = handlerConfigs
+	this.Hook = hook
 	return &this
 }
 
@@ -118,6 +120,30 @@ func (o *DnsAPIZonesPutInput) SetHandlerConfigs(v []map[string]string) {
 	o.HandlerConfigs = v
 }
 
+// GetHook returns the Hook field value
+func (o *DnsAPIZonesPutInput) GetHook() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Hook
+}
+
+// GetHookOk returns a tuple with the Hook field value
+// and a boolean to check if the value has been set.
+func (o *DnsAPIZonesPutInput) GetHookOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Hook, true
+}
+
+// SetHook sets field value
+func (o *DnsAPIZonesPutInput) SetHook(v string) {
+	o.Hook = v
+}
+
 func (o DnsAPIZonesPutInput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -133,6 +159,7 @@ func (o DnsAPIZonesPutInput) ToMap() (map[string]interface{}, error) {
 	if o.HandlerConfigs != nil {
 		toSerialize["handlerConfigs"] = o.HandlerConfigs
 	}
+	toSerialize["hook"] = o.Hook
 	return toSerialize, nil
 }
 

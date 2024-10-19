@@ -2195,6 +2195,7 @@ components:
         default: true
         ipam:
           key: ipam
+        hook: hook
         scope: scope
         dns:
           search:
@@ -2227,6 +2228,8 @@ components:
           type: boolean
         dns:
           $ref: '#/components/schemas/DhcpScopeDNS'
+        hook:
+          type: string
         ipam:
           additionalProperties:
             type: string
@@ -2245,6 +2248,7 @@ components:
           type: integer
       required:
       - default
+      - hook
       - ipam
       - options
       - scope
@@ -2258,6 +2262,7 @@ components:
           default: true
           ipam:
             key: ipam
+          hook: hook
           scope: scope
           dns:
             search:
@@ -2289,6 +2294,7 @@ components:
           default: true
           ipam:
             key: ipam
+          hook: hook
           scope: scope
           dns:
             search:
@@ -2331,6 +2337,7 @@ components:
         default: true
         ipam:
           key: ipam
+        hook: hook
         dns:
           search:
           - search
@@ -2362,6 +2369,8 @@ components:
           type: boolean
         dns:
           $ref: '#/components/schemas/DhcpScopeDNS'
+        hook:
+          type: string
         ipam:
           additionalProperties:
             type: string
@@ -2379,6 +2388,7 @@ components:
           type: integer
       required:
       - default
+      - hook
       - options
       - subnetCidr
       - ttl
@@ -2681,6 +2691,7 @@ components:
         - key: handlerConfigs
         - key: handlerConfigs
         authoritative: true
+        hook: hook
         defaultTTL: 0
         name: name
       properties:
@@ -2696,12 +2707,15 @@ components:
             type: object
           nullable: true
           type: array
+        hook:
+          type: string
         name:
           type: string
       required:
       - authoritative
       - defaultTTL
       - handlerConfigs
+      - hook
       - name
       type: object
     DnsAPIZonesGetOutput:
@@ -2711,12 +2725,14 @@ components:
           - key: handlerConfigs
           - key: handlerConfigs
           authoritative: true
+          hook: hook
           defaultTTL: 0
           name: name
         - handlerConfigs:
           - key: handlerConfigs
           - key: handlerConfigs
           authoritative: true
+          hook: hook
           defaultTTL: 0
           name: name
       properties:
@@ -2734,6 +2750,7 @@ components:
         - key: handlerConfigs
         - key: handlerConfigs
         authoritative: true
+        hook: hook
         defaultTTL: 0
       properties:
         authoritative:
@@ -2748,10 +2765,13 @@ components:
             type: object
           nullable: true
           type: array
+        hook:
+          type: string
       required:
       - authoritative
       - defaultTTL
       - handlerConfigs
+      - hook
       type: object
     DnsRoleConfig:
       example:

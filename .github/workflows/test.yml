@@ -27,7 +27,7 @@ jobs:
           npm ci
           npm run build
       - run: make test-env-start
-      - run: make install-deps
+      - run: make install-deps gen-clean gen-client-go
       - run: make test
       - if: ${{ always() }}
         run: |

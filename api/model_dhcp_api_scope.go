@@ -21,6 +21,7 @@ var _ MappedNullable = &DhcpAPIScope{}
 type DhcpAPIScope struct {
 	Default    bool              `json:"default"`
 	Dns        *DhcpScopeDNS     `json:"dns,omitempty"`
+	Hook       string            `json:"hook"`
 	Ipam       map[string]string `json:"ipam"`
 	Options    []TypesDHCPOption `json:"options"`
 	Scope      string            `json:"scope"`
@@ -32,9 +33,10 @@ type DhcpAPIScope struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32) *DhcpAPIScope {
+func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32) *DhcpAPIScope {
 	this := DhcpAPIScope{}
 	this.Default = default_
+	this.Hook = hook
 	this.Ipam = ipam
 	this.Options = options
 	this.Scope = scope
@@ -105,6 +107,30 @@ func (o *DhcpAPIScope) HasDns() bool {
 // SetDns gets a reference to the given DhcpScopeDNS and assigns it to the Dns field.
 func (o *DhcpAPIScope) SetDns(v DhcpScopeDNS) {
 	o.Dns = &v
+}
+
+// GetHook returns the Hook field value
+func (o *DhcpAPIScope) GetHook() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Hook
+}
+
+// GetHookOk returns a tuple with the Hook field value
+// and a boolean to check if the value has been set.
+func (o *DhcpAPIScope) GetHookOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Hook, true
+}
+
+// SetHook sets field value
+func (o *DhcpAPIScope) SetHook(v string) {
+	o.Hook = v
 }
 
 // GetIpam returns the Ipam field value
@@ -245,6 +271,7 @@ func (o DhcpAPIScope) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Dns) {
 		toSerialize["dns"] = o.Dns
 	}
+	toSerialize["hook"] = o.Hook
 	if o.Ipam != nil {
 		toSerialize["ipam"] = o.Ipam
 	}
