@@ -20,6 +20,7 @@ type APIZone struct {
 	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	Authoritative  bool                `json:"authoritative" required:"true"`
+	Hook           string              `json:"hook" required:"true"`
 }
 type APIZonesGetOutput struct {
 	Zones []APIZone `json:"zones" required:"true"`
@@ -59,6 +60,7 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 				Authoritative:  _zone.Authoritative,
 				DefaultTTL:     _zone.DefaultTTL,
 				HandlerConfigs: _zone.HandlerConfigs,
+				Hook:           _zone.Hook,
 			})
 		}
 		return nil
@@ -75,6 +77,7 @@ type APIZonesPutInput struct {
 	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
 	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
 	Authoritative  bool                `json:"authoritative" required:"true"`
+	Hook           string              `json:"hook" required:"true"`
 }
 
 func (r *Role) APIZonesPut() usecase.Interactor {
@@ -87,6 +90,7 @@ func (r *Role) APIZonesPut() usecase.Interactor {
 		z.Authoritative = input.Authoritative
 		z.HandlerConfigs = input.HandlerConfigs
 		z.DefaultTTL = input.DefaultTTL
+		z.Hook = input.Hook
 		err := z.put(ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)

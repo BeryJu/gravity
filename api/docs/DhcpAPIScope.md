@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Default** | **bool** |  | 
 **Dns** | Pointer to [**DhcpScopeDNS**](DhcpScopeDNS.md) |  | [optional] 
+**Hook** | **string** |  | 
 **Ipam** | **map[string]string** |  | 
 **Options** | [**[]TypesDHCPOption**](TypesDHCPOption.md) |  | 
 **Scope** | **string** |  | 
@@ -16,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewDhcpAPIScope
 
-`func NewDhcpAPIScope(default_ bool, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32, ) *DhcpAPIScope`
+`func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32, ) *DhcpAPIScope`
 
 NewDhcpAPIScope instantiates a new DhcpAPIScope object
 This constructor will assign default values to properties that have it defined,
@@ -75,6 +76,26 @@ SetDns sets Dns field to given value.
 `func (o *DhcpAPIScope) HasDns() bool`
 
 HasDns returns a boolean if a field has been set.
+
+### GetHook
+
+`func (o *DhcpAPIScope) GetHook() string`
+
+GetHook returns the Hook field if non-nil, zero value otherwise.
+
+### GetHookOk
+
+`func (o *DhcpAPIScope) GetHookOk() (*string, bool)`
+
+GetHookOk returns a tuple with the Hook field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHook
+
+`func (o *DhcpAPIScope) SetHook(v string)`
+
+SetHook sets Hook field to given value.
+
 
 ### GetIpam
 

@@ -7,12 +7,13 @@ Name | Type | Description | Notes
 **Authoritative** | **bool** |  | 
 **DefaultTTL** | **int32** |  | 
 **HandlerConfigs** | **[]map[string]string** |  | 
+**Hook** | **string** |  | 
 
 ## Methods
 
 ### NewDnsAPIZonesPutInput
 
-`func NewDnsAPIZonesPutInput(authoritative bool, defaultTTL int32, handlerConfigs []map[string]string, ) *DnsAPIZonesPutInput`
+`func NewDnsAPIZonesPutInput(authoritative bool, defaultTTL int32, handlerConfigs []map[string]string, hook string, ) *DnsAPIZonesPutInput`
 
 NewDnsAPIZonesPutInput instantiates a new DnsAPIZonesPutInput object
 This constructor will assign default values to properties that have it defined,
@@ -97,6 +98,26 @@ SetHandlerConfigs sets HandlerConfigs field to given value.
 `func (o *DnsAPIZonesPutInput) UnsetHandlerConfigs()`
 
 UnsetHandlerConfigs ensures that no value is present for HandlerConfigs, not even an explicit nil
+### GetHook
+
+`func (o *DnsAPIZonesPutInput) GetHook() string`
+
+GetHook returns the Hook field if non-nil, zero value otherwise.
+
+### GetHookOk
+
+`func (o *DnsAPIZonesPutInput) GetHookOk() (*string, bool)`
+
+GetHookOk returns a tuple with the Hook field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHook
+
+`func (o *DnsAPIZonesPutInput) SetHook(v string)`
+
+SetHook sets Hook field to given value.
+
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

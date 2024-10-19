@@ -1,7 +1,9 @@
 ---
-title: "Zone Handlers"
+title: "Zones"
 weight: 1
 ---
+
+## Handlers
 
 The order of handler matters; Gravity will send a query to each handler in the order they are configured until a response is returned.
 
@@ -123,3 +125,7 @@ Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredn
       whoami
     }
 ```
+
+## Hooks
+
+Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks.md)

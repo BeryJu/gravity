@@ -21,6 +21,7 @@ var _ MappedNullable = &DhcpAPIScopesPutInput{}
 type DhcpAPIScopesPutInput struct {
 	Default    bool              `json:"default"`
 	Dns        *DhcpScopeDNS     `json:"dns,omitempty"`
+	Hook       string            `json:"hook"`
 	Ipam       map[string]string `json:"ipam,omitempty"`
 	Options    []TypesDHCPOption `json:"options"`
 	SubnetCidr string            `json:"subnetCidr"`
@@ -31,9 +32,10 @@ type DhcpAPIScopesPutInput struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScopesPutInput(default_ bool, options []TypesDHCPOption, subnetCidr string, ttl int32) *DhcpAPIScopesPutInput {
+func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int32) *DhcpAPIScopesPutInput {
 	this := DhcpAPIScopesPutInput{}
 	this.Default = default_
+	this.Hook = hook
 	this.Options = options
 	this.SubnetCidr = subnetCidr
 	this.Ttl = ttl
@@ -102,6 +104,30 @@ func (o *DhcpAPIScopesPutInput) HasDns() bool {
 // SetDns gets a reference to the given DhcpScopeDNS and assigns it to the Dns field.
 func (o *DhcpAPIScopesPutInput) SetDns(v DhcpScopeDNS) {
 	o.Dns = &v
+}
+
+// GetHook returns the Hook field value
+func (o *DhcpAPIScopesPutInput) GetHook() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Hook
+}
+
+// GetHookOk returns a tuple with the Hook field value
+// and a boolean to check if the value has been set.
+func (o *DhcpAPIScopesPutInput) GetHookOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Hook, true
+}
+
+// SetHook sets field value
+func (o *DhcpAPIScopesPutInput) SetHook(v string) {
+	o.Hook = v
 }
 
 // GetIpam returns the Ipam field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -225,6 +251,7 @@ func (o DhcpAPIScopesPutInput) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Dns) {
 		toSerialize["dns"] = o.Dns
 	}
+	toSerialize["hook"] = o.Hook
 	if o.Ipam != nil {
 		toSerialize["ipam"] = o.Ipam
 	}

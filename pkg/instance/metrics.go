@@ -21,4 +21,11 @@ var (
 			"instance": extconfig.Get().Instance.Identifier,
 		},
 	}, []string{"roleId"})
+	instanceRoleHooks = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "gravity_instance_roles_hooks",
+		Help: "Execution time of hooks for a given role",
+		ConstLabels: prometheus.Labels{
+			"instance": extconfig.Get().Instance.Identifier,
+		},
+	}, []string{"roleId", "hook"})
 )

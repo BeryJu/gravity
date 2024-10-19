@@ -78,6 +78,7 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 			"range_end":   sc.EndRange,
 		},
 		Options: []api.TypesDHCPOption{},
+		Hook:    "",
 	}
 	for _, optv := range sc.OptionValues.OptionValue {
 		tag, err := strconv.Atoi(optv.OptionId)

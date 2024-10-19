@@ -1843,6 +1843,8 @@ components:
           type: boolean
         dns:
           $ref: '#/components/schemas/DhcpScopeDNS'
+        hook:
+          type: string
         ipam:
           additionalProperties:
             type: string
@@ -1866,6 +1868,7 @@ components:
       - options
       - ttl
       - default
+      - hook
       type: object
     DhcpAPIScopesGetOutput:
       properties:
@@ -1883,6 +1886,8 @@ components:
           type: boolean
         dns:
           $ref: '#/components/schemas/DhcpScopeDNS'
+        hook:
+          type: string
         ipam:
           additionalProperties:
             type: string
@@ -1903,6 +1908,7 @@ components:
       - options
       - ttl
       - default
+      - hook
       type: object
     DhcpRoleConfig:
       properties:
@@ -2112,6 +2118,8 @@ components:
             type: object
           nullable: true
           type: array
+        hook:
+          type: string
         name:
           type: string
       required:
@@ -2119,6 +2127,7 @@ components:
       - handlerConfigs
       - defaultTTL
       - authoritative
+      - hook
       type: object
     DnsAPIZonesGetOutput:
       properties:
@@ -2144,10 +2153,13 @@ components:
             type: object
           nullable: true
           type: array
+        hook:
+          type: string
       required:
       - handlerConfigs
       - defaultTTL
       - authoritative
+      - hook
       type: object
     DnsRoleConfig:
       properties:

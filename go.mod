@@ -14,6 +14,7 @@ require (
 	github.com/coredns/coredns v1.11.3
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/creasty/defaults v1.8.0
+	github.com/dop251/goja v0.0.0-20241009100908-5f46f2705ca3
 	github.com/felixge/fgprof v0.9.5
 	github.com/getsentry/sentry-go v0.29.1
 	github.com/google/gopacket v1.1.19
@@ -88,6 +89,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dimchansky/utfbom v1.1.1 // indirect
+	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/dnstap/golang-dnstap v0.4.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/ebitengine/purego v0.6.0-alpha.5 // indirect
@@ -105,6 +107,7 @@ require (
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
+	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect

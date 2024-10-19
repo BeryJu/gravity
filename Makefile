@@ -40,8 +40,6 @@ web-build:
 
 web-watch:
 	cd ${PWD}/web
-	npm ci
-	npm version ${VERSION} || true
 	npm run watch
 
 web-lint:
@@ -103,7 +101,7 @@ gen-client-go:
 	go get
 	go fmt .
 	go mod tidy
-	gofumpt -l -w .
+	gofumpt -l -w . || true
 	git add .
 
 gen-client-ts:
