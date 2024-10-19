@@ -1,3 +1,4 @@
+import { codecovRollupPlugin } from "@codecov/rollup-plugin";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
@@ -53,6 +54,13 @@ export default {
         copy({
             targets: [...resources],
             copyOnce: false,
+        }),
+        codecovRollupPlugin({
+            // eslint-disable-next-line no-undef
+            enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+            bundleName: "gravity-ui",
+            // eslint-disable-next-line no-undef
+            uploadToken: process.env.CODECOV_TOKEN,
         }),
     ],
     watch: {

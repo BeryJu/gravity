@@ -1,6 +1,8 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/library/node:23.0 AS web-builder
 
+ARG CODECOV_TOKEN
+
 WORKDIR /work
 
 COPY ./Makefile /work/Makefile
