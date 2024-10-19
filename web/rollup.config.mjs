@@ -5,6 +5,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
 import esbuild from "rollup-plugin-esbuild";
+import { readFileSync } from "fs";
 
 export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
@@ -33,6 +34,14 @@ export const resources = [
 // eslint-disable-next-line no-undef
 export const isProdBuild = process.env.NODE_ENV === "production";
 
+const codecovToken = () => {
+    try {
+        return readFileSync("/run/secrets/CODECOV_TOKEN");
+    } catch {
+        return undefined;
+    }
+};
+
 export default {
     input: "./src/main.ts",
     output: [
@@ -56,11 +65,9 @@ export default {
             copyOnce: false,
         }),
         codecovRollupPlugin({
-            // eslint-disable-next-line no-undef
-            enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+            enableBundleAnalysis: codecovToken() !== undefined,
             bundleName: "gravity-ui",
-            // eslint-disable-next-line no-undef
-            uploadToken: process.env.CODECOV_TOKEN,
+            uploadToken: codecovToken(),
         }),
     ],
     watch: {

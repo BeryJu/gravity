@@ -34,7 +34,8 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/amd64,linux/arm64
           context: .
+          secrets: |
+            CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }}
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
-            CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }}

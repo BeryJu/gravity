@@ -1,15 +1,14 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/library/node:23.0 AS web-builder
 
-ARG CODECOV_TOKEN
-
 WORKDIR /work
 
 COPY ./Makefile /work/Makefile
 COPY ./web/package.json /work/web/package.json
 COPY ./web/package-lock.json /work/web/package-lock.json
 
-RUN cd web && npm ci
+RUN --mount=type=secret,id=CODECOV_TOKEN \
+    cd web && npm ci
 
 COPY ./web /work/web
 
