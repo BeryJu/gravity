@@ -33,7 +33,9 @@ Create a DHCP option with the code and data given.
 
 ```javascript
 const UniFiPrefix = [0x01, 0x04];
+// IP of the UniFi Network Controller, converted to Hex. Each octet of the IP is converted individually.
+const UniFiIP = [0xC0, 0xA8, 0x01, 0x64];
 function onDHCPRequestAfter(req, res) {
-    res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, 0xC0, 0xA8, 0x01, 0x64]))
+    res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, ...UniFiIP]))
 }
 ```

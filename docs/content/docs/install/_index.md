@@ -5,9 +5,13 @@ description:
   Get started using Gravity
 ---
 
-### Installation
+### Pre-requisites
 
-#### Docker Compose
+Gravity requires at least 1 CPU core and 1 GB of memory. The resource usage varies depending on your configuration, for example having 200 DNS Zones with Blocky and CoreDNS will increase these requirements.
+
+Gravity supports both x86 and ARM-based hosts, however only AMD64 and ARM64 variants are supported. Gravity should be able to work on other architectures too, however this is not officially supported.
+
+### Docker Compose
 
 Create a file called `docker-compose.yml` in a new directory with the following content:
 
@@ -47,11 +51,11 @@ A default admin user is created on the first startup. You can find the credentia
 
 You can reach Gravity by going to `http://<server IP or hostname>:8008` in your browser.
 
-### Configuration
+## Configuration
 
 The following environment variables can be set.
 
-##### Common
+### Common
 
 - `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
 - `LOG_LEVEL`: Log level. Defaults to `info`.
@@ -60,7 +64,7 @@ The following environment variables can be set.
 - `INSTANCE_IP`: This instance's reachable IP. When running in Docker and not using `network_mode: host`, this should be the host's IP.
 - `LISTEN_ONLY`: Enable listen-only mode. In listen-only mode, Gravity will not reply to any DHCP packets and will not run [discovery](../discovery).
 
-##### Advanced
+### Advanced
 
 - `DEBUG`: Enable debug mode. This should not be set manually in most cases and is only intended for development environments.
 - `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but this option will override that. Set to 0.0.0.0 when using Docker.
@@ -73,7 +77,7 @@ The following environment variables can be set.
 - `ETCD_ENDPOINT`: etcd Client endpoint. Defaults to `localhost:2379` when using embedded etcd.
 - `ETCD_JOIN_CLUSTER`: Set to a join cluster token to join the node to a cluster. See [Clustering](./cluster).
 
-##### Changing Environment Variables
+### Changing Environment Variables
 
 Gravity is designed so that you ideally don't have to explicitly define environment variables, but if necessary, environment variables can be added or changed by modifying the `environment:` options in the Docker Compose file.
 
