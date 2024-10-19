@@ -58,6 +58,7 @@ docs/DhcpAPILeasesPutInput.md
 docs/DhcpAPIRoleConfigInput.md
 docs/DhcpAPIRoleConfigOutput.md
 docs/DhcpAPIScope.md
+docs/DhcpAPIScopeStatistics.md
 docs/DhcpAPIScopesGetOutput.md
 docs/DhcpAPIScopesPutInput.md
 docs/DhcpRoleConfig.md
@@ -152,6 +153,7 @@ model_dhcp_api_leases_put_input.go
 model_dhcp_api_role_config_input.go
 model_dhcp_api_role_config_output.go
 model_dhcp_api_scope.go
+model_dhcp_api_scope_statistics.go
 model_dhcp_api_scopes_get_output.go
 model_dhcp_api_scopes_put_input.go
 model_dhcp_role_config.go

@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **Ipam** | **map[string]string** |  | 
 **Options** | [**[]TypesDHCPOption**](TypesDHCPOption.md) |  | 
 **Scope** | **string** |  | 
+**Statistics** | [**DhcpAPIScopeStatistics**](DhcpAPIScopeStatistics.md) |  | 
 **SubnetCidr** | **string** |  | 
 **Ttl** | **int32** |  | 
 
@@ -17,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewDhcpAPIScope
 
-`func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, subnetCidr string, ttl int32, ) *DhcpAPIScope`
+`func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, statistics DhcpAPIScopeStatistics, subnetCidr string, ttl int32, ) *DhcpAPIScope`
 
 NewDhcpAPIScope instantiates a new DhcpAPIScope object
 This constructor will assign default values to properties that have it defined,
@@ -175,6 +176,26 @@ and a boolean to check if the value has been set.
 `func (o *DhcpAPIScope) SetScope(v string)`
 
 SetScope sets Scope field to given value.
+
+
+### GetStatistics
+
+`func (o *DhcpAPIScope) GetStatistics() DhcpAPIScopeStatistics`
+
+GetStatistics returns the Statistics field if non-nil, zero value otherwise.
+
+### GetStatisticsOk
+
+`func (o *DhcpAPIScope) GetStatisticsOk() (*DhcpAPIScopeStatistics, bool)`
+
+GetStatisticsOk returns a tuple with the Statistics field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStatistics
+
+`func (o *DhcpAPIScope) SetStatistics(v DhcpAPIScopeStatistics)`
+
+SetStatistics sets Statistics field to given value.
 
 
 ### GetSubnetCidr

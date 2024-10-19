@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.10.0
+  version: 0.11.0
 servers:
 - url: /
 paths:
@@ -2222,7 +2222,10 @@ components:
           tag: 0
           tagName: tagName
           value: value
-        ttl: 6
+        ttl: 5
+        statistics:
+          usable: 0
+          used: 0
       properties:
         default:
           type: boolean
@@ -2242,6 +2245,8 @@ components:
           type: array
         scope:
           type: string
+        statistics:
+          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
         subnetCidr:
           type: string
         ttl:
@@ -2252,8 +2257,24 @@ components:
       - ipam
       - options
       - scope
+      - statistics
       - subnetCidr
       - ttl
+      type: object
+    DhcpAPIScopeStatistics:
+      example:
+        usable: 0
+        used: 0
+      properties:
+        usable:
+          minimum: 0
+          type: integer
+        used:
+          minimum: 0
+          type: integer
+      required:
+      - usable
+      - used
       type: object
     DhcpAPIScopesGetOutput:
       example:
@@ -2289,7 +2310,10 @@ components:
             tag: 0
             tagName: tagName
             value: value
-          ttl: 6
+          ttl: 5
+          statistics:
+            usable: 0
+            used: 0
         - subnetCidr: subnetCidr
           default: true
           ipam:
@@ -2321,15 +2345,24 @@ components:
             tag: 0
             tagName: tagName
             value: value
-          ttl: 6
+          ttl: 5
+          statistics:
+            usable: 0
+            used: 0
+        statistics:
+          usable: 0
+          used: 0
       properties:
         scopes:
           items:
             $ref: '#/components/schemas/DhcpAPIScope'
           nullable: true
           type: array
+        statistics:
+          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
       required:
       - scopes
+      - statistics
       type: object
     DhcpAPIScopesPutInput:
       example:
