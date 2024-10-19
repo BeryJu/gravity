@@ -132,7 +132,10 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 				r.RecursionAvailable = r.RecursionDesired
 			}
 			handlerReply.SetReply(r.Msg)
-			z.inst.HookMeth(z.Hook, "onDNSRequest", r, handlerReply)
+			z.inst.ExecuteHook(roles.HookOptions{
+				Source: z.Hook,
+				Method: "onDNSRequest",
+			}, r, handlerReply)
 			err := w.WriteMsg(handlerReply)
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))

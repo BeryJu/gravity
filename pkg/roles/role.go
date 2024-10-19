@@ -49,11 +49,17 @@ func NewEvent(ctx context.Context, data map[string]interface{}) *Event {
 
 type EventHandler func(ev *Event)
 
+type HookOptions struct {
+	Method string
+	Source string
+	Env    map[string]interface{}
+}
+
 type Instance interface {
 	KV() *storage.Client
 	Log() *zap.Logger
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 	Context() context.Context
-	HookMeth(src string, meth string, args ...interface{})
+	ExecuteHook(HookOptions, ...interface{})
 }
