@@ -1,6 +1,8 @@
 ---
 title: "DHCP"
 weight: 6
+description:
+  Configure Gravity as your DHCP server and optionally import existing leases/reservations.
 ---
 
 Gravity's DHCP Server supports:
