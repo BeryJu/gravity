@@ -40,7 +40,7 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 func (ap *AuthProvider) oidcInit(w http.ResponseWriter, r *http.Request) {
 	if ap.oidc == nil {
 		w.WriteHeader(400)
-		w.Write([]byte("OIDC not configured"))
+		_, _ = w.Write([]byte("OIDC not configured"))
 		return
 	}
 	newState := base64.RawURLEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
@@ -53,7 +53,7 @@ func (ap *AuthProvider) oidcInit(w http.ResponseWriter, r *http.Request) {
 func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 	if ap.oidc == nil {
 		w.WriteHeader(400)
-		w.Write([]byte("OIDC not configured"))
+		_, _ = w.Write([]byte("OIDC not configured"))
 		return
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
