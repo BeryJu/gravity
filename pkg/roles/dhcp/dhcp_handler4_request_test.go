@@ -81,7 +81,7 @@ func TestDHCPRequest_Hook(t *testing.T) {
 				"range_start": "10.100.0.100",
 				"range_end":   "10.100.0.250",
 			},
-			Hook: `function onDHCPRequest(req, res) {
+			Hook: `function onDHCPRequestAfter(req, res) {
 				res.BootFileName = "foo"
 			}`,
 		}),
