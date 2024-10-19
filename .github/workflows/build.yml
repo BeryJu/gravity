@@ -39,3 +39,4 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
+            CC_GH_COMMIT_SHA=${{ github.event.pull_request.head.sha }}
