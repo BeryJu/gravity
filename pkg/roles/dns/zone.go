@@ -112,6 +112,10 @@ func getIP(addr net.Addr) *netip.Addr {
 }
 
 func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
+	z.inst.ExecuteHook(roles.HookOptions{
+		Source: z.Hook,
+		Method: "onDNSRequestBefore",
+	}, r)
 	for idx, handler := range z.h {
 		ss := span.StartChild("gravity.dns.request.handler")
 		ss.Description = handler.Identifier()
@@ -134,7 +138,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			handlerReply.SetReply(r.Msg)
 			z.inst.ExecuteHook(roles.HookOptions{
 				Source: z.Hook,
-				Method: "onDNSRequest",
+				Method: "onDNSRequestAfter",
 			}, r, handlerReply)
 			err := w.WriteMsg(handlerReply)
 			if err != nil {

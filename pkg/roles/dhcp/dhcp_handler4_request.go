@@ -28,11 +28,15 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
 
+	r.i.ExecuteHook(roles.HookOptions{
+		Source: match.scope.Hook,
+		Method: "onDHCPRequestBefore",
+	}, req)
 	rep := match.createReply(req)
 	rep.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
 	r.i.ExecuteHook(roles.HookOptions{
 		Source: match.scope.Hook,
-		Method: "onDHCPRequest",
+		Method: "onDHCPRequestAfter",
 	}, req, rep)
 	return rep
 }
