@@ -80,10 +80,7 @@ export class OverviewPage extends AKElement {
                     <div
                         class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-xl pf-m-3-col-on-2xl big-graph-container"
                     >
-                        <ak-aggregate-card
-                            icon="pf-icon pf-icon-server"
-                            header="DHCP Scope usage"
-                        >
+                        <ak-aggregate-card icon="pf-icon pf-icon-server" header="DHCP Scope usage">
                             <gravity-overview-charts-dhcp-usage></gravity-overview-charts-dhcp-usage>
                         </ak-aggregate-card>
                     </div>

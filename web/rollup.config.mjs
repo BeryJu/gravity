@@ -7,7 +7,6 @@ import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
 import esbuild from "rollup-plugin-esbuild";
 
-
 export const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export const resources = [

@@ -60,7 +60,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     }
 
     row(item: DhcpAPIScope): TemplateResult[] {
-        const usage = Math.round(item.statistics.used/(100 / item.statistics.usable));
+        const usage = Math.round(item.statistics.used / (100 / item.statistics.usable));
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`<pre>${item.subnetCidr}</pre>`,
