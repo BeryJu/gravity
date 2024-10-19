@@ -29,6 +29,7 @@ export class DHCPUsageChart extends AKChart<DhcpAPIScopesGetOutput> {
                 const usage = Math.round(d.statistics.used / (100 / d.statistics.usable));
                 return {
                     backgroundColor: [getColorFromString(d.scope).toString(), "#ffffff"],
+                    borderColor: "rgba(0,0,0,0)",
                     spanGaps: true,
                     data: [usage, 100 - usage],
                     label: d.scope,
