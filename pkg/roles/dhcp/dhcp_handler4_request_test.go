@@ -105,6 +105,55 @@ func TestDHCPRequest_Hook(t *testing.T) {
 	assert.Equal(t, "foo", res.BootFileName)
 }
 
+func TestDHCPRequest_Hook_UniFi(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+			Hook: `const UniFiPrefix = [0x01, 0x04];
+			function onDHCPRequestAfter(req, res) {
+				res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, 0xC0, 0xA8, 0x01, 0x64]))
+			}`,
+		}),
+	))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
+	defer role.Stop()
+
+	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
+	assert.NoError(t, err)
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	ones, bits := res.SubnetMask().Size()
+	assert.Equal(t, 24, ones)
+	assert.Equal(t, 32, bits)
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
+	vnd := res.GetOneOption(dhcpv4.OptionVendorSpecificInformation)
+	assert.Equal(t, []byte{1, 4, 0, 0, 1, 64}, vnd)
+}
+
 func TestDHCPRequestDNS(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"net"
 	"net/netip"
 	"strings"
@@ -12,6 +11,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -184,18 +184,16 @@ func (s *Scope) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	return nil
 }
 
-// calculateUsage Calculate scope usage for prometheus metrics
-func (s *Scope) calculateUsage() {
-	usable := s.ipam.UsableSize()
-	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
-	used := big.NewInt(0)
-	s.role.leasesM.RLock()
-	defer s.role.leasesM.RUnlock()
-	for _, lease := range s.role.leases {
-		if lease.ScopeKey != s.Name {
-			continue
-		}
-		used = used.Add(used, big.NewInt(1))
-	}
-	dhcpScopeUsage.WithLabelValues(s.Name).Set(float64(used.Uint64()))
+func (s *Scope) executeHook(method string, args ...interface{}) {
+	s.role.i.ExecuteHook(roles.HookOptions{
+		Source: s.Hook,
+		Method: method,
+		Env: map[string]interface{}{
+			"dhcp": map[string]interface{}{
+				"Opt": func(code uint8, data []byte) dhcpv4.Option {
+					return dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(code), data)
+				},
+			},
+		},
+	}, args...)
 }

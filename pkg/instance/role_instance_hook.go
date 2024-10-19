@@ -39,9 +39,9 @@ func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface
 		log.Warn("failed to run scope hook", zap.Error(err))
 		return
 	}
-	hookMeth, ok := goja.AssertFunction(vm.Get(options.Method))
+	m := vm.Get(options.Method)
+	hookMeth, ok := goja.AssertFunction(m)
 	if !ok {
-		log.Warn("hook not a function", zap.String("meth", options.Method))
 		return
 	}
 	convertedArgs := []goja.Value{}

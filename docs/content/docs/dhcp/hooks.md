@@ -20,3 +20,20 @@ Called after the DHCP response is generated.
 ## Environment
 
 {{< gravity-hook-env >}}
+
+### `dhcp` Object
+
+#### `Opt(code, data)`
+
+Create a DHCP option with the code and data given.
+
+## Examples
+
+### Set Option 43 for UniFi Adoption
+
+```javascript
+const UniFiPrefix = [0x01, 0x04];
+function onDHCPRequestAfter(req, res) {
+    res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, 0xC0, 0xA8, 0x01, 0x64]))
+}
+```

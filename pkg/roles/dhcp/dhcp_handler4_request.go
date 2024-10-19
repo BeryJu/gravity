@@ -1,7 +1,6 @@
 package dhcp
 
 import (
-	"beryju.io/gravity/pkg/roles"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.uber.org/zap"
 )
@@ -28,15 +27,9 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
 
-	r.i.ExecuteHook(roles.HookOptions{
-		Source: match.scope.Hook,
-		Method: "onDHCPRequestBefore",
-	}, req)
+	match.scope.executeHook("onDHCPRequestBefore", req)
 	rep := match.createReply(req)
 	rep.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
-	r.i.ExecuteHook(roles.HookOptions{
-		Source: match.scope.Hook,
-		Method: "onDHCPRequestAfter",
-	}, req, rep)
+	match.scope.executeHook("onDHCPRequestAfter", req, rep)
 	return rep
 }
