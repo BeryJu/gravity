@@ -101,7 +101,7 @@ gen-client-go:
 	go get
 	go fmt .
 	go mod tidy
-	gofumpt -l -w .
+	gofumpt -l -w . || true
 	git add .
 
 gen-client-ts:
