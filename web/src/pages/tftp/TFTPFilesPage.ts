@@ -10,6 +10,7 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./TFTPFileForm";
 
 @customElement("gravity-tftp-files")
 export class TFTPFilesPage extends TablePage<TftpAPIFile> {
@@ -120,5 +121,16 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
+    }
+
+    renderObjectCreate(): TemplateResult {
+        return html`
+            <ak-forms-modal>
+                <span slot="submit"> ${"Upload"} </span>
+                <span slot="header"> ${"Upload File"} </span>
+                <gravity-tftp-file-form slot="form"> </gravity-tftp-file-form>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Upload"}</button>
+            </ak-forms-modal>
+        `;
     }
 }

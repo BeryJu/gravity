@@ -82,7 +82,8 @@ func (r *Role) APIFilesDownload() usecase.Interactor {
 }
 
 type APIFilesPutInput struct {
-	APIFile
+	Name string `json:"name" required:"true"`
+	Host string `json:"host" required:"true"`
 	Data []byte `json:"data" required:"true"`
 }
 

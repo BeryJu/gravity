@@ -159,6 +159,35 @@ export class Form<T> extends AKElement {
         return serializeForm(elements) as T;
     }
 
+    /**
+     * Return the form elements that may contain filenames. Not sure why this is quite so
+     * convoluted. There is exactly one case where this is used:
+     * `./flow/stages/prompt/PromptStage: 147: case PromptTypeEnum.File.`
+     * Consider moving this functionality to there.
+     */
+    getFormFiles(): { [key: string]: File } {
+        const files: { [key: string]: File } = {};
+        const elements =
+            this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
+                "ak-form-element-horizontal",
+            ) || [];
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            element.requestUpdate();
+            const inputElement = element.querySelector<HTMLInputElement>("[name]");
+            if (!inputElement) {
+                continue;
+            }
+            if (inputElement.tagName.toLowerCase() === "input" && inputElement.type === "file") {
+                if ((inputElement.files || []).length < 1) {
+                    continue;
+                }
+                files[element.name] = (inputElement.files || [])[0];
+            }
+        }
+        return files;
+    }
+
     submit(ev: Event): Promise<unknown> | undefined {
         ev.preventDefault();
         const data = this.serializeForm();

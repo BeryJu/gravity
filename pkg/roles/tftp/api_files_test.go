@@ -49,10 +49,8 @@ func TestAPIFilesPut(t *testing.T) {
 
 	data := securecookie.GenerateRandomKey(32)
 	assert.NoError(t, role.APIFilesPut().Interact(ctx, tftp.APIFilesPutInput{
-		APIFile: tftp.APIFile{
-			Name: "foo",
-			Host: "bar",
-		},
+		Name: "foo",
+		Host: "bar",
 		Data: data,
 	}, &struct{}{}))
 

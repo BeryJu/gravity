@@ -2447,17 +2447,15 @@ components:
     TftpAPIFilesPutInput:
       properties:
         data:
+          format: base64
           type: string
         host:
           type: string
         name:
           type: string
-        sizeBytes:
-          type: integer
       required:
       - name
       - host
-      - sizeBytes
       - data
       type: object
     TftpAPIRoleConfigInput:
