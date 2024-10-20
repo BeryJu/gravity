@@ -22,7 +22,7 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 
 	err := match.Put(req.Context, match.scope.TTL)
 	if err != nil {
-		r.log.Warn("failed to put dhcp lease", zap.Error(err))
+		req.log.Warn("failed to put dhcp lease", zap.Error(err))
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
