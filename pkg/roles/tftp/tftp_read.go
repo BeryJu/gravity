@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/gravity/internal/resources"
 	"beryju.io/gravity/pkg/roles/tftp/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/pin/tftp/v3"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -21,6 +22,18 @@ func (r *Role) readLogger(filename string, rf io.ReaderFrom) error {
 
 func (r *Role) readHandler(filename string, rf io.ReaderFrom) error {
 	ot := rf.(tftp.OutgoingTransfer)
+	ctx, canc := context.WithCancel(context.Background())
+	defer canc()
+	span := sentry.StartTransaction(ctx, "gravity.tftp.request")
+	defer span.Finish()
+	hub := sentry.GetHubFromContext(span.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		IPAddress: ot.RemoteAddr().IP.String(),
+	})
+
 	var f io.Reader
 	var err error
 	if strings.HasPrefix(filename, "bundled/") {
@@ -29,7 +42,7 @@ func (r *Role) readHandler(filename string, rf io.ReaderFrom) error {
 		f, err = r.localfs.Open(strings.Replace(filename, "local/", "", 1))
 	} else {
 		var re *clientv3.GetResponse
-		re, err = r.i.KV().Get(context.Background(),
+		re, err = r.i.KV().Get(span.Context(),
 			r.i.KV().Key(
 				types.KeyRole,
 				types.KeyFiles,

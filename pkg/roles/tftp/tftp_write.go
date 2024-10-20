@@ -7,6 +7,7 @@ import (
 	"io"
 
 	"beryju.io/gravity/pkg/roles/tftp/types"
+	"github.com/getsentry/sentry-go"
 	"github.com/pin/tftp/v3"
 	"go.uber.org/zap"
 )
@@ -21,6 +22,18 @@ const maxSize = 1.5 * 1024
 
 func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 	it := wt.(tftp.IncomingTransfer)
+	ctx, canc := context.WithCancel(context.Background())
+	defer canc()
+	span := sentry.StartTransaction(ctx, "gravity.tftp.request")
+	defer span.Finish()
+	hub := sentry.GetHubFromContext(span.Context())
+	if hub == nil {
+		hub = sentry.CurrentHub()
+	}
+	hub.Scope().SetUser(sentry.User{
+		IPAddress: it.RemoteAddr().IP.String(),
+	})
+
 	s, ok := it.Size()
 	if ok && s >= maxSize {
 		return errors.New("file too big")
@@ -34,7 +47,7 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 		return err
 	}
 	r.i.KV().Put(
-		context.Background(),
+		span.Context(),
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyFiles,
