@@ -39,7 +39,7 @@ func New(instance roles.Instance) *Role {
 		ctx:     instance.Context(),
 		localfs: os.DirFS(extconfig.Get().Dirs().TFTPLocalDir),
 	}
-	s := tftp.NewServer(r.readLogger, r.writeLogger)
+	s := tftp.NewServer(r.Reader, r.Writer)
 	r.s = s
 	s.SetTimeout(5 * time.Second)
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

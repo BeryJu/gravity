@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) readLogger(filename string, rf io.ReaderFrom) error {
+func (r *Role) Reader(filename string, rf io.ReaderFrom) error {
 	ot := rf.(tftp.OutgoingTransfer)
 	r.log.Info("TFTP Read request", zap.String("filename", filename), zap.String("client", ot.RemoteAddr().IP.String()))
 	return r.readHandler(filename, rf)

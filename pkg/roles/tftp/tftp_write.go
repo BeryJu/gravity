@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) writeLogger(filename string, wt io.WriterTo) error {
+func (r *Role) Writer(filename string, wt io.WriterTo) error {
 	it := wt.(tftp.IncomingTransfer)
 	r.log.Info("TFTP Write request", zap.String("filename", filename), zap.String("client", it.RemoteAddr().IP.String()))
 	return r.writeHandler(filename, wt)
