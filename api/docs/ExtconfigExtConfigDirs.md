@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **BackupDir** | Pointer to **string** |  | [optional] 
 **CertDir** | Pointer to **string** |  | [optional] 
 **EtcdDir** | Pointer to **string** |  | [optional] 
+**TftpLocalDir** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -101,6 +102,31 @@ SetEtcdDir sets EtcdDir field to given value.
 `func (o *ExtconfigExtConfigDirs) HasEtcdDir() bool`
 
 HasEtcdDir returns a boolean if a field has been set.
+
+### GetTftpLocalDir
+
+`func (o *ExtconfigExtConfigDirs) GetTftpLocalDir() string`
+
+GetTftpLocalDir returns the TftpLocalDir field if non-nil, zero value otherwise.
+
+### GetTftpLocalDirOk
+
+`func (o *ExtconfigExtConfigDirs) GetTftpLocalDirOk() (*string, bool)`
+
+GetTftpLocalDirOk returns a tuple with the TftpLocalDir field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTftpLocalDir
+
+`func (o *ExtconfigExtConfigDirs) SetTftpLocalDir(v string)`
+
+SetTftpLocalDir sets TftpLocalDir field to given value.
+
+### HasTftpLocalDir
+
+`func (o *ExtconfigExtConfigDirs) HasTftpLocalDir() bool`
+
+HasTftpLocalDir returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

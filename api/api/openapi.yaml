@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.11.0
+  version: 0.13.1
 servers:
 - url: /
 paths:
@@ -1358,6 +1358,44 @@ paths:
       summary: Monitoring role config
       tags:
       - roles/monitoring
+  /api/v1/roles/tftp:
+    get:
+      operationId: tftp.get_role_config
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TftpAPIRoleConfigOutput'
+          description: OK
+      summary: TFTP role config
+      tags:
+      - roles/tftp
+    post:
+      operationId: tftp.put_role_config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TftpAPIRoleConfigInput'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP role config
+      tags:
+      - roles/tftp
   /api/v1/roles/tsdb:
     get:
       operationId: tsdb.get_role_config
@@ -1396,6 +1434,113 @@ paths:
       summary: TSDB role config
       tags:
       - roles/tsdb
+  /api/v1/tftp/files:
+    delete:
+      operationId: tftp.delete_files
+      parameters:
+      - explode: true
+        in: query
+        name: host
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
+    get:
+      operationId: tftp.get_files
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TftpAPIFilesGetOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
+    post:
+      operationId: tftp.put_files
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TftpAPIFilesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
+  /api/v1/tftp/files/download:
+    get:
+      operationId: tftp.download_files
+      parameters:
+      - explode: true
+        in: query
+        name: host
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TftpAPIFilesDownloadOutput'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
   /api/v1/tools/ping:
     post:
       operationId: tools.ping
@@ -2818,12 +2963,15 @@ components:
         backupDir: backupDir
         etcdDir: etcdDir
         certDir: certDir
+        tftpLocalDir: tftpLocalDir
       properties:
         backupDir:
           type: string
         certDir:
           type: string
         etcdDir:
+          type: string
+        tftpLocalDir:
           type: string
       type: object
     InstanceAPIInstanceInfo:
@@ -2835,6 +2983,7 @@ components:
           backupDir: backupDir
           etcdDir: etcdDir
           certDir: certDir
+          tftpLocalDir: tftpLocalDir
         version: version
       properties:
         buildHash:
@@ -2944,6 +3093,101 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TftpAPIFile:
+      example:
+        host: host
+        name: name
+        sizeBytes: 0
+      properties:
+        host:
+          type: string
+        name:
+          type: string
+        sizeBytes:
+          type: integer
+      required:
+      - host
+      - name
+      - sizeBytes
+      type: object
+    TftpAPIFilesDownloadOutput:
+      example:
+        data: data
+      properties:
+        data:
+          format: base64
+          type: string
+      required:
+      - data
+      type: object
+    TftpAPIFilesGetOutput:
+      example:
+        files:
+        - host: host
+          name: name
+          sizeBytes: 0
+        - host: host
+          name: name
+          sizeBytes: 0
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/TftpAPIFile'
+          nullable: true
+          type: array
+      required:
+      - files
+      type: object
+    TftpAPIFilesPutInput:
+      example:
+        data: data
+        host: host
+        name: name
+      properties:
+        data:
+          format: base64
+          type: string
+        host:
+          type: string
+        name:
+          type: string
+      required:
+      - data
+      - host
+      - name
+      type: object
+    TftpAPIRoleConfigInput:
+      example:
+        config:
+          port: 0
+          enableLocal: true
+      properties:
+        config:
+          $ref: '#/components/schemas/TftpRoleConfig'
+      required:
+      - config
+      type: object
+    TftpAPIRoleConfigOutput:
+      example:
+        config:
+          port: 0
+          enableLocal: true
+      properties:
+        config:
+          $ref: '#/components/schemas/TftpRoleConfig'
+      required:
+      - config
+      type: object
+    TftpRoleConfig:
+      example:
+        port: 0
+        enableLocal: true
+      properties:
+        enableLocal:
+          type: boolean
+        port:
+          type: integer
       type: object
     TsdbAPIRoleConfigInput:
       example:

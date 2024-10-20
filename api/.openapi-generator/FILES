@@ -10,6 +10,7 @@ api_roles_discovery.go
 api_roles_dns.go
 api_roles_etcd.go
 api_roles_monitoring.go
+api_roles_tftp.go
 api_roles_tsdb.go
 client.go
 configuration.go
@@ -97,7 +98,15 @@ docs/RolesDiscoveryApi.md
 docs/RolesDnsApi.md
 docs/RolesEtcdApi.md
 docs/RolesMonitoringApi.md
+docs/RolesTftpApi.md
 docs/RolesTsdbApi.md
+docs/TftpAPIFile.md
+docs/TftpAPIFilesDownloadOutput.md
+docs/TftpAPIFilesGetOutput.md
+docs/TftpAPIFilesPutInput.md
+docs/TftpAPIRoleConfigInput.md
+docs/TftpAPIRoleConfigOutput.md
+docs/TftpRoleConfig.md
 docs/TsdbAPIRoleConfigInput.md
 docs/TsdbAPIRoleConfigOutput.md
 docs/TsdbRoleConfig.md
@@ -185,6 +194,13 @@ model_monitoring_api_role_config_input.go
 model_monitoring_api_role_config_output.go
 model_monitoring_role_config.go
 model_rest_err_response.go
+model_tftp_api_file.go
+model_tftp_api_files_download_output.go
+model_tftp_api_files_get_output.go
+model_tftp_api_files_put_input.go
+model_tftp_api_role_config_input.go
+model_tftp_api_role_config_output.go
+model_tftp_role_config.go
 model_tsdb_api_role_config_input.go
 model_tsdb_api_role_config_output.go
 model_tsdb_role_config.go
@@ -202,5 +218,6 @@ test/api_roles_discovery_test.go
 test/api_roles_dns_test.go
 test/api_roles_etcd_test.go
 test/api_roles_monitoring_test.go
+test/api_roles_tftp_test.go
 test/api_roles_tsdb_test.go
 utils.go
