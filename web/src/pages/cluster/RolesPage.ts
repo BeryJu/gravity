@@ -30,7 +30,7 @@ export interface Role {
     settingsAvailable: boolean;
 }
 
-export const roles: Role[] = [
+export const Roles: Role[] = [
     { id: "api", name: "API", settingsAvailable: true },
     { id: "backup", name: "Backup", settingsAvailable: true },
     { id: "dhcp", name: "DHCP", settingsAvailable: true },
@@ -73,7 +73,7 @@ export class RolesPage extends TablePage<Role> {
     async apiEndpoint(): Promise<PaginatedResponse<Role>> {
         const inst = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
         this.instances = inst.instances || [];
-        return PaginationWrapper(roles);
+        return PaginationWrapper(Roles);
     }
 
     columns(): TableColumn[] {

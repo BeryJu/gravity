@@ -158,7 +158,7 @@ test-local:
 	$(eval TEST_FLAGS := -v -shuffle=on -failfast)
 
 test: internal/resources/macoui internal/resources/blocky internal/resources/tftp
-	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
+	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
 	export ETCD_ENDPOINT="localhost:2385"
 	export DEBUG="true"
 	export LISTEN_ONLY="true"

@@ -1,8 +1,8 @@
 import { ClusterInstancesApi, RolesApiApi } from "gravity-api";
+import { Roles } from "src/pages/cluster/RolesPage";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
-import { state } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../../api/Config";
 import { KeyUnknown } from "../../../elements/forms/Form";
@@ -42,19 +42,6 @@ export class ClusterJoinInitial extends WizardFormPage {
         return true;
     };
 
-    @state()
-    roles: string[] = [
-        "DNS",
-        "DHCP",
-        "API",
-        "etcd",
-        "Discovery",
-        "Backup",
-        "Monitoring",
-        "Debug",
-        "TSDB",
-    ];
-
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
                 <input type="text" value="" class="pf-c-form-control" required />
@@ -63,15 +50,15 @@ export class ClusterJoinInitial extends WizardFormPage {
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Roles"} ?required=${true}>
-                ${this.roles.map((role) => {
+                ${Roles.map((role) => {
                     return html`<div class="pf-c-check">
                         <input
                             type="checkbox"
                             class="pf-c-check__input"
                             ?checked=${true}
-                            name=${`role_${role.toLowerCase()}`}
+                            name=${`role_${role.id}`}
                         />
-                        <label class="pf-c-check__label"> ${role} </label>
+                        <label class="pf-c-check__label"> ${role.name} </label>
                     </div>`;
                 })}
                 <p class="pf-c-form__helper-text">Select which roles the new node should provide</p>
