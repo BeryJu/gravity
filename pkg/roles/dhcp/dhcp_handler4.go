@@ -197,7 +197,7 @@ func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {
 	case dhcpv4.MessageTypeRelease:
 		handler = h.role.HandleDHCPRelease4
 	default:
-		r.log.Info("Unsupported message type", zap.String("msg", mt.String()))
+		r.log.Info("Unsupported message type", zap.String("dhcpMsg", mt.String()))
 		return nil
 	}
 
