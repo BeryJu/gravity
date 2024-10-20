@@ -1345,6 +1345,25 @@ paths:
       summary: TSDB role config
       tags:
       - roles/tsdb
+  /api/v1/tftp/files:
+    get:
+      operationId: tftp.get_files
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TftpAPIFilesOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
   /api/v1/tools/ping:
     post:
       operationId: tools.ping
@@ -2317,6 +2336,29 @@ components:
         status:
           description: Status text.
           type: string
+      type: object
+    TftpAPIFile:
+      properties:
+        host:
+          type: string
+        name:
+          type: string
+        sizeBytes:
+          type: integer
+      required:
+      - name
+      - host
+      - sizeBytes
+      type: object
+    TftpAPIFilesOutput:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/TftpAPIFile'
+          nullable: true
+          type: array
+      required:
+      - files
       type: object
     TftpAPIRoleConfigInput:
       properties:

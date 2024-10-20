@@ -11,8 +11,9 @@ import (
 )
 
 type APIFile struct {
-	Name string `json:"name" required:"true"`
-	Host string `json:"host" required:"true"`
+	Name      string `json:"name" required:"true"`
+	Host      string `json:"host" required:"true"`
+	SizeBytes int    `json:"sizeBytes" required:"true"`
 }
 type APIFilesOutput struct {
 	Files []APIFile `json:"files" required:"true"`
@@ -24,15 +25,16 @@ func (r *Role) APIFilesGet() usecase.Interactor {
 			types.KeyRole,
 			types.KeyFiles,
 		).Prefix(true).String()
-		rawFiles, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix(), clientv3.WithKeysOnly())
+		rawFiles, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, rf := range rawFiles.Kvs {
 			parts := strings.SplitN(strings.TrimPrefix(string(rf.Key), prefix), "/", 2)
 			output.Files = append(output.Files, APIFile{
-				Host: parts[0],
-				Name: parts[1],
+				Host:      parts[0],
+				Name:      parts[1],
+				SizeBytes: len(rf.Value),
 			})
 		}
 		return nil

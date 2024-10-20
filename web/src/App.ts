@@ -51,6 +51,10 @@ export const ROUTES = [
         await import("./pages/discovery/DiscoverySubnetsPage");
         return html`<gravity-discovery-subnets></gravity-discovery-subnets>`;
     }),
+    new Route(new RegExp("^/tftp/files$"), async () => {
+        await import("./pages/tftp/TFTPFilesPage");
+        return html`<gravity-tftp-files></gravity-tftp-files>`;
+    }),
     new Route(new RegExp("^/cluster/roles$"), async () => {
         await import("./pages/cluster/RolesPage");
         return html`<gravity-cluster-roles></gravity-cluster-roles>`;
@@ -177,6 +181,12 @@ export class AdminInterface extends AKElement {
                 <span slot="label">DHCP</span>
                 <ak-sidebar-item path="/dhcp/scopes" .activeWhen=${["^/dhcp/scopes/(?<scope>.*)$"]}>
                     <span slot="label">Scopes</span>
+                </ak-sidebar-item>
+            </ak-sidebar-item>
+            <ak-sidebar-item>
+                <span slot="label">${"TFTP"}</span>
+                <ak-sidebar-item path="/tftp/files">
+                    <span slot="label">Files</span>
                 </ak-sidebar-item>
             </ak-sidebar-item>
             <ak-sidebar-item>
