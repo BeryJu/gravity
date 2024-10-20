@@ -14,7 +14,7 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 			return nil
 		}
 		req.log.Debug("found scope for new lease", zap.String("scope", scope.Name))
-		match = scope.createLeaseFor(req)
+		match = scope.leaseFor(req)
 		if match == nil {
 			return nil
 		}
