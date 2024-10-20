@@ -152,7 +152,7 @@ func (s *Scope) match(peer net.IP) int {
 	return -1
 }
 
-func (s *Scope) createLeaseFor(req *Request4) *Lease {
+func (s *Scope) leaseFor(req *Request4) *Lease {
 	ident := s.role.DeviceIdentifier(req.DHCPv4)
 	lease := s.role.NewLease(ident)
 	lease.Hostname = req.HostName()

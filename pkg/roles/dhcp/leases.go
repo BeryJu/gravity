@@ -123,6 +123,19 @@ func (l *Lease) IsReservation() bool {
 	return l.Expiry == -1
 }
 
+func (l *Lease) Delete(ctx context.Context) error {
+	leaseKey := l.inst.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		l.Identifier,
+	)
+	_, err := l.inst.KV().Delete(
+		ctx,
+		leaseKey.String(),
+	)
+	return err
+}
+
 func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
 	if expiry > 0 && !l.IsReservation() {
 		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()

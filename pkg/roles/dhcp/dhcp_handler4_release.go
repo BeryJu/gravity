@@ -5,12 +5,12 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
+func (r *Role) HandleDHCPRelease4(req *Request4) *dhcpv4.DHCPv4 {
 	match := r.FindLease(req)
-
 	if match == nil {
 		scope := r.findScopeForRequest(req)
 		if scope == nil {
+			req.log.Info("no scope found")
 			return nil
 		}
 		req.log.Debug("found scope for new lease", zap.String("scope", scope.Name))
@@ -18,18 +18,14 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
+		return nil
 	}
-
-	err := match.Put(req.Context, match.scope.TTL)
-	if err != nil {
-		r.log.Warn("failed to put dhcp lease", zap.Error(err))
+	if !match.IsReservation() {
+		err := match.Delete(req.Context)
+		if err != nil {
+			r.log.Warn("failed to put lease", zap.Error(err))
+		}
 	}
-
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
-
-	match.scope.executeHook("onDHCPRequestBefore", req)
-	rep := match.createReply(req)
-	rep.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeAck))
-	match.scope.executeHook("onDHCPRequestAfter", req, rep)
-	return rep
+	return nil
 }
