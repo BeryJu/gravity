@@ -24,12 +24,12 @@ func (r *Role) APIFilesGet() usecase.Interactor {
 			types.KeyRole,
 			types.KeyFiles,
 		).Prefix(true).String()
-		rawFiles, err := r.i.KV().Get(ctx, prefix, clientv3.WithKeysOnly())
+		rawFiles, err := r.i.KV().Get(ctx, prefix, clientv3.WithPrefix(), clientv3.WithKeysOnly())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, rf := range rawFiles.Kvs {
-			parts := strings.SplitN(strings.TrimSuffix(string(rf.Key), prefix), "/", 1)
+			parts := strings.SplitN(strings.TrimPrefix(string(rf.Key), prefix), "/", 2)
 			output.Files = append(output.Files, APIFile{
 				Host: parts[0],
 				Name: parts[1],
