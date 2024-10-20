@@ -36,7 +36,7 @@ func TestTFTP_Write(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, []byte{}))
 	defer role.Stop()
 
-	buff := bytes.NewBufferString("\"foobar\"")
+	buff := bytes.NewBufferString("foobar")
 	err := role.Writer("filename", IncomingTransfer{buff, "1.2.3.4"})
 	assert.NoError(t, err)
 
@@ -49,6 +49,6 @@ func TestTFTP_Write(t *testing.T) {
 			"1.2.3.4",
 			"filename",
 		),
-		"foobar",
+		[]byte("foobar"),
 	)
 }

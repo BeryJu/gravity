@@ -2,6 +2,7 @@ package tftp
 
 import (
 	"context"
+	"encoding/base64"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/tftp/types"
@@ -82,7 +83,7 @@ func (r *Role) APIFilesDownload() usecase.Interactor {
 
 type APIFilesPutInput struct {
 	APIFile
-	Data string `json:"data" required:"true"`
+	Data []byte `json:"data" required:"true"`
 }
 
 func (r *Role) APIFilesPut() usecase.Interactor {
@@ -95,7 +96,7 @@ func (r *Role) APIFilesPut() usecase.Interactor {
 				input.Host,
 				input.Name,
 			).String(),
-			input.Data,
+			base64.StdEncoding.EncodeToString(input.Data),
 		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)

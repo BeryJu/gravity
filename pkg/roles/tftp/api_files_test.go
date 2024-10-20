@@ -39,3 +39,96 @@ func TestAPIFilesGet(t *testing.T) {
 	assert.Equal(t, output.Files[0].Name, "file")
 	assert.Equal(t, output.Files[0].SizeBytes, len(data))
 }
+
+func TestAPIFilesPut(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tftp", ctx)
+	role := tftp.New(inst)
+
+	data := securecookie.GenerateRandomKey(32)
+	assert.NoError(t, role.APIFilesPut().Interact(ctx, tftp.APIFilesPutInput{
+		APIFile: tftp.APIFile{
+			Name: "foo",
+			Host: "bar",
+		},
+		Data: data,
+	}, &struct{}{}))
+
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyFiles,
+			"bar",
+			"foo",
+		),
+		base64.StdEncoding.EncodeToString(data),
+	)
+}
+
+func TestAPIFilesDownload(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tftp", ctx)
+	role := tftp.New(inst)
+
+	data := base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyFiles,
+			"1.2.3.4",
+			"file",
+		).String(),
+		data,
+	))
+
+	var output tftp.APIFilesDownloadOutput
+	assert.NoError(t, role.APIFilesDownload().Interact(ctx, tftp.APIFilesDownloadInput{
+		Host: "1.2.3.4",
+		Name: "file",
+	}, &output))
+	assert.NotNil(t, output)
+	assert.Len(t, output.Data, len(data))
+}
+
+func TestAPIFilesDelete(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tftp", ctx)
+	role := tftp.New(inst)
+
+	data := base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyFiles,
+			"1.2.3.4",
+			"file",
+		).String(),
+		data,
+	))
+
+	assert.NoError(t, role.APIFilesDelete().Interact(ctx, tftp.APIFilesDeleteInput{
+		Host: "1.2.3.4",
+		Name: "file",
+	}, &struct{}{}))
+
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyFiles,
+			"1.2.3.4",
+			"file",
+		),
+	)
+}
