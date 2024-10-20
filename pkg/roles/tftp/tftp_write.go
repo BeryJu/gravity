@@ -43,10 +43,10 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 	if err != nil {
 		return err
 	}
-	r.i.KV().Put(
+	_, err = r.i.KV().Put(
 		span.Context(),
 		r.getPath(filename, it.RemoteAddr()).String(),
 		buf.String(),
 	)
-	return nil
+	return err
 }
