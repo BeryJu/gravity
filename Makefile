@@ -32,10 +32,13 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	go run ${GO_FLAGS} . server
 
 # Web
-web-build:
+web-install:
 	cd ${PWD}/web
 	npm ci
 	npm version ${VERSION} || true
+
+web-build:
+	cd ${PWD}/web
 	npm run build
 
 web-watch:

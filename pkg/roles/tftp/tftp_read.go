@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"beryju.io/gravity/internal/resources"
-	"beryju.io/gravity/pkg/roles/tftp/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/pin/tftp/v3"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -42,13 +41,10 @@ func (r *Role) readHandler(filename string, rf io.ReaderFrom) error {
 		f, err = r.localfs.Open(strings.Replace(filename, "local/", "", 1))
 	} else {
 		var re *clientv3.GetResponse
-		re, err = r.i.KV().Get(span.Context(),
-			r.i.KV().Key(
-				types.KeyRole,
-				types.KeyFiles,
-				ot.RemoteAddr().IP.String(),
-				filename,
-			).String())
+		re, err = r.i.KV().Get(
+			span.Context(),
+			r.getPath(filename, ot.RemoteAddr()).String(),
+		)
 		if err != nil || len(re.Kvs) < 1 {
 			return err
 		}

@@ -1,4 +1,4 @@
-import { DhcpAPIScope, RolesDhcpApi, RolesTftpApi, TftpAPIFile } from "gravity-api";
+import { RolesTftpApi, TftpAPIFile } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -59,17 +59,18 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
         return html`<ak-forms-delete-bulk
-            objectLabel=${"DHCP Scope(s)"}
+            objectLabel=${"TFTP File(s)"}
             .objects=${this.selectedElements}
-            .metadata=${(item: DhcpAPIScope) => {
+            .metadata=${(item: TftpAPIFile) => {
                 return [
-                    { key: "Scope", value: item.scope },
-                    { key: "CIDR", value: item.subnetCidr },
+                    { key: "Name", value: item.name },
+                    { key: "Host", value: item.host },
                 ];
             }}
-            .delete=${(item: DhcpAPIScope) => {
-                return new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteScopes({
-                    scope: item.scope,
+            .delete=${(item: TftpAPIFile) => {
+                return new RolesTftpApi(DEFAULT_CONFIG).tftpDeleteFiles({
+                    name: item.name,
+                    host: item.host,
                 });
             }}
         >

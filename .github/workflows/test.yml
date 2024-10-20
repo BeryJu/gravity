@@ -21,14 +21,7 @@ jobs:
           node-version-file: web/package.json
           cache: "npm"
           cache-dependency-path: web/package-lock.json
-      - name: Build web
-        run: |
-          cd web
-          npm i
-          cd ..
-          make gen-client-ts
-          cd web
-          npm run build
+      - run: make web-install gen-client-ts web-build
       - run: make test-env-start
       - run: make install-deps gen-clean gen-client-go
       - run: make test
@@ -61,14 +54,7 @@ jobs:
           node-version: "18"
           cache: "npm"
           cache-dependency-path: web/package-lock.json
-      - name: Build web
-        run: |
-          cd web
-          npm i
-          cd ..
-          make gen-client-ts
-          cd web
-          npm run build
+      - run: make web-install gen-client-ts web-build
       - run: make install-deps
       - uses: golangci/golangci-lint-action@v6
         with:

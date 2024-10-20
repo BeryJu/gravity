@@ -1346,6 +1346,29 @@ paths:
       tags:
       - roles/tsdb
   /api/v1/tftp/files:
+    delete:
+      operationId: tftp.delete_files
+      parameters:
+      - in: query
+        name: host
+        schema:
+          type: string
+      - in: query
+        name: name
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
     get:
       operationId: tftp.get_files
       responses:
@@ -1353,8 +1376,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TftpAPIFilesOutput'
+                $ref: '#/components/schemas/TftpAPIFilesGetOutput'
           description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
+    post:
+      operationId: tftp.put_files
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TftpAPIFilesPutInput'
+      responses:
+        "204":
+          description: No Content
         "500":
           content:
             application/json:
@@ -2350,7 +2392,7 @@ components:
       - host
       - sizeBytes
       type: object
-    TftpAPIFilesOutput:
+    TftpAPIFilesGetOutput:
       properties:
         files:
           items:
@@ -2359,6 +2401,22 @@ components:
           type: array
       required:
       - files
+      type: object
+    TftpAPIFilesPutInput:
+      properties:
+        data:
+          type: string
+        host:
+          type: string
+        name:
+          type: string
+        sizeBytes:
+          type: integer
+      required:
+      - name
+      - host
+      - sizeBytes
+      - data
       type: object
     TftpAPIRoleConfigInput:
       properties:

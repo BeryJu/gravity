@@ -31,7 +31,7 @@ func TestAPIFilesGet(t *testing.T) {
 		data,
 	))
 
-	var output tftp.APIFilesOutput
+	var output tftp.APIFilesGetOutput
 	assert.NoError(t, role.APIFilesGet().Interact(ctx, struct{}{}, &output))
 	assert.NotNil(t, output)
 	assert.Len(t, output.Files, 1)

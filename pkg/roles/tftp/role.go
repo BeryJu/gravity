@@ -3,17 +3,24 @@ package tftp
 import (
 	"context"
 	"io/fs"
+	"net"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/tftp/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/pin/tftp/v3"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
 )
+
+const etcdMaxSize = 1.5 * 1024
+const sharedNamespace = "global"
 
 type Role struct {
 	localfs fs.FS
@@ -38,11 +45,8 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/tftp/files", r.APIFilesGet())
-		// svc.Post("/api/v1/dns/zones", r.APIZonesPut())
-		// svc.Delete("/api/v1/dns/zones", r.APIZonesDelete())
-		// svc.Get("/api/v1/dns/zones/records", r.APIRecordsGet())
-		// svc.Post("/api/v1/dns/zones/records", r.APIRecordsPut())
-		// svc.Delete("/api/v1/dns/zones/records", r.APIRecordsDelete())
+		svc.Post("/api/v1/tftp/files", r.APIFilesPut())
+		svc.Delete("/api/v1/tftp/files", r.APIFilesDelete())
 		svc.Get("/api/v1/roles/tftp", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/tftp", r.APIRoleConfigPut())
 	})
@@ -68,4 +72,17 @@ func (r *Role) Stop() {
 	if r.s != nil {
 		r.s.Shutdown()
 	}
+}
+
+func (r *Role) getPath(filename string, addr net.UDPAddr) *storage.Key {
+	bk := r.i.KV().Key(
+		types.KeyRole,
+		types.KeyFiles,
+	)
+	if strings.HasPrefix(filename, sharedNamespace) {
+		bk.Add(filename)
+	} else {
+		bk.Add(addr.IP.String(), filename)
+	}
+	return bk
 }
