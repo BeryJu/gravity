@@ -62,9 +62,12 @@ jobs:
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - name: Build web
-        working-directory: web/
         run: |
-          npm ci
+          cd web
+          npm i
+          cd ..
+          make gen-client-ts
+          cd web
           npm run build
       - run: make install-deps
       - uses: golangci/golangci-lint-action@v6
