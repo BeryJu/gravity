@@ -21,27 +21,27 @@ jobs:
           node-version-file: web/package.json
           cache: "npm"
           cache-dependency-path: web/package-lock.json
-      - name: Build web
-        working-directory: web/
-        run: |
-          npm ci
-          npm run build
+      - run: make web-install gen-client-ts web-build
       - run: make test-env-start
       - run: make install-deps gen-clean gen-client-go
       - run: make test
       - if: ${{ always() }}
         run: |
           go install github.com/jstemmer/go-junit-report/v2@latest
-          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out report.xml
+          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy	-out junit.xml
       - if: ${{ always() }}
         uses: test-summary/action@v2
         with:
-          paths: report.xml
+          paths: junit.xml
           show: "fail"
       - if: ${{ always() }}
         run: make test-env-stop
       - if: ${{ always() }}
         uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - if: ${{ always() }}
+        uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
   lint:
@@ -58,11 +58,7 @@ jobs:
           node-version: "18"
           cache: "npm"
           cache-dependency-path: web/package-lock.json
-      - name: Build web
-        working-directory: web/
-        run: |
-          npm ci
-          npm run build
+      - run: make web-install gen-client-ts web-build
       - run: make install-deps
       - uses: golangci/golangci-lint-action@v6
         with:

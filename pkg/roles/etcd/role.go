@@ -79,6 +79,7 @@ func New(instance roles.Instance) *Role {
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, "peer", relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
+	cfg.MaxRequestBytes = 10 * 1024 * 1024 // 10 MB
 	err := ee.prepareJoin(cfg)
 	if err != nil {
 		instance.Log().Warn("failed to join cluster", zap.Error(err))

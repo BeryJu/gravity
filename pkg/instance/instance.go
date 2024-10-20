@@ -23,6 +23,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/etcd"
 	"beryju.io/gravity/pkg/roles/monitoring"
+	"beryju.io/gravity/pkg/roles/tftp"
 	"beryju.io/gravity/pkg/roles/tsdb"
 	"beryju.io/gravity/pkg/storage"
 )
@@ -195,6 +196,8 @@ func (i *Instance) bootstrap(ctx context.Context) {
 			rc.Role = debug.New(rc.RoleInstance)
 		case "tsdb":
 			rc.Role = tsdb.New(rc.RoleInstance)
+		case "tftp":
+			rc.Role = tftp.New(rc.RoleInstance)
 		case "etcd":
 			// Special case
 			continue

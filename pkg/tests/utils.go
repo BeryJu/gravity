@@ -68,7 +68,13 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 	assert.NoError(t, err)
 	assert.Equal(t, len(expected), len(values.Kvs))
 	for idx, res := range expected {
-		assert.Equal(t, MustJSON(res), string(values.Kvs[idx].Value))
+		if rb, ok := res.([]byte); ok {
+			assert.Equal(t, rb, values.Kvs[idx].Value)
+		} else if rb, ok := res.(string); ok {
+			assert.Equal(t, rb, string(values.Kvs[idx].Value))
+		} else {
+			assert.Equal(t, MustJSON(res), string(values.Kvs[idx].Value))
+		}
 	}
 }
 

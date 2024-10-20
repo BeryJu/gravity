@@ -21,6 +21,7 @@ import "./RoleDHCPConfigForm";
 import "./RoleDNSConfigForm";
 import "./RoleDiscoveryConfigForm";
 import "./RoleMonitoringConfigForm";
+import "./RoleTFTPConfigForm";
 import "./RoleTSDBConfigForm";
 
 export interface Role {
@@ -29,7 +30,7 @@ export interface Role {
     settingsAvailable: boolean;
 }
 
-export const roles: Role[] = [
+export const Roles: Role[] = [
     { id: "api", name: "API", settingsAvailable: true },
     { id: "backup", name: "Backup", settingsAvailable: true },
     { id: "dhcp", name: "DHCP", settingsAvailable: true },
@@ -37,6 +38,7 @@ export const roles: Role[] = [
     { id: "dns", name: "DNS", settingsAvailable: true },
     { id: "etcd", name: "etcd", settingsAvailable: false },
     { id: "monitoring", name: "Monitoring", settingsAvailable: true },
+    { id: "tftp", name: "TFTP", settingsAvailable: true },
     { id: "tsdb", name: "TSDB", settingsAvailable: true },
 ];
 
@@ -71,7 +73,7 @@ export class RolesPage extends TablePage<Role> {
     async apiEndpoint(): Promise<PaginatedResponse<Role>> {
         const inst = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
         this.instances = inst.instances || [];
-        return PaginationWrapper(roles);
+        return PaginationWrapper(Roles);
     }
 
     columns(): TableColumn[] {
@@ -115,6 +117,11 @@ export class RolesPage extends TablePage<Role> {
                     slot="form"
                     .instancePk=${role.id}
                 ></gravity-cluster-role-tsdb-config>`;
+            case "tftp":
+                return html`<gravity-cluster-role-tftp-config
+                    slot="form"
+                    .instancePk=${role.id}
+                ></gravity-cluster-role-tftp-config>`;
             default:
                 return html`Not yet`;
         }

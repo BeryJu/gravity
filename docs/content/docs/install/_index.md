@@ -57,7 +57,7 @@ The following environment variables can be set.
 
 ### Common
 
-- `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb`.
+- `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp`.
 - `LOG_LEVEL`: Log level. Defaults to `info`.
 - `DATA_PATH`: Path to store etcd data. Defaults to `./data`.
 - `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to the detected hostname. When running in Docker, this is configured via the `hostname` attribute.

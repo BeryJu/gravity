@@ -15,6 +15,7 @@ type NullDNSWriter struct {
 func (nw *NullDNSWriter) LocalAddr() net.Addr {
 	return &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 53}
 }
+
 func (nw *NullDNSWriter) RemoteAddr() net.Addr {
 	return &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 1053}
 }
