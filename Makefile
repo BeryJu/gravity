@@ -159,7 +159,7 @@ test-local:
 
 test: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb"
-	export ETCD_ENDPOINT="localhost:2379"
+	export ETCD_ENDPOINT="localhost:2385"
 	export DEBUG="true"
 	export LISTEN_ONLY="true"
 	go run -v . cli etcdctl del --prefix /
