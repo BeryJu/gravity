@@ -19,7 +19,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const etcdMaxSize = 10 * 1024
+const etcdMaxSize = 10 * 1024 * 1024
 const sharedNamespace = "shared"
 
 type Role struct {
