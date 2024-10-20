@@ -25,7 +25,7 @@ func (r *Role) readHandler(filename string, rf io.ReaderFrom) error {
 	var err error
 	if strings.HasPrefix(filename, "bundled/") {
 		f, err = resources.TFTPRoot.Open(strings.Replace(filename, "bundled/", "tftp/", 1))
-	} else if strings.HasPrefix(filename, "local") {
+	} else if strings.HasPrefix(filename, "local") && r.cfg.EnableLocal {
 		f, err = r.localfs.Open(strings.Replace(filename, "local/", "", 1))
 	} else {
 		var re *clientv3.GetResponse
