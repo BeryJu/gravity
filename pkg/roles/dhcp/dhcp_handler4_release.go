@@ -23,7 +23,9 @@ func (r *Role) HandleDHCPRelease4(req *Request4) *dhcpv4.DHCPv4 {
 	if !match.IsReservation() {
 		err := match.Delete(req.Context)
 		if err != nil {
-			r.log.Warn("failed to put lease", zap.Error(err))
+			req.log.Warn("failed to put lease", zap.Error(err))
+		} else {
+			req.log.Info("deleted lease from release")
 		}
 	}
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()
