@@ -6,6 +6,7 @@ import { customElement, property } from "lit/decorators.js";
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFCheck from "@patternfly/patternfly/components/Check/check.css";
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
@@ -124,6 +125,7 @@ export class Form<T> extends AKElement {
             PFAlert,
             PFInputGroup,
             PFFormControl,
+            PFCheck,
             AKElement.GlobalStyle,
             css`
                 select[multiple] {
