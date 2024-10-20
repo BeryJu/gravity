@@ -151,7 +151,7 @@ func TestDHCPRequest_Hook_UniFi(t *testing.T) {
 	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 	vnd := res.GetOneOption(dhcpv4.OptionVendorSpecificInformation)
-	assert.Equal(t, []byte{1, 4, 0, 0, 1, 64}, vnd)
+	assert.Equal(t, []byte{1, 4, 0xc0, 0xa8, 0x1, 0x64}, vnd)
 }
 
 func TestDHCPRequestDNS(t *testing.T) {
