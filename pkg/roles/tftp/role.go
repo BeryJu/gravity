@@ -37,7 +37,7 @@ func New(instance roles.Instance) *Role {
 	s.SetTimeout(5 * time.Second)
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		// svc.Get("/api/v1/dns/zones", r.APIZonesGet())
+		svc.Get("/api/v1/tftp/files", r.APIFilesGet())
 		// svc.Post("/api/v1/dns/zones", r.APIZonesPut())
 		// svc.Delete("/api/v1/dns/zones", r.APIZonesDelete())
 		// svc.Get("/api/v1/dns/zones/records", r.APIRecordsGet())
