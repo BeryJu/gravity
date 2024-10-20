@@ -1,5 +1,5 @@
 import { ClusterInstancesApi, RolesApiApi } from "gravity-api";
-import { Roles } from "src/pages/cluster/RolesPage";
+import { Roles } from "../RolesPage";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
