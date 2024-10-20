@@ -19,8 +19,8 @@ import (
 	"go.uber.org/zap"
 )
 
-const etcdMaxSize = 1.5 * 1024
-const sharedNamespace = "global"
+const etcdMaxSize = 10 * 1024
+const sharedNamespace = "shared"
 
 type Role struct {
 	localfs fs.FS
