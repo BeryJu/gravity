@@ -1,5 +1,4 @@
 import { ClusterInstancesApi, RolesApiApi } from "gravity-api";
-import { Roles } from "../RolesPage";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
@@ -9,6 +8,7 @@ import { KeyUnknown } from "../../../elements/forms/Form";
 import "../../../elements/forms/FormGroup";
 import "../../../elements/forms/HorizontalFormElement";
 import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
+import { Roles } from "../RolesPage";
 
 @customElement("gravity-cluster-join-initial")
 export class ClusterJoinInitial extends WizardFormPage {

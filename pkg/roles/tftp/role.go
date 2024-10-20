@@ -45,6 +45,7 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/tftp/files", r.APIFilesGet())
+		svc.Get("/api/v1/tftp/files/download", r.APIFilesDownload())
 		svc.Post("/api/v1/tftp/files", r.APIFilesPut())
 		svc.Delete("/api/v1/tftp/files", r.APIFilesDelete())
 		svc.Get("/api/v1/roles/tftp", r.APIRoleConfigGet())

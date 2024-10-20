@@ -46,6 +46,40 @@ func (r *Role) APIFilesGet() usecase.Interactor {
 	return u
 }
 
+type APIFilesDownloadInput struct {
+	Host string `query:"host"`
+	Name string `query:"name"`
+}
+
+type APIFilesDownloadOutput struct {
+	Data []byte `json:"data" required:"true"`
+}
+
+func (r *Role) APIFilesDownload() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIFilesDownloadInput, output *APIFilesDownloadOutput) error {
+		prefix := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyFiles,
+			input.Host,
+			input.Name,
+		).String()
+		rawFiles, err := r.i.KV().Get(ctx, prefix)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if len(rawFiles.Kvs) < 1 {
+			return status.NotFound
+		}
+		output.Data = rawFiles.Kvs[0].Value
+		return nil
+	})
+	u.SetName("tftp.download_files")
+	u.SetTitle("TFTP Files")
+	u.SetTags("roles/tftp")
+	u.SetExpectedErrors(status.Internal, status.NotFound)
+	return u
+}
+
 type APIFilesPutInput struct {
 	APIFile
 	Data string `json:"data" required:"true"`

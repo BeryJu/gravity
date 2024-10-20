@@ -4,6 +4,7 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/buttons/ActionButton";
 import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
@@ -47,12 +48,53 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
         ];
     }
 
+    b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+    download(content: string, fileName: string) {
+        const blob = this.b64toBlob(content);
+        const urlForDownload = window.URL.createObjectURL(blob);
+        const linkElement = document.createElement("a");
+        linkElement.href = urlForDownload;
+        linkElement.download = fileName;
+        linkElement.click();
+        URL.revokeObjectURL(urlForDownload);
+    }
+
     row(item: TftpAPIFile): TemplateResult[] {
         return [
-            html`${item.name}`,
+            html`<pre>${item.name}</pre>`,
             html`<pre>${item.host}</pre>`,
             html`${item.sizeBytes} Bytes`,
-            html``,
+            html`<ak-action-button
+                class="pf-m-plain"
+                .apiRequest=${async () => {
+                    const data = await new RolesTftpApi(DEFAULT_CONFIG).tftpDownloadFiles({
+                        host: item.host,
+                        name: item.name,
+                    });
+                    this.download(data.data, item.name);
+                }}
+            >
+                <i class="fas fa-download" aria-hidden="true"></i>
+            </ak-action-button>`,
         ];
     }
 

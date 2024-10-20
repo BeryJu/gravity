@@ -1406,6 +1406,40 @@ paths:
       summary: TFTP Files
       tags:
       - roles/tftp
+  /api/v1/tftp/files/download:
+    get:
+      operationId: tftp.download_files
+      parameters:
+      - in: query
+        name: host
+        schema:
+          type: string
+      - in: query
+        name: name
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TftpAPIFilesDownloadOutput'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: TFTP Files
+      tags:
+      - roles/tftp
   /api/v1/tools/ping:
     post:
       operationId: tools.ping
@@ -2391,6 +2425,14 @@ components:
       - name
       - host
       - sizeBytes
+      type: object
+    TftpAPIFilesDownloadOutput:
+      properties:
+        data:
+          format: base64
+          type: string
+      required:
+      - data
       type: object
     TftpAPIFilesGetOutput:
       properties:
