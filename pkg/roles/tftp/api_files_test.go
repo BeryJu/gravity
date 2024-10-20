@@ -63,7 +63,7 @@ func TestAPIFilesPut(t *testing.T) {
 			"bar",
 			"foo",
 		),
-		base64.StdEncoding.EncodeToString(data),
+		data,
 	)
 }
 

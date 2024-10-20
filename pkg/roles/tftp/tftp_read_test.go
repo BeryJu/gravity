@@ -60,7 +60,7 @@ func TestTFTP_Read_Bundled(t *testing.T) {
 	defer role.Stop()
 
 	buff := bytes.NewBuffer([]byte{})
-	err := role.Reader("bundled/undionly.kpxe", OutgoingTransfer{buff})
+	err := role.Reader("bundled/ipxe.undionly.kpxe", OutgoingTransfer{buff})
 	assert.NoError(t, err)
 	assert.True(t, len(buff.Bytes()) > 0)
 }

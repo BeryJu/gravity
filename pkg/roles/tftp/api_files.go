@@ -2,7 +2,6 @@ package tftp
 
 import (
 	"context"
-	"encoding/base64"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/tftp/types"
@@ -97,7 +96,7 @@ func (r *Role) APIFilesPut() usecase.Interactor {
 				input.Host,
 				input.Name,
 			).String(),
-			base64.StdEncoding.EncodeToString(input.Data),
+			string(input.Data),
 		)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
