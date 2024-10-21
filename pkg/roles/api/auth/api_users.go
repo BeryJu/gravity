@@ -15,7 +15,8 @@ type APIUsersGetInput struct {
 	Username string `query:"username" description:"Optional username of a user to get"`
 }
 type APIUser struct {
-	Username string `json:"username" required:"true"`
+	Username    string       `json:"username" required:"true"`
+	Permissions []Permission `json:"permissions" required:"true"`
 }
 type APIUsersGetOutput struct {
 	Users []APIUser `json:"users" required:"true"`
@@ -47,7 +48,8 @@ func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
 				continue
 			}
 			output.Users = append(output.Users, APIUser{
-				Username: u.Username,
+				Username:    u.Username,
+				Permissions: u.Permissions(),
 			})
 		}
 		return nil
@@ -62,19 +64,38 @@ func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
 type APIUsersPutInput struct {
 	Username string `query:"username" required:"true"`
 
-	Password string `json:"password" required:"true"`
+	Password    string       `json:"password" required:"true"`
+	Permissions []Permission `json:"permissions" required:"true"`
 }
 
 func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIUsersPutInput, output *struct{}) error {
+		rawUsers, err := ap.inst.KV().Get(
+			ctx,
+			ap.inst.KV().Key(
+				types.KeyRole,
+				types.KeyUsers,
+				input.Username,
+			).String(),
+		)
+		if err == nil && len(rawUsers.Kvs) < 1 {
+			user, err := ap.userFromKV(rawUsers.Kvs[0])
+			if err != nil {
+				_ = bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
+				ap.log.Warn("failed to parse user", zap.Error(err), zap.String("user", input.Username))
+				return status.Wrap(err, status.Internal)
+			}
+		}
+
 		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
 		user := &User{
-			Username: input.Username,
-			Password: string(hash),
-			ap:       ap,
+			Username:       input.Username,
+			Password:       string(hash),
+			RawPermissions: &input.Permissions,
+			ap:             ap,
 		}
 		err = user.put(ctx)
 		if err != nil {
