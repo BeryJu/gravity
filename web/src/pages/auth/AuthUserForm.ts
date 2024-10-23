@@ -1,12 +1,21 @@
-import { AuthAPIUser, RolesApiApi } from "gravity-api";
+import { AuthAPIUser, AuthPermission, RolesApiApi } from "gravity-api";
+import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 import { KV, first } from "../../utils";
+
+export const DEFAULT_ADMIN_PERMISSIONS: AuthPermission[] = [
+    {
+        path: "/*",
+        methods: ["GET", "POST", "PUT", "HEAD", "DELETE"],
+    },
+];
 
 @customElement("gravity-auth-user-form")
 export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
@@ -32,6 +41,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
             username: this.instance?.username || data.username,
             authAPIUsersPutInput: {
                 password: (data as unknown as KV).password,
+                permissions: data.permissions,
             },
         });
     };
@@ -48,6 +58,15 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal label="Password" ?required=${true} name="password">
                 <input type="password" class="pf-c-form-control" required />
+            </ak-form-element-horizontal>
+            <ak-form-element-horizontal label=${"Permissions"} name="permissions">
+                <ak-codemirror
+                    mode="yaml"
+                    value="${YAML.stringify(
+                        this.instance?.permissions || DEFAULT_ADMIN_PERMISSIONS,
+                    )}"
+                >
+                </ak-codemirror>
             </ak-form-element-horizontal>`;
     }
 }
