@@ -22,7 +22,12 @@ func main() {
 	}
 	packetSource := gopacket.NewPacketSource(p, p.LinkType())
 	for packet := range packetSource.Packets() {
-		dhcpLayer := packet.Layers()[3]
+		fmt.Printf("Checking packet %s\n", packet.String())
+		layers := packet.Layers()
+		if len(layers) < 3 {
+			continue
+		}
+		dhcpLayer := layers[3]
 		stringRep := fmt.Sprintf("%+v", dhcpLayer.LayerContents())
 		fmt.Println(strings.ReplaceAll(stringRep, " ", ", "))
 	}
