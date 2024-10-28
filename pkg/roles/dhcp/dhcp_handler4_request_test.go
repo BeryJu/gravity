@@ -2,6 +2,8 @@ package dhcp_test
 
 import (
 	"net"
+	"net/netip"
+	"sync"
 	"testing"
 	"time"
 
@@ -9,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/tests"
+	"github.com/gorilla/securecookie"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 )
@@ -285,4 +288,107 @@ func TestDHCPRequestDNS_ChangedScope(t *testing.T) {
 	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
 	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 	assert.Equal(t, "test2.gravity.beryju.io", res.DomainName())
+}
+
+func TestDHCP_Parallel(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test1",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test2",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.1.0/24",
+			Default:    true,
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.1.100",
+				"range_end":   "10.100.1.250",
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test3",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.2.0/24",
+			Default:    true,
+			TTL:        86400,
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.2.100",
+				"range_end":   "10.100.2.250",
+			},
+		}),
+	))
+
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 1067,
+	}))))
+	defer role.Stop()
+
+	wg := sync.WaitGroup{}
+	wg.Add(3)
+	tester := func(cidr string) {
+		defer wg.Done()
+		c, err := netip.ParsePrefix(cidr)
+		if err != nil {
+			panic(err)
+		}
+		for i := 1; i < 100; i++ {
+			rr := &dhcpv4.DHCPv4{
+				GatewayIPAddr: net.ParseIP(c.Addr().Next().String()),
+				ClientHWAddr:  generateHW(),
+				OpCode:        dhcpv4.OpcodeBootRequest,
+			}
+			rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))
+			req4 := role.NewRequest4(rr)
+			res := role.Handler4(req4)
+			assert.NotNil(t, res)
+			a, err := netip.ParseAddr(res.YourIPAddr.String())
+			if err != nil {
+				panic(err)
+			}
+			assert.True(t, c.Contains(a))
+		}
+	}
+	go tester("10.100.0.0/24")
+	go tester("10.100.1.0/24")
+	go tester("10.100.2.0/24")
+
+	wg.Wait()
+}
+
+func generateHW() net.HardwareAddr {
+	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
 }
