@@ -23,6 +23,7 @@ export class ZoneInitialWizardPage extends WizardFormPage {
             handlerConfigs: [],
             defaultTTL: 86400,
             name: name,
+            hook: "",
         };
         this.host.state["handlerConfigs"] = [];
         this.host.addActionBefore("Create zone", "create-zone", async (): Promise<boolean> => {
