@@ -167,6 +167,10 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         >
                         </ak-codemirror>
                     </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label=${"Hook"} name="hook">
+                        <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
+                        </ak-codemirror>
+                    </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
     }
