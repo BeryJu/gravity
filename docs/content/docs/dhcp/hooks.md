@@ -23,7 +23,7 @@ Called after the DHCP response is generated.
 
 ### `dhcp` Object
 
-#### `Opt(code, data)`
+#### `Opt(code: number, data: byte[])`
 
 Create a DHCP option with the code and data given.
 
@@ -33,8 +33,7 @@ Create a DHCP option with the code and data given.
 
 ```javascript
 const UniFiPrefix = [0x01, 0x04];
-// IP of the UniFi Network Controller, converted to Hex. Each octet of the IP is converted individually.
-const UniFiIP = [0xC0, 0xA8, 0x01, 0x64];
+const UniFiIP = net.parseIP("192.168.1.100", "v4");
 function onDHCPRequestAfter(req, res) {
     res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, ...UniFiIP]))
 }

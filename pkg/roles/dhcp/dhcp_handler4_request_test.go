@@ -132,8 +132,9 @@ func TestDHCPRequest_Hook_UniFi(t *testing.T) {
 				"range_end":   "10.100.0.250",
 			},
 			Hook: `const UniFiPrefix = [0x01, 0x04];
+			const UniFiIP = net.parseIP("192.168.1.100", "v4");
 			function onDHCPRequestAfter(req, res) {
-				res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, 0xC0, 0xA8, 0x01, 0x64]))
+				res.UpdateOption(dhcp.Opt(43, [...UniFiPrefix, ...UniFiIP]));
 			}`,
 		}),
 	))

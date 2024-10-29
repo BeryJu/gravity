@@ -1,13 +1,18 @@
 <h3><code>gravity</code> Object</h3>
 
-<h4><code>log(msg)</code></h4>
+<h4><code>log(msg: any)</code></h4>
 <p>Logs a message to the stdout of the Gravity node this hook is run on.</p>
 
-<h4><code>node</code></h4>
+<h4><code>node: string</code></h4>
 <p>The identifier of the node this hook is run on.</p>
 
-<h4><code>version</code></h4>
+<h4><code>version: string</code></h4>
 <p>The version of Gravity on the node this hook is run on.</p>
 
 <h4><code>role</code></h4>
 <p>A reference to the <a href="https://pkg.go.dev/beryju.io/gravity/pkg/instance#RoleInstance">Role instance</a> this hook was triggered by.</p>
+
+<h3><code>net</code> Object</h3>
+
+<h4><code>parseIP(ip: string, family: string)</code></h4>
+<p>Parse an IP address from the string <code>ip</code> and return it as an array of bytes. <code>family</code> determines if the IP should be parsed as IPv4 or IPv6.</p>

@@ -1,6 +1,7 @@
 package instance
 
 import (
+	"net"
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -8,6 +9,28 @@ import (
 	"github.com/dop251/goja"
 	"go.uber.org/zap"
 )
+
+func (ri *RoleInstance) HookEnvironment(options roles.HookOptions) map[string]interface{} {
+	return map[string]interface{}{
+		"gravity": map[string]interface{}{
+			"log": func(msg goja.Value) {
+				ri.log.With(zap.String("hook", options.Method)).Info(msg.String())
+			},
+			"node":    extconfig.Get().Instance.Identifier,
+			"version": extconfig.Version,
+			"role":    ri,
+		},
+		"net": map[string]interface{}{
+			"parseIP": func(input goja.Value, family goja.Value) []byte {
+				parsed := net.ParseIP(input.String())
+				if family.String() == "v4" {
+					return parsed[12:]
+				}
+				return parsed
+			},
+		},
+	}
+}
 
 func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface{}) {
 	if options.Source == "" {
@@ -22,19 +45,14 @@ func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface
 			log.Warn("failed to set environment", zap.Error(err))
 		}
 	}
-	err := vm.Set("gravity", map[string]interface{}{
-		"log": func(msg goja.Value) {
-			log.Info(msg.String())
-		},
-		"node":    extconfig.Get().Instance.Identifier,
-		"version": extconfig.Version,
-		"role":    ri,
-	})
-	if err != nil {
-		log.Warn("failed to set environment", zap.Error(err))
+	for k, v := range ri.HookEnvironment(options) {
+		err := vm.Set(k, v)
+		if err != nil {
+			log.Warn("failed to set environment", zap.Error(err))
+		}
 	}
 
-	_, err = vm.RunString(options.Source)
+	_, err := vm.RunString(options.Source)
 	if err != nil {
 		log.Warn("failed to run scope hook", zap.Error(err))
 		return
