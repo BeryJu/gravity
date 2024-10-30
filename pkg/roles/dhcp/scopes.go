@@ -126,6 +126,9 @@ func (r *Role) findScopeForRequest(req *Request4) *Scope {
 			match = scope
 		}
 	}
+	if match != nil {
+		req.log.Debug("final scope selection", zap.String("scope", match.Name))
+	}
 	return match
 }
 
