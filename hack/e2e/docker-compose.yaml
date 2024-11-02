@@ -1,0 +1,81 @@
+---
+networks:
+  network-A:
+    labels:
+      io.beryju.gravity/testing: "true"
+    # Required so we can set the IP for the gravity container directly here
+    # not used to assign IP addresses to test containers
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.100.0.0/24
+  network-B:
+    labels:
+      io.beryju.gravity/testing: "true"
+    # Required so we can set the IP for the gravity container directly here
+    # not used to assign IP addresses to test containers
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.101.0.0/24
+
+services:
+  gravity:
+    image: ghcr.io/beryju/gravity:latest
+    networks:
+      network-A:
+        ipv4_address: 10.100.0.10
+    ports:
+      - 8008:8008
+    hostname: gravity1
+    volumes:
+      - ./config.json:/config.json
+    environment:
+      BOOTSTRAP_ROLES: dns;dhcp;api;etcd;discovery;backup;monitoring;tftp
+      IMPORT_CONFIGS: file:///config.json
+      LOG_LEVEL: debug
+      ADMIN_PASSWORD: test # testing password
+  relay:
+    build:
+      context: .
+      dockerfile: relay.Dockerfile
+    image: ghcr.io/beryju/gravity-dhcp-relay:latest
+    cap_add:
+      - NET_ADMIN
+    networks:
+      network-A:
+        ipv4_address: 10.100.0.5
+      network-B:
+        ipv4_address: 10.101.0.5
+    depends_on:
+      - gravity
+    command: -d -iu eth1 -id eth0 10.100.0.10
+
+  ubuntu-net-a:
+    build:
+      context: .
+      dockerfile: test.Dockerfile
+    image: ghcr.io/beryju/gravity-testing:latest
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - network-A
+    depends_on:
+      - gravity
+    deploy:
+      mode: replicated
+      replicas: 6
+  ubuntu-net-b:
+    build:
+      context: .
+      dockerfile: test.Dockerfile
+    image: ghcr.io/beryju/gravity-testing:latest
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - network-B
+    depends_on:
+      - gravity
+    deploy:
+      mode: replicated
+      replicas: 6
