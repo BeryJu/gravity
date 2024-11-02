@@ -25,10 +25,11 @@ type ExtConfig struct {
 		Interface  string `env:"INSTANCE_INTERFACE"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
-	LogLevel       string `env:"LOG_LEVEL,default=info"`
-	DataPath       string `env:"DATA_PATH,default=./data"`
-	BootstrapRoles string `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
-	FallbackDNS    string `env:"FALLBACK_DNS,default=1.1.1.1:53"`
+	LogLevel       string   `env:"LOG_LEVEL,default=info"`
+	DataPath       string   `env:"DATA_PATH,default=./data"`
+	BootstrapRoles string   `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
+	FallbackDNS    string   `env:"FALLBACK_DNS,default=1.1.1.1:53"`
+	ImportConfigs  []string `env:"IMPORT_CONFIGS"`
 
 	Sentry struct {
 		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
