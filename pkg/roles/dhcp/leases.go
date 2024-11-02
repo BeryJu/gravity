@@ -49,7 +49,18 @@ func (r *Role) FindLease(req *Request4) *Lease {
 		return nil
 	}
 	// Check if the leases's scope matches the expected scope to handle this request
-	expectedScope := r.findScopeForRequest(req)
+	expectedScope := r.findScopeForRequest(req, func(scope *Scope) int {
+		// Consider the existing lease for finding the scope
+		// Check how many bits of the leases address match the scope
+		sm := scope.match(net.ParseIP(lease.Address))
+		// If the matching bits match how many bits are in the CIDR, and
+		// the scope of the lease matches the scope we're filtering, we've
+		// got a match
+		if sm == lease.scope.cidr.Bits() && lease.ScopeKey == scope.Name {
+			return 99
+		}
+		return -1
+	})
 	if expectedScope != nil && lease.scope != expectedScope {
 		// We have a specific scope to handle this request but it doesn't match the lease
 		lease.scope = expectedScope
