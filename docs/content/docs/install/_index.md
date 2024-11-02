@@ -76,6 +76,15 @@ The following environment variables can be set.
 - `ETCD_PEER_PORT`: Port used for etcd peer traffic. Defaults to `2380`. This may need to be changed when running in Kubernetes.
 - `ETCD_ENDPOINT`: etcd Client endpoint. Defaults to `localhost:2379` when using embedded etcd.
 - `ETCD_JOIN_CLUSTER`: Set to a join cluster token to join the node to a cluster. See [Clustering](./cluster).
+- `IMPORT_CONFIGS`: A list of base64-encoded configs or file URIs to import configs from on first startup. For example:
+
+    ```bash
+    IMPORT_CONFIGS=file:///config.json
+    # Multiple configs
+    IMPORT_CONFIGS=file:///configA.json|file:///configB.json
+    # Base64 import
+    IMPORT_CONFIGS=eyJlbnRyaWVzIjogW3sia2V5IjogIi9ncmF2aXR5L2ZvbyIsInZhbHVlIjogIlptOXYifV19
+    ```
 
 ### Changing Environment Variables
 

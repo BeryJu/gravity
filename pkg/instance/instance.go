@@ -252,6 +252,7 @@ func (i *Instance) checkFirstStart(ctx context.Context) {
 		return
 	}
 	i.log.Info("Initial startup")
+	i.autoImportConfig()
 	inst.DispatchEvent(
 		types.EventTopicInstanceFirstStart,
 		roles.NewEvent(ctx, map[string]interface{}{}),
