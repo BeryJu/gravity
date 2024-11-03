@@ -27,7 +27,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -82,7 +82,7 @@ func TestRoleDNS_Etcd_Root(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -136,7 +136,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -190,7 +190,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -271,7 +271,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -325,7 +325,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 			"eXaMpLe.CoM.",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},
@@ -379,7 +379,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},

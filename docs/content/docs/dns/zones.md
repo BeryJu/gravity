@@ -10,7 +10,7 @@ The order of handler matters; Gravity will send a query to each handler in the o
 The handler configuration consists of a list of individual handler configurations. All list entries require a `type` attribute which must match one of the headers listed below. For example:
 
 ```yaml
-- cache_ttl: "3600"
+- cache_ttl: 3600
   to: 8.8.8.8:53
   type: forward_blocky
 - to: 8.8.8.8:53
@@ -50,6 +50,8 @@ Forward queries to another DNS server.
 
   Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`.
 
+  Starting with Gravity 0.14, this can also be set as a JSON/YAML array using `[8.8.8.8:53, 1.1.1.1:53]` instead of a semicolon-separated string.
+
 - `cache_ttl`: Optional TTL to cache responses in etcd.
 
   Defaults to 0. Attempts to cache for the TTL of the response.
@@ -72,6 +74,8 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
 
   Multiple servers should be separated by `;`. For example `8.8.8.8:53;1.1.1.1`.
 
+  Starting with Gravity 0.14, this can also be set as a JSON/YAML array using `[8.8.8.8:53, 1.1.1.1:53]` instead of a semicolon-separated string.
+
 - `cache_ttl`: Optional TTL to cache responses in etcd
 
   Defaults to 0. Attempts to cache for the TTL of the response.
@@ -81,6 +85,8 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
 - `allowlists`: List of allowlists to load.
 
   Entries beginning with http:// or https:// are downloaded when the DNS Role is started. Can also be set to an inline list of domains to block/allow. Multiple entries should be separated by a `;`.
+
+  Starting with Gravity 0.14, this can also be set as a JSON/YAML array using `[https://foo, https://bar]` instead of a semicolon-separated string.
 
   By default, these blocklists are loaded:
 
@@ -98,7 +104,10 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
 ```yaml
 - type: forward_blocky
   to: 8.8.8.8
-  blocklists: https://adaway.org/hosts.txt
+  blocklists:
+    - https://adaway.org/hosts.txt
+  allowlists:
+    - exception.com
 ```
 
 ### `coredns`
@@ -131,4 +140,4 @@ Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredn
 
 ## Hooks
 
-Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks.md)
+Optional hooks to dynamically modify requests and responses. See [Hooks](../hooks)

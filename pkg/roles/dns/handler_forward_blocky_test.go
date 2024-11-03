@@ -34,7 +34,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type":       "forward_blocky",
 					"blocklists": "http://127.0.0.1:9005/blocky_file.txt",
@@ -83,7 +83,7 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type":       "forward_blocky",
 					"blocklists": "http://127.0.0.1:9005/blocky_file.txt",

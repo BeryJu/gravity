@@ -23,7 +23,7 @@ func TestRoleDNSZoneFind(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "forward_ip",
 					"to":   "127.0.0.1:1053",

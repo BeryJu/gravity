@@ -17,7 +17,13 @@ type MemoryHandler struct {
 	z   *Zone
 }
 
-func NewMemoryHandler(z *Zone, config map[string]string) *MemoryHandler {
+func init() {
+	HandlerRegistry.Add(MemoryType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewMemoryHandler(z, rawConfig)
+	})
+}
+
+func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 	mh := &MemoryHandler{
 		EtcdHandler: &EtcdHandler{z: z},
 		z:           z,

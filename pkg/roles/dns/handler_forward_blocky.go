@@ -24,11 +24,17 @@ const BlockyForwarderType = "forward_blocky"
 
 type BlockyForwarder struct {
 	*IPForwarderHandler
-	c   map[string]string
+	c   map[string]interface{}
 	b   *server.Server
 	log *zap.Logger
 	st  time.Time
 	cfg *config.Config
+}
+
+func init() {
+	HandlerRegistry.Add(BlockyForwarderType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewBlockyForwarder(z, rawConfig)
+	})
 }
 
 func HTTPByteSource(url string) config.BytesSource {
@@ -45,7 +51,7 @@ func TextByteSource(content string) config.BytesSource {
 	}
 }
 
-func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
+func NewBlockyForwarder(z *Zone, rawConfig map[string]interface{}) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
 		c:                  rawConfig,
@@ -80,7 +86,17 @@ func (bfwd *BlockyForwarder) Identifier() string {
 }
 
 func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
-	forwarders := strings.Split(bfwd.c["to"], ";")
+	forwarders := []string{}
+	switch v := bfwd.c["to"].(type) {
+	case string:
+		forwarders = strings.Split(v, ";")
+	case []interface{}:
+		for _, fwd := range v {
+			if f, ok := fwd.(string); ok {
+				forwarders = append(forwarders, f)
+			}
+		}
+	}
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
@@ -163,10 +179,20 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	return &cfg, nil
 }
 
-func (bfwd *BlockyForwarder) getLists(raw string) []config.BytesSource {
+func (bfwd *BlockyForwarder) getLists(raw interface{}) []config.BytesSource {
 	list := []config.BytesSource{}
-	lists := strings.Split(raw, ";")
-	for _, rl := range lists {
+	rawLists := []string{}
+	switch v := raw.(type) {
+	case string:
+		rawLists = strings.Split(v, ";")
+	case []interface{}:
+		for _, rl := range v {
+			if r, ok := rl.(string); ok {
+				rawLists = append(rawLists, r)
+			}
+		}
+	}
+	for _, rl := range rawLists {
 		if strings.HasPrefix(rl, "http") {
 			list = append(list, HTTPByteSource(rl))
 		} else {

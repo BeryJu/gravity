@@ -32,7 +32,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type":   "coredns",
 					"config": CoreDNSConfig,

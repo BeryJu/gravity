@@ -44,7 +44,7 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a zone that'll forward to a reasonable default
 		zone := r.newZone(".")
-		zone.HandlerConfigs = []map[string]string{
+		zone.HandlerConfigs = []map[string]interface{}{
 			{
 				"type": "memory",
 			},

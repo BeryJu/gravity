@@ -16,11 +16,11 @@ type APIZonesGetInput struct {
 	Name string `query:"name"  description:"Optionally get DNS Zone by name"`
 }
 type APIZone struct {
-	Name           string              `json:"name" required:"true"`
-	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
-	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
-	Authoritative  bool                `json:"authoritative" required:"true"`
-	Hook           string              `json:"hook" required:"true"`
+	Name           string                   `json:"name" required:"true"`
+	HandlerConfigs []map[string]interface{} `json:"handlerConfigs" required:"true"`
+	DefaultTTL     uint32                   `json:"defaultTTL" required:"true"`
+	Authoritative  bool                     `json:"authoritative" required:"true"`
+	Hook           string                   `json:"hook" required:"true"`
 }
 type APIZonesGetOutput struct {
 	Zones []APIZone `json:"zones" required:"true"`
@@ -73,11 +73,11 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 }
 
 type APIZonesPutInput struct {
-	Name           string              `query:"zone" required:"true" maxLength:"255"`
-	HandlerConfigs []map[string]string `json:"handlerConfigs" required:"true"`
-	DefaultTTL     uint32              `json:"defaultTTL" required:"true"`
-	Authoritative  bool                `json:"authoritative" required:"true"`
-	Hook           string              `json:"hook" required:"true"`
+	Name           string                   `query:"zone" required:"true" maxLength:"255"`
+	HandlerConfigs []map[string]interface{} `json:"handlerConfigs" required:"true"`
+	DefaultTTL     uint32                   `json:"defaultTTL" required:"true"`
+	Authoritative  bool                     `json:"authoritative" required:"true"`
+	Hook           string                   `json:"hook" required:"true"`
 }
 
 func (r *Role) APIZonesPut() usecase.Interactor {

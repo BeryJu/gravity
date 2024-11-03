@@ -23,10 +23,28 @@ type IPForwarderHandler struct {
 	CacheTTL int
 }
 
-func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
-	net, ok := config["net"]
+func init() {
+	HandlerRegistry.Add(IPForwarderType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewIPForwarderHandler(z, rawConfig)
+	})
+}
+
+func NewIPForwarderHandler(z *Zone, config map[string]interface{}) *IPForwarderHandler {
+	net, ok := config["net"].(string)
 	if !ok {
 		net = ""
+	}
+
+	resolvers := []string{}
+	switch v := config["to"].(type) {
+	case string:
+		resolvers = strings.Split(v, ";")
+	case []interface{}:
+		for _, rl := range v {
+			if r, ok := rl.(string); ok {
+				resolvers = append(resolvers, r)
+			}
+		}
 	}
 
 	ipf := &IPForwarderHandler{
@@ -35,17 +53,24 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 			Net:     net,
 			Timeout: types.DefaultUpstreamTimeout,
 		},
-		resolvers: strings.Split(config["to"], ";"),
+		resolvers: resolvers,
 	}
 	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
-	rawTtl := config["cache_ttl"]
-	cacheTtl, err := strconv.Atoi(rawTtl)
-	if err != nil && rawTtl != "" {
-		ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
-		cacheTtl = 0
+	cacheTTL := 0
+	switch v := config["cache_ttl"].(type) {
+	case int:
+		cacheTTL = v
+	case string:
+		rawTtl := config["cache_ttl"].(string)
+		_cacheTtl, err := strconv.Atoi(rawTtl)
+		if err != nil && rawTtl != "" {
+			ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
+			_cacheTtl = 0
+		}
+		cacheTTL = _cacheTtl
 	}
-	ipf.CacheTTL = cacheTtl
+	ipf.CacheTTL = cacheTTL
 	return ipf
 }
 
