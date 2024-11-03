@@ -29,23 +29,42 @@ func NewIPForwarderHandler(z *Zone, config map[string]interface{}) *IPForwarderH
 		net = ""
 	}
 
+	resolvers := []string{}
+	switch v := config["to"].(type) {
+	case string:
+		resolvers = strings.Split(v, ";")
+	case []interface{}:
+		for _, rl := range v {
+			if r, ok := rl.(string); ok {
+				resolvers = append(resolvers, r)
+			}
+		}
+	}
+
 	ipf := &IPForwarderHandler{
 		z: z,
 		c: &dns.Client{
 			Net:     net,
 			Timeout: types.DefaultUpstreamTimeout,
 		},
-		resolvers: strings.Split(config["to"].(string), ";"),
+		resolvers: resolvers,
 	}
 	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
-	rawTtl := config["cache_ttl"].(string)
-	cacheTtl, err := strconv.Atoi(rawTtl)
-	if err != nil && rawTtl != "" {
-		ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
-		cacheTtl = 0
+	cacheTTL := 0
+	switch v := config["cache_ttl"].(type) {
+	case int:
+		cacheTTL = v
+	case string:
+		rawTtl := config["cache_ttl"].(string)
+		_cacheTtl, err := strconv.Atoi(rawTtl)
+		if err != nil && rawTtl != "" {
+			ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))
+			_cacheTtl = 0
+		}
+		cacheTTL = _cacheTtl
 	}
-	ipf.CacheTTL = cacheTtl
+	ipf.CacheTTL = cacheTTL
 	return ipf
 }
 

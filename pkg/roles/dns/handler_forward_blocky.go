@@ -80,7 +80,17 @@ func (bfwd *BlockyForwarder) Identifier() string {
 }
 
 func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
-	forwarders := strings.Split(bfwd.c["to"].(string), ";")
+	forwarders := []string{}
+	switch v := bfwd.c["to"].(type) {
+	case string:
+		forwarders = strings.Split(v, ";")
+	case []interface{}:
+		for _, fwd := range v {
+			if f, ok := fwd.(string); ok {
+				forwarders = append(forwarders, f)
+			}
+		}
+	}
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
@@ -99,12 +109,12 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		HTTPByteSource(blockyListBase + "adaway.org.txt"),
 		HTTPByteSource(blockyListBase + "big.oisd.nl.txt"),
 	}
-	if bll, ok := bfwd.c["blocklists"].(string); ok {
+	if bll, ok := bfwd.c["blocklists"]; ok {
 		blockLists = bfwd.getLists(bll)
 	}
 
 	allowLists := []config.BytesSource{}
-	if all, ok := bfwd.c["allowlists"].(string); ok {
+	if all, ok := bfwd.c["allowlists"]; ok {
 		allowLists = bfwd.getLists(all)
 	}
 
@@ -163,10 +173,20 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	return &cfg, nil
 }
 
-func (bfwd *BlockyForwarder) getLists(raw string) []config.BytesSource {
+func (bfwd *BlockyForwarder) getLists(raw interface{}) []config.BytesSource {
 	list := []config.BytesSource{}
-	lists := strings.Split(raw, ";")
-	for _, rl := range lists {
+	rawLists := []string{}
+	switch v := raw.(type) {
+	case string:
+		rawLists = strings.Split(v, ";")
+	case []interface{}:
+		for _, rl := range v {
+			if r, ok := rl.(string); ok {
+				rawLists = append(rawLists, r)
+			}
+		}
+	}
+	for _, rl := range rawLists {
 		if strings.HasPrefix(rl, "http") {
 			list = append(list, HTTPByteSource(rl))
 		} else {
