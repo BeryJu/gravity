@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.13.4
+  version: 0.14.0
 servers:
 - url: /
 paths:
@@ -2866,8 +2866,8 @@ components:
     DnsAPIZone:
       example:
         handlerConfigs:
-        - key: handlerConfigs
-        - key: handlerConfigs
+        - key: ""
+        - key: ""
         authoritative: true
         hook: hook
         defaultTTL: 0
@@ -2880,8 +2880,7 @@ components:
           type: integer
         handlerConfigs:
           items:
-            additionalProperties:
-              type: string
+            additionalProperties: {}
             type: object
           nullable: true
           type: array
@@ -2900,15 +2899,15 @@ components:
       example:
         zones:
         - handlerConfigs:
-          - key: handlerConfigs
-          - key: handlerConfigs
+          - key: ""
+          - key: ""
           authoritative: true
           hook: hook
           defaultTTL: 0
           name: name
         - handlerConfigs:
-          - key: handlerConfigs
-          - key: handlerConfigs
+          - key: ""
+          - key: ""
           authoritative: true
           hook: hook
           defaultTTL: 0
@@ -2925,8 +2924,8 @@ components:
     DnsAPIZonesPutInput:
       example:
         handlerConfigs:
-        - key: handlerConfigs
-        - key: handlerConfigs
+        - key: ""
+        - key: ""
         authoritative: true
         hook: hook
         defaultTTL: 0
@@ -2938,8 +2937,7 @@ components:
           type: integer
         handlerConfigs:
           items:
-            additionalProperties:
-              type: string
+            additionalProperties: {}
             type: object
           nullable: true
           type: array

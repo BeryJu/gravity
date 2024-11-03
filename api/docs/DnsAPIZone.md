@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Authoritative** | **bool** |  | 
 **DefaultTTL** | **int32** |  | 
-**HandlerConfigs** | **[]map[string]string** |  | 
+**HandlerConfigs** | **[]map[string]interface{}** |  | 
 **Hook** | **string** |  | 
 **Name** | **string** |  | 
 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewDnsAPIZone
 
-`func NewDnsAPIZone(authoritative bool, defaultTTL int32, handlerConfigs []map[string]string, hook string, name string, ) *DnsAPIZone`
+`func NewDnsAPIZone(authoritative bool, defaultTTL int32, handlerConfigs []map[string]interface{}, hook string, name string, ) *DnsAPIZone`
 
 NewDnsAPIZone instantiates a new DnsAPIZone object
 This constructor will assign default values to properties that have it defined,
@@ -71,20 +71,20 @@ SetDefaultTTL sets DefaultTTL field to given value.
 
 ### GetHandlerConfigs
 
-`func (o *DnsAPIZone) GetHandlerConfigs() []map[string]string`
+`func (o *DnsAPIZone) GetHandlerConfigs() []map[string]interface{}`
 
 GetHandlerConfigs returns the HandlerConfigs field if non-nil, zero value otherwise.
 
 ### GetHandlerConfigsOk
 
-`func (o *DnsAPIZone) GetHandlerConfigsOk() (*[]map[string]string, bool)`
+`func (o *DnsAPIZone) GetHandlerConfigsOk() (*[]map[string]interface{}, bool)`
 
 GetHandlerConfigsOk returns a tuple with the HandlerConfigs field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetHandlerConfigs
 
-`func (o *DnsAPIZone) SetHandlerConfigs(v []map[string]string)`
+`func (o *DnsAPIZone) SetHandlerConfigs(v []map[string]interface{})`
 
 SetHandlerConfigs sets HandlerConfigs field to given value.
 

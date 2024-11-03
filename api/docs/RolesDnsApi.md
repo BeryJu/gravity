@@ -484,7 +484,7 @@ import (
 
 func main() {
     zone := "zone_example" // string | 
-    dnsAPIZonesPutInput := *openapiclient.NewDnsAPIZonesPutInput(false, int32(123), []map[string]string{map[string]string{"key": "Inner_example"}}, "Hook_example") // DnsAPIZonesPutInput |  (optional)
+    dnsAPIZonesPutInput := *openapiclient.NewDnsAPIZonesPutInput(false, int32(123), []map[string]interface{}{map[string]interface{}{"key": interface{}(123)}}, "Hook_example") // DnsAPIZonesPutInput |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
