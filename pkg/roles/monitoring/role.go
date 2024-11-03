@@ -71,9 +71,11 @@ func (r *Role) HandleMetrics(w http.ResponseWriter, re *http.Request) {
 	promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
 		DisableCompression: true,
 	})).ServeHTTP(w, re)
-	promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
-		DisableCompression: true,
-	}).ServeHTTP(w, re)
+	if blockyReg != nil {
+		promhttp.HandlerFor(blockyReg, promhttp.HandlerOpts{
+			DisableCompression: true,
+		}).ServeHTTP(w, re)
+	}
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
