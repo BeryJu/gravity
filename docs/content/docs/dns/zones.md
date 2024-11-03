@@ -78,8 +78,11 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
   Set to -1 to never cache, and set to -2 to cache without a TTL.
 
 - `blocklists`: List of blocklists to load.
+- `allowlists`: List of allowlists to load.
 
-  Multiple URLs should be separated by `;`. Defaults to these lists:
+  Entries beginning with http:// or https:// are downloaded when the DNS Role is started. Can also be set to an inline list of domains to block/allow. Multiple entries should be separated by a `;`.
+
+  By default, these blocklists are loaded:
 
   - https://adaway.org/hosts.txt
   - https://dbl.oisd.nl/
