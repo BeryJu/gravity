@@ -38,6 +38,13 @@ func HTTPByteSource(url string) config.BytesSource {
 	}
 }
 
+func TextByteSource(content string) config.BytesSource {
+	return config.BytesSource{
+		Type: config.BytesSourceTypeText,
+		From: content,
+	}
+}
+
 func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
@@ -93,11 +100,12 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		HTTPByteSource(blockyListBase + "big.oisd.nl.txt"),
 	}
 	if bll, ok := bfwd.c["blocklists"]; ok {
-		lists := strings.Split(bll, ";")
-		blockLists = []config.BytesSource{}
-		for _, list := range lists {
-			blockLists = append(blockLists, HTTPByteSource(list))
-		}
+		blockLists = bfwd.getLists(bll)
+	}
+
+	allowLists := []config.BytesSource{}
+	if all, ok := bfwd.c["allowlists"]; ok {
+		allowLists = bfwd.getLists(all)
 	}
 
 	cfg := config.Config{}
@@ -139,6 +147,9 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		Denylists: map[string][]config.BytesSource{
 			"block": blockLists,
 		},
+		Allowlists: map[string][]config.BytesSource{
+			"allow": allowLists,
+		},
 		Loading: config.SourceLoading{
 			Downloads: config.Downloader{
 				Attempts: 3,
@@ -149,6 +160,19 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		},
 	}
 	return &cfg, nil
+}
+
+func (bfwd *BlockyForwarder) getLists(raw string) []config.BytesSource {
+	allowLists := []config.BytesSource{}
+	lists := strings.Split(raw, ";")
+	for _, list := range lists {
+		if strings.HasPrefix(list, "http") {
+			allowLists = append(allowLists, HTTPByteSource(list))
+		} else {
+			allowLists = append(allowLists, TextByteSource(list))
+		}
+	}
+	return allowLists
 }
 
 func (bfwd *BlockyForwarder) setup() error {
