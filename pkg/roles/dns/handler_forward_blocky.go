@@ -116,11 +116,12 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	// Blocky uses a custom registry, so this doesn't work as expected
 	// cfg.Prometheus.Enable = true
 	cfg.Log.Level = logrus.DebugLevel
-	cfg.QueryLog.Type = config.QueryLogTypeNone
+	cfg.QueryLog.Type = config.QueryLogTypeConsole
 	if !extconfig.Get().Debug {
 		cfg.Log.Format = blockylog.FormatTypeJson
 		// Only log errors from blocky to prevent double-logging all queries
 		cfg.Log.Level = logrus.FatalLevel
+		cfg.QueryLog.Type = config.QueryLogTypeNone
 	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
@@ -145,10 +146,10 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	cfg.Blocking = config.Blocking{
 		BlockType: "zeroIP",
 		Denylists: map[string][]config.BytesSource{
-			"block": blockLists,
+			"default": blockLists,
 		},
 		Allowlists: map[string][]config.BytesSource{
-			"allow": allowLists,
+			"default": allowLists,
 		},
 		Loading: config.SourceLoading{
 			Downloads: config.Downloader{
@@ -156,23 +157,23 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 			},
 		},
 		ClientGroupsBlock: map[string][]string{
-			"default": {"block"},
+			"default": {"default"},
 		},
 	}
 	return &cfg, nil
 }
 
 func (bfwd *BlockyForwarder) getLists(raw string) []config.BytesSource {
-	allowLists := []config.BytesSource{}
+	list := []config.BytesSource{}
 	lists := strings.Split(raw, ";")
-	for _, list := range lists {
-		if strings.HasPrefix(list, "http") {
-			allowLists = append(allowLists, HTTPByteSource(list))
+	for _, rl := range lists {
+		if strings.HasPrefix(rl, "http") {
+			list = append(list, HTTPByteSource(rl))
 		} else {
-			allowLists = append(allowLists, TextByteSource(list))
+			list = append(list, TextByteSource(rl))
 		}
 	}
-	return allowLists
+	return list
 }
 
 func (bfwd *BlockyForwarder) setup() error {
