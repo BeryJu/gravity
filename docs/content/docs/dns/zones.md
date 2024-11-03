@@ -140,4 +140,4 @@ Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredn
 
 ## Hooks
 
-Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks.md)
+Optional hooks to dynamically modify requests and responses. See [Hooks](../hooks)

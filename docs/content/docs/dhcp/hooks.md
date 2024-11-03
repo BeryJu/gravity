@@ -19,7 +19,7 @@ Called after the DHCP response is generated.
 
 ## Environment
 
-{{< gravity-hook-env >}}
+{{< readfile "/docs/_gravity-hook-env.md" >}}
 
 ### `dhcp` Object
 
