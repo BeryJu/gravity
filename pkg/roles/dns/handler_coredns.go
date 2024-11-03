@@ -17,20 +17,20 @@ import (
 const CoreDNSType = "coredns"
 
 type CoreDNS struct {
-	c        map[string]string
+	c        map[string]interface{}
 	log      *zap.Logger
 	instance *caddy.Instance
 	srv      *dnsserver.Server
 }
 
-func NewCoreDNS(z *Zone, rawConfig map[string]string) *CoreDNS {
+func NewCoreDNS(z *Zone, rawConfig map[string]interface{}) *CoreDNS {
 	core := &CoreDNS{
 		c: rawConfig,
 	}
 	core.log = z.log.With(zap.String("handler", core.Identifier()))
 	dnsserver.Quiet = true
 	corefile := caddy.CaddyfileInput{
-		Contents:       []byte(core.c["config"]),
+		Contents:       []byte(core.c["config"].(string)),
 		Filepath:       "in-memory",
 		ServerTypeName: "dns",
 	}

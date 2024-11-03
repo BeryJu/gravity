@@ -24,7 +24,7 @@ const BlockyForwarderType = "forward_blocky"
 
 type BlockyForwarder struct {
 	*IPForwarderHandler
-	c   map[string]string
+	c   map[string]interface{}
 	b   *server.Server
 	log *zap.Logger
 	st  time.Time
@@ -45,7 +45,7 @@ func TextByteSource(content string) config.BytesSource {
 	}
 }
 
-func NewBlockyForwarder(z *Zone, rawConfig map[string]string) *BlockyForwarder {
+func NewBlockyForwarder(z *Zone, rawConfig map[string]interface{}) *BlockyForwarder {
 	bfwd := &BlockyForwarder{
 		IPForwarderHandler: NewIPForwarderHandler(z, rawConfig),
 		c:                  rawConfig,
@@ -80,7 +80,7 @@ func (bfwd *BlockyForwarder) Identifier() string {
 }
 
 func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
-	forwarders := strings.Split(bfwd.c["to"], ";")
+	forwarders := strings.Split(bfwd.c["to"].(string), ";")
 	upstreams := make([]config.Upstream, len(forwarders))
 	for idx, fwd := range forwarders {
 		us, err := config.ParseUpstream(fwd)
@@ -99,12 +99,12 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		HTTPByteSource(blockyListBase + "adaway.org.txt"),
 		HTTPByteSource(blockyListBase + "big.oisd.nl.txt"),
 	}
-	if bll, ok := bfwd.c["blocklists"]; ok {
+	if bll, ok := bfwd.c["blocklists"].(string); ok {
 		blockLists = bfwd.getLists(bll)
 	}
 
 	allowLists := []config.BytesSource{}
-	if all, ok := bfwd.c["allowlists"]; ok {
+	if all, ok := bfwd.c["allowlists"].(string); ok {
 		allowLists = bfwd.getLists(all)
 	}
 

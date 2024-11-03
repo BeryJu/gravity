@@ -25,7 +25,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},
@@ -79,7 +79,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},
@@ -133,7 +133,7 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 			"test.",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},
@@ -215,7 +215,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 			".",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},
@@ -269,7 +269,7 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 			"TesT.",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},
@@ -323,7 +323,7 @@ func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 			"test.",
 		).String(),
 		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "memory",
 				},

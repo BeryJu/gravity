@@ -44,7 +44,7 @@ func TestAPIZonesPut(t *testing.T) {
 	assert.NoError(t, role.APIZonesPut().Interact(ctx, dns.APIZonesPutInput{
 		Name:          strings.TrimSuffix(name, "."),
 		Authoritative: true,
-		HandlerConfigs: []map[string]string{
+		HandlerConfigs: []map[string]interface{}{
 			{
 				"type": "etcd",
 			},
@@ -61,7 +61,7 @@ func TestAPIZonesPut(t *testing.T) {
 		),
 		dns.Zone{
 			Authoritative: true,
-			HandlerConfigs: []map[string]string{
+			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "etcd",
 				},

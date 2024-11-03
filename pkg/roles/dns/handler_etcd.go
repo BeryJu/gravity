@@ -20,7 +20,7 @@ type EtcdHandler struct {
 	lookupKey func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR
 }
 
-func NewEtcdHandler(z *Zone, config map[string]string) *EtcdHandler {
+func NewEtcdHandler(z *Zone, config map[string]interface{}) *EtcdHandler {
 	eh := &EtcdHandler{
 		z: z,
 	}

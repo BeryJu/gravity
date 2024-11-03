@@ -23,8 +23,8 @@ type IPForwarderHandler struct {
 	CacheTTL int
 }
 
-func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandler {
-	net, ok := config["net"]
+func NewIPForwarderHandler(z *Zone, config map[string]interface{}) *IPForwarderHandler {
+	net, ok := config["net"].(string)
 	if !ok {
 		net = ""
 	}
@@ -35,11 +35,11 @@ func NewIPForwarderHandler(z *Zone, config map[string]string) *IPForwarderHandle
 			Net:     net,
 			Timeout: types.DefaultUpstreamTimeout,
 		},
-		resolvers: strings.Split(config["to"], ";"),
+		resolvers: strings.Split(config["to"].(string), ";"),
 	}
 	ipf.log = z.log.With(zap.String("handler", ipf.Identifier()))
 
-	rawTtl := config["cache_ttl"]
+	rawTtl := config["cache_ttl"].(string)
 	cacheTtl, err := strconv.Atoi(rawTtl)
 	if err != nil && rawTtl != "" {
 		ipf.log.Warn("failed to parse cache_ttl, defaulting to 0", zap.Error(err), zap.Any("config", config))

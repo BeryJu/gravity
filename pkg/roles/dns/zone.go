@@ -35,7 +35,7 @@ type Zone struct {
 	Name string `json:"-"`
 
 	etcdKey        string
-	HandlerConfigs []map[string]string `json:"handlerConfigs"`
+	HandlerConfigs []map[string]interface{} `json:"handlerConfigs"`
 
 	h []Handler
 
@@ -194,7 +194,7 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 
 func (z *Zone) Init(ctx context.Context) {
 	for _, handlerCfg := range z.HandlerConfigs {
-		t := handlerCfg["type"]
+		t := handlerCfg["type"].(string)
 		var handler Handler
 		switch t {
 		case CoreDNSType:
