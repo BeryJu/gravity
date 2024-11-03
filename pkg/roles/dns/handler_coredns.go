@@ -23,6 +23,12 @@ type CoreDNS struct {
 	srv      *dnsserver.Server
 }
 
+func init() {
+	HandlerRegistry.Add(CoreDNSType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewCoreDNS(z, rawConfig)
+	})
+}
+
 func NewCoreDNS(z *Zone, rawConfig map[string]interface{}) *CoreDNS {
 	core := &CoreDNS{
 		c: rawConfig,

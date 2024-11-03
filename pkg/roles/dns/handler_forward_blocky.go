@@ -31,6 +31,12 @@ type BlockyForwarder struct {
 	cfg *config.Config
 }
 
+func init() {
+	HandlerRegistry.Add(BlockyForwarderType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewBlockyForwarder(z, rawConfig)
+	})
+}
+
 func HTTPByteSource(url string) config.BytesSource {
 	return config.BytesSource{
 		Type: config.BytesSourceTypeHttp,

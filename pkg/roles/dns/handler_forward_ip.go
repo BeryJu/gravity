@@ -23,6 +23,12 @@ type IPForwarderHandler struct {
 	CacheTTL int
 }
 
+func init() {
+	HandlerRegistry.Add(IPForwarderType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewIPForwarderHandler(z, rawConfig)
+	})
+}
+
 func NewIPForwarderHandler(z *Zone, config map[string]interface{}) *IPForwarderHandler {
 	net, ok := config["net"].(string)
 	if !ok {

@@ -195,23 +195,12 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 func (z *Zone) Init(ctx context.Context) {
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"].(string)
-		var handler Handler
-		switch t {
-		case CoreDNSType:
-			handler = NewCoreDNS(z, handlerCfg)
-		case BlockyForwarderType:
-			handler = NewBlockyForwarder(z, handlerCfg)
-		case IPForwarderType:
-			handler = NewIPForwarderHandler(z, handlerCfg)
-		case EtcdType:
-			handler = NewEtcdHandler(z, handlerCfg)
-		case MemoryType:
-			handler = NewMemoryHandler(z, handlerCfg)
-		default:
+		hc, ok := HandlerRegistry.Find(t)
+		if !ok {
 			z.log.Warn("invalid forwarder type", zap.String("type", t))
 			continue
 		}
-		z.h = append(z.h, handler)
+		z.h = append(z.h, hc(z, handlerCfg))
 	}
 
 	// start watching all records in this zone, in case etcd goes down

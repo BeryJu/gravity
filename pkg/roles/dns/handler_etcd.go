@@ -20,6 +20,12 @@ type EtcdHandler struct {
 	lookupKey func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR
 }
 
+func init() {
+	HandlerRegistry.Add(EtcdType, func(z *Zone, rawConfig map[string]interface{}) Handler {
+		return NewEtcdHandler(z, rawConfig)
+	})
+}
+
 func NewEtcdHandler(z *Zone, config map[string]interface{}) *EtcdHandler {
 	eh := &EtcdHandler{
 		z: z,
