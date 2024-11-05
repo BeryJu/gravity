@@ -40,7 +40,8 @@ func TestAPILeasesGet(t *testing.T) {
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
@@ -83,7 +84,8 @@ func TestAPILeasesPut(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			name,
 		),
 		dhcp.Lease{
@@ -116,7 +118,8 @@ func TestAPILeasesDelete(t *testing.T) {
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
@@ -132,7 +135,8 @@ func TestAPILeasesDelete(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		),
 	)

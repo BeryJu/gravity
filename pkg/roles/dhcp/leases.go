@@ -110,9 +110,10 @@ func (l *Lease) setLeaseIP(req *Request4) {
 func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	prefix := r.i.KV().Key(
 		types.KeyRole,
-		types.KeyLeases,
+		types.KeyScopes,
 	).Prefix(true).String()
-	identifier := strings.TrimPrefix(string(raw.Key), prefix)
+	keyParts := strings.SplitN(prefix, "/", 2)
+	identifier := strings.TrimPrefix(string(raw.Key), prefix+"/"+keyParts[0])
 	l := r.NewLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
@@ -152,7 +153,8 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 
 	leaseKey := l.inst.KV().Key(
 		types.KeyRole,
-		types.KeyLeases,
+		types.KeyScopes,
+		l.ScopeKey,
 		l.Identifier,
 	)
 	_, err = l.inst.KV().Put(

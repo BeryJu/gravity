@@ -3,6 +3,7 @@ package dhcp
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -32,12 +33,13 @@ func (r *Role) handleLeaseOp(ev *clientv3.Event) {
 }
 
 func (r *Role) loadInitialLeases(ctx context.Context) {
+	prefix := r.i.KV().Key(
+		types.KeyRole,
+		types.KeyScopes,
+	).Prefix(true).String()
 	leases, err := r.i.KV().Get(
 		ctx,
-		r.i.KV().Key(
-			types.KeyRole,
-			types.KeyLeases,
-		).Prefix(true).String(),
+		prefix,
 		clientv3.WithPrefix(),
 	)
 	if err != nil {
@@ -49,6 +51,10 @@ func (r *Role) loadInitialLeases(ctx context.Context) {
 		return
 	}
 	for _, lease := range leases.Kvs {
+		relKey := strings.ReplaceAll(string(lease.Key), prefix, "")
+		if !strings.Contains("/", relKey) {
+			continue
+		}
 		r.handleLeaseOp(&clientv3.Event{
 			Type: mvccpb.PUT,
 			Kv:   lease,
@@ -57,13 +63,21 @@ func (r *Role) loadInitialLeases(ctx context.Context) {
 }
 
 func (r *Role) startWatchLeases() {
+	prefix := r.i.KV().Key(
+		types.KeyRole,
+		types.KeyScopes,
+	).Prefix(true).String()
 	watchChan := r.i.KV().Watch(
 		r.ctx,
-		r.i.KV().Key(types.KeyRole, types.KeyLeases).Prefix(true).String(),
+		prefix,
 		clientv3.WithPrefix(),
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
+			relKey := strings.ReplaceAll(string(event.Kv.Key), prefix, "")
+			if !strings.Contains("/", relKey) {
+				continue
+			}
 			r.handleLeaseOp(event)
 		}
 	}

@@ -51,7 +51,8 @@ func TestAPIScopesGet(t *testing.T) {
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			"test",
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),

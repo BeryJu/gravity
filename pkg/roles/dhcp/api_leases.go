@@ -50,7 +50,8 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 
 		leaseKey := r.i.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			input.ScopeName,
 		)
 		if input.Identifier == "" {
 			leaseKey = leaseKey.Prefix(true)
@@ -65,9 +66,6 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 			l, err := r.leaseFromKV(lease)
 			if err != nil {
 				r.log.Warn("failed to parse lease", zap.Error(err))
-				continue
-			}
-			if l.ScopeKey != input.ScopeName {
 				continue
 			}
 			al := &APILease{
@@ -186,7 +184,8 @@ func (r *Role) APILeasesDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesDeleteInput, output *struct{}) error {
 		key := r.i.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			input.Scope,
 			input.Identifier,
 		)
 		_, err := r.i.KV().Delete(

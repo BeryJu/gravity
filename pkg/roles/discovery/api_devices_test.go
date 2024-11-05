@@ -97,7 +97,8 @@ func TestDeviceApplyDHCP(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			dhcpTypes.KeyRole,
-			dhcpTypes.KeyLeases,
+			dhcpTypes.KeyScopes,
+			name,
 			"aa:bb:cc",
 		),
 		dhcp.Lease{
@@ -193,7 +194,8 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			dhcpTypes.KeyRole,
-			dhcpTypes.KeyLeases,
+			dhcpTypes.KeyScopes,
+			name,
 			"aa:bb:cc",
 		),
 		dhcp.Lease{

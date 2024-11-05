@@ -70,7 +70,8 @@ func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 			ctx,
 			inst.KV().Key(
 				types.KeyRole,
-				types.KeyLeases,
+				types.KeyScopes,
+				scope.Name,
 				lease.Identifier,
 			).String(),
 			tests.MustJSON(lease),
