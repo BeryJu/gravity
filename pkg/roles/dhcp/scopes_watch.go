@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
+func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue, ctx context.Context) bool {
 	prefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true)
 	relKey := strings.TrimPrefix(string(kv.Key), prefix.String())
 	// we only care about scope-level updates, everything underneath doesn't matter
@@ -23,14 +23,20 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool
 		r.log.Debug("removed scope", zap.String("key", relKey))
 		r.scopesM.Lock()
 		defer r.scopesM.Unlock()
+		sc := r.scopes[relKey]
+		sc.StopWatchingLeases()
 		delete(r.scopes, relKey)
 	} else if t == mvccpb.PUT {
 		s, err := r.scopeFromKV(kv)
 		if err != nil {
 			r.log.Warn("failed to convert scope from event", zap.Error(err))
 		} else {
+			s.watchScopeLeases(ctx)
 			s.calculateUsage()
 			r.scopesM.Lock()
+			if oldScope, ok := r.scopes[s.Name]; ok {
+				oldScope.StopWatchingLeases()
+			}
 			r.scopes[s.Name] = s
 			r.scopesM.Unlock()
 			r.log.Debug("added scope", zap.String("name", s.Name))
@@ -57,7 +63,7 @@ func (r *Role) loadInitialScopes(ctx context.Context) {
 		return
 	}
 	for _, scope := range scopes.Kvs {
-		r.handleScopeOp(mvccpb.PUT, scope)
+		r.handleScopeOp(mvccpb.PUT, scope, ctx)
 	}
 }
 
@@ -69,7 +75,7 @@ func (r *Role) startWatchScopes() {
 	)
 	for watchResp := range watchChan {
 		for _, event := range watchResp.Events {
-			if r.handleScopeOp(event.Type, event.Kv) {
+			if r.handleScopeOp(event.Type, event.Kv, r.ctx) {
 				r.log.Debug("scope watch update", zap.String("key", string(event.Kv.Key)))
 			}
 		}

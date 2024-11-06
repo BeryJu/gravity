@@ -47,11 +47,16 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 			r.log.Warn("failed to get scope", zap.Error(err))
 			return status.Wrap(errors.New("failed to get scope"), status.Internal)
 		}
+		s, err := r.scopeFromKV(rawScope.Kvs[0])
+		if err != nil {
+			r.log.Warn("failed to parse scope", zap.Error(err))
+			return status.Wrap(err, status.Internal)
+		}
 
 		leaseKey := r.i.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
-			input.ScopeName,
+			s.Name,
 		)
 		if input.Identifier == "" {
 			leaseKey = leaseKey.Prefix(true)
@@ -63,7 +68,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 			return status.Wrap(err, status.Internal)
 		}
 		for _, lease := range rawLeases.Kvs {
-			l, err := r.leaseFromKV(lease)
+			l, err := s.leaseFromKV(lease)
 			if err != nil {
 				r.log.Warn("failed to parse lease", zap.Error(err))
 				continue
@@ -127,7 +132,7 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 			return status.Wrap(errors.New("failed to construct scope"), status.Internal)
 		}
 
-		l := r.NewLease(input.Identifier)
+		l := scope.NewLease(input.Identifier)
 		l.Address = input.Address
 		l.Hostname = input.Hostname
 		l.AddressLeaseTime = input.AddressLeaseTime
@@ -156,13 +161,40 @@ type APILeasesWOLInput struct {
 
 func (r *Role) APILeasesWOL() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
-		r.leasesM.RLock()
-		l, ok := r.leases[input.Identifier]
-		r.leasesM.RUnlock()
-		if !ok {
-			return status.InvalidArgument
+		rawScope, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(
+				types.KeyRole,
+				types.KeyScopes,
+				input.Scope,
+			).String(),
+		)
+		if err != nil || len(rawScope.Kvs) < 1 {
+			r.log.Warn("failed to get scope", zap.Error(err))
+			return status.Wrap(errors.New("failed to get scope"), status.Internal)
 		}
-		err := l.sendWOL()
+		scope, err := r.scopeFromKV(rawScope.Kvs[0])
+		if err != nil {
+			r.log.Warn("failed to construct scope", zap.Error(err))
+			return status.Wrap(errors.New("failed to construct scope"), status.Internal)
+		}
+
+		leaseKey := r.i.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			scope.Name,
+			input.Identifier,
+		)
+		rawLeases, err := r.i.KV().Get(ctx, leaseKey.String(), clientv3.WithPrefix())
+		if err != nil || len(rawLeases.Kvs) < 1 {
+			return status.Wrap(err, status.InvalidArgument)
+		}
+		l, err := scope.leaseFromKV(rawLeases.Kvs[0])
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+
+		err = l.sendWOL()
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

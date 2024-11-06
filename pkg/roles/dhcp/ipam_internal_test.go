@@ -58,7 +58,7 @@ func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 			types.KeyScopes,
 			scope.Name,
 		).String(),
-		tests.MustJSON(scope),
+		tests.MustJSON(&scope),
 	))
 	// Create fake leases to test against
 	for i := 0; i < iter-10; i++ {

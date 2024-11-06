@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/netip"
 	"strings"
+	"sync"
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
@@ -26,17 +27,19 @@ type ScopeDNS struct {
 type Scope struct {
 	ipam IPAM
 	inst roles.Instance
-	DNS  *ScopeDNS `json:"dns"`
-
-	IPAM map[string]string `json:"ipam"`
 	role *Role
 	log  *zap.Logger
 
 	cidr netip.Prefix
 	Name string `json:"-"`
 
-	etcdKey string
+	etcdKey        string
+	leases         map[string]*Lease
+	leasesWatchCtx context.CancelFunc
+	leasesSync     sync.RWMutex
 
+	DNS        *ScopeDNS           `json:"dns"`
+	IPAM       map[string]string   `json:"ipam"`
 	SubnetCIDR string              `json:"subnetCidr"`
 	Options    []*types.DHCPOption `json:"options"`
 	TTL        int64               `json:"ttl"`
@@ -46,13 +49,15 @@ type Scope struct {
 
 func (r *Role) NewScope(name string) *Scope {
 	return &Scope{
-		Name: name,
-		inst: r.i,
-		role: r,
-		TTL:  int64((7 * 24 * time.Hour).Seconds()),
-		log:  r.log.With(zap.String("scope", name)),
-		DNS:  &ScopeDNS{},
-		IPAM: make(map[string]string),
+		Name:       name,
+		inst:       r.i,
+		role:       r,
+		TTL:        int64((7 * 24 * time.Hour).Seconds()),
+		log:        r.log.With(zap.String("scope", name)),
+		DNS:        &ScopeDNS{},
+		IPAM:       make(map[string]string),
+		leases:     make(map[string]*Lease),
+		leasesSync: sync.RWMutex{},
 	}
 }
 
@@ -96,52 +101,6 @@ func (s *Scope) ipamType(previous *Scope) (IPAM, error) {
 	}
 }
 
-type scopeSelector func(scope *Scope) int
-
-func (r *Role) findScopeForRequest(req *Request4, additionalSelectors ...scopeSelector) *Scope {
-	var match *Scope
-	longestBits := 0
-	r.scopesM.RLock()
-	defer r.scopesM.RUnlock()
-	// To prioritise requests from a DHCP relay being matched correctly, give their subnet
-	// match a 1 bit more priority
-	const dhcpRelayBias = 1
-	for _, scope := range r.scopes {
-		// Check additional selectors (highest priority)
-		for _, sel := range additionalSelectors {
-			m := sel(scope)
-			if m > -1 && m > longestBits {
-				match = scope
-				longestBits = m
-			}
-		}
-		// Check based on gateway IP (next highest priority)
-		gatewayMatchBits := scope.match(req.GatewayIPAddr)
-		if gatewayMatchBits > -1 && gatewayMatchBits+dhcpRelayBias > longestBits {
-			req.log.Debug("selected scope based on cidr match (gateway IP)", zap.String("scope", scope.Name))
-			match = scope
-			longestBits = gatewayMatchBits + dhcpRelayBias
-		}
-		// Handle local broadcast, check with the instance's listening IP
-		// Only consider local scopes if we don't have a match already
-		localMatchBits := scope.match(net.ParseIP(req.LocalIP()))
-		if localMatchBits > -1 && localMatchBits > longestBits {
-			req.log.Debug("selected scope based on cidr match (instance/interface IP)", zap.String("scope", scope.Name))
-			match = scope
-			longestBits = localMatchBits
-		}
-		// Fallback to default scope if we don't already have a match
-		if match == nil && scope.Default {
-			req.log.Debug("selected scope based on default flag", zap.String("scope", scope.Name))
-			match = scope
-		}
-	}
-	if match != nil {
-		req.log.Debug("final scope selection", zap.String("scope", match.Name))
-	}
-	return match
-}
-
 func (s *Scope) match(peer net.IP) int {
 	ip, err := netip.ParseAddr(peer.String())
 	if err != nil {
@@ -156,11 +115,8 @@ func (s *Scope) match(peer net.IP) int {
 
 func (s *Scope) createLeaseFor(req *Request4) *Lease {
 	ident := s.role.DeviceIdentifier(req.DHCPv4)
-	lease := s.role.NewLease(ident)
+	lease := s.NewLease(ident)
 	lease.Hostname = req.HostName()
-
-	lease.scope = s
-	lease.ScopeKey = s.Name
 	lease.setLeaseIP(req)
 	req.log.Info("creating new DHCP lease", zap.String("ip", lease.Address), zap.String("identifier", ident))
 	return lease
@@ -209,4 +165,61 @@ func (s *Scope) executeHook(method string, args ...interface{}) {
 			},
 		},
 	}, args...)
+}
+
+func (s *Scope) watchScopeLeases(ctx context.Context) {
+	evtHandler := func(ev *clientv3.Event) {
+		lease, err := s.leaseFromKV(ev.Kv)
+		defer s.calculateUsage()
+		if ev.Type == clientv3.EventTypeDelete {
+			delete(s.leases, lease.Identifier)
+		} else {
+			// Check if the record parsed above actually was parsed correctly,
+			// we don't care for that when removing, but prevent adding
+			// empty leases
+			if err != nil {
+				return
+			}
+			s.leasesSync.Lock()
+			defer s.leasesSync.Unlock()
+			s.leases[lease.Identifier] = lease
+		}
+	}
+	ctx, canc := context.WithCancel(ctx)
+	s.leasesWatchCtx = canc
+
+	prefix := s.inst.KV().Key(s.etcdKey).Prefix(true).String()
+
+	leases, err := s.inst.KV().Get(ctx, prefix, clientv3.WithPrefix())
+	if err != nil {
+		s.log.Warn("failed to list initial leases", zap.Error(err))
+		time.Sleep(5 * time.Second)
+		s.watchScopeLeases(ctx)
+		return
+	}
+	for _, lease := range leases.Kvs {
+		evtHandler(&clientv3.Event{
+			Type: mvccpb.PUT,
+			Kv:   lease,
+		})
+	}
+
+	watchChan := s.inst.KV().Watch(
+		ctx,
+		prefix,
+		clientv3.WithPrefix(),
+	)
+	go func() {
+		for watchResp := range watchChan {
+			for _, event := range watchResp.Events {
+				go evtHandler(event)
+			}
+		}
+	}()
+}
+
+func (s *Scope) StopWatchingLeases() {
+	if s != nil && s.leasesWatchCtx != nil {
+		s.leasesWatchCtx()
+	}
 }

@@ -26,7 +26,6 @@ type Role struct {
 	ctx context.Context
 
 	scopes map[string]*Scope
-	leases map[string]*Lease
 
 	cfg *RoleConfig
 
@@ -35,7 +34,6 @@ type Role struct {
 
 	oui     *oui.OuiDb
 	scopesM sync.RWMutex
-	leasesM sync.RWMutex
 }
 
 func New(instance roles.Instance) *Role {
@@ -44,8 +42,6 @@ func New(instance roles.Instance) *Role {
 		i:       instance,
 		scopes:  make(map[string]*Scope),
 		scopesM: sync.RWMutex{},
-		leases:  make(map[string]*Lease),
-		leasesM: sync.RWMutex{},
 		ctx:     instance.Context(),
 	}
 	r.s4 = &handler4{
@@ -78,16 +74,8 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
 	r.loadInitialScopes(start.Context())
-	r.loadInitialLeases(start.Context())
-
-	// Since scope usage relies on r.leases, but r.leases is loaded after the scopes,
-	// manually update the usage
-	for _, s := range r.scopes {
-		s.calculateUsage()
-	}
 
 	go r.startWatchScopes()
-	go r.startWatchLeases()
 
 	err := r.initServer4()
 	if err != nil {
