@@ -13,7 +13,7 @@
     "dependencies": {
         "@codecov/rollup-plugin": "^1.2.1",
         "@codemirror/lang-javascript": "^6.2.2",
-        "@codemirror/legacy-modes": "^6.4.1",
+        "@codemirror/legacy-modes": "^6.4.2",
         "@codemirror/theme-one-dark": "^6.1.2",
         "@patternfly/patternfly": "^4.224.2",
         "@rollup/plugin-commonjs": "^28.0.1",
