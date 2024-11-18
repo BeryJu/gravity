@@ -11,7 +11,7 @@
         "tsc": "tsc --noEmit -p ."
     },
     "dependencies": {
-        "@codecov/rollup-plugin": "^1.3.0",
+        "@codecov/rollup-plugin": "^1.4.0",
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/legacy-modes": "^6.4.2",
         "@codemirror/theme-one-dark": "^6.1.2",
