@@ -41,7 +41,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -91,7 +91,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -150,7 +150,7 @@ func TestRoleDNS_IPForwarder_v6(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{

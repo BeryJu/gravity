@@ -55,7 +55,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -110,7 +110,7 @@ func TestRoleDNS_Etcd_Root(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -164,7 +164,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -232,7 +232,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -245,7 +245,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	ans := fw.Msg().Answer[0]
 	assert.Equal(t, net.ParseIP("10.2.3.4").String(), ans.(*d.A).A.String())
 
-	fw = dns.NewNullDNSWriter()
+	fw = NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -258,7 +258,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	ans = fw.Msg().Answer[0]
 	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
 
-	fw = dns.NewNullDNSWriter()
+	fw = NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -482,7 +482,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -536,7 +536,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -590,7 +590,7 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{

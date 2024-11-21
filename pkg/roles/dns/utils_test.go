@@ -1,4 +1,4 @@
-package dns
+package dns_test
 
 import (
 	"errors"
