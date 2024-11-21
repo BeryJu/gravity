@@ -44,6 +44,7 @@ func NewEtcdHandler(z *Zone, config map[string]interface{}) *EtcdHandler {
 		for _, kv := range res.Kvs {
 			rec, err := eh.z.recordFromKV(kv)
 			if err != nil {
+				eh.log.Warn("failed to create record from kv", zap.Error(err))
 				continue
 			}
 			ans := rec.ToDNS(qname)
@@ -140,7 +141,6 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 			r,
 		)
 		if len(cnames) > 0 {
-			m.Answer = append(m.Answer, cnames...)
 			// For each cname, lookup the actual record
 			for _, _cn := range cnames {
 				cn := _cn.(*dns.CNAME)

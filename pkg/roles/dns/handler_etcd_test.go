@@ -256,6 +256,21 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	})
 	ans = fw.Msg().Answer[0]
 	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
+
+	fw = NewNullDNSWriter()
+	role.Handler(fw, &d.Msg{
+		Question: []d.Question{
+			{
+				Name:   "foo.example.com.",
+				Qclass: d.ClassINET,
+			},
+		},
+	})
+	assert.Len(t, fw.Msg().Answer, 2)
+	assert.Equal(t, "bar.example.com.", fw.Msg().Answer[0].(*d.CNAME).Target)
+	assert.Equal(t, net.ParseIP("10.2.3.4").String(), fw.Msg().Answer[1].(*d.A).A.String())
+}
+
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
