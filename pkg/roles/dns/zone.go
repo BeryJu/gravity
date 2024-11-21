@@ -27,6 +27,7 @@ const (
 
 type Zone struct {
 	inst roles.Instance
+	role *Role
 
 	records         map[string]map[string]*Record
 	recordsWatchCtx context.CancelFunc
@@ -125,6 +126,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		hr := utils.NewRequest(r.Msg, ss.Context(), utils.DNSRoutingMeta{
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
+			ResolveRequest:  z.role.Handler,
 		})
 
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), hr)
@@ -176,6 +178,7 @@ func (r *Role) newZone(name string) *Zone {
 		h:           make([]Handler, 0),
 		records:     make(map[string]map[string]*Record),
 		recordsSync: sync.RWMutex{},
+		role:        r,
 	}
 }
 

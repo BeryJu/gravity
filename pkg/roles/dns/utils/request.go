@@ -9,6 +9,7 @@ import (
 type DNSRoutingMeta struct {
 	HandlerIdx      int
 	HasMoreHandlers bool
+	ResolveRequest  dns.HandlerFunc
 }
 
 type DNSRequest struct {
