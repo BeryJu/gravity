@@ -343,7 +343,7 @@ func TestRoleDNS_Etcd_CNAME_MultiZone(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
@@ -429,7 +429,7 @@ func TestRoleDNS_Etcd_CNAME_Recursive(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := dns.NewNullDNSWriter()
+	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{

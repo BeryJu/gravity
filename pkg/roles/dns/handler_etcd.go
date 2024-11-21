@@ -147,9 +147,9 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 				nq := dns.Question{
 					Name: cn.Target,
 				}
-				nr := NewNullDNSWriter()
+				nr := utils.NewFakeDNSWriter(w)
 				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}))
-				m.Answer = append(m.Answer, nr.msg.Answer...)
+				m.Answer = append(m.Answer, nr.Msg().Answer...)
 			}
 		}
 	}
