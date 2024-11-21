@@ -46,7 +46,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
+	fw := dns.NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: []d.Question{
 			{
