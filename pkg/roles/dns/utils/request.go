@@ -9,13 +9,14 @@ import (
 type DNSRoutingMeta struct {
 	HandlerIdx      int
 	HasMoreHandlers bool
-	ResolveRequest  dns.HandlerFunc
+	ResolveRequest  func(w dns.ResponseWriter, r *DNSRequest)
 }
 
 type DNSRequest struct {
 	*dns.Msg
 	context context.Context
 	meta    DNSRoutingMeta
+	iter    int
 }
 
 func NewRequest(msg *dns.Msg, ctx context.Context, meta DNSRoutingMeta) *DNSRequest {
@@ -23,6 +24,7 @@ func NewRequest(msg *dns.Msg, ctx context.Context, meta DNSRoutingMeta) *DNSRequ
 		Msg:     msg,
 		context: ctx,
 		meta:    meta,
+		iter:    0,
 	}
 }
 
@@ -32,4 +34,17 @@ func (r *DNSRequest) Context() context.Context {
 
 func (r *DNSRequest) Meta() DNSRoutingMeta {
 	return r.meta
+}
+
+func (r *DNSRequest) Iteration() int {
+	return r.iter
+}
+
+func (r *DNSRequest) Chain(msg *dns.Msg) *DNSRequest {
+	return &DNSRequest{
+		Msg:     msg,
+		context: r.context,
+		meta:    r.meta,
+		iter:    r.iter + 1,
+	}
 }

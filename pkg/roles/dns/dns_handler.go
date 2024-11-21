@@ -11,6 +11,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const IterationMax = 20
+
 // Find a zone for the given fqdn
 func (r *Role) FindZone(fqdn string) *Zone {
 	lastLongest := 0
@@ -29,9 +31,6 @@ func (r *Role) FindZone(fqdn string) *Zone {
 }
 
 func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
-	lastLongest := 0
-	var longestZone *Zone
-
 	span := sentry.StartTransaction(
 		context.TODO(),
 		"gravity.dns.request",
@@ -51,7 +50,24 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 		IPAddress: clientIP,
 	})
 	defer span.Finish()
+	req := utils.NewRequest(r, span.Context(), utils.DNSRoutingMeta{})
+	ro.rootHandler(w, req)
+}
 
+func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
+	if r.Iteration() > IterationMax {
+		ro.log.Error("exceeded maximum iteration count")
+		m := new(dns.Msg)
+		m.SetRcode(r.Msg, dns.RcodeNameError)
+		err := w.WriteMsg(m)
+		if err != nil {
+			ro.log.Warn("failed to send answer", zap.Error(err))
+		}
+		return
+	}
+	lastLongest := 0
+	var longestZone *Zone
+	span := sentry.SpanFromContext(r.Context())
 	for _, question := range r.Question {
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
 		ro.zonesM.RLock()
@@ -73,7 +89,7 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	if longestZone == nil {
 		ro.log.Error("no matching zone and no global zone")
 		m := new(dns.Msg)
-		m.SetRcode(r, dns.RcodeNameError)
+		m.SetRcode(r.Msg, dns.RcodeNameError)
 		err := w.WriteMsg(m)
 		if err != nil {
 			ro.log.Warn("failed to send answer", zap.Error(err))
@@ -82,5 +98,5 @@ func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
 	span.SetTag("gravity.dns.zone", longestZone.Name)
-	longestZone.resolve(w, utils.NewRequest(r, span.Context(), utils.DNSRoutingMeta{}), span)
+	longestZone.resolve(w, r, span)
 }

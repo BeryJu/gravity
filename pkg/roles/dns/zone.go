@@ -70,7 +70,7 @@ func (z *Zone) soa() *dns.Msg {
 	return m
 }
 
-func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler, rep *dns.Msg) {
+func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler) {
 	for _, question := range q.Question {
 		dnsQueries.WithLabelValues(
 			dns.TypeToString[question.Qtype],
@@ -126,7 +126,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		hr := utils.NewRequest(r.Msg, ss.Context(), utils.DNSRoutingMeta{
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
-			ResolveRequest:  z.role.Handler,
+			ResolveRequest:  z.role.rootHandler,
 		})
 
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), hr)
@@ -146,7 +146,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))
 			}
-			z.resolveUpdateMetrics(ss.EndTime.Sub(ss.StartTime), r, handler, handlerReply)
+			z.resolveUpdateMetrics(ss.EndTime.Sub(ss.StartTime), r, handler)
 			return
 		}
 		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))
