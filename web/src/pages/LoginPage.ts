@@ -140,17 +140,6 @@ export class LoginPage extends AKElement {
                               `
                             : html``}
                     </main>
-                    <footer class="pf-c-login__footer">
-                        <p></p>
-                        <ul class="pf-c-list pf-m-inline">
-                            <li>
-                                <a
-                                    href="https://gravity.beryju.io?utm_source=gravity&amp;utm_medium=login"
-                                    >${"Powered by Gravity"}</a
-                                >
-                            </li>
-                        </ul>
-                    </footer>
                 </div>
             </div>
         `;
