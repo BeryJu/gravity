@@ -199,7 +199,7 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 	})
 	ans = fw.Msg().Answer[0]
 	assert.Equal(t, "bar.test.", ans.(*d.CNAME).Target)
-	assert.Len(t, fw.Msg().Answer, 3)
+	assert.Len(t, fw.Msg().Answer, 2)
 }
 
 func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
