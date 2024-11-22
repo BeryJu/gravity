@@ -1,16 +1,11 @@
 import { RolesTftpApi, TftpAPIFilesPutInput } from "gravity-api";
 
-
-
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-
 
 @customElement("gravity-tftp-file-form")
 export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {

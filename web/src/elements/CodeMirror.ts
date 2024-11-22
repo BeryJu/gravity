@@ -48,9 +48,6 @@ export class CodeMirrorTextarea extends AKElement {
                 case "yaml":
                     textValue = YAML.stringify(v);
                     break;
-                case "javascript":
-                    textValue = JSON.stringify(v);
-                    break;
                 default:
                     textValue = v.toString();
                     break;
@@ -71,8 +68,6 @@ export class CodeMirrorTextarea extends AKElement {
             switch (this.mode.toLowerCase()) {
                 case "yaml":
                     return YAML.parse(this.getInnerValue());
-                case "javascript":
-                    return JSON.parse(this.getInnerValue());
                 default:
                     return this.getInnerValue();
             }
