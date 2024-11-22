@@ -10,8 +10,8 @@ require (
 	github.com/Ullaakut/nmap/v2 v2.2.2
 	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
 	github.com/api7/etcdstore v1.1.0
-	github.com/coredns/caddy v1.1.1
-	github.com/coredns/coredns v1.11.4
+	github.com/coredns/caddy v1.1.2-0.20241029205200-8de985351a98
+	github.com/coredns/coredns v1.12.0
 	github.com/coreos/go-oidc/v3 v3.11.0
 	github.com/creasty/defaults v1.8.0
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
@@ -237,6 +237,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
+	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/mod v0.22.0 // indirect
