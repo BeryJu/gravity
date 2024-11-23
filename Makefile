@@ -128,7 +128,7 @@ gen-client-ts:
 	cd ${PWD}/gen-ts-api && npm i
 	\cp -rf ${PWD}/gen-ts-api/* ${PWD}/web/node_modules/gravity-api
 
-gen-client-ts-update: gen-client-ts
+gen-client-ts-publish: gen-client-ts
 	cd ${PWD}/gen-ts-api
 	npm publish
 	cd ${PWD}/web
@@ -136,7 +136,7 @@ gen-client-ts-update: gen-client-ts
 	npm version ${VERSION} || true
 	git add package*.json
 
-gen: gen-build gen-clean gen-client-go gen-client-ts-update gen-tag
+gen: gen-build gen-clean gen-client-go gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s

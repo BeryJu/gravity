@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.14.0
+  version: 0.14.1
 paths:
   /api/v1/auth/config:
     get:
@@ -1579,15 +1579,20 @@ components:
       type: object
     ApiAPILogMessage:
       properties:
+        level:
+          type: string
+        logger:
+          type: string
         message:
           type: string
         node:
           type: string
+        time:
+          format: date-time
+          type: string
       type: object
     ApiAPILogMessages:
       properties:
-        isJSON:
-          type: boolean
         messages:
           items:
             $ref: '#/components/schemas/ApiAPILogMessage'

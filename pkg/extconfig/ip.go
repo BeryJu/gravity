@@ -54,7 +54,7 @@ func (e *ExtConfig) GetInterfaceForIP(forIp net.IP) (*net.Interface, error) {
 	for _, i := range ifaces {
 		addrs, err := e.checkInterface(i)
 		if err != nil {
-			e.Logger().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
+			e.intLog().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
 			continue
 		}
 		for _, addr := range addrs {
@@ -74,13 +74,13 @@ func (e *ExtConfig) GetIP() (net.IP, error) {
 	for _, i := range ifaces {
 		addrs, err := e.checkInterface(i)
 		if err != nil {
-			e.Logger().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
+			e.intLog().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
 			continue
 		}
 		if len(addrs) < 1 {
 			continue
 		}
-		e.Logger().Debug("Detected IP of instance", zap.String("ip", addrs[0].String()))
+		e.intLog().Debug("Detected IP of instance", zap.String("ip", addrs[0].String()))
 		return addrs[0], nil
 	}
 	return nil, errors.New("failed to find IP, set `INSTANCE_IP`")
