@@ -1,13 +1,17 @@
 package extconfig
 
 import (
-	_ "beryju.io/gravity/pkg/extconfig/log_iml"
+	"beryju.io/gravity/pkg/extconfig/log_iml"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 func (e *ExtConfig) Logger() *zap.Logger {
 	return e.logger
+}
+
+func (e *ExtConfig) intLog() *zap.Logger {
+	return e.Logger().Named("extconfig")
 }
 
 func (e *ExtConfig) BuildLogger() *zap.Logger {
@@ -45,5 +49,5 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	return log.With(
 		zap.String("instance", e.Instance.Identifier),
 		zap.String("version", FullVersion()),
-	)
+	).WithOptions(log_iml.Get().Hook())
 }

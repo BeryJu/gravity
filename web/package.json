@@ -27,7 +27,6 @@
         "@typescript-eslint/eslint-plugin": "^8.15.0",
         "@typescript-eslint/parser": "^8.15.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
-        "ansi-to-html": "^0.7.2",
         "chart.js": "^4.4.6",
         "chartjs-adapter-moment": "^1.0.1",
         "codemirror": "^6.0.1",

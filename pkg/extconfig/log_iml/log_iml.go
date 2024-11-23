@@ -1,44 +1,31 @@
 package log_iml
 
 import (
-	"bytes"
-	"net/url"
-	"strings"
 	"sync"
 
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type inMemoryLogger struct {
-	msgs    []string
-	msgM    sync.RWMutex
-	lineBuf *bytes.Buffer
-	max     int
+	msgs []zapcore.Entry
+	msgM sync.RWMutex
+	max  int
 }
 
-func (iml *inMemoryLogger) Close() error { return nil }
-func (iml *inMemoryLogger) Sync() error  { return nil }
-func (iml *inMemoryLogger) flush() {
-	go func() {
+func (iml *inMemoryLogger) Hook() zap.Option {
+	return zap.Hooks(func(e zapcore.Entry) error {
 		iml.msgM.Lock()
-		iml.msgs = append(iml.msgs, iml.lineBuf.String())
-		iml.lineBuf.Reset()
+		defer iml.msgM.Unlock()
+		iml.msgs = append(iml.msgs, e)
 		if len(iml.msgs) > iml.max {
 			iml.msgs = iml.msgs[1:]
 		}
-		iml.msgM.Unlock()
-	}()
+		return nil
+	})
 }
 
-func (iml *inMemoryLogger) Write(log []byte) (int, error) {
-	n, err := iml.lineBuf.Write(log)
-	if strings.Contains(string(log), "\n") {
-		iml.flush()
-	}
-	return n, err
-}
-
-func (iml *inMemoryLogger) Messages() []string {
+func (iml *inMemoryLogger) Messages() []zapcore.Entry {
 	iml.msgM.RLock()
 	defer iml.msgM.RUnlock()
 	return iml.msgs
@@ -48,20 +35,14 @@ var iml *inMemoryLogger
 
 func init() {
 	iml = &inMemoryLogger{
-		msgs:    make([]string, 0),
-		max:     300,
-		lineBuf: new(bytes.Buffer),
-	}
-	err := zap.RegisterSink("gravity-in-memory", func(u *url.URL) (zap.Sink, error) {
-		return iml, nil
-	})
-	if err != nil {
-		panic(err)
+		msgs: make([]zapcore.Entry, 0),
+		max:  300,
 	}
 }
 
 type InMemoryLogger interface {
-	Messages() []string
+	Messages() []zapcore.Entry
+	Hook() zap.Option
 }
 
 func Get() InMemoryLogger {
