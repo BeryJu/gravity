@@ -13,6 +13,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
+	"gopkg.in/yaml.v2"
 
 	"github.com/0xERR0R/blocky/config"
 	blockylog "github.com/0xERR0R/blocky/log"
@@ -85,7 +86,9 @@ func (bfwd *BlockyForwarder) Identifier() string {
 	return BlockyForwarderType
 }
 
-func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
+// Generate the configuration for Blocky based on parameters specified.
+// Used if no full custom config is specified
+func (bfwd *BlockyForwarder) generateConfig(cfg *config.Config) error {
 	forwarders := []string{}
 	switch v := bfwd.c["to"].(type) {
 	case string:
@@ -123,25 +126,9 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 	if all, ok := bfwd.c["allowlists"]; ok {
 		allowLists = bfwd.getLists(all)
 	}
-
-	cfg := config.Config{}
-	err := defaults.Set(&cfg)
-	if err != nil {
-		return nil, fmt.Errorf("failed to set config defaults: %w", err)
-	}
-	// Blocky uses a custom registry, so this doesn't work as expected
-	// cfg.Prometheus.Enable = true
-	cfg.Log.Level = logrus.DebugLevel
-	cfg.QueryLog.Type = config.QueryLogTypeConsole
-	if !extconfig.Get().Debug {
-		cfg.Log.Format = blockylog.FormatTypeJson
-		// Only log errors from blocky to prevent double-logging all queries
-		cfg.Log.Level = logrus.FatalLevel
-		cfg.QueryLog.Type = config.QueryLogTypeNone
-	}
 	bootstrap, err := netip.ParseAddrPort(extconfig.Get().FallbackDNS)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	cfg.BootstrapDNS = config.BootstrapDNS{
 		{
@@ -158,7 +145,6 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		},
 		Timeout: config.Duration(types.DefaultUpstreamTimeout),
 	}
-	// TODO: Blocky config
 	cfg.Blocking = config.Blocking{
 		BlockType: "zeroIP",
 		Denylists: map[string][]config.BytesSource{
@@ -175,6 +161,36 @@ func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
 		ClientGroupsBlock: map[string][]string{
 			"default": {"default"},
 		},
+	}
+	return nil
+}
+
+func (bfwd *BlockyForwarder) getConfig() (*config.Config, error) {
+	cfg := config.Config{}
+	if ccfg, ok := bfwd.c["config"].(string); ok {
+		err := yaml.UnmarshalStrict([]byte(ccfg), &cfg)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse specified config: %w", err)
+		}
+	} else {
+		err := defaults.Set(&cfg)
+		if err != nil {
+			return nil, fmt.Errorf("failed to set config defaults: %w", err)
+		}
+		err = bfwd.generateConfig(&cfg)
+		if err != nil {
+			return nil, fmt.Errorf("failed to generate config: %w", err)
+		}
+	}
+	// Blocky uses a custom registry, so this doesn't work as expected
+	// cfg.Prometheus.Enable = true
+	cfg.Log.Level = logrus.DebugLevel
+	cfg.QueryLog.Type = config.QueryLogTypeConsole
+	if !extconfig.Get().Debug {
+		cfg.Log.Format = blockylog.FormatTypeJson
+		// Only log errors from blocky to prevent double-logging all queries
+		cfg.Log.Level = logrus.FatalLevel
+		cfg.QueryLog.Type = config.QueryLogTypeNone
 	}
 	return &cfg, nil
 }
