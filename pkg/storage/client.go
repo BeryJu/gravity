@@ -1,10 +1,9 @@
 package storage
 
 import (
-	"context"
 	"time"
 
-	"github.com/getsentry/sentry-go"
+	"beryju.io/gravity/pkg/storage/trace"
 	"go.uber.org/zap"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -31,7 +30,11 @@ func NewClient(prefix string, logger *zap.Logger, debug bool, endpoints ...strin
 	if err != nil {
 		logger.Panic("failed to setup etcd client", zap.Error(err))
 	}
-	cli.KV = namespace.NewKV(cli.KV, prefix)
+	cli.KV = trace.NewKV(namespace.NewKV(cli.KV, prefix), func(op clientv3.Op) {
+		if debug {
+			logger.Warn("etcd op without transaction", zap.String("key", string(op.KeyBytes())), zap.String("op", trace.NameFromOp(op)))
+		}
+	})
 	cli.Watcher = namespace.NewWatcher(cli.Watcher, prefix)
 	cli.Lease = namespace.NewLease(cli.Lease, prefix)
 
@@ -48,33 +51,6 @@ func (c *Client) Config() clientv3.Config {
 	return c.config
 }
 
-func (c *Client) trace(ctx context.Context, op string, key string) func() {
-	tx := sentry.TransactionFromContext(ctx)
-	if tx == nil {
-		if c.debug {
-			c.log.Warn("etcd op without transaction", zap.String("key", key), zap.String("op", op))
-		}
-		return func() {}
-	}
-	span := tx.StartChild(op)
-	span.Description = key
-	span.SetTag("etcd.key", key)
-	return func() {
-		span.Finish()
-	}
-}
+func (c *Client) AddGlobalHook() {
 
-func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
-	defer c.trace(ctx, "etcd.get", key)()
-	return c.Client.Get(ctx, key, opts...)
-}
-
-func (c *Client) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
-	defer c.trace(ctx, "etcd.put", key)()
-	return c.Client.Put(ctx, key, val, opts...)
-}
-
-func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
-	defer c.trace(ctx, "etcd.delete", key)()
-	return c.Client.Delete(ctx, key, opts...)
 }
