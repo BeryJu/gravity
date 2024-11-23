@@ -11,7 +11,6 @@ import (
 	"beryju.io/gravity/pkg/roles/api"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestStart(t *testing.T) {
@@ -40,13 +39,6 @@ func TestFirstStart(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("test", ctx)
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyCluster,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
 	inst.AddEventListener(types.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		defer rootInst.Stop()
 

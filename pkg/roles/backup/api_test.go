@@ -6,10 +6,8 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/backup"
-	"beryju.io/gravity/pkg/roles/backup/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestAPIBackupStart(t *testing.T) {
@@ -40,14 +38,7 @@ func TestAPIBackupStatus(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
-	inst := rootInst.ForRole("backup", ctx)
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
+	rootInst.ForRole("backup", ctx)
 
 	TestAPIBackupStart(t)
 
