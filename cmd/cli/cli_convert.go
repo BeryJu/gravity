@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import "github.com/spf13/cobra"
 
@@ -8,5 +8,5 @@ var cliConvertCmd = &cobra.Command{
 }
 
 func init() {
-	cliCmd.AddCommand(cliConvertCmd)
+	CLICmd.AddCommand(cliConvertCmd)
 }

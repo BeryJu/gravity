@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	_ "unsafe"
@@ -17,5 +17,5 @@ var globalFlags command.GlobalFlags
 
 func init() {
 	globalFlags.Endpoints = []string{extconfig.Get().Etcd.Endpoint}
-	cliCmd.AddCommand(etcdctlCommand)
+	CLICmd.AddCommand(etcdctlCommand)
 }

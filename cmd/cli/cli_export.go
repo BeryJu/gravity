@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"encoding/json"
@@ -43,5 +43,5 @@ var exportCmd = &cobra.Command{
 
 func init() {
 	exportCmd.Flags().BoolVar(&exportSafe, "safe", false, "Export only safe values")
-	cliCmd.AddCommand(exportCmd)
+	CLICmd.AddCommand(exportCmd)
 }

@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"context"
@@ -25,7 +25,7 @@ var (
 	logger    *zap.Logger
 )
 
-var cliCmd = &cobra.Command{
+var CLICmd = &cobra.Command{
 	Use:   "cli",
 	Short: "Interact with a running Gravity server",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -66,9 +66,8 @@ func init() {
 		defUrl = fmt.Sprintf("unix://%s/gravity.sock", cwd)
 	}
 	logger = extconfig.Get().Logger().Named("cli")
-	cliCmd.PersistentFlags().StringVarP(&apiUrl, "host", "s", defUrl, "API Host")
-	cliCmd.PersistentFlags().StringVarP(&apiToken, "token", "t", "", "API Token")
-	rootCmd.AddCommand(cliCmd)
+	CLICmd.PersistentFlags().StringVarP(&apiUrl, "host", "s", defUrl, "API Host")
+	CLICmd.PersistentFlags().StringVarP(&apiToken, "token", "t", "", "API Token")
 }
 
 func checkApiError(hr *http.Response, err error) {

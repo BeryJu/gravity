@@ -40,3 +40,14 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
             CC_GH_COMMIT_SHA=${{ github.event.pull_request.head.sha }}
+  build-cli:
+    name: Build CLI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [arm64, amd64]
+        os: [darwin, linux]
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} make bin/gravity-cli

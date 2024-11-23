@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"github.com/spf13/cobra"
@@ -14,5 +14,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	cliCmd.AddCommand(sc)
+	CLICmd.AddCommand(sc)
 }

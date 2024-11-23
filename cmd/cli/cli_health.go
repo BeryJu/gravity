@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"os"
@@ -20,5 +20,5 @@ var healthCmd = &cobra.Command{
 }
 
 func init() {
-	cliCmd.AddCommand(healthCmd)
+	CLICmd.AddCommand(healthCmd)
 }

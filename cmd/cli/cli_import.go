@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"encoding/json"
@@ -36,5 +36,5 @@ var importCmd = &cobra.Command{
 }
 
 func init() {
-	cliCmd.AddCommand(importCmd)
+	CLICmd.AddCommand(importCmd)
 }

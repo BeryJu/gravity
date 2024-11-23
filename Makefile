@@ -19,17 +19,18 @@ ci--env:
 docker-build: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
-		-v -a -o gravity .
+		-v -a -o gravity ${PWD}
 
 clean:
 	rm -rf ${PWD}/data/
+	rm -rf ${PWD}/bin/
 
 run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export INSTANCE_LISTEN=0.0.0.0
 	export DEBUG=true
 	export LISTEN_ONLY=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
-	go run ${GO_FLAGS} . server
+	go run ${GO_FLAGS} ${PWD} server
 
 # Web
 web-install:
@@ -51,6 +52,12 @@ web-lint:
 	npm run lint
 	npm run lit-analyse
 
+# CLI
+bin/gravity-cli:
+	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
+	mkdir -p ${PWD}/bin/
+	go build ${GO_FLAGS} -o ${PWD}/bin/gravity-cli ${PWD}/cmd/cli/main/
+
 # Website
 website-watch:
 	cd ${PWD}/docs
@@ -58,26 +65,26 @@ website-watch:
 
 internal/resources/macoui:
 	mkdir -p internal/resources/macoui
-	curl -L https://raw.githubusercontent.com/wireshark/wireshark/6885d787fda5f74a2d1f9eeea443fecf8dd58528/manuf -o ./internal/resources/macoui/db.txt
+	curl -L https://raw.githubusercontent.com/wireshark/wireshark/6885d787fda5f74a2d1f9eeea443fecf8dd58528/manuf -o ${PWD}/internal/resources/macoui/db.txt
 
 internal/resources/blocky:
 	mkdir -p internal/resources/blocky
-	curl -L https://adaway.org/hosts.txt -o ./internal/resources/blocky/adaway.org.txt
-	curl -L https://big.oisd.nl/domainswild -o ./internal/resources/blocky/big.oisd.nl.txt
-	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ./internal/resources/blocky/StevenBlack.hosts.txt
-	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ./internal/resources/blocky/AdguardDNS.txt
-	curl -L https://v.firebog.net/hosts/Easylist.txt -o ./internal/resources/blocky/Easylist.txt
-	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ./internal/resources/blocky/AdGuardSDNSFilter.txt
+	curl -L https://adaway.org/hosts.txt -o ${PWD}/internal/resources/blocky/adaway.org.txt
+	curl -L https://big.oisd.nl/domainswild -o ${PWD}/internal/resources/blocky/big.oisd.nl.txt
+	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ${PWD}/internal/resources/blocky/StevenBlack.hosts.txt
+	curl -L https://v.firebog.net/hosts/AdguardDNS.txt -o ${PWD}/internal/resources/blocky/AdguardDNS.txt
+	curl -L https://v.firebog.net/hosts/Easylist.txt -o ${PWD}/internal/resources/blocky/Easylist.txt
+	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ${PWD}/internal/resources/blocky/AdGuardSDNSFilter.txt
 
 internal/resources/tftp:
 	mkdir -p internal/resources/tftp
-	curl -L http://boot.ipxe.org/undionly.kpxe -o ./internal/resources/tftp/ipxe.undionly.kpxe
-	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe -o ./internal/resources/tftp/netboot.xyz.kpxe
-	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz-undionly.kpxe -o ./internal/resources/tftp/netboot.xyz-undionly.kpxe
-	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ./internal/resources/tftp/netboot.xyz.efi
+	curl -L http://boot.ipxe.org/undionly.kpxe -o ${PWD}/internal/resources/tftp/ipxe.undionly.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe -o ${PWD}/internal/resources/tftp/netboot.xyz.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz-undionly.kpxe -o ${PWD}/internal/resources/tftp/netboot.xyz-undionly.kpxe
+	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ${PWD}/internal/resources/tftp/netboot.xyz.efi
 
 gen-build:
-	DEBUG=true go run ${GO_FLAGS} . generateSchema ${SCHEMA_FILE}
+	DEBUG=true go run ${GO_FLAGS} ${PWD} generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
 gen-clean:
@@ -162,7 +169,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 	export ETCD_ENDPOINT="localhost:2385"
 	export DEBUG="true"
 	export LISTEN_ONLY="true"
-	go run -v . cli etcdctl del --prefix /
+	go run -v ${PWD} cli etcdctl del --prefix /
 	go test \
 		-p 1 \
 		-coverprofile=coverage.txt \
