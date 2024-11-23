@@ -39,8 +39,6 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
-      - run: |
-          make bin/gravity-cli
       - uses: actions/create-release@v1.1.4
         id: create_release
         env:
