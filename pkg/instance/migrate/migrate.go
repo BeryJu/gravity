@@ -5,6 +5,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/Masterminds/semver/v3"
 	"go.uber.org/zap"
 )
@@ -23,24 +24,26 @@ func New(ri roles.Instance) *Migrator {
 	}
 }
 
-func (mi *Migrator) Run(ctx context.Context) error {
+func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 	cv := semver.MustParse(extconfig.FullVersion())
+	cli := mi.ri.KV()
 	for _, m := range mi.migrations {
 		enabled, err := m.Check(cv, ctx)
 		if err != nil {
 			mi.log.Warn("failed to check if migration should be enabled", zap.String("migration", m.Name()), zap.Error(err))
-			continue
+			return nil, err
 		}
 		if !enabled {
 			continue
 		}
-		err = m.Hook(ctx)
+		_cli, err := m.Hook(ctx)
 		if err != nil {
 			mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
-			continue
+			return nil, err
 		}
+		cli = _cli
 	}
-	return nil
+	return cli, nil
 }
 
 func (mi *Migrator) AddMigration(migration roles.Migration) {

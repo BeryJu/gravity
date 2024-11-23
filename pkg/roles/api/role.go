@@ -10,11 +10,14 @@ import (
 	"path"
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/api7/etcdstore"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -42,6 +45,18 @@ type Role struct {
 }
 
 func New(instance roles.Instance) *Role {
+	instance.Migrator().AddMigration(&migrate.InlineMigration{
+		MigrationName:     "test-migration",
+		ActivateOnVersion: migrate.MustParseConstraint("<= 0.15.1"),
+		HookFunc: func(ctx context.Context) (*storage.Client, error) {
+			return instance.KV().WithHooks(storage.StorageHook{
+				Request: func(ctx context.Context, op clientv3.Op, client *storage.Client) error {
+					return nil
+				},
+			}), nil
+		},
+	})
+
 	mux := mux.NewRouter()
 	r := &Role{
 		log:          instance.Log(),

@@ -11,6 +11,7 @@ import (
 )
 
 type RoleInstance struct {
+	kv       *storage.Client
 	context  context.Context
 	log      *zap.Logger
 	parent   *Instance
@@ -24,13 +25,14 @@ func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {
 		roleId:  roleId,
 		parent:  i,
 		context: ctx,
+		kv:      i.kv,
 	}
 	ri.migrator = migrate.New(ri)
 	return ri
 }
 
 func (ri *RoleInstance) KV() *storage.Client {
-	return ri.parent.kv
+	return ri.kv
 }
 
 func (ri *RoleInstance) Log() *zap.Logger {

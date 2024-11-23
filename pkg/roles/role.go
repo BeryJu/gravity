@@ -58,7 +58,7 @@ type HookOptions struct {
 
 type Migration interface {
 	Check(clusterVersion *semver.Version, ctx context.Context) (bool, error)
-	Hook(context.Context) error
+	Hook(context.Context) (*storage.Client, error)
 	Cleanup(context.Context) error
 	Name() string
 }

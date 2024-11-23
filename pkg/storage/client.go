@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"time"
 
 	"beryju.io/gravity/pkg/storage/trace"
@@ -10,12 +11,18 @@ import (
 	"go.etcd.io/etcd/client/v3/namespace"
 )
 
+type StorageHook struct {
+	Request func(ctx context.Context, op clientv3.Op, client *Client) error
+}
+
 type Client struct {
 	*clientv3.Client
 	log    *zap.Logger
 	config clientv3.Config
 	prefix string
 	debug  bool
+	hooks  []StorageHook
+	parent *Client
 }
 
 func NewClient(prefix string, logger *zap.Logger, debug bool, endpoints ...string) *Client {
@@ -44,6 +51,7 @@ func NewClient(prefix string, logger *zap.Logger, debug bool, endpoints ...strin
 		prefix: prefix,
 		config: config,
 		debug:  debug,
+		hooks:  []StorageHook{},
 	}
 }
 
@@ -51,6 +59,24 @@ func (c *Client) Config() clientv3.Config {
 	return c.config
 }
 
-func (c *Client) AddGlobalHook() {
+func (c *Client) WithHooks(hooks ...StorageHook) *Client {
+	return &Client{
+		Client: c.Client,
+		log:    c.log,
+		prefix: c.prefix,
+		config: c.config,
+		debug:  c.debug,
+		hooks:  hooks,
+		parent: c,
+	}
+}
 
+func (c *Client) Do(ctx context.Context, op clientv3.Op) (clientv3.OpResponse, error) {
+	for _, h := range c.hooks {
+		err := h.Request(ctx, op, c.parent)
+		if err != nil {
+			return clientv3.OpResponse{}, err
+		}
+	}
+	return c.Client.Do(ctx, op)
 }
