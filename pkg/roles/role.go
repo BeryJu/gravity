@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"beryju.io/gravity/pkg/storage"
+	"github.com/Masterminds/semver/v3"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
@@ -55,6 +56,17 @@ type HookOptions struct {
 	Env    map[string]interface{}
 }
 
+type Migration interface {
+	Check(clusterVersion *semver.Version, ctx context.Context) (bool, error)
+	Hook(context.Context) error
+	Cleanup(context.Context) error
+	Name() string
+}
+
+type RoleMigrator interface {
+	AddMigration(Migration)
+}
+
 type Instance interface {
 	KV() *storage.Client
 	Log() *zap.Logger
@@ -62,4 +74,5 @@ type Instance interface {
 	AddEventListener(topic string, handler EventHandler)
 	Context() context.Context
 	ExecuteHook(HookOptions, ...interface{})
+	Migrator() RoleMigrator
 }

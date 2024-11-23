@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
@@ -39,6 +40,13 @@ type Role struct {
 }
 
 func New(instance roles.Instance) *Role {
+	instance.Migrator().AddMigration(&migrate.InlineMigration{
+		MigrationName:     "test-migration",
+		ActivateOnVersion: migrate.MustParseConstraint("<= 0.15.1"),
+		HookFunc: func(ctx context.Context) {
+
+		},
+	})
 	r := &Role{
 		log:     instance.Log(),
 		i:       instance,

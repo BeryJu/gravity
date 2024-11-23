@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api"
@@ -37,6 +38,7 @@ type RoleContext struct {
 	Role              roles.Role
 	RoleInstance      *RoleInstance
 	ContextCancelFunc context.CancelFunc
+	Migrator          *migrate.Migrator
 }
 
 type Instance struct {
@@ -336,7 +338,14 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	defer srs.Finish()
 	defer i.putInstanceInfo(srs.Context())
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
-	err := i.roles[id].Role.Start(srs.Context(), rawConfig)
+	// Run migrations
+	err := i.roles[id].Migrator.Run(srs.Context())
+	if err != nil {
+		i.log.Warn("failed to run migrations for role", zap.String("roleId", id))
+		return false
+	}
+	// Start role
+	err = i.roles[id].Role.Start(srs.Context(), rawConfig)
 	if err == roles.ErrRoleNotConfigured {
 		i.log.Info("role not configured", zap.String("roleId", id))
 	} else if err != nil {

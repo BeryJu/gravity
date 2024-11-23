@@ -4,26 +4,29 @@ import (
 	"context"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
 	"go.uber.org/zap"
 )
 
 type RoleInstance struct {
-	context context.Context
-	log     *zap.Logger
-	parent  *Instance
-	roleId  string
+	context  context.Context
+	log      *zap.Logger
+	parent   *Instance
+	roleId   string
+	migrator *migrate.Migrator
 }
 
 func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {
-	in := &RoleInstance{
+	ri := &RoleInstance{
 		log:     extconfig.Get().Logger().Named("role." + roleId),
 		roleId:  roleId,
 		parent:  i,
 		context: ctx,
 	}
-	return in
+	ri.migrator = migrate.New(ri)
+	return ri
 }
 
 func (ri *RoleInstance) KV() *storage.Client {
@@ -36,6 +39,10 @@ func (ri *RoleInstance) Log() *zap.Logger {
 
 func (ri *RoleInstance) Context() context.Context {
 	return ri.context
+}
+
+func (ri *RoleInstance) Migrator() roles.RoleMigrator {
+	return ri.migrator
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
