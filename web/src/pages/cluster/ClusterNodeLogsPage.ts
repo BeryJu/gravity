@@ -37,7 +37,6 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
             new TableColumn("Timestamp"),
             new TableColumn("Logger"),
             new TableColumn("Message"),
-            new TableColumn("Fields"),
         ];
     }
 
@@ -47,7 +46,6 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
             html`${item.time?.toLocaleString()}`,
             html`<pre>${item.logger}</pre>`,
             html`<pre>${item.message}</pre>`,
-            html``,
         ];
     }
 }
