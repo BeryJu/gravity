@@ -10,6 +10,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -41,21 +42,18 @@ type RoleContext struct {
 type Instance struct {
 	rootContext context.Context
 	roles       map[string]RoleContext
+	rolesM      sync.Mutex
 	kv          *storage.Client
 	log         *zap.Logger
 
-	eventHandlers map[string]map[string][]roles.EventHandler
-
-	etcd *etcd.Role
-
+	eventHandlers     map[string]map[string][]roles.EventHandler
+	eventHandlersM    sync.RWMutex
 	rootContextCancel context.CancelFunc
 
-	instanceInfoLease *clientv3.LeaseID
-	identifier        string
+	identifier string
 
-	eventHandlersM sync.RWMutex
-
-	rolesM sync.Mutex
+	instanceSession *concurrency.Session
+	etcd            *etcd.Role
 }
 
 func New() *Instance {
@@ -169,7 +167,6 @@ func (i *Instance) getRoles(ctx context.Context) []string {
 func (i *Instance) bootstrap(ctx context.Context) {
 	i.log.Debug("bootstrapping instance")
 	i.keepAliveInstanceInfo(ctx)
-	i.putInstanceInfo(ctx)
 	i.setupInstanceAPI()
 	rootInstance := i.ForRole("root", ctx)
 	for _, roleId := range i.getRoles(ctx) {

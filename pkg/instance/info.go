@@ -4,20 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"slices"
-	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
 	"golang.org/x/exp/maps"
 )
 
 type InstanceInfo struct {
-	Version    string `json:"version" required:"true"`
-	Roles      string `json:"roles" required:"true"`
-	Identifier string `json:"identifier" required:"true"`
-	IP         string `json:"ip" required:"true"`
+	Version    string   `json:"version" required:"true"`
+	Roles      []string `json:"roles" required:"true"`
+	Identifier string   `json:"identifier" required:"true"`
+	IP         string   `json:"ip" required:"true"`
 }
 
 func (i *Instance) getInfo() *InstanceInfo {
@@ -28,42 +28,37 @@ func (i *Instance) getInfo() *InstanceInfo {
 	slices.Sort(roles)
 	return &InstanceInfo{
 		Version:    extconfig.FullVersion(),
-		Roles:      strings.Join(roles, ";"),
+		Roles:      roles,
 		Identifier: extconfig.Get().Instance.Identifier,
 		IP:         extconfig.Get().Instance.IP,
 	}
 }
 
 func (i *Instance) keepAliveInstanceInfo(ctx context.Context) {
-	if i.instanceInfoLease == nil {
-		lease, err := i.kv.Lease.Grant(ctx, 100)
-		if err != nil {
-			i.log.Warn("failed to grant lease", zap.Error(err))
-			return
-		}
-		i.instanceInfoLease = &lease.ID
+	restarter := func() {
+		<-i.instanceSession.Done()
+		i.keepAliveInstanceInfo(ctx)
 	}
-	keepAlive, err := i.kv.KeepAlive(ctx, *i.instanceInfoLease)
+	defer func() {
+		i.putInstanceInfo(ctx)
+		go restarter()
+	}()
+	sess, err := concurrency.NewSession(i.kv.Client)
 	if err != nil {
-		i.log.Warn("failed to grant lease", zap.Error(err))
+		i.log.Warn("failed to setup etcd lease session", zap.Error(err))
 		return
 	}
-	go func() {
-		for range keepAlive {
-			// eat messages until keep alive channel closes
-		}
-	}()
+	i.instanceSession = sess
 }
 
-func (i *Instance) putInstanceInfo(ctx context.Context) {
+func (i *Instance) putInstanceInfo(ctx context.Context, opts ...clientv3.OpOption) {
 	ji, err := json.Marshal(i.getInfo())
 	if err != nil {
 		i.log.Warn("failed to get instance info", zap.Error(err))
 		return
 	}
-	opts := []clientv3.OpOption{}
-	if i.instanceInfoLease != nil {
-		opts = append(opts, clientv3.WithLease(*i.instanceInfoLease))
+	if i.instanceSession != nil {
+		opts = append(opts, clientv3.WithLease(i.instanceSession.Lease()))
 	}
 	_, err = i.kv.Put(
 		ctx,
