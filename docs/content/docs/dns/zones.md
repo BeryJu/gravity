@@ -81,6 +81,10 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
   Defaults to 0. Attempts to cache for the TTL of the response.
   Set to -1 to never cache, and set to -2 to cache without a TTL.
 
+- `config`: Optional Blocky configuration as string. (Requires Gravity 0.15.0)
+
+  See [here](https://0xerr0r.github.io/blocky/main/configuration/) for a reference configuration file and options that can be configured.
+
 - `blocklists`: List of blocklists to load.
 - `allowlists`: List of allowlists to load.
 
@@ -101,6 +105,9 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
 
 ##### Example
 
+{{< tabpane text=true >}}
+  {{% tab header="Customized options" lang="en" %}}
+
 ```yaml
 - type: forward_blocky
   to: 8.8.8.8
@@ -109,6 +116,33 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
   allowlists:
     - exception.com
 ```
+
+  {{% /tab %}}
+  {{% tab header="Full custom config" lang="en" %}}
+
+```yaml
+- type: forward_blocky
+  # Non-exhaustive Blocky configuration, this is just an example to show the usage of `config:`
+  config: |
+    upstreams:
+      init:
+        # Configure startup behavior.
+        # accepted: blocking, failOnError, fast
+        # default: blocking
+        strategy: fast
+      groups:
+        # these external DNS resolvers will be used. Blocky picks 2 random resolvers from the list for each query
+        # format for resolver: [net:]host:[port][/path]. net could be empty (default, shortcut for tcp+udp), tcp+udp, tcp, udp, tcp-tls or https (DoH). If port is empty, default port will be used (53 for udp and tcp, 853 for tcp-tls, 443 for https (Doh))
+        # this configuration is mandatory, please define at least one external DNS resolver
+        default:
+          # example for tcp+udp IPv4 server (https://digitalcourage.de/)
+          - 5.9.164.112
+          # Cloudflare
+          - 1.1.1.1
+```
+
+  {{% /tab %}}
+{{< /tabpane >}}
 
 ### `coredns`
 
@@ -120,7 +154,7 @@ Resolve queries by using a variety of CoreDNS Plugins. See [here](https://coredn
 
   Example:
 
-  ```
+  ```caddy
   .:1053 {
     whoami
   }
