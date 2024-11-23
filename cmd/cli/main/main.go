@@ -1,8 +1,15 @@
 package main
 
-import "beryju.io/gravity/cmd/cli"
+import (
+	"os"
+
+	"beryju.io/gravity/cmd/cli"
+)
 
 func main() {
 	cli.CLICmd.Use = "gravity-cli"
-	cli.CLICmd.Execute()
+	err := cli.CLICmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
 }
