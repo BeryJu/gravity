@@ -10,7 +10,6 @@ import (
 	"beryju.io/gravity/pkg/tests"
 	d "github.com/miekg/dns"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestRoleDNS_BlockyForwarder(t *testing.T) {
@@ -18,14 +17,6 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyZones,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
@@ -67,14 +58,6 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
-	tests.PanicIfError(inst.KV().Delete(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyZones,
-		).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	))
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
