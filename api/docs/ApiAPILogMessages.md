@@ -4,7 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**IsJSON** | Pointer to **bool** |  | [optional] 
 **Messages** | Pointer to [**[]ApiAPILogMessage**](ApiAPILogMessage.md) |  | [optional] 
 
 ## Methods
@@ -25,31 +24,6 @@ will change when the set of required properties is changed
 NewApiAPILogMessagesWithDefaults instantiates a new ApiAPILogMessages object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetIsJSON
-
-`func (o *ApiAPILogMessages) GetIsJSON() bool`
-
-GetIsJSON returns the IsJSON field if non-nil, zero value otherwise.
-
-### GetIsJSONOk
-
-`func (o *ApiAPILogMessages) GetIsJSONOk() (*bool, bool)`
-
-GetIsJSONOk returns a tuple with the IsJSON field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetIsJSON
-
-`func (o *ApiAPILogMessages) SetIsJSON(v bool)`
-
-SetIsJSON sets IsJSON field to given value.
-
-### HasIsJSON
-
-`func (o *ApiAPILogMessages) HasIsJSON() bool`
-
-HasIsJSON returns a boolean if a field has been set.
 
 ### GetMessages
 

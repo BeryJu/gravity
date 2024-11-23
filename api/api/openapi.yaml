@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.14.0
+  version: 0.15.0
 servers:
 - url: /
 paths:
@@ -1706,24 +1706,37 @@ components:
     ApiAPILogMessage:
       example:
         node: node
+        level: level
+        logger: logger
+        time: 2000-01-23T04:56:07.000+00:00
         message: message
       properties:
+        level:
+          type: string
+        logger:
+          type: string
         message:
           type: string
         node:
           type: string
+        time:
+          format: date-time
+          type: string
       type: object
     ApiAPILogMessages:
       example:
-        isJSON: true
         messages:
         - node: node
+          level: level
+          logger: logger
+          time: 2000-01-23T04:56:07.000+00:00
           message: message
         - node: node
+          level: level
+          logger: logger
+          time: 2000-01-23T04:56:07.000+00:00
           message: message
       properties:
-        isJSON:
-          type: boolean
         messages:
           items:
             $ref: '#/components/schemas/ApiAPILogMessage'
