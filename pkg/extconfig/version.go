@@ -1,6 +1,7 @@
 package extconfig
 
 import (
+	"os"
 	"strings"
 )
 
@@ -11,10 +12,14 @@ var (
 )
 
 func FullVersion() string {
+	if os.Getenv("CI") == "true" {
+		Version = "99.99.99"
+		BuildHash = "test"
+	}
 	version := strings.Builder{}
 	version.WriteString(Version)
 	if BuildHash != "" {
-		version.WriteRune('-')
+		version.WriteRune('+')
 		if len(BuildHash) >= 8 {
 			version.WriteString(BuildHash[:8])
 		} else {

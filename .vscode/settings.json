@@ -3,9 +3,12 @@
         "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb;tftp",
         "ETCD_ENDPOINT": "localhost:2385",
         "DEBUG": "true",
-        "INSTANCE_IP": "0.0.0.0"
+        "INSTANCE_IP": "0.0.0.0",
+        "CI": "true",
     },
     "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v"],
+    "go.coverOnSingleTest": true,
+    "go.coverOnTestPackage": true,
     "gitlens.autolinks": [
         {
             "alphanumeric": true,
