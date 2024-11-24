@@ -25,9 +25,9 @@ func TestGetIP(t *testing.T) {
 }
 
 func TestVersion(t *testing.T) {
-	assert.Equal(t, Version+"-dev", FullVersion())
+	assert.Equal(t, Version+"+dev", FullVersion())
 	BuildHash = "foo"
-	assert.Equal(t, Version+"-foo", FullVersion())
+	assert.Equal(t, Version+"+foo", FullVersion())
 	BuildHash = "foobqerqewrqwer"
-	assert.Equal(t, Version+"-foobqerq", FullVersion())
+	assert.Equal(t, Version+"+foobqerq", FullVersion())
 }

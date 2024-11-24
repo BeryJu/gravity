@@ -13,7 +13,7 @@ var (
 
 func FullVersion() string {
 	if os.Getenv("CI") == "true" {
-		return "99.99.99+test"
+		Version = "99.99.99"
 	}
 	version := strings.Builder{}
 	version.WriteString(Version)
