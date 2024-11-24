@@ -2,11 +2,15 @@ package migrate
 
 import (
 	"context"
+	"encoding/json"
+	"sort"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/Masterminds/semver/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
 
@@ -24,8 +28,49 @@ func New(ri roles.Instance) *Migrator {
 	}
 }
 
+func (mi *Migrator) GetClusterVersion() (*semver.Version, error) {
+	type partialInstanceInfo struct {
+		Version string `json:"version" required:"true"`
+	}
+	instances, err := mi.ri.KV().Get(
+		context.Background(),
+		mi.ri.KV().Key(
+			types.KeyInstance,
+		).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+	if err != nil {
+		return nil, err
+	}
+	// Gather all instances in the cluster and parse their versions
+	version := []*semver.Version{}
+	for _, inst := range instances.Kvs {
+		pi := partialInstanceInfo{}
+		err = json.Unmarshal(inst.Value, &pi)
+		if err != nil {
+			mi.log.Warn("failed to parse instance info", zap.Error(err))
+			continue
+		}
+		v, err := semver.NewVersion(pi.Version)
+		if err != nil {
+			mi.log.Warn("failed to parse instance version", zap.Error(err))
+			continue
+		}
+		version = append(version, v)
+	}
+	sort.Sort(semver.Collection(version))
+	if len(version) < 1 {
+		return semver.MustParse(extconfig.FullVersion()), nil
+	}
+	return version[0], nil
+}
+
 func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
-	cv := semver.MustParse(extconfig.FullVersion())
+	cv, err := mi.GetClusterVersion()
+	if err != nil {
+		return nil, err
+	}
+	mi.log.Debug("Checking migrations to activate for cluster version", zap.String("clusterVersion", cv.String()))
 	cli := mi.ri.KV()
 	for _, m := range mi.migrations {
 		mi.log.Debug("Checking if migration needs to be run", zap.String("migration", m.Name()))
