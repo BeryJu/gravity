@@ -79,16 +79,22 @@ func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 			mi.log.Warn("failed to check if migration should be enabled", zap.String("migration", m.Name()), zap.Error(err))
 			return nil, err
 		}
-		if !enabled {
-			continue
+		if enabled {
+			_cli, err := m.Hook(ctx)
+			if err != nil {
+				mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
+				return nil, err
+			}
+			mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
+			cli = _cli
+		} else {
+			mi.log.Info("Running cleanup for migration", zap.String("migration", m.Name()))
+			err := m.Cleanup(ctx)
+			if err != nil {
+				mi.log.Warn("failed to cleanup migration", zap.String("migration", m.Name()), zap.Error(err))
+				continue
+			}
 		}
-		_cli, err := m.Hook(ctx)
-		if err != nil {
-			mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
-			return nil, err
-		}
-		mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
-		cli = _cli
 	}
 	return cli, nil
 }

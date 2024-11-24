@@ -31,6 +31,20 @@ func TestMigrate_ClusterVersion(t *testing.T) {
 		`{"version":"0.15.0+foo"}`,
 	)
 	assert.NoError(t, err)
+	// Invalid JSON
+	_, err = ri.KV().Put(
+		ctx,
+		ri.KV().Key(types.KeyInstance, "baz").String(),
+		`{`,
+	)
+	assert.NoError(t, err)
+	// Invalid Version
+	_, err = ri.KV().Put(
+		ctx,
+		ri.KV().Key(types.KeyInstance, "baz").String(),
+		`{"version":"0.15.0++foo"}`,
+	)
+	assert.NoError(t, err)
 
 	ct := 0
 	ri.Migrator().AddMigration(&migrate.InlineMigration{
@@ -104,4 +118,26 @@ func TestMigrate_Hook(t *testing.T) {
 	assert.NoError(t, err)
 	tests.AssertEtcd(t, kv, ri.KV().Key("foo"), "bar")
 	assert.Equal(t, 2, ct)
+}
+
+func TestMigrate_Cleanup(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	ri := rootInst.ForRole("migrate", ctx)
+	ct := 0
+	ri.Migrator().AddMigration(&migrate.InlineMigration{
+		MigrationName:     "test",
+		ActivateOnVersion: migrate.MustParseConstraint("< 0.1.0"),
+		HookFunc: func(ctx context.Context) (*storage.Client, error) {
+			return ri.KV(), nil
+		},
+		CleanupFunc: func(ctx context.Context) error {
+			ct += 1
+			return nil
+		},
+	})
+	_, err := ri.Migrator().Run(ctx)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, ct)
 }
