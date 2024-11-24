@@ -49,7 +49,11 @@ func TestMigrate_Hook(t *testing.T) {
 		ActivateOnVersion: migrate.MustParseConstraint("> 0.0.0"),
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			return ri.KV().WithHooks(storage.StorageHook{
-				Request: func(ctx context.Context, op clientv3.Op, client *storage.Client) error {
+				Get: func(ctx context.Context, key string, opts ...clientv3.OpOption) error {
+					ct += 1
+					return nil
+				},
+				Put: func(ctx context.Context, key, val string, opts ...clientv3.OpOption) error {
 					ct += 1
 					return nil
 				},

@@ -12,7 +12,9 @@ import (
 )
 
 type StorageHook struct {
-	Request func(ctx context.Context, op clientv3.Op, client *Client) error
+	Get    func(ctx context.Context, key string, opts ...clientv3.OpOption) error
+	Put    func(ctx context.Context, key string, val string, opts ...clientv3.OpOption) error
+	Delete func(ctx context.Context, key string, opts ...clientv3.OpOption) error
 }
 
 type Client struct {
@@ -71,12 +73,41 @@ func (c *Client) WithHooks(hooks ...StorageHook) *Client {
 	}
 }
 
-func (c *Client) Do(ctx context.Context, op clientv3.Op) (clientv3.OpResponse, error) {
+func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
 	for _, h := range c.hooks {
-		err := h.Request(ctx, op, c.parent)
+		if h.Get == nil {
+			continue
+		}
+		err := h.Get(ctx, key, opts...)
 		if err != nil {
-			return clientv3.OpResponse{}, err
+			return nil, err
 		}
 	}
-	return c.Client.Do(ctx, op)
+	return c.Client.Get(ctx, key, opts...)
+}
+
+func (c *Client) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
+	for _, h := range c.hooks {
+		if h.Put == nil {
+			continue
+		}
+		err := h.Put(ctx, key, val, opts...)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return c.Client.Put(ctx, key, val, opts...)
+}
+
+func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
+	for _, h := range c.hooks {
+		if h.Delete == nil {
+			continue
+		}
+		err := h.Delete(ctx, key, opts...)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return c.Client.Delete(ctx, key, opts...)
 }
