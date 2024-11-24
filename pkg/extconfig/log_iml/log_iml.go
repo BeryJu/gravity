@@ -7,13 +7,13 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type inMemoryLogger struct {
+type InMemoryLogger struct {
 	msgs []zapcore.Entry
 	msgM sync.RWMutex
 	max  int
 }
 
-func (iml *inMemoryLogger) Hook() zap.Option {
+func (iml *InMemoryLogger) Hook() zap.Option {
 	return zap.Hooks(func(e zapcore.Entry) error {
 		iml.msgM.Lock()
 		defer iml.msgM.Unlock()
@@ -25,26 +25,31 @@ func (iml *inMemoryLogger) Hook() zap.Option {
 	})
 }
 
-func (iml *inMemoryLogger) Messages() []zapcore.Entry {
+func (iml *InMemoryLogger) MaxSize() int {
+	return iml.max
+}
+
+func (iml *InMemoryLogger) Flush() {
+	iml.msgM.Lock()
+	iml.msgs = make([]zapcore.Entry, 0)
+	iml.msgM.Unlock()
+}
+
+func (iml *InMemoryLogger) Messages() []zapcore.Entry {
 	iml.msgM.RLock()
 	defer iml.msgM.RUnlock()
 	return iml.msgs
 }
 
-var iml *inMemoryLogger
+var iml *InMemoryLogger
 
 func init() {
-	iml = &inMemoryLogger{
+	iml = &InMemoryLogger{
 		msgs: make([]zapcore.Entry, 0),
 		max:  300,
 	}
 }
 
-type InMemoryLogger interface {
-	Messages() []zapcore.Entry
-	Hook() zap.Option
-}
-
-func Get() InMemoryLogger {
+func Get() *InMemoryLogger {
 	return iml
 }
