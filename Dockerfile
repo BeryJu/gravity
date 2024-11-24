@@ -1,8 +1,6 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/library/node:23.3 AS web-builder
 
-ARG CC_GH_COMMIT_SHA
-
 WORKDIR /work
 
 COPY ./Makefile /work/Makefile

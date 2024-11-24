@@ -2,7 +2,6 @@ import { codecovRollupPlugin } from "@codecov/rollup-plugin";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import { readFileSync } from "fs";
 import copy from "rollup-plugin-copy";
 import cssimport from "rollup-plugin-cssimport";
 import esbuild from "rollup-plugin-esbuild";
@@ -35,11 +34,8 @@ export const resources = [
 export const isProdBuild = process.env.NODE_ENV === "production";
 
 const codecovToken = () => {
-    try {
-        return readFileSync("/run/secrets/CODECOV_TOKEN");
-    } catch {
-        return undefined;
-    }
+    // eslint-disable-next-line no-undef
+    return process.env.CODECOV_TOKEN;
 };
 
 export default {
@@ -68,10 +64,7 @@ export default {
             enableBundleAnalysis: codecovToken() !== undefined,
             bundleName: "gravity-ui",
             uploadToken: codecovToken(),
-            uploadOverrides: {
-                // eslint-disable-next-line no-undef
-                sha: process.env.CC_GH_COMMIT_SHA,
-            },
+            gitService: "github",
         }),
     ],
     watch: {

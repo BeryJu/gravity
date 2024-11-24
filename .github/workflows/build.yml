@@ -39,7 +39,6 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
-            CC_GH_COMMIT_SHA=${{ github.event.pull_request.head.sha }}
   build-cli:
     name: Build CLI
     runs-on: ubuntu-latest
@@ -49,5 +48,22 @@ jobs:
         os: [darwin, linux]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
       - run: |
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} make bin/gravity-cli
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: web/package.json
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - run: make web-install gen-client-ts web-build
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
