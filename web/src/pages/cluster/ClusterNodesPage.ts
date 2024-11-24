@@ -42,7 +42,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
         return [
             html`${item.identifier}`,
             html`<ak-chip-group
-                >${item.roles?.split(";").map((role) => {
+                >${item.roles?.map((role) => {
                     return html`<ak-chip>${role}</ak-chip>`;
                 })}</ak-chip-group
             >`,
