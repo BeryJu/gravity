@@ -11,6 +11,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	clientv3 "go.etcd.io/etcd/client/v3"
 
@@ -48,8 +49,8 @@ type Role struct {
 
 func New(instance roles.Instance) *Role {
 	instance.Migrator().AddMigration(&migrate.InlineMigration{
-		MigrationName:     "api-add-default-perms",
-		ActivateOnVersion: migrate.MustParseConstraint("< 0.16.0"),
+		MigrationName: "api-add-default-perms",
+		ActivateFunc:  func(v *semver.Version) bool { return true },
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			userPrefix := instance.KV().Key(types.KeyRole, types.KeyUsers).Prefix(true).String()
 			defaultPerms := []auth.Permission{
@@ -60,8 +61,9 @@ func New(instance roles.Instance) *Role {
 			}
 			return instance.KV().WithHooks(storage.StorageHook{
 				GetPost: func(ctx context.Context, key string, res *clientv3.GetResponse, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
+					shouldIntercept := res != nil && len(res.Kvs) > 0 && strings.HasPrefix(key, userPrefix)
 					// If we're fetching a user, intercept the response
-					if res != nil && len(res.Kvs) > 0 && strings.HasPrefix(key, userPrefix) {
+					if shouldIntercept {
 						u := map[string]interface{}{}
 						err := json.Unmarshal(res.Kvs[0].Value, &u)
 						if err != nil {
