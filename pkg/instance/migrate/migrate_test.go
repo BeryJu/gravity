@@ -97,11 +97,11 @@ func TestMigrate_Hook(t *testing.T) {
 		ActivateOnVersion: migrate.MustParseConstraint("> 0.0.0"),
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			return ri.KV().WithHooks(storage.StorageHook{
-				Get: func(ctx context.Context, key string, opts ...clientv3.OpOption) error {
+				GetPre: func(ctx context.Context, key string, opts ...clientv3.OpOption) error {
 					ct += 1
 					return nil
 				},
-				Put: func(ctx context.Context, key, val string, opts ...clientv3.OpOption) error {
+				PutPre: func(ctx context.Context, key, val string, opts ...clientv3.OpOption) error {
 					ct += 1
 					return nil
 				},
