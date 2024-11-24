@@ -21,6 +21,7 @@ func (ap *AuthProvider) checkToken(r *http.Request) bool {
 	if !strings.EqualFold(parts[0], BearerType) {
 		return false
 	}
+	// Get token
 	rawTokens, err := ap.inst.KV().Get(
 		r.Context(),
 		ap.inst.KV().Key(
@@ -40,10 +41,28 @@ func (ap *AuthProvider) checkToken(r *http.Request) bool {
 	if err != nil {
 		return false
 	}
-	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	session.Values[types.SessionKeyUser] = User{
-		Username: key.Username,
+	// Get token's user
+	rawUsers, err := ap.inst.KV().Get(
+		r.Context(),
+		ap.inst.KV().Key(
+			types.KeyRole,
+			types.KeyUsers,
+			key.Username,
+		).String(),
+	)
+	if err != nil {
+		ap.log.Warn("failed to check token", zap.Error(err))
+		return false
 	}
+	if len(rawUsers.Kvs) < 1 {
+		return false
+	}
+	user, err := ap.userFromKV(rawUsers.Kvs[0])
+	if err != nil {
+		return false
+	}
+	session := r.Context().Value(types.RequestSession).(*sessions.Session)
+	session.Values[types.SessionKeyUser] = *user
 	session.Values[types.SessionKeyDirty] = true
 	return false
 }
