@@ -28,6 +28,7 @@ func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 	cv := semver.MustParse(extconfig.FullVersion())
 	cli := mi.ri.KV()
 	for _, m := range mi.migrations {
+		mi.log.Debug("Checking if migration needs to be run", zap.String("migration", m.Name()))
 		enabled, err := m.Check(cv, ctx)
 		if err != nil {
 			mi.log.Warn("failed to check if migration should be enabled", zap.String("migration", m.Name()), zap.Error(err))
@@ -41,6 +42,7 @@ func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 			mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
 			return nil, err
 		}
+		mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
 		cli = _cli
 	}
 	return cli, nil

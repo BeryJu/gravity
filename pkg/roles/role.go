@@ -65,6 +65,7 @@ type Migration interface {
 
 type RoleMigrator interface {
 	AddMigration(Migration)
+	Run(ctx context.Context) (*storage.Client, error)
 }
 
 type Instance interface {

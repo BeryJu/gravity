@@ -27,10 +27,8 @@ func (im *InlineMigration) Name() string {
 }
 
 func (im *InlineMigration) Check(clusterVersion *semver.Version, ctx context.Context) (bool, error) {
-	if im.ActivateOnVersion.Check(clusterVersion) {
-		return true, nil
-	}
-	return false, nil
+	check := im.ActivateOnVersion.Check(clusterVersion)
+	return check, nil
 }
 
 func (im *InlineMigration) Hook(ctx context.Context) (*storage.Client, error) {
