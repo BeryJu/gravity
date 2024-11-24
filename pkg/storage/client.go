@@ -119,7 +119,7 @@ func (c *Client) Put(ctx context.Context, key string, val string, opts ...client
 		return res, err
 	}
 	for _, h := range c.hooks {
-		if h.GetPost == nil {
+		if h.PutPost == nil {
 			continue
 		}
 		_r, err := h.PutPost(ctx, key, val, res, opts...)
@@ -146,7 +146,7 @@ func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOpti
 		return res, err
 	}
 	for _, h := range c.hooks {
-		if h.GetPost == nil {
+		if h.DeletePost == nil {
 			continue
 		}
 		_r, err := h.DeletePost(ctx, key, res, opts...)
