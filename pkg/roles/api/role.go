@@ -3,18 +3,23 @@ package api
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"net"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/api7/etcdstore"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -42,6 +47,41 @@ type Role struct {
 }
 
 func New(instance roles.Instance) *Role {
+	instance.Migrator().AddMigration(&migrate.InlineMigration{
+		MigrationName:     "api-add-default-perms",
+		ActivateOnVersion: migrate.MustParseConstraint("< 0.16.0"),
+		HookFunc: func(ctx context.Context) (*storage.Client, error) {
+			userPrefix := instance.KV().Key(types.KeyRole, types.KeyUsers).Prefix(true).String()
+			defaultPerms := []auth.Permission{
+				{
+					Path:    "/*",
+					Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+				},
+			}
+			return instance.KV().WithHooks(storage.StorageHook{
+				GetPost: func(ctx context.Context, key string, res *clientv3.GetResponse, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
+					// If we're fetching a user, intercept the response
+					if res != nil && len(res.Kvs) > 0 && strings.HasPrefix(key, userPrefix) {
+						u := map[string]interface{}{}
+						err := json.Unmarshal(res.Kvs[0].Value, &u)
+						if err != nil {
+							return res, nil
+						}
+						if _, set := u["permissions"]; !set {
+							u["permissions"] = defaultPerms
+						}
+						v, err := json.Marshal(u)
+						if err != nil {
+							return res, nil
+						}
+						res.Kvs[0].Value = v
+					}
+					return res, nil
+				},
+			}), nil
+		},
+	})
+
 	mux := mux.NewRouter()
 	r := &Role{
 		log:          instance.Log(),
