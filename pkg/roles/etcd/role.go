@@ -141,6 +141,10 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	return nil
 }
 
+func (ee *Role) Config() *embed.Config {
+	return ee.cfg
+}
+
 func (ee *Role) Start(ctx context.Context) error {
 	start := time.Now()
 	ee.log.Info("starting embedded etcd")
