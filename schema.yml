@@ -1732,6 +1732,8 @@ components:
           $ref: '#/components/schemas/TypesOIDCConfig'
         port:
           type: integer
+        sessionDuration:
+          type: string
       type: object
     AuthAPIConfigOutput:
       properties:
