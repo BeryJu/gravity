@@ -17,6 +17,11 @@ type Role interface {
 	Stop()
 }
 
+type MigratableRole interface {
+	Role
+	RegisterMigrations()
+}
+
 type Event struct {
 	Context context.Context
 	topic   string
