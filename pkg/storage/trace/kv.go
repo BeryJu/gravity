@@ -44,7 +44,17 @@ func (kv traceKV) trace(ctx context.Context, op clientv3.Op) func() {
 	}
 }
 
-func (kv traceKV) Do(ctx context.Context, op clientv3.Op) (clientv3.OpResponse, error) {
-	defer kv.trace(ctx, op)()
-	return kv.KV.Do(ctx, op)
+func (kv traceKV) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
+	defer kv.trace(ctx, clientv3.OpGet(key, opts...))()
+	return kv.KV.Get(ctx, key, opts...)
+}
+
+func (kv traceKV) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
+	defer kv.trace(ctx, clientv3.OpPut(key, val, opts...))()
+	return kv.KV.Put(ctx, key, val, opts...)
+}
+
+func (kv traceKV) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
+	defer kv.trace(ctx, clientv3.OpDelete(key, opts...))()
+	return kv.KV.Delete(ctx, key, opts...)
 }
