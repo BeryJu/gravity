@@ -103,5 +103,5 @@ func TestMigrate_Hook(t *testing.T) {
 	)
 	assert.NoError(t, err)
 	tests.AssertEtcd(t, kv, ri.KV().Key("foo"), "bar")
-	assert.Equal(t, 1, ct)
+	assert.Equal(t, 2, ct)
 }
