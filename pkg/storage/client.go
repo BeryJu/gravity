@@ -12,9 +12,13 @@ import (
 )
 
 type StorageHook struct {
-	Get    func(ctx context.Context, key string, opts ...clientv3.OpOption) error
-	Put    func(ctx context.Context, key string, val string, opts ...clientv3.OpOption) error
-	Delete func(ctx context.Context, key string, opts ...clientv3.OpOption) error
+	GetPre    func(ctx context.Context, key string, opts ...clientv3.OpOption) error
+	PutPre    func(ctx context.Context, key string, val string, opts ...clientv3.OpOption) error
+	DeletePre func(ctx context.Context, key string, opts ...clientv3.OpOption) error
+
+	GetPost    func(ctx context.Context, key string, res *clientv3.GetResponse, opts ...clientv3.OpOption) (*clientv3.GetResponse, error)
+	PutPost    func(ctx context.Context, key string, val string, res *clientv3.PutResponse, opts ...clientv3.OpOption) (*clientv3.PutResponse, error)
+	DeletePost func(ctx context.Context, key string, res *clientv3.DeleteResponse, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error)
 }
 
 type Client struct {
@@ -75,39 +79,81 @@ func (c *Client) WithHooks(hooks ...StorageHook) *Client {
 
 func (c *Client) Get(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.GetResponse, error) {
 	for _, h := range c.hooks {
-		if h.Get == nil {
+		if h.GetPre == nil {
 			continue
 		}
-		err := h.Get(ctx, key, opts...)
+		err := h.GetPre(ctx, key, opts...)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return c.Client.Get(ctx, key, opts...)
+	res, err := c.Client.Get(ctx, key, opts...)
+	if err != nil {
+		return res, err
+	}
+	for _, h := range c.hooks {
+		if h.GetPost == nil {
+			continue
+		}
+		_r, err := h.GetPost(ctx, key, res, opts...)
+		if err != nil {
+			return nil, err
+		}
+		res = _r
+	}
+	return res, err
 }
 
 func (c *Client) Put(ctx context.Context, key string, val string, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
 	for _, h := range c.hooks {
-		if h.Put == nil {
+		if h.PutPre == nil {
 			continue
 		}
-		err := h.Put(ctx, key, val, opts...)
+		err := h.PutPre(ctx, key, val, opts...)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return c.Client.Put(ctx, key, val, opts...)
+	res, err := c.Client.Put(ctx, key, val, opts...)
+	if err != nil {
+		return res, err
+	}
+	for _, h := range c.hooks {
+		if h.PutPost == nil {
+			continue
+		}
+		_r, err := h.PutPost(ctx, key, val, res, opts...)
+		if err != nil {
+			return nil, err
+		}
+		res = _r
+	}
+	return res, err
 }
 
 func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOption) (*clientv3.DeleteResponse, error) {
 	for _, h := range c.hooks {
-		if h.Delete == nil {
+		if h.DeletePre == nil {
 			continue
 		}
-		err := h.Delete(ctx, key, opts...)
+		err := h.DeletePre(ctx, key, opts...)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return c.Client.Delete(ctx, key, opts...)
+	res, err := c.Client.Delete(ctx, key, opts...)
+	if err != nil {
+		return res, err
+	}
+	for _, h := range c.hooks {
+		if h.DeletePost == nil {
+			continue
+		}
+		_r, err := h.DeletePost(ctx, key, res, opts...)
+		if err != nil {
+			return nil, err
+		}
+		res = _r
+	}
+	return res, err
 }

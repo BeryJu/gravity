@@ -21,15 +21,29 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		ListenOverride: "localhost:8008",
 	}))))
 
+	username := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
 
+	tests.PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
+		types.KeyRole,
+		types.KeyUsers,
+		username,
+	).String(), tests.MustJSON(auth.User{
+		Username: username,
+		Permissions: []auth.Permission{
+			{
+				Path:    "/*",
+				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+			},
+		},
+	})))
 	tests.PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
 		token,
 	).String(), tests.MustJSON(auth.Token{
 		Key:      token,
-		Username: "foo",
+		Username: username,
 	})))
 
 	config := api.NewConfiguration()

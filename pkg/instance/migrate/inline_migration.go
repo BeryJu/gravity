@@ -18,6 +18,7 @@ func MustParseConstraint(input string) *semver.Constraints {
 type InlineMigration struct {
 	MigrationName     string
 	ActivateOnVersion *semver.Constraints
+	ActivateFunc      func(*semver.Version) bool
 	HookFunc          func(context.Context) (*storage.Client, error)
 	CleanupFunc       func(context.Context) error
 }
@@ -27,6 +28,9 @@ func (im *InlineMigration) Name() string {
 }
 
 func (im *InlineMigration) Check(clusterVersion *semver.Version, ctx context.Context) (bool, error) {
+	if im.ActivateFunc != nil {
+		return im.ActivateFunc(clusterVersion), nil
+	}
 	check := im.ActivateOnVersion.Check(clusterVersion)
 	return check, nil
 }

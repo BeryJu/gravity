@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"sort"
+	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
@@ -28,15 +29,16 @@ func New(ri roles.Instance) *Migrator {
 	}
 }
 
-func (mi *Migrator) GetClusterVersion() (*semver.Version, error) {
+func (mi *Migrator) GetClusterVersion(ctx context.Context) (*semver.Version, error) {
 	type partialInstanceInfo struct {
 		Version string `json:"version" required:"true"`
 	}
+	pfx := mi.ri.KV().Key(
+		types.KeyInstance,
+	).Prefix(true).String()
 	instances, err := mi.ri.KV().Get(
-		context.Background(),
-		mi.ri.KV().Key(
-			types.KeyInstance,
-		).Prefix(true).String(),
+		ctx,
+		pfx,
 		clientv3.WithPrefix(),
 	)
 	if err != nil {
@@ -45,6 +47,9 @@ func (mi *Migrator) GetClusterVersion() (*semver.Version, error) {
 	// Gather all instances in the cluster and parse their versions
 	version := []*semver.Version{}
 	for _, inst := range instances.Kvs {
+		if strings.Count(strings.TrimPrefix(string(inst.Key), pfx), "/") > 0 {
+			continue
+		}
 		pi := partialInstanceInfo{}
 		err = json.Unmarshal(inst.Value, &pi)
 		if err != nil {
@@ -66,7 +71,7 @@ func (mi *Migrator) GetClusterVersion() (*semver.Version, error) {
 }
 
 func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
-	cv, err := mi.GetClusterVersion()
+	cv, err := mi.GetClusterVersion(ctx)
 	if err != nil {
 		return nil, err
 	}

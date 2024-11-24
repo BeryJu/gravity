@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
 
@@ -101,6 +102,11 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		).String(),
 		cookieSecret,
 	)
+	sessDur := time.Hour * 24
+	if d, err := time.ParseDuration(r.cfg.SessionDuration); err == nil {
+		sessDur = d
+	}
+	sess.Options.MaxAge = int(sessDur.Seconds())
 	if err != nil {
 		return err
 	}

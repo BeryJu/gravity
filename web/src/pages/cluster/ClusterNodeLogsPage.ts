@@ -13,7 +13,6 @@ import { PaginationWrapper } from "../../utils";
 
 @customElement("gravity-cluster-node-logs")
 export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
-
     pageTitle(): string {
         return "Node logs";
     }

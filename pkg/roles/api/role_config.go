@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"time"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles/api/types"
@@ -16,9 +17,10 @@ import (
 type RoleConfig struct {
 	OIDC *types.OIDCConfig `json:"oidc"`
 	// Override listen address temporarily, must by JSON accessible as config is passed as JSON
-	ListenOverride string `json:"listenOverride,omitempty"`
-	CookieSecret   string `json:"cookieSecret"`
-	Port           int32  `json:"port"`
+	ListenOverride  string `json:"listenOverride,omitempty"`
+	CookieSecret    string `json:"cookieSecret"`
+	Port            int32  `json:"port"`
+	SessionDuration string `json:"sessionDuration"`
 }
 
 func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
@@ -89,6 +91,11 @@ func (r *Role) APIRoleConfigPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIRoleConfigInput, output *struct{}) error {
 		if input.Config.CookieSecret == "" {
 			input.Config.CookieSecret = r.cfg.CookieSecret
+		}
+		if input.Config.SessionDuration != "" {
+			if _, err := time.ParseDuration(input.Config.SessionDuration); err != nil {
+				return status.InvalidArgument
+			}
 		}
 		jc, err := json.Marshal(input.Config)
 		if err != nil {

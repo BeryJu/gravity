@@ -71,6 +71,12 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 
 	user := User{
 		Password: string(hashedPw),
+		Permissions: []Permission{
+			{
+				Path:    "/*",
+				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+			},
+		},
 	}
 	userJson, err := json.Marshal(user)
 	if err != nil {

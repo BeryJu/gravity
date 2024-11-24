@@ -336,16 +336,21 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	defer srs.Finish()
 	defer i.putInstanceInfo(srs.Context())
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
-	// Run migrations
-	client, err := i.roles[id].RoleInstance.Migrator().Run(srs.Context())
-	if err != nil {
-		i.log.Warn("failed to run migrations for role", zap.String("roleId", id))
-		return false
+	client := i.roles[id].RoleInstance.kv
+	if mr, ok := i.roles[id].Role.(roles.MigratableRole); ok {
+		mr.RegisterMigrations()
+		// Run migrations
+		_client, err := i.roles[id].RoleInstance.Migrator().Run(srs.Context())
+		if err != nil {
+			i.log.Warn("failed to run migrations for role", zap.String("roleId", id))
+			return false
+		}
+		client = _client
 	}
 	// Overwrite role's KV client with the potentially hooked client for migrations
 	i.roles[id].RoleInstance.kv = client
 	// Start role
-	err = i.roles[id].Role.Start(srs.Context(), rawConfig)
+	err := i.roles[id].Role.Start(srs.Context(), rawConfig)
 	if err == roles.ErrRoleNotConfigured {
 		i.log.Info("role not configured", zap.String("roleId", id))
 	} else if err != nil {

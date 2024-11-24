@@ -10,10 +10,17 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+type Permission struct {
+	Path    string   `json:"path"`
+	Methods []string `json:"methods"`
+}
+
 type User struct {
-	ap       *AuthProvider
-	Username string `json:"-"`
-	Password string `json:"password"`
+	ap *AuthProvider
+
+	Username    string       `json:"-"`
+	Password    string       `json:"password"`
+	Permissions []Permission `json:"permissions"`
 }
 
 func (u *User) String() string {
