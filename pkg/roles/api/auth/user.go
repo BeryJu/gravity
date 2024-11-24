@@ -18,25 +18,13 @@ type Permission struct {
 type User struct {
 	ap *AuthProvider
 
-	Username       string        `json:"-"`
-	Password       string        `json:"password"`
-	RawPermissions *[]Permission `json:"permissions"`
+	Username    string       `json:"-"`
+	Password    string       `json:"password"`
+	Permissions []Permission `json:"permissions"`
 }
 
 func (u *User) String() string {
 	return u.Username
-}
-
-func (u *User) Permissions() []Permission {
-	if u.RawPermissions == nil {
-		return []Permission{
-			{
-				Path:    "/*",
-				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
-			},
-		}
-	}
-	return *u.RawPermissions
 }
 
 func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*User, error) {

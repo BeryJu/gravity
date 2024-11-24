@@ -18,7 +18,7 @@ func mustRequest(meth string, url string) *http.Request {
 func TestPermission_Fixed(t *testing.T) {
 	ap := AuthProvider{}
 	assert.True(t, ap.checkPermission(mustRequest("get", "/foo/bar"), User{
-		RawPermissions: &[]Permission{
+		Permissions: []Permission{
 			{
 				Path:    "/foo/bar",
 				Methods: []string{"get", "post"},
@@ -38,7 +38,7 @@ func TestPermission_Fixed(t *testing.T) {
 func TestPermission_Wildcard(t *testing.T) {
 	ap := AuthProvider{}
 	assert.True(t, ap.checkPermission(mustRequest("get", "/foo/bar"), User{
-		RawPermissions: &[]Permission{
+		Permissions: []Permission{
 			{
 				Path:    "/foo/*",
 				Methods: []string{"get"},

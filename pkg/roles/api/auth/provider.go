@@ -71,7 +71,7 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 
 	user := User{
 		Password: string(hashedPw),
-		RawPermissions: &[]Permission{
+		Permissions: []Permission{
 			{
 				Path:    "/*",
 				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},

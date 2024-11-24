@@ -49,7 +49,7 @@ func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
 			}
 			output.Users = append(output.Users, APIUser{
 				Username:    u.Username,
-				Permissions: u.Permissions(),
+				Permissions: u.Permissions,
 			})
 		}
 		return nil
@@ -78,6 +78,7 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 				input.Username,
 			).String(),
 		)
+		var oldUser *User
 		if err == nil && len(rawUsers.Kvs) < 1 {
 			user, err := ap.userFromKV(rawUsers.Kvs[0])
 			if err != nil {
@@ -85,17 +86,22 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 				ap.log.Warn("failed to parse user", zap.Error(err), zap.String("user", input.Username))
 				return status.Wrap(err, status.Internal)
 			}
+			oldUser = user
 		}
 
-		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-		if err != nil {
-			return status.Wrap(err, status.Internal)
-		}
 		user := &User{
-			Username:       input.Username,
-			Password:       string(hash),
-			RawPermissions: &input.Permissions,
-			ap:             ap,
+			Username:    input.Username,
+			Permissions: input.Permissions,
+			ap:          ap,
+		}
+		if input.Password != "" {
+			hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+			if err != nil {
+				return status.Wrap(err, status.Internal)
+			}
+			user.Password = string(hash)
+		} else {
+			user.Password = oldUser.Password
 		}
 		err = user.put(ctx)
 		if err != nil {

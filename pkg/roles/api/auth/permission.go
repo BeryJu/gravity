@@ -9,7 +9,7 @@ const wildcard = "*"
 
 func (ap *AuthProvider) checkPermission(req *http.Request, u User) bool {
 	var longestMatch *Permission
-	for _, perm := range u.Permissions() {
+	for _, perm := range u.Permissions {
 		if strings.HasSuffix(perm.Path, wildcard) && strings.HasPrefix(req.URL.Path, strings.TrimSuffix(perm.Path, wildcard)) {
 			if longestMatch == nil || len(perm.Path) > len(longestMatch.Path) {
 				longestMatch = &perm
