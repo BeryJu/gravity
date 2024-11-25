@@ -1,7 +1,6 @@
 import {
-    ClusterInstancesApi,
-    InstanceAPIInstanceInfo,
-    InstanceAPIInstancesOutput,
+    ClusterApi,
+    InstanceAPIClusterInfoOutput,
 } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
@@ -11,18 +10,15 @@ import { DEFAULT_CONFIG } from "../../../api/Config";
 import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-version")
-export class VersionCard extends AdminStatusCard<InstanceAPIInstancesOutput> {
+export class VersionCard extends AdminStatusCard<InstanceAPIClusterInfoOutput> {
     header = "Version";
     headerLink = "#/cluster/nodes";
 
-    clusterInfo?: InstanceAPIInstanceInfo;
-
-    async getPrimaryValue(): Promise<InstanceAPIInstancesOutput> {
-        this.clusterInfo = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo();
-        return await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
+    async getPrimaryValue(): Promise<InstanceAPIClusterInfoOutput> {
+        return await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
     }
 
-    getStatus(value: InstanceAPIInstancesOutput): Promise<AdminStatus> {
+    getStatus(value: InstanceAPIClusterInfoOutput): Promise<AdminStatus> {
         const matching =
             value.instances?.filter((inst) => {
                 return inst.version === value.clusterVersion;
@@ -41,7 +37,7 @@ export class VersionCard extends AdminStatusCard<InstanceAPIInstancesOutput> {
 
     renderValue(): TemplateResult {
         return html`<a
-            href="https://github.com/BeryJu/gravity/commit/${this.clusterInfo?.buildHash}"
+            href="https://github.com/BeryJu/gravity/releases/tag/${this.value?.clusterVersionShort}"
             target="_blank"
         >
             ${this.value?.clusterVersion}

@@ -11,16 +11,16 @@ export class CurrentInstanceCard extends AdminStatusCard<InstanceAPIInstanceInfo
     header = "Current instance";
 
     getPrimaryValue(): Promise<InstanceAPIInstanceInfo> {
-        return new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInfo();
+        return new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstanceInfo();
     }
 
     getStatus(data: InstanceAPIInstanceInfo): Promise<AdminStatus> {
         return Promise.resolve<AdminStatus>({
             icon: "fa fa-check-circle pf-m-success",
-            message: html`${data.currentInstanceIP}`,
+            message: html`${data.instanceIP}`,
         });
     }
     renderValue() {
-        return html`${this.value?.currentInstanceIdentifier}`;
+        return html`${this.value?.instanceIdentifier}`;
     }
 }
