@@ -88,12 +88,12 @@ func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 			return nil, err
 		}
 		if enabled {
+			mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
 			_cli, err := m.Hook(span.Context())
 			if err != nil {
 				mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
 				return nil, err
 			}
-			mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
 			cli = _cli
 		} else {
 			mi.log.Info("Running cleanup for migration", zap.String("migration", m.Name()))

@@ -87,9 +87,9 @@ func (s *Scope) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	prefix := s.inst.KV().Key(
 		types.KeyRole,
 		types.KeyScopes,
+		s.Name,
 	).Prefix(true).String()
-	keyParts := strings.SplitN(prefix, "/", 2)
-	identifier := strings.TrimPrefix(string(raw.Key), prefix+"/"+keyParts[0])
+	identifier := strings.TrimPrefix(string(raw.Key), prefix)
 	l := s.NewLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
