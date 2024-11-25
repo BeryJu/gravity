@@ -243,6 +243,25 @@ paths:
       summary: Backup status
       tags:
       - roles/backup
+  /api/v1/cluster:
+    get:
+      operationId: cluster.get_cluster_info
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIClusterInfoOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Cluster
+      tags:
+      - cluster
   /api/v1/cluster/export:
     post:
       operationId: api.export
@@ -287,9 +306,9 @@ paths:
       summary: Import Cluster
       tags:
       - roles/api
-  /api/v1/cluster/info:
+  /api/v1/cluster/instance:
     get:
-      operationId: cluster.get_info
+      operationId: cluster.get_instance_info
       responses:
         "200":
           content:
@@ -304,25 +323,6 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
       summary: Instance
-      tags:
-      - cluster/instances
-  /api/v1/cluster/instances:
-    get:
-      operationId: cluster.get_instances
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: Instances
       tags:
       - cluster/instances
   /api/v1/cluster/node/logs:
@@ -2355,34 +2355,40 @@ components:
         tftpLocalDir:
           type: string
       type: object
-    InstanceAPIInstanceInfo:
+    InstanceAPIClusterInfoOutput:
       properties:
-        buildHash:
+        clusterVersion:
           type: string
-        currentInstanceIP:
+        clusterVersionShort:
           type: string
-        currentInstanceIdentifier:
-          type: string
-        dirs:
-          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
-        version:
-          type: string
-      required:
-      - version
-      - buildHash
-      - dirs
-      - currentInstanceIdentifier
-      - currentInstanceIP
-      type: object
-    InstanceAPIInstancesOutput:
-      properties:
         instances:
           items:
             $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
       required:
+      - clusterVersion
+      - clusterVersionShort
       - instances
+      type: object
+    InstanceAPIInstanceInfo:
+      properties:
+        buildHash:
+          type: string
+        dirs:
+          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
+        instanceIP:
+          type: string
+        instanceIdentifier:
+          type: string
+        version:
+          type: string
+      required:
+      - version
+      - buildHash
+      - dirs
+      - instanceIdentifier
+      - instanceIP
       type: object
     InstanceAPIRoleRestartInput:
       properties:

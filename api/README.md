@@ -77,8 +77,8 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ClusterInstancesApi* | [**ClusterGetInfo**](docs/ClusterInstancesApi.md#clustergetinfo) | **Get** /api/v1/cluster/info | Instance
-*ClusterInstancesApi* | [**ClusterGetInstances**](docs/ClusterInstancesApi.md#clustergetinstances) | **Get** /api/v1/cluster/instances | Instances
+*ClusterApi* | [**ClusterGetClusterInfo**](docs/ClusterApi.md#clustergetclusterinfo) | **Get** /api/v1/cluster | Cluster
+*ClusterInstancesApi* | [**ClusterGetInstanceInfo**](docs/ClusterInstancesApi.md#clustergetinstanceinfo) | **Get** /api/v1/cluster/instance | Instance
 *ClusterInstancesApi* | [**ClusterInstanceRoleRestart**](docs/ClusterInstancesApi.md#clusterinstancerolerestart) | **Post** /api/v1/cluster/roles/restart | Instance roles
 *RolesApiApi* | [**ApiAuthConfig**](docs/RolesApiApi.md#apiauthconfig) | **Get** /api/v1/auth/config | API Users
 *RolesApiApi* | [**ApiDeleteTokens**](docs/RolesApiApi.md#apideletetokens) | **Delete** /api/v1/auth/tokens | Tokens
@@ -213,8 +213,8 @@ Class | Method | HTTP request | Description
  - [DnsAPIZonesPutInput](docs/DnsAPIZonesPutInput.md)
  - [DnsRoleConfig](docs/DnsRoleConfig.md)
  - [ExtconfigExtConfigDirs](docs/ExtconfigExtConfigDirs.md)
+ - [InstanceAPIClusterInfoOutput](docs/InstanceAPIClusterInfoOutput.md)
  - [InstanceAPIInstanceInfo](docs/InstanceAPIInstanceInfo.md)
- - [InstanceAPIInstancesOutput](docs/InstanceAPIInstancesOutput.md)
  - [InstanceAPIRoleRestartInput](docs/InstanceAPIRoleRestartInput.md)
  - [InstanceInstanceInfo](docs/InstanceInstanceInfo.md)
  - [MonitoringAPIRoleConfigInput](docs/MonitoringAPIRoleConfigInput.md)
