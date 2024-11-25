@@ -191,4 +191,4 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-run=^$$ \
 		-bench=^Benchmark \
 		$(shell go list ./... | grep -v ./api) \
-			2>&1 | tee test-output
+			| tee test-output
