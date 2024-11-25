@@ -37,7 +37,7 @@ require (
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.54
 	github.com/swaggest/rest v0.2.69
