@@ -171,6 +171,12 @@ func (r *Role) ListenAndServeSocket() {
 			Values: map[interface{}]interface{}{
 				types.SessionKeyUser: auth.User{
 					Username: "gravity-socket",
+					Permissions: []auth.Permission{
+						{
+							Path:    "/*",
+							Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+						},
+					},
 				},
 			},
 		})
