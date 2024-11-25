@@ -74,7 +74,7 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 		Permissions: []Permission{
 			{
 				Path:    "/*",
-				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 			},
 		},
 	}
