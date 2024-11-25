@@ -6,9 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type scopeSelector func(scope *Scope) int
-
-func (r *Role) findScopeForRequest(req *Request4, additionalSelectors ...scopeSelector) *Scope {
+func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	var match *Scope
 	longestBits := 0
 	r.scopesM.RLock()
@@ -16,14 +14,14 @@ func (r *Role) findScopeForRequest(req *Request4, additionalSelectors ...scopeSe
 	// To prioritise requests from a DHCP relay being matched correctly, give their subnet
 	// match a 1 bit more priority
 	const dhcpRelayBias = 1
+	const clientIPBias = 2
 	for _, scope := range r.scopes {
-		// Check additional selectors (highest priority)
-		for _, sel := range additionalSelectors {
-			m := sel(scope)
-			if m > -1 && m > longestBits {
-				match = scope
-				longestBits = m
-			}
+		// Check based on Client IP Address (highest priority)
+		clientIPMatchBits := scope.match(req.ClientIPAddr)
+		if clientIPMatchBits > -1 && clientIPMatchBits+clientIPBias > longestBits {
+			req.log.Debug("selected scope based on client IP", zap.String("scope", scope.Name))
+			match = scope
+			longestBits = clientIPMatchBits + clientIPBias
 		}
 		// Check based on gateway IP (next highest priority)
 		gatewayMatchBits := scope.match(req.GatewayIPAddr)
