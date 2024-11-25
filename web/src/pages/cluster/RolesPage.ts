@@ -1,4 +1,4 @@
-import { ClusterInstancesApi, InstanceInstanceInfo } from "gravity-api";
+import { ClusterApi, InstanceInstanceInfo } from "gravity-api";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -71,7 +71,7 @@ export class RolesPage extends TablePage<Role> {
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<Role>> {
-        const inst = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstances();
+        const inst = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
         this.instances = inst.instances || [];
         return PaginationWrapper(Roles);
     }
