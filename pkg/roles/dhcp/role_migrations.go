@@ -12,13 +12,10 @@ import (
 	"go.uber.org/zap"
 )
 
-func (r *Role) migrateMoveInitial() {
+func (r *Role) migrateMoveInitial(ctx context.Context) {
 	r.log.Info("Running initial move migration")
-	res, err := r.i.KV().Get(
-		r.ctx,
-		r.i.KV().Key(types.KeyRole, types.KeyLegacyLeases).Prefix(true).String(),
-		clientv3.WithPrefix(),
-	)
+	pfx := r.i.KV().Key(types.KeyRole, types.KeyLegacyLeases).Prefix(true).String()
+	res, err := r.i.KV().Get(ctx, pfx, clientv3.WithPrefix())
 	if err != nil {
 		r.log.Warn("failed to get legacy leases", zap.Error(err))
 		return
@@ -26,14 +23,15 @@ func (r *Role) migrateMoveInitial() {
 	// Copy from legacy prefix (global scope) to new prefix (scope-scoped)
 	for _, kv := range res.Kvs {
 		l := &Lease{}
+		ident := strings.TrimPrefix(string(kv.Key), pfx)
 		err = json.Unmarshal(kv.Value, &l)
 		if err != nil {
 			r.log.Warn("failed to parse lease", zap.Error(err))
 			continue
 		}
 		_, err = r.i.KV().Put(
-			r.ctx,
-			r.i.KV().Key(types.KeyRole, types.KeyScopes, l.ScopeKey, l.Identifier).String(),
+			ctx,
+			r.i.KV().Key(types.KeyRole, types.KeyScopes, l.ScopeKey, ident).String(),
 			string(kv.Value),
 		)
 		if err != nil {
@@ -67,7 +65,7 @@ func (r *Role) RegisterMigrations() {
 			pureKV := r.i.KV()
 			leasePrefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 
-			r.migrateMoveInitial()
+			r.migrateMoveInitial(ctx)
 
 			return r.i.KV().WithHooks(storage.StorageHook{
 				PutPost: func(ctx context.Context, key, val string, res *clientv3.PutResponse, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
