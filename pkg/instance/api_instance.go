@@ -15,11 +15,20 @@ import (
 )
 
 type APIInstancesOutput struct {
-	Instances []InstanceInfo `json:"instances" required:"true"`
+	ClusterVersion string         `json:"clusterVersion" required:"true"`
+	Instances      []InstanceInfo `json:"instances" required:"true"`
 }
 
 func (i *Instance) APIInstances() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstancesOutput) error {
+		ri := i.ForRole("api", ctx)
+		m := migrate.New(ri)
+		cv, err := m.GetClusterVersion(ctx)
+		if err != nil {
+			return status.Internal
+		}
+		output.ClusterVersion = cv.String()
+
 		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()
 		instances, err := i.kv.Get(
 			ctx,

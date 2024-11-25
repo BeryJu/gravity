@@ -2376,12 +2376,15 @@ components:
       type: object
     InstanceAPIInstancesOutput:
       properties:
+        clusterVersion:
+          type: string
         instances:
           items:
             $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
       required:
+      - clusterVersion
       - instances
       type: object
     InstanceAPIRoleRestartInput:

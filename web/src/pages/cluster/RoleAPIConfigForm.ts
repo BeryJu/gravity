@@ -57,7 +57,11 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                 />
                 <p class="pf-c-form__helper-text">Secret used to sign cookies.</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Session Duration" ?required=${true} name="sessionDuration">
+            <ak-form-element-horizontal
+                label="Session Duration"
+                ?required=${true}
+                name="sessionDuration"
+            >
                 <input
                     type="text"
                     value="${first(this.instance?.sessionDuration, "24h")}"

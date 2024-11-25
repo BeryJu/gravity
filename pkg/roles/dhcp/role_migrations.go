@@ -61,6 +61,10 @@ func (r *Role) RegisterMigrations() {
 	r.i.Migrator().AddMigration(&migrate.InlineMigration{
 		MigrationName:     "dhcp-move",
 		ActivateOnVersion: migrate.MustParseConstraint("< 0.17.0"),
+		CleanupFunc: func(ctx context.Context) error {
+			r.log.Warn("Cleanup called")
+			return nil
+		},
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			pureKV := r.i.KV()
 			leasePrefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
