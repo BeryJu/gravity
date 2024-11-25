@@ -5,16 +5,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **BuildHash** | **string** |  | 
-**CurrentInstanceIP** | **string** |  | 
-**CurrentInstanceIdentifier** | **string** |  | 
 **Dirs** | [**ExtconfigExtConfigDirs**](ExtconfigExtConfigDirs.md) |  | 
+**InstanceIP** | **string** |  | 
+**InstanceIdentifier** | **string** |  | 
 **Version** | **string** |  | 
 
 ## Methods
 
 ### NewInstanceAPIInstanceInfo
 
-`func NewInstanceAPIInstanceInfo(buildHash string, currentInstanceIP string, currentInstanceIdentifier string, dirs ExtconfigExtConfigDirs, version string, ) *InstanceAPIInstanceInfo`
+`func NewInstanceAPIInstanceInfo(buildHash string, dirs ExtconfigExtConfigDirs, instanceIP string, instanceIdentifier string, version string, ) *InstanceAPIInstanceInfo`
 
 NewInstanceAPIInstanceInfo instantiates a new InstanceAPIInstanceInfo object
 This constructor will assign default values to properties that have it defined,
@@ -49,46 +49,6 @@ and a boolean to check if the value has been set.
 SetBuildHash sets BuildHash field to given value.
 
 
-### GetCurrentInstanceIP
-
-`func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIP() string`
-
-GetCurrentInstanceIP returns the CurrentInstanceIP field if non-nil, zero value otherwise.
-
-### GetCurrentInstanceIPOk
-
-`func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIPOk() (*string, bool)`
-
-GetCurrentInstanceIPOk returns a tuple with the CurrentInstanceIP field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCurrentInstanceIP
-
-`func (o *InstanceAPIInstanceInfo) SetCurrentInstanceIP(v string)`
-
-SetCurrentInstanceIP sets CurrentInstanceIP field to given value.
-
-
-### GetCurrentInstanceIdentifier
-
-`func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIdentifier() string`
-
-GetCurrentInstanceIdentifier returns the CurrentInstanceIdentifier field if non-nil, zero value otherwise.
-
-### GetCurrentInstanceIdentifierOk
-
-`func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIdentifierOk() (*string, bool)`
-
-GetCurrentInstanceIdentifierOk returns a tuple with the CurrentInstanceIdentifier field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCurrentInstanceIdentifier
-
-`func (o *InstanceAPIInstanceInfo) SetCurrentInstanceIdentifier(v string)`
-
-SetCurrentInstanceIdentifier sets CurrentInstanceIdentifier field to given value.
-
-
 ### GetDirs
 
 `func (o *InstanceAPIInstanceInfo) GetDirs() ExtconfigExtConfigDirs`
@@ -107,6 +67,46 @@ and a boolean to check if the value has been set.
 `func (o *InstanceAPIInstanceInfo) SetDirs(v ExtconfigExtConfigDirs)`
 
 SetDirs sets Dirs field to given value.
+
+
+### GetInstanceIP
+
+`func (o *InstanceAPIInstanceInfo) GetInstanceIP() string`
+
+GetInstanceIP returns the InstanceIP field if non-nil, zero value otherwise.
+
+### GetInstanceIPOk
+
+`func (o *InstanceAPIInstanceInfo) GetInstanceIPOk() (*string, bool)`
+
+GetInstanceIPOk returns a tuple with the InstanceIP field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInstanceIP
+
+`func (o *InstanceAPIInstanceInfo) SetInstanceIP(v string)`
+
+SetInstanceIP sets InstanceIP field to given value.
+
+
+### GetInstanceIdentifier
+
+`func (o *InstanceAPIInstanceInfo) GetInstanceIdentifier() string`
+
+GetInstanceIdentifier returns the InstanceIdentifier field if non-nil, zero value otherwise.
+
+### GetInstanceIdentifierOk
+
+`func (o *InstanceAPIInstanceInfo) GetInstanceIdentifierOk() (*string, bool)`
+
+GetInstanceIdentifierOk returns a tuple with the InstanceIdentifier field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInstanceIdentifier
+
+`func (o *InstanceAPIInstanceInfo) SetInstanceIdentifier(v string)`
+
+SetInstanceIdentifier sets InstanceIdentifier field to given value.
 
 
 ### GetVersion
