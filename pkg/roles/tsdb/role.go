@@ -31,6 +31,12 @@ type Role struct {
 	ms  sync.RWMutex
 }
 
+func init() {
+	roles.Register("tsdb", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	r := &Role{
 		log: instance.Log(),

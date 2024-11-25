@@ -27,6 +27,12 @@ type Role struct {
 	server *http.Server
 }
 
+func init() {
+	roles.Register("debug", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
 	r := &Role{

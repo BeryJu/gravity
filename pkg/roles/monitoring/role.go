@@ -30,6 +30,12 @@ type Role struct {
 //go:linkname blockyReg github.com/0xERR0R/blocky/metrics.reg
 var blockyReg *prometheus.Registry
 
+func init() {
+	roles.Register("monitoring", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
 	r := &Role{

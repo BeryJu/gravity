@@ -24,7 +24,7 @@ func TestEmbeddedEtcd_Start(t *testing.T) {
 		_ = os.RemoveAll(etcdRole.Config().Dir)
 	}()
 
-	err := etcdRole.Start(ctx)
+	err := etcdRole.Start(ctx, []byte{})
 	assert.NoError(t, err)
 
 	c := storage.NewClient(

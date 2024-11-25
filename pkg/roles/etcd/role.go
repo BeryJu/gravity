@@ -24,6 +24,12 @@ const (
 	relInstKeyPath  = "/instance_key.pem"
 )
 
+func init() {
+	roles.Register("etcd", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 type Role struct {
 	i roles.Instance
 
@@ -145,7 +151,7 @@ func (ee *Role) Config() *embed.Config {
 	return ee.cfg
 }
 
-func (ee *Role) Start(ctx context.Context) error {
+func (ee *Role) Start(ctx context.Context, cfg []byte) error {
 	start := time.Now()
 	ee.log.Info("starting embedded etcd")
 	e, err := embed.StartEtcd(ee.cfg)
