@@ -37,7 +37,7 @@ export class VersionCard extends AdminStatusCard<InstanceAPIClusterInfoOutput> {
 
     renderValue(): TemplateResult {
         return html`<a
-            href="https://github.com/BeryJu/gravity/releases/tag/${this.value?.clusterVersionShort}"
+            href="https://github.com/BeryJu/gravity/releases/tag/v${this.value?.clusterVersionShort}"
             target="_blank"
         >
             ${this.value?.clusterVersion}
