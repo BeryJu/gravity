@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/base64"
 	"fmt"
+	"net/http"
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/instance"
@@ -33,7 +34,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		Permissions: []auth.Permission{
 			{
 				Path:    "/*",
-				Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 			},
 		},
 	})))

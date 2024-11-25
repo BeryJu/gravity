@@ -174,7 +174,7 @@ func (r *Role) ListenAndServeSocket() {
 					Permissions: []auth.Permission{
 						{
 							Path:    "/*",
-							Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+							Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 						},
 					},
 				},

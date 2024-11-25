@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"strings"
 
 	"beryju.io/gravity/pkg/instance/migrate"
@@ -22,7 +23,7 @@ func (r *Role) RegisterMigrations() {
 			defaultPerms := []auth.Permission{
 				{
 					Path:    "/*",
-					Methods: []string{"GET", "POST", "PUT", "HEAD", "DELETE"},
+					Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 				},
 			}
 			return r.i.KV().WithHooks(storage.StorageHook{
