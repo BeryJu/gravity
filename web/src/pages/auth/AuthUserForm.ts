@@ -56,7 +56,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
                   >
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
-            <ak-form-element-horizontal label="Password" ?required=${true} name="password">
+            <ak-form-element-horizontal label="Password" ?required=${this.instance === undefined} name="password">
                 <input type="password" class="pf-c-form-control" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Permissions"} name="permissions">
