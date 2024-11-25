@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/tsdb/types";
+
+message MetricsRecord {
+    int64 value = 1;
+}
