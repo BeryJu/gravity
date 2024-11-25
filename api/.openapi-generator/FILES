@@ -45,6 +45,7 @@ docs/AuthAPITokensPutOutput.md
 docs/AuthAPIUser.md
 docs/AuthAPIUsersGetOutput.md
 docs/AuthAPIUsersPutInput.md
+docs/AuthPermission.md
 docs/BackupAPIBackupStatus.md
 docs/BackupAPIBackupStatusOutput.md
 docs/BackupAPIRoleConfigInput.md
@@ -149,6 +150,7 @@ model_auth_api_user.go
 model_auth_api_users_get_output.go
 model_auth_api_users_put_input.go
 model_auth_apime_output.go
+model_auth_permission.go
 model_backup_api_backup_status.go
 model_backup_api_backup_status_output.go
 model_backup_api_role_config_input.go

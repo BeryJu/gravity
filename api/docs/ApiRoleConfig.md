@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **ListenOverride** | Pointer to **string** |  | [optional] 
 **Oidc** | Pointer to [**TypesOIDCConfig**](TypesOIDCConfig.md) |  | [optional] 
 **Port** | Pointer to **int32** |  | [optional] 
+**SessionDuration** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -127,6 +128,31 @@ SetPort sets Port field to given value.
 `func (o *ApiRoleConfig) HasPort() bool`
 
 HasPort returns a boolean if a field has been set.
+
+### GetSessionDuration
+
+`func (o *ApiRoleConfig) GetSessionDuration() string`
+
+GetSessionDuration returns the SessionDuration field if non-nil, zero value otherwise.
+
+### GetSessionDurationOk
+
+`func (o *ApiRoleConfig) GetSessionDurationOk() (*string, bool)`
+
+GetSessionDurationOk returns a tuple with the SessionDuration field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSessionDuration
+
+`func (o *ApiRoleConfig) SetSessionDuration(v string)`
+
+SetSessionDuration sets SessionDuration field to given value.
+
+### HasSessionDuration
+
+`func (o *ApiRoleConfig) HasSessionDuration() bool`
+
+HasSessionDuration returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

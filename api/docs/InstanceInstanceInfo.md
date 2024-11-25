@@ -6,14 +6,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Identifier** | **string** |  | 
 **Ip** | **string** |  | 
-**Roles** | **string** |  | 
+**Roles** | **[]string** |  | 
 **Version** | **string** |  | 
 
 ## Methods
 
 ### NewInstanceInstanceInfo
 
-`func NewInstanceInstanceInfo(identifier string, ip string, roles string, version string, ) *InstanceInstanceInfo`
+`func NewInstanceInstanceInfo(identifier string, ip string, roles []string, version string, ) *InstanceInstanceInfo`
 
 NewInstanceInstanceInfo instantiates a new InstanceInstanceInfo object
 This constructor will assign default values to properties that have it defined,
@@ -70,24 +70,34 @@ SetIp sets Ip field to given value.
 
 ### GetRoles
 
-`func (o *InstanceInstanceInfo) GetRoles() string`
+`func (o *InstanceInstanceInfo) GetRoles() []string`
 
 GetRoles returns the Roles field if non-nil, zero value otherwise.
 
 ### GetRolesOk
 
-`func (o *InstanceInstanceInfo) GetRolesOk() (*string, bool)`
+`func (o *InstanceInstanceInfo) GetRolesOk() (*[]string, bool)`
 
 GetRolesOk returns a tuple with the Roles field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRoles
 
-`func (o *InstanceInstanceInfo) SetRoles(v string)`
+`func (o *InstanceInstanceInfo) SetRoles(v []string)`
 
 SetRoles sets Roles field to given value.
 
 
+### SetRolesNil
+
+`func (o *InstanceInstanceInfo) SetRolesNil(b bool)`
+
+ SetRolesNil sets the value for Roles to be an explicit nil
+
+### UnsetRoles
+`func (o *InstanceInstanceInfo) UnsetRoles()`
+
+UnsetRoles ensures that no value is present for Roles, not even an explicit nil
 ### GetVersion
 
 `func (o *InstanceInstanceInfo) GetVersion() string`

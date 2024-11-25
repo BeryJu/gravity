@@ -5,12 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Password** | **string** |  | 
+**Permissions** | [**[]AuthPermission**](AuthPermission.md) |  | 
 
 ## Methods
 
 ### NewAuthAPIUsersPutInput
 
-`func NewAuthAPIUsersPutInput(password string, ) *AuthAPIUsersPutInput`
+`func NewAuthAPIUsersPutInput(password string, permissions []AuthPermission, ) *AuthAPIUsersPutInput`
 
 NewAuthAPIUsersPutInput instantiates a new AuthAPIUsersPutInput object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +46,36 @@ and a boolean to check if the value has been set.
 SetPassword sets Password field to given value.
 
 
+### GetPermissions
+
+`func (o *AuthAPIUsersPutInput) GetPermissions() []AuthPermission`
+
+GetPermissions returns the Permissions field if non-nil, zero value otherwise.
+
+### GetPermissionsOk
+
+`func (o *AuthAPIUsersPutInput) GetPermissionsOk() (*[]AuthPermission, bool)`
+
+GetPermissionsOk returns a tuple with the Permissions field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPermissions
+
+`func (o *AuthAPIUsersPutInput) SetPermissions(v []AuthPermission)`
+
+SetPermissions sets Permissions field to given value.
+
+
+### SetPermissionsNil
+
+`func (o *AuthAPIUsersPutInput) SetPermissionsNil(b bool)`
+
+ SetPermissionsNil sets the value for Permissions to be an explicit nil
+
+### UnsetPermissions
+`func (o *AuthAPIUsersPutInput) UnsetPermissions()`
+
+UnsetPermissions ensures that no value is present for Permissions, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

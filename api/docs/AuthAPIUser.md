@@ -4,13 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Permissions** | [**[]AuthPermission**](AuthPermission.md) |  | 
 **Username** | **string** |  | 
 
 ## Methods
 
 ### NewAuthAPIUser
 
-`func NewAuthAPIUser(username string, ) *AuthAPIUser`
+`func NewAuthAPIUser(permissions []AuthPermission, username string, ) *AuthAPIUser`
 
 NewAuthAPIUser instantiates a new AuthAPIUser object
 This constructor will assign default values to properties that have it defined,
@@ -25,6 +26,36 @@ NewAuthAPIUserWithDefaults instantiates a new AuthAPIUser object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
+### GetPermissions
+
+`func (o *AuthAPIUser) GetPermissions() []AuthPermission`
+
+GetPermissions returns the Permissions field if non-nil, zero value otherwise.
+
+### GetPermissionsOk
+
+`func (o *AuthAPIUser) GetPermissionsOk() (*[]AuthPermission, bool)`
+
+GetPermissionsOk returns a tuple with the Permissions field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPermissions
+
+`func (o *AuthAPIUser) SetPermissions(v []AuthPermission)`
+
+SetPermissions sets Permissions field to given value.
+
+
+### SetPermissionsNil
+
+`func (o *AuthAPIUser) SetPermissionsNil(b bool)`
+
+ SetPermissionsNil sets the value for Permissions to be an explicit nil
+
+### UnsetPermissions
+`func (o *AuthAPIUser) UnsetPermissions()`
+
+UnsetPermissions ensures that no value is present for Permissions, not even an explicit nil
 ### GetUsername
 
 `func (o *AuthAPIUser) GetUsername() string`
