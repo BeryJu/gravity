@@ -41,21 +41,38 @@ func (r *Role) migrateMoveInitial(ctx context.Context) {
 	}
 }
 
-// func (r *Role) migrateMoveBackground() {
-// 	watchChan := r.i.KV().Watch(
-// 		r.ctx,
-// 		r.i.KV().Key(types.KeyRole, types.KeyLegacyLeases).Prefix(true).String(),
-// 		clientv3.WithPrefix(),
-// 	)
-// 	for watchResp := range watchChan {
-// 		for _, event := range watchResp.Events {
-// 			switch event.Type {
-// 			case clientv3.EventTypeDelete:
-// 				r.i.KV().Delete(r.ctx)
-// 			}
-// 		}
-// 	}
-// }
+func (r *Role) migrateMoveBackground(ctx context.Context) {
+	watchChan := r.i.KV().Watch(
+		ctx,
+		r.i.KV().Key(types.KeyRole, types.KeyLegacyLeases).Prefix(true).String(),
+		clientv3.WithPrefix(),
+	)
+	type partialLease struct {
+		ScopeKey string `json:"scopeKey"`
+	}
+	for watchResp := range watchChan {
+		for _, event := range watchResp.Events {
+			pl := partialLease{}
+			err := json.Unmarshal(event.Kv.Value, &pl)
+			if err != nil {
+				r.log.Warn("failed to parse partial lease", zap.Error(err))
+				continue
+			}
+			ident := strings.Split(string(event.Kv.Key), "/")[2]
+			newKey := r.i.KV().Key(types.KeyRole, types.KeyScopes, pl.ScopeKey, ident).String()
+			switch event.Type {
+			case clientv3.EventTypePut:
+				_, err = r.i.KV().Put(ctx, newKey, string(event.Kv.Value))
+			case clientv3.EventTypeDelete:
+				_, err = r.i.KV().Delete(ctx, newKey)
+			}
+			if err != nil {
+				r.log.Warn("failed to mirror legacy lease operation", zap.Error(err))
+				continue
+			}
+		}
+	}
+}
 
 func (r *Role) RegisterMigrations() {
 	r.i.Migrator().AddMigration(&migrate.InlineMigration{
@@ -76,6 +93,7 @@ func (r *Role) RegisterMigrations() {
 			leasePrefix := r.i.KV().Key(types.KeyRole, types.KeyScopes).Prefix(true).String()
 
 			r.migrateMoveInitial(ctx)
+			go r.migrateMoveBackground(ctx)
 
 			return r.i.KV().WithHooks(storage.StorageHook{
 				PutPost: func(ctx context.Context, key, val string, res *clientv3.PutResponse, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {

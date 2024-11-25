@@ -73,13 +73,7 @@ type APIInstanceInfo struct {
 
 func (i *Instance) APIInstanceInfo() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstanceInfo) error {
-		ri := i.ForRole("api", ctx)
-		m := migrate.New(ri)
-		cv, err := m.GetClusterVersion(ctx)
-		if err != nil {
-			return status.Internal
-		}
-		output.Version = cv.String()
+		output.Version = extconfig.Version
 		output.BuildHash = extconfig.BuildHash
 		output.Dirs = extconfig.Get().Dirs()
 		output.CurrentInstanceIP = extconfig.Get().Instance.IP
