@@ -11,8 +11,12 @@ var (
 	BuildHash = ""
 )
 
+func CI() bool {
+	return strings.EqualFold(os.Getenv("CI"), "true")
+}
+
 func FullVersion() string {
-	if os.Getenv("CI") == "true" {
+	if CI() {
 		Version = "99.99.99"
 		BuildHash = "test"
 	}
