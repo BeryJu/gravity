@@ -47,8 +47,7 @@ export class OverviewPage extends AKElement {
     }
 
     render(): TemplateResult {
-        return html` <ak-page-header>
-                <span slot="header"> ${this.me ? html`Hello, ${this.me.username}` : html``} </span>
+        return html`<ak-page-header header=${this.me ? `Hello, ${this.me.username}` : "Hello"}>
             </ak-page-header>
             <section class="pf-c-page__main-section">
                 <div class="pf-l-grid pf-m-gutter">

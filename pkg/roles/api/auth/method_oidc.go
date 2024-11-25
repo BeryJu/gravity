@@ -95,6 +95,12 @@ func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 	user := User{
 		Username: claims.Email,
 		Password: "",
+		Permissions: []Permission{
+			{
+				Path:    "/*",
+				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
+			},
+		},
 	}
 	session.Values[types.SessionKeyUser] = user
 	session.Values[types.SessionKeyDirty] = true

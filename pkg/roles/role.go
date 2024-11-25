@@ -82,3 +82,15 @@ type Instance interface {
 	ExecuteHook(HookOptions, ...interface{})
 	Migrator() RoleMigrator
 }
+
+type RoleConstructor func(Instance) Role
+
+var roleRegistry map[string]RoleConstructor = make(map[string]RoleConstructor)
+
+func Register(name string, constructor RoleConstructor) {
+	roleRegistry[name] = constructor
+}
+
+func GetRole(name string) RoleConstructor {
+	return roleRegistry[name]
+}

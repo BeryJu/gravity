@@ -32,6 +32,12 @@ type Role struct {
 	cfg *RoleConfig
 }
 
+func init() {
+	roles.Register("tftp", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	r := &Role{
 		log:     instance.Log(),

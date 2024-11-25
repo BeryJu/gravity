@@ -16,16 +16,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
-	"beryju.io/gravity/pkg/roles/api"
-	"beryju.io/gravity/pkg/roles/backup"
-	"beryju.io/gravity/pkg/roles/debug"
-	"beryju.io/gravity/pkg/roles/dhcp"
-	"beryju.io/gravity/pkg/roles/discovery"
-	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/etcd"
-	"beryju.io/gravity/pkg/roles/monitoring"
-	"beryju.io/gravity/pkg/roles/tftp"
-	"beryju.io/gravity/pkg/roles/tsdb"
 	"beryju.io/gravity/pkg/storage"
 )
 
@@ -103,7 +94,7 @@ func (i *Instance) startEtcd(ctx context.Context) bool {
 		i.Stop()
 		return false
 	}
-	err := i.etcd.Start(es.Context())
+	err := i.etcd.Start(es.Context(), []byte{})
 	if err != nil {
 		i.log.Warn("failed to start etcd", zap.Error(err))
 		i.Stop()
@@ -177,30 +168,11 @@ func (i *Instance) bootstrap(ctx context.Context) {
 			ContextCancelFunc: cancel,
 		}
 		switch roleId {
-		case "dhcp":
-			rc.Role = dhcp.New(rc.RoleInstance)
-		case "dns":
-			rc.Role = dns.New(rc.RoleInstance)
-		case "api":
-			rc.Role = api.New(rc.RoleInstance)
-		case "discovery":
-			rc.Role = discovery.New(rc.RoleInstance)
-		case "backup":
-			rc.Role = backup.New(rc.RoleInstance)
-		case "monitoring":
-			rc.Role = monitoring.New(rc.RoleInstance)
-		case "debug":
-			rc.Role = debug.New(rc.RoleInstance)
-		case "tsdb":
-			rc.Role = tsdb.New(rc.RoleInstance)
-		case "tftp":
-			rc.Role = tftp.New(rc.RoleInstance)
 		case "etcd":
-			// Special case
+			// Special handling
 			continue
 		default:
-			i.log.Info("Invalid role, skipping", zap.String("roleId", roleId))
-			continue
+			rc.Role = roles.GetRole(roleId)(rc.RoleInstance)
 		}
 		i.rolesM.Lock()
 		i.roles[roleId] = rc

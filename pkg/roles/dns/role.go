@@ -29,6 +29,12 @@ type Role struct {
 	zonesM  sync.RWMutex
 }
 
+func init() {
+	roles.Register("dns", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	r := &Role{
 		servers: make([]*dns.Server, 0),

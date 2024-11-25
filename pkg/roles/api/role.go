@@ -42,6 +42,12 @@ type Role struct {
 	socketServer http.Server
 }
 
+func init() {
+	roles.Register("api", func(i roles.Instance) roles.Role {
+		return New(i)
+	})
+}
+
 func New(instance roles.Instance) *Role {
 	mux := mux.NewRouter()
 	r := &Role{

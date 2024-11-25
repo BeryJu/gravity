@@ -1,7 +1,4 @@
-import {
-    ClusterApi,
-    InstanceAPIClusterInfoOutput,
-} from "gravity-api";
+import { ClusterApi, InstanceAPIClusterInfoOutput } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -37,7 +34,8 @@ export class VersionCard extends AdminStatusCard<InstanceAPIClusterInfoOutput> {
 
     renderValue(): TemplateResult {
         return html`<a
-            href="https://github.com/BeryJu/gravity/releases/tag/v${this.value?.clusterVersionShort}"
+            href="https://github.com/BeryJu/gravity/releases/tag/v${this.value
+                ?.clusterVersionShort}"
             target="_blank"
         >
             ${this.value?.clusterVersion}
