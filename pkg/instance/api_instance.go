@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/instance/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -63,7 +64,13 @@ type APIInstanceInfo struct {
 
 func (i *Instance) APIInstanceInfo() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstanceInfo) error {
-		output.Version = extconfig.Version
+		ri := i.ForRole("api", ctx)
+		m := migrate.New(ri)
+		cv, err := m.GetClusterVersion(ctx)
+		if err != nil {
+			return status.Internal
+		}
+		output.Version = cv.String()
 		output.BuildHash = extconfig.BuildHash
 		output.Dirs = extconfig.Get().Dirs()
 		output.CurrentInstanceIP = extconfig.Get().Instance.IP
