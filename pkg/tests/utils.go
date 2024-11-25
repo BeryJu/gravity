@@ -85,7 +85,9 @@ func ResetEtcd(t *testing.T) {
 		"/",
 		clientv3.WithPrefix(),
 	)
-	assert.NoError(t, err)
+	if t != nil {
+		assert.NoError(t, err)
+	}
 }
 
 func Setup(t *testing.T) func() {
