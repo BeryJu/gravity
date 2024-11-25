@@ -9,8 +9,8 @@ import (
 func (i *Instance) setupInstanceAPI() {
 	i.ForRole("instance", i.rootContext).AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
-		svc.Get("/api/v1/cluster/instances", i.APIInstances())
-		svc.Get("/api/v1/cluster/info", i.APIInstanceInfo())
+		svc.Get("/api/v1/cluster", i.APIClusterInfo())
+		svc.Get("/api/v1/cluster/instance", i.APIInstanceInfo())
 		svc.Post("/api/v1/cluster/roles/restart", i.APIClusterRoleRestart())
 	})
 }

@@ -11,6 +11,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/Masterminds/semver/v3"
+	"github.com/getsentry/sentry-go"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
@@ -77,24 +78,26 @@ func (mi *Migrator) Run(ctx context.Context) (*storage.Client, error) {
 	}
 	mi.log.Debug("Checking migrations to activate for cluster version", zap.String("clusterVersion", cv.String()))
 	cli := mi.ri.KV()
+	span := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.migrate")
+	defer span.Finish()
 	for _, m := range mi.migrations {
 		mi.log.Debug("Checking if migration needs to be run", zap.String("migration", m.Name()))
-		enabled, err := m.Check(cv, ctx)
+		enabled, err := m.Check(cv, span.Context())
 		if err != nil {
 			mi.log.Warn("failed to check if migration should be enabled", zap.String("migration", m.Name()), zap.Error(err))
 			return nil, err
 		}
 		if enabled {
-			_cli, err := m.Hook(ctx)
+			mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
+			_cli, err := m.Hook(span.Context())
 			if err != nil {
 				mi.log.Warn("failed to hook for migration", zap.String("migration", m.Name()), zap.Error(err))
 				return nil, err
 			}
-			mi.log.Info("Enabling migration", zap.String("migration", m.Name()))
 			cli = _cli
 		} else {
 			mi.log.Info("Running cleanup for migration", zap.String("migration", m.Name()))
-			err := m.Cleanup(ctx)
+			err := m.Cleanup(span.Context())
 			if err != nil {
 				mi.log.Warn("failed to cleanup migration", zap.String("migration", m.Name()), zap.Error(err))
 				continue

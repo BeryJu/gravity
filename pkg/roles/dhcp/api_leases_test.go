@@ -33,14 +33,15 @@ func TestAPILeasesGet(t *testing.T) {
 			types.KeyScopes,
 			scope.Name,
 		).String(),
-		tests.MustJSON(scope),
+		tests.MustJSON(&scope),
 	))
 	lease := testLease()
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
@@ -69,7 +70,7 @@ func TestAPILeasesPut(t *testing.T) {
 			types.KeyScopes,
 			scope.Name,
 		).String(),
-		tests.MustJSON(scope),
+		tests.MustJSON(&scope),
 	))
 	assert.NoError(t, role.APILeasesPut().Interact(ctx, dhcp.APILeasesPutInput{
 		Identifier: name,
@@ -83,7 +84,8 @@ func TestAPILeasesPut(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			name,
 		),
 		dhcp.Lease{
@@ -109,14 +111,15 @@ func TestAPILeasesDelete(t *testing.T) {
 			types.KeyScopes,
 			scope.Name,
 		).String(),
-		tests.MustJSON(scope),
+		tests.MustJSON(&scope),
 	))
 	lease := testLease()
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		).String(),
 		tests.MustJSON(lease),
@@ -132,7 +135,8 @@ func TestAPILeasesDelete(t *testing.T) {
 		inst.KV(),
 		inst.KV().Key(
 			types.KeyRole,
-			types.KeyLeases,
+			types.KeyScopes,
+			scope.Name,
 			lease.Identifier,
 		),
 	)

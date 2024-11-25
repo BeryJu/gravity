@@ -56,28 +56,6 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 			r.log.Warn("failed to get scopes", zap.Error(err))
 			return status.Wrap(errors.New("failed to get scopes"), status.Internal)
 		}
-		// Fetch all leases for statistics
-		rawLeases, err := r.i.KV().Get(
-			ctx,
-			r.i.KV().Key(
-				types.KeyRole,
-				types.KeyLeases,
-			).String(),
-			clientv3.WithPrefix(),
-		)
-		if err != nil {
-			r.log.Warn("failed to get leases", zap.Error(err))
-			return status.Wrap(errors.New("failed to get leases"), status.Internal)
-		}
-		leases := []*Lease{}
-		for _, rl := range rawLeases.Kvs {
-			l, err := r.leaseFromKV(rl)
-			if err != nil {
-				r.log.Warn("failed to parse lease", zap.Error(err))
-				continue
-			}
-			leases = append(leases, l)
-		}
 
 		// Generate summarized statistics
 		sum := APIScopeStatistics{}
@@ -92,12 +70,23 @@ func (r *Role) APIScopesGet() usecase.Interactor {
 				Usable: sc.ipam.UsableSize().Uint64(),
 				Used:   0,
 			}
-			for _, l := range leases {
-				if l.ScopeKey != sc.Name {
-					continue
-				}
-				stat.Used += 1
+			// Fetch all leases for statistics
+			rawLeases, err := r.i.KV().Get(
+				ctx,
+				r.i.KV().Key(
+					types.KeyRole,
+					types.KeyScopes,
+					sc.Name,
+				).Prefix(true).String(),
+				clientv3.WithPrefix(),
+				clientv3.WithCountOnly(),
+			)
+			if err != nil {
+				r.log.Warn("failed to get leases", zap.Error(err))
+				return status.Wrap(errors.New("failed to get leases"), status.Internal)
 			}
+			stat.Used = uint64(len(rawLeases.Kvs))
+
 			sum.Usable += stat.Usable
 			sum.Used += stat.Used
 			output.Scopes = append(output.Scopes, &APIScope{

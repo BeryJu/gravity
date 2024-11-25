@@ -258,6 +258,25 @@ paths:
       summary: Backup status
       tags:
       - roles/backup
+  /api/v1/cluster:
+    get:
+      operationId: cluster.get_cluster_info
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstanceAPIClusterInfoOutput'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Cluster
+      tags:
+      - cluster
   /api/v1/cluster/export:
     post:
       operationId: api.export
@@ -302,9 +321,9 @@ paths:
       summary: Import Cluster
       tags:
       - roles/api
-  /api/v1/cluster/info:
+  /api/v1/cluster/instance:
     get:
-      operationId: cluster.get_info
+      operationId: cluster.get_instance_info
       responses:
         "200":
           content:
@@ -319,25 +338,6 @@ paths:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
       summary: Instance
-      tags:
-      - cluster/instances
-  /api/v1/cluster/instances:
-    get:
-      operationId: cluster.get_instances
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstanceAPIInstancesOutput'
-          description: OK
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestErrResponse'
-          description: Internal Server Error
-      summary: Instances
       tags:
       - cluster/instances
   /api/v1/cluster/node/logs:
@@ -3053,37 +3053,9 @@ components:
         tftpLocalDir:
           type: string
       type: object
-    InstanceAPIInstanceInfo:
+    InstanceAPIClusterInfoOutput:
       example:
-        currentInstanceIdentifier: currentInstanceIdentifier
-        currentInstanceIP: currentInstanceIP
-        buildHash: buildHash
-        dirs:
-          backupDir: backupDir
-          etcdDir: etcdDir
-          certDir: certDir
-          tftpLocalDir: tftpLocalDir
-        version: version
-      properties:
-        buildHash:
-          type: string
-        currentInstanceIP:
-          type: string
-        currentInstanceIdentifier:
-          type: string
-        dirs:
-          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
-        version:
-          type: string
-      required:
-      - buildHash
-      - currentInstanceIP
-      - currentInstanceIdentifier
-      - dirs
-      - version
-      type: object
-    InstanceAPIInstancesOutput:
-      example:
+        clusterVersionShort: clusterVersionShort
         instances:
         - identifier: identifier
           ip: ip
@@ -3097,14 +3069,50 @@ components:
           - roles
           - roles
           version: version
+        clusterVersion: clusterVersion
       properties:
+        clusterVersion:
+          type: string
+        clusterVersionShort:
+          type: string
         instances:
           items:
             $ref: '#/components/schemas/InstanceInstanceInfo'
           nullable: true
           type: array
       required:
+      - clusterVersion
+      - clusterVersionShort
       - instances
+      type: object
+    InstanceAPIInstanceInfo:
+      example:
+        buildHash: buildHash
+        dirs:
+          backupDir: backupDir
+          etcdDir: etcdDir
+          certDir: certDir
+          tftpLocalDir: tftpLocalDir
+        instanceIdentifier: instanceIdentifier
+        version: version
+        instanceIP: instanceIP
+      properties:
+        buildHash:
+          type: string
+        dirs:
+          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
+        instanceIP:
+          type: string
+        instanceIdentifier:
+          type: string
+        version:
+          type: string
+      required:
+      - buildHash
+      - dirs
+      - instanceIP
+      - instanceIdentifier
+      - version
       type: object
     InstanceAPIRoleRestartInput:
       example:

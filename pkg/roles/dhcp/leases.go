@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"math"
 	"net"
 	"net/netip"
@@ -42,36 +41,24 @@ type Lease struct {
 }
 
 func (r *Role) FindLease(req *Request4) *Lease {
-	r.leasesM.RLock()
-	defer r.leasesM.RUnlock()
-	lease, ok := r.leases[r.DeviceIdentifier(req.DHCPv4)]
+	expectedScope := r.findScopeForRequest(req)
+	expectedScope.leasesSync.RLock()
+	defer expectedScope.leasesSync.RUnlock()
+	lease, ok := expectedScope.leases[r.DeviceIdentifier(req.DHCPv4)]
 	if !ok {
 		return nil
-	}
-	// Check if the leases's scope matches the expected scope to handle this request
-	expectedScope := r.findScopeForRequest(req)
-	if expectedScope != nil && lease.scope != expectedScope {
-		// We have a specific scope to handle this request but it doesn't match the lease
-		lease.scope = expectedScope
-		lease.ScopeKey = expectedScope.Name
-		lease.setLeaseIP(req)
-		lease.log.Info("Re-assigning address for lease due to changed request scope", zap.String("newIP", lease.Address))
-		go func() {
-			err := lease.Put(req.Context, lease.scope.TTL)
-			if err != nil {
-				r.log.Warn("failed to update lease", zap.Error(err))
-			}
-		}()
 	}
 	return lease
 }
 
-func (r *Role) NewLease(identifier string) *Lease {
+func (s *Scope) NewLease(identifier string) *Lease {
 	return &Lease{
-		inst:       r.i,
+		inst:       s.inst,
 		Identifier: identifier,
-		log:        r.log.With(zap.String("identifier", identifier)),
+		log:        s.log.With(zap.String("identifier", identifier)),
 		Expiry:     0,
+		scope:      s,
+		ScopeKey:   s.Name,
 	}
 }
 
@@ -96,26 +83,21 @@ func (l *Lease) setLeaseIP(req *Request4) {
 	l.scope.ipam.UseIP(*ip, l.Identifier)
 }
 
-func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
-	prefix := r.i.KV().Key(
+func (s *Scope) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
+	prefix := s.inst.KV().Key(
 		types.KeyRole,
-		types.KeyLeases,
+		types.KeyScopes,
+		s.Name,
 	).Prefix(true).String()
 	identifier := strings.TrimPrefix(string(raw.Key), prefix)
-	l := r.NewLease(identifier)
+	l := s.NewLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
 		return l, err
 	}
 	l.etcdKey = string(raw.Key)
-
-	r.scopesM.RLock()
-	scope, ok := r.scopes[l.ScopeKey]
-	r.scopesM.RUnlock()
-	if !ok {
-		return l, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
-	}
-	l.scope = scope
+	l.scope = s
+	l.ScopeKey = s.Name
 	return l, nil
 }
 
@@ -141,7 +123,8 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 
 	leaseKey := l.inst.KV().Key(
 		types.KeyRole,
-		types.KeyLeases,
+		types.KeyScopes,
+		l.ScopeKey,
 		l.Identifier,
 	)
 	_, err = l.inst.KV().Put(

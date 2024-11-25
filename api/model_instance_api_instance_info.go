@@ -19,23 +19,23 @@ var _ MappedNullable = &InstanceAPIInstanceInfo{}
 
 // InstanceAPIInstanceInfo struct for InstanceAPIInstanceInfo
 type InstanceAPIInstanceInfo struct {
-	BuildHash                 string                 `json:"buildHash"`
-	CurrentInstanceIP         string                 `json:"currentInstanceIP"`
-	CurrentInstanceIdentifier string                 `json:"currentInstanceIdentifier"`
-	Dirs                      ExtconfigExtConfigDirs `json:"dirs"`
-	Version                   string                 `json:"version"`
+	BuildHash          string                 `json:"buildHash"`
+	Dirs               ExtconfigExtConfigDirs `json:"dirs"`
+	InstanceIP         string                 `json:"instanceIP"`
+	InstanceIdentifier string                 `json:"instanceIdentifier"`
+	Version            string                 `json:"version"`
 }
 
 // NewInstanceAPIInstanceInfo instantiates a new InstanceAPIInstanceInfo object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInstanceAPIInstanceInfo(buildHash string, currentInstanceIP string, currentInstanceIdentifier string, dirs ExtconfigExtConfigDirs, version string) *InstanceAPIInstanceInfo {
+func NewInstanceAPIInstanceInfo(buildHash string, dirs ExtconfigExtConfigDirs, instanceIP string, instanceIdentifier string, version string) *InstanceAPIInstanceInfo {
 	this := InstanceAPIInstanceInfo{}
 	this.BuildHash = buildHash
-	this.CurrentInstanceIP = currentInstanceIP
-	this.CurrentInstanceIdentifier = currentInstanceIdentifier
 	this.Dirs = dirs
+	this.InstanceIP = instanceIP
+	this.InstanceIdentifier = instanceIdentifier
 	this.Version = version
 	return &this
 }
@@ -72,54 +72,6 @@ func (o *InstanceAPIInstanceInfo) SetBuildHash(v string) {
 	o.BuildHash = v
 }
 
-// GetCurrentInstanceIP returns the CurrentInstanceIP field value
-func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIP() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.CurrentInstanceIP
-}
-
-// GetCurrentInstanceIPOk returns a tuple with the CurrentInstanceIP field value
-// and a boolean to check if the value has been set.
-func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIPOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.CurrentInstanceIP, true
-}
-
-// SetCurrentInstanceIP sets field value
-func (o *InstanceAPIInstanceInfo) SetCurrentInstanceIP(v string) {
-	o.CurrentInstanceIP = v
-}
-
-// GetCurrentInstanceIdentifier returns the CurrentInstanceIdentifier field value
-func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIdentifier() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.CurrentInstanceIdentifier
-}
-
-// GetCurrentInstanceIdentifierOk returns a tuple with the CurrentInstanceIdentifier field value
-// and a boolean to check if the value has been set.
-func (o *InstanceAPIInstanceInfo) GetCurrentInstanceIdentifierOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.CurrentInstanceIdentifier, true
-}
-
-// SetCurrentInstanceIdentifier sets field value
-func (o *InstanceAPIInstanceInfo) SetCurrentInstanceIdentifier(v string) {
-	o.CurrentInstanceIdentifier = v
-}
-
 // GetDirs returns the Dirs field value
 func (o *InstanceAPIInstanceInfo) GetDirs() ExtconfigExtConfigDirs {
 	if o == nil {
@@ -142,6 +94,54 @@ func (o *InstanceAPIInstanceInfo) GetDirsOk() (*ExtconfigExtConfigDirs, bool) {
 // SetDirs sets field value
 func (o *InstanceAPIInstanceInfo) SetDirs(v ExtconfigExtConfigDirs) {
 	o.Dirs = v
+}
+
+// GetInstanceIP returns the InstanceIP field value
+func (o *InstanceAPIInstanceInfo) GetInstanceIP() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.InstanceIP
+}
+
+// GetInstanceIPOk returns a tuple with the InstanceIP field value
+// and a boolean to check if the value has been set.
+func (o *InstanceAPIInstanceInfo) GetInstanceIPOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.InstanceIP, true
+}
+
+// SetInstanceIP sets field value
+func (o *InstanceAPIInstanceInfo) SetInstanceIP(v string) {
+	o.InstanceIP = v
+}
+
+// GetInstanceIdentifier returns the InstanceIdentifier field value
+func (o *InstanceAPIInstanceInfo) GetInstanceIdentifier() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.InstanceIdentifier
+}
+
+// GetInstanceIdentifierOk returns a tuple with the InstanceIdentifier field value
+// and a boolean to check if the value has been set.
+func (o *InstanceAPIInstanceInfo) GetInstanceIdentifierOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.InstanceIdentifier, true
+}
+
+// SetInstanceIdentifier sets field value
+func (o *InstanceAPIInstanceInfo) SetInstanceIdentifier(v string) {
+	o.InstanceIdentifier = v
 }
 
 // GetVersion returns the Version field value
@@ -179,9 +179,9 @@ func (o InstanceAPIInstanceInfo) MarshalJSON() ([]byte, error) {
 func (o InstanceAPIInstanceInfo) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["buildHash"] = o.BuildHash
-	toSerialize["currentInstanceIP"] = o.CurrentInstanceIP
-	toSerialize["currentInstanceIdentifier"] = o.CurrentInstanceIdentifier
 	toSerialize["dirs"] = o.Dirs
+	toSerialize["instanceIP"] = o.InstanceIP
+	toSerialize["instanceIdentifier"] = o.InstanceIdentifier
 	toSerialize["version"] = o.Version
 	return toSerialize, nil
 }

@@ -44,6 +44,7 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
         if (!data.addressLeaseTime) {
             data.addressLeaseTime = "0";
         }
+        data.expiry = -1;
         if (this.instance && this.needsRecreate(data)) {
             await new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
                 scope: this.scope || "",

@@ -1,8 +1,6 @@
 package dhcp
 
 import (
-	"math/big"
-
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -36,14 +34,8 @@ var (
 func (s *Scope) calculateUsage() {
 	usable := s.ipam.UsableSize()
 	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
-	used := big.NewInt(0)
-	s.role.leasesM.RLock()
-	defer s.role.leasesM.RUnlock()
-	for _, lease := range s.role.leases {
-		if lease.ScopeKey != s.Name {
-			continue
-		}
-		used = used.Add(used, big.NewInt(1))
-	}
-	dhcpScopeUsage.WithLabelValues(s.Name).Set(float64(used.Uint64()))
+	s.leasesSync.RLock()
+	defer s.leasesSync.RUnlock()
+	used := len(s.leases)
+	dhcpScopeUsage.WithLabelValues(s.Name).Set(float64(used))
 }

@@ -1,7 +1,7 @@
 package types
 
 const (
-	KeyRole   = "dhcp"
-	KeyLeases = "leases"
-	KeyScopes = "scopes"
+	KeyRole         = "dhcp"
+	KeyLegacyLeases = "leases"
+	KeyScopes       = "scopes"
 )

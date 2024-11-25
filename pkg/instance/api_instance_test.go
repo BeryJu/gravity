@@ -23,7 +23,7 @@ func TestAPIInstances(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 
-	var output instance.APIInstancesOutput
-	assert.NoError(t, rootInst.APIInstances().Interact(tests.Context(), struct{}{}, &output))
+	var output instance.APIClusterInfoOutput
+	assert.NoError(t, rootInst.APIClusterInfo().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 }

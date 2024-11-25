@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/instance/migrate"
 	"beryju.io/gravity/pkg/instance/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -13,12 +14,24 @@ import (
 	"go.uber.org/zap"
 )
 
-type APIInstancesOutput struct {
-	Instances []InstanceInfo `json:"instances" required:"true"`
+type APIClusterInfoOutput struct {
+	ClusterVersion      string         `json:"clusterVersion" required:"true"`
+	ClusterVersionShort string         `json:"clusterVersionShort" required:"true"`
+	Instances           []InstanceInfo `json:"instances" required:"true"`
 }
 
-func (i *Instance) APIInstances() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstancesOutput) error {
+func (i *Instance) APIClusterInfo() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIClusterInfoOutput) error {
+		ri := i.ForRole("api", ctx)
+		m := migrate.New(ri)
+		cv, err := m.GetClusterVersion(ctx)
+		if err != nil {
+			return status.Internal
+		}
+		output.ClusterVersion = cv.String()
+		sv, _ := cv.SetMetadata("")
+		output.ClusterVersionShort = sv.String()
+
 		prefix := i.kv.Key(types.KeyInstance).Prefix(true).String()
 		instances, err := i.kv.Get(
 			ctx,
@@ -44,9 +57,9 @@ func (i *Instance) APIInstances() usecase.Interactor {
 		}
 		return nil
 	})
-	u.SetName("cluster.get_instances")
-	u.SetTitle("Instances")
-	u.SetTags("cluster/instances")
+	u.SetName("cluster.get_cluster_info")
+	u.SetTitle("Cluster")
+	u.SetTags("cluster")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
@@ -57,8 +70,8 @@ type APIInstanceInfo struct {
 
 	Dirs *extconfig.ExtConfigDirs `json:"dirs" required:"true"`
 
-	CurrentInstanceIdentifier string `json:"currentInstanceIdentifier" required:"true"`
-	CurrentInstanceIP         string `json:"currentInstanceIP" required:"true"`
+	InstanceIdentifier string `json:"instanceIdentifier" required:"true"`
+	InstanceIP         string `json:"instanceIP" required:"true"`
 }
 
 func (i *Instance) APIInstanceInfo() usecase.Interactor {
@@ -66,11 +79,11 @@ func (i *Instance) APIInstanceInfo() usecase.Interactor {
 		output.Version = extconfig.Version
 		output.BuildHash = extconfig.BuildHash
 		output.Dirs = extconfig.Get().Dirs()
-		output.CurrentInstanceIP = extconfig.Get().Instance.IP
-		output.CurrentInstanceIdentifier = extconfig.Get().Instance.Identifier
+		output.InstanceIP = extconfig.Get().Instance.IP
+		output.InstanceIdentifier = extconfig.Get().Instance.Identifier
 		return nil
 	})
-	u.SetName("cluster.get_info")
+	u.SetName("cluster.get_instance_info")
 	u.SetTitle("Instance")
 	u.SetTags("cluster/instances")
 	u.SetExpectedErrors(status.Internal)
