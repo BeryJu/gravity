@@ -62,7 +62,13 @@ func (r *Role) RegisterMigrations() {
 		MigrationName:     "dhcp-move",
 		ActivateOnVersion: migrate.MustParseConstraint("< 0.17.0"),
 		CleanupFunc: func(ctx context.Context) error {
-			r.log.Warn("Cleanup called")
+			res, err := r.i.KV().Delete(ctx,
+				r.i.KV().Key(types.KeyRole, types.KeyLegacyLeases).Prefix(true).String(),
+				clientv3.WithPrefix())
+			if err != nil {
+				return err
+			}
+			r.log.Info("Successfully cleaned up old DHCP leases", zap.Int64("count", res.Deleted))
 			return nil
 		},
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
