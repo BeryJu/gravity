@@ -30,17 +30,17 @@ func (r *Role) handleScopeOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue, ctx 
 		s, err := r.scopeFromKV(kv)
 		if err != nil {
 			r.log.Warn("failed to convert scope from event", zap.Error(err))
-		} else {
-			s.watchScopeLeases(ctx)
-			s.calculateUsage()
-			r.scopesM.Lock()
-			if oldScope, ok := r.scopes[s.Name]; ok {
-				oldScope.StopWatchingLeases()
-			}
-			r.scopes[s.Name] = s
-			r.scopesM.Unlock()
-			r.log.Debug("added scope", zap.String("name", s.Name))
+			return false
 		}
+		s.watchScopeLeases(ctx)
+		s.calculateUsage()
+		r.scopesM.Lock()
+		if oldScope, ok := r.scopes[s.Name]; ok {
+			oldScope.StopWatchingLeases()
+		}
+		r.scopes[s.Name] = s
+		r.scopesM.Unlock()
+		r.log.Debug("added scope", zap.String("name", s.Name))
 	}
 	return true
 }

@@ -33,7 +33,7 @@ func (r *Role) migrateMoveInitial() {
 		}
 		_, err = r.i.KV().Put(
 			r.ctx,
-			r.i.KV().Key(types.KeyRole, types.KeyScopes, l.ScopeKey).String(),
+			r.i.KV().Key(types.KeyRole, types.KeyScopes, l.ScopeKey, l.Identifier).String(),
 			string(kv.Value),
 		)
 		if err != nil {
