@@ -23,20 +23,10 @@ func Test_api_ClusterInstancesApiService(t *testing.T) {
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
 
-	t.Run("Test ClusterInstancesApiService ClusterGetInfo", func(t *testing.T) {
+	t.Run("Test ClusterInstancesApiService ClusterGetInstanceInfo", func(t *testing.T) {
 		t.Skip("skip test") // remove to run test
 
-		resp, httpRes, err := apiClient.ClusterInstancesApi.ClusterGetInfo(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-	})
-
-	t.Run("Test ClusterInstancesApiService ClusterGetInstances", func(t *testing.T) {
-		t.Skip("skip test") // remove to run test
-
-		resp, httpRes, err := apiClient.ClusterInstancesApi.ClusterGetInstances(context.Background()).Execute()
+		resp, httpRes, err := apiClient.ClusterInstancesApi.ClusterGetInstanceInfo(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
