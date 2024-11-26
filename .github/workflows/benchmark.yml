@@ -29,8 +29,7 @@ jobs:
       - run: make test-env-start
       - run: make install-deps
       - run: make bench
-      - name: Store benchmark result
-        uses: benchmark-action/github-action-benchmark@v1
+      - uses: benchmark-action/github-action-benchmark@v1
         with:
           name: Gravity Benchmark
           tool: 'go'
@@ -41,3 +40,5 @@ jobs:
           alert-threshold: '200%'
           comment-on-alert: true
           fail-on-alert: true
+          alert-comment-cc-users: '@BeryJu'
+          summary-always: true
