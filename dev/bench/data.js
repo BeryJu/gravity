@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732585715129,
+  "lastUpdate": 1732596700902,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -488,6 +488,98 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "111157 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "committer": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "id": "3d92d8cb8398f62d8e399c621b2eea85db80dcad",
+          "message": "build(deps): bump the eslint group in /web with 2 updates",
+          "timestamp": "2024-11-26T01:44:45Z",
+          "url": "https://github.com/BeryJu/gravity/pull/1327/commits/3d92d8cb8398f62d8e399c621b2eea85db80dcad"
+        },
+        "date": 1732596700084,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 724383,
+            "unit": "ns/op\t   29922 B/op\t     413 allocs/op",
+            "extra": "1623 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 724383,
+            "unit": "ns/op",
+            "extra": "1623 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29922,
+            "unit": "B/op",
+            "extra": "1623 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1623 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 9607,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "117026 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 9607,
+            "unit": "ns/op",
+            "extra": "117026 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "117026 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "117026 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 9785,
+            "unit": "ns/op\t    5010 B/op\t      67 allocs/op",
+            "extra": "109808 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 9785,
+            "unit": "ns/op",
+            "extra": "109808 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5010,
+            "unit": "B/op",
+            "extra": "109808 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "109808 times\n4 procs"
           }
         ]
       }
