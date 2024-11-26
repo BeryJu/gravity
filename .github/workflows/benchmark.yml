@@ -28,13 +28,12 @@ jobs:
       - run: make web-install web-build
       - run: make test-env-start
       - run: make install-deps internal/resources/macoui internal/resources/blocky internal/resources/tftp
-      - uses: bobheadxi/gobenchdata@v1
-        with:
-          GO_BENCHMARKS: "^Benchmark"
-          PUBLISH: "true"
-          CHECKS: "true"
-          CHECKS_CONFIG: ".github/gobenchdata-checks.yml"
+      - run: go run go.bobheadxi.dev/gobenchdata@v1 action
         env:
+          INPUT_GO_BENCHMARKS: "^Benchmark"
+          INPUT_PUBLISH: "true"
+          INPUT_CHECKS: "true"
+          INPUT_CHECKS_CONFIG: ".github/gobenchdata-checks.yml"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Gravity environment variables
           BOOTSTRAP_ROLES: "dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
