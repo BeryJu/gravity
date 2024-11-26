@@ -11,6 +11,7 @@ import (
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 )
 
 func (r *Role) APIMetrics() usecase.Interactor {
@@ -45,16 +46,21 @@ func (r *Role) APIMetrics() usecase.Interactor {
 			if input.Node != "" && input.Node != node {
 				continue
 			}
-			value, err := strconv.ParseInt(string(kv.Value), 10, 0)
+			v := types.MetricsRecord{}
+			err = proto.Unmarshal(kv.Value, &v)
 			if err != nil {
-				r.log.Warn("failed to parse metric value", zap.Error(err))
-				continue
+				value, err := strconv.ParseInt(string(kv.Value), 10, 0)
+				if err != nil {
+					r.log.Warn("failed to parse metric value", zap.Error(err))
+					continue
+				}
+				v.Value = value
 			}
 			output.Records = append(output.Records, types.APIMetricsRecord{
 				Keys:  keyParts[:2],
 				Time:  time.Unix(int64(ts), 0),
 				Node:  node,
-				Value: value,
+				Value: v.Value,
 			})
 		}
 		return nil

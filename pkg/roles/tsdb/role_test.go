@@ -101,7 +101,7 @@ func TestRoleWrite(t *testing.T) {
 			types.KeyRole, nameBeforeWrite,
 			extconfig.Get().Instance.Identifier,
 		).Prefix(true),
-		42,
+		&types.MetricsRecord{Value: 42},
 	)
 	tests.AssertEtcd(
 		t,
@@ -110,7 +110,7 @@ func TestRoleWrite(t *testing.T) {
 			types.KeyRole, nameSet,
 			extconfig.Get().Instance.Identifier,
 		).Prefix(true),
-		43,
+		&types.MetricsRecord{Value: 43},
 	)
 	tests.AssertEtcd(
 		t,
@@ -119,6 +119,6 @@ func TestRoleWrite(t *testing.T) {
 			types.KeyRole, nameInc,
 			extconfig.Get().Instance.Identifier,
 		).Prefix(true),
-		1,
+		&types.MetricsRecord{Value: 1},
 	)
 }

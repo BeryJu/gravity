@@ -17,6 +17,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 var (
@@ -38,6 +40,14 @@ func MustJSON(in interface{}) string {
 		panic(err)
 	}
 	return string(j)
+}
+
+func MustProto(in protoreflect.ProtoMessage) []byte {
+	r, err := proto.Marshal(in)
+	if err != nil {
+		panic(err)
+	}
+	return r
 }
 
 func MustParseNetIP(t *testing.T, r string) netip.Addr {
@@ -72,6 +82,8 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 			assert.Equal(t, rb, values.Kvs[idx].Value)
 		} else if rb, ok := res.(string); ok {
 			assert.Equal(t, rb, string(values.Kvs[idx].Value))
+		} else if rb, ok := res.(protoreflect.ProtoMessage); ok {
+			assert.Equal(t, MustProto(rb), values.Kvs[idx].Value)
 		} else {
 			assert.Equal(t, MustJSON(res), string(values.Kvs[idx].Value))
 		}

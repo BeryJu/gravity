@@ -87,6 +87,12 @@ gen-build:
 	DEBUG=true go run ${GO_FLAGS} ${PWD} generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
+gen-proto:
+	protoc \
+		--proto_path . \
+		--go_out . \
+		protobuf/**
+
 gen-clean:
 	rm -rf ${PWD}/gen-ts-api/
 	rm -rf ${PWD}/api/api/

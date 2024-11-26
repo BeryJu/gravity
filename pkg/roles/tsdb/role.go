@@ -20,6 +20,7 @@ import (
 	"github.com/swaggest/rest/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 )
 
 type Role struct {
@@ -165,10 +166,17 @@ func (r *Role) write(ctx context.Context) {
 			extconfig.Get().Instance.Identifier,
 			strconv.FormatInt(time.Now().Unix(), 10),
 		).String()
-		_, err := r.i.KV().Put(
+		v := types.MetricsRecord{
+			Value: int64(value.Value),
+		}
+		rv, err := proto.Marshal(&v)
+		if err != nil {
+			r.log.Warn("failed to marshal message", zap.Error(err))
+		}
+		_, err = r.i.KV().Put(
 			ks.Context(),
 			key,
-			strconv.Itoa(value.Value),
+			string(rv),
 			clientv3.WithLease(lease.ID),
 		)
 		if err != nil {
