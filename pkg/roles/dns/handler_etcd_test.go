@@ -69,61 +69,6 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
 }
 
-func BenchmarkRoleDNS_Etcd(b *testing.B) {
-	defer tests.Setup(nil)()
-	rootInst := instance.New()
-	ctx := tests.Context()
-	inst := rootInst.ForRole("dns", ctx)
-	tests.PanicIfError(inst.KV().Put(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyZones,
-			TestZone,
-		).String(),
-		tests.MustJSON(dns.Zone{
-			HandlerConfigs: []map[string]interface{}{
-				{
-					"type": "etcd",
-				},
-			},
-		}),
-	))
-	tests.PanicIfError(inst.KV().Put(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyZones,
-			TestZone,
-			"foo",
-			types.DNSRecordTypeA,
-			"0",
-		).String(),
-		tests.MustJSON(dns.Record{
-			Data: "10.1.2.3",
-		}),
-	))
-
-	role := dns.New(inst)
-	_ = role.Start(ctx, RoleConfig())
-	defer role.Stop()
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		fw := NewNullDNSWriter()
-		role.Handler(fw, &d.Msg{
-			Question: []d.Question{
-				{
-					Name:   "foo.example.com.",
-					Qtype:  d.TypeA,
-					Qclass: d.ClassINET,
-				},
-			},
-		})
-		_ = fw.Msg()
-	}
-}
-
 // Test DNS Entry at root of zone
 func TestRoleDNS_Etcd_Root(t *testing.T) {
 	defer tests.Setup(t)()
