@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732663052352,
+  "lastUpdate": 1732663911176,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -1448,6 +1448,102 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "111988 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jens.langhammer@beryju.org",
+            "name": "Jens L.",
+            "username": "BeryJu"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "294cdd7731269b2f9a60a9a577903595737ab599",
+          "message": "dhcp: release & inform (#1251)\n\n* add dhcp release support\r\n\r\n* add tests\r\n\r\n* fix duplicate log fields\r\n\r\n* fix",
+          "timestamp": "2024-11-27T00:28:11+01:00",
+          "tree_id": "94ed0932c8d82307cf80d898ddd3c43f79569623",
+          "url": "https://github.com/BeryJu/gravity/commit/294cdd7731269b2f9a60a9a577903595737ab599"
+        },
+        "date": 1732663910689,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 744619,
+            "unit": "ns/op\t   29920 B/op\t     413 allocs/op",
+            "extra": "1534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 744619,
+            "unit": "ns/op",
+            "extra": "1534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29920,
+            "unit": "B/op",
+            "extra": "1534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 9812,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "111987 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 9812,
+            "unit": "ns/op",
+            "extra": "111987 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "111987 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "111987 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 10076,
+            "unit": "ns/op\t    5010 B/op\t      67 allocs/op",
+            "extra": "107416 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 10076,
+            "unit": "ns/op",
+            "extra": "107416 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5010,
+            "unit": "B/op",
+            "extra": "107416 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "107416 times\n4 procs"
           }
         ]
       }
