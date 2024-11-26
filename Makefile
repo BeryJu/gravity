@@ -168,7 +168,7 @@ install-deps: internal/resources/macoui internal/resources/blocky internal/resou
 
 test-local:
 	$(eval TEST_COUNT := 100)
-	$(eval TEST_FLAGS := -v -shuffle=on -failfast)
+	$(eval TEST_FLAGS := -shuffle=on -failfast)
 
 test: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
@@ -178,6 +178,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 	export CI="true"
 	go test \
 		-p 1 \
+		-v \
 		-coverprofile=coverage.txt \
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
