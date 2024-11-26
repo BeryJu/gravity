@@ -41,6 +41,9 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	}
+	if CI() {
+		config.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+	}
 	config.EncoderConfig.EncodeDuration = zapcore.MillisDurationEncoder
 	log, err := config.Build()
 	if err != nil {
