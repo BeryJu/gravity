@@ -1,0 +1,11 @@
+checks:
+  - name: My Check
+    description: |-
+      Define a check here - in this example, we caculate % difference for NsPerOp in the diff function.
+      diff is a function where you receive two parameters, current and base, and in general this function
+      should return a negative value for an improvement and a positive value for a regression.
+    package: .
+    benchmarks: []
+    diff: (current.NsPerOp - base.NsPerOp) / base.NsPerOp * 100
+    thresholds:
+      max: 10

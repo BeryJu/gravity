@@ -179,16 +179,3 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		$(shell go list ./... | grep -v ./api) \
 			2>&1 | tee test-output
 	go tool cover -html coverage.txt -o coverage.html
-
-bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
-	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
-	export ETCD_ENDPOINT="localhost:2385"
-	export LISTEN_ONLY="true"
-	export LOG_LEVEL="FATAL"
-	export CI="true"
-	go test \
-		-run=^$$ \
-		-bench=^Benchmark \
-		-benchmem \
-		$(shell go list ./... | grep -v ./api) \
-			| tee test-output

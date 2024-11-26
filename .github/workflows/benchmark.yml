@@ -27,18 +27,16 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: make web-install web-build
       - run: make test-env-start
-      - run: make install-deps
-      - run: make bench
-      - uses: benchmark-action/github-action-benchmark@v1
-        with:
-          name: Gravity Benchmark
-          tool: 'go'
-          output-file-path: test-output
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: true
-          # Show alert with commit comment on detecting possible performance regression
-          alert-threshold: '200%'
-          comment-on-alert: true
-          fail-on-alert: true
-          alert-comment-cc-users: '@BeryJu'
-          summary-always: true
+      - run: make install-deps internal/resources/macoui internal/resources/blocky internal/resources/tftp
+      - uses: bobheadxi/gobenchdata@v1
+        env:
+          GO_BENCHMARKS: "^Benchmark"
+          PUBLISH: "true"
+          CHECKS: "true"
+          CHECKS_CONFIG: ".github/gobenchdata-checks.yml"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Gravity environment variables
+          BOOTSTRAP_ROLES: "dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
+          ETCD_ENDPOINT: "localhost:2385"
+          LISTEN_ONLY: "true"
+          LOG_LEVEL: "FATAL"
