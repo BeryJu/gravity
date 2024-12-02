@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733138886177,
+  "lastUpdate": 1733161618244,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -3200,6 +3200,122 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "106807 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "committer": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "id": "dfa8f49607306b6ff2f06f870fe5e37ab54cdb1c",
+          "message": "build(deps): bump github.com/quic-go/quic-go from 0.48.1 to 0.48.2",
+          "timestamp": "2024-12-02T17:11:41Z",
+          "url": "https://github.com/BeryJu/gravity/pull/1341/commits/dfa8f49607306b6ff2f06f870fe5e37ab54cdb1c"
+        },
+        "date": 1733161617746,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1338524,
+            "unit": "ns/op\t   70872 B/op\t    1432 allocs/op",
+            "extra": "883 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1338524,
+            "unit": "ns/op",
+            "extra": "883 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 70872,
+            "unit": "B/op",
+            "extra": "883 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1432,
+            "unit": "allocs/op",
+            "extra": "883 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 734344,
+            "unit": "ns/op\t   29925 B/op\t     413 allocs/op",
+            "extra": "1630 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 734344,
+            "unit": "ns/op",
+            "extra": "1630 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29925,
+            "unit": "B/op",
+            "extra": "1630 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1630 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 9862,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "113620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 9862,
+            "unit": "ns/op",
+            "extra": "113620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "113620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "113620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 10182,
+            "unit": "ns/op\t    5009 B/op\t      67 allocs/op",
+            "extra": "105514 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 10182,
+            "unit": "ns/op",
+            "extra": "105514 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5009,
+            "unit": "B/op",
+            "extra": "105514 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "105514 times\n4 procs"
           }
         ]
       }
