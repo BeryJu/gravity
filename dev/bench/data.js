@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733138855677,
+  "lastUpdate": 1733138870219,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -2960,6 +2960,126 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "116492 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80c40d42eb0e01884f4c94a786f6c09c74d54a41",
+          "message": "build(deps): bump eslint from 9.15.0 to 9.16.0 in /web in the eslint group (#1337)\n\nbuild(deps): bump eslint in /web in the eslint group\r\n\r\nBumps the eslint group in /web with 1 update: [eslint](https://github.com/eslint/eslint).\r\n\r\n\r\nUpdates `eslint` from 9.15.0 to 9.16.0\r\n- [Release notes](https://github.com/eslint/eslint/releases)\r\n- [Changelog](https://github.com/eslint/eslint/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/eslint/eslint/compare/v9.15.0...v9.16.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: eslint\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: eslint\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-02T12:24:14+01:00",
+          "tree_id": "34c8bb1eac551c0e29b6eca08b09011ef77e1cb4",
+          "url": "https://github.com/BeryJu/gravity/commit/80c40d42eb0e01884f4c94a786f6c09c74d54a41"
+        },
+        "date": 1733138869930,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1292832,
+            "unit": "ns/op\t   71099 B/op\t    1438 allocs/op",
+            "extra": "961 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1292832,
+            "unit": "ns/op",
+            "extra": "961 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 71099,
+            "unit": "B/op",
+            "extra": "961 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1438,
+            "unit": "allocs/op",
+            "extra": "961 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 728163,
+            "unit": "ns/op\t   29919 B/op\t     413 allocs/op",
+            "extra": "1620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 728163,
+            "unit": "ns/op",
+            "extra": "1620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29919,
+            "unit": "B/op",
+            "extra": "1620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1620 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 9779,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "115941 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 9779,
+            "unit": "ns/op",
+            "extra": "115941 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "115941 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "115941 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 10019,
+            "unit": "ns/op\t    5010 B/op\t      67 allocs/op",
+            "extra": "107391 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 10019,
+            "unit": "ns/op",
+            "extra": "107391 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5010,
+            "unit": "B/op",
+            "extra": "107391 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "107391 times\n4 procs"
           }
         ]
       }
