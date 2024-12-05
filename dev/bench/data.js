@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733375146091,
+  "lastUpdate": 1733375152956,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -4608,6 +4608,122 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "107808 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "committer": {
+            "name": "BeryJu",
+            "username": "BeryJu"
+          },
+          "id": "fbfd75d24e0be28835eed83cc9fac8dd5aaf75ce",
+          "message": "build(deps): bump golang.org/x/net from 0.31.0 to 0.32.0",
+          "timestamp": "2024-12-04T08:39:31Z",
+          "url": "https://github.com/BeryJu/gravity/pull/1348/commits/fbfd75d24e0be28835eed83cc9fac8dd5aaf75ce"
+        },
+        "date": 1733375152682,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1313943,
+            "unit": "ns/op\t   71153 B/op\t    1439 allocs/op",
+            "extra": "975 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1313943,
+            "unit": "ns/op",
+            "extra": "975 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 71153,
+            "unit": "B/op",
+            "extra": "975 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1439,
+            "unit": "allocs/op",
+            "extra": "975 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 719319,
+            "unit": "ns/op\t   29924 B/op\t     413 allocs/op",
+            "extra": "1590 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 719319,
+            "unit": "ns/op",
+            "extra": "1590 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29924,
+            "unit": "B/op",
+            "extra": "1590 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1590 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 9578,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "117018 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 9578,
+            "unit": "ns/op",
+            "extra": "117018 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "117018 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "117018 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 9811,
+            "unit": "ns/op\t    5009 B/op\t      67 allocs/op",
+            "extra": "108556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 9811,
+            "unit": "ns/op",
+            "extra": "108556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5009,
+            "unit": "B/op",
+            "extra": "108556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "108556 times\n4 procs"
           }
         ]
       }
