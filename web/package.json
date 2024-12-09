@@ -15,7 +15,7 @@
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/legacy-modes": "^6.4.2",
         "@codemirror/theme-one-dark": "^6.1.2",
-        "@patternfly/patternfly": "^4.224.2",
+        "@patternfly/patternfly": "^6.0.0",
         "@rollup/plugin-commonjs": "^28.0.1",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.3.0",
