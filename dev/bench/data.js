@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733805726489,
+  "lastUpdate": 1733830674369,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -6728,6 +6728,126 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "105158 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cf4f55e44a585f07aeab9227ab5304070451298",
+          "message": "build(deps): bump @trivago/prettier-plugin-sort-imports from 5.1.0 to 5.2.0 in /web (#1358)\n\nbuild(deps): bump @trivago/prettier-plugin-sort-imports in /web\r\n\r\nBumps [@trivago/prettier-plugin-sort-imports](https://github.com/trivago/prettier-plugin-sort-imports) from 5.1.0 to 5.2.0.\r\n- [Release notes](https://github.com/trivago/prettier-plugin-sort-imports/releases)\r\n- [Changelog](https://github.com/trivago/prettier-plugin-sort-imports/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/trivago/prettier-plugin-sort-imports/compare/v5.1.0...v5.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: \"@trivago/prettier-plugin-sort-imports\"\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-10T12:33:53+01:00",
+          "tree_id": "cc99d71bf0464583afd2bd9c384d83cc21938beb",
+          "url": "https://github.com/BeryJu/gravity/commit/5cf4f55e44a585f07aeab9227ab5304070451298"
+        },
+        "date": 1733830673429,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1424676,
+            "unit": "ns/op\t   70592 B/op\t    1427 allocs/op",
+            "extra": "832 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1424676,
+            "unit": "ns/op",
+            "extra": "832 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 70592,
+            "unit": "B/op",
+            "extra": "832 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1427,
+            "unit": "allocs/op",
+            "extra": "832 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 731703,
+            "unit": "ns/op\t   29917 B/op\t     413 allocs/op",
+            "extra": "1606 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 731703,
+            "unit": "ns/op",
+            "extra": "1606 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29917,
+            "unit": "B/op",
+            "extra": "1606 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1606 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 10624,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "113880 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 10624,
+            "unit": "ns/op",
+            "extra": "113880 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "113880 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "113880 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 11119,
+            "unit": "ns/op\t    5010 B/op\t      67 allocs/op",
+            "extra": "103556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 11119,
+            "unit": "ns/op",
+            "extra": "103556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5010,
+            "unit": "B/op",
+            "extra": "103556 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "103556 times\n4 procs"
           }
         ]
       }
