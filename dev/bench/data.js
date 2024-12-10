@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733830674369,
+  "lastUpdate": 1733830717535,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -6848,6 +6848,126 @@ window.BENCHMARK_DATA = {
             "value": 67,
             "unit": "allocs/op",
             "extra": "103556 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cbfcbb530081f57b8d603cd6b965ef1ab09f0fc7",
+          "message": "build(deps): bump the eslint group in /web with 2 updates (#1356)\n\nBumps the eslint group in /web with 2 updates: [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/eslint-plugin) and [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/parser).\r\n\r\n\r\nUpdates `@typescript-eslint/eslint-plugin` from 8.17.0 to 8.18.0\r\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\r\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/CHANGELOG.md)\r\n- [Commits](https://github.com/typescript-eslint/typescript-eslint/commits/v8.18.0/packages/eslint-plugin)\r\n\r\nUpdates `@typescript-eslint/parser` from 8.17.0 to 8.18.0\r\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\r\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/parser/CHANGELOG.md)\r\n- [Commits](https://github.com/typescript-eslint/typescript-eslint/commits/v8.18.0/packages/parser)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: \"@typescript-eslint/eslint-plugin\"\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: eslint\r\n- dependency-name: \"@typescript-eslint/parser\"\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: eslint\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-10T12:34:57+01:00",
+          "tree_id": "34fd9b1ca0a6ee8834ccd6a9896a56022bf4b5e5",
+          "url": "https://github.com/BeryJu/gravity/commit/cbfcbb530081f57b8d603cd6b965ef1ab09f0fc7"
+        },
+        "date": 1733830717162,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1363319,
+            "unit": "ns/op\t   70711 B/op\t    1429 allocs/op",
+            "extra": "847 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1363319,
+            "unit": "ns/op",
+            "extra": "847 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 70711,
+            "unit": "B/op",
+            "extra": "847 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1429,
+            "unit": "allocs/op",
+            "extra": "847 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 730732,
+            "unit": "ns/op\t   29919 B/op\t     413 allocs/op",
+            "extra": "1617 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 730732,
+            "unit": "ns/op",
+            "extra": "1617 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 29919,
+            "unit": "B/op",
+            "extra": "1617 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 413,
+            "unit": "allocs/op",
+            "extra": "1617 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 10678,
+            "unit": "ns/op\t    4944 B/op\t      66 allocs/op",
+            "extra": "101092 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 10678,
+            "unit": "ns/op",
+            "extra": "101092 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 4944,
+            "unit": "B/op",
+            "extra": "101092 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 66,
+            "unit": "allocs/op",
+            "extra": "101092 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 10749,
+            "unit": "ns/op\t    5010 B/op\t      67 allocs/op",
+            "extra": "94732 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 10749,
+            "unit": "ns/op",
+            "extra": "94732 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 5010,
+            "unit": "B/op",
+            "extra": "94732 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 67,
+            "unit": "allocs/op",
+            "extra": "94732 times\n4 procs"
           }
         ]
       }
