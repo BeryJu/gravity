@@ -78,12 +78,27 @@ func (ipf *IPForwarderHandler) Identifier() string {
 	return IPForwarderType
 }
 
+// Only cache records we can handle
+func (ipf *IPForwarderHandler) canCacheRecord(ans dns.RR) bool {
+	switch ans.(type) {
+	case *dns.A:
+	case *dns.AAAA:
+	case *dns.TXT:
+	case *dns.PTR:
+	case *dns.CNAME:
+	case *dns.MX:
+	case *dns.SRV:
+		return true
+	}
+	return false
+}
+
 func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Question, ans dns.RR, idx int) {
 	cs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.cache")
 	cs.SetTag("gravity.dns.handler.forward_ip.cache.query", query.String())
 	cs.SetTag("gravity.dns.handler.forward_ip.cache.ans", ans.String())
 	defer cs.Finish()
-	if ans == nil {
+	if ans == nil || !ipf.canCacheRecord(ans) {
 		return
 	}
 	cacheTtl := ans.Header().Ttl
