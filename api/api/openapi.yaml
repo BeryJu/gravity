@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.18.1
+  version: 0.18.2
 servers:
 - url: /
 paths:
@@ -2951,6 +2951,7 @@ components:
         - key: ""
         authoritative: true
         hook: hook
+        recordCount: 6
         defaultTTL: 0
         name: name
       properties:
@@ -2969,12 +2970,15 @@ components:
           type: string
         name:
           type: string
+        recordCount:
+          type: integer
       required:
       - authoritative
       - defaultTTL
       - handlerConfigs
       - hook
       - name
+      - recordCount
       type: object
     DnsAPIZonesGetOutput:
       example:
@@ -2984,6 +2988,7 @@ components:
           - key: ""
           authoritative: true
           hook: hook
+          recordCount: 6
           defaultTTL: 0
           name: name
         - handlerConfigs:
@@ -2991,6 +2996,7 @@ components:
           - key: ""
           authoritative: true
           hook: hook
+          recordCount: 6
           defaultTTL: 0
           name: name
       properties:

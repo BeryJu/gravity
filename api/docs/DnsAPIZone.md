@@ -9,12 +9,13 @@ Name | Type | Description | Notes
 **HandlerConfigs** | **[]map[string]interface{}** |  | 
 **Hook** | **string** |  | 
 **Name** | **string** |  | 
+**RecordCount** | **int32** |  | 
 
 ## Methods
 
 ### NewDnsAPIZone
 
-`func NewDnsAPIZone(authoritative bool, defaultTTL int32, handlerConfigs []map[string]interface{}, hook string, name string, ) *DnsAPIZone`
+`func NewDnsAPIZone(authoritative bool, defaultTTL int32, handlerConfigs []map[string]interface{}, hook string, name string, recordCount int32, ) *DnsAPIZone`
 
 NewDnsAPIZone instantiates a new DnsAPIZone object
 This constructor will assign default values to properties that have it defined,
@@ -137,6 +138,26 @@ and a boolean to check if the value has been set.
 `func (o *DnsAPIZone) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetRecordCount
+
+`func (o *DnsAPIZone) GetRecordCount() int32`
+
+GetRecordCount returns the RecordCount field if non-nil, zero value otherwise.
+
+### GetRecordCountOk
+
+`func (o *DnsAPIZone) GetRecordCountOk() (*int32, bool)`
+
+GetRecordCountOk returns a tuple with the RecordCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRecordCount
+
+`func (o *DnsAPIZone) SetRecordCount(v int32)`
+
+SetRecordCount sets RecordCount field to given value.
 
 
 
