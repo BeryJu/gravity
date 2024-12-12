@@ -81,13 +81,7 @@ func (ipf *IPForwarderHandler) Identifier() string {
 // Only cache records we can handle
 func (ipf *IPForwarderHandler) canCacheRecord(ans dns.RR) bool {
 	switch ans.(type) {
-	case *dns.A:
-	case *dns.AAAA:
-	case *dns.TXT:
-	case *dns.PTR:
-	case *dns.CNAME:
-	case *dns.MX:
-	case *dns.SRV:
+	case *dns.A, *dns.AAAA, *dns.TXT, *dns.PTR, *dns.CNAME, *dns.MX, *dns.SRV:
 		return true
 	}
 	return false
