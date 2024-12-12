@@ -3,6 +3,7 @@ package dns
 import (
 	"context"
 	"errors"
+	"slices"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
@@ -21,6 +22,7 @@ type APIZone struct {
 	DefaultTTL     uint32                   `json:"defaultTTL" required:"true"`
 	Authoritative  bool                     `json:"authoritative" required:"true"`
 	Hook           string                   `json:"hook" required:"true"`
+	RecordCount    int                      `json:"recordCount" required:"true"`
 }
 type APIZonesGetOutput struct {
 	Zones []APIZone `json:"zones" required:"true"`
@@ -46,6 +48,15 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 			r.log.Warn("failed to get zones", zap.Error(err))
 			return status.Wrap(errors.New("failed to get zones"), status.Internal)
 		}
+		rawRecords, err := r.i.KV().Get(
+			ctx,
+			r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true).String(),
+			clientv3.WithPrefix(),
+			clientv3.WithKeysOnly(),
+		)
+		if err != nil {
+			return status.Wrap(errors.New("failed to get records"), status.Internal)
+		}
 		for _, rawZone := range rawZones.Kvs {
 			_zone, err := r.zoneFromKV(rawZone)
 			if err != nil {
@@ -55,12 +66,20 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 			if strings.Contains(_zone.Name, "/") {
 				continue
 			}
+			recordCount := slices.Collect(func(yield func(int) bool) {
+				for _, v := range rawRecords.Kvs {
+					if strings.HasPrefix(string(v.Key), _zone.etcdKey+"/") {
+						yield(1)
+					}
+				}
+			})
 			output.Zones = append(output.Zones, APIZone{
 				Name:           _zone.Name,
 				Authoritative:  _zone.Authoritative,
 				DefaultTTL:     _zone.DefaultTTL,
 				HandlerConfigs: _zone.HandlerConfigs,
 				Hook:           _zone.Hook,
+				RecordCount:    len(recordCount),
 			})
 		}
 		return nil

@@ -94,37 +94,44 @@ func (r *Record) ToDNS(qname string) dns.RR {
 	var rr dns.RR
 	switch r.RRType() {
 	case dns.TypeA:
-		rr = &dns.A{}
-		rr.(*dns.A).Hdr = hdr
-		rr.(*dns.A).A = net.ParseIP(r.Data)
+		rr = &dns.A{
+			Hdr: hdr,
+			A:   net.ParseIP(r.Data),
+		}
 	case dns.TypeAAAA:
-		rr = &dns.AAAA{}
-		rr.(*dns.AAAA).Hdr = hdr
-		rr.(*dns.AAAA).AAAA = net.ParseIP(r.Data)
+		rr = &dns.AAAA{
+			Hdr:  hdr,
+			AAAA: net.ParseIP(r.Data),
+		}
 	case dns.TypePTR:
-		rr = &dns.PTR{}
-		rr.(*dns.PTR).Hdr = hdr
-		rr.(*dns.PTR).Ptr = r.Data
+		rr = &dns.PTR{
+			Hdr: hdr,
+			Ptr: r.Data,
+		}
 	case dns.TypeSRV:
-		rr = &dns.SRV{}
-		rr.(*dns.SRV).Hdr = hdr
-		rr.(*dns.SRV).Target = r.Data
-		rr.(*dns.SRV).Port = r.SRVPort
-		rr.(*dns.SRV).Priority = r.SRVPriority
-		rr.(*dns.SRV).Weight = r.SRVWeight
+		rr = &dns.SRV{
+			Hdr:      hdr,
+			Target:   r.Data,
+			Port:     r.SRVPort,
+			Priority: r.SRVPriority,
+			Weight:   r.SRVWeight,
+		}
 	case dns.TypeMX:
-		rr = &dns.MX{}
-		rr.(*dns.MX).Hdr = hdr
-		rr.(*dns.MX).Mx = r.Data
-		rr.(*dns.MX).Preference = r.MXPreference
+		rr = &dns.MX{
+			Hdr:        hdr,
+			Mx:         r.Data,
+			Preference: r.MXPreference,
+		}
 	case dns.TypeCNAME:
-		rr = &dns.CNAME{}
-		rr.(*dns.CNAME).Hdr = hdr
-		rr.(*dns.CNAME).Target = r.Data
+		rr = &dns.CNAME{
+			Hdr:    hdr,
+			Target: r.Data,
+		}
 	case dns.TypeTXT:
-		rr = &dns.TXT{}
-		rr.(*dns.TXT).Hdr = hdr
-		rr.(*dns.TXT).Txt = strings.Split(r.Data, TXTSeparator)
+		rr = &dns.TXT{
+			Hdr: hdr,
+			Txt: strings.Split(r.Data, TXTSeparator),
+		}
 	}
 	return rr
 }

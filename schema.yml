@@ -2301,12 +2301,15 @@ components:
           type: string
         name:
           type: string
+        recordCount:
+          type: integer
       required:
       - name
       - handlerConfigs
       - defaultTTL
       - authoritative
       - hook
+      - recordCount
       type: object
     DnsAPIZonesGetOutput:
       properties:

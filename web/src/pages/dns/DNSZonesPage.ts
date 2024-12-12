@@ -45,6 +45,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
     columns(): TableColumn[] {
         return [
             new TableColumn("Zone"),
+            new TableColumn("Records"),
             new TableColumn("Authoritative"),
             new TableColumn("Actions"),
         ];
@@ -55,6 +56,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
             html`<a href=${`#/dns/zones/${item.name}`}>
                 ${item.name === "." ? "Root Zone" : item.name}
             </a>`,
+            html`${item.recordCount}`,
             html`${item.authoritative ? "Yes" : "No"}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
