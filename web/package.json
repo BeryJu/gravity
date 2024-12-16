@@ -19,7 +19,7 @@
         "@rollup/plugin-commonjs": "^28.0.2",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.0",
-        "@rollup/plugin-typescript": "^12.1.1",
+        "@rollup/plugin-typescript": "^12.1.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.0",
         "@types/chart.js": "^2.9.41",
         "@types/codemirror": "5.60.15",
