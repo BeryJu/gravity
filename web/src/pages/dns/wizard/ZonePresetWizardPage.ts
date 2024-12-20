@@ -76,11 +76,11 @@ export class ZonePresetWizardPage extends WizardPage {
     };
 
     render(): TemplateResult {
-        return html`<form class="pf-c-form pf-m-horizontal">
+        return html`<form class="pf-v6-c-form pf-m-horizontal">
             ${this.applicationTypes.map((type, idx) => {
-                return html`<div class="pf-c-radio">
+                return html`<div class="pf-v6-c-radio">
                     <input
-                        class="pf-c-radio__input"
+                        class="pf-v6-c-radio__input"
                         type="radio"
                         name="type"
                         id=${type.name}
@@ -94,8 +94,8 @@ export class ZonePresetWizardPage extends WizardPage {
                             this.host.isValid = true;
                         }}
                     />
-                    <label class="pf-c-radio__label" for=${type.name}>${type.name}</label>
-                    <span class="pf-c-radio__description">${type.description}</span>
+                    <label class="pf-v6-c-radio__label" for=${type.name}>${type.name}</label>
+                    <span class="pf-v6-c-radio__description">${type.description}</span>
                 </div>`;
             })}
         </form>`;

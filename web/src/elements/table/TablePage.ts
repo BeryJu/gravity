@@ -1,12 +1,11 @@
 import { CSSResult } from "lit";
 import { TemplateResult, html } from "lit";
-import { ifDefined } from "lit/directives/if-defined.js";
 
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 
-import "../PageHeader";
+import { EVENT_TMP_TITLE } from "../../common/constants";
 import { updateURLParams } from "../router/RouteMatch";
 import { Table } from "../table/Table";
 
@@ -53,7 +52,7 @@ export abstract class TablePage<T extends object> extends Table<T> {
                     search: "",
                 });
             }}
-            class="pf-c-button pf-m-link"
+            class="pf-v6-c-button pf-m-link"
         >
             ${"Clear search"}
         </button>`;
@@ -68,22 +67,29 @@ export abstract class TablePage<T extends object> extends Table<T> {
     }
 
     render(): TemplateResult {
-        return html`<ak-page-header
-                icon=${this.pageIcon()}
-                header=${this.pageTitle()}
-                description=${ifDefined(this.pageDescription())}
-            >
-            </ak-page-header>
-            <section class="pf-c-page__main-section pf-m-no-padding-mobile">
-                <div class="pf-c-sidebar pf-m-gutter">
-                    <div class="pf-c-sidebar__main">
-                        ${this.renderSidebarBefore()}
-                        <div class="pf-c-sidebar__content">
-                            <div class="pf-c-card">${this.renderTable()}</div>
+        this.dispatchEvent(
+            new CustomEvent(EVENT_TMP_TITLE, {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    title: this.pageTitle(),
+                    icon: this.pageIcon(),
+                    subtext: this.pageDescription(),
+                },
+            }),
+        );
+        return html`<section class="pf-v6-c-page__main-section pf-m-no-padding-mobile">
+            <div class="pf-v6-c-sidebar pf-m-gutter">
+                <div class="pf-v6-c-sidebar__main">
+                    ${this.renderSidebarBefore()}
+                    <div class="pf-v6-c-sidebar__content">
+                        <div class="pf-v6-c-card">
+                            <div class="pf-v6-c-card__body">${this.renderTable()}</div>
                         </div>
-                        ${this.renderSidebarAfter()}
                     </div>
+                    ${this.renderSidebarAfter()}
                 </div>
-            </section>`;
+            </div>
+        </section>`;
     }
 }

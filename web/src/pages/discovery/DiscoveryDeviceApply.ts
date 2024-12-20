@@ -20,16 +20,16 @@ import "../../elements/forms/HorizontalFormElement";
 @customElement("gravity-discover-apply-form")
 export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput> {
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="To" ?required=${true} name="to">
-                <select class="pf-c-form-control">
+        return html` <ak-form-element-horizontal label="To" required name="to">
+                <select>
                     <option value="dhcp">
                         DHCP (will also create a DNS record if the DHCP Scope is DNS integrated)
                     </option>
                     <option value="dns">DNS</option>
                 </select>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="DHCP Scope" ?required=${true} name="dhcpScope">
-                <select class="pf-c-form-control">
+            <ak-form-element-horizontal label="DHCP Scope" required name="dhcpScope">
+                <select>
                     <option value="">---</option>
                     ${until(
                         new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
@@ -42,8 +42,8 @@ export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput
                     )}
                 </select>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="DNS Zone" ?required=${true} name="dnsZone">
-                <select class="pf-c-form-control">
+            <ak-form-element-horizontal label="DNS Zone" required name="dnsZone">
+                <select>
                     <option value="">---</option>
                     ${until(
                         new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
