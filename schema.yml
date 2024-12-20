@@ -2619,4 +2619,6 @@ components:
             type: string
           nullable: true
           type: array
+        tokenUsernameField:
+          type: string
       type: object

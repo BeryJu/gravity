@@ -18,10 +18,13 @@ func (ap *AuthProvider) isAllowedPath(r *http.Request) bool {
 }
 
 func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
+	ap.checkStaticToken(r)
+	if ap.oidc != nil {
+		ap.checkJWTToken(r)
+	}
 	if ap.isAllowedPath(r) {
 		return true
 	}
-	ap.checkToken(r)
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	u, ok := session.Values[types.SessionKeyUser]
 	if u == nil || !ok {

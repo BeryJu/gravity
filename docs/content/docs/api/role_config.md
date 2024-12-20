@@ -13,5 +13,6 @@ title: "Role configuration"
     The placeholder `$INSTANCE_IDENTIFIER` will be replaced by the instance's name and `$INSTANCE_IP` will be replaced by the instances IP.
 
   - `scopes`: Array of scopes that are requested. Should contain `openid` and `email`.
+  - `tokenUsernameField`: Field used from JWT tokens to find the user when JWT is used for token authentication.
 
 When OpenID Connect is configured, Gravity will automatically start SSO authentication. To prevent this, add the query parameter `local` to the Gravity URL, like `http://gravity1.domain.tld/ui/?local`.
