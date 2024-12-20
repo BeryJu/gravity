@@ -64,7 +64,6 @@ func TestImport(t *testing.T) {
 			},
 		},
 	}
-	// var output struct{}
 
 	err := role.APIClusterImport().Interact(ctx, entries, &struct{}{})
 	assert.NoError(t, err)

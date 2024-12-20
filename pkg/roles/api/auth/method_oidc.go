@@ -106,3 +106,51 @@ func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 	session.Values[types.SessionKeyDirty] = true
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+func (ap *AuthProvider) checkJWTToken(r *http.Request) bool {
+	header := r.Header.Get(AuthorizationHeader)
+	if header == "" {
+		return false
+	}
+	parts := strings.SplitN(header, " ", 2)
+	if len(parts) < 2 {
+		return false
+	}
+	if !strings.EqualFold(parts[0], BearerType) {
+		return false
+	}
+	t, err := ap.oidcVerifier.Verify(r.Context(), parts[1])
+	if err != nil {
+		ap.log.Warn("failed to verify JWT token", zap.Error(err))
+		return false
+	}
+	rt := map[string]interface{}{}
+	err = t.Claims(&rt)
+	if err != nil {
+		return false
+	}
+	// Get token's user
+	rawUsers, err := ap.inst.KV().Get(
+		r.Context(),
+		ap.inst.KV().Key(
+			types.KeyRole,
+			types.KeyUsers,
+			rt[ap.oidc.TokenUsernameField].(string),
+		).String(),
+	)
+	if err != nil {
+		ap.log.Warn("failed to check token", zap.Error(err))
+		return false
+	}
+	if len(rawUsers.Kvs) < 1 {
+		return false
+	}
+	user, err := ap.userFromKV(rawUsers.Kvs[0])
+	if err != nil {
+		return false
+	}
+	session := r.Context().Value(types.RequestSession).(*sessions.Session)
+	session.Values[types.SessionKeyUser] = *user
+	session.Values[types.SessionKeyDirty] = true
+	return false
+}

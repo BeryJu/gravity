@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ap *AuthProvider) checkToken(r *http.Request) bool {
+func (ap *AuthProvider) checkStaticToken(r *http.Request) bool {
 	header := r.Header.Get(AuthorizationHeader)
 	if header == "" {
 		return false

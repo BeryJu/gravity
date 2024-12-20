@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.18.6
+  version: 0.18.4
 paths:
   /api/v1/auth/config:
     get:
@@ -1758,11 +1758,17 @@ components:
       properties:
         authenticated:
           type: boolean
+        permissions:
+          items:
+            $ref: '#/components/schemas/AuthPermission'
+          nullable: true
+          type: array
         username:
           type: string
       required:
       - username
       - authenticated
+      - permissions
       type: object
     AuthAPIToken:
       properties:
@@ -2613,4 +2619,6 @@ components:
             type: string
           nullable: true
           type: array
+        tokenUsernameField:
+          type: string
       type: object

@@ -14,6 +14,8 @@ Session authentication using local users and OIDC is supported for browser usage
 
 To authenticate to the API using a token, create the token either using [ADMIN_TOKEN](../install/_index.md#advanced), or in the Web Interface under __Auth -> Tokens__. Upon creation, the token will be shown in the browser. Afterwards, add the `Authorization` header to API requests with the value of `Bearer <token>`.
 
+Starting with Gravity 0.19, when OIDC is enabled, JWT tokens signed by the OIDC issuer can also be used. The role configuration parameter `tokenUsernameField` configures which claim from the JWT is used to lookup the user.
+
 #### CLI
 
 To create a new user, run the following command in the Gravity container:
