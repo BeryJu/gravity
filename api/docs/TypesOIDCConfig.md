@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **Issuer** | Pointer to **string** |  | [optional] 
 **RedirectURL** | Pointer to **string** |  | [optional] 
 **Scopes** | Pointer to **[]string** |  | [optional] 
+**TokenUsernameField** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -164,6 +165,31 @@ HasScopes returns a boolean if a field has been set.
 `func (o *TypesOIDCConfig) UnsetScopes()`
 
 UnsetScopes ensures that no value is present for Scopes, not even an explicit nil
+### GetTokenUsernameField
+
+`func (o *TypesOIDCConfig) GetTokenUsernameField() string`
+
+GetTokenUsernameField returns the TokenUsernameField field if non-nil, zero value otherwise.
+
+### GetTokenUsernameFieldOk
+
+`func (o *TypesOIDCConfig) GetTokenUsernameFieldOk() (*string, bool)`
+
+GetTokenUsernameFieldOk returns a tuple with the TokenUsernameField field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTokenUsernameField
+
+`func (o *TypesOIDCConfig) SetTokenUsernameField(v string)`
+
+SetTokenUsernameField sets TokenUsernameField field to given value.
+
+### HasTokenUsernameField
+
+`func (o *TypesOIDCConfig) HasTokenUsernameField() bool`
+
+HasTokenUsernameField returns a boolean if a field has been set.
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
