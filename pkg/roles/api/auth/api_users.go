@@ -79,7 +79,7 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 			).String(),
 		)
 		var oldUser *User
-		if err == nil && len(rawUsers.Kvs) < 1 {
+		if err == nil && len(rawUsers.Kvs) > 0 {
 			user, err := ap.userFromKV(rawUsers.Kvs[0])
 			if err != nil {
 				_ = bcrypt.CompareHashAndPassword([]byte{}, []byte(input.Password))
