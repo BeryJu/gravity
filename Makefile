@@ -183,7 +183,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
 		${TEST_FLAGS} \
-		$(shell go list ./... | grep -v ./api) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			2>&1 | tee test-output
 	go tool cover -html coverage.txt -o coverage.html
 
