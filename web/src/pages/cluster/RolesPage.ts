@@ -63,7 +63,7 @@ export class RolesPage extends TablePage<Role> {
             PFGrid,
             PFCard,
             css`
-                .pf-c-sidebar__content {
+                .pf-v6-c-sidebar__content {
                     background-color: transparent;
                 }
             `,
@@ -142,16 +142,16 @@ export class RolesPage extends TablePage<Role> {
                 },
             }),
         );
-        return html` <section class="pf-c-page__main-section pf-m-no-padding-mobile">
-            <div class="pf-c-sidebar pf-m-gutter">
-                <div class="pf-c-sidebar__main">
+        return html` <section class="pf-v6-c-page__main-section pf-m-no-padding-mobile">
+            <div class="pf-v6-c-sidebar pf-m-gutter">
+                <div class="pf-v6-c-sidebar__main">
                     ${this.renderSidebarBefore()}
-                    <a class="pf-c-sidebar__content pf-l-grid pf-m-gutter">
+                    <a class="pf-v6-c-sidebar__content pf-v6-l-grid pf-m-gutter">
                         ${this.data?.results.map((role) => {
                             const card = html` <div
-                                class="pf-c-card ${role.settingsAvailable
+                                class="pf-v6-c-card ${role.settingsAvailable
                                     ? "pf-m-hoverable-raised"
-                                    : ""} pf-l-grid__item pf-m-3-col"
+                                    : ""} pf-v6-l-grid__item pf-m-3-col"
                                 @click=${() => {
                                     if (!role.settingsAvailable) {
                                         return;
@@ -166,8 +166,8 @@ export class RolesPage extends TablePage<Role> {
                                 }}
                                 slot="trigger"
                             >
-                                <div class="pf-c-card__title">${role.name}</div>
-                                <div class="pf-c-card__body">
+                                <div class="pf-v6-c-card__title">${role.name}</div>
+                                <div class="pf-v6-c-card__body">
                                     <ak-chip-group
                                         >${this.instances
                                             .filter((inst) => inst.roles?.includes(role.id))
