@@ -55,6 +55,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                 label="Session Duration"
                 ?required=${true}
                 name="sessionDuration"
+                helperText="Duration for which a session is valid for."
             >
                 <input
                     type="text"
@@ -62,7 +63,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     class="pf-c-form-control"
                     required
                 />
-                <p class="pf-c-form__helper-text">Duration for which a session is valid for.</p>
             </ak-form-element-horizontal>
             <ak-form-group ?expanded=${true}>
                 <span slot="header">OIDC</span>
@@ -123,6 +123,19 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                                 this.instance?.oidc?.scopes?.join(" "),
                                 "openid profile email",
                             )}"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal
+                        label="Token username field"
+                        ?required=${true}
+                        name="oidc.tokenUsernameField"
+                        helperText="Field in JWT tokens used to lookup user when using Token API authentication."
+                    >
+                        <input
+                            type="text"
+                            value="${first(this.instance?.oidc?.tokenUsernameField, "email")}"
+                            class="pf-c-form-control"
                             required
                         />
                     </ak-form-element-horizontal>
