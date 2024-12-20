@@ -1,5 +1,4 @@
 import { ClusterApi, InstanceInstanceInfo } from "gravity-api";
-import { EVENT_TMP_TITLE } from "src/common/constants";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
@@ -8,6 +7,7 @@ import PFCard from "@patternfly/patternfly/components/Card/card.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import { EVENT_TMP_TITLE } from "../../common/constants";
 import { AKElement } from "../../elements/Base";
 import "../../elements/chips/Chip";
 import "../../elements/chips/ChipGroup";

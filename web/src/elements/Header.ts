@@ -5,6 +5,7 @@ import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFMasthead from "@patternfly/patternfly/components/Masthead/masthead.css";
 import PFMenuToggle from "@patternfly/patternfly/components/MenuToggle/menu-toggle.css";
+import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFToggleGroup from "@patternfly/patternfly/components/ToggleGroup/toggle-group.css";
 import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
@@ -63,6 +64,7 @@ export class Header extends AKElement {
             PFMenuToggle,
             PFToolbar,
             PFToggleGroup,
+            PFTitle,
             PFMasthead,
             css`
                 .pf-v6-c-toolbar__group.title {
@@ -125,7 +127,7 @@ export class Header extends AKElement {
                             <div class="pf-v6-c-toolbar__group pf-m-filter-group title">
                                 <div class="pf-v6-c-toolbar__item">
                                     <div class="pf-v6-c-content">
-                                        <h1>${this._title.title}</h1>
+                                        <h1 class="pf-v6-c-title pf-m-2xl">${this._title.title}</h1>
                                     </div>
                                 </div>
                             </div>
