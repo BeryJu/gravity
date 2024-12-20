@@ -30,8 +30,9 @@ func (ap *AuthProvider) APIConfig() usecase.Interactor {
 }
 
 type APIMeOutput struct {
-	Username      string `json:"username" required:"true"`
-	Authenticated bool   `json:"authenticated" required:"true"`
+	Username      string       `json:"username" required:"true"`
+	Authenticated bool         `json:"authenticated" required:"true"`
+	Permissions   []Permission `json:"permissions" required:"true"`
 }
 
 func (ap *AuthProvider) APIMe() usecase.Interactor {
@@ -45,6 +46,7 @@ func (ap *AuthProvider) APIMe() usecase.Interactor {
 		user := u.(User)
 		output.Authenticated = true
 		output.Username = user.Username
+		output.Permissions = user.Permissions
 		return nil
 	})
 	u.SetName("api.users_me")

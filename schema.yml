@@ -1758,11 +1758,17 @@ components:
       properties:
         authenticated:
           type: boolean
+        permissions:
+          items:
+            $ref: '#/components/schemas/AuthPermission'
+          nullable: true
+          type: array
         username:
           type: string
       required:
       - username
       - authenticated
+      - permissions
       type: object
     AuthAPIToken:
       properties:
