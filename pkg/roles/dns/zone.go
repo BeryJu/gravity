@@ -3,7 +3,6 @@ package dns
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net"
 	"net/netip"
 	"strings"
@@ -47,27 +46,11 @@ type Zone struct {
 	Hook          string `json:"hook"`
 }
 
-func (z *Zone) soa() *dns.Msg {
-	m := new(dns.Msg)
-	m.Authoritative = z.Authoritative
-	m.Ns = []dns.RR{
-		&dns.SOA{
-			Hdr: dns.RR_Header{
-				Name:   z.Name,
-				Rrtype: dns.TypeSOA,
-				Class:  dns.ClassINET,
-				Ttl:    z.DefaultTTL,
-			},
-			Ns:      z.Name,
-			Mbox:    fmt.Sprintf("root.%s", z.Name),
-			Serial:  1337,
-			Refresh: 600,
-			Retry:   15,
-			Expire:  5,
-			Minttl:  z.DefaultTTL,
-		},
-	}
-	return m
+func (z *Zone) Handlers() []Handler {
+	return append([]Handler{
+		// Internal SOA handler
+		&SOAIntHandler{z},
+	}, z.h...)
 }
 
 func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Handler) {
@@ -117,7 +100,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		Source: z.Hook,
 		Method: "onDNSRequestBefore",
 	}, r)
-	for idx, handler := range z.h {
+	for idx, handler := range z.Handlers() {
 		ss := span.StartChild("gravity.dns.request.handler")
 		ss.Description = handler.Identifier()
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
@@ -150,15 +133,6 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			return
 		}
 		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))
-	}
-	if z.Authoritative {
-		soa := z.soa()
-		soa.SetReply(r.Msg)
-		err := w.WriteMsg(soa)
-		if err != nil {
-			z.log.Warn("failed to write response", zap.Error(err))
-		}
-		return
 	}
 	z.log.Debug("no handler has a reply, fallback back to NX")
 	fallback := new(dns.Msg)
