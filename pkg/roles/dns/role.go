@@ -100,6 +100,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 			),
 		),
 	)
+	if r.cfg.Port < 1 {
+		return nil
+	}
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	if runtime.GOOS == "darwin" {
 		listen = fmt.Sprintf(":%d", r.cfg.Port)

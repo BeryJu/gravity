@@ -69,7 +69,10 @@ func (r *Role) APIZonesGet() usecase.Interactor {
 			recordCount := slices.Collect(func(yield func(int) bool) {
 				for _, v := range rawRecords.Kvs {
 					if strings.HasPrefix(string(v.Key), _zone.etcdKey+"/") {
-						yield(1)
+						ok := yield(1)
+						if !ok {
+							return
+						}
 					}
 				}
 			})

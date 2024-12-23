@@ -11,7 +11,7 @@ import (
 
 func RoleConfig() []byte {
 	return []byte(tests.MustJSON(dns.RoleConfig{
-		Port: 1054,
+		Port: 0,
 	}))
 }
 

@@ -15,9 +15,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	var output dhcp.APIRoleConfigOutput
@@ -31,9 +29,7 @@ func TestAPIRoleConfigPut(t *testing.T) {
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	assert.NoError(t, role.APIRoleConfigPut().Interact(ctx, dhcp.APIRoleConfigInput{
