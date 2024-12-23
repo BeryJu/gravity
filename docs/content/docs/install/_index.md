@@ -86,6 +86,14 @@ The following environment variables can be set.
     IMPORT_CONFIGS=eyJlbnRyaWVzIjogW3sia2V5IjogIi9ncmF2aXR5L2ZvbyIsInZhbHVlIjogIlptOXYifV19
     ```
 
+    These json files should have the same format as the API endpoint `/api/v1/cluster/import`, see [Reference](../api/reference.md). To find out which keys control what setting, it is recommended to extract the config of a running cluster using `/api/v1/cluster/export` and extract the settings desired.
+
+    For example:
+
+    ```json
+    {"entries": [{"key": "/gravity/foo","value": "Zm9v"}]}
+    ```
+
 ### Changing Environment Variables
 
 Gravity is designed so that you ideally don't have to explicitly define environment variables, but if necessary, environment variables can be added or changed by modifying the `environment:` options in the Docker Compose file.
