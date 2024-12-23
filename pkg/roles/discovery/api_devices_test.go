@@ -276,7 +276,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 	// Create DNS role to register events
 	dnsRole := dns.New(rootInst.ForRole("dns", ctx))
 	tests.PanicIfError(dnsRole.Start(ctx, []byte(tests.MustJSON(dns.RoleConfig{
-		Port: 1054,
+		Port: 0,
 	}))))
 	defer dnsRole.Stop()
 
