@@ -43,9 +43,7 @@ func TestDHCPRequest(t *testing.T) {
 			},
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
@@ -89,9 +87,7 @@ func TestDHCPRequest_Hook(t *testing.T) {
 			}`,
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
@@ -138,9 +134,7 @@ func TestDHCPRequest_Hook_UniFi(t *testing.T) {
 			}`,
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
@@ -188,9 +182,7 @@ func TestDHCPRequestDNS(t *testing.T) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
@@ -258,9 +250,7 @@ func TestDHCPRequestDNS_ChangedScope(t *testing.T) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	// First ensure the lease is created as we expect
@@ -353,9 +343,7 @@ func TestDHCP_Parallel(t *testing.T) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	wg := sync.WaitGroup{}

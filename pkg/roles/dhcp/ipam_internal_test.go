@@ -78,9 +78,7 @@ func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 	}
 
 	role := dhcp.New(inst)
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 	ipam, err := dhcp.NewInternalIPAM(role, &scope)
 	assert.NoError(t, err)

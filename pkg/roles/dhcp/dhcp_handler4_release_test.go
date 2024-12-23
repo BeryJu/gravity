@@ -54,9 +54,7 @@ func TestDHCPRelease(t *testing.T) {
 			Hostname:   "linux-test.home.arpa",
 		}),
 	))
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
 	req, err := dhcpv4.FromBytes(DHCPReleasePayload)

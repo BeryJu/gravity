@@ -74,9 +74,7 @@ func BenchmarkRoleDHCP_Request(b *testing.B) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
-	}))))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 	c, err := netip.ParsePrefix("10.100.0.0/24")
 	if err != nil {

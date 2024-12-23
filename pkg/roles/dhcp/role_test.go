@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func RoleConfig() []byte {
+	return []byte(tests.MustJSON(dhcp.RoleConfig{
+		Port: 0,
+	}))
+}
+
 func TestRoleStartNoConfig(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()

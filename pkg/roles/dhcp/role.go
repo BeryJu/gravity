@@ -95,6 +95,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	go r.startWatchScopes()
 	go r.startWatchLeases()
 
+	if r.cfg.Port < 1 {
+		return nil
+	}
+
 	err := r.initServer4()
 	if err != nil {
 		r.log.Warn("failed to setup server", zap.Error(err))

@@ -66,7 +66,7 @@ func TestDeviceApplyDHCP(t *testing.T) {
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp", ctx))
 	tests.PanicIfError(dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
+		Port: 0,
 	}))))
 	defer dhcpRole.Stop()
 
@@ -156,7 +156,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 	// Create DHCP role to register events
 	dhcpRole := dhcp.New(rootInst.ForRole("dhcp", ctx))
 	tests.PanicIfError(dhcpRole.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: 1067,
+		Port: 0,
 	}))))
 	defer dhcpRole.Stop()
 	// Create DNS role to register events
