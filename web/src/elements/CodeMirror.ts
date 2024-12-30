@@ -8,8 +8,9 @@ import {
 } from "@codemirror/language";
 import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
-import { oneDark } from "@codemirror/theme-one-dark";
 import { EditorView, drawSelection, keymap, lineNumbers } from "@codemirror/view";
+import { vsCodeDark } from "@fsegurai/codemirror-theme-vscode-dark";
+import { vsCodeLight } from "@fsegurai/codemirror-theme-vscode-light";
 import YAML from "yaml";
 
 import { customElement, property } from "lit/decorators.js";
@@ -80,15 +81,8 @@ export class CodeMirrorTextarea extends AKElement {
     constructor() {
         super();
         this.theme = new Compartment();
-        this.themeLight = EditorView.theme(
-            {
-                "&": {
-                    backgroundColor: "var(--pf-global--BackgroundColor--light-300)",
-                },
-            },
-            { dark: false },
-        );
-        this.themeDark = oneDark;
+        this.themeLight = vsCodeLight;
+        this.themeDark = vsCodeDark;
     }
 
     private getInnerValue(): string {
