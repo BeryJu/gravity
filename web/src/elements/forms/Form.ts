@@ -51,54 +51,59 @@ export function serializeForm<T extends KeyUnknown>(
     const json: { [key: string]: unknown } = {};
     elements.forEach((element) => {
         element.requestUpdate();
-        const inputElement = element.querySelector<HTMLInputElement>("[name]");
-        if (element.hidden || !inputElement) {
-            return;
-        }
-        // Skip elements that are writeOnly where the user hasn't clicked on the value
-        if (element.writeOnly && !element.writeOnlyActivated) {
-            return;
-        }
-        if (
-            inputElement.tagName.toLowerCase() === "select" &&
-            "multiple" in inputElement.attributes
-        ) {
-            const selectElement = inputElement as unknown as HTMLSelectElement;
-            assignValue(
-                inputElement,
-                Array.from(selectElement.selectedOptions).map((v) => v.value),
-                json,
-            );
-        } else if (inputElement.tagName.toLowerCase() === "input" && inputElement.type === "date") {
-            assignValue(inputElement, inputElement.valueAsDate, json);
-        } else if (
-            inputElement.tagName.toLowerCase() === "input" &&
-            inputElement.type === "datetime-local"
-        ) {
-            assignValue(inputElement, new Date(inputElement.valueAsNumber), json);
-        } else if (
-            inputElement.tagName.toLowerCase() === "input" &&
-            "type" in inputElement.dataset &&
-            inputElement.dataset["type"] === "datetime-local"
-        ) {
-            // Workaround for Firefox <93, since 92 and older don't support
-            // datetime-local fields
-            assignValue(inputElement, new Date(inputElement.value), json);
-        } else if (
-            inputElement.tagName.toLowerCase() === "input" &&
-            inputElement.type === "checkbox"
-        ) {
-            assignValue(inputElement, inputElement.checked, json);
-        } else if (
-            inputElement.tagName.toLowerCase() === "input" &&
-            inputElement.type === "number"
-        ) {
-            assignValue(inputElement, parseInt(inputElement.value, 10), json);
-        } else if ("selectedFlow" in inputElement) {
-            assignValue(inputElement, inputElement.value, json);
-        } else {
-            assignValue(inputElement, inputElement.value, json);
-        }
+        const inputElements = element.querySelectorAll<HTMLInputElement>("[name]");
+        inputElements.forEach((inputElement) => {
+            if (element.hidden || !inputElement) {
+                return;
+            }
+            // Skip elements that are writeOnly where the user hasn't clicked on the value
+            if (element.writeOnly && !element.writeOnlyActivated) {
+                return;
+            }
+            if (
+                inputElement.tagName.toLowerCase() === "select" &&
+                "multiple" in inputElement.attributes
+            ) {
+                const selectElement = inputElement as unknown as HTMLSelectElement;
+                assignValue(
+                    inputElement,
+                    Array.from(selectElement.selectedOptions).map((v) => v.value),
+                    json,
+                );
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
+                inputElement.type === "date"
+            ) {
+                assignValue(inputElement, inputElement.valueAsDate, json);
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
+                inputElement.type === "datetime-local"
+            ) {
+                assignValue(inputElement, new Date(inputElement.valueAsNumber), json);
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
+                "type" in inputElement.dataset &&
+                inputElement.dataset["type"] === "datetime-local"
+            ) {
+                // Workaround for Firefox <93, since 92 and older don't support
+                // datetime-local fields
+                assignValue(inputElement, new Date(inputElement.value), json);
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
+                inputElement.type === "checkbox"
+            ) {
+                assignValue(inputElement, inputElement.checked, json);
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
+                inputElement.type === "number"
+            ) {
+                assignValue(inputElement, parseInt(inputElement.value, 10), json);
+            } else if ("selectedFlow" in inputElement) {
+                assignValue(inputElement, inputElement.value, json);
+            } else {
+                assignValue(inputElement, inputElement.value, json);
+            }
+        });
     });
     return json as unknown as T;
 }
