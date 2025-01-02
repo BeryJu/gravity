@@ -30,6 +30,11 @@ jobs:
         run: make ci--env
       - id: meta
         uses: docker/metadata-action@v5.6.1
+        with:
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=v${{ steps.vars.outputs.version }}
       - uses: docker/build-push-action@v6.10.0
         with:
           tags: |
