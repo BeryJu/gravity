@@ -26,6 +26,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: vars
         run: make ci--env
+      - id: meta
+        uses: docker/metadata-action@v5.6.1
       - uses: docker/build-push-action@v6.10.0
         with:
           tags: |
@@ -39,6 +41,7 @@ jobs:
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
   build-cli:
     name: Build CLI
     runs-on: ubuntu-latest
