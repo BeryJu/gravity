@@ -153,6 +153,7 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}))
 				m.Answer = append(m.Answer, nr.Msg().Answer...)
 			}
+			m.Answer = append(m.Answer, cnames...)
 		}
 	}
 	if len(m.Answer) < 1 {
