@@ -60,8 +60,8 @@ export class ModalForm extends ModalButton {
                 ? html`<ak-loading-overlay ?topMost=${true}></ak-loading-overlay>`
                 : html``}
             <header class="pf-v6-c-modal-box__header">
-                <div class="pf-v6-c-modal-box__header-main">
-                    <h1 class="pf-v6-c-modal-box__title"><slot name="header"></slot></h1>
+                <div class="pf-v6-c-content">
+                    <h1 class="pf-v6-c-title pf-m-2xl"><slot name="header"></slot></h1>
                 </div>
             </header>
             <div class="pf-v6-c-modal-box__body">

@@ -25,6 +25,26 @@ export class AggregateCard extends AKElement {
     static get styles(): CSSResult[] {
         return [PFBase, PFCard, PFFlex, AKElement.GlobalStyle].concat([
             css`
+                .pf-m-success {
+                    color: var(--pf-t--global--icon--color--status--success--default);
+                }
+
+                .pf-m-warning {
+                    color: var(--pf-t--global--icon--color--status--warning--default);
+                }
+
+                .pf-m-info {
+                    color: var(--pf-t--global--icon--color--status--info--default);
+                }
+
+                .pf-m-pending {
+                    color: var(--pf-t--global--icon--color--status--custom--default);
+                }
+
+                .pf-m-danger {
+                    color: var(--pf-t--global--icon--color--status--danger--default);
+                }
+
                 .pf-v6-c-card.pf-v6-c-card-aggregate {
                     height: 100%;
                 }

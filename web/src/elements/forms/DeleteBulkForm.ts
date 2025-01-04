@@ -142,7 +142,7 @@ export class DeleteBulkForm extends ModalButton {
 
     renderModalInner(): TemplateResult {
         return html`<section
-                class="pf-v6-c-modal-box__header pf-v6-c-page__main-section pf-m-light"
+                class="pf-v6-c-modal-box__header pf-m-light"
             >
                 <div class="pf-v6-c-content">
                     <h1 class="pf-v6-c-title pf-m-2xl">${`Delete ${this.objectLabel}`}</h1>
