@@ -140,12 +140,14 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 			un,
 			r,
 		)
-		if len(cnames) > 0 {
-			// For each cname, lookup the actual record
+		// For each CNAME, lookup the actual record
+		// only lookup related names if the query wasn't directly for CNAMEs
+		if len(cnames) > 0 && r.Question[0].Qtype != dns.TypeCNAME {
 			for _, _cn := range cnames {
 				cn := _cn.(*dns.CNAME)
 				nq := dns.Question{
-					Name: cn.Target,
+					Name:   cn.Target,
+					Qclass: dns.ClassINET,
 				}
 				nr := utils.NewFakeDNSWriter(w)
 				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}))

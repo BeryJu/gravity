@@ -204,12 +204,12 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 			types.KeyRole,
 			types.KeyZones,
 			TestZone,
-			"foo",
+			"svc",
 			types.DNSRecordTypeCNAME,
 			"0",
 		).String(),
 		tests.MustJSON(dns.Record{
-			Data: "bar.example.com.",
+			Data: "host.example.com.",
 		}),
 	))
 	tests.PanicIfError(inst.KV().Put(
@@ -218,7 +218,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 			types.KeyRole,
 			types.KeyZones,
 			TestZone,
-			"bar",
+			"host",
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
@@ -232,44 +232,42 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	t.Run("A", func(t *testing.T) {
+		// Test lookup of direct host
+		AssertDNS(t, role, []d.Question{
 			{
-				Name:   "bar.example.com.",
+				Name:   "host.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
-		},
+		}, "host.example.com.	0	IN	A	10.2.3.4")
 	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), ans.(*d.A).A.String())
 
-	fw = NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	t.Run("CNAME", func(t *testing.T) {
+		// Explicitly ask for CNAME
+		AssertDNS(t, role, []d.Question{
 			{
-				Name:   "foo.example.com.",
+				Name:   "svc.example.com.",
 				Qtype:  d.TypeCNAME,
 				Qclass: d.ClassINET,
 			},
-		},
+		}, "svc.example.com.	0	IN	CNAME	host.example.com.")
 	})
-	ans = fw.Msg().Answer[0]
-	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
 
-	fw = NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.example.com.",
-				Qclass: d.ClassINET,
+	t.Run("Anything", func(t *testing.T) {
+		// Ask for anything
+		AssertDNS(t, role,
+			[]d.Question{
+				{
+					Name:   "svc.example.com.",
+					Qtype:  d.TypeA,
+					Qclass: d.ClassINET,
+				},
 			},
-		},
+			"svc.example.com.	0	IN	CNAME	host.example.com.",
+			"host.example.com.	0	IN	A	10.2.3.4",
+		)
 	})
-	assert.Len(t, fw.Msg().Answer, 2)
-	assert.Equal(t, "bar.example.com.", fw.Msg().Answer[0].(*d.CNAME).Target)
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), fw.Msg().Answer[1].(*d.A).A.String())
 }
 
 // Test DNS CNAME that points to another zone
