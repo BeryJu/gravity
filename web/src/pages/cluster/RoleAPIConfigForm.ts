@@ -60,7 +60,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                 <input
                     type="text"
                     value="${first(this.instance?.sessionDuration, "24h")}"
-                    class="pf-c-form-control"
                     required
                 />
             </ak-form-element-horizontal>
@@ -135,7 +134,6 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                         <input
                             type="text"
                             value="${first(this.instance?.oidc?.tokenUsernameField, "email")}"
-                            class="pf-c-form-control"
                             required
                         />
                     </ak-form-element-horizontal>

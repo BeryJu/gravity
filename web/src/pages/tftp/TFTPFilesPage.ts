@@ -117,7 +117,7 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
@@ -129,7 +129,7 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
                 <span slot="submit"> ${"Upload"} </span>
                 <span slot="header"> ${"Upload File"} </span>
                 <gravity-tftp-file-form slot="form"> </gravity-tftp-file-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Upload"}</button>
+                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Upload"}</button>
             </ak-forms-modal>
         `;
     }

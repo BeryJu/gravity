@@ -36,7 +36,6 @@ export class RoleTFTPConfigForm extends ModelForm<TftpRoleConfig, string> {
                 <input
                     type="number"
                     value="${first(this.instance?.port, 69)}"
-                    class="pf-c-form-control"
                     required
                 />
             </ak-form-element-horizontal>

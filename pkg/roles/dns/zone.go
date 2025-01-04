@@ -125,6 +125,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 				Source: z.Hook,
 				Method: "onDNSRequestAfter",
 			}, r, handlerReply)
+			z.log.Debug("final DNS conversation", zap.String("request", r.String()), zap.String("reply", handlerReply.String()))
 			err := w.WriteMsg(handlerReply)
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))
