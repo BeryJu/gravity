@@ -137,10 +137,9 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		}
 		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))
 	}
-	z.log.Debug("no handler has a reply, fallback back to NX")
+	z.log.Debug("no handler has a reply")
 	fallback := new(dns.Msg)
 	fallback.SetReply(r.Msg)
-	fallback.SetRcode(r.Msg, dns.RcodeNameError)
 	err := w.WriteMsg(fallback)
 	if err != nil {
 		z.log.Warn("failed to write response", zap.Error(err))

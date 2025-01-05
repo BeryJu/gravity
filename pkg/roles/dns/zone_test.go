@@ -7,10 +7,11 @@ import (
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
+	d "github.com/miekg/dns"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoleDNSZoneFind(t *testing.T) {
+func TestRoleDNS_ZoneFind(t *testing.T) {
 	defer tests.Setup(t)()
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -37,4 +38,35 @@ func TestRoleDNSZoneFind(t *testing.T) {
 	defer role.Stop()
 	zone := role.FindZone("foo.bar.")
 	assert.Equal(t, zone, role.FindZone("bar.baz."))
+}
+
+func TestRoleDNS_ZoneNoHandler(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]interface{}{},
+		}),
+	))
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	msg := AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.example.com.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
+		},
+	})
+	assert.Equal(t, d.RcodeSuccess, msg.Rcode)
 }

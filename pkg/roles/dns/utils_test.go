@@ -34,7 +34,7 @@ func NewNullDNSWriter() *NullDNSWriter {
 	return &NullDNSWriter{}
 }
 
-func AssertDNS(t *testing.T, role *dns.Role, q []d.Question, expected ...string) {
+func AssertDNS(t *testing.T, role *dns.Role, q []d.Question, expected ...string) *d.Msg {
 	fw := NewNullDNSWriter()
 	role.Handler(fw, &d.Msg{
 		Question: q,
@@ -53,4 +53,5 @@ func AssertDNS(t *testing.T, role *dns.Role, q []d.Question, expected ...string)
 	}
 	assert.Len(t, givenAnswersStr, len(expectedAnswersStr), "Count of answers is mismatched")
 	assert.ElementsMatch(t, givenAnswersStr, expectedAnswersStr, "Given and expected answers mismatch")
+	return fw.Msg()
 }
