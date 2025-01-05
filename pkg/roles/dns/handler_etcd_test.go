@@ -575,7 +575,6 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 				Qclass: d.ClassINET,
 			},
 		},
-		// FIXME: should be all lowercase
-		"bar.eXaMpLe.CoM.	0	IN	A	10.1.2.3",
+		"bar.example.com.	0	IN	A	10.1.2.3",
 	)
 }
