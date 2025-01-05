@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Address** | **string** |  | 
 **AddressLeaseTime** | **string** |  | 
+**Description** | **string** |  | 
 **DnsZone** | Pointer to **string** |  | [optional] 
 **Expiry** | Pointer to **int32** |  | [optional] 
 **Hostname** | **string** |  | 
@@ -17,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewDhcpAPILease
 
-`func NewDhcpAPILease(address string, addressLeaseTime string, hostname string, identifier string, scopeKey string, ) *DhcpAPILease`
+`func NewDhcpAPILease(address string, addressLeaseTime string, description string, hostname string, identifier string, scopeKey string, ) *DhcpAPILease`
 
 NewDhcpAPILease instantiates a new DhcpAPILease object
 This constructor will assign default values to properties that have it defined,
@@ -70,6 +71,26 @@ and a boolean to check if the value has been set.
 `func (o *DhcpAPILease) SetAddressLeaseTime(v string)`
 
 SetAddressLeaseTime sets AddressLeaseTime field to given value.
+
+
+### GetDescription
+
+`func (o *DhcpAPILease) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *DhcpAPILease) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *DhcpAPILease) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
 
 
 ### GetDnsZone

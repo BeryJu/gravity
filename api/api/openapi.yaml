@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.20.0
+  version: 0.20.1
 servers:
 - url: /
 paths:
@@ -2319,6 +2319,7 @@ components:
         address: address
         dnsZone: dnsZone
         scopeKey: scopeKey
+        description: description
         expiry: 0
         addressLeaseTime: addressLeaseTime
         info:
@@ -2327,6 +2328,8 @@ components:
         address:
           type: string
         addressLeaseTime:
+          type: string
+        description:
           type: string
         dnsZone:
           type: string
@@ -2343,6 +2346,7 @@ components:
       required:
       - address
       - addressLeaseTime
+      - description
       - hostname
       - identifier
       - scopeKey
@@ -2362,6 +2366,7 @@ components:
           address: address
           dnsZone: dnsZone
           scopeKey: scopeKey
+          description: description
           expiry: 0
           addressLeaseTime: addressLeaseTime
           info:
@@ -2371,6 +2376,7 @@ components:
           address: address
           dnsZone: dnsZone
           scopeKey: scopeKey
+          description: description
           expiry: 0
           addressLeaseTime: addressLeaseTime
           info:
@@ -2389,6 +2395,7 @@ components:
         hostname: hostname
         address: address
         dnsZone: dnsZone
+        description: description
         expiry: 0
         addressLeaseTime: addressLeaseTime
       properties:
@@ -2397,6 +2404,8 @@ components:
           type: string
         addressLeaseTime:
           maxLength: 40
+          type: string
+        description:
           type: string
         dnsZone:
           maxLength: 255

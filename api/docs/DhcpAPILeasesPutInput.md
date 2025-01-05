@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Address** | **string** |  | 
 **AddressLeaseTime** | **string** |  | 
+**Description** | Pointer to **string** |  | [optional] 
 **DnsZone** | Pointer to **string** |  | [optional] 
 **Expiry** | Pointer to **int32** |  | [optional] 
 **Hostname** | **string** |  | 
@@ -68,6 +69,31 @@ and a boolean to check if the value has been set.
 
 SetAddressLeaseTime sets AddressLeaseTime field to given value.
 
+
+### GetDescription
+
+`func (o *DhcpAPILeasesPutInput) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *DhcpAPILeasesPutInput) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *DhcpAPILeasesPutInput) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
+### HasDescription
+
+`func (o *DhcpAPILeasesPutInput) HasDescription() bool`
+
+HasDescription returns a boolean if a field has been set.
 
 ### GetDnsZone
 
