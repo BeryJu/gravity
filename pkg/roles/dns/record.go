@@ -140,7 +140,7 @@ func (r *Record) ToDNS(qname string) dns.RR {
 	case dns.TypeCNAME:
 		rr = &dns.CNAME{
 			Hdr:    hdr,
-			Target: r.Data,
+			Target: utils.EnsureTrailingPeriod(r.Data),
 		}
 	case dns.TypeTXT:
 		rr = &dns.TXT{

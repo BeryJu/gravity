@@ -40,11 +40,11 @@ func (r *DNSRequest) Iteration() int {
 	return r.iter
 }
 
-func (r *DNSRequest) Chain(msg *dns.Msg) *DNSRequest {
+func (r *DNSRequest) Chain(msg *dns.Msg, ctx context.Context, meta DNSRoutingMeta) *DNSRequest {
 	return &DNSRequest{
 		Msg:     msg,
-		context: r.context,
-		meta:    r.meta,
+		context: ctx,
+		meta:    meta,
 		iter:    r.iter + 1,
 	}
 }

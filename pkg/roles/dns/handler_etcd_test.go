@@ -410,17 +410,36 @@ func TestRoleDNS_Etcd_CNAME_Recursive(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "foo.example.com.",
-				Qtype:  d.TypeCNAME,
+				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	assert.Len(t, fw.Msg().Answer, 2)
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+	)
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {

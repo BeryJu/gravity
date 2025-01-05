@@ -150,7 +150,7 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 					Qclass: dns.ClassINET,
 				}
 				nr := utils.NewFakeDNSWriter(w)
-				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}))
+				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}, r.Context(), r.Meta()))
 				m.Answer = append(m.Answer, nr.Msg().Answer...)
 			}
 			m.Answer = append(m.Answer, cnames...)

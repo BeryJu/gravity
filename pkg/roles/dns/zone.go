@@ -106,7 +106,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		ss.SetTag("gravity.dns.handler", handler.Identifier())
 		// Create new request for handler with the correct context
-		hr := utils.NewRequest(r.Msg, ss.Context(), utils.DNSRoutingMeta{
+		hr := r.Chain(r.Msg, ss.Context(), utils.DNSRoutingMeta{
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
 			ResolveRequest: func(w dns.ResponseWriter, r *utils.DNSRequest) {
