@@ -45,7 +45,7 @@ func NewClient(prefix string, logger *zap.Logger, debug bool, endpoints ...strin
 	}
 	cli.KV = trace.NewKV(namespace.NewKV(cli.KV, prefix), func(op clientv3.Op) {
 		if debug {
-			logger.Warn("etcd op without transaction", zap.String("key", string(op.KeyBytes())), zap.String("op", trace.NameFromOp(op)))
+			logger.DPanic("etcd op without transaction", zap.String("key", string(op.KeyBytes())), zap.String("op", trace.NameFromOp(op)))
 		}
 	})
 	cli.Watcher = namespace.NewWatcher(cli.Watcher, prefix)
