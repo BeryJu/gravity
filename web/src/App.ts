@@ -136,10 +136,6 @@ export class AdminInterface extends AKElement {
             this.isAuthenticated = me.authenticated;
             if (!me.authenticated) {
                 this.showSidebar = false;
-                if (window.location.hash !== "#/login") {
-                    window.location.hash = "#/login";
-                    window.location.reload();
-                }
             }
         });
     }
@@ -151,7 +147,7 @@ export class AdminInterface extends AKElement {
                 class="pf-v6-c-page__main"
                 tabindex="-1"
                 id="main-content"
-                defaultUrl="/overview"
+                defaultUrl="/login"
                 .routes=${ROUTES}
             >
             </ak-router-outlet>`;
