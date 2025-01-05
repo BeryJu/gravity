@@ -6,6 +6,7 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dns"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,7 +18,7 @@ func TestAPIRecordsGet(t *testing.T) {
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
-	zone := tests.RandomString() + "."
+	zone := utils.EnsureTrailingPeriod(tests.RandomString())
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
@@ -55,7 +56,7 @@ func TestAPIRecordsPut(t *testing.T) {
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
-	name := tests.RandomString() + "."
+	name := utils.EnsureTrailingPeriod(tests.RandomString())
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
@@ -95,7 +96,7 @@ func TestAPIRecordsDelete(t *testing.T) {
 	inst := rootInst.ForRole("dns", ctx)
 	role := dns.New(inst)
 
-	zone := tests.RandomString() + "."
+	zone := utils.EnsureTrailingPeriod(tests.RandomString())
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(

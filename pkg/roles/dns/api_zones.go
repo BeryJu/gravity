@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -105,10 +106,7 @@ type APIZonesPutInput struct {
 func (r *Role) APIZonesPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesPutInput, output *struct{}) error {
 		z := r.newZone(input.Name)
-		z.Name = input.Name
-		if !strings.HasSuffix(z.Name, ".") {
-			z.Name += "."
-		}
+		z.Name = utils.EnsureTrailingPeriod(input.Name)
 		z.Authoritative = input.Authoritative
 		z.HandlerConfigs = input.HandlerConfigs
 		z.DefaultTTL = input.DefaultTTL

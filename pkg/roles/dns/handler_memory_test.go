@@ -21,7 +21,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -36,7 +36,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 			"foo",
 			types.DNSRecordTypeA,
 			"0",
@@ -70,7 +70,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -85,7 +85,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 			"*",
 			types.DNSRecordTypeA,
 			"0",
@@ -211,7 +211,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -226,7 +226,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 			"*.*",
 			types.DNSRecordTypeA,
 			"0",

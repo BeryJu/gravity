@@ -21,7 +21,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -60,7 +60,7 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
