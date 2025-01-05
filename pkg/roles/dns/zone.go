@@ -106,10 +106,13 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
 		ss.SetTag("gravity.dns.handler", handler.Identifier())
 		// Create new request for handler with the correct context
-		hr := utils.NewRequest(r.Msg, ss.Context(), utils.DNSRoutingMeta{
+		hr := r.Chain(r.Msg, ss.Context(), utils.DNSRoutingMeta{
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
-			ResolveRequest:  z.role.rootHandler,
+			ResolveRequest: func(w dns.ResponseWriter, r *utils.DNSRequest) {
+				z.log.Debug("Next lookup iteration", zap.Int("iter", r.Iteration()+1))
+				z.role.rootHandler(w, r)
+			},
 		})
 
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), hr)
@@ -125,7 +128,6 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 				Source: z.Hook,
 				Method: "onDNSRequestAfter",
 			}, r, handlerReply)
-			z.log.Debug("final DNS conversation", zap.String("request", r.String()), zap.String("reply", handlerReply.String()))
 			err := w.WriteMsg(handlerReply)
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))

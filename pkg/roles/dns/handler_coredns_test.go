@@ -1,7 +1,6 @@
 package dns_test
 
 import (
-	"net"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
@@ -29,7 +28,7 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -46,16 +45,11 @@ func TestRoleDNSHandlerCoreDNS(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "example.org.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "example.org.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.0.0.1").String(), ans.(*d.A).A.String())
+	}, "example.org.	IN	A	10.0.0.1")
 }

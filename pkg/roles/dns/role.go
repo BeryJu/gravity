@@ -49,7 +49,7 @@ func New(instance roles.Instance) *Role {
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventHandlerCreateReverse)
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a zone that'll forward to a reasonable default
-		zone := r.newZone(".")
+		zone := r.newZone(types.DNSRootZone)
 		zone.HandlerConfigs = []map[string]interface{}{
 			{
 				"type": "memory",
@@ -93,7 +93,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	dnsMux := dns.NewServeMux()
 	dnsMux.HandleFunc(
-		".",
+		types.DNSRootZone,
 		r.recoverMiddleware(
 			r.loggingMiddleware(
 				r.Handler,

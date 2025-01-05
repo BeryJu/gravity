@@ -5,6 +5,7 @@ import (
 	"net"
 	"strings"
 
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
@@ -84,7 +85,7 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 		ro.zonesM.RUnlock()
 	}
 	if longestZone == nil {
-		longestZone = ro.zones["."]
+		longestZone = ro.zones[types.DNSRootZone]
 	}
 	if longestZone == nil {
 		ro.log.Error("no matching zone and no global zone")

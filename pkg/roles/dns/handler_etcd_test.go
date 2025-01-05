@@ -1,7 +1,6 @@
 package dns_test
 
 import (
-	"net"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
@@ -55,18 +54,13 @@ func TestRoleDNS_Etcd(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.example.com.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.example.com.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "foo.example.com.	0	IN	A	10.1.2.3")
 }
 
 // Test DNS Entry at root of zone
@@ -110,18 +104,13 @@ func TestRoleDNS_Etcd_Root(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   TestZone,
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "example.com.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "example.com.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
@@ -164,18 +153,13 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.example.com.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.example.com.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "foo.example.com.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Etcd_CNAME(t *testing.T) {
@@ -204,12 +188,12 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 			types.KeyRole,
 			types.KeyZones,
 			TestZone,
-			"foo",
+			"svc",
 			types.DNSRecordTypeCNAME,
 			"0",
 		).String(),
 		tests.MustJSON(dns.Record{
-			Data: "bar.example.com.",
+			Data: "host.example.com.",
 		}),
 	))
 	tests.PanicIfError(inst.KV().Put(
@@ -218,7 +202,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 			types.KeyRole,
 			types.KeyZones,
 			TestZone,
-			"bar",
+			"host",
 			types.DNSRecordTypeA,
 			"0",
 		).String(),
@@ -232,44 +216,42 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	t.Run("A", func(t *testing.T) {
+		// Test lookup of direct host
+		AssertDNS(t, role, []d.Question{
 			{
-				Name:   "bar.example.com.",
+				Name:   "host.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
-		},
+		}, "host.example.com.	0	IN	A	10.2.3.4")
 	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), ans.(*d.A).A.String())
 
-	fw = NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	t.Run("CNAME", func(t *testing.T) {
+		// Explicitly ask for CNAME
+		AssertDNS(t, role, []d.Question{
 			{
-				Name:   "foo.example.com.",
+				Name:   "svc.example.com.",
 				Qtype:  d.TypeCNAME,
 				Qclass: d.ClassINET,
 			},
-		},
+		}, "svc.example.com.	0	IN	CNAME	host.example.com.")
 	})
-	ans = fw.Msg().Answer[0]
-	assert.Equal(t, "bar.example.com.", ans.(*d.CNAME).Target)
 
-	fw = NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.example.com.",
-				Qclass: d.ClassINET,
+	t.Run("Anything", func(t *testing.T) {
+		// Ask for anything
+		AssertDNS(t, role,
+			[]d.Question{
+				{
+					Name:   "svc.example.com.",
+					Qtype:  d.TypeA,
+					Qclass: d.ClassINET,
+				},
 			},
-		},
+			"svc.example.com.	0	IN	CNAME	host.example.com.",
+			"host.example.com.	0	IN	A	10.2.3.4",
+		)
 	})
-	assert.Len(t, fw.Msg().Answer, 2)
-	assert.Equal(t, "bar.example.com.", fw.Msg().Answer[0].(*d.CNAME).Target)
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), fw.Msg().Answer[1].(*d.A).A.String())
 }
 
 // Test DNS CNAME that points to another zone
@@ -343,19 +325,18 @@ func TestRoleDNS_Etcd_CNAME_MultiZone(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	// Ask for anything
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "foo.example.com.",
-				Qtype:  d.TypeCNAME,
+				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	assert.Len(t, fw.Msg().Answer, 2)
-	assert.Equal(t, "bar.example.net.", fw.Msg().Answer[0].(*d.CNAME).Target)
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), fw.Msg().Answer[1].(*d.A).A.String())
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	A	10.2.3.4",
+	)
 }
 
 // Test DNS CNAME that points to another zone, recursive
@@ -429,17 +410,36 @@ func TestRoleDNS_Etcd_CNAME_Recursive(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "foo.example.com.",
-				Qtype:  d.TypeCNAME,
+				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	assert.Len(t, fw.Msg().Answer, 2)
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+		"bar.example.net.	0	IN	CNAME	foo.example.com.",
+		"foo.example.com.	0	IN	CNAME	bar.example.net.",
+	)
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
@@ -482,18 +482,16 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "foo.bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+		"foo.bar.example.com.	0	IN	A	10.1.2.3",
+	)
 }
 
 func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
@@ -536,18 +534,16 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "bar.example.com.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+		"bar.example.com.	0	IN	A	10.1.2.3",
+	)
 }
 
 func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
@@ -590,16 +586,14 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "bar.eXaMpLe.CoM.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+		"bar.example.com.	0	IN	A	10.1.2.3",
+	)
 }

@@ -118,7 +118,7 @@ func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Questi
 	}
 	name := strings.TrimSuffix(ans.Header().Name, utils.EnsureLeadingPeriod(ipf.z.Name))
 	if strings.EqualFold(ans.Header().Name, ipf.z.Name) {
-		name = types.DNSRoot
+		name = types.DNSRootRecord
 	}
 	record := ipf.z.newRecord(name, dns.TypeToString[ans.Header().Rrtype])
 	switch v := ans.(type) {

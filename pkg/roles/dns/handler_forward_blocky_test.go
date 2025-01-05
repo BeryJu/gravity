@@ -1,7 +1,6 @@
 package dns_test
 
 import (
-	"net"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
@@ -22,7 +21,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -39,18 +38,16 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "gravity.beryju.io.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("0.0.0.0").String(), ans.(*d.A).A.String())
+		"gravity.beryju.io.	0	IN	A	0.0.0.0",
+	)
 }
 
 func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
@@ -63,7 +60,7 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			types.DNSRootZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			HandlerConfigs: []map[string]interface{}{
@@ -81,16 +78,14 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	AssertDNS(t, role,
+		[]d.Question{
 			{
 				Name:   "gravity.beryju.io.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.0.0.1").String(), ans.(*d.A).A.String())
+		"gravity.beryju.io.	3600	IN	A	10.0.0.1",
+	)
 }

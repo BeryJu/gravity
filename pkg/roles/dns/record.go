@@ -8,6 +8,7 @@ import (
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -84,9 +85,25 @@ func (r *Record) RRType() uint16 {
 	return dns.TypeNone
 }
 
+func (r *Record) FQDN(qname string) string {
+	parts := []string{}
+	qnameParts := strings.Split(qname, types.DNSSep)
+	for idx, lp := range strings.Split(r.Name, types.DNSSep) {
+		if lp == types.DNSWildcard {
+			parts = append(parts, qnameParts[idx])
+		} else if lp != types.DNSRootRecord {
+			parts = append(parts, lp)
+		}
+	}
+	if r.zone.Name != types.DNSRootZone {
+		parts = append(parts, r.zone.Name)
+	}
+	return utils.EnsureTrailingPeriod(strings.Join(parts, types.DNSSep))
+}
+
 func (r *Record) ToDNS(qname string) dns.RR {
 	hdr := dns.RR_Header{
-		Name:   qname,
+		Name:   r.FQDN(qname),
 		Rrtype: r.RRType(),
 		Class:  dns.ClassINET,
 		Ttl:    r.TTL,
@@ -125,7 +142,7 @@ func (r *Record) ToDNS(qname string) dns.RR {
 	case dns.TypeCNAME:
 		rr = &dns.CNAME{
 			Hdr:    hdr,
-			Target: r.Data,
+			Target: utils.EnsureTrailingPeriod(r.Data),
 		}
 	case dns.TypeTXT:
 		rr = &dns.TXT{
