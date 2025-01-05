@@ -61,6 +61,7 @@ func New(instance roles.Instance) *Role {
 			r.log.Warn("failed to put subnet", zap.Error(err))
 			return
 		}
+		go subnet.RunDiscovery()
 	})
 	return r
 }
