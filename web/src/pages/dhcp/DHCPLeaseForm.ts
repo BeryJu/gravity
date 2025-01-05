@@ -90,6 +90,14 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
                     class="pf-c-form-control"
                     required
                 />
-            </ak-form-element-horizontal>`;
+            </ak-form-element-horizontal>
+            <ak-form-element-horizontal label="Description" name="description">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.description)}"
+                    class="pf-c-form-control"
+                />
+            </ak-form-element-horizontal>
+            `;
     }
 }

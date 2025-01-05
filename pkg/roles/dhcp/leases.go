@@ -24,10 +24,10 @@ import (
 )
 
 type Lease struct {
-	inst roles.Instance
+	inst  roles.Instance
+	scope *Scope
+	log   *zap.Logger
 
-	scope      *Scope
-	log        *zap.Logger
 	Identifier string `json:"-"`
 
 	Address          string `json:"address"`
@@ -36,7 +36,8 @@ type Lease struct {
 	ScopeKey         string `json:"scopeKey"`
 	DNSZone          string `json:"dnsZone,omitempty"`
 	// Set to -1 for a reservation
-	Expiry int64 `json:"expiry"`
+	Expiry      int64  `json:"expiry"`
+	Description string `json:"description"`
 
 	etcdKey string
 }
