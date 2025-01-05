@@ -182,7 +182,20 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 					Qclass: d.ClassINET,
 				},
 			},
-			"foo.text.	0	IN	CNAME	bar.test.",
+			"foo.test.	0	IN	CNAME	bar.test.",
+		)
+	})
+
+	t.Run("Anything", func(t *testing.T) {
+		AssertDNS(t, role,
+			[]d.Question{
+				{
+					Name:   "foo.test.",
+					Qtype:  d.TypeA,
+					Qclass: d.ClassINET,
+				},
+			},
+			"foo.test.	0	IN	CNAME	bar.test.",
 			"bar.test.	0	IN	A	10.2.3.4",
 		)
 	})
