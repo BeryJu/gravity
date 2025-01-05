@@ -43,9 +43,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                 l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.address.includes(this.search),
         );
-        data.sort((a, b) => {
-            return ip2int(a.address) - ip2int(b.address);
-        });
+        data.sort((a, b) => ip2int(a.address) - ip2int(b.address));
         return PaginationWrapper(data);
     }
 

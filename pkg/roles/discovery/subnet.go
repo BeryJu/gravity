@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
+	"github.com/getsentry/sentry-go"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/concurrency"
@@ -54,6 +55,8 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 
 func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 	dev := []Device{}
+	tr := sentry.StartTransaction(ctx, "gravity.discovery.run")
+	defer tr.Finish()
 	se, err := concurrency.NewSession(s.inst.KV().Client)
 	if err != nil {
 		s.log.Warn("Failed to create concurrency session", zap.Error(err))
@@ -64,23 +67,23 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 		se,
 		s.role.i.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier).String(),
 	)
-	err = m.Lock(ctx)
+	err = m.Lock(tr.Context())
 	if err != nil {
 		s.log.Warn("failed to acquire discovery lock", zap.Error(err))
 		return dev
 	}
 	defer func() {
-		err := m.Unlock(ctx)
+		err := m.Unlock(tr.Context())
 		if err != nil {
 			s.log.Warn("failed to unlock discovery lock", zap.Error(err))
 		}
 	}()
 
-	s.log.Debug("starting scan for subnet")
-	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
+	s.log.Info("starting scan for subnet")
+	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(tr.Context(), map[string]interface{}{
 		"subnet": s,
 	}))
-	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(s.role.ctx, map[string]interface{}{
+	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(tr.Context(), map[string]interface{}{
 		"subnet": s,
 	}))
 
@@ -90,7 +93,7 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 	}
 
 	scanner, err := nmap.NewScanner(
-		nmap.WithContext(ctx),
+		nmap.WithContext(tr.Context()),
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
@@ -125,7 +128,7 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 			}
 		}
 		devices = append(devices, *dev)
-		err := dev.put(ctx, int64(s.DiscoveryTTL))
+		err := dev.put(tr.Context(), int64(s.DiscoveryTTL))
 		if err != nil {
 			s.log.Warn("ignoring device", zap.Error(err))
 		}
