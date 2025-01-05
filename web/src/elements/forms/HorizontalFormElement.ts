@@ -124,34 +124,43 @@ export class HorizontalFormElement extends AKElement {
                                   <slot></slot>
                               </span>
                           `}
-                    <div class="pf-v6-c-form__helper-text" aria-live="polite">
-                        <div class="pf-v6-c-helper-text">
-                            ${this.helperText
-                                ? html`
-                                      <div class="pf-v6-c-form__helper-text">
-                                          <div class="pf-v6-c-helper-text">
-                                              <div class="pf-v6-c-helper-text__item">
-                                                  <span class="pf-v6-c-helper-text__item-text"
-                                                      >${this.helperText}</span
-                                                  >
-                                              </div>
-                                          </div>
-                                      </div>
-                                  `
-                                : nothing}
-                            ${this.errorMessages.map((message) => {
-                                return html`<div class="pf-v6-c-helper-text__item pf-m-error">
-                                    <span class="pf-v6-c-helper-text__item-icon">
-                                        <i
-                                            class="fas fa-fw fa-exclamation-circle"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </span>
-                                    <span class="pf-v6-c-helper-text__item-text">${message}</span>
-                                </div>`;
-                            })}
-                        </div>
-                    </div>
+                    ${this.helperText || this.errorMessages.length > 0
+                        ? html`
+                              <div class="pf-v6-c-form__helper-text" aria-live="polite">
+                                  <div class="pf-v6-c-helper-text">
+                                      ${this.helperText
+                                          ? html`
+                                                <div class="pf-v6-c-form__helper-text">
+                                                    <div class="pf-v6-c-helper-text">
+                                                        <div class="pf-v6-c-helper-text__item">
+                                                            <span
+                                                                class="pf-v6-c-helper-text__item-text"
+                                                                >${this.helperText}</span
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `
+                                          : nothing}
+                                      ${this.errorMessages.map((message) => {
+                                          return html`<div
+                                              class="pf-v6-c-helper-text__item pf-m-error"
+                                          >
+                                              <span class="pf-v6-c-helper-text__item-icon">
+                                                  <i
+                                                      class="fas fa-fw fa-exclamation-circle"
+                                                      aria-hidden="true"
+                                                  ></i>
+                                              </span>
+                                              <span class="pf-v6-c-helper-text__item-text"
+                                                  >${message}</span
+                                              >
+                                          </div>`;
+                                      })}
+                                  </div>
+                              </div>
+                          `
+                        : nothing}
                 </div>
             </div>
         </div>`;
