@@ -66,7 +66,7 @@ func (eh *EtcdHandler) findWildcard(r *utils.DNSRequest, relRecordName string, q
 	// Assuming the question is foo.bar.baz and the zone is baz,
 	// we'll try replacing all names from left to right by starts and query with that
 	wildcardName := relRecordName
-	parts := strings.Split(relRecordName, ".")
+	parts := strings.Split(relRecordName, types.DNSSep)
 	for _, part := range parts {
 		// Replace the current dot part with a wildcard (make sure to only replace 1 occurrence,
 		// since we replace from left to right)
@@ -91,7 +91,7 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 	} else {
 		// Otherwise the relative record name still has a dot at the end which is not what we store
 		// in the database
-		relRecordName = strings.TrimSuffix(relRecordName, ".")
+		relRecordName = strings.TrimSuffix(relRecordName, types.DNSSep)
 	}
 	directRecordKey := eh.z.inst.KV().Key(
 		eh.z.etcdKey,

@@ -15,9 +15,13 @@ const (
 )
 
 const (
-	DNSWildcard   = "*"
+	DNSWildcard = "*"
+	// Special name for DNS records at the zone apex
 	DNSRootRecord = "@"
-	DNSRootZone   = "."
+	// Special name for the root zone in gravity
+	DNSRootZone = "."
+	// Separator between DNS labels
+	DNSSep = "."
 )
 
 const (

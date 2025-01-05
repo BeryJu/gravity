@@ -70,7 +70,7 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 			output.Records = append(output.Records, APIRecord{
 				UID:          rec.uid,
 				Hostname:     rec.Name,
-				FQDN:         rec.Name + "." + zone.Name,
+				FQDN:         rec.Name + types.DNSSep + zone.Name,
 				Type:         rec.Type,
 				Data:         rec.Data,
 				MXPreference: rec.MXPreference,

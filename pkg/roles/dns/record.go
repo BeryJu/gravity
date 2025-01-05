@@ -87,8 +87,8 @@ func (r *Record) RRType() uint16 {
 
 func (r *Record) FQDN(qname string) string {
 	parts := []string{}
-	qnameParts := strings.Split(qname, ".")
-	for idx, lp := range strings.Split(r.Name, ".") {
+	qnameParts := strings.Split(qname, types.DNSSep)
+	for idx, lp := range strings.Split(r.Name, types.DNSSep) {
 		if lp == types.DNSWildcard {
 			parts = append(parts, qnameParts[idx])
 		} else if lp != types.DNSRootRecord {
@@ -98,7 +98,7 @@ func (r *Record) FQDN(qname string) string {
 	if r.zone.Name != types.DNSRootZone {
 		parts = append(parts, r.zone.Name)
 	}
-	return utils.EnsureTrailingPeriod(strings.Join(parts, "."))
+	return utils.EnsureTrailingPeriod(strings.Join(parts, types.DNSSep))
 }
 
 func (r *Record) ToDNS(qname string) dns.RR {

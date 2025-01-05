@@ -35,7 +35,7 @@ func (r *Role) handleZoneOp(t mvccpb.Event_EventType, kv *mvccpb.KeyValue, ctx c
 		if oldZone, ok := r.zones[z.Name]; ok {
 			oldZone.StopWatchingRecords()
 		}
-		if !strings.HasSuffix(z.Name, ".") {
+		if !strings.HasSuffix(z.Name, types.DNSSep) {
 			r.log.Warn("Zone is missing trailing period, most likely configured incorrectly", zap.String("name", z.Name))
 		}
 		r.log.Debug("added zone", zap.String("name", z.Name))

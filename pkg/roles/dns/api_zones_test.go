@@ -43,7 +43,7 @@ func TestAPIZonesPut(t *testing.T) {
 
 	name := utils.EnsureTrailingPeriod(tests.RandomString())
 	assert.NoError(t, role.APIZonesPut().Interact(ctx, dns.APIZonesPutInput{
-		Name:          strings.TrimSuffix(name, "."),
+		Name:          strings.TrimSuffix(name, types.DNSSep),
 		Authoritative: true,
 		HandlerConfigs: []map[string]interface{}{
 			{
