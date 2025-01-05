@@ -64,8 +64,17 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 		se,
 		s.role.i.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier).String(),
 	)
-	m.Lock(ctx)
-	defer m.Unlock(ctx)
+	err = m.Lock(ctx)
+	if err != nil {
+		s.log.Warn("failed to acquire discovery lock", zap.Error(err))
+		return dev
+	}
+	defer func() {
+		err := m.Unlock(ctx)
+		if err != nil {
+			s.log.Warn("failed to unlock discovery lock", zap.Error(err))
+		}
+	}()
 
 	s.log.Debug("starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
