@@ -27,6 +27,7 @@ type APILease struct {
 	ScopeKey         string        `json:"scopeKey" required:"true"`
 	DNSZone          string        `json:"dnsZone"`
 	Expiry           int64         `json:"expiry"`
+	Description      string        `json:"description" required:"true"`
 }
 type APILeasesGetOutput struct {
 	Leases []*APILease `json:"leases" required:"true"`
@@ -78,6 +79,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 				ScopeKey:         l.ScopeKey,
 				DNSZone:          l.DNSZone,
 				Expiry:           l.Expiry,
+				Description:      l.Description,
 			}
 			if r.oui != nil {
 				entry, err := r.oui.LookupString(l.Identifier)
@@ -107,6 +109,7 @@ type APILeasesPutInput struct {
 	AddressLeaseTime string `json:"addressLeaseTime" required:"true" maxLength:"40"`
 	DNSZone          string `json:"dnsZone" maxLength:"255"`
 	Expiry           int64  `json:"expiry"`
+	Description      string `json:"description"`
 }
 
 func (r *Role) APILeasesPut() usecase.Interactor {
@@ -136,6 +139,8 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 		l.ScopeKey = input.Scope
 		l.DNSZone = input.DNSZone
 		l.Expiry = input.Expiry
+		l.Description = input.Description
+
 		l.scope = scope
 		err = l.Put(ctx, -1)
 		if err != nil {

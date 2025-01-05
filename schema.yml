@@ -1936,6 +1936,8 @@ components:
           type: string
         addressLeaseTime:
           type: string
+        description:
+          type: string
         dnsZone:
           type: string
         expiry:
@@ -1954,6 +1956,7 @@ components:
       - hostname
       - addressLeaseTime
       - scopeKey
+      - description
       type: object
     DhcpAPILeaseInfo:
       properties:
@@ -1977,6 +1980,8 @@ components:
           type: string
         addressLeaseTime:
           maxLength: 40
+          type: string
+        description:
           type: string
         dnsZone:
           maxLength: 255

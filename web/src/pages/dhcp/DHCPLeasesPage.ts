@@ -1,6 +1,6 @@
 import { DhcpAPILease, RolesDhcpApi } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { TemplateResult, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
@@ -53,6 +53,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         return [
             new TableColumn("Hostname"),
             new TableColumn("Address"),
+            new TableColumn("Description"),
             new TableColumn("Identifier"),
             new TableColumn("Expiry"),
             new TableColumn("Actions"),
@@ -144,8 +145,9 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         return [
             html`${item.hostname}`,
             html`<pre>${item.address}</pre>`,
+            html`${item.description !== "" ? item.description : "-"}`,
             html`<pre>${item.identifier}</pre>
-                ${item.info ? html` (${item.info.vendor})` : html``}`,
+                ${item.info ? html` (${item.info.vendor})` : nothing}`,
             html`${(item.expiry || 0) <= -1
                 ? html`Reservation`
                 : new Date((item.expiry || 0) * 1000).toLocaleString()}`,

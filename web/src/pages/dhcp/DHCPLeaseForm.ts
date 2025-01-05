@@ -44,6 +44,11 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
         if (!data.addressLeaseTime) {
             data.addressLeaseTime = "0";
         }
+        if (!this.instance) {
+            data.expiry = -1;
+        } else {
+            data.expiry = this.instance.expiry;
+        }
         if (this.instance && this.needsRecreate(data)) {
             await new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
                 scope: this.scope || "",
@@ -85,6 +90,14 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
                     class="pf-c-form-control"
                     required
                 />
-            </ak-form-element-horizontal>`;
+            </ak-form-element-horizontal>
+            <ak-form-element-horizontal label="Description" name="description">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.description)}"
+                    class="pf-c-form-control"
+                />
+            </ak-form-element-horizontal>
+            `;
     }
 }
