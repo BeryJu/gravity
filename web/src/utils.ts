@@ -1,3 +1,5 @@
+import { parse } from "ipaddr.js";
+
 import { PaginatedResponse } from "./elements/table/Table";
 
 export interface KV {
@@ -25,8 +27,7 @@ export function first<T>(items: T[] | null | undefined): T | undefined {
 }
 
 export function ip2int(ip: string): number {
-    return parseInt(
-        ip.split(".").reduce((acc, byte) => acc + byte.padStart(3, "0"), ""),
-        10,
-    );
+    return parse(ip)
+        .toByteArray()
+        .reduce((acc, c) => acc + c);
 }
