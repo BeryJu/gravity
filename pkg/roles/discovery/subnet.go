@@ -12,6 +12,7 @@ import (
 	"github.com/Ullaakut/nmap/v2"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
 )
 
@@ -51,7 +52,30 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 	return sub, nil
 }
 
-func (s *Subnet) RunDiscovery() []Device {
+func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
+	dev := []Device{}
+	se, err := concurrency.NewSession(s.inst.KV().Client)
+	if err != nil {
+		s.log.Warn("Failed to create concurrency session", zap.Error(err))
+		return dev
+	}
+
+	m := concurrency.NewMutex(
+		se,
+		s.role.i.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier).String(),
+	)
+	err = m.Lock(ctx)
+	if err != nil {
+		s.log.Warn("failed to acquire discovery lock", zap.Error(err))
+		return dev
+	}
+	defer func() {
+		err := m.Unlock(ctx)
+		if err != nil {
+			s.log.Warn("failed to unlock discovery lock", zap.Error(err))
+		}
+	}()
+
 	s.log.Debug("starting scan for subnet")
 	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(s.role.ctx, map[string]interface{}{
 		"subnet": s,
@@ -66,6 +90,7 @@ func (s *Subnet) RunDiscovery() []Device {
 	}
 
 	scanner, err := nmap.NewScanner(
+		nmap.WithContext(ctx),
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
@@ -74,13 +99,13 @@ func (s *Subnet) RunDiscovery() []Device {
 	s.log.Debug("nmap args", zap.Strings("args", scanner.Args()))
 	if err != nil {
 		s.log.Warn("unable to create nmap scanner", zap.Error(err))
-		return []Device{}
+		return dev
 	}
 
 	result, warnings, err := scanner.Run()
 	if err != nil {
 		s.log.Warn("unable to run nmap scan", zap.Error(err))
-		return []Device{}
+		return dev
 	}
 	for _, warning := range warnings {
 		s.log.Warn(warning)
@@ -100,7 +125,7 @@ func (s *Subnet) RunDiscovery() []Device {
 			}
 		}
 		devices = append(devices, *dev)
-		err := dev.put(s.role.ctx, int64(s.DiscoveryTTL))
+		err := dev.put(ctx, int64(s.DiscoveryTTL))
 		if err != nil {
 			s.log.Warn("ignoring device", zap.Error(err))
 		}

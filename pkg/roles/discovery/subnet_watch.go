@@ -1,6 +1,8 @@
 package discovery
 
 import (
+	"context"
+
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -13,7 +15,7 @@ func (r *Role) startDiscovery(raw *mvccpb.KeyValue) {
 		r.log.Warn("failed to parse subnet", zap.Error(err))
 		return
 	}
-	go sub.RunDiscovery()
+	go sub.RunDiscovery(context.Background())
 }
 
 func (r *Role) startWatchSubnets() {

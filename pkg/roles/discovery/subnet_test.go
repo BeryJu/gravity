@@ -35,7 +35,7 @@ func TestDiscoveryDocker(t *testing.T) {
 	sub := role.NewSubnet("docker-test")
 	sub.CIDR = DockerNetworkCIDR
 	sub.DNSResolver = DockerIPCoreDNS
-	devices := sub.RunDiscovery()
+	devices := sub.RunDiscovery(ctx)
 	assert.Equal(t, "10.200.0.1", devices[0].IP)
 
 	assert.Equal(t, "etcd.t.gravity.beryju.io", devices[1].Hostname)
