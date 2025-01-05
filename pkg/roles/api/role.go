@@ -92,7 +92,7 @@ func (r *Role) SessionStore() sessions.Store {
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
-	r.cfg = r.decodeRoleConfig(config)
+	r.cfg = r.decodeRoleConfig(ctx, config)
 
 	cookieSecret, err := base64.StdEncoding.DecodeString(r.cfg.CookieSecret)
 	if err != nil {

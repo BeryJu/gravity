@@ -28,7 +28,7 @@ func (e *ExtConfig) BuildLogger() *zap.Logger {
 func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	config := zap.Config{
 		Encoding:         "json",
-		Development:      false,
+		Development:      e.Debug,
 		OutputPaths:      []string{"stdout"},
 		ErrorOutputPaths: []string{"stderr"},
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
@@ -36,7 +36,6 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 	config.Level = zap.NewAtomicLevelAt(l)
 	config.DisableCaller = !e.Debug
 	if e.Debug {
-		config.Development = false
 		config.Encoding = "console"
 		config.EncoderConfig = zap.NewDevelopmentEncoderConfig()
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder

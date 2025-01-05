@@ -23,7 +23,7 @@ type RoleConfig struct {
 	SessionDuration string `json:"sessionDuration"`
 }
 
-func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
+func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string, ctx context.Context) {
 	if cfg.CookieSecret != "" {
 		return
 	}
@@ -36,7 +36,7 @@ func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
 			return
 		}
 		_, err = r.i.KV().Put(
-			context.Background(),
+			ctx,
 			r.i.KV().Key(
 				instanceTypes.KeyInstance,
 				instanceTypes.KeyRole,
@@ -51,20 +51,20 @@ func (r *Role) checkCookieSecret(cfg *RoleConfig, fallback string) {
 	}(cfg)
 }
 
-func (r *Role) decodeRoleConfig(raw []byte) *RoleConfig {
+func (r *Role) decodeRoleConfig(ctx context.Context, raw []byte) *RoleConfig {
 	fallbackSecret := base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 	def := RoleConfig{
 		Port: 8008,
 	}
 	if len(raw) < 1 {
-		r.checkCookieSecret(&def, fallbackSecret)
+		r.checkCookieSecret(&def, fallbackSecret, ctx)
 		return &def
 	}
 	err := json.Unmarshal(raw, &def)
 	if err != nil {
 		r.log.Warn("failed to decode role config", zap.Error(err))
 	}
-	r.checkCookieSecret(&def, fallbackSecret)
+	r.checkCookieSecret(&def, fallbackSecret, ctx)
 	return &def
 }
 
