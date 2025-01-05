@@ -86,6 +86,6 @@ func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
 				Qclass: d.ClassINET,
 			},
 		},
-		"gravity.beryju.io.	0	IN	A	10.0.0.1",
+		"gravity.beryju.io.	3600	IN	A	10.0.0.1",
 	)
 }

@@ -174,32 +174,29 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
+	t.Run("A", func(t *testing.T) {
+		AssertDNS(t, role, []d.Question{
 			{
 				Name:   "bar.test.",
 				Qtype:  d.TypeA,
 				Qclass: d.ClassINET,
 			},
-		},
+		}, "bar.test.	0	IN	A	10.2.3.4")
 	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.2.3.4").String(), ans.(*d.A).A.String())
 
-	fw = NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.test.",
-				Qtype:  d.TypeCNAME,
-				Qclass: d.ClassINET,
+	t.Run("CNAME", func(t *testing.T) {
+		AssertDNS(t, role,
+			[]d.Question{
+				{
+					Name:   "foo.test.",
+					Qtype:  d.TypeCNAME,
+					Qclass: d.ClassINET,
+				},
 			},
-		},
+			"foo.text.	0	IN	CNAME	bar.test.",
+			"bar.test.	0	IN	A	10.2.3.4",
+		)
 	})
-	ans = fw.Msg().Answer[0]
-	assert.Equal(t, "bar.test.", ans.(*d.CNAME).Target)
-	assert.Len(t, fw.Msg().Answer, 2)
 }
 
 func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
