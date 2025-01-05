@@ -11,6 +11,8 @@ var (
 	BuildHash = ""
 )
 
+const ReleaseBuildHash = "release"
+
 func CI() bool {
 	return strings.EqualFold(os.Getenv("CI"), "true")
 }
@@ -22,7 +24,7 @@ func FullVersion() string {
 	}
 	version := strings.Builder{}
 	version.WriteString(Version)
-	if BuildHash != "" {
+	if BuildHash != "" && BuildHash != ReleaseBuildHash {
 		version.WriteRune('+')
 		if len(BuildHash) >= 8 {
 			version.WriteString(BuildHash[:8])
