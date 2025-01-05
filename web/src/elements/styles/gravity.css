@@ -461,6 +461,9 @@ html > form > input {
     .pf-c-tree-view__content:focus-within {
         --pf-c-tree-view__node--hover--BackgroundColor: var(--ak-dark-background-light-ish);
     }
+    .button.pf-c-button.sidebar-trigger {
+        color: var(--ak-dark-foreground);
+    }
 }
 
 .pf-c-data-list__item {
