@@ -107,7 +107,7 @@ func (r *Role) APISubnetsStart() usecase.Interactor {
 			r.log.Warn("failed to parse subnet from KV", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
-		go s.RunDiscovery()
+		go s.RunDiscovery(context.Background())
 		return nil
 	})
 	u.SetName("discovery.subnet_start")
