@@ -263,7 +263,7 @@ export class Form<T> extends AKElement {
         const inline = this.renderForm();
         if (inline) {
             return html`<form
-                class="pf-v6-c-form pf-m-horizontal"
+                class="pf-c-form pf-m-horizontal"
                 @submit=${(ev: Event) => {
                     ev.preventDefault();
                 }}

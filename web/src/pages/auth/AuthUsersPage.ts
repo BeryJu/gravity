@@ -53,7 +53,7 @@ export class AuthUsersPage extends TablePage<AuthAPIUser> {
                 <span slot="header"> ${"Update user"} </span>
                 <gravity-auth-user-form slot="form" .instancePk=${item.username}>
                 </gravity-auth-user-form>
-                <button slot="trigger" class="pf-v6-c-button pf-m-plain">
+                <button slot="trigger" class="pf-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
             </ak-forms-modal>`,
@@ -74,7 +74,7 @@ export class AuthUsersPage extends TablePage<AuthAPIUser> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
@@ -86,7 +86,7 @@ export class AuthUsersPage extends TablePage<AuthAPIUser> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="header"> ${"Create User"} </span>
                 <gravity-auth-user-form slot="form"> </gravity-auth-user-form>
-                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

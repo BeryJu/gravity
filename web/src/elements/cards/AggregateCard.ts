@@ -25,39 +25,19 @@ export class AggregateCard extends AKElement {
     static get styles(): CSSResult[] {
         return [PFBase, PFCard, PFFlex, AKElement.GlobalStyle].concat([
             css`
-                .pf-m-success {
-                    color: var(--pf-t--global--icon--color--status--success--default);
-                }
-
-                .pf-m-warning {
-                    color: var(--pf-t--global--icon--color--status--warning--default);
-                }
-
-                .pf-m-info {
-                    color: var(--pf-t--global--icon--color--status--info--default);
-                }
-
-                .pf-m-pending {
-                    color: var(--pf-t--global--icon--color--status--custom--default);
-                }
-
-                .pf-m-danger {
-                    color: var(--pf-t--global--icon--color--status--danger--default);
-                }
-
-                .pf-v6-c-card.pf-v6-c-card-aggregate {
+                .pf-c-card.pf-c-card-aggregate {
                     height: 100%;
                 }
                 .pf-c-card__header {
                     flex-wrap: nowrap;
                 }
                 .center-value {
-                    font-size: var(--pf-t--global--font--size--heading--h1);
+                    font-size: var(--pf-global--icon--FontSize--lg);
                     text-align: center;
                     color: var(--pf-global--Color--100);
                 }
                 .subtext {
-                    font-size: var(--pf-t--global--font--size--heading--h4);
+                    font-size: var(--pf-global--FontSize--sm);
                 }
             `,
         ]);
@@ -69,29 +49,21 @@ export class AggregateCard extends AKElement {
 
     renderHeaderLink(): TemplateResult {
         return html`${this.headerLink
-            ? html`<a class="pf-v6-c-menu-toggle pf-m-plain" href="${this.headerLink}">
-                  <span class="pf-v6-c-menu-toggle__icon">
-                      <i class="fa fa-link"> </i>
-                  </span>
+            ? html`<a href="${this.headerLink}">
+                  <i class="fa fa-link"> </i>
               </a>`
             : ""}`;
     }
 
     render(): TemplateResult {
-        return html`<div class="pf-v6-c-card pf-v6-c-card-aggregate">
-            <div class="pf-v6-c-card__header">
-                <div class="pf-v6-c-card__actions">${this.renderHeaderLink()}</div>
-                <div class="pf-v6-c-card__header-main">
-                    <div class="pf-v6-c-card__title">
-                        <h2 class="pf-v6-c-card__title-text">
-                            <i class="${ifDefined(this.icon)}"></i>&nbsp;${this.header
-                                ? this.header
-                                : ""}
-                        </h2>
-                    </div>
+        return html`<div class="pf-c-card pf-c-card-aggregate">
+            <div class="pf-c-card__header pf-l-flex pf-m-justify-content-space-between">
+                <div class="pf-c-card__title">
+                    <i class="${ifDefined(this.icon)}"></i>&nbsp;${this.header ? this.header : ""}
                 </div>
+                ${this.renderHeaderLink()}
             </div>
-            <div class="pf-v6-c-card__body ${this.isCenter ? "center-value" : ""}">
+            <div class="pf-c-card__body ${this.isCenter ? "center-value" : ""}">
                 ${this.renderInner()}
             </div>
         </div>`;

@@ -2,8 +2,7 @@ import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
-import PFLabelGroup from "@patternfly/patternfly/components/Label/label-group.css";
-import PFLabel from "@patternfly/patternfly/components/Label/label.css";
+import PFChip from "@patternfly/patternfly/components/Chip/chip.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
@@ -17,21 +16,32 @@ export class Chip extends AKElement {
     removable = false;
 
     static get styles(): CSSResult[] {
-        return [PFBase, PFButton, PFLabel, PFLabelGroup, AKElement.GlobalStyle];
+        return [PFBase, PFButton, PFChip, AKElement.GlobalStyle];
     }
 
     render(): TemplateResult {
-        return html`
-            <li class="pf-v6-c-label-group__list-item">
-                <span class="pf-v6-c-label">
-                    <span class="pf-v6-c-label__content">
-                        <span class="pf-v6-c-label__icon">
-                            <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
-                        </span>
-                        <span class="pf-v6-c-label__text"><slot></slot></span>
-                    </span>
+        return html`<li class="pf-c-chip-group__list-item">
+            <div class="pf-c-chip">
+                <span class="pf-c-chip__text">
+                    <slot></slot>
                 </span>
-            </li>
-        `;
+                ${this.removable
+                    ? html`<button
+                          class="pf-c-button pf-m-plain"
+                          type="button"
+                          @click=${() => {
+                              this.dispatchEvent(
+                                  new CustomEvent("remove", {
+                                      bubbles: true,
+                                      composed: true,
+                                  }),
+                              );
+                          }}
+                      >
+                          <i class="fas fa-times" aria-hidden="true"></i>
+                      </button>`
+                    : html``}
+            </div>
+        </li>`;
     }
 }

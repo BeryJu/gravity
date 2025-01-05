@@ -96,7 +96,7 @@ export class WizardFormPage extends WizardPage {
                 @input=${() => this.inputCallback()}
             >
                 <form
-                    class="pf-v6-c-form pf-m-horizontal"
+                    class="pf-c-form pf-m-horizontal"
                     @submit=${(ev: Event) => {
                         ev.preventDefault();
                     }}

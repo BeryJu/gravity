@@ -34,31 +34,57 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal
                 label="Cron Schedule"
-                required
+                ?required=${true}
                 name="cronExpr"
-                helperText="Cron backup schedule"
             >
-                <input type="text" value="${ifDefined(this.instance?.cronExpr)}" required />
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.cronExpr)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">Cron backup schedule</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal
-                label="Endpoint"
-                required
-                name="endpoint"
-                helperText="S3 Endpoint, including schema."
-            >
-                <input type="text" value="${ifDefined(this.instance?.endpoint)}" required />
+            <ak-form-element-horizontal label="Endpoint" ?required=${true} name="endpoint">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.endpoint)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">S3 Endpoint, including schema.</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Bucket" required name="bucket">
-                <input type="text" value="${ifDefined(this.instance?.bucket)}" required />
+            <ak-form-element-horizontal label="Bucket" ?required=${true} name="bucket">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.bucket)}"
+                    class="pf-c-form-control"
+                    required
+                />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Access key" required name="accessKey">
-                <input type="text" value="${ifDefined(this.instance?.accessKey)}" required />
+            <ak-form-element-horizontal label="Access key" ?required=${true} name="accessKey">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.accessKey)}"
+                    class="pf-c-form-control"
+                    required
+                />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Secret Key" required name="secretKey">
-                <input type="text" value="${ifDefined(this.instance?.secretKey)}" required />
+            <ak-form-element-horizontal label="Secret Key" ?required=${true} name="secretKey">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.secretKey)}"
+                    class="pf-c-form-control"
+                    required
+                />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Path" required name="path">
-                <input type="text" value="${ifDefined(this.instance?.path)}" required />
+            <ak-form-element-horizontal label="Path" ?required=${true} name="path">
+                <input
+                    type="text"
+                    value="${ifDefined(this.instance?.path)}"
+                    class="pf-c-form-control"
+                    required
+                />
             </ak-form-element-horizontal>`;
     }
 }
