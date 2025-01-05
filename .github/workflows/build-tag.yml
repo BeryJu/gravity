@@ -45,7 +45,7 @@ jobs:
           context: .
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
-            GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
+            GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
       - uses: actions/create-release@v1.1.4
         id: create_release

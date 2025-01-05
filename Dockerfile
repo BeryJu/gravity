@@ -7,8 +7,7 @@ COPY ./Makefile /work/Makefile
 COPY ./web/package.json /work/web/package.json
 COPY ./web/package-lock.json /work/web/package-lock.json
 
-RUN --mount=type=secret,id=CODECOV_TOKEN \
-    cd web && npm ci
+RUN cd web && npm ci
 
 COPY ./web /work/web
 
