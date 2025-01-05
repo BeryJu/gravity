@@ -15,8 +15,9 @@ const (
 )
 
 const (
-	DNSWildcard = "*"
-	DNSRoot     = "@"
+	DNSWildcard   = "*"
+	DNSRootRecord = "@"
+	DNSRootZone   = "."
 )
 
 const (

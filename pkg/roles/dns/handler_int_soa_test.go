@@ -21,10 +21,11 @@ func TestRoleDNS_SOA(t *testing.T) {
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyZones,
-			".",
+			TestZone,
 		).String(),
 		tests.MustJSON(dns.Zone{
 			Authoritative: true,
+			DefaultTTL:    3600,
 			HandlerConfigs: []map[string]interface{}{
 				{
 					"type": "forward_ip",
@@ -38,16 +39,11 @@ func TestRoleDNS_SOA(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   ".",
-				Qtype:  d.TypeSOA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   TestZone,
+			Qtype:  d.TypeSOA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, ".", ans.(*d.SOA).Ns)
+	}, "example.com.	3600	IN	SOA	example.com. root.example.com. 1337 600 15 5 3600")
 }

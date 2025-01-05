@@ -91,11 +91,13 @@ func (r *Record) FQDN(qname string) string {
 	for idx, lp := range strings.Split(r.Name, ".") {
 		if lp == types.DNSWildcard {
 			parts = append(parts, qnameParts[idx])
-		} else if lp != types.DNSRoot {
+		} else if lp != types.DNSRootRecord {
 			parts = append(parts, lp)
 		}
 	}
-	parts = append(parts, r.zone.Name)
+	if r.zone.Name != types.DNSRootZone {
+		parts = append(parts, r.zone.Name)
+	}
 	return utils.EnsureTrailingPeriod(strings.Join(parts, "."))
 }
 

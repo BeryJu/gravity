@@ -52,5 +52,5 @@ func AssertDNS(t *testing.T, role *dns.Role, q []d.Question, expected ...string)
 		expectedAnswersStr = append(expectedAnswersStr, r.String())
 	}
 	assert.Len(t, givenAnswersStr, len(expectedAnswersStr), "Count of answers is mismatched")
-	assert.ElementsMatch(t, givenAnswersStr, expectedAnswersStr)
+	assert.ElementsMatch(t, givenAnswersStr, expectedAnswersStr, "Given and expected answers mismatch")
 }

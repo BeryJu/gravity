@@ -87,7 +87,7 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 	relRecordName := strings.TrimSuffix(strings.ToLower(question.Name), strings.ToLower(eh.z.Name))
 	if relRecordName == "" {
 		// If the query name was the zone, the query should look for a record at the root
-		relRecordName = types.DNSRoot
+		relRecordName = types.DNSRootRecord
 	} else {
 		// Otherwise the relative record name still has a dot at the end which is not what we store
 		// in the database

@@ -1,7 +1,6 @@
 package dns_test
 
 import (
-	"net"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
@@ -52,18 +51,13 @@ func TestRoleDNS_Memory(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "foo.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Memory_Wildcard(t *testing.T) {
@@ -106,18 +100,13 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "foo.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Memory_CNAME(t *testing.T) {
@@ -239,18 +228,13 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "foo.bar.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "foo.bar.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "foo.bar.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Memory_MixedCase(t *testing.T) {
@@ -293,18 +277,13 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "bar.test.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "bar.test.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "bar.test.	0	IN	A	10.1.2.3")
 }
 
 func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
@@ -347,16 +326,11 @@ func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
 	assert.Nil(t, role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	fw := NewNullDNSWriter()
-	role.Handler(fw, &d.Msg{
-		Question: []d.Question{
-			{
-				Name:   "bar.TesT.",
-				Qtype:  d.TypeA,
-				Qclass: d.ClassINET,
-			},
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "bar.TesT.",
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
 		},
-	})
-	ans := fw.Msg().Answer[0]
-	assert.Equal(t, net.ParseIP("10.1.2.3").String(), ans.(*d.A).A.String())
+	}, "bar.test.	0	IN	A	10.1.2.3")
 }
