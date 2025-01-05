@@ -40,7 +40,6 @@ export class SidebarBrand extends AKElement {
                     background-color: transparent;
                     border-radius: 0px;
                     height: 100%;
-                    color: var(--ak-dark-foreground);
                 }
                 .ak-brand {
                     width: 100%;
