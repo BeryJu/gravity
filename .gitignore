@@ -3,7 +3,7 @@ gen-ts-api/
 coverage.txt
 coverage.html
 *.pcap
-*.sock
+./*.sock
 tests.json
 test-output
 bin/**

@@ -104,7 +104,7 @@ func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	session.Values[types.SessionKeyUser] = user
 	session.Values[types.SessionKeyDirty] = true
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/ui/#/overview", http.StatusFound)
 }
 
 func (ap *AuthProvider) checkJWTToken(r *http.Request) bool {
