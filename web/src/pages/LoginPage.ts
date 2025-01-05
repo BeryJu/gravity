@@ -30,13 +30,13 @@ export class LoginForm extends Form<AuthAPILoginInput> {
 
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal label=${"Username"} name="username">
-                <input type="text" autocomplete="username" />
+                <input type="text" class="pf-c-form-control" autocomplete="username" />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Password"} name="password">
-                <input type="password" autocomplete="current-password" />
+                <input type="password" class="pf-c-form-control" autocomplete="current-password" />
             </ak-form-element-horizontal>
             <button
-                class="pf-v6-c-button pf-m-primary pf-m-block"
+                class="pf-c-button pf-m-primary pf-m-block"
                 @click=${(e: MouseEvent) => {
                     e.preventDefault();
                     this.submit(e);
@@ -68,7 +68,7 @@ export class LoginPage extends AKElement {
                     background-position: center center;
                     background-size: cover;
                 }
-                .pf-v6-c-login__header {
+                .pf-c-login__header {
                     font-size: 3rem;
                     color: var(--ak-accent);
                 }
@@ -86,62 +86,29 @@ export class LoginPage extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="pf-v6-c-background-image__filter"
-                width="0"
-                height="0"
-            >
-                <filter id="image_overlay">
-                    <feColorMatrix
-                        in="SourceGraphic"
-                        type="matrix"
-                        values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"
-                    />
-                    <feComponentTransfer color-interpolation-filters="sRGB" result="duotone">
-                        <feFuncR
-                            type="table"
-                            tableValues="0.086274509803922 0.43921568627451"
-                        ></feFuncR>
-                        <feFuncG
-                            type="table"
-                            tableValues="0.086274509803922 0.43921568627451"
-                        ></feFuncG>
-                        <feFuncB
-                            type="table"
-                            tableValues="0.086274509803922 0.43921568627451"
-                        ></feFuncB>
-                        <feFuncA type="table" tableValues="0 1"></feFuncA>
-                    </feComponentTransfer>
-                </filter>
-            </svg>
-            <div class="pf-v6-c-login">
-                <div class="pf-v6-c-login__container">
-                    <header class="pf-v6-c-login__header">
-                        <img src="static/assets/images/logo-color.png" alt="gravity logo" />
+        return html`<div class="pf-c-login">
+            <div class="pf-c-login__container">
+                <header class="pf-c-login__header">
+                    <img src="static/assets/images/logo-color.png" alt="gravity logo" />
+                </header>
+                <main class="pf-c-login__main">
+                    <header class="pf-c-login__main-header">
+                        <h1 class="pf-c-title pf-m-3xl">Log in to Gravity.</h1>
                     </header>
-                    <main class="pf-v6-c-login__main">
-                        <header class="pf-v6-c-login__main-header">
-                            <h1 class="pf-v6-c-title pf-m-3xl">Log in to Gravity.</h1>
-                        </header>
-                        <div class="pf-v6-c-login__main-body">
-                            <gravity-login-form></gravity-login-form>
-                        </div>
-                        ${this.authConfig?.oidc
-                            ? html`
-                                  <div class="pf-v6-c-login__main-body">
-                                      <a
-                                          class="pf-v6-c-button pf-m-primary pf-m-block"
-                                          href="/auth/oidc"
-                                          >Login with SSO</a
-                                      >
-                                  </div>
-                              `
-                            : html``}
-                    </main>
-                </div>
+                    <div class="pf-c-login__main-body">
+                        <gravity-login-form></gravity-login-form>
+                    </div>
+                    ${this.authConfig?.oidc
+                        ? html`
+                              <div class="pf-c-login__main-body">
+                                  <a class="pf-c-button pf-m-primary pf-m-block" href="/auth/oidc"
+                                      >Login with SSO</a
+                                  >
+                              </div>
+                          `
+                        : html``}
+                </main>
             </div>
-        `;
+        </div>`;
     }
 }

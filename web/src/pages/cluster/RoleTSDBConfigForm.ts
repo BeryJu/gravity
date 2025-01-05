@@ -32,31 +32,38 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal name="enabled" checkbox>
-                <div class="pf-v6-c-check">
+        return html` <ak-form-element-horizontal name="enabled">
+                <div class="pf-c-check">
                     <input
                         type="checkbox"
-                        class="pf-v6-c-check__input"
+                        class="pf-c-check__input"
                         ?checked=${first(this.instance?.enabled, true)}
                     />
-                    <label class="pf-v6-c-check__label"> ${"Enabled"} </label>
+                    <label class="pf-c-check__label"> ${"Enabled"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal
-                label="Metrics expiry"
-                required
-                name="expire"
-                helperText="Time in seconds before oldest metrics are deleted. Defaults to 30 minutes."
-            >
-                <input type="number" value="${first(this.instance?.expire, 60 * 30)}" required />
+            <ak-form-element-horizontal label="Metrics expiry" ?required=${true} name="expire">
+                <input
+                    type="number"
+                    value="${first(this.instance?.expire, 60 * 30)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">
+                    Time in seconds before oldest metrics are deleted. Defaults to 30 minutes.
+                </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal
-                label="Scrape interval"
-                required
-                name="scrape"
-                helperText="Interval in seconds of how often metrics are collected and written to the database."
-            >
-                <input type="number" value="${first(this.instance?.scrape, 30)}" required />
+            <ak-form-element-horizontal label="Scrape interval" ?required=${true} name="scrape">
+                <input
+                    type="number"
+                    value="${first(this.instance?.scrape, 30)}"
+                    class="pf-c-form-control"
+                    required
+                />
+                <p class="pf-c-form__helper-text">
+                    Interval in seconds of how often metrics are collected and written to the
+                    database.
+                </p>
             </ak-form-element-horizontal>`;
     }
 }

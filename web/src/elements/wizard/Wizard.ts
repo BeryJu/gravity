@@ -3,7 +3,6 @@ import { property } from "@lit/reactive-element/decorators/property.js";
 import { CSSResult, TemplateResult, html } from "lit";
 import { state } from "lit/decorators.js";
 
-import PFActionList from "@patternfly/patternfly/components/ActionList/action-list.css";
 import PFWizard from "@patternfly/patternfly/components/Wizard/wizard.css";
 
 import { ModalButton } from "../buttons/ModalButton";
@@ -37,7 +36,7 @@ export class Wizard extends ModalButton {
     isValid = false;
 
     static get styles(): CSSResult[] {
-        return super.styles.concat(PFWizard, PFActionList);
+        return super.styles.concat(PFWizard);
     }
 
     @state()
@@ -121,10 +120,6 @@ export class Wizard extends ModalButton {
         });
     }
 
-    renderClose() {
-        return html``;
-    }
-
     renderModalInner(): TemplateResult {
         const firstPage = this.querySelector<WizardPage>(`[slot=${this.steps[0]}]`);
         if (!this.currentStep && firstPage) {
@@ -136,44 +131,37 @@ export class Wizard extends ModalButton {
             this.steps = this.steps.concat("ak-wizard-page-action");
             lastPage = currentIndex === this.steps.length - 1;
         }
-        return html`<div class="pf-v6-c-wizard">
-            <div class="pf-v6-c-wizard__header">
+        return html`<div class="pf-c-wizard">
+            <div class="pf-c-wizard__header">
                 ${this.canCancel
-                    ? html`<div class="pf-v6-c-wizard__close">
-                          <button
-                              class="pf-v6-c-button pf-m-plain"
-                              type="button"
-                              aria-label="${"Close"}"
-                              @click=${() => {
-                                  this.reset();
-                              }}
-                          >
-                              <span class="pf-v6-c-button__icon">
-                                  <i class="fas fa-times" aria-hidden="true"></i>
-                              </span>
-                          </button>
-                      </div> `
+                    ? html`<button
+                          class="pf-c-button pf-m-plain pf-c-wizard__close"
+                          type="button"
+                          aria-label="${"Close"}"
+                          @click=${() => {
+                              this.reset();
+                          }}
+                      >
+                          <i class="fas fa-times" aria-hidden="true"></i>
+                      </button>`
                     : html``}
-                <div class="pf-v6-c-wizard__title">
-                    <h1 class="pf-v6-c-wizard__title-text">${this.header}</h1>
-                </div>
-                <div class="pf-v6-c-wizard__description">${this.description}</div>
+                <h1 class="pf-c-title pf-m-3xl pf-c-wizard__title">${this.header}</h1>
+                <p class="pf-c-wizard__description">${this.description}</p>
             </div>
-            <div class="pf-v6-c-wizard__outer-wrap">
-                <div class="pf-v6-c-wizard__inner-wrap">
-                    <nav class="pf-v6-c-wizard__nav">
-                        <ol class="pf-v6-c-wizard__nav-list">
+            <div class="pf-c-wizard__outer-wrap">
+                <div class="pf-c-wizard__inner-wrap">
+                    <nav class="pf-c-wizard__nav">
+                        <ol class="pf-c-wizard__nav-list">
                             ${this.steps.map((step, idx) => {
                                 const currentIdx = this.currentStep
                                     ? this.steps.indexOf(this.currentStep.slot)
                                     : 0;
                                 return html`
-                                    <li class="pf-v6-c-wizard__nav-item">
+                                    <li class="pf-c-wizard__nav-item">
                                         <button
-                                            class="pf-v6-c-wizard__nav-link ${idx === currentIdx
+                                            class="pf-c-wizard__nav-link ${idx === currentIdx
                                                 ? "pf-m-current"
                                                 : ""}"
-                                            type="button"
                                             ?disabled=${currentIdx < idx}
                                             @click=${() => {
                                                 const stepEl = this.querySelector<WizardPage>(
@@ -184,88 +172,78 @@ export class Wizard extends ModalButton {
                                                 }
                                             }}
                                         >
-                                            <span class="pf-v6-c-wizard__nav-link-main">
-                                                <span class="pf-v6-c-wizard__nav-link-text">
-                                                    ${this.querySelector<WizardPage>(
-                                                        `[slot=${step}]`,
-                                                    )?.sidebarLabel()}
-                                                </span>
-                                            </span>
+                                            ${this.querySelector<WizardPage>(
+                                                `[slot=${step}]`,
+                                            )?.sidebarLabel()}
                                         </button>
                                     </li>
                                 `;
                             })}
                         </ol>
                     </nav>
-                    <main class="pf-v6-c-wizard__main">
-                        <div class="pf-v6-c-wizard__main-body">
+                    <main class="pf-c-wizard__main">
+                        <div class="pf-c-wizard__main-body">
                             <slot name=${this.currentStep?.slot || this.steps[0]}></slot>
                         </div>
                     </main>
                 </div>
-                <footer class="pf-v6-c-wizard__footer">
-                    <div class="pf-v6-c-action-list">
-                        <div class="pf-v6-c-action-list__group">
-                            <button
-                                class="pf-v6-c-button pf-m-primary"
-                                type="submit"
-                                ?disabled=${!this.isValid}
-                                @click=${async () => {
-                                    const cb = await this.currentStep?.nextCallback();
-                                    if (!cb) {
-                                        return;
-                                    }
-                                    if (lastPage) {
-                                        await this.finalHandler();
-                                        this.reset();
-                                    } else {
-                                        const nextPage = this.querySelector<WizardPage>(
-                                            `[slot=${this.steps[currentIndex + 1]}]`,
-                                        );
-                                        if (nextPage) {
-                                            this.currentStep = nextPage;
-                                        }
-                                    }
-                                }}
-                            >
-                                ${lastPage ? "Finish" : "Next"}
-                            </button>
-                            ${(this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0) >
-                                0 && this.canBack
-                                ? html`
-                                      <button
-                                          class="pf-v6-c-button pf-m-secondary"
-                                          type="button"
-                                          @click=${() => {
-                                              const prevPage = this.querySelector<WizardPage>(
-                                                  `[slot=${this.steps[currentIndex - 1]}]`,
-                                              );
-                                              if (prevPage) {
-                                                  this.currentStep = prevPage;
-                                              }
-                                          }}
-                                      >
-                                          ${"Back"}
-                                      </button>
-                                  `
-                                : html``}
-                        </div>
-                        <div class="pf-v6-c-action-list__group">
-                            ${this.canCancel
-                                ? html`<div class="pf-v6-c-wizard__footer-cancel">
-                                      <button
-                                          class="pf-v6-c-button pf-m-link"
-                                          type="button"
-                                          @click=${() => {
-                                              this.reset();
-                                          }}
-                                      >
-                                          ${"Cancel"}
-                                      </button>
-                                  </div>`
-                                : html``}
-                        </div>
-                    </div>
+                <footer class="pf-c-wizard__footer">
+                    <button
+                        class="pf-c-button pf-m-primary"
+                        type="submit"
+                        ?disabled=${!this.isValid}
+                        @click=${async () => {
+                            const cb = await this.currentStep?.nextCallback();
+                            if (!cb) {
+                                return;
+                            }
+                            if (lastPage) {
+                                await this.finalHandler();
+                                this.reset();
+                            } else {
+                                const nextPage = this.querySelector<WizardPage>(
+                                    `[slot=${this.steps[currentIndex + 1]}]`,
+                                );
+                                if (nextPage) {
+                                    this.currentStep = nextPage;
+                                }
+                            }
+                        }}
+                    >
+                        ${lastPage ? "Finish" : "Next"}
+                    </button>
+                    ${(this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0) > 0 &&
+                    this.canBack
+                        ? html`
+                              <button
+                                  class="pf-c-button pf-m-secondary"
+                                  type="button"
+                                  @click=${() => {
+                                      const prevPage = this.querySelector<WizardPage>(
+                                          `[slot=${this.steps[currentIndex - 1]}]`,
+                                      );
+                                      if (prevPage) {
+                                          this.currentStep = prevPage;
+                                      }
+                                  }}
+                              >
+                                  ${"Back"}
+                              </button>
+                          `
+                        : html``}
+                    ${this.canCancel
+                        ? html`<div class="pf-c-wizard__footer-cancel">
+                              <button
+                                  class="pf-c-button pf-m-link"
+                                  type="button"
+                                  @click=${() => {
+                                      this.reset();
+                                  }}
+                              >
+                                  ${"Cancel"}
+                              </button>
+                          </div>`
+                        : html``}
                 </footer>
             </div>
         </div>`;

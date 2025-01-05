@@ -7,7 +7,6 @@ import PFCard from "@patternfly/patternfly/components/Card/card.css";
 import PFGrid from "@patternfly/patternfly/layouts/Grid/grid.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
-import { EVENT_TMP_TITLE } from "../../common/constants";
 import { AKElement } from "../../elements/Base";
 import "../../elements/chips/Chip";
 import "../../elements/chips/ChipGroup";
@@ -63,7 +62,7 @@ export class RolesPage extends TablePage<Role> {
             PFGrid,
             PFCard,
             css`
-                .pf-v6-c-sidebar__content {
+                .pf-c-sidebar__content {
                     background-color: transparent;
                 }
             `,
@@ -133,63 +132,58 @@ export class RolesPage extends TablePage<Role> {
     }
 
     render(): TemplateResult {
-        this.dispatchEvent(
-            new CustomEvent(EVENT_TMP_TITLE, {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    title: this.pageTitle(),
-                },
-            }),
-        );
-        return html` <section class="pf-v6-c-page__main-section pf-m-no-padding-mobile">
-            <div class="pf-v6-c-sidebar pf-m-gutter">
-                <div class="pf-v6-c-sidebar__main">
-                    ${this.renderSidebarBefore()}
-                    <a class="pf-v6-c-sidebar__content pf-v6-l-grid pf-m-gutter">
-                        ${this.data?.results.map((role) => {
-                            const card = html` <div
-                                class="pf-v6-c-card ${role.settingsAvailable
-                                    ? "pf-m-hoverable-raised"
-                                    : ""} pf-v6-l-grid__item pf-m-3-col"
-                                @click=${() => {
-                                    if (!role.settingsAvailable) {
-                                        return;
-                                    }
-                                    const form = this.shadowRoot?.querySelector<ModalForm>(
-                                        `#${role.id}`,
-                                    );
-                                    if (!form) {
-                                        return;
-                                    }
-                                    form.onClick();
-                                }}
-                                slot="trigger"
-                            >
-                                <div class="pf-v6-c-card__title">${role.name}</div>
-                                <div class="pf-v6-c-card__body">
-                                    <ak-chip-group
-                                        >${this.instances
-                                            .filter((inst) => inst.roles?.includes(role.id))
-                                            .map((inst) => {
-                                                return html`<ak-chip>${inst.identifier}</ak-chip>`;
-                                            })}</ak-chip-group
-                                    >
-                                </div>
-                            </div>`;
-                            return card;
-                        })}
-                    </a>
-                    ${this.renderSidebarAfter()}
+        return html`<ak-page-header icon=${this.pageIcon()} header=${this.pageTitle()}>
+            </ak-page-header>
+            <section class="pf-c-page__main-section pf-m-no-padding-mobile">
+                <div class="pf-c-sidebar pf-m-gutter">
+                    <div class="pf-c-sidebar__main">
+                        ${this.renderSidebarBefore()}
+                        <div class="pf-c-sidebar__content pf-l-grid pf-m-gutter">
+                            ${this.data?.results.map((role) => {
+                                const card = html` <div
+                                    class="pf-c-card ${role.settingsAvailable
+                                        ? "pf-m-hoverable-raised"
+                                        : ""} pf-l-grid__item pf-m-3-col"
+                                    @click=${() => {
+                                        if (!role.settingsAvailable) {
+                                            return;
+                                        }
+                                        const form = this.shadowRoot?.querySelector<ModalForm>(
+                                            `#${role.id}`,
+                                        );
+                                        if (!form) {
+                                            return;
+                                        }
+                                        form.onClick();
+                                    }}
+                                    slot="trigger"
+                                >
+                                    <div class="pf-c-card__title">${role.name}</div>
+                                    <div class="pf-c-card__body">
+                                        <ak-chip-group
+                                            >${this.instances
+                                                .filter((inst) => inst.roles?.includes(role.id))
+                                                .map((inst) => {
+                                                    return html`<ak-chip
+                                                        >${inst.identifier}</ak-chip
+                                                    >`;
+                                                })}</ak-chip-group
+                                        >
+                                    </div>
+                                </div>`;
+                                return card;
+                            })}
+                        </div>
+                        ${this.renderSidebarAfter()}
+                    </div>
+                    ${this.data?.results.map((role) => {
+                        return html`<ak-forms-modal id="${role.id}">
+                            <span slot="submit"> ${"Update"} </span>
+                            <span slot="header"> ${`Update ${role.name} Role config`} </span>
+                            ${this.renderRoleConfigForm(role)}
+                        </ak-forms-modal>`;
+                    })}
                 </div>
-                ${this.data?.results.map((role) => {
-                    return html`<ak-forms-modal id="${role.id}">
-                        <span slot="submit"> ${"Update"} </span>
-                        <span slot="header"> ${`Update ${role.name} Role config`} </span>
-                        ${this.renderRoleConfigForm(role)}
-                    </ak-forms-modal>`;
-                })}
-            </div>
-        </section>`;
+            </section>`;
     }
 }

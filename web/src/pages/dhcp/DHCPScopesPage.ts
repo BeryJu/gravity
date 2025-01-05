@@ -84,7 +84,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
                 <span slot="header"> ${"Update Scope"} </span>
                 <gravity-dhcp-scope-form slot="form" .instancePk=${item.scope}>
                 </gravity-dhcp-scope-form>
-                <button slot="trigger" class="pf-v6-c-button pf-m-plain">
+                <button slot="trigger" class="pf-c-button pf-m-plain">
                     <i class="fas fa-edit"></i>
                 </button>
             </ak-forms-modal>`,
@@ -108,7 +108,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
                 });
             }}
         >
-            <button ?disabled=${disabled} slot="trigger" class="pf-v6-c-button pf-m-danger">
+            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
                 ${"Delete"}
             </button>
         </ak-forms-delete-bulk>`;
@@ -120,7 +120,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
                 <span slot="submit"> ${"Create"} </span>
                 <span slot="header"> ${"Create Scope"} </span>
                 <gravity-dhcp-scope-form slot="form"> </gravity-dhcp-scope-form>
-                <button slot="trigger" class="pf-v6-c-button pf-m-primary">${"Create"}</button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
     }

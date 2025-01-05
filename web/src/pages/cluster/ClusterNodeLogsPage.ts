@@ -4,6 +4,7 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
+import "../../elements/PageHeader";
 import "../../elements/Spinner";
 import "../../elements/buttons/SpinnerButton";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";

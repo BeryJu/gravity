@@ -1,4 +1,4 @@
-import { CSSResult, TemplateResult, css, html, nothing } from "lit";
+import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -28,11 +28,16 @@ export class SpinnerButton extends AKElement {
             AKElement.GlobalStyle,
             css`
                 button {
+                    height: 100%;
                     /* Have to use !important here, as buttons with pf-m-progress have transition already */
                     transition: all var(--pf-c-button--m-progress--TransitionDuration) ease 0s !important;
                 }
             `,
         ];
+    }
+
+    constructor() {
+        super();
     }
 
     setLoading(): void {
@@ -43,9 +48,7 @@ export class SpinnerButton extends AKElement {
 
     setDone(statusClass: string): void {
         this.isRunning = false;
-        setTimeout(() => {
-            this.classList.remove(PROGRESS_CLASS);
-        }, 2500);
+        this.classList.remove(PROGRESS_CLASS);
         this.classList.add(statusClass);
         this.requestUpdate();
         setTimeout(() => {
@@ -56,7 +59,7 @@ export class SpinnerButton extends AKElement {
 
     render(): TemplateResult {
         return html`<button
-            class="pf-v6-c-button ${this.classList.toString()}"
+            class="pf-c-button pf-m-progress ${this.classList.toString()}"
             ?disabled=${this.disabled}
             @click=${() => {
                 if (this.isRunning === true) {
@@ -75,11 +78,11 @@ export class SpinnerButton extends AKElement {
             }}
         >
             ${this.isRunning
-                ? html`<span class="pf-v6-c-button__progress">
+                ? html`<span class="pf-c-button__progress">
                       <ak-spinner size=${PFSize.Medium}></ak-spinner>
                   </span>`
-                : nothing}
-            <slot class="pf-v6-c-button__text"></slot>
+                : ""}
+            <slot></slot>
         </button>`;
     }
 }

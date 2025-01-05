@@ -30,8 +30,13 @@ export class RoleMonitoringConfigForm extends ModelForm<MonitoringRoleConfig, st
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="Port" required name="port">
-            <input type="number" value="${first(this.instance?.port, 8009)}" required />
+        return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
+            <input
+                type="number"
+                value="${first(this.instance?.port, 8009)}"
+                class="pf-c-form-control"
+                required
+            />
         </ak-form-element-horizontal>`;
     }
 }

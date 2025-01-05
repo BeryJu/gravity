@@ -16,7 +16,7 @@ import "./ZonePresetWizardPage";
 @customElement("gravity-dns-zone-wizard")
 export class DNSZoneWizard extends AKElement {
     static get styles(): CSSResult[] {
-        return [PFBase, PFButton, PFRadio, AKElement.GlobalStyle];
+        return [PFBase, PFButton, AKElement.GlobalStyle, PFRadio];
     }
 
     @property({ type: Boolean })
@@ -36,9 +36,7 @@ export class DNSZoneWizard extends AKElement {
                 header=${"New zone"}
                 description=${"Create a new DNS zone."}
             >
-                <button slot="trigger" class="pf-v6-c-button pf-m-primary">
-                    ${this.createText}
-                </button>
+                <button slot="trigger" class="pf-c-button pf-m-primary">${this.createText}</button>
             </ak-wizard>
         `;
     }
