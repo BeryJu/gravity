@@ -49,17 +49,18 @@ export class PageHeader extends AKElement {
             AKElement.GlobalStyle,
             css`
                 :host {
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                }
+                .bar {
+                    border-bottom: var(--pf-global--BorderWidth--sm);
+                    border-bottom-style: solid;
+                    border-bottom-color: var(--pf-global--BorderColor--100);
                     display: flex;
                     flex-direction: row;
-                    min-height: 114px;
-                }
-                .sidebar-trigger,
-                .pf-c-page__main-section {
-                    background-color: transparent;
-                }
-                .pf-c-button.pf-m-plain {
-                    background-color: transparent;
-                    border-radius: 0px;
+                    min-height: var(--navbar-height);
+                    background-color: var(--pf-c-page--BackgroundColor);
                 }
                 .pf-c-page__main-section {
                     flex-grow: 1;
@@ -93,7 +94,8 @@ export class PageHeader extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<button
+        return html`<div class="bar">
+            <button
                 class="sidebar-trigger pf-c-button pf-m-plain"
                 @click=${() => {
                     this.dispatchEvent(
@@ -106,7 +108,7 @@ export class PageHeader extends AKElement {
             >
                 <i class="fas fa-bars"></i>
             </button>
-            <section class="pf-c-page__main-section pf-m-light">
+            <section class="pf-c-page__main-section">
                 <div class="pf-c-content">
                     <h1>
                         ${this.renderIcon()}
@@ -114,6 +116,7 @@ export class PageHeader extends AKElement {
                     </h1>
                     ${this.description ? html`<p>${this.description}</p>` : html``}
                 </div>
-            </section>`;
+            </section>
+        </div>`;
     }
 }

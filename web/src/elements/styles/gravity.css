@@ -1,6 +1,8 @@
 :root {
     --ak-accent: #3873e0;
 
+    --navbar-height: 114px;
+
     --ak-dark-foreground: #fafafa;
     --ak-dark-foreground-darker: #bebebe;
     --ak-dark-foreground-link: #5a5cb9;
@@ -170,6 +172,7 @@ html > form > input {
         --pf-c-page__main-section--m-light--BackgroundColor: var(--ak-dark-background-darker);
         --pf-global--link--Color: var(--ak-dark-foreground-link);
         --pf-c-radio__label--Color: var(--ak-dark-foreground-link);
+        --pf-global--BorderColor--100: var(--ak-dark-background-lighter) !important;
     }
     /* Global page background colour */
     .pf-c-page {
@@ -191,9 +194,6 @@ html > form > input {
     .sidebar-trigger,
     .notification-trigger {
         background-color: transparent !important;
-    }
-    .pf-c-page__main-section.pf-m-light {
-        background-color: transparent;
     }
     .pf-c-content {
         color: var(--ak-dark-foreground);
