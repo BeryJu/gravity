@@ -29,8 +29,11 @@ export class SidebarBrand extends AKElement {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
-                    height: 114px;
-                    min-height: 114px;
+                    height: var(--navbar-height);
+                    min-height: var(--navbar-height);
+                    border-bottom: var(--pf-global--BorderWidth--sm);
+                    border-bottom-style: solid;
+                    border-bottom-color: var(--pf-global--BorderColor--100);
                 }
                 .pf-c-brand img {
                     width: 100%;

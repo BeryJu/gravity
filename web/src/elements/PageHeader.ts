@@ -8,6 +8,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_SIDEBAR_TOGGLE, TITLE_DEFAULT } from "../common/constants";
 import { AKElement } from "./Base";
+import "./ak-nav-buttons";
 
 @customElement("ak-page-header")
 export class PageHeader extends AKElement {
@@ -49,17 +50,18 @@ export class PageHeader extends AKElement {
             AKElement.GlobalStyle,
             css`
                 :host {
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                }
+                .bar {
+                    border-bottom: var(--pf-global--BorderWidth--sm);
+                    border-bottom-style: solid;
+                    border-bottom-color: var(--pf-global--BorderColor--100);
                     display: flex;
                     flex-direction: row;
-                    min-height: 114px;
-                }
-                .sidebar-trigger,
-                .pf-c-page__main-section {
-                    background-color: transparent;
-                }
-                .pf-c-button.pf-m-plain {
-                    background-color: transparent;
-                    border-radius: 0px;
+                    min-height: var(--navbar-height);
+                    background-color: var(--pf-c-page--BackgroundColor);
                 }
                 .pf-c-page__main-section {
                     flex-grow: 1;
@@ -70,12 +72,11 @@ export class PageHeader extends AKElement {
                 img.pf-icon {
                     max-height: 24px;
                 }
-                .sidebar-trigger,
-                .notification-trigger {
-                    font-size: 24px;
+                .pf-c-page__header-tools {
+                    flex-shrink: 0;
                 }
-                .notification-trigger.has-notifications {
-                    color: var(--pf-global--active-color--100);
+                .pf-c-page__header-tools-group {
+                    height: 100%;
                 }
             `,
         ];
@@ -93,7 +94,8 @@ export class PageHeader extends AKElement {
     }
 
     render(): TemplateResult {
-        return html`<button
+        return html`<div class="bar">
+            <button
                 class="sidebar-trigger pf-c-button pf-m-plain"
                 @click=${() => {
                     this.dispatchEvent(
@@ -106,7 +108,7 @@ export class PageHeader extends AKElement {
             >
                 <i class="fas fa-bars"></i>
             </button>
-            <section class="pf-c-page__main-section pf-m-light">
+            <section class="pf-c-page__main-section">
                 <div class="pf-c-content">
                     <h1>
                         ${this.renderIcon()}
@@ -114,6 +116,12 @@ export class PageHeader extends AKElement {
                     </h1>
                     ${this.description ? html`<p>${this.description}</p>` : html``}
                 </div>
-            </section>`;
+            </section>
+            <div class="pf-c-page__header-tools">
+                <div class="pf-c-page__header-tools-group">
+                    <ak-nav-buttons></ak-nav-buttons>
+                </div>
+            </div>
+        </div>`;
     }
 }
