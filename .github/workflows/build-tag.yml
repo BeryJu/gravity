@@ -15,6 +15,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+      packages: write
+      contents: read
     outputs:
       release_upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
@@ -36,6 +41,7 @@ jobs:
           tags: |
             type=raw,value=v${{ steps.vars.outputs.version }}
       - uses: docker/build-push-action@v6.10.0
+        id: push
         with:
           tags: |
             ghcr.io/beryju/gravity:stable
@@ -47,6 +53,11 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/beryju/gravity
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
       - uses: actions/create-release@v1.1.4
         id: create_release
         env:
