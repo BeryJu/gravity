@@ -52,6 +52,7 @@ var CLICmd = &cobra.Command{
 		if apiToken != "" {
 			config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", apiToken))
 		}
+		config.UserAgent = fmt.Sprintf("gravity-cli/%s", extconfig.FullVersion())
 		apiClient = api.NewAPIClient(config)
 	},
 }
