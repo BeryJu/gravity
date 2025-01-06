@@ -464,6 +464,9 @@ html > form > input {
     .button.pf-c-button.sidebar-trigger {
         color: var(--ak-dark-foreground);
     }
+    .pf-c-page__header-tools {
+        color: var(--ak-dark-foreground) !important;
+    }
 }
 
 .pf-c-data-list__item {

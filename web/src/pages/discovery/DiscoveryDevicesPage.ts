@@ -9,7 +9,7 @@ import "../../elements/forms/ModalForm";
 import { paramURL } from "../../elements/router/RouterOutlet";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
-import { ip2int, PaginationWrapper } from "../../utils";
+import { PaginationWrapper, ip2int } from "../../utils";
 import "./DiscoveryDeviceApply";
 
 @customElement("gravity-discovery-devices")

@@ -8,6 +8,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { EVENT_SIDEBAR_TOGGLE, TITLE_DEFAULT } from "../common/constants";
 import { AKElement } from "./Base";
+import "./ak-nav-buttons";
 
 @customElement("ak-page-header")
 export class PageHeader extends AKElement {
@@ -71,12 +72,11 @@ export class PageHeader extends AKElement {
                 img.pf-icon {
                     max-height: 24px;
                 }
-                .sidebar-trigger,
-                .notification-trigger {
-                    font-size: 24px;
+                .pf-c-page__header-tools {
+                    flex-shrink: 0;
                 }
-                .notification-trigger.has-notifications {
-                    color: var(--pf-global--active-color--100);
+                .pf-c-page__header-tools-group {
+                    height: 100%;
                 }
             `,
         ];
@@ -117,6 +117,11 @@ export class PageHeader extends AKElement {
                     ${this.description ? html`<p>${this.description}</p>` : html``}
                 </div>
             </section>
+            <div class="pf-c-page__header-tools">
+                <div class="pf-c-page__header-tools-group">
+                    <ak-nav-buttons></ak-nav-buttons>
+                </div>
+            </div>
         </div>`;
     }
 }

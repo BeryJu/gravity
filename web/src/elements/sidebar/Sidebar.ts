@@ -7,7 +7,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../Base";
 import "../sidebar/SidebarBrand";
-import "../sidebar/SidebarUser";
+import "../sidebar/SidebarVersion";
 
 @customElement("ak-sidebar")
 export class Sidebar extends AKElement {
@@ -67,7 +67,7 @@ export class Sidebar extends AKElement {
             <ul class="pf-c-nav__list">
                 <slot></slot>
             </ul>
-            <ak-sidebar-user></ak-sidebar-user>
+            <ak-sidebar-version></ak-sidebar-version>
         </nav>`;
     }
 }
