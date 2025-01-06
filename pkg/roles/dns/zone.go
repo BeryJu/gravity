@@ -120,9 +120,10 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
-			if i := getIP(w.RemoteAddr()); i != nil && i.IsPrivate() {
-				r.RecursionAvailable = r.RecursionDesired
+			if i := getIP(w.RemoteAddr()); i != nil && (i.IsPrivate() || i.IsLoopback()) {
+				handlerReply.RecursionAvailable = r.Msg.RecursionDesired
 			}
+			handlerReply.SetEdns0(4000, false)
 			handlerReply.SetReply(r.Msg)
 			z.inst.ExecuteHook(roles.HookOptions{
 				Source: z.Hook,

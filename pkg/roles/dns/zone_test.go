@@ -70,3 +70,34 @@ func TestRoleDNS_ZoneNoHandler(t *testing.T) {
 	})
 	assert.Equal(t, d.RcodeSuccess, msg.Rcode)
 }
+
+func TestRoleDNS_NoZone(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]interface{}{},
+		}),
+	))
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	msg := AssertDNS(t, role, []d.Question{
+		{
+			Name:   TestZone2,
+			Qtype:  d.TypeA,
+			Qclass: d.ClassINET,
+		},
+	})
+	assert.Equal(t, d.RcodeNameError, msg.Rcode)
+}
