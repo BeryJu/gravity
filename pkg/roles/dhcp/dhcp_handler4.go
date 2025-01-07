@@ -2,14 +2,12 @@ package dhcp
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"strings"
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
-	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -34,51 +32,6 @@ const MaxDatagram = 1 << 16
 
 type Handler4 func(req *Request4) *dhcpv4.DHCPv4
 
-type Request4 struct {
-	*dhcpv4.DHCPv4
-	peer      net.Addr
-	log       *zap.Logger
-	Context   context.Context
-	oob       *ipv4.ControlMessage
-	requestId string
-}
-
-type contextRequestID struct{}
-
-func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
-	requestId := fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())
-	return &Request4{
-		DHCPv4:    dhcp,
-		Context:   context.WithValue(r.ctx, contextRequestID{}, requestId),
-		peer:      &net.UDPAddr{},
-		log:       r.log.With(zap.String("request", requestId)),
-		requestId: requestId,
-	}
-}
-
-// Use the instance ip unless the the interface is not bound
-func (req *Request4) LocalIP() string {
-	ip := extconfig.Get().Instance.IP
-	if req.oob != nil {
-		ief, err := net.InterfaceByIndex(req.oob.IfIndex)
-		if err != nil {
-			return ip
-		}
-		addrs, err := ief.Addrs()
-		if err != nil {
-			return ip
-		}
-		for _, addr := range addrs {
-			if ipv4Addr := addr.(*net.IPNet).IP.To4(); ipv4Addr != nil {
-				ip = ipv4Addr.String()
-				req.log.Debug("Unbound interface found", zap.String("ifname", ief.Name), zap.String("ip", ip))
-				return ip
-			}
-		}
-	}
-	return ip
-}
-
 func (h *handler4) Serve() error {
 	for {
 		b := *bufpool.Get().(*[]byte)
@@ -88,11 +41,11 @@ func (h *handler4) Serve() error {
 		if err != nil {
 			return err
 		}
-		go h.handle(b[:n], oob, peer.(*net.UDPAddr))
+		go h.Handle(b[:n], oob, peer.(*net.UDPAddr))
 	}
 }
 
-func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) {
+func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) {
 	if extconfig.Get().ListenOnlyMode {
 		return
 	}

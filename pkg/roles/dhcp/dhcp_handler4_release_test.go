@@ -60,7 +60,7 @@ func TestDHCPRelease(t *testing.T) {
 	req, err := dhcpv4.FromBytes(DHCPReleasePayload)
 	assert.NoError(t, err)
 	req4 := role.NewRequest4(req)
-	res := role.Handler4(req4)
+	res := role.Handle4(req4)
 	assert.Nil(t, res)
 
 	tests.AssertEtcd(

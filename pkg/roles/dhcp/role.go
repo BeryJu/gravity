@@ -74,8 +74,13 @@ func New(instance roles.Instance) *Role {
 	return r
 }
 
-func (r *Role) Handler4(re *Request4) *dhcpv4.DHCPv4 {
+// Deprecated: FunctionName is deprecated.
+func (r *Role) Handle4(re *Request4) *dhcpv4.DHCPv4 {
 	return r.s4.HandleRequest(re)
+}
+
+func (r *Role) Handler4() *handler4 {
+	return r.s4
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
