@@ -251,7 +251,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 
 	for _, opt := range l.scope.Options {
 		finalVal := make([]byte, 0)
-		if opt.Tag == nil && opt.TagName == "" {
+		if opt == nil || opt.Tag == nil && opt.TagName == "" {
 			continue
 		}
 		if opt.TagName != "" {
@@ -299,6 +299,9 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		}
 		dopt := dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(*opt.Tag), finalVal)
 		rep.UpdateOption(dopt)
+		if dopt.Code.Code() == uint8(dhcpv4.OptionBootfileName) {
+			rep.BootFileName = dhcpv4.GetString(dopt.Code, rep.Options)
+		}
 	}
 	return rep
 }
