@@ -11,7 +11,7 @@ const (
 	TagNameNameServer = "name_server"
 	TagNameDomainName = "domain_name"
 	TagNameBootfile   = "bootfile"
-	TagNameTFTPserver = "tftp_server"
+	TagNameTFTPServer = "tftp_server"
 )
 
 // https://datatracker.ietf.org/doc/html/rfc2131
@@ -23,7 +23,7 @@ var TagMap map[OptionTagName]uint8 = map[OptionTagName]uint8{
 	TagNameNameServer: dhcpv4.OptionDomainNameServer.Code(),
 	TagNameDomainName: dhcpv4.OptionDomainName.Code(),
 	TagNameBootfile:   dhcpv4.OptionBootfileName.Code(),
-	TagNameTFTPserver: dhcpv4.OptionTFTPServerName.Code(),
+	TagNameTFTPServer: dhcpv4.OptionTFTPServerName.Code(),
 }
 
 var IPTags = map[uint8]bool{

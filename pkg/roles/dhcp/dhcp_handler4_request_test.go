@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/tests"
-	"github.com/gorilla/securecookie"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 )
@@ -378,6 +378,62 @@ func TestDHCP_Parallel(t *testing.T) {
 	wg.Wait()
 }
 
-func generateHW() net.HardwareAddr {
-	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
+func TestDHCPRequest_Options(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+			"test",
+		).String(),
+		tests.MustJSON(dhcp.Scope{
+			SubnetCIDR: "10.100.0.0/24",
+			Default:    true,
+			TTL:        86400,
+			Options: []*types.DHCPOption{
+				{
+					TagName: types.TagNameRouter,
+					Value:   api.PtrString("1.2.3.4"),
+				},
+				{
+					TagName: types.TagNameBootfile,
+					Value:   api.PtrString("foo"),
+				},
+				{
+					TagName: "",
+					Value:   api.PtrString("1.2.3.4"),
+				},
+				{
+					TagName: "foo",
+					Value:   api.PtrString("1.2.3.4"),
+				},
+			},
+			IPAM: map[string]string{
+				"type":        "internal",
+				"range_start": "10.100.0.100",
+				"range_end":   "10.100.0.250",
+			},
+		}),
+	))
+	tests.PanicIfError(role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	req, err := dhcpv4.FromBytes(DHCPRequestPayload)
+	assert.NoError(t, err)
+	req4 := role.NewRequest4(req)
+	res := role.Handler4(req4)
+	assert.NotNil(t, res)
+	assert.Equal(t, "10.100.0.100", res.YourIPAddr.String())
+	assert.Equal(t, "ffffff00", res.SubnetMask().String())
+	assert.Equal(t, "44:90:bb:66:32:04", res.ClientHWAddr.String())
+	assert.Equal(t, "1.2.3.4", res.Router()[0].String())
+	assert.Equal(t, "foo", res.BootFileName)
+	assert.Equal(t, "foo", res.BootFileNameOption())
+	assert.Equal(t, 86400*time.Second, res.IPAddressLeaseTime(1*time.Second))
 }
