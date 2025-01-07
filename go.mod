@@ -26,7 +26,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/insomniacslk/dhcp v0.0.0-20240829085014-a3a4c1f04475
 	github.com/miekg/dns v1.1.62
-	github.com/minio/minio-go/v7 v7.0.82
+	github.com/minio/minio-go/v7 v7.0.83
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/ori-edge/k8s_gateway v0.4.0
 	github.com/pin/tftp/v3 v3.1.0
@@ -134,7 +134,7 @@ require (
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
-	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
