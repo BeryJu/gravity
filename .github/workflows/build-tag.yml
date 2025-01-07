@@ -19,7 +19,9 @@ jobs:
       id-token: write
       attestations: write
       packages: write
-      contents: read
+      # Required to create relases
+      contents: write
+      pull-requests: read
     outputs:
       release_upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
