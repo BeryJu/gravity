@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736121463262,
+  "lastUpdate": 1736266778249,
   "repoUrl": "https://github.com/BeryJu/gravity",
   "entries": {
     "Gravity Benchmark": [
@@ -840,6 +840,126 @@ window.BENCHMARK_DATA = {
             "value": 89,
             "unit": "allocs/op",
             "extra": "79206 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jens.langhammer@beryju.org",
+            "name": "Jens Langhammer",
+            "username": "BeryJu"
+          },
+          "committer": {
+            "email": "jens.langhammer@beryju.org",
+            "name": "Jens Langhammer",
+            "username": "BeryJu"
+          },
+          "distinct": true,
+          "id": "9070994c9606602629aed7d368e62fa7ae11740d",
+          "message": "tag version v0.21.0",
+          "timestamp": "2025-01-07T17:15:36+01:00",
+          "tree_id": "072998a6646734f5ffa084a16c394b78ff0c34f9",
+          "url": "https://github.com/BeryJu/gravity/commit/9070994c9606602629aed7d368e62fa7ae11740d"
+        },
+        "date": 1736266777292,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkRoleDHCP_Request",
+            "value": 1486203,
+            "unit": "ns/op\t   70991 B/op\t    1433 allocs/op",
+            "extra": "897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - ns/op",
+            "value": 1486203,
+            "unit": "ns/op",
+            "extra": "897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - B/op",
+            "value": 70991,
+            "unit": "B/op",
+            "extra": "897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDHCP_Request - allocs/op",
+            "value": 1433,
+            "unit": "allocs/op",
+            "extra": "897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd",
+            "value": 722369,
+            "unit": "ns/op\t   31868 B/op\t     434 allocs/op",
+            "extra": "1587 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - ns/op",
+            "value": 722369,
+            "unit": "ns/op",
+            "extra": "1587 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - B/op",
+            "value": 31868,
+            "unit": "B/op",
+            "extra": "1587 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Etcd - allocs/op",
+            "value": 434,
+            "unit": "allocs/op",
+            "extra": "1587 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory",
+            "value": 12400,
+            "unit": "ns/op\t    6856 B/op\t      87 allocs/op",
+            "extra": "90488 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - ns/op",
+            "value": 12400,
+            "unit": "ns/op",
+            "extra": "90488 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - B/op",
+            "value": 6856,
+            "unit": "B/op",
+            "extra": "90488 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_Memory - allocs/op",
+            "value": 87,
+            "unit": "allocs/op",
+            "extra": "90488 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone",
+            "value": 13068,
+            "unit": "ns/op\t    7154 B/op\t      91 allocs/op",
+            "extra": "85790 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - ns/op",
+            "value": 13068,
+            "unit": "ns/op",
+            "extra": "85790 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - B/op",
+            "value": 7154,
+            "unit": "B/op",
+            "extra": "85790 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkRoleDNS_DefaultRootZone - allocs/op",
+            "value": 91,
+            "unit": "allocs/op",
+            "extra": "85790 times\n4 procs"
           }
         ]
       }
