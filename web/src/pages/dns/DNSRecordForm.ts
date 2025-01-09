@@ -66,6 +66,9 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 return "SRV Target";
             case "MX":
                 return "Mail server";
+            case "AAAA":
+            case "A":
+                return "IP Address";
             default:
                 return "Data";
         }
