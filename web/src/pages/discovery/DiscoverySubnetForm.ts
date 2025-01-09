@@ -35,10 +35,10 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
     renderForm(): TemplateResult {
         return html` ${this.instance
                 ? html``
-                : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
+                : html` <ak-form-element-horizontal label="Name" required name="name">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
-            <ak-form-element-horizontal label="Discovery CIDR" ?required=${true} name="subnetCidr">
+            <ak-form-element-horizontal label="Discovery CIDR" required name="subnetCidr">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.subnetCidr)}"
@@ -46,7 +46,7 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="DNS Resolver" ?required=${true} name="dnsResolver">
+            <ak-form-element-horizontal label="DNS Resolver" required name="dnsResolver">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.dnsResolver)}"
@@ -54,7 +54,7 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="discoveryTTL">
+            <ak-form-element-horizontal label="Default TTL" required name="discoveryTTL">
                 <input
                     type="number"
                     value="${ifDefined(this.instance?.discoveryTTL || 86400)}"

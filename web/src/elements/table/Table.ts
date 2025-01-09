@@ -221,7 +221,7 @@ export abstract class Table<T extends object> extends AKElement {
         return html`<tr role="row">
             <td role="cell" colspan="25">
                 <div class="pf-l-bullseye">
-                    <ak-empty-state ?loading="${true}" header=${"Loading"}> </ak-empty-state>
+                    <ak-empty-state loading header=${"Loading"}> </ak-empty-state>
                 </div>
             </td>
         </tr>`;

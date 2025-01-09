@@ -32,7 +32,7 @@ export class RoleTFTPConfigForm extends ModelForm<TftpRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label="Port" ?required=${true} name="port">
+        return html`<ak-form-element-horizontal label="Port" required name="port">
                 <input type="number" value="${first(this.instance?.port, 69)}" required />
             </ak-form-element-horizontal>
             <ak-form-element-horizontal name="enableLocal">

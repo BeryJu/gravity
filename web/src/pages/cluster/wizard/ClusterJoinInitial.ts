@@ -43,19 +43,19 @@ export class ClusterJoinInitial extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
+        return html`<ak-form-element-horizontal label=${"Name"} required name="name">
                 <input type="text" value="" class="pf-c-form-control" required />
                 <p class="pf-c-form__helper-text">
                     The unique identifier of the node being added to the cluster.
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${"Roles"} ?required=${true}>
+            <ak-form-element-horizontal label=${"Roles"} required>
                 ${Roles.map((role) => {
                     return html`<div class="pf-c-check">
                         <input
                             type="checkbox"
                             class="pf-c-check__input"
-                            ?checked=${true}
+                            checked
                             name=${`role_${role.id}`}
                         />
                         <label class="pf-c-check__label"> ${role.name} </label>

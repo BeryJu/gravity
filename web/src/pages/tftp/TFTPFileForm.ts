@@ -47,7 +47,7 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label="Name" ?required=${true} name="name">
+        return html`<ak-form-element-horizontal label="Name" required name="name">
                 <input
                     type="text"
                     value="${this.instance?.name || ""}"
@@ -56,7 +56,7 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
                 />
                 <p class="pf-c-form__helper-text">Filename</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Host" ?required=${true} name="host">
+            <ak-form-element-horizontal label="Host" required name="host">
                 <input
                     type="text"
                     value="${this.instance?.host || ""}"
