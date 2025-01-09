@@ -1,6 +1,6 @@
 import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { TemplateResult, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -76,12 +76,15 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
 
     renderForm(): TemplateResult {
         return html` <ak-form-element-horizontal label="Hostname" required name="hostname">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.hostname)}"
-                    class="pf-c-form-control"
-                    required
-                />
+                <div class="pf-c-input-group">
+                    <input
+                        type="text"
+                        value="${ifDefined(this.instance?.hostname)}"
+                        class="pf-c-form-control"
+                        required
+                    />
+                    ${this.zone !== "." ? html`<span class="pf-c-input-group__text">.${this.zone}</span>`: nothing}
+                </div>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="UID" required name="uid">
                 <input
