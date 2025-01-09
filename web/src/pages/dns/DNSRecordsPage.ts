@@ -1,6 +1,6 @@
-import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
+import { DnsAPIRecord, DnsAPIZone, RolesDnsApi } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { TemplateResult, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -18,6 +18,12 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     zone: string | undefined;
 
     @state()
+    _zone?: DnsAPIZone;
+
+    @state()
+    zoneCanStoreRecords = true;
+
+    @state()
     isReverseZone = false;
 
     pageTitle(): string {
@@ -32,12 +38,22 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     checkbox = true;
 
     searchEnabled(): boolean {
-        return true;
+        return this.zoneCanStoreRecords;
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<DnsAPIRecord>> {
         if ((this.zone || "").endsWith(".in-addr.arpa.")) {
             this.isReverseZone = true;
+        }
+        const zone = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones({
+            name: this.zone,
+        });
+        this._zone = zone.zones![0];
+        this.zoneCanStoreRecords =
+            (this._zone.handlerConfigs || []).filter((h) => h.type.toLowerCase() === "etcd")
+                .length > 0;
+        if (!this.zoneCanStoreRecords) {
+            return PaginationWrapper([]);
         }
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
             zone: this.zone || ".",
@@ -128,5 +144,25 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                 <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
             </ak-forms-modal>
         `;
+    }
+
+    renderEmpty(inner?: TemplateResult): TemplateResult {
+        return super.renderEmpty(html`
+            ${inner
+                ? inner
+                : html`<ak-empty-state
+                      icon="${this.zoneCanStoreRecords ? this.pageIcon() : "fa fa-times"}"
+                      header="${this.zoneCanStoreRecords
+                          ? "No objects found."
+                          : "Zone cannot store records."}"
+                  >
+                      <div slot="body">
+                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : html``}
+                      </div>
+                      <div slot="primary">
+                          ${this.zoneCanStoreRecords ? this.renderObjectCreate() : nothing}
+                      </div>
+                  </ak-empty-state>`}
+        `);
     }
 }
