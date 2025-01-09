@@ -166,10 +166,23 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                             value="${YAML.stringify(this.instance?.options)}"
                         >
                         </ak-codemirror>
+                        <p class="pf-c-form__helper-text">
+                            Add additional DHCP options
+                            <a href="https://gravity.beryju.io/docs/dhcp/options/" target="_blank"
+                                >Documentation</a
+                            >
+                        </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal label=${"Hook"} name="hook">
                         <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
                         </ak-codemirror>
+                        <p class="pf-c-form__helper-text">
+                            Dynamically alter the DHCP request/response after it is received and
+                            before it is sent.
+                            <a href="https://gravity.beryju.io/docs/dhcp/hooks/" target="_blank"
+                                >Documentation</a
+                            >
+                        </p>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;

@@ -85,10 +85,16 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                     )}"
                 >
                 </ak-codemirror>
+                <p class="pf-c-form__helper-text">
+                    Configure where requests to this zone will be routed to and how they should be answered. <a href="https://gravity.beryju.io/docs/dns/zones/#handlers" target="_blank">Documentation</a>
+                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Hook"} name="hook">
                 <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
                 </ak-codemirror>
+                <p class="pf-c-form__helper-text">
+                    Dynamically alter the DNS request/response after it is received and before it is sent. <a href="https://gravity.beryju.io/docs/dns/hooks/" target="_blank">Documentation</a>
+                </p>
             </ak-form-element-horizontal>
         `;
     }
