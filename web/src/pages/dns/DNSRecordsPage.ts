@@ -130,20 +130,22 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     }
 
     renderObjectCreate(): TemplateResult {
-        return html`
-            <ak-forms-modal submitKeepOpen="submit-keep-open">
-                <span slot="submit"> ${"Create"} </span>
-                <span slot="submit-keep-open"> ${"Create & stay open"} </span>
-                <span slot="header"> ${"Create Record"} </span>
-                <gravity-dns-record-form
-                    zone=${ifDefined(this.zone)}
-                    slot="form"
-                    recordType=${this.isReverseZone ? "PTR" : "A"}
-                >
-                </gravity-dns-record-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
-            </ak-forms-modal>
-        `;
+        return this.zoneCanStoreRecords
+            ? html`
+                  <ak-forms-modal submitKeepOpen="submit-keep-open">
+                      <span slot="submit"> ${"Create"} </span>
+                      <span slot="submit-keep-open"> ${"Create & stay open"} </span>
+                      <span slot="header"> ${"Create Record"} </span>
+                      <gravity-dns-record-form
+                          zone=${ifDefined(this.zone)}
+                          slot="form"
+                          recordType=${this.isReverseZone ? "PTR" : "A"}
+                      >
+                      </gravity-dns-record-form>
+                      <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
+                  </ak-forms-modal>
+              `
+            : html``;
     }
 
     renderEmpty(inner?: TemplateResult): TemplateResult {
@@ -157,7 +159,13 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                           : "Zone cannot store records."}"
                   >
                       <div slot="body">
-                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : html``}
+                          ${this.zoneCanStoreRecords
+                              ? nothing
+                              : html`<span
+                                    >Zone is not configured with an <code>etcd</code> handler and
+                                    cannot store records.</span
+                                >`}
+                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : nothing}
                       </div>
                       <div slot="primary">
                           ${this.zoneCanStoreRecords ? this.renderObjectCreate() : nothing}
