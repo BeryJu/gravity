@@ -53,7 +53,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
         return html`
             ${this.instance
                 ? html``
-                : html` <ak-form-element-horizontal label="Name" ?required=${true} name="name">
+                : html` <ak-form-element-horizontal label="Name" required name="name">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal name="authoritative">
@@ -66,7 +66,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                     <label class="pf-c-check__label"> ${"Authoritative"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Default TTL" ?required=${true} name="defaultTTL">
+            <ak-form-element-horizontal label="Default TTL" required name="defaultTTL">
                 <input
                     type="number"
                     value="${this.instance?.defaultTTL || 0}"
@@ -85,10 +85,24 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                     )}"
                 >
                 </ak-codemirror>
+                <p class="pf-c-form__helper-text">
+                    Configure where requests to this zone will be routed to and how they should be
+                    answered.
+                    <a href="https://gravity.beryju.io/docs/dns/zones/#handlers" target="_blank"
+                        >Documentation</a
+                    >
+                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Hook"} name="hook">
                 <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
                 </ak-codemirror>
+                <p class="pf-c-form__helper-text">
+                    Dynamically alter the DNS request/response after it is received and before it is
+                    sent.
+                    <a href="https://gravity.beryju.io/docs/dns/hooks/" target="_blank"
+                        >Documentation</a
+                    >
+                </p>
             </ak-form-element-horizontal>
         `;
     }

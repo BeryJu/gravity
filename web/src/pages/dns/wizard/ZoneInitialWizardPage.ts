@@ -40,7 +40,7 @@ export class ZoneInitialWizardPage extends WizardFormPage {
     };
 
     renderForm(): TemplateResult {
-        return html`<ak-form-element-horizontal label=${"Name"} ?required=${true} name="name">
+        return html`<ak-form-element-horizontal label=${"Name"} required name="name">
                 <input type="text" value="" class="pf-c-form-control" required />
                 <p class="pf-c-form__helper-text">
                     The zone name specifies which DNS namespace this zone is responsible for. This

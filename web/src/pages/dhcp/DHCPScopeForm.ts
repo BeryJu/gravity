@@ -59,10 +59,10 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     renderForm(): TemplateResult {
         return html` ${this.instance
                 ? html``
-                : html`<ak-form-element-horizontal label="Name" ?required=${true} name="scope">
+                : html`<ak-form-element-horizontal label="Name" required name="scope">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
-            <ak-form-element-horizontal label="Subnet CIDR" ?required=${true} name="subnetCidr">
+            <ak-form-element-horizontal label="Subnet CIDR" required name="subnetCidr">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.subnetCidr)}"
@@ -100,7 +100,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     determined.
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="TTL" ?required=${true} name="ttl">
+            <ak-form-element-horizontal label="TTL" required name="ttl">
                 <input
                     type="number"
                     value="${this.instance?.ttl || 86400}"
@@ -109,12 +109,12 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 />
                 <p class="pf-c-form__helper-text">Default TTL of leases, in seconds.</p>
             </ak-form-element-horizontal>
-            <ak-form-group ?expanded=${true}>
+            <ak-form-group expanded>
                 <span slot="header">IPAM</span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label="IP Range Start"
-                        ?required=${true}
+                        required
                         name="ipam.range_start"
                     >
                         <input
@@ -125,11 +125,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         />
                         <p class="pf-c-form__helper-text">Start of the IP range, inclusive.</p>
                     </ak-form-element-horizontal>
-                    <ak-form-element-horizontal
-                        label="IP Range End"
-                        ?required=${true}
-                        name="ipam.range_end"
-                    >
+                    <ak-form-element-horizontal label="IP Range End" required name="ipam.range_end">
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.ipam?.range_end)}"
@@ -166,10 +162,23 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                             value="${YAML.stringify(this.instance?.options)}"
                         >
                         </ak-codemirror>
+                        <p class="pf-c-form__helper-text">
+                            Add additional DHCP options
+                            <a href="https://gravity.beryju.io/docs/dhcp/options/" target="_blank"
+                                >Documentation</a
+                            >
+                        </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal label=${"Hook"} name="hook">
                         <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
                         </ak-codemirror>
+                        <p class="pf-c-form__helper-text">
+                            Dynamically alter the DHCP request/response after it is received and
+                            before it is sent.
+                            <a href="https://gravity.beryju.io/docs/dhcp/hooks/" target="_blank"
+                                >Documentation</a
+                            >
+                        </p>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;

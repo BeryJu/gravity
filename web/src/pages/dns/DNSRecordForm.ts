@@ -1,6 +1,6 @@
 import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
 
-import { TemplateResult, html } from "lit";
+import { TemplateResult, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -66,21 +66,29 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 return "SRV Target";
             case "MX":
                 return "Mail server";
+            case "AAAA":
+            case "A":
+                return "IP Address";
             default:
                 return "Data";
         }
     }
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="Hostname" ?required=${true} name="hostname">
-                <input
-                    type="text"
-                    value="${ifDefined(this.instance?.hostname)}"
-                    class="pf-c-form-control"
-                    required
-                />
+        return html` <ak-form-element-horizontal label="Hostname" required name="hostname">
+                <div class="pf-c-input-group">
+                    <input
+                        type="text"
+                        value="${ifDefined(this.instance?.hostname)}"
+                        class="pf-c-form-control"
+                        required
+                    />
+                    ${this.zone !== "."
+                        ? html`<span class="pf-c-input-group__text">.${this.zone}</span>`
+                        : nothing}
+                </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="UID" ?required=${true} name="uid">
+            <ak-form-element-horizontal label="UID" required name="uid">
                 <input
                     type="number"
                     value="${this.instance?.uid || 0}"
@@ -91,7 +99,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     Unique identifier to configure multiple records for the same hostname.
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Type" ?required=${true} name="type">
+            <ak-form-element-horizontal label="Type" required name="type">
                 <select
                     class="pf-c-form-control"
                     @change=${(ev: Event) => {
@@ -109,7 +117,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     <option value="TXT" ?selected=${this.recordType === "TXT"}>TXT</option>
                 </select>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="${this.getLabel()}" ?required=${true} name="data">
+            <ak-form-element-horizontal label="${this.getLabel()}" required name="data">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.data)}"
@@ -121,7 +129,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 ? html`
                       <ak-form-element-horizontal
                           label="MX Preference"
-                          ?required=${true}
+                          required
                           name="mxPreference"
                       >
                           <input
@@ -135,7 +143,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 : html``}
             ${this.recordType === "SRV"
                 ? html`
-                      <ak-form-element-horizontal label="SRV Port" ?required=${true} name="srvPort">
+                      <ak-form-element-horizontal label="SRV Port" required name="srvPort">
                           <input
                               type="number"
                               value="${ifDefined(this.instance?.srvPort)}"
@@ -143,11 +151,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                               required
                           />
                       </ak-form-element-horizontal>
-                      <ak-form-element-horizontal
-                          label="SRV Priority"
-                          ?required=${true}
-                          name="srvPriority"
-                      >
+                      <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
                           <input
                               type="number"
                               value="${ifDefined(this.instance?.srvPriority)}"
@@ -155,11 +159,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                               required
                           />
                       </ak-form-element-horizontal>
-                      <ak-form-element-horizontal
-                          label="SRV Weight"
-                          ?required=${true}
-                          name="srvWeight"
-                      >
+                      <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
                           <input
                               type="number"
                               value="${ifDefined(this.instance?.srvWeight)}"

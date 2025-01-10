@@ -49,11 +49,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
     renderForm(): TemplateResult {
         return html` ${this.instance
                 ? html``
-                : html`<ak-form-element-horizontal
-                      label="Username"
-                      ?required=${true}
-                      name="username"
-                  >
+                : html`<ak-form-element-horizontal label="Username" required name="username">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
             <ak-form-element-horizontal

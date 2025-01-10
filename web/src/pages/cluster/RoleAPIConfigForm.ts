@@ -40,7 +40,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
     };
 
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="Port" ?required=${true} name="port">
+        return html` <ak-form-element-horizontal label="Port" required name="port">
                 <input
                     type="number"
                     value="${first(this.instance?.port, 8008)}"
@@ -48,7 +48,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Cookie Secret" ?required=${true} name="cookieSecret">
+            <ak-form-element-horizontal label="Cookie Secret" required name="cookieSecret">
                 <input
                     type="text"
                     value="${ifDefined(this.instance?.cookieSecret)}"
@@ -59,7 +59,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal
                 label="Session Duration"
-                ?required=${true}
+                required
                 name="sessionDuration"
                 helperText="Duration for which a session is valid for."
             >
@@ -69,10 +69,10 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            <ak-form-group ?expanded=${true}>
+            <ak-form-group expanded>
                 <span slot="header">OIDC</span>
                 <div slot="body" class="pf-c-form">
-                    <ak-form-element-horizontal label="Issuer" ?required=${true} name="oidc.issuer">
+                    <ak-form-element-horizontal label="Issuer" required name="oidc.issuer">
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.issuer)}"
@@ -84,11 +84,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             "".well-known/openid-configuration" suffix is removed.
                         </p>
                     </ak-form-element-horizontal>
-                    <ak-form-element-horizontal
-                        label="Client ID"
-                        ?required=${true}
-                        name="oidc.clientID"
-                    >
+                    <ak-form-element-horizontal label="Client ID" required name="oidc.clientID">
                         <input
                             type="text"
                             value="${ifDefined(this.instance?.oidc?.clientID)}"
@@ -98,7 +94,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Client Secret"
-                        ?required=${true}
+                        required
                         name="oidc.clientSecret"
                     >
                         <input
@@ -110,7 +106,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Redirect URL"
-                        ?required=${true}
+                        required
                         name="oidc.redirectURL"
                     >
                         <input
@@ -128,11 +124,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             instance's name and '$INSTANCE_IP' will be replaced by the instances IP.
                         </p>
                     </ak-form-element-horizontal>
-                    <ak-form-element-horizontal
-                        label="Scopes"
-                        ?required=${true}
-                        name="oidc.scopesList"
-                    >
+                    <ak-form-element-horizontal label="Scopes" required name="oidc.scopesList">
                         <input
                             type="text"
                             value="${first(
@@ -148,7 +140,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label="Token username field"
-                        ?required=${true}
+                        required
                         name="oidc.tokenUsernameField"
                         helperText="Field in JWT tokens used to lookup user when using Token API authentication."
                     >

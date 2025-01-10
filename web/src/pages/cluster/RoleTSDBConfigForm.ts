@@ -42,7 +42,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
                     <label class="pf-c-check__label"> ${"Enabled"} </label>
                 </div>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Metrics expiry" ?required=${true} name="expire">
+            <ak-form-element-horizontal label="Metrics expiry" required name="expire">
                 <input
                     type="number"
                     value="${first(this.instance?.expire, 60 * 30)}"
@@ -53,7 +53,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
                     Time in seconds before oldest metrics are deleted. Defaults to 30 minutes.
                 </p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Scrape interval" ?required=${true} name="scrape">
+            <ak-form-element-horizontal label="Scrape interval" required name="scrape">
                 <input
                     type="number"
                     value="${first(this.instance?.scrape, 30)}"
