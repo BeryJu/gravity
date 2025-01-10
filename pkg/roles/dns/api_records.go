@@ -15,6 +15,8 @@ import (
 type APIRecordsGetInput struct {
 	Zone     string `query:"zone"`
 	Hostname string `query:"hostname" description:"Optionally get DNS Records for hostname"`
+	Type     string `query:"type"`
+	UID      string `query:"uid"`
 }
 type APIRecord struct {
 	UID      string `json:"uid" required:"true"`
@@ -52,10 +54,17 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 			types.KeyZones,
 			zone.Name,
 		)
-		if input.Hostname == "" {
-			recordKey = recordKey.Prefix(true)
-		} else {
+		if input.Hostname != "" {
 			recordKey = recordKey.Add(input.Hostname).Prefix(true)
+		}
+		if input.Type != "" {
+			recordKey = recordKey.Add(strings.ToUpper(input.Type)).Prefix(true)
+		}
+		if input.UID != "" {
+			recordKey = recordKey.Add(input.UID).Prefix(true)
+		}
+		if input.Hostname == "" && input.Type == "" && input.UID == "" {
+			recordKey = recordKey.Prefix(true)
 		}
 		rawRecords, err := r.i.KV().Get(ctx, recordKey.String(), clientv3.WithPrefix())
 		if err != nil {
