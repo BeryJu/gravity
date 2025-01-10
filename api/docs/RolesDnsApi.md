@@ -147,7 +147,7 @@ No authorization required
 
 ## DnsGetRecords
 
-> DnsAPIRecordsGetOutput DnsGetRecords(ctx).Zone(zone).Hostname(hostname).Execute()
+> DnsAPIRecordsGetOutput DnsGetRecords(ctx).Zone(zone).Hostname(hostname).Type_(type_).Uid(uid).Execute()
 
 DNS Records
 
@@ -166,10 +166,12 @@ import (
 func main() {
     zone := "zone_example" // string |  (optional)
     hostname := "hostname_example" // string | Optionally get DNS Records for hostname (optional)
+    type_ := "type__example" // string |  (optional)
+    uid := "uid_example" // string |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDnsApi.DnsGetRecords(context.Background()).Zone(zone).Hostname(hostname).Execute()
+    resp, r, err := apiClient.RolesDnsApi.DnsGetRecords(context.Background()).Zone(zone).Hostname(hostname).Type_(type_).Uid(uid).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsGetRecords``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -192,6 +194,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **zone** | **string** |  | 
  **hostname** | **string** | Optionally get DNS Records for hostname | 
+ **type_** | **string** |  | 
+ **uid** | **string** |  | 
 
 ### Return type
 

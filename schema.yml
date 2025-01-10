@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.21.1
+  version: 0.22.0
 paths:
   /api/v1/auth/config:
     get:
@@ -920,6 +920,14 @@ paths:
         name: hostname
         schema:
           description: Optionally get DNS Records for hostname
+          type: string
+      - in: query
+        name: type
+        schema:
+          type: string
+      - in: query
+        name: uid
+        schema:
           type: string
       responses:
         "200":
