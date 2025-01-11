@@ -44,6 +44,9 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
+		if len(rawZone.Kvs) < 1 {
+			return status.NotFound
+		}
 		zone, err := r.zoneFromKV(rawZone.Kvs[0])
 		if err != nil {
 			return status.Wrap(err, status.Internal)
