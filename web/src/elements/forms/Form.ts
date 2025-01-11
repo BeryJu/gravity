@@ -108,6 +108,25 @@ export function serializeForm<T extends KeyUnknown>(
     return json as unknown as T;
 }
 
+export function formFiles(elements: NodeListOf<HorizontalFormElement>): { [key: string]: File } {
+    const files: { [key: string]: File } = {};
+    for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        element.requestUpdate();
+        const inputElement = element.querySelector<HTMLInputElement>("[name]");
+        if (!inputElement) {
+            continue;
+        }
+        if (inputElement.tagName.toLowerCase() === "input" && inputElement.type === "file") {
+            if ((inputElement.files || []).length < 1) {
+                continue;
+            }
+            files[element.name] = (inputElement.files || [])[0];
+        }
+    }
+    return files;
+}
+
 @customElement("ak-form")
 export class Form<T> extends AKElement {
     viewportCheck = true;
@@ -171,26 +190,13 @@ export class Form<T> extends AKElement {
      * Consider moving this functionality to there.
      */
     getFormFiles(): { [key: string]: File } {
-        const files: { [key: string]: File } = {};
-        const elements =
-            this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
-                "ak-form-element-horizontal",
-            ) || [];
-        for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            element.requestUpdate();
-            const inputElement = element.querySelector<HTMLInputElement>("[name]");
-            if (!inputElement) {
-                continue;
-            }
-            if (inputElement.tagName.toLowerCase() === "input" && inputElement.type === "file") {
-                if ((inputElement.files || []).length < 1) {
-                    continue;
-                }
-                files[element.name] = (inputElement.files || [])[0];
-            }
+        const elements = this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
+            "ak-form-element-horizontal",
+        );
+        if (!elements) {
+            return {};
         }
-        return files;
+        return formFiles(elements);
     }
 
     submit(ev: Event): Promise<unknown> | undefined {
