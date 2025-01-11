@@ -3,9 +3,11 @@ package dns
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 	"strings"
 
+	"beryju.io/gravity/pkg/convert/bind"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/swaggest/usecase"
@@ -145,6 +147,44 @@ func (r *Role) APIZonesDelete() usecase.Interactor {
 		return nil
 	})
 	u.SetName("dns.delete_zones")
+	u.SetTitle("DNS Zones")
+	u.SetTags("roles/dns")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}
+
+type APIZonesImportInput struct {
+	Type    string `json:"type" enum:"bind"`
+	Payload string `json:"payload"`
+	Zone    string `query:"zone"`
+}
+
+type APIZonesImportOutput struct{}
+
+type DNSImporter interface {
+	Run(ctx context.Context) error
+}
+
+func (r *Role) APIZonesImport() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesImportInput, output *APIZonesImportOutput) error {
+		var converter DNSImporter
+		var err error
+		switch input.Type {
+		case "bind":
+			converter, err = bind.New(nil, input.Payload)
+		default:
+			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
+		}
+		if err != nil {
+			return status.Wrap(err, status.InvalidArgument)
+		}
+		err = converter.Run(ctx)
+		if err != nil {
+			return status.Wrap(err, status.InvalidArgument)
+		}
+		return nil
+	})
+	u.SetName("dns.import_zones")
 	u.SetTitle("DNS Zones")
 	u.SetTags("roles/dns")
 	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
