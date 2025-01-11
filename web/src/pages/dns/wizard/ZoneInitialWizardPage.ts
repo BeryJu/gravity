@@ -1,4 +1,4 @@
-import { DnsAPIZone, RolesDnsApi } from "gravity-api";
+import { DnsAPIZonesPutInput, RolesDnsApi } from "gravity-api";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
@@ -18,11 +18,10 @@ export class ZoneInitialWizardPage extends WizardFormPage {
         if (!name.endsWith(".")) {
             name += ".";
         }
-        const zone: DnsAPIZone = {
+        const zone: DnsAPIZonesPutInput = {
             authoritative: data.authoritative as boolean,
             handlerConfigs: [],
             defaultTTL: 86400,
-            name: name,
             hook: "",
         };
         this.host.state["handlerConfigs"] = [];
@@ -31,9 +30,10 @@ export class ZoneInitialWizardPage extends WizardFormPage {
                 [key: string]: string;
             }[];
             this.host.state["zone"] = await new RolesDnsApi(DEFAULT_CONFIG).dnsPutZones({
-                zone: zone.name,
+                zone: name,
                 dnsAPIZonesPutInput: zone,
             });
+            this.host.state["name"] = name;
             return true;
         });
         return true;

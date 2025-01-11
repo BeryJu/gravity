@@ -66,6 +66,7 @@ func New(instance roles.Instance) *Role {
 	}).Handle)
 	r.m.Use(r.SessionMiddleware)
 	r.m.Use(NewLoggingMiddleware(r.log, nil))
+	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)

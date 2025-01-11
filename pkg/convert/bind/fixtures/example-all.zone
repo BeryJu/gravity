@@ -1,0 +1,18 @@
+; example from https://bind9.readthedocs.io/en/v9.18.14/chapter3.html
+; modified to include all record types gravity supports
+;
+; base zone file for example.com
+$TTL 2d    ; default TTL for zone
+$ORIGIN example.com. ; base domain-name
+; Start of Authority RR defining the key characteristics of the zone (domain)
+@         IN      SOA   ns1.example.com. hostmaster.example.com. (
+                                2003080800 ; serial number
+                                12h        ; refresh
+                                15m        ; update retry
+                                3w         ; expiry
+                                2h         ; minimum
+                                )
+mail       IN      A       192.168.254.4
+mail       IN      AAAA    2001:db8:3333:4444:5555:6666:7777:8888
+@          IN      TXT     foo
+_sip._udp  IN      SRV     10 100 5060 fs1.example.com.

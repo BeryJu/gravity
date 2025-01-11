@@ -860,6 +860,41 @@ paths:
       summary: DNS Zones
       tags:
       - roles/dns
+  /api/v1/dns/zones/import:
+    post:
+      operationId: dns.import_zones
+      parameters:
+      - in: query
+        name: zone
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnsAPIZonesImportInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsAPIZonesImportOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DNS Zones
+      tags:
+      - roles/dns
   /api/v1/dns/zones/records:
     delete:
       operationId: dns.delete_records
@@ -2339,6 +2374,20 @@ components:
           type: array
       required:
       - zones
+      type: object
+    DnsAPIZonesImportInput:
+      properties:
+        payload:
+          type: string
+        type:
+          enum:
+          - bind
+          type: string
+      type: object
+    DnsAPIZonesImportOutput:
+      properties:
+        successful:
+          type: boolean
       type: object
     DnsAPIZonesPutInput:
       properties:

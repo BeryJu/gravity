@@ -62,6 +62,18 @@ export class ZonePresetWizardPage extends WizardPage {
                 ];
             },
         },
+        {
+            components: ["gravity-dns-wizard-import"],
+            name: "Import",
+            description: "Import DNS records from various different formats.",
+            callback: (host: Wizard) => {
+                host.state["handlerConfigs"] = [
+                    {
+                        type: "etcd",
+                    },
+                ];
+            },
+        },
     ];
 
     sidebarLabel = () => "Zone configuration preset";

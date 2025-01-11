@@ -14,8 +14,6 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-const TXTSeparator = "\n"
-
 type Record struct {
 	inst roles.Instance
 	zone *Zone
@@ -147,7 +145,7 @@ func (r *Record) ToDNS(qname string) dns.RR {
 	case dns.TypeTXT:
 		rr = &dns.TXT{
 			Hdr: hdr,
-			Txt: strings.Split(r.Data, TXTSeparator),
+			Txt: strings.Split(r.Data, types.TXTSeparator),
 		}
 	}
 	return rr

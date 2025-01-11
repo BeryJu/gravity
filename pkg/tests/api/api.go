@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"beryju.io/gravity/api"
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	roleAPI "beryju.io/gravity/pkg/roles/api"
 	"beryju.io/gravity/pkg/roles/api/auth"
@@ -52,6 +53,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 	config.Scheme = "http"
 	config.Host = "localhost:8008"
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
+	config.UserAgent = fmt.Sprintf("gravity-testing/%s", extconfig.FullVersion())
 	return api.NewAPIClient(config), func() {
 		role.Stop()
 	}

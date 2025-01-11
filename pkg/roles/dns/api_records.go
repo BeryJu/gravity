@@ -124,6 +124,9 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
+		if len(rawZone.Kvs) < 1 {
+			return status.NotFound
+		}
 		zone, err := r.zoneFromKV(rawZone.Kvs[0])
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -167,6 +170,9 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 		).String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
+		}
+		if len(rawZone.Kvs) < 1 {
+			return status.NotFound
 		}
 		_, err = r.zoneFromKV(rawZone.Kvs[0])
 		if err != nil {
