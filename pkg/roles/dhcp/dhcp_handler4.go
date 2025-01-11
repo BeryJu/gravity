@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"strings"
@@ -9,12 +10,13 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
-	"github.com/google/uuid"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
 )
+
+var ErrNilResponse = errors.New("no DHCP response")
 
 // Credit to CoreDHCP
 // https://github.com/coredhcp/coredhcp/blob/master/server/handle.go
@@ -34,51 +36,6 @@ const MaxDatagram = 1 << 16
 
 type Handler4 func(req *Request4) *dhcpv4.DHCPv4
 
-type Request4 struct {
-	*dhcpv4.DHCPv4
-	peer      net.Addr
-	log       *zap.Logger
-	Context   context.Context
-	oob       *ipv4.ControlMessage
-	requestId string
-}
-
-type contextRequestID struct{}
-
-func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
-	requestId := fmt.Sprintf("%s-%s", uuid.New().String(), dhcp.TransactionID.String())
-	return &Request4{
-		DHCPv4:    dhcp,
-		Context:   context.WithValue(r.ctx, contextRequestID{}, requestId),
-		peer:      &net.UDPAddr{},
-		log:       r.log.With(zap.String("request", requestId)),
-		requestId: requestId,
-	}
-}
-
-// Use the instance ip unless the the interface is not bound
-func (req *Request4) LocalIP() string {
-	ip := extconfig.Get().Instance.IP
-	if req.oob != nil {
-		ief, err := net.InterfaceByIndex(req.oob.IfIndex)
-		if err != nil {
-			return ip
-		}
-		addrs, err := ief.Addrs()
-		if err != nil {
-			return ip
-		}
-		for _, addr := range addrs {
-			if ipv4Addr := addr.(*net.IPNet).IP.To4(); ipv4Addr != nil {
-				ip = ipv4Addr.String()
-				req.log.Debug("Unbound interface found", zap.String("ifname", ief.Name), zap.String("ip", ip))
-				return ip
-			}
-		}
-	}
-	return ip
-}
-
 func (h *handler4) Serve() error {
 	for {
 		b := *bufpool.Get().(*[]byte)
@@ -88,25 +45,26 @@ func (h *handler4) Serve() error {
 		if err != nil {
 			return err
 		}
-		go h.handle(b[:n], oob, peer.(*net.UDPAddr))
+		go func(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) {
+			_ = h.Handle(buf, oob, peer)
+		}(b[:n], oob, peer.(*net.UDPAddr))
 	}
 }
 
-func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) {
+func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) error {
 	if extconfig.Get().ListenOnlyMode {
-		return
+		return nil
 	}
 	context, canc := context.WithCancel(h.role.ctx)
 	defer canc()
 	m, err := dhcpv4.FromBytes(buf)
 	bufpool.Put(&buf)
 	if err != nil {
-		h.role.log.Info("Error parsing DHCPv4 request", zap.Error(err))
-		return
+		return fmt.Errorf("error parsing dhcpv4 request: %w", err)
 	}
 
 	r := h.role.NewRequest4(m)
-	r.peer = _peer
+	r.peer = peer
 	r.Context = context
 	r.oob = oob
 
@@ -120,65 +78,70 @@ func (h *handler4) handle(buf []byte, oob *ipv4.ControlMessage, _peer net.Addr) 
 	}
 	hub.Scope().SetUser(sentry.User{
 		Username:  m.HostName(),
-		IPAddress: strings.Split(_peer.String(), ":")[0],
+		IPAddress: strings.Split(peer.String(), ":")[0],
 	})
 
 	span.Description = m.MessageType().String()
 	defer span.Finish()
 	resp := h.HandleRequest(r)
 
-	if resp != nil {
-		h.role.logDHCPMessage(r, resp, []zapcore.Field{})
-		useEthernet := false
-		var peer *net.UDPAddr
-		if !r.GatewayIPAddr.IsUnspecified() {
-			peer = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
-		} else if resp.MessageType() == dhcpv4.MessageTypeNak {
-			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
-		} else if !r.ClientIPAddr.IsUnspecified() {
-			peer = &net.UDPAddr{IP: r.ClientIPAddr, Port: dhcpv4.ClientPort}
-		} else if r.IsBroadcast() {
-			peer = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
-		} else {
-			// sends a layer2 frame so that we can define the destination MAC address
-			peer = &net.UDPAddr{IP: resp.YourIPAddr, Port: dhcpv4.ClientPort}
-			useEthernet = true
-		}
+	if resp == nil {
+		r.log.Debug("handler4: dropping request because response is nil")
+		return ErrNilResponse
+	}
 
-		var woob *ipv4.ControlMessage
-		if peer.IP.Equal(net.IPv4bcast) || peer.IP.IsLinkLocalUnicast() || useEthernet {
-			// Direct broadcasts, link-local and layer2 unicasts to the interface the ruest was
-			// received on. Other packets should use the normal routing table in
-			// case of asymetric routing
-			switch {
-			case h.iface.Index != 0:
-				woob = &ipv4.ControlMessage{IfIndex: h.iface.Index}
-			case r.oob != nil && r.oob.IfIndex != 0:
-				woob = &ipv4.ControlMessage{IfIndex: r.oob.IfIndex}
-			default:
-				r.log.Error("HandleMsg4: Did not receive interface information")
-			}
-		}
+	h.role.logDHCPMessage(r, resp, []zapcore.Field{})
+	useEthernet := false
+	var p *net.UDPAddr
+	if !r.GatewayIPAddr.IsUnspecified() {
+		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
+	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
+		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
+	} else if !r.ClientIPAddr.IsUnspecified() {
+		p = &net.UDPAddr{IP: r.ClientIPAddr, Port: dhcpv4.ClientPort}
+	} else if r.IsBroadcast() {
+		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
+	} else {
+		// sends a layer2 frame so that we can define the destination MAC address
+		p = &net.UDPAddr{IP: resp.YourIPAddr, Port: dhcpv4.ClientPort}
+		useEthernet = true
+	}
 
-		if useEthernet {
-			r.log.Debug("sending via ethernet")
-			intf, err := net.InterfaceByIndex(woob.IfIndex)
-			if err != nil {
-				r.log.Error("handler4: Can not get Interface for index", zap.Error(err), zap.Int("index", woob.IfIndex))
-				return
-			}
-			err = h.sendEthernet(*intf, resp)
-			if err != nil {
-				r.log.Error("handler4: Cannot send Ethernet packet", zap.Error(err))
-			}
-		} else {
-			if _, err := h.pc.WriteTo(resp.ToBytes(), woob, peer); err != nil {
-				r.log.Error("handler4: conn.Write failed", zap.Error(err), zap.String("peer", peer.String()))
-			}
+	var woob *ipv4.ControlMessage
+	if p.IP.Equal(net.IPv4bcast) || p.IP.IsLinkLocalUnicast() || useEthernet {
+		// Direct broadcasts, link-local and layer2 unicasts to the interface the ruest was
+		// received on. Other packets should use the normal routing table in
+		// case of asymetric routing
+		switch {
+		case h.iface.Index != 0:
+			woob = &ipv4.ControlMessage{IfIndex: h.iface.Index}
+		case r.oob != nil && r.oob.IfIndex != 0:
+			woob = &ipv4.ControlMessage{IfIndex: r.oob.IfIndex}
+		default:
+			r.log.Error("HandleMsg4: Did not receive interface information")
+		}
+	}
+
+	if useEthernet {
+		r.log.Debug("sending via ethernet")
+		intf, err := net.InterfaceByIndex(woob.IfIndex)
+		if err != nil {
+			r.log.Error("handler4: Can not get Interface for index", zap.Error(err), zap.Int("index", woob.IfIndex))
+			return fmt.Errorf("handler4: Can not get Interface for index: %w", err)
+		}
+		err = h.sendEthernet(*intf, resp)
+		if err != nil {
+			r.log.Error("handler4: Cannot send Ethernet packet", zap.Error(err))
+			return fmt.Errorf("handler4: Cannot send Ethernet packet: %w", err)
 		}
 	} else {
-		r.log.Debug("handler4: dropping request because response is nil")
+		_, err := h.pc.WriteTo(resp.ToBytes(), woob, p)
+		if err != nil {
+			r.log.Error("handler4: conn.Write failed", zap.Error(err), zap.String("peer", p.String()))
+			return fmt.Errorf("handler4: failed to write response: %w", err)
+		}
 	}
+	return nil
 }
 
 func (h *handler4) HandleRequest(r *Request4) *dhcpv4.DHCPv4 {

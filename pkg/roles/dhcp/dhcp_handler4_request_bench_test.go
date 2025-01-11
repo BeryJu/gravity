@@ -90,6 +90,6 @@ func BenchmarkRoleDHCP_Request(b *testing.B) {
 		}
 		rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))
 		req4 := role.NewRequest4(rr)
-		_ = role.Handler4(req4)
+		_ = role.Handle4(req4)
 	}
 }
