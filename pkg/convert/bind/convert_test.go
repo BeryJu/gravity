@@ -153,13 +153,16 @@ func TestBindImport(t *testing.T) {
 	for _, file := range cases {
 		t.Run(file.file, func(t *testing.T) {
 			// Clean etcd before testing so we can debug easier
-			ri.KV().Delete(ctx, ri.KV().Key(
+			_, err := ri.KV().Delete(ctx, ri.KV().Key(
 				types.KeyRole,
 				types.KeyZones,
 			).Prefix(true).String(), clientv3.WithPrefix())
+			assert.NoError(t, err)
+
 			x, err := os.Open(file.file)
 			assert.NoError(t, err)
 			defer x.Close()
+
 			c, err := bind.New(api, x)
 			assert.NoError(t, err)
 			assert.NoError(t, c.Run(ctx))
