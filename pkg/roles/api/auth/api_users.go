@@ -100,7 +100,7 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 				return status.Wrap(err, status.Internal)
 			}
 			user.Password = string(hash)
-		} else {
+		} else if oldUser != nil {
 			user.Password = oldUser.Password
 		}
 		err = user.put(ctx)

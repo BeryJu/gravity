@@ -24,7 +24,7 @@ func (ap *AuthProvider) checkPermission(req *http.Request, u User) bool {
 		return false
 	}
 	for _, meth := range longestMatch.Methods {
-		if strings.EqualFold(meth, req.Method) {
+		if strings.EqualFold(meth, req.Method) || meth == wildcard {
 			return true
 		}
 	}

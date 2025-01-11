@@ -45,4 +45,12 @@ func TestPermission_Wildcard(t *testing.T) {
 			},
 		},
 	}))
+	assert.True(t, ap.checkPermission(mustRequest("get", "/foo/bar"), User{
+		Permissions: []Permission{
+			{
+				Path:    "/foo/*",
+				Methods: []string{"*"},
+			},
+		},
+	}))
 }
