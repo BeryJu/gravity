@@ -35,6 +35,6 @@ module:
     - path: github.com/google/docsy/dependencies
       disable: false
 imaging:
-  resampleFilter: catmullRom
+  resampleFilter: CatmullRom
   quality: 75
   anchor: Smart
