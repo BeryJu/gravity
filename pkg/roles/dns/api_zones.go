@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/convert/bind"
+	apiUtils "beryju.io/gravity/pkg/roles/api/utils"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/swaggest/usecase"
@@ -159,7 +160,9 @@ type APIZonesImportInput struct {
 	Zone    string `query:"zone"`
 }
 
-type APIZonesImportOutput struct{}
+type APIZonesImportOutput struct {
+	Successful bool `json:"successful"`
+}
 
 type DNSImporter interface {
 	Run(ctx context.Context) error
@@ -169,9 +172,13 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIZonesImportInput, output *APIZonesImportOutput) error {
 		var converter DNSImporter
 		var err error
+		ac := apiUtils.APIClientFromRequest(ctx)
+		if ac == nil {
+			return status.Wrap(err, status.Internal)
+		}
 		switch input.Type {
 		case "bind":
-			converter, err = bind.New(nil, input.Payload)
+			converter, err = bind.New(ac, input.Payload)
 		default:
 			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
 		}
@@ -182,6 +189,7 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.InvalidArgument)
 		}
+		output.Successful = true
 		return nil
 	})
 	u.SetName("dns.import_zones")
