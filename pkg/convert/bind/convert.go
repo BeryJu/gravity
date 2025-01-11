@@ -20,12 +20,28 @@ type Converter struct {
 	zone string
 }
 
-func New(api *api.APIClient, input string) (*Converter, error) {
-	return &Converter{
+type ConverterOption struct {
+	apply func(*Converter)
+}
+
+func WithExistingZone(name string) ConverterOption {
+	return ConverterOption{
+		apply: func(c *Converter) {
+			c.zone = name
+		},
+	}
+}
+
+func New(api *api.APIClient, input string, options ...ConverterOption) (*Converter, error) {
+	conv := &Converter{
 		a: api,
 		i: input,
 		l: extconfig.Get().Logger().Named("convert.bind"),
-	}, nil
+	}
+	for _, opt := range options {
+		opt.apply(conv)
+	}
+	return conv, nil
 }
 
 func (c *Converter) Run(ctx context.Context) error {
@@ -43,11 +59,13 @@ func (c *Converter) Run(ctx context.Context) error {
 	}
 
 	// First create zone
-	for _, rr := range records {
-		if rr.Header().Rrtype == dns.TypeSOA {
-			err := c.createZone(rr, ctx)
-			if err != nil {
-				return err
+	if c.zone == "" {
+		for _, rr := range records {
+			if rr.Header().Rrtype == dns.TypeSOA {
+				err := c.createZone(rr, ctx)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

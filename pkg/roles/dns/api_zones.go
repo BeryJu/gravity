@@ -178,7 +178,7 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 		}
 		switch input.Type {
 		case "bind":
-			converter, err = bind.New(ac, input.Payload)
+			converter, err = bind.New(ac, input.Payload, bind.WithExistingZone(input.Zone))
 		default:
 			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
 		}
