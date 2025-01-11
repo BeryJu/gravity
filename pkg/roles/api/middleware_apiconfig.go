@@ -16,8 +16,11 @@ func NewAPIConfigMiddleware() func(h http.Handler) http.Handler {
 			c := api.NewConfiguration()
 			c.AddDefaultHeader("Authorization", r.Header.Get("Authorization"))
 			c.AddDefaultHeader("Cookie", r.Header.Get("Cookie"))
-			c.Host = r.URL.Host
-			c.Scheme = r.URL.Scheme
+			c.Host = r.Host
+			c.Scheme = "http"
+			if r.TLS != nil {
+				c.Scheme = "https"
+			}
 			c.UserAgent = r.Header.Get("User-Agent")
 			nr := r.WithContext(context.WithValue(r.Context(), utils.ContextKeyAPIConfig, c))
 			h.ServeHTTP(w, nr)
