@@ -8,6 +8,7 @@ import { KeyUnknown } from "../../../elements/forms/Form";
 import "../../../elements/forms/FormGroup";
 import "../../../elements/forms/HorizontalFormElement";
 import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
+import { convertToTitle } from "../../../common/utils";
 
 @customElement("gravity-dns-wizard-import")
 export class ZoneImportWizardPage extends WizardFormPage {
@@ -46,22 +47,22 @@ export class ZoneImportWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label="Type" required name="type">
-                ${["bind"].map((type, idx) => {
+                ${["bind"].map((type) => {
                     return html`<div class="pf-c-radio">
                         <input
                             class="pf-c-radio__input"
                             type="radio"
                             name="type"
-                            ?checked=${idx === 0}
                             id=${type}
+                            value=${type}
                         />
-                        <label class="pf-c-radio__label" for=${type}>${type}</label>
+                        <label class="pf-c-radio__label" for=${type}>${convertToTitle(type)}</label>
                     </div>`;
                 })}
                 <p class="pf-c-form__helper-text">Format of the data to import</p>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="File" name="file">
-                <input type="file" value="" class="pf-c-form-control" />
+            <ak-form-element-horizontal label="File" name="file" required>
+                <input type="file" value="" class="pf-c-form-control" required />
                 <p class="pf-c-form__helper-text">File to import</p>
             </ak-form-element-horizontal>`;
     }

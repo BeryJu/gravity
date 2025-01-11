@@ -1,6 +1,7 @@
 package bind_test
 
 import (
+	"os"
 	"testing"
 
 	"beryju.io/gravity/pkg/convert/bind"
@@ -151,8 +152,10 @@ func TestBindImport(t *testing.T) {
 				types.KeyRole,
 				types.KeyZones,
 			).Prefix(true).String(), clientv3.WithPrefix())
-
-			c, err := bind.New(api, file.file)
+			x, err := os.Open(file.file)
+			assert.NoError(t, err)
+			defer x.Close()
+			c, err := bind.New(api, x)
 			assert.NoError(t, err)
 			assert.NoError(t, c.Run(ctx))
 			for _, kv := range file.kv {

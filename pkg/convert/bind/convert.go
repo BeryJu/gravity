@@ -2,7 +2,7 @@ package bind
 
 import (
 	"context"
-	"os"
+	"io"
 	"strings"
 
 	"beryju.io/gravity/api"
@@ -16,7 +16,7 @@ import (
 type Converter struct {
 	a    *api.APIClient
 	l    *zap.Logger
-	i    string
+	i    io.Reader
 	zone string
 }
 
@@ -32,7 +32,7 @@ func WithExistingZone(name string) ConverterOption {
 	}
 }
 
-func New(api *api.APIClient, input string, options ...ConverterOption) (*Converter, error) {
+func New(api *api.APIClient, input io.Reader, options ...ConverterOption) (*Converter, error) {
 	conv := &Converter{
 		a: api,
 		i: input,
@@ -45,13 +45,7 @@ func New(api *api.APIClient, input string, options ...ConverterOption) (*Convert
 }
 
 func (c *Converter) Run(ctx context.Context) error {
-	x, err := os.Open(c.i)
-	if err != nil {
-		return err
-	}
-	defer x.Close()
-
-	p := dns.NewZoneParser(x, "", x.Name())
+	p := dns.NewZoneParser(c.i, "", "")
 
 	records := []dns.RR{}
 	for rr, ok := p.Next(); ok; rr, ok = p.Next() {

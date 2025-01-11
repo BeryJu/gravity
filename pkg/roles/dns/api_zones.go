@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -178,7 +179,7 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 		}
 		switch input.Type {
 		case "bind":
-			converter, err = bind.New(ac, input.Payload, bind.WithExistingZone(input.Zone))
+			converter, err = bind.New(ac, bytes.NewReader([]byte(input.Payload)), bind.WithExistingZone(input.Zone))
 		default:
 			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
 		}

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"os"
 
 	"beryju.io/gravity/pkg/convert/bind"
 	"github.com/spf13/cobra"
@@ -15,7 +16,14 @@ var cliConverrtBind = &cobra.Command{
 		ctx, cancel := context.WithCancel(cmd.Context())
 		defer cancel()
 		for _, file := range args {
-			conv, err := bind.New(apiClient, file)
+			x, err := os.Open(file)
+			if err != nil {
+				logger.Warn("failed to open file", zap.Error(err), zap.String("file", file))
+				continue
+			}
+			defer x.Close()
+
+			conv, err := bind.New(apiClient, x)
 			if err != nil {
 				logger.Warn("failed to convert", zap.String("file", file), zap.Error(err))
 				continue
