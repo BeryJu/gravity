@@ -39,15 +39,14 @@ func New(api *api.APIClient, input string) (*Converter, error) {
 	}, nil
 }
 
-func (c *Converter) Run(ctx context.Context) []error {
-	errors := []error{}
+func (c *Converter) Run(ctx context.Context) error {
 	for _, scope := range c.in.IPv4.Scopes.Scope {
 		err := c.convertScope(scope, ctx)
 		if err != nil {
-			errors = append(errors, err)
+			return err
 		}
 	}
-	return errors
+	return nil
 }
 
 func (c *Converter) convertScope(sc Scope, ctx context.Context) error {

@@ -22,6 +22,8 @@ const (
 	DNSRootZone = "."
 	// Separator between DNS labels
 	DNSSep = "."
+	// Separator between multiple TXT values
+	TXTSeparator = "\n"
 )
 
 const (

@@ -20,7 +20,10 @@ var cliConverrtMSDHCPCmd = &cobra.Command{
 				logger.Warn("failed to convert", zap.String("file", xml), zap.Error(err))
 				continue
 			}
-			conv.Run(ctx)
+			err = conv.Run(ctx)
+			if err != nil {
+				logger.Warn("failed to convert file", zap.Error(err))
+			}
 		}
 	},
 }

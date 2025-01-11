@@ -19,9 +19,9 @@ func TestDHCPImport(t *testing.T) {
 	dhcp.New(rootInst.ForRole("dhcp", ctx))
 
 	files := []string{
-		"./test_a.xml",
-		"./test_b.xml",
-		"./test_c.xml",
+		"./fixtures/test_a.xml",
+		"./fixtures/test_b.xml",
+		"./fixtures/test_c.xml",
 	}
 
 	api, stop := api.APIClient(rootInst)
@@ -31,8 +31,7 @@ func TestDHCPImport(t *testing.T) {
 		t.Run(file, func(t *testing.T) {
 			c, err := ms_dhcp.New(api, file)
 			assert.NoError(t, err)
-			errors := c.Run(ctx)
-			assert.Equal(t, []error{}, errors)
+			assert.NoError(t, c.Run(ctx))
 		})
 	}
 }
