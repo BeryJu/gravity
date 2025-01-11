@@ -55,15 +55,15 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 			zone.Name,
 		)
 		if input.Hostname != "" {
-			recordKey = recordKey.Add(input.Hostname).Prefix(true)
+			recordKey = recordKey.Add(input.Hostname)
 		}
 		if input.Type != "" {
-			recordKey = recordKey.Add(strings.ToUpper(input.Type)).Prefix(true)
+			recordKey = recordKey.Add(strings.ToUpper(input.Type))
 		}
 		if input.UID != "" {
-			recordKey = recordKey.Add(input.UID).Prefix(true)
+			recordKey = recordKey.Add(input.UID)
 		}
-		if input.Hostname == "" && input.Type == "" && input.UID == "" {
+		if input.Hostname == "" || input.Type == "" || input.UID == "" {
 			recordKey = recordKey.Prefix(true)
 		}
 		rawRecords, err := r.i.KV().Get(ctx, recordKey.String(), clientv3.WithPrefix())
