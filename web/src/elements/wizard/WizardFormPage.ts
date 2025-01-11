@@ -1,7 +1,7 @@
 import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement";
 
 import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -41,6 +41,9 @@ export class WizardForm extends Form<KeyUnknown> {
 }
 
 export class WizardFormPage extends WizardPage {
+    @query("ak-wizard-form")
+    form?: WizardForm;
+
     static get styles(): CSSResult[] {
         return [
             PFBase,

@@ -10,6 +10,7 @@ import { AKElement } from "../../../elements/Base";
 import "../../../elements/wizard/Wizard";
 import "./ZoneCacheWizardPage";
 import "./ZoneForwarderWizardPage";
+import "./ZoneImportWizardPage";
 import "./ZoneInitialWizardPage";
 import "./ZonePresetWizardPage";
 
