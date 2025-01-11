@@ -2,6 +2,9 @@ package bind
 
 import (
 	"context"
+	"crypto/sha512"
+	"encoding/hex"
+	"fmt"
 	"io"
 	"strings"
 
@@ -129,11 +132,14 @@ func (c *Converter) convertRecord(rr dns.RR, ctx context.Context) error {
 		relName = types.DNSRootRecord
 	}
 
+	hasher := sha512.New()
+	hasher.Write([]byte(rr.String()))
+
 	_, err := c.a.RolesDnsApi.DnsPutRecords(ctx).
 		DnsAPIRecordsPutInput(req).
 		Zone(c.zone).
 		Hostname(relName).
-		Uid("bind-import").
+		Uid(fmt.Sprintf("bind-import-%s", hex.EncodeToString(hasher.Sum(nil))[:8])).
 		Execute()
 	if err != nil {
 		return err
