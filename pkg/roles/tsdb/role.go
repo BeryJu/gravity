@@ -142,7 +142,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) write(ctx context.Context) {
-	ss := sentry.StartSpan(ctx, "gravity.tsdb.write")
+	ss := sentry.StartTransaction(ctx, "gravity.tsdb.write")
 	defer ss.Finish()
 	r.log.Debug("writing metrics")
 	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(ss.Context(), map[string]interface{}{}))
