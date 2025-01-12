@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**DnsGetRecords**](RolesDnsApi.md#DnsGetRecords) | **Get** /api/v1/dns/zones/records | DNS Records
 [**DnsGetRoleConfig**](RolesDnsApi.md#DnsGetRoleConfig) | **Get** /api/v1/roles/dns | DNS role config
 [**DnsGetZones**](RolesDnsApi.md#DnsGetZones) | **Get** /api/v1/dns/zones | DNS Zones
+[**DnsImportZones**](RolesDnsApi.md#DnsImportZones) | **Post** /api/v1/dns/zones/import | DNS Zones
 [**DnsPutRecords**](RolesDnsApi.md#DnsPutRecords) | **Post** /api/v1/dns/zones/records | DNS Records
 [**DnsPutRoleConfig**](RolesDnsApi.md#DnsPutRoleConfig) | **Post** /api/v1/roles/dns | DNS role config
 [**DnsPutZones**](RolesDnsApi.md#DnsPutZones) | **Post** /api/v1/dns/zones | DNS Zones
@@ -331,6 +332,72 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DnsImportZones
+
+> DnsAPIZonesImportOutput DnsImportZones(ctx).Zone(zone).DnsAPIZonesImportInput(dnsAPIZonesImportInput).Execute()
+
+DNS Zones
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "beryju.io/gravity/api"
+)
+
+func main() {
+    zone := "zone_example" // string |  (optional)
+    dnsAPIZonesImportInput := *openapiclient.NewDnsAPIZonesImportInput() // DnsAPIZonesImportInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesDnsApi.DnsImportZones(context.Background()).Zone(zone).DnsAPIZonesImportInput(dnsAPIZonesImportInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesDnsApi.DnsImportZones``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DnsImportZones`: DnsAPIZonesImportOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesDnsApi.DnsImportZones`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDnsImportZonesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **zone** | **string** |  | 
+ **dnsAPIZonesImportInput** | [**DnsAPIZonesImportInput**](DnsAPIZonesImportInput.md) |  | 
+
+### Return type
+
+[**DnsAPIZonesImportOutput**](DnsAPIZonesImportOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

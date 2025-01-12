@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 ## TsdbGetMetrics
 
-> TypesAPIMetricsGetOutput TsdbGetMetrics(ctx).Role(role).Category(category).Node(node).Since(since).Execute()
+> TypesAPIMetricsGetOutput TsdbGetMetrics(ctx).Role(role).Category(category).ExtraKeys(extraKeys).Node(node).Since(since).Execute()
 
 Retrieve Metrics
 
@@ -32,12 +32,13 @@ import (
 func main() {
     role := openapiclient.TypesAPIMetricsRole("system") // TypesAPIMetricsRole | 
     category := "category_example" // string |  (optional)
+    extraKeys := []string{"Inner_example"} // []string |  (optional)
     node := "node_example" // string |  (optional)
     since := time.Now() // time.Time | Optionally set a start time for which to return datapoints after (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesTsdbApi.TsdbGetMetrics(context.Background()).Role(role).Category(category).Node(node).Since(since).Execute()
+    resp, r, err := apiClient.RolesTsdbApi.TsdbGetMetrics(context.Background()).Role(role).Category(category).ExtraKeys(extraKeys).Node(node).Since(since).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesTsdbApi.TsdbGetMetrics``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -60,6 +61,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **role** | [**TypesAPIMetricsRole**](TypesAPIMetricsRole.md) |  | 
  **category** | **string** |  | 
+ **extraKeys** | **[]string** |  | 
  **node** | **string** |  | 
  **since** | **time.Time** | Optionally set a start time for which to return datapoints after | 
 

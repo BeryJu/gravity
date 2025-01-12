@@ -14,33 +14,33 @@ import (
 	"encoding/json"
 )
 
-// checks if the AuthAPILoginOutput type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &AuthAPILoginOutput{}
+// checks if the DnsAPIZonesImportOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DnsAPIZonesImportOutput{}
 
-// AuthAPILoginOutput struct for AuthAPILoginOutput
-type AuthAPILoginOutput struct {
+// DnsAPIZonesImportOutput struct for DnsAPIZonesImportOutput
+type DnsAPIZonesImportOutput struct {
 	Successful *bool `json:"successful,omitempty"`
 }
 
-// NewAuthAPILoginOutput instantiates a new AuthAPILoginOutput object
+// NewDnsAPIZonesImportOutput instantiates a new DnsAPIZonesImportOutput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAuthAPILoginOutput() *AuthAPILoginOutput {
-	this := AuthAPILoginOutput{}
+func NewDnsAPIZonesImportOutput() *DnsAPIZonesImportOutput {
+	this := DnsAPIZonesImportOutput{}
 	return &this
 }
 
-// NewAuthAPILoginOutputWithDefaults instantiates a new AuthAPILoginOutput object
+// NewDnsAPIZonesImportOutputWithDefaults instantiates a new DnsAPIZonesImportOutput object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAuthAPILoginOutputWithDefaults() *AuthAPILoginOutput {
-	this := AuthAPILoginOutput{}
+func NewDnsAPIZonesImportOutputWithDefaults() *DnsAPIZonesImportOutput {
+	this := DnsAPIZonesImportOutput{}
 	return &this
 }
 
 // GetSuccessful returns the Successful field value if set, zero value otherwise.
-func (o *AuthAPILoginOutput) GetSuccessful() bool {
+func (o *DnsAPIZonesImportOutput) GetSuccessful() bool {
 	if o == nil || IsNil(o.Successful) {
 		var ret bool
 		return ret
@@ -50,7 +50,7 @@ func (o *AuthAPILoginOutput) GetSuccessful() bool {
 
 // GetSuccessfulOk returns a tuple with the Successful field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AuthAPILoginOutput) GetSuccessfulOk() (*bool, bool) {
+func (o *DnsAPIZonesImportOutput) GetSuccessfulOk() (*bool, bool) {
 	if o == nil || IsNil(o.Successful) {
 		return nil, false
 	}
@@ -58,7 +58,7 @@ func (o *AuthAPILoginOutput) GetSuccessfulOk() (*bool, bool) {
 }
 
 // HasSuccessful returns a boolean if a field has been set.
-func (o *AuthAPILoginOutput) HasSuccessful() bool {
+func (o *DnsAPIZonesImportOutput) HasSuccessful() bool {
 	if o != nil && !IsNil(o.Successful) {
 		return true
 	}
@@ -67,11 +67,11 @@ func (o *AuthAPILoginOutput) HasSuccessful() bool {
 }
 
 // SetSuccessful gets a reference to the given bool and assigns it to the Successful field.
-func (o *AuthAPILoginOutput) SetSuccessful(v bool) {
+func (o *DnsAPIZonesImportOutput) SetSuccessful(v bool) {
 	o.Successful = &v
 }
 
-func (o AuthAPILoginOutput) MarshalJSON() ([]byte, error) {
+func (o DnsAPIZonesImportOutput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -79,7 +79,7 @@ func (o AuthAPILoginOutput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o AuthAPILoginOutput) ToMap() (map[string]interface{}, error) {
+func (o DnsAPIZonesImportOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Successful) {
 		toSerialize["successful"] = o.Successful
@@ -87,38 +87,38 @@ func (o AuthAPILoginOutput) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableAuthAPILoginOutput struct {
-	value *AuthAPILoginOutput
+type NullableDnsAPIZonesImportOutput struct {
+	value *DnsAPIZonesImportOutput
 	isSet bool
 }
 
-func (v NullableAuthAPILoginOutput) Get() *AuthAPILoginOutput {
+func (v NullableDnsAPIZonesImportOutput) Get() *DnsAPIZonesImportOutput {
 	return v.value
 }
 
-func (v *NullableAuthAPILoginOutput) Set(val *AuthAPILoginOutput) {
+func (v *NullableDnsAPIZonesImportOutput) Set(val *DnsAPIZonesImportOutput) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAuthAPILoginOutput) IsSet() bool {
+func (v NullableDnsAPIZonesImportOutput) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAuthAPILoginOutput) Unset() {
+func (v *NullableDnsAPIZonesImportOutput) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAuthAPILoginOutput(val *AuthAPILoginOutput) *NullableAuthAPILoginOutput {
-	return &NullableAuthAPILoginOutput{value: val, isSet: true}
+func NewNullableDnsAPIZonesImportOutput(val *DnsAPIZonesImportOutput) *NullableDnsAPIZonesImportOutput {
+	return &NullableDnsAPIZonesImportOutput{value: val, isSet: true}
 }
 
-func (v NullableAuthAPILoginOutput) MarshalJSON() ([]byte, error) {
+func (v NullableDnsAPIZonesImportOutput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAuthAPILoginOutput) UnmarshalJSON(src []byte) error {
+func (v *NullableDnsAPIZonesImportOutput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

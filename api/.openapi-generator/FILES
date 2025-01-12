@@ -83,6 +83,8 @@ docs/DnsAPIRoleConfigInput.md
 docs/DnsAPIRoleConfigOutput.md
 docs/DnsAPIZone.md
 docs/DnsAPIZonesGetOutput.md
+docs/DnsAPIZonesImportInput.md
+docs/DnsAPIZonesImportOutput.md
 docs/DnsAPIZonesPutInput.md
 docs/DnsRoleConfig.md
 docs/ExtconfigExtConfigDirs.md
@@ -187,6 +189,8 @@ model_dns_api_role_config_input.go
 model_dns_api_role_config_output.go
 model_dns_api_zone.go
 model_dns_api_zones_get_output.go
+model_dns_api_zones_import_input.go
+model_dns_api_zones_import_output.go
 model_dns_api_zones_put_input.go
 model_dns_role_config.go
 model_extconfig_ext_config_dirs.go

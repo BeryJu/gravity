@@ -4,7 +4,7 @@
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.22.0"
+VERSION = "0.23.0"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -152,7 +152,7 @@ gen-client-ts-publish: gen-client-ts
 	npm version ${VERSION} || true
 	git add package*.json
 
-gen: gen-build gen-clean gen-client-go gen-client-ts-publish gen-tag
+release: gen-build gen-clean gen-client-go gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s
