@@ -3,8 +3,9 @@ package types
 import "time"
 
 const (
-	KeyRole  = "dns"
-	KeyZones = "zones"
+	KeyRole        = "dns"
+	KeyZones       = "zones"
+	KeyHandlerType = "handler"
 )
 
 const (

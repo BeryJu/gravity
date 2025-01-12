@@ -25,25 +25,22 @@ const (
 )
 
 type Zone struct {
-	inst roles.Instance
-	role *Role
-
-	records         map[string]map[string]*Record
-	recordsWatchCtx context.CancelFunc
-
-	log  *zap.Logger
-	Name string `json:"-"`
-
-	etcdKey        string
-	HandlerConfigs []map[string]interface{} `json:"handlerConfigs"`
+	inst    roles.Instance
+	role    *Role
+	log     *zap.Logger
+	etcdKey string
 
 	h []Handler
 
-	recordsSync sync.RWMutex
-	DefaultTTL  uint32 `json:"defaultTTL"`
+	records         map[string]map[string]*Record
+	recordsWatchCtx context.CancelFunc
+	recordsSync     sync.RWMutex
 
-	Authoritative bool   `json:"authoritative"`
-	Hook          string `json:"hook"`
+	Name           string                   `json:"-"`
+	HandlerConfigs []map[string]interface{} `json:"handlerConfigs"`
+	DefaultTTL     uint32                   `json:"defaultTTL"`
+	Authoritative  bool                     `json:"authoritative"`
+	Hook           string                   `json:"hook"`
 }
 
 func (z *Zone) Handlers() []Handler {
@@ -70,7 +67,21 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 			map[string]interface{}{
 				"key": z.inst.KV().Key(
 					types.KeyRole,
+					types.KeyHandlerType,
 					h.Identifier(),
+				).String(),
+				"default": tsdbTypes.Metric{
+					ResetOnWrite: true,
+				},
+			},
+		))
+		go z.inst.DispatchEvent(tsdbTypes.EventTopicTSDBInc, roles.NewEvent(
+			context.Background(),
+			map[string]interface{}{
+				"key": z.inst.KV().Key(
+					types.KeyRole,
+					types.KeyZones,
+					z.Name,
 				).String(),
 				"default": tsdbTypes.Metric{
 					ResetOnWrite: true,
