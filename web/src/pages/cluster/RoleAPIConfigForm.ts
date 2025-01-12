@@ -65,9 +65,19 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
             >
                 <input
                     type="text"
-                    value="${first(this.instance?.sessionDuration, "24h")}"
+                    value="${ifDefined(
+                        this.instance?.sessionDuration === ""
+                            ? "24h"
+                            : this.instance?.sessionDuration,
+                    )}"
                     required
+                    class="pf-c-form-control"
                 />
+                <p class="pf-c-form__helper-text">
+                    Duration sessions will be valid for. See
+                    <a target="_blank" href="https://pkg.go.dev/time#ParseDuration">here</a> for a
+                    format reference.
+                </p>
             </ak-form-element-horizontal>
             <ak-form-group expanded>
                 <span slot="header">OIDC</span>
@@ -135,7 +145,7 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             required
                         />
                         <p class="pf-c-form__helper-text">
-                            Space-separated list of OpenID scopes to request
+                            Space-separated list of OpenID scopes to request.
                         </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
@@ -148,7 +158,12 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
                             type="text"
                             value="${first(this.instance?.oidc?.tokenUsernameField, "email")}"
                             required
+                            class="pf-c-form-control"
                         />
+                        <p class="pf-c-form__helper-text">
+                            When using JWTs to authenticate to the API, the name of the field used
+                            to lookup the user in Gravity.
+                        </p>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
