@@ -1,5 +1,6 @@
 .ONESHELL:
 .SHELLFLAGS += -x -e
+.PHONY:  web
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
@@ -33,6 +34,8 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	go run ${GO_FLAGS} ${PWD} server
 
 # Web
+web: web-lint web-build
+
 web-install:
 	cd ${PWD}/web
 	npm ci

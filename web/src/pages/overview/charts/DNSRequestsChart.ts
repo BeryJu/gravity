@@ -11,7 +11,10 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-dns-requests")
 export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({ role: TypesAPIMetricsRole.Dns, category: "handler" });
+        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
+            role: TypesAPIMetricsRole.Dns,
+            category: "handler",
+        });
     }
 
     getChartType(): string {

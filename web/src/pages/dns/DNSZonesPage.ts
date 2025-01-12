@@ -9,6 +9,7 @@ import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./DNSTableChart";
 import "./DNSZoneForm";
 import "./wizard/DNSZoneWizard";
 
@@ -47,6 +48,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
             new TableColumn("Zone"),
             new TableColumn("Records"),
             new TableColumn("Authoritative"),
+            new TableColumn(""),
             new TableColumn("Actions"),
         ];
     }
@@ -58,6 +60,7 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
             </a>`,
             html`${item.recordCount}`,
             html`${item.authoritative ? "Yes" : "No"}`,
+            html`<gravity-dns-zone-chart zone=${item.name}></gravity-dns-zone-chart>`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Zone"} </span>
