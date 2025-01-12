@@ -23,6 +23,9 @@ func (r *Role) APIMetrics() usecase.Interactor {
 		if input.Category != "" {
 			pf = pf.Add(input.Category)
 		}
+		if len(input.ExtraKeys) > 0 {
+			pf = pf.Add(input.ExtraKeys...)
+		}
 		prefix := pf.Prefix(true).String()
 		rawMetrics, err := r.i.KV().Get(
 			ctx,
