@@ -11,7 +11,7 @@ import { AKChart } from "../../../elements/charts/Chart";
 @customElement("gravity-overview-charts-dns-requests")
 export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({ role: TypesAPIMetricsRole.Dns });
+        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({ role: TypesAPIMetricsRole.Dns, category: "handler" });
     }
 
     getChartType(): string {
@@ -23,7 +23,13 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
             datasets: [],
         };
         groupBy(data.records || [], (record) => record.node).forEach(([node, records]) => {
-            groupBy(records, (record) => record.keys![1]).forEach(([handler, records]) => {
+            groupBy(records, (record) => {
+                // TODO: Remove in the future
+                if (record.keys?.length === 3) {
+                    return record.keys![1] && record.keys![2];
+                }
+                return record.keys![1];
+            }).forEach(([handler, records]) => {
                 const background = getColorFromString(handler);
                 background.a = 0.3;
                 chartData.datasets.push({

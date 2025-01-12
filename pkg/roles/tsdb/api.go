@@ -57,7 +57,8 @@ func (r *Role) APIMetrics() usecase.Interactor {
 				v.Value = value
 			}
 			output.Records = append(output.Records, types.APIMetricsRecord{
-				Keys:  keyParts[:2],
+				// Remove node and timestamp from keys
+				Keys:  keyParts[:len(keyParts)-2],
 				Time:  time.Unix(int64(ts), 0),
 				Node:  node,
 				Value: v.Value,
