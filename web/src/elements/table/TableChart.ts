@@ -5,12 +5,21 @@ import { css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
-import { AKChart } from "../../elements/charts/Chart";
+import { AKChart } from "../charts/Chart";
 
-@customElement("gravity-dns-zone-chart")
-export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
+@customElement("gravity-table-chart")
+export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {
+    @property({ type: Array })
+    extraKeys: string[] = [];
+
+    @property({ attribute: "role" })
+    metricRole?: TypesAPIMetricsRole;
+
     @property()
-    zone?: string;
+    category?: string;
+
+    @property()
+    label?: string;
 
     static get styles() {
         return super.styles.concat(css`
@@ -20,7 +29,7 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
                 justify-content: end;
             }
             .container {
-                width: 20rem;
+                width: 25rem;
                 height: 3rem;
             }
         `);
@@ -28,9 +37,9 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
 
     async apiRequest(): Promise<TypesAPIMetricsGetOutput> {
         return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
-            role: TypesAPIMetricsRole.Dns,
-            category: "zones",
-            extraKeys: [this.zone || ""],
+            role: this.role as TypesAPIMetricsRole,
+            category: this.category,
+            extraKeys: this.extraKeys,
         });
     }
 
@@ -44,7 +53,7 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
         if (!this.parentElement) {
             return;
         }
-        this.parentElement.style.width = "28rem";
+        this.parentElement.style.width = "25rem";
         this.parentElement.style.padding = "0";
     }
 
@@ -77,7 +86,7 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
             datasets: [],
         };
         chartData.datasets.push({
-            label: this.zone,
+            label: this.label ?? this.extraKeys[0],
             backgroundColor: "rgba(0,0,0,0)",
             borderColor: "#3873e0",
             spanGaps: true,

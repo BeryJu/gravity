@@ -1,4 +1,4 @@
-import { DnsAPIZone, RolesDnsApi } from "gravity-api";
+import { DnsAPIZone, RolesDnsApi, TypesAPIMetricsRole } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -7,9 +7,9 @@ import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import "../../elements/table/TableChart";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
-import "./DNSTableChart";
 import "./DNSZoneForm";
 import "./wizard/DNSZoneWizard";
 
@@ -60,7 +60,12 @@ export class DNSZonesPage extends TablePage<DnsAPIZone> {
             </a>`,
             html`${item.recordCount}`,
             html`${item.authoritative ? "Yes" : "No"}`,
-            html`<gravity-dns-zone-chart zone=${item.name}></gravity-dns-zone-chart>`,
+            html`<gravity-table-chart
+                role=${TypesAPIMetricsRole.Dns}
+                category="zones"
+                .extraKeys=${[item.name]}
+                legend=${item.name}
+            ></gravity-table-chart>`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Zone"} </span>

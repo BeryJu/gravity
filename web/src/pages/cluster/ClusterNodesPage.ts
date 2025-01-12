@@ -1,4 +1,4 @@
-import { ClusterApi, InstanceInstanceInfo } from "gravity-api";
+import { ClusterApi, InstanceInstanceInfo, TypesAPIMetricsRole } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -8,6 +8,7 @@ import "../../elements/chips/Chip";
 import "../../elements/chips/ChipGroup";
 import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import "../../elements/table/TableChart";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
 import "./wizard/ClusterJoinWizard";
@@ -35,6 +36,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             new TableColumn("Roles"),
             new TableColumn("IP"),
             new TableColumn("Version"),
+            new TableColumn(""),
         ];
     }
 
@@ -48,6 +50,12 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             >`,
             html`${item.ip}`,
             html`${item.version}`,
+            html`<gravity-table-chart
+                role=${TypesAPIMetricsRole.System}
+                category="cpu"
+                .extraKeys=${[item.identifier]}
+                legend="${item.identifier} CPU"
+            ></gravity-table-chart>`,
         ];
     }
 
