@@ -106,6 +106,7 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		zap.Int("size", responseLogger.Size()),
 		zap.Int("status", responseLogger.Status()),
 		zap.String("userAgent", req.UserAgent()),
+		zap.String("url", url.RequestURI()),
 	}
 	se := req.Context().Value(types.RequestSession)
 	if se != nil {
@@ -117,5 +118,5 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			}
 		}
 	}
-	h.afterHandler(h.logger.With(fields...), req).Info(url.RequestURI())
+	h.afterHandler(h.logger.With(fields...), req).Info("HTTP Request")
 }

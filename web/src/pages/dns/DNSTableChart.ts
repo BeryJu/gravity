@@ -40,6 +40,7 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
 
     firstUpdated(): void {
         super.firstUpdated();
+        // This is a bit hacky but required to make the chart sit well in the table
         if (!this.parentElement) {
             return;
         }
@@ -76,6 +77,7 @@ export class DNSTableChart extends AKChart<TypesAPIMetricsGetOutput> {
             datasets: [],
         };
         chartData.datasets.push({
+            label: this.zone,
             backgroundColor: "rgba(0,0,0,0)",
             borderColor: "#3873e0",
             spanGaps: true,

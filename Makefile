@@ -106,7 +106,7 @@ gen-clean:
 gen-tag:
 	git add Makefile
 	cd ${PWD}
-	git commit -m "tag version v${VERSION}"
+	git commit -m "release version v${VERSION}"
 	git tag v${VERSION}
 
 gen-client-go:
