@@ -63,6 +63,7 @@ func New(instance roles.Instance) *Role {
 		svc.Get("/api/v1/dhcp/scopes", r.APIScopesGet())
 		svc.Post("/api/v1/dhcp/scopes", r.APIScopesPut())
 		svc.Delete("/api/v1/dhcp/scopes", r.APIScopesDelete())
+		svc.Post("/api/v1/dhcp/scopes/import", r.APIScopesImport())
 		svc.Get("/api/v1/dhcp/scopes/leases", r.APILeasesGet())
 		svc.Post("/api/v1/dhcp/scopes/leases", r.APILeasesPut())
 		svc.Post("/api/v1/dhcp/scopes/leases/wol", r.APILeasesWOL())

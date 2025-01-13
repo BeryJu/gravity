@@ -448,6 +448,41 @@ paths:
       summary: DHCP Scopes
       tags:
       - roles/dhcp
+  /api/v1/dhcp/scopes/import:
+    post:
+      operationId: dhcp.import_scopes
+      parameters:
+      - in: query
+        name: scope
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpAPIScopesImportInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpAPIScopesImportOutput'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
   /api/v1/dhcp/scopes/leases:
     delete:
       operationId: dhcp.delete_leases
@@ -2119,6 +2154,20 @@ components:
       required:
       - scopes
       - statistics
+      type: object
+    DhcpAPIScopesImportInput:
+      properties:
+        payload:
+          type: string
+        type:
+          enum:
+          - ms_dhcp
+          type: string
+      type: object
+    DhcpAPIScopesImportOutput:
+      properties:
+        successful:
+          type: boolean
       type: object
     DhcpAPIScopesPutInput:
       properties:

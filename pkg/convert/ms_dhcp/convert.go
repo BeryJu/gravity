@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net"
-	"os"
 	"strconv"
 	"strings"
 
@@ -17,30 +16,46 @@ import (
 )
 
 type Converter struct {
-	a  *api.APIClient
-	l  *zap.Logger
-	in DHCPServer
+	a     *api.APIClient
+	l     *zap.Logger
+	in    DHCPServer
+	scope string
 }
 
-func New(api *api.APIClient, input string) (*Converter, error) {
-	x, err := os.ReadFile(input)
-	if err != nil {
-		return nil, err
+type ConverterOption struct {
+	apply func(*Converter)
+}
+
+func WithExistingScope(name string) ConverterOption {
+	return ConverterOption{
+		apply: func(c *Converter) {
+			c.scope = name
+		},
 	}
+}
+
+func New(api *api.APIClient, input string, options ...ConverterOption) (*Converter, error) {
 	var dhcps DHCPServer
-	err = xml.Unmarshal(x, &dhcps)
+	err := xml.Unmarshal([]byte(input), &dhcps)
 	if err != nil {
 		return nil, err
 	}
-	return &Converter{
+	conv := &Converter{
 		a:  api,
 		in: dhcps,
 		l:  extconfig.Get().Logger().Named("convert.ms_dhcp"),
-	}, nil
+	}
+	for _, opt := range options {
+		opt.apply(conv)
+	}
+	return conv, nil
 }
 
 func (c *Converter) Run(ctx context.Context) error {
 	for _, scope := range c.in.IPv4.Scopes.Scope {
+		if c.scope != "" && scope.Name != c.scope {
+			continue
+		}
 		err := c.convertScope(scope, ctx)
 		if err != nil {
 			return err
