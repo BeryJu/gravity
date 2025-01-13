@@ -1,4 +1,4 @@
-import { parse } from "ipaddr.js";
+import { AbstractIPNum, IPv4, IPv6 } from "ip-num";
 
 import { PaginatedResponse } from "./elements/table/Table";
 
@@ -26,8 +26,21 @@ export function first<T>(items: T[] | null | undefined): T | undefined {
     return undefined;
 }
 
-export function ip2int(ip: string): number {
-    return parse(ip)
-        .toByteArray()
-        .reduce((acc, c) => acc + c);
+export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number {
+    const getIP = (input: string) => {
+        let ip: AbstractIPNum;
+        try {
+            ip = IPv6.fromString(input);
+        } catch {
+            ip = IPv4.fromString(input);
+        }
+        return ip;
+    };
+    return (a: T, b: T) => {
+        const aIP = getIP(getter(a));
+        const bIP = getIP(getter(b));
+        if (aIP > bIP) return 1;
+        if (aIP < bIP) return -1;
+        return 0;
+    };
 }

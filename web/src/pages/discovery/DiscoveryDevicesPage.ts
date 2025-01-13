@@ -9,7 +9,7 @@ import "../../elements/forms/ModalForm";
 import { paramURL } from "../../elements/router/RouterOutlet";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper, ip2int } from "../../utils";
+import { PaginationWrapper, sortByIP } from "../../utils";
 import "./DiscoveryDeviceApply";
 
 @customElement("gravity-discovery-devices")
@@ -37,7 +37,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
                 l.mac.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.ip.includes(this.search),
         );
-        data.sort((a, b) => ip2int(a.ip) - ip2int(b.ip));
+        data.sort(sortByIP((i) => i.ip));
         return PaginationWrapper(data);
     }
 

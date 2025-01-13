@@ -2,7 +2,7 @@ import { DhcpAPIScopesPutInput } from "gravity-api";
 import { IPv4, IPv4CidrRange, IPv6 } from "ip-num";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
-import { PropertyValues, TemplateResult, html } from "lit";
+import { TemplateResult, html } from "lit";
 import { state } from "lit/decorators.js";
 
 import { KeyUnknown } from "../../../elements/forms/Form";
