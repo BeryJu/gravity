@@ -12,6 +12,7 @@ import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
 import "./DHCPScopeForm";
+import "./wizard/DHCPScopeWizard";
 
 @customElement("gravity-dhcp-scopes")
 export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
@@ -115,13 +116,6 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     }
 
     renderObjectCreate(): TemplateResult {
-        return html`
-            <ak-forms-modal>
-                <span slot="submit"> ${"Create"} </span>
-                <span slot="header"> ${"Create Scope"} </span>
-                <gravity-dhcp-scope-form slot="form"> </gravity-dhcp-scope-form>
-                <button slot="trigger" class="pf-c-button pf-m-primary">${"Create"}</button>
-            </ak-forms-modal>
-        `;
+        return html` <gravity-dhcp-scope-wizard></gravity-dhcp-scope-wizard> `;
     }
 }

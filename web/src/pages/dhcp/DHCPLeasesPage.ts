@@ -11,7 +11,7 @@ import "../../elements/forms/ModalForm";
 import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper, ip2int } from "../../utils";
+import { PaginationWrapper, sortByIP } from "../../utils";
 import "./DHCPLeaseForm";
 
 @customElement("gravity-dhcp-leases")
@@ -43,7 +43,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                 l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.address.includes(this.search),
         );
-        data.sort((a, b) => ip2int(a.address) - ip2int(b.address));
+        data.sort(sortByIP((i) => i.address));
         return PaginationWrapper(data);
     }
 

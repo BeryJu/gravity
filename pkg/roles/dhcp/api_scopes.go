@@ -3,8 +3,11 @@ package dhcp
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/netip"
 
+	"beryju.io/gravity/pkg/convert/ms_dhcp"
+	"beryju.io/gravity/pkg/roles/api/utils"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -203,6 +206,59 @@ func (r *Role) APIScopesDelete() usecase.Interactor {
 		return nil
 	})
 	u.SetName("dhcp.delete_scopes")
+	u.SetTitle("DHCP Scopes")
+	u.SetTags("roles/dhcp")
+	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
+	return u
+}
+
+type APIScopesImporterType string
+
+func (APIScopesImporterType) Enum() []interface{} {
+	return []interface{}{
+		"ms_dhcp",
+	}
+}
+
+type APIScopesImportInput struct {
+	Type    APIScopesImporterType `json:"type"`
+	Payload string                `json:"payload"`
+	Scope   string                `query:"scope"`
+}
+
+type APIScopesImportOutput struct {
+	Successful bool `json:"successful"`
+}
+
+type DHCPImporter interface {
+	Run(ctx context.Context) error
+}
+
+func (r *Role) APIScopesImport() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIScopesImportInput, output *APIScopesImportOutput) error {
+		var converter DHCPImporter
+		var err error
+		ac := utils.APIClientFromRequest(ctx)
+		if ac == nil {
+			return status.Wrap(err, status.Internal)
+		}
+		switch input.Type {
+		case "ms_dhcp":
+			converter, err = ms_dhcp.New(ac, input.Payload, ms_dhcp.WithExistingScope(input.Scope))
+		default:
+			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
+		}
+		if err != nil {
+			return status.Wrap(err, status.InvalidArgument)
+		}
+		err = converter.Run(ctx)
+		if err != nil {
+			return status.Wrap(err, status.InvalidArgument)
+		}
+		output.Successful = true
+		return nil
+	})
+	u.SetName("dhcp.import_scopes")
 	u.SetTitle("DHCP Scopes")
 	u.SetTags("roles/dhcp")
 	u.SetExpectedErrors(status.Internal, status.InvalidArgument)

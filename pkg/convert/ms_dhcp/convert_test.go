@@ -1,6 +1,7 @@
 package ms_dhcp_test
 
 import (
+	"os"
 	"testing"
 
 	"beryju.io/gravity/pkg/convert/ms_dhcp"
@@ -29,7 +30,9 @@ func TestDHCPImport(t *testing.T) {
 
 	for _, file := range files {
 		t.Run(file, func(t *testing.T) {
-			c, err := ms_dhcp.New(api, file)
+			x, err := os.ReadFile(file)
+			assert.NoError(t, err)
+			c, err := ms_dhcp.New(api, string(x))
 			assert.NoError(t, err)
 			assert.NoError(t, c.Run(ctx))
 		})

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"os"
 
 	"beryju.io/gravity/pkg/convert/ms_dhcp"
 	"github.com/spf13/cobra"
@@ -15,7 +16,12 @@ var cliConverrtMSDHCPCmd = &cobra.Command{
 		ctx, cancel := context.WithCancel(cmd.Context())
 		defer cancel()
 		for _, xml := range args {
-			conv, err := ms_dhcp.New(apiClient, xml)
+			x, err := os.ReadFile(xml)
+			if err != nil {
+				logger.Warn("failed to read file", zap.Error(err), zap.String("file", xml))
+				continue
+			}
+			conv, err := ms_dhcp.New(apiClient, string(x))
 			if err != nil {
 				logger.Warn("failed to convert", zap.String("file", xml), zap.Error(err))
 				continue
