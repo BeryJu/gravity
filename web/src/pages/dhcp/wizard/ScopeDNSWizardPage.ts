@@ -23,8 +23,11 @@ export class ScopeDNSWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label="DNS Zone" name="zone" required>
-                <input type="text" value="" class="pf-c-form-control" required />
-                <p class="pf-c-form__helper-text">DNS Zone which records in this scope should be registered in. Reverse records are created automatically if a matching reverse-DNS zone exists.</p>
-            </ak-form-element-horizontal>`;
+            <input type="text" value="" class="pf-c-form-control" required />
+            <p class="pf-c-form__helper-text">
+                DNS Zone which records in this scope should be registered in. Reverse records are
+                created automatically if a matching reverse-DNS zone exists.
+            </p>
+        </ak-form-element-horizontal>`;
     }
 }
