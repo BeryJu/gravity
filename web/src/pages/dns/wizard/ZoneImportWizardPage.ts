@@ -1,4 +1,4 @@
-import { RolesDnsApi } from "gravity-api";
+import { DnsAPIZonesImporterType, RolesDnsApi } from "gravity-api";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
@@ -37,7 +37,7 @@ export class ZoneImportWizardPage extends WizardFormPage {
                 zone: name,
                 dnsAPIZonesImportInput: {
                     payload: contents || "",
-                    type: data.type as "bind",
+                    type: data.Type as DnsAPIZonesImporterType,
                 },
             });
             return result.successful || false;
@@ -47,7 +47,7 @@ export class ZoneImportWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label="Type" required name="type">
-                ${["bind"].map((type) => {
+                ${Object.keys(DnsAPIZonesImporterType).map((type) => {
                     return html`<div class="pf-c-radio">
                         <input
                             class="pf-c-radio__input"

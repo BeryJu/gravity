@@ -2386,15 +2386,18 @@ components:
         payload:
           type: string
         type:
-          enum:
-          - bind
-          type: string
+          $ref: '#/components/schemas/DnsAPIZonesImporterType'
       type: object
     DnsAPIZonesImportOutput:
       properties:
         successful:
           type: boolean
       type: object
+    DnsAPIZonesImporterType:
+      enum:
+      - bind
+      - opnsense
+      type: string
     DnsAPIZonesPutInput:
       properties:
         authoritative:

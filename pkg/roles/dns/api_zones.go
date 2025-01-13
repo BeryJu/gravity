@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/convert/bind"
+	"beryju.io/gravity/pkg/convert/opnsense"
 	apiUtils "beryju.io/gravity/pkg/roles/api/utils"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
@@ -155,10 +156,19 @@ func (r *Role) APIZonesDelete() usecase.Interactor {
 	return u
 }
 
+type APIZonesImporterType string
+
+func (APIZonesImporterType) Enum() []interface{} {
+	return []interface{}{
+		"bind",
+		"opnsense",
+	}
+}
+
 type APIZonesImportInput struct {
-	Type    string `json:"type" enum:"bind"`
-	Payload string `json:"payload"`
-	Zone    string `query:"zone"`
+	Type    APIZonesImporterType `json:"type"`
+	Payload string               `json:"payload"`
+	Zone    string               `query:"zone"`
 }
 
 type APIZonesImportOutput struct {
@@ -180,6 +190,8 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 		switch input.Type {
 		case "bind":
 			converter, err = bind.New(ac, bytes.NewReader([]byte(input.Payload)), bind.WithExistingZone(input.Zone))
+		case "opnsense":
+			converter, err = opnsense.New(ac, []byte(input.Payload), opnsense.WithExistingZone(input.Zone))
 		default:
 			err = status.WithDescription(status.InvalidArgument, fmt.Sprintf("invalid converter type specified: %s", input.Type))
 		}
