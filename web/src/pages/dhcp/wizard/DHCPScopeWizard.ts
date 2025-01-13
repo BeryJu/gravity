@@ -8,6 +8,7 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../../../elements/Base";
 import "../../../elements/wizard/Wizard";
+import "./ScopeDNSWizardPage";
 import "./ScopeImportWizardPage";
 import "./ScopeInitialWizardPage";
 import "./ScopeInternalWizardPage";

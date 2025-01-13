@@ -21,6 +21,7 @@ export class ScopeInternalWizardPage extends WizardFormPage {
                 value: data.router as string,
             });
         }
+        req.ipam = data.ipam as { [key: string]: string };
         this.host.state["scopeReq"] = req;
         return true;
     };
@@ -33,6 +34,23 @@ export class ScopeInternalWizardPage extends WizardFormPage {
             <ak-form-element-horizontal label="Router" name="router">
                 <input type="text" value="" class="pf-c-form-control" />
                 <p class="pf-c-form__helper-text">The router for the specified subnet.</p>
-            </ak-form-element-horizontal>`;
+            </ak-form-element-horizontal>
+            <ak-form-group expanded>
+                <span slot="header">IPAM</span>
+                <div slot="body" class="pf-c-form">
+                    <ak-form-element-horizontal
+                        label="IP Range Start"
+                        required
+                        name="ipam.range_start"
+                    >
+                        <input type="text" value="" class="pf-c-form-control" required />
+                        <p class="pf-c-form__helper-text">Start of the IP range, inclusive.</p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="IP Range End" required name="ipam.range_end">
+                        <input type="text" value="" class="pf-c-form-control" required />
+                        <p class="pf-c-form__helper-text">End of the IP range, exclusive.</p>
+                    </ak-form-element-horizontal>
+                </div>
+            </ak-form-group>`;
     }
 }
