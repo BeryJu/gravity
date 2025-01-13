@@ -14,7 +14,7 @@ import { TypeCreate } from "../../dns/wizard/ZonePresetWizardPage";
 export class ScopePresetWizardPage extends WizardPage {
     applicationTypes: TypeCreate[] = [
         {
-            components: [],
+            components: ["gravity-dhcp-wizard-internal"],
             name: "Gravity-hosted",
             description: "Leases are stored in Gravity, optionally integrated with DNS.",
             callback: () => {},

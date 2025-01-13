@@ -2160,15 +2160,17 @@ components:
         payload:
           type: string
         type:
-          enum:
-          - ms_dhcp
-          type: string
+          $ref: '#/components/schemas/DhcpAPIScopesImporterType'
       type: object
     DhcpAPIScopesImportOutput:
       properties:
         successful:
           type: boolean
       type: object
+    DhcpAPIScopesImporterType:
+      enum:
+      - ms_dhcp
+      type: string
     DhcpAPIScopesPutInput:
       properties:
         default:

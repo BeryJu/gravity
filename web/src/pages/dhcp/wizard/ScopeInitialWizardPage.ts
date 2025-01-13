@@ -16,22 +16,18 @@ export class ScopeInitialWizardPage extends WizardFormPage {
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const name = data.name as string;
         const scope: DhcpAPIScopesPutInput = {
-            subnetCidr: data.subnet as string,
+            // placeholder, this is overwritten later
+            subnetCidr: "10.0.0.0/8",
             ttl: 86400,
             _default: false,
             options: [],
             hook: "",
         };
-        if (data.router !== "") {
-            scope.options?.push({
-                tagName: "router",
-                value: data.router as string,
-            });
-        }
+        this.host.state["scopeReq"] = scope;
         this.host.addActionBefore("Create scope", "create-scope", async (): Promise<boolean> => {
             this.host.state["scope"] = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
                 scope: name,
-                dhcpAPIScopesPutInput: scope,
+                dhcpAPIScopesPutInput: this.host.state["scopeReq"] as DhcpAPIScopesPutInput,
             });
             this.host.state["name"] = name;
             return true;
@@ -41,15 +37,11 @@ export class ScopeInitialWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label="Name" required name="name">
-                <input type="text" value="" class="pf-c-form-control" required />
-            </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Subnet" name="subnet" required>
-                <input type="text" value="" class="pf-c-form-control" required />
-                <p class="pf-c-form__helper-text">The IP subnet the DHCP scope manages.</p>
-            </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="Router" name="router">
-                <input type="text" value="" class="pf-c-form-control" />
-                <p class="pf-c-form__helper-text">The router for the specified subnet.</p>
-            </ak-form-element-horizontal> `;
+            <input type="text" value="" class="pf-c-form-control" required />
+            <p class="pf-c-form__helper-text">
+                Name of the scope. When importing leases, this name must match the name of a scope
+                in the the import file.
+            </p>
+        </ak-form-element-horizontal> `;
     }
 }

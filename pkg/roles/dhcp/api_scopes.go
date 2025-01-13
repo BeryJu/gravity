@@ -212,10 +212,18 @@ func (r *Role) APIScopesDelete() usecase.Interactor {
 	return u
 }
 
+type APIScopesImporterType string
+
+func (APIScopesImporterType) Enum() []interface{} {
+	return []interface{}{
+		"ms_dhcp",
+	}
+}
+
 type APIScopesImportInput struct {
-	Type    string `json:"type" enum:"ms_dhcp"`
-	Payload string `json:"payload"`
-	Scope   string `query:"scope"`
+	Type    APIScopesImporterType `json:"type"`
+	Payload string                `json:"payload"`
+	Scope   string                `query:"scope"`
 }
 
 type APIScopesImportOutput struct {

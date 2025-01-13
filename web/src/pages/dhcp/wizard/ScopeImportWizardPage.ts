@@ -1,4 +1,4 @@
-import { RolesDhcpApi } from "gravity-api";
+import { DhcpAPIScopesImporterType, RolesDhcpApi } from "gravity-api";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
@@ -37,7 +37,7 @@ export class ScopeImportWizardPage extends WizardFormPage {
                 scope: name,
                 dhcpAPIScopesImportInput: {
                     payload: contents || "",
-                    type: data.type as "ms_dhcp",
+                    type: data.type as DhcpAPIScopesImporterType,
                 },
             });
             return result.successful || false;
@@ -47,7 +47,7 @@ export class ScopeImportWizardPage extends WizardFormPage {
 
     renderForm(): TemplateResult {
         return html`<ak-form-element-horizontal label="Type" required name="type">
-                ${["ms_dhcp"].map((type) => {
+                ${Object.keys(DhcpAPIScopesImporterType).map((type) => {
                     return html`<div class="pf-c-radio">
                         <input
                             class="pf-c-radio__input"

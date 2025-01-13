@@ -8,10 +8,9 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { AKElement } from "../../../elements/Base";
 import "../../../elements/wizard/Wizard";
-// import "./ZoneCacheWizardPage";
-// import "./ZoneForwarderWizardPage";
 import "./ScopeImportWizardPage";
 import "./ScopeInitialWizardPage";
+import "./ScopeInternalWizardPage";
 import "./ScopePresetWizardPage";
 
 @customElement("gravity-dhcp-scope-wizard")

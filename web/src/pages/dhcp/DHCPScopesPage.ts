@@ -116,8 +116,6 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
     }
 
     renderObjectCreate(): TemplateResult {
-        return html`
-            <gravity-dhcp-scope-wizard></gravity-dhcp-scope-wizard>
-        `;
+        return html` <gravity-dhcp-scope-wizard></gravity-dhcp-scope-wizard> `;
     }
 }
