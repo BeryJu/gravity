@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**DhcpGetLeases**](RolesDhcpApi.md#DhcpGetLeases) | **Get** /api/v1/dhcp/scopes/leases | DHCP Leases
 [**DhcpGetRoleConfig**](RolesDhcpApi.md#DhcpGetRoleConfig) | **Get** /api/v1/roles/dhcp | DHCP role config
 [**DhcpGetScopes**](RolesDhcpApi.md#DhcpGetScopes) | **Get** /api/v1/dhcp/scopes | DHCP Scopes
+[**DhcpImportScopes**](RolesDhcpApi.md#DhcpImportScopes) | **Post** /api/v1/dhcp/scopes/import | DHCP Scopes
 [**DhcpPutLeases**](RolesDhcpApi.md#DhcpPutLeases) | **Post** /api/v1/dhcp/scopes/leases | DHCP Leases
 [**DhcpPutRoleConfig**](RolesDhcpApi.md#DhcpPutRoleConfig) | **Post** /api/v1/roles/dhcp | DHCP role config
 [**DhcpPutScopes**](RolesDhcpApi.md#DhcpPutScopes) | **Post** /api/v1/dhcp/scopes | DHCP Scopes
@@ -324,6 +325,72 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DhcpImportScopes
+
+> DhcpAPIScopesImportOutput DhcpImportScopes(ctx).Scope(scope).DhcpAPIScopesImportInput(dhcpAPIScopesImportInput).Execute()
+
+DHCP Scopes
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "beryju.io/gravity/api"
+)
+
+func main() {
+    scope := "scope_example" // string |  (optional)
+    dhcpAPIScopesImportInput := *openapiclient.NewDhcpAPIScopesImportInput() // DhcpAPIScopesImportInput |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.RolesDhcpApi.DhcpImportScopes(context.Background()).Scope(scope).DhcpAPIScopesImportInput(dhcpAPIScopesImportInput).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `RolesDhcpApi.DhcpImportScopes``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DhcpImportScopes`: DhcpAPIScopesImportOutput
+    fmt.Fprintf(os.Stdout, "Response from `RolesDhcpApi.DhcpImportScopes`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDhcpImportScopesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **scope** | **string** |  | 
+ **dhcpAPIScopesImportInput** | [**DhcpAPIScopesImportInput**](DhcpAPIScopesImportInput.md) |  | 
+
+### Return type
+
+[**DhcpAPIScopesImportOutput**](DhcpAPIScopesImportOutput.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

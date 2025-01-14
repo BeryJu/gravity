@@ -14,34 +14,34 @@ import (
 	"encoding/json"
 )
 
-// checks if the DnsAPIZonesImportInput type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &DnsAPIZonesImportInput{}
+// checks if the DhcpAPIScopesImportInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPIScopesImportInput{}
 
-// DnsAPIZonesImportInput struct for DnsAPIZonesImportInput
-type DnsAPIZonesImportInput struct {
-	Payload *string                  `json:"payload,omitempty"`
-	Type    *DnsAPIZonesImporterType `json:"type,omitempty"`
+// DhcpAPIScopesImportInput struct for DhcpAPIScopesImportInput
+type DhcpAPIScopesImportInput struct {
+	Payload *string                    `json:"payload,omitempty"`
+	Type    *DhcpAPIScopesImporterType `json:"type,omitempty"`
 }
 
-// NewDnsAPIZonesImportInput instantiates a new DnsAPIZonesImportInput object
+// NewDhcpAPIScopesImportInput instantiates a new DhcpAPIScopesImportInput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDnsAPIZonesImportInput() *DnsAPIZonesImportInput {
-	this := DnsAPIZonesImportInput{}
+func NewDhcpAPIScopesImportInput() *DhcpAPIScopesImportInput {
+	this := DhcpAPIScopesImportInput{}
 	return &this
 }
 
-// NewDnsAPIZonesImportInputWithDefaults instantiates a new DnsAPIZonesImportInput object
+// NewDhcpAPIScopesImportInputWithDefaults instantiates a new DhcpAPIScopesImportInput object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewDnsAPIZonesImportInputWithDefaults() *DnsAPIZonesImportInput {
-	this := DnsAPIZonesImportInput{}
+func NewDhcpAPIScopesImportInputWithDefaults() *DhcpAPIScopesImportInput {
+	this := DhcpAPIScopesImportInput{}
 	return &this
 }
 
 // GetPayload returns the Payload field value if set, zero value otherwise.
-func (o *DnsAPIZonesImportInput) GetPayload() string {
+func (o *DhcpAPIScopesImportInput) GetPayload() string {
 	if o == nil || IsNil(o.Payload) {
 		var ret string
 		return ret
@@ -51,7 +51,7 @@ func (o *DnsAPIZonesImportInput) GetPayload() string {
 
 // GetPayloadOk returns a tuple with the Payload field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DnsAPIZonesImportInput) GetPayloadOk() (*string, bool) {
+func (o *DhcpAPIScopesImportInput) GetPayloadOk() (*string, bool) {
 	if o == nil || IsNil(o.Payload) {
 		return nil, false
 	}
@@ -59,7 +59,7 @@ func (o *DnsAPIZonesImportInput) GetPayloadOk() (*string, bool) {
 }
 
 // HasPayload returns a boolean if a field has been set.
-func (o *DnsAPIZonesImportInput) HasPayload() bool {
+func (o *DhcpAPIScopesImportInput) HasPayload() bool {
 	if o != nil && !IsNil(o.Payload) {
 		return true
 	}
@@ -68,14 +68,14 @@ func (o *DnsAPIZonesImportInput) HasPayload() bool {
 }
 
 // SetPayload gets a reference to the given string and assigns it to the Payload field.
-func (o *DnsAPIZonesImportInput) SetPayload(v string) {
+func (o *DhcpAPIScopesImportInput) SetPayload(v string) {
 	o.Payload = &v
 }
 
 // GetType returns the Type field value if set, zero value otherwise.
-func (o *DnsAPIZonesImportInput) GetType() DnsAPIZonesImporterType {
+func (o *DhcpAPIScopesImportInput) GetType() DhcpAPIScopesImporterType {
 	if o == nil || IsNil(o.Type) {
-		var ret DnsAPIZonesImporterType
+		var ret DhcpAPIScopesImporterType
 		return ret
 	}
 	return *o.Type
@@ -83,7 +83,7 @@ func (o *DnsAPIZonesImportInput) GetType() DnsAPIZonesImporterType {
 
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DnsAPIZonesImportInput) GetTypeOk() (*DnsAPIZonesImporterType, bool) {
+func (o *DhcpAPIScopesImportInput) GetTypeOk() (*DhcpAPIScopesImporterType, bool) {
 	if o == nil || IsNil(o.Type) {
 		return nil, false
 	}
@@ -91,7 +91,7 @@ func (o *DnsAPIZonesImportInput) GetTypeOk() (*DnsAPIZonesImporterType, bool) {
 }
 
 // HasType returns a boolean if a field has been set.
-func (o *DnsAPIZonesImportInput) HasType() bool {
+func (o *DhcpAPIScopesImportInput) HasType() bool {
 	if o != nil && !IsNil(o.Type) {
 		return true
 	}
@@ -99,12 +99,12 @@ func (o *DnsAPIZonesImportInput) HasType() bool {
 	return false
 }
 
-// SetType gets a reference to the given DnsAPIZonesImporterType and assigns it to the Type field.
-func (o *DnsAPIZonesImportInput) SetType(v DnsAPIZonesImporterType) {
+// SetType gets a reference to the given DhcpAPIScopesImporterType and assigns it to the Type field.
+func (o *DhcpAPIScopesImportInput) SetType(v DhcpAPIScopesImporterType) {
 	o.Type = &v
 }
 
-func (o DnsAPIZonesImportInput) MarshalJSON() ([]byte, error) {
+func (o DhcpAPIScopesImportInput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -112,7 +112,7 @@ func (o DnsAPIZonesImportInput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o DnsAPIZonesImportInput) ToMap() (map[string]interface{}, error) {
+func (o DhcpAPIScopesImportInput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Payload) {
 		toSerialize["payload"] = o.Payload
@@ -123,38 +123,38 @@ func (o DnsAPIZonesImportInput) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableDnsAPIZonesImportInput struct {
-	value *DnsAPIZonesImportInput
+type NullableDhcpAPIScopesImportInput struct {
+	value *DhcpAPIScopesImportInput
 	isSet bool
 }
 
-func (v NullableDnsAPIZonesImportInput) Get() *DnsAPIZonesImportInput {
+func (v NullableDhcpAPIScopesImportInput) Get() *DhcpAPIScopesImportInput {
 	return v.value
 }
 
-func (v *NullableDnsAPIZonesImportInput) Set(val *DnsAPIZonesImportInput) {
+func (v *NullableDhcpAPIScopesImportInput) Set(val *DhcpAPIScopesImportInput) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableDnsAPIZonesImportInput) IsSet() bool {
+func (v NullableDhcpAPIScopesImportInput) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableDnsAPIZonesImportInput) Unset() {
+func (v *NullableDhcpAPIScopesImportInput) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableDnsAPIZonesImportInput(val *DnsAPIZonesImportInput) *NullableDnsAPIZonesImportInput {
-	return &NullableDnsAPIZonesImportInput{value: val, isSet: true}
+func NewNullableDhcpAPIScopesImportInput(val *DhcpAPIScopesImportInput) *NullableDhcpAPIScopesImportInput {
+	return &NullableDhcpAPIScopesImportInput{value: val, isSet: true}
 }
 
-func (v NullableDnsAPIZonesImportInput) MarshalJSON() ([]byte, error) {
+func (v NullableDhcpAPIScopesImportInput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableDnsAPIZonesImportInput) UnmarshalJSON(src []byte) error {
+func (v *NullableDhcpAPIScopesImportInput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

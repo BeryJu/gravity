@@ -1,78 +1,78 @@
-# DnsAPIZonesImportInput
+# DhcpAPIScopesImportInput
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Payload** | Pointer to **string** |  | [optional] 
-**Type** | Pointer to [**DnsAPIZonesImporterType**](DnsAPIZonesImporterType.md) |  | [optional] 
+**Type** | Pointer to [**DhcpAPIScopesImporterType**](DhcpAPIScopesImporterType.md) |  | [optional] 
 
 ## Methods
 
-### NewDnsAPIZonesImportInput
+### NewDhcpAPIScopesImportInput
 
-`func NewDnsAPIZonesImportInput() *DnsAPIZonesImportInput`
+`func NewDhcpAPIScopesImportInput() *DhcpAPIScopesImportInput`
 
-NewDnsAPIZonesImportInput instantiates a new DnsAPIZonesImportInput object
+NewDhcpAPIScopesImportInput instantiates a new DhcpAPIScopesImportInput object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewDnsAPIZonesImportInputWithDefaults
+### NewDhcpAPIScopesImportInputWithDefaults
 
-`func NewDnsAPIZonesImportInputWithDefaults() *DnsAPIZonesImportInput`
+`func NewDhcpAPIScopesImportInputWithDefaults() *DhcpAPIScopesImportInput`
 
-NewDnsAPIZonesImportInputWithDefaults instantiates a new DnsAPIZonesImportInput object
+NewDhcpAPIScopesImportInputWithDefaults instantiates a new DhcpAPIScopesImportInput object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetPayload
 
-`func (o *DnsAPIZonesImportInput) GetPayload() string`
+`func (o *DhcpAPIScopesImportInput) GetPayload() string`
 
 GetPayload returns the Payload field if non-nil, zero value otherwise.
 
 ### GetPayloadOk
 
-`func (o *DnsAPIZonesImportInput) GetPayloadOk() (*string, bool)`
+`func (o *DhcpAPIScopesImportInput) GetPayloadOk() (*string, bool)`
 
 GetPayloadOk returns a tuple with the Payload field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPayload
 
-`func (o *DnsAPIZonesImportInput) SetPayload(v string)`
+`func (o *DhcpAPIScopesImportInput) SetPayload(v string)`
 
 SetPayload sets Payload field to given value.
 
 ### HasPayload
 
-`func (o *DnsAPIZonesImportInput) HasPayload() bool`
+`func (o *DhcpAPIScopesImportInput) HasPayload() bool`
 
 HasPayload returns a boolean if a field has been set.
 
 ### GetType
 
-`func (o *DnsAPIZonesImportInput) GetType() DnsAPIZonesImporterType`
+`func (o *DhcpAPIScopesImportInput) GetType() DhcpAPIScopesImporterType`
 
 GetType returns the Type field if non-nil, zero value otherwise.
 
 ### GetTypeOk
 
-`func (o *DnsAPIZonesImportInput) GetTypeOk() (*DnsAPIZonesImporterType, bool)`
+`func (o *DhcpAPIScopesImportInput) GetTypeOk() (*DhcpAPIScopesImporterType, bool)`
 
 GetTypeOk returns a tuple with the Type field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetType
 
-`func (o *DnsAPIZonesImportInput) SetType(v DnsAPIZonesImporterType)`
+`func (o *DhcpAPIScopesImportInput) SetType(v DhcpAPIScopesImporterType)`
 
 SetType sets Type field to given value.
 
 ### HasType
 
-`func (o *DnsAPIZonesImportInput) HasType() bool`
+`func (o *DhcpAPIScopesImportInput) HasType() bool`
 
 HasType returns a boolean if a field has been set.
 

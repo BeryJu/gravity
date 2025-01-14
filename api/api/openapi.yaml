@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.23.1
+  version: 0.24.0
 servers:
 - url: /
 paths:
@@ -455,6 +455,44 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: DHCP Scopes
+      tags:
+      - roles/dhcp
+  /api/v1/dhcp/scopes/import:
+    post:
+      operationId: dhcp.import_scopes
+      parameters:
+      - explode: true
+        in: query
+        name: scope
+        required: false
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DhcpAPIScopesImportInput'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DhcpAPIScopesImportOutput'
+          description: OK
         "400":
           content:
             application/json:
@@ -2678,6 +2716,27 @@ components:
       - scopes
       - statistics
       type: object
+    DhcpAPIScopesImportInput:
+      example:
+        payload: payload
+        type: null
+      properties:
+        payload:
+          type: string
+        type:
+          $ref: '#/components/schemas/DhcpAPIScopesImporterType'
+      type: object
+    DhcpAPIScopesImportOutput:
+      example:
+        successful: true
+      properties:
+        successful:
+          type: boolean
+      type: object
+    DhcpAPIScopesImporterType:
+      enum:
+      - ms_dhcp
+      type: string
     DhcpAPIScopesPutInput:
       example:
         subnetCidr: subnetCidr
@@ -3099,14 +3158,12 @@ components:
     DnsAPIZonesImportInput:
       example:
         payload: payload
-        type: bind
+        type: null
       properties:
         payload:
           type: string
         type:
-          enum:
-          - bind
-          type: string
+          $ref: '#/components/schemas/DnsAPIZonesImporterType'
       type: object
     DnsAPIZonesImportOutput:
       example:
@@ -3115,6 +3172,11 @@ components:
         successful:
           type: boolean
       type: object
+    DnsAPIZonesImporterType:
+      enum:
+      - bind
+      - opnsense
+      type: string
     DnsAPIZonesPutInput:
       example:
         handlerConfigs:

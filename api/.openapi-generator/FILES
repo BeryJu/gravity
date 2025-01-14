@@ -64,6 +64,9 @@ docs/DhcpAPIRoleConfigOutput.md
 docs/DhcpAPIScope.md
 docs/DhcpAPIScopeStatistics.md
 docs/DhcpAPIScopesGetOutput.md
+docs/DhcpAPIScopesImportInput.md
+docs/DhcpAPIScopesImportOutput.md
+docs/DhcpAPIScopesImporterType.md
 docs/DhcpAPIScopesPutInput.md
 docs/DhcpRoleConfig.md
 docs/DhcpScopeDNS.md
@@ -85,6 +88,7 @@ docs/DnsAPIZone.md
 docs/DnsAPIZonesGetOutput.md
 docs/DnsAPIZonesImportInput.md
 docs/DnsAPIZonesImportOutput.md
+docs/DnsAPIZonesImporterType.md
 docs/DnsAPIZonesPutInput.md
 docs/DnsRoleConfig.md
 docs/ExtconfigExtConfigDirs.md
@@ -170,6 +174,9 @@ model_dhcp_api_role_config_output.go
 model_dhcp_api_scope.go
 model_dhcp_api_scope_statistics.go
 model_dhcp_api_scopes_get_output.go
+model_dhcp_api_scopes_import_input.go
+model_dhcp_api_scopes_import_output.go
+model_dhcp_api_scopes_importer_type.go
 model_dhcp_api_scopes_put_input.go
 model_dhcp_role_config.go
 model_dhcp_scope_dns.go
@@ -191,6 +198,7 @@ model_dns_api_zone.go
 model_dns_api_zones_get_output.go
 model_dns_api_zones_import_input.go
 model_dns_api_zones_import_output.go
+model_dns_api_zones_importer_type.go
 model_dns_api_zones_put_input.go
 model_dns_role_config.go
 model_extconfig_ext_config_dirs.go

@@ -14,33 +14,33 @@ import (
 	"encoding/json"
 )
 
-// checks if the DnsAPIZonesImportOutput type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &DnsAPIZonesImportOutput{}
+// checks if the DhcpAPIScopesImportOutput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &DhcpAPIScopesImportOutput{}
 
-// DnsAPIZonesImportOutput struct for DnsAPIZonesImportOutput
-type DnsAPIZonesImportOutput struct {
+// DhcpAPIScopesImportOutput struct for DhcpAPIScopesImportOutput
+type DhcpAPIScopesImportOutput struct {
 	Successful *bool `json:"successful,omitempty"`
 }
 
-// NewDnsAPIZonesImportOutput instantiates a new DnsAPIZonesImportOutput object
+// NewDhcpAPIScopesImportOutput instantiates a new DhcpAPIScopesImportOutput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDnsAPIZonesImportOutput() *DnsAPIZonesImportOutput {
-	this := DnsAPIZonesImportOutput{}
+func NewDhcpAPIScopesImportOutput() *DhcpAPIScopesImportOutput {
+	this := DhcpAPIScopesImportOutput{}
 	return &this
 }
 
-// NewDnsAPIZonesImportOutputWithDefaults instantiates a new DnsAPIZonesImportOutput object
+// NewDhcpAPIScopesImportOutputWithDefaults instantiates a new DhcpAPIScopesImportOutput object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewDnsAPIZonesImportOutputWithDefaults() *DnsAPIZonesImportOutput {
-	this := DnsAPIZonesImportOutput{}
+func NewDhcpAPIScopesImportOutputWithDefaults() *DhcpAPIScopesImportOutput {
+	this := DhcpAPIScopesImportOutput{}
 	return &this
 }
 
 // GetSuccessful returns the Successful field value if set, zero value otherwise.
-func (o *DnsAPIZonesImportOutput) GetSuccessful() bool {
+func (o *DhcpAPIScopesImportOutput) GetSuccessful() bool {
 	if o == nil || IsNil(o.Successful) {
 		var ret bool
 		return ret
@@ -50,7 +50,7 @@ func (o *DnsAPIZonesImportOutput) GetSuccessful() bool {
 
 // GetSuccessfulOk returns a tuple with the Successful field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DnsAPIZonesImportOutput) GetSuccessfulOk() (*bool, bool) {
+func (o *DhcpAPIScopesImportOutput) GetSuccessfulOk() (*bool, bool) {
 	if o == nil || IsNil(o.Successful) {
 		return nil, false
 	}
@@ -58,7 +58,7 @@ func (o *DnsAPIZonesImportOutput) GetSuccessfulOk() (*bool, bool) {
 }
 
 // HasSuccessful returns a boolean if a field has been set.
-func (o *DnsAPIZonesImportOutput) HasSuccessful() bool {
+func (o *DhcpAPIScopesImportOutput) HasSuccessful() bool {
 	if o != nil && !IsNil(o.Successful) {
 		return true
 	}
@@ -67,11 +67,11 @@ func (o *DnsAPIZonesImportOutput) HasSuccessful() bool {
 }
 
 // SetSuccessful gets a reference to the given bool and assigns it to the Successful field.
-func (o *DnsAPIZonesImportOutput) SetSuccessful(v bool) {
+func (o *DhcpAPIScopesImportOutput) SetSuccessful(v bool) {
 	o.Successful = &v
 }
 
-func (o DnsAPIZonesImportOutput) MarshalJSON() ([]byte, error) {
+func (o DhcpAPIScopesImportOutput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -79,7 +79,7 @@ func (o DnsAPIZonesImportOutput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o DnsAPIZonesImportOutput) ToMap() (map[string]interface{}, error) {
+func (o DhcpAPIScopesImportOutput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Successful) {
 		toSerialize["successful"] = o.Successful
@@ -87,38 +87,38 @@ func (o DnsAPIZonesImportOutput) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableDnsAPIZonesImportOutput struct {
-	value *DnsAPIZonesImportOutput
+type NullableDhcpAPIScopesImportOutput struct {
+	value *DhcpAPIScopesImportOutput
 	isSet bool
 }
 
-func (v NullableDnsAPIZonesImportOutput) Get() *DnsAPIZonesImportOutput {
+func (v NullableDhcpAPIScopesImportOutput) Get() *DhcpAPIScopesImportOutput {
 	return v.value
 }
 
-func (v *NullableDnsAPIZonesImportOutput) Set(val *DnsAPIZonesImportOutput) {
+func (v *NullableDhcpAPIScopesImportOutput) Set(val *DhcpAPIScopesImportOutput) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableDnsAPIZonesImportOutput) IsSet() bool {
+func (v NullableDhcpAPIScopesImportOutput) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableDnsAPIZonesImportOutput) Unset() {
+func (v *NullableDhcpAPIScopesImportOutput) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableDnsAPIZonesImportOutput(val *DnsAPIZonesImportOutput) *NullableDnsAPIZonesImportOutput {
-	return &NullableDnsAPIZonesImportOutput{value: val, isSet: true}
+func NewNullableDhcpAPIScopesImportOutput(val *DhcpAPIScopesImportOutput) *NullableDhcpAPIScopesImportOutput {
+	return &NullableDhcpAPIScopesImportOutput{value: val, isSet: true}
 }
 
-func (v NullableDnsAPIZonesImportOutput) MarshalJSON() ([]byte, error) {
+func (v NullableDhcpAPIScopesImportOutput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableDnsAPIZonesImportOutput) UnmarshalJSON(src []byte) error {
+func (v *NullableDhcpAPIScopesImportOutput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
