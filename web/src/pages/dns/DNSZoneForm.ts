@@ -8,7 +8,7 @@ import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { first } from "../../utils";
+import { firstElement } from "../../utils";
 
 export const DEFAULT_HANDLER_CONFIG = [
     {
@@ -29,7 +29,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
         const zones = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones({
             name: pk,
         });
-        const zone = first(zones.zones);
+        const zone = firstElement(zones.zones);
         if (!zone) throw new Error("No zone");
         return zone;
     }

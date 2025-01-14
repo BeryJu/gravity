@@ -7,19 +7,22 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { first } from "../../utils";
+import { first, firstElement } from "../../utils";
 
 @customElement("gravity-dhcp-lease-form")
 export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
     @property()
     scope: string | undefined;
 
+    @property()
+    nextAddress?: string;
+
     async loadInstance(pk: string): Promise<DhcpAPILease> {
         const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({
             scope: this.scope,
             identifier: pk,
         });
-        const lease = first(leases.leases);
+        const lease = firstElement(leases.leases);
         if (!lease) throw new Error("No lease");
         return lease;
     }
@@ -71,11 +74,15 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
                     class="pf-c-form-control"
                     required
                 />
+                <p class="pf-c-form__helper-text">
+                    The identifier used by the device this lease is for. In most cases this will be
+                    the MAC address of the network device.
+                </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="Address" required name="address">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.address)}"
+                    value="${first(this.instance?.address, this.nextAddress, "")}"
                     class="pf-c-form-control"
                     required
                 />
