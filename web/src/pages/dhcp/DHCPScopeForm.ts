@@ -10,7 +10,7 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/FormGroup";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, first } from "../../utils";
+import { KV, firstElement } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
@@ -18,7 +18,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
             name: pk,
         });
-        const zone = first(scopes.scopes);
+        const zone = firstElement(scopes.scopes);
         if (!zone) throw new Error("No scope");
         return zone;
     }

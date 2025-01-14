@@ -8,7 +8,7 @@ import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, first } from "../../utils";
+import { KV, firstElement } from "../../utils";
 
 export const DEFAULT_ADMIN_PERMISSIONS: AuthPermission[] = [
     {
@@ -23,7 +23,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
         const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers({
             username: pk,
         });
-        const user = first(users.users);
+        const user = firstElement(users.users);
         if (!user) throw new Error("No user");
         return user;
     }

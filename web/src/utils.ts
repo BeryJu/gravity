@@ -19,26 +19,37 @@ export function PaginationWrapper<T>(items: T[]): PaginatedResponse<T> {
     };
 }
 
-export function first<T>(items: T[] | null | undefined): T | undefined {
+export function firstElement<T>(items: T[] | null | undefined): T | undefined {
     if (items !== undefined && items !== null && items.length > 0) {
         return items[0];
     }
     return undefined;
 }
 
-export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number {
-    const getIP = (input: string) => {
-        let ip: AbstractIPNum;
-        try {
-            ip = IPv6.fromString(input);
-        } catch {
-            ip = IPv4.fromString(input);
+export function first<T>(...args: Array<T | undefined | null>): T {
+    for (let index = 0; index < args.length; index++) {
+        const element = args[index];
+        if (element !== undefined && element !== null) {
+            return element;
         }
-        return ip;
-    };
+    }
+    throw new Error(`No compatible arg given: ${args}`);
+}
+
+export function ip(raw: string): AbstractIPNum {
+    let ip: AbstractIPNum;
+    try {
+        ip = IPv6.fromString(raw);
+    } catch {
+        ip = IPv4.fromString(raw);
+    }
+    return ip;
+}
+
+export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number {
     return (a: T, b: T) => {
-        const aIP = getIP(getter(a));
-        const bIP = getIP(getter(b));
+        const aIP = ip(getter(a));
+        const bIP = ip(getter(b));
         if (aIP > bIP) return 1;
         if (aIP < bIP) return -1;
         return 0;
