@@ -195,7 +195,9 @@ func (z *Zone) Init(ctx context.Context) {
 		},
 		z.inst.KV(),
 		z.inst.KV().Key(z.etcdKey).Prefix(true),
+		watcher.WithPrefix[map[string]*Record](),
 	)
+	z.records.Start(ctx)
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"].(string)
 		hc, ok := HandlerRegistry.Find(t)
@@ -205,8 +207,6 @@ func (z *Zone) Init(ctx context.Context) {
 		}
 		z.h = append(z.h, hc(z, handlerCfg))
 	}
-
-	z.records.Start(ctx)
 }
 
 func (z *Zone) StopWatchingRecords() {

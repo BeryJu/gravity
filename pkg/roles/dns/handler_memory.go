@@ -45,7 +45,7 @@ func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 				}
 			}
 		} else {
-			recs, ok = mh.z.records.GetPrefix(k.String())
+			recs, ok = mh.z.records.GetOK(k.String())
 			if !ok {
 				return answers
 			}
