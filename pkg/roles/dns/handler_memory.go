@@ -36,7 +36,7 @@ func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 			prefix := k.String()
 			// If the key is a prefix, we can't just directly look it up in the map,
 			// and have to fall back to a "slightly" slower method of iterating through the map
-			for key, rr := range mh.z.records.IterRelativeKey() {
+			for key, rr := range mh.z.records.Iter() {
 				if !strings.HasPrefix(key, prefix) {
 					continue
 				}

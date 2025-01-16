@@ -119,7 +119,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
 			ResolveRequest: func(w dns.ResponseWriter, r *utils.DNSRequest) {
-				z.log.Debug("Next lookup iteration", zap.Int("iter", r.Iteration()+1))
+				z.log.Debug("Next lookup iteration", zap.Int("iter", r.Iteration()))
 				z.role.rootHandler(w, r)
 			},
 		})
