@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -54,6 +55,7 @@ func New[T any](
 	w := &Watcher[T]{
 		entries:     make(map[string]T),
 		mutex:       sync.RWMutex{},
+		log:         extconfig.Get().Logger().Named("watcher"),
 		constructor: constructor,
 		prefix:      prefix,
 		client:      client,
