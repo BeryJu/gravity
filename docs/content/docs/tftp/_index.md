@@ -1,5 +1,7 @@
 ---
 title: "TFTP Role"
+weight: 7
+description: Use Gravity as a TFTP server to upload network device configuration to or chainload PXE boot from.
 ---
 
 Gravity provides a TFTP server that can store router/switch configurations and can be used for chain network booting.

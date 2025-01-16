@@ -1,6 +1,7 @@
 ---
 title: "DNS Role"
 weight: 6
+description: Configure Gravity as a DNS server to forward to public resolvers or internally stored records.
 ---
 
 Gravity's DNS Server supports:
