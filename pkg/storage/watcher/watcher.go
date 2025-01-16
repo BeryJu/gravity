@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/storage"
+	"github.com/getsentry/sentry-go"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -99,13 +100,14 @@ func (w *Watcher[T]) Start(ctx context.Context) {
 }
 
 func (w *Watcher[T]) loadInitial(ctx context.Context) {
-	entries, err := w.client.Get(
-		ctx, w.prefix.String(), clientv3.WithPrefix())
+	tx := sentry.StartTransaction(ctx, "gravity.storage.watcher.loadInitial")
+	defer tx.Finish()
+	entries, err := w.client.Get(tx.Context(), w.prefix.String(), clientv3.WithPrefix())
 	if err != nil {
 		w.log.Warn("failed to list entries", zap.Error(err))
 		if !errors.Is(err, context.Canceled) {
 			time.Sleep(5 * time.Second)
-			w.loadInitial(ctx)
+			w.loadInitial(tx.Context())
 		}
 		return
 	}
