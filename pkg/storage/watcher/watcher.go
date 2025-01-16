@@ -27,6 +27,8 @@ type Watcher[T any] struct {
 	withPrefix       bool
 	afterInitialLoad func()
 	beforeUpdate     func(entry T)
+
+	watchCancel context.CancelFunc
 }
 
 func WithPrefix[T any]() func(*Watcher[T]) {
@@ -93,7 +95,15 @@ func (w *Watcher[T]) Iter() iter.Seq2[string, T] {
 
 func (w *Watcher[T]) Start(ctx context.Context) {
 	w.loadInitial(ctx)
-	w.startWatch(ctx)
+	cctx, cancel := context.WithCancel(ctx)
+	w.watchCancel = cancel
+	go w.startWatch(cctx)
+}
+
+func (w *Watcher[T]) Stop() {
+	if w.watchCancel != nil {
+		w.watchCancel()
+	}
 }
 
 func (w *Watcher[T]) loadInitial(ctx context.Context) {

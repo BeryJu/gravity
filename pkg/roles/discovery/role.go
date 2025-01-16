@@ -8,16 +8,20 @@ import (
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/discovery/types"
+	"beryju.io/gravity/pkg/storage/watcher"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/zap"
 
 	"github.com/swaggest/rest/web"
 )
 
 type Role struct {
-	log *zap.Logger
-	i   roles.Instance
-	cfg *RoleConfig
-	ctx context.Context
+	log     *zap.Logger
+	i       roles.Instance
+	cfg     *RoleConfig
+	ctx     context.Context
+	watcher *watcher.Watcher[*Subnet]
 }
 
 func init() {
@@ -32,6 +36,19 @@ func New(instance roles.Instance) *Role {
 		i:   instance,
 		ctx: instance.Context(),
 	}
+	r.watcher = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Subnet, error) {
+			sub, err := r.subnetFromKV(kv)
+			if err != nil {
+				r.log.Warn("failed to parse subnet", zap.Error(err))
+				return nil, err
+			}
+			go sub.RunDiscovery(context.Background())
+			return sub, err
+		},
+		r.i.KV(),
+		r.i.KV().Key(types.KeyRole, types.KeySubnets).Prefix(true),
+	)
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/discovery/subnets", r.APISubnetsGet())
@@ -71,9 +88,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	if !r.cfg.Enabled || extconfig.Get().ListenOnlyMode {
 		return roles.ErrRoleNotConfigured
 	}
-	go r.startWatchSubnets()
+	r.watcher.Start(r.ctx)
 	return nil
 }
 
 func (r *Role) Stop() {
+	r.watcher.Stop()
 }

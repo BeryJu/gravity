@@ -112,8 +112,8 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
 
-	go r.scopes.Start(r.ctx)
-	go r.leases.Start(r.ctx)
+	r.scopes.Start(r.ctx)
+	r.leases.Start(r.ctx)
 
 	if r.cfg.Port < 1 {
 		return nil
@@ -190,6 +190,8 @@ func (r *Role) startServer4() error {
 }
 
 func (r *Role) Stop() {
+	r.scopes.Stop()
+	r.leases.Stop()
 	if r.s4 != nil && r.s4.pc != nil {
 		r.s4.pc.Close()
 	}

@@ -102,7 +102,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dns.start")
 	defer start.Finish()
 
-	go r.zones.Start(r.ctx)
+	r.zones.Start(r.ctx)
 
 	dnsMux := dns.NewServeMux()
 	dnsMux.HandleFunc(
@@ -148,6 +148,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) Stop() {
+	r.zones.Stop()
 	for _, server := range r.servers {
 		err := server.Shutdown()
 		if err != nil && err.Error() != "dns: server not started" {
