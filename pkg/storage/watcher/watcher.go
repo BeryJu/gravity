@@ -3,7 +3,6 @@ package watcher
 import (
 	"context"
 	"errors"
-	"iter"
 	"strings"
 	"sync"
 	"time"
@@ -31,24 +30,6 @@ type Watcher[T any] struct {
 	watchCancel context.CancelFunc
 }
 
-func WithPrefix[T any]() func(*Watcher[T]) {
-	return func(w *Watcher[T]) {
-		w.withPrefix = true
-	}
-}
-
-func WithAfterInitialLoad[T any](callback func()) func(*Watcher[T]) {
-	return func(w *Watcher[T]) {
-		w.afterInitialLoad = callback
-	}
-}
-
-func WithBeforeUpdate[T any](callback func(entry T)) func(*Watcher[T]) {
-	return func(w *Watcher[T]) {
-		w.beforeUpdate = callback
-	}
-}
-
 func New[T any](
 	constructor func(*mvccpb.KeyValue) (T, error),
 	client *storage.Client,
@@ -72,51 +53,6 @@ func New[T any](
 
 func (w *Watcher[T]) Prefix() *storage.Key {
 	return w.prefix.Copy().Prefix(false)
-}
-
-func (w *Watcher[T]) Get(key string) T {
-	entry, _ := w.GetOK(key)
-	return entry
-}
-
-func (w *Watcher[T]) GetPrefix(parts ...string) (T, bool) {
-	return w.GetOK(w.Prefix().Add(parts...).String())
-}
-
-func (w *Watcher[T]) GetOK(key string) (T, bool) {
-	w.mutex.RLock()
-	defer w.mutex.RUnlock()
-	entry, ok := w.entries[key]
-	return entry, ok
-}
-
-type KV[T any] struct {
-	Key   string
-	Value T
-}
-
-func (w *Watcher[T]) iter(fullkey bool) iter.Seq2[string, T] {
-	return func(yield func(string, T) bool) {
-		w.mutex.RLock()
-		defer w.mutex.RUnlock()
-		for k, v := range w.entries {
-			kk := k
-			if !fullkey {
-				kk = strings.TrimPrefix(kk, w.prefix.String())
-			}
-			if !yield(kk, v) {
-				return
-			}
-		}
-	}
-}
-
-func (w *Watcher[T]) Iter() iter.Seq2[string, T] {
-	return w.iter(true)
-}
-
-func (w *Watcher[T]) IterRelativeKey() iter.Seq2[string, T] {
-	return w.iter(false)
 }
 
 func (w *Watcher[T]) Start(ctx context.Context) {
