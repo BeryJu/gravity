@@ -7,7 +7,7 @@ github_repo: 'https://github.com/BeryJu/gravity'
 github_subdir: docs
 
 params:
-  description: Fully-replicated DNS and DHCP Server with ad-blocking powered by etcd
+  description: Fully-replicated DNS, DHCP and TFTP Server with ad-blocking powered by etcd
   copyright: BeryJu.io
   offlineSearch: true
   ui:

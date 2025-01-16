@@ -1,8 +1,7 @@
 ---
 title: "Installation"
-weight: 5
-description:
-  Get started using Gravity
+weight: 1
+description: Get started using Gravity
 ---
 
 ### Pre-requisites

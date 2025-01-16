@@ -1,6 +1,7 @@
 ---
-title: "Backup"
+title: "Backup Role"
 weight: 10
+description: Configure Gravity's inbuilt backup system to upload snapshots to S3 or create them locally.
 ---
 
 ## Snapshots

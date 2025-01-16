@@ -1,5 +1,7 @@
 ---
-title: "Discovery"
+title: "Discovery Role"
+weight: 12
+description: Setup Gravity to discover existing devices on a network and create DNS/DHCP records/leases for them
 ---
 
 Gravity can run periodical scans of your network(s) to discover devices. Once Gravity has discovered a device, you can create a DHCP lease and/or DNS record based on the discovered information.
