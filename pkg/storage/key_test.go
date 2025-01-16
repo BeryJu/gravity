@@ -14,3 +14,10 @@ func TestKey(t *testing.T) {
 	k = c.Key().Add("foo", "bar").Prefix(true)
 	assert.Equal(t, "/foo/bar/", k.String())
 }
+
+func TestKeyCopy(t *testing.T) {
+	c := storage.NewClient("/gravity", nil, false, "localhost:2379")
+	k := c.Key().Add("foo", "bar")
+	assert.Equal(t, "/foo/bar", k.String())
+	assert.Equal(t, "/foo/bar", k.Copy().String())
+}

@@ -31,7 +31,7 @@ func (k *Key) IsPrefix() bool {
 
 func (k *Key) Copy() *Key {
 	p := make([]string, len(k.parts))
-	copy(k.parts, p)
+	copy(p, k.parts)
 	return &Key{
 		parts:  p,
 		prefix: k.prefix,
