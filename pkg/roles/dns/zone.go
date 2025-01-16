@@ -169,7 +169,7 @@ func (r *Role) newZone(name string) *Zone {
 			if err != nil {
 				return nil, err
 			}
-			uidMap, ok := z.records.GetOK(rr.recordKey)
+			uidMap, ok := z.records.GetPrefix(rr.recordKey)
 			if !ok {
 				uidMap = make(map[string]*Record)
 			}

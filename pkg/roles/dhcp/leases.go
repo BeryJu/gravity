@@ -43,7 +43,7 @@ type Lease struct {
 }
 
 func (r *Role) FindLease(req *Request4) *Lease {
-	lease, ok := r.leases.GetOK(r.DeviceIdentifier(req.DHCPv4))
+	lease, ok := r.leases.GetPrefix(r.DeviceIdentifier(req.DHCPv4))
 	if !ok {
 		return nil
 	}
