@@ -58,7 +58,7 @@ func New[T any](
 	w := &Watcher[T]{
 		entries:     make(map[string]T),
 		mutex:       sync.RWMutex{},
-		log:         extconfig.Get().Logger().Named("watcher").With(zap.String("prefix", prefix.String())),
+		log:         extconfig.Get().Logger().Named("storage.watcher").With(zap.String("prefix", prefix.String())),
 		constructor: constructor,
 		prefix:      prefix,
 		client:      client,
@@ -80,7 +80,7 @@ func (w *Watcher[T]) Get(key string) T {
 }
 
 func (w *Watcher[T]) GetPrefix(parts ...string) (T, bool) {
-	return w.GetOK(w.prefix.Add(parts...).String())
+	return w.GetOK(w.Prefix().Add(parts...).String())
 }
 
 func (w *Watcher[T]) GetOK(key string) (T, bool) {
