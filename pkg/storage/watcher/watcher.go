@@ -23,6 +23,7 @@ type Watcher[T any] struct {
 
 	withPrefix       bool
 	afterInitialLoad func()
+	beforeUpdate     func(entry T)
 }
 
 func WithPrefix[T any]() func(*Watcher[T]) {
@@ -34,6 +35,12 @@ func WithPrefix[T any]() func(*Watcher[T]) {
 func WithAfterInitialLoad[T any](callback func()) func(*Watcher[T]) {
 	return func(w *Watcher[T]) {
 		w.afterInitialLoad = callback
+	}
+}
+
+func WithBeforeUpdate[T any](callback func(entry T)) func(*Watcher[T]) {
+	return func(w *Watcher[T]) {
+		w.beforeUpdate = callback
 	}
 }
 
@@ -63,14 +70,19 @@ func (w *Watcher[T]) Get(key string) T {
 	return w.entries[key]
 }
 
-func (w *Watcher[T]) Iter() chan T {
-	c := make(chan T)
+type KV[T any] struct {
+	Key   string
+	Value T
+}
+
+func (w *Watcher[T]) Iter() chan KV[T] {
+	c := make(chan KV[T])
 	go func() {
 		w.mutex.RLock()
 		defer w.mutex.RUnlock()
-		for _, i := range w.entries {
+		for k, v := range w.entries {
 			select {
-			case c <- i:
+			case c <- KV[T]{Key: k, Value: v}:
 			case <-c:
 				close(c)
 				return
@@ -106,9 +118,7 @@ func (w *Watcher[T]) loadInitial(ctx context.Context) {
 }
 
 func (w *Watcher[T]) startWatch(ctx context.Context) {
-	ch := w.client.Watch(
-		ctx, w.prefix.String(), clientv3.WithPrefix(),
-	)
+	ch := w.client.Watch(ctx, w.prefix.String(), clientv3.WithPrefix())
 	for watchResp := range ch {
 		for _, event := range watchResp.Events {
 			w.handleEvent(event.Type, event.Kv)
@@ -121,6 +131,12 @@ func (w *Watcher[T]) handleEvent(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 	// we only care about scope-level updates, everything underneath doesn't matter
 	if !w.withPrefix && strings.Contains(relKey, "/") {
 		return false
+	}
+	if w.beforeUpdate != nil {
+		w.mutex.RLock()
+		old := w.entries[string(kv.Key)]
+		w.beforeUpdate(old)
+		w.mutex.RUnlock()
 	}
 	if t == mvccpb.DELETE {
 		w.log.Debug("removed entry", zap.String("key", string(kv.Key)))
