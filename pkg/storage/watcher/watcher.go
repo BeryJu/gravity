@@ -25,14 +25,14 @@ type Watcher[T any] struct {
 	afterInitialLoad func()
 }
 
-func WithPrefix() func(*Watcher[any]) {
-	return func(w *Watcher[any]) {
+func WithPrefix[T any]() func(*Watcher[T]) {
+	return func(w *Watcher[T]) {
 		w.withPrefix = true
 	}
 }
 
-func WithAfterInitialLoad(callback func()) func(*Watcher[any]) {
-	return func(w *Watcher[any]) {
+func WithAfterInitialLoad[T any](callback func()) func(*Watcher[T]) {
+	return func(w *Watcher[T]) {
 		w.afterInitialLoad = callback
 	}
 }

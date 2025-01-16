@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -28,15 +27,14 @@ type Role struct {
 	ctx context.Context
 
 	scopes *watcher.Watcher[*Scope]
-	leases map[string]*Lease
+	leases *watcher.Watcher[*Lease]
 
 	cfg *RoleConfig
 
 	s4  *handler4
 	log *zap.Logger
 
-	oui     *oui.OuiDb
-	leasesM sync.RWMutex
+	oui *oui.OuiDb
 }
 
 func init() {
@@ -47,11 +45,9 @@ func init() {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log:     instance.Log(),
-		i:       instance,
-		leases:  make(map[string]*Lease),
-		leasesM: sync.RWMutex{},
-		ctx:     instance.Context(),
+		log: instance.Log(),
+		i:   instance,
+		ctx: instance.Context(),
 	}
 	r.scopes = watcher.New(func(kv *mvccpb.KeyValue) (*Scope, error) {
 		s, err := r.scopeFromKV(kv)
@@ -60,7 +56,26 @@ func New(instance roles.Instance) *Role {
 		}
 		s.calculateUsage()
 		return s, nil
-	}, instance.KV(), instance.KV().Key())
+	}, instance.KV(), instance.KV().Key(
+		types.KeyRole,
+		types.KeyScopes,
+	).Prefix(true))
+	r.leases = watcher.New(func(kv *mvccpb.KeyValue) (*Lease, error) {
+		s, err := r.leaseFromKV(kv)
+		if err != nil {
+			return nil, err
+		}
+		return s, nil
+	}, instance.KV(), r.i.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+	).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
+		// Re-calculate scope usage after all leases are loaded
+		for s := range r.scopes.Iter() {
+			s.calculateUsage()
+		}
+	}))
+
 	r.s4 = &handler4{
 		role: r,
 	}
@@ -96,11 +111,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
-	r.loadInitialLeases(start.Context())
 
 	go r.scopes.Start(r.ctx)
-
-	go r.startWatchLeases()
+	go r.leases.Start(r.ctx)
 
 	if r.cfg.Port < 1 {
 		return nil

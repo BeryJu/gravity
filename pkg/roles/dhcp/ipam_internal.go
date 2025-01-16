@@ -147,9 +147,7 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 		return false
 	}
 	// check for existing leases
-	i.role.leasesM.RLock()
-	defer i.role.leasesM.RUnlock()
-	for _, l := range i.role.leases {
+	for l := range i.role.leases.Iter() {
 		// Ignore leases from other scopes
 		if l.ScopeKey != i.scope.Name {
 			continue

@@ -43,10 +43,8 @@ type Lease struct {
 }
 
 func (r *Role) FindLease(req *Request4) *Lease {
-	r.leasesM.RLock()
-	defer r.leasesM.RUnlock()
-	lease, ok := r.leases[r.DeviceIdentifier(req.DHCPv4)]
-	if !ok {
+	lease := r.leases.Get(r.DeviceIdentifier(req.DHCPv4))
+	if lease == nil {
 		return nil
 	}
 	// Check if the leases's scope matches the expected scope to handle this request
