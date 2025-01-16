@@ -10,11 +10,13 @@ The order of handler matters; Gravity will send a query to each handler in the o
 The handler configuration consists of a list of individual handler configurations. All list entries require a `type` attribute which must match one of the headers listed below. For example:
 
 ```yaml
-- cache_ttl: 3600
-  to: 8.8.8.8:53
-  type: forward_blocky
-- to: 8.8.8.8:53
-  type: forward_ip
+- type: forward_blocky
+  to:
+    - 8.8.8.8
+  cache_ttl: 3600
+- type: forward_ip
+  to:
+    - 8.8.8.8
 ```
 
 or
@@ -61,7 +63,8 @@ Forward queries to another DNS server.
 
 ```yaml
 - type: forward_ip
-  to: 8.8.8.8
+  to:
+    - 8.8.8.8
 ```
 
 ### `forward_blocky`
@@ -110,7 +113,8 @@ Forward queries to another DNS server via Blocky for advert/privacy blocking.
 
 ```yaml
 - type: forward_blocky
-  to: 8.8.8.8
+  to:
+    - 8.8.8.8
   blocklists:
     - https://adaway.org/hosts.txt
   allowlists:
