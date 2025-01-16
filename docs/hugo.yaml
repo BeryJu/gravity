@@ -13,6 +13,7 @@ params:
   ui:
     readingtime:
       enable: true
+    showLightDarkModeMenu: true
 
 markup:
   tableOfContents:
