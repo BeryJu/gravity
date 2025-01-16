@@ -58,7 +58,7 @@ func New[T any](
 	w := &Watcher[T]{
 		entries:     make(map[string]T),
 		mutex:       sync.RWMutex{},
-		log:         extconfig.Get().Logger().Named("watcher"),
+		log:         extconfig.Get().Logger().Named("watcher").With(zap.String("prefix", prefix.String())),
 		constructor: constructor,
 		prefix:      prefix,
 		client:      client,
@@ -71,9 +71,15 @@ func New[T any](
 }
 
 func (w *Watcher[T]) Get(key string) T {
+	entry, _ := w.GetOK(key)
+	return entry
+}
+
+func (w *Watcher[T]) GetOK(key string) (T, bool) {
 	w.mutex.RLock()
 	defer w.mutex.RUnlock()
-	return w.entries[key]
+	entry, ok := w.entries[key]
+	return entry, ok
 }
 
 type KV[T any] struct {
@@ -94,6 +100,7 @@ func (w *Watcher[T]) Iter() iter.Seq2[string, T] {
 }
 
 func (w *Watcher[T]) Start(ctx context.Context) {
+	w.log.Debug("Starting watcher")
 	w.loadInitial(ctx)
 	cctx, cancel := context.WithCancel(ctx)
 	w.watchCancel = cancel
@@ -107,6 +114,7 @@ func (w *Watcher[T]) Stop() {
 }
 
 func (w *Watcher[T]) loadInitial(ctx context.Context) {
+	w.log.Debug("Loading initial")
 	tx := sentry.StartTransaction(ctx, "gravity.storage.watcher.loadInitial")
 	defer tx.Finish()
 	entries, err := w.client.Get(tx.Context(), w.prefix.String(), clientv3.WithPrefix())

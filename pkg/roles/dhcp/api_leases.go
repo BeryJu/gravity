@@ -163,8 +163,8 @@ type APILeasesWOLInput struct {
 
 func (r *Role) APILeasesWOL() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
-		l := r.leases.Get(input.Identifier)
-		if l == nil {
+		l, ok := r.leases.GetOK(input.Identifier)
+		if !ok {
 			return status.InvalidArgument
 		}
 		err := l.sendWOL()

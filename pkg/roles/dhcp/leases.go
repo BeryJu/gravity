@@ -43,8 +43,8 @@ type Lease struct {
 }
 
 func (r *Role) FindLease(req *Request4) *Lease {
-	lease := r.leases.Get(r.DeviceIdentifier(req.DHCPv4))
-	if lease == nil {
+	lease, ok := r.leases.GetOK(r.DeviceIdentifier(req.DHCPv4))
+	if !ok {
 		return nil
 	}
 	// Check if the leases's scope matches the expected scope to handle this request
@@ -108,8 +108,8 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	}
 	l.etcdKey = string(raw.Key)
 
-	scope := r.scopes.Get(l.ScopeKey)
-	if scope == nil {
+	scope, ok := r.scopes.GetOK(l.ScopeKey)
+	if !ok {
 		return l, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
 	}
 	l.scope = scope

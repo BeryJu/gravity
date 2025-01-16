@@ -11,8 +11,8 @@ func (r *Role) eventCreateLease(ev *roles.Event) {
 	address := ev.Payload.Data["address"].(string)
 	scopeName := ev.Payload.Data["scope"].(string)
 
-	scope := r.scopes.Get(scopeName)
-	if scope == nil {
+	scope, ok := r.scopes.GetOK(scopeName)
+	if !ok {
 		r.log.Warn("event to create lease with missing scope", zap.String("scopeName", scopeName))
 		return
 	}

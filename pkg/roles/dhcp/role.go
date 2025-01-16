@@ -49,32 +49,41 @@ func New(instance roles.Instance) *Role {
 		i:   instance,
 		ctx: instance.Context(),
 	}
-	r.scopes = watcher.New(func(kv *mvccpb.KeyValue) (*Scope, error) {
-		s, err := r.scopeFromKV(kv)
-		if err != nil {
-			return nil, err
-		}
-		s.calculateUsage()
-		return s, nil
-	}, instance.KV(), instance.KV().Key(
-		types.KeyRole,
-		types.KeyScopes,
-	).Prefix(true))
-	r.leases = watcher.New(func(kv *mvccpb.KeyValue) (*Lease, error) {
-		s, err := r.leaseFromKV(kv)
-		if err != nil {
-			return nil, err
-		}
-		return s, nil
-	}, instance.KV(), r.i.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-	).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
-		// Re-calculate scope usage after all leases are loaded
-		for _, s := range r.scopes.Iter() {
+	r.scopes = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Scope, error) {
+			s, err := r.scopeFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
 			s.calculateUsage()
-		}
-	}))
+			return s, nil
+		},
+		instance.KV(),
+		instance.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+		).Prefix(true),
+	)
+
+	r.leases = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Lease, error) {
+			s, err := r.leaseFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			return s, nil
+		},
+		instance.KV(),
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
+			// Re-calculate scope usage after all leases are loaded
+			for _, s := range r.scopes.Iter() {
+				s.calculateUsage()
+			}
+		}),
+	)
 
 	r.s4 = &handler4{
 		role: r,
