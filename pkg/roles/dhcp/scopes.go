@@ -73,7 +73,7 @@ func (r *Role) scopeFromKV(raw *mvccpb.KeyValue) (*Scope, error) {
 
 	s.etcdKey = string(raw.Key)
 
-	previous := r.scopes[s.Name]
+	previous := r.scopes.Get(s.Name)
 
 	ipamInst, err := s.ipamType(previous)
 	if err != nil {
@@ -99,13 +99,11 @@ func (s *Scope) ipamType(previous *Scope) (IPAM, error) {
 func (r *Role) findScopeForRequest(req *Request4) *Scope {
 	var match *Scope
 	longestBits := 0
-	r.scopesM.RLock()
-	defer r.scopesM.RUnlock()
 	// To prioritise requests from a DHCP relay being matched correctly, give their subnet
 	// match a 1 bit more priority
 	const dhcpRelayBias = 1
 	const clientIPBias = 2
-	for _, scope := range r.scopes {
+	for scope := range r.scopes.Iter() {
 		// Check based on Client IP Address (highest priority)
 		clientIPMatchBits := scope.match(req.ClientIPAddr)
 		if clientIPMatchBits > -1 && clientIPMatchBits+clientIPBias > longestBits {

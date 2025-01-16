@@ -110,10 +110,8 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 	}
 	l.etcdKey = string(raw.Key)
 
-	r.scopesM.RLock()
-	scope, ok := r.scopes[l.ScopeKey]
-	r.scopesM.RUnlock()
-	if !ok {
+	scope := r.scopes.Get(l.ScopeKey)
+	if scope == nil {
 		return l, fmt.Errorf("DHCP lease with invalid scope key: %s", l.ScopeKey)
 	}
 	l.scope = scope

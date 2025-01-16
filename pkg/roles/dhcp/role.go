@@ -12,8 +12,10 @@ import (
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/getsentry/sentry-go"
 	"github.com/swaggest/rest/web"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/zap"
 	"golang.org/x/net/ipv4"
 
@@ -25,7 +27,7 @@ type Role struct {
 	i   roles.Instance
 	ctx context.Context
 
-	scopes map[string]*Scope
+	scopes *watcher.Watcher[*Scope]
 	leases map[string]*Lease
 
 	cfg *RoleConfig
@@ -34,7 +36,6 @@ type Role struct {
 	log *zap.Logger
 
 	oui     *oui.OuiDb
-	scopesM sync.RWMutex
 	leasesM sync.RWMutex
 }
 
@@ -48,12 +49,18 @@ func New(instance roles.Instance) *Role {
 	r := &Role{
 		log:     instance.Log(),
 		i:       instance,
-		scopes:  make(map[string]*Scope),
-		scopesM: sync.RWMutex{},
 		leases:  make(map[string]*Lease),
 		leasesM: sync.RWMutex{},
 		ctx:     instance.Context(),
 	}
+	r.scopes = watcher.New(func(kv *mvccpb.KeyValue) (*Scope, error) {
+		s, err := r.scopeFromKV(kv)
+		if err != nil {
+			return nil, err
+		}
+		s.calculateUsage()
+		return s, nil
+	}, instance.KV(), instance.KV().Key())
 	r.s4 = &handler4{
 		role: r,
 	}
@@ -89,16 +96,10 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
-	r.loadInitialScopes(start.Context())
 	r.loadInitialLeases(start.Context())
 
-	// Since scope usage relies on r.leases, but r.leases is loaded after the scopes,
-	// manually update the usage
-	for _, s := range r.scopes {
-		s.calculateUsage()
-	}
+	go r.scopes.Start(r.ctx)
 
-	go r.startWatchScopes()
 	go r.startWatchLeases()
 
 	if r.cfg.Port < 1 {
