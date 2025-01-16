@@ -136,8 +136,9 @@ func (w *Watcher[T]) startWatch(ctx context.Context) {
 }
 
 func (w *Watcher[T]) handleEvent(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
-	relKey := strings.TrimPrefix(string(kv.Key), w.prefix.String())
+	watcherEvents.WithLabelValues(w.prefix.String(), mvccpb.Event_EventType_name[int32(t)]).Inc()
 	// we only care about scope-level updates, everything underneath doesn't matter
+	relKey := strings.TrimPrefix(string(kv.Key), w.prefix.String())
 	if !w.withPrefix && strings.Contains(relKey, "/") {
 		return false
 	}
