@@ -6,17 +6,16 @@ import (
 	"net"
 	"net/netip"
 	"strings"
-	"sync"
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
+	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
-	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 )
 
@@ -32,9 +31,7 @@ type Zone struct {
 
 	h []Handler
 
-	records         map[string]map[string]*Record
-	recordsWatchCtx context.CancelFunc
-	recordsSync     sync.RWMutex
+	records *watcher.Watcher[map[string]*Record]
 
 	Name           string                   `json:"-"`
 	HandlerConfigs []map[string]interface{} `json:"handlerConfigs"`
@@ -159,15 +156,30 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 }
 
 func (r *Role) newZone(name string) *Zone {
-	return &Zone{
-		Name:        strings.ToLower(name),
-		DefaultTTL:  DefaultTTL,
-		inst:        r.i,
-		h:           make([]Handler, 0),
-		records:     make(map[string]map[string]*Record),
-		recordsSync: sync.RWMutex{},
-		role:        r,
+	z := &Zone{
+		Name:       strings.ToLower(name),
+		DefaultTTL: DefaultTTL,
+		inst:       r.i,
+		h:          make([]Handler, 0),
+		role:       r,
 	}
+	z.records = watcher.New(
+		func(kv *mvccpb.KeyValue) (map[string]*Record, error) {
+			rr, err := z.recordFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			uidMap := z.records.Get(rr.recordKey)
+			if uidMap == nil {
+				uidMap = make(map[string]*Record)
+			}
+			uidMap[rr.uid] = rr
+			return uidMap, nil
+		},
+		z.inst.KV(),
+		z.inst.KV().Key(z.etcdKey).Prefix(true),
+	)
+	return z
 }
 
 func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
@@ -194,70 +206,12 @@ func (z *Zone) Init(ctx context.Context) {
 		z.h = append(z.h, hc(z, handlerCfg))
 	}
 
-	// start watching all records in this zone, in case etcd goes down
-	z.watchZoneRecords(ctx)
-}
-
-func (z *Zone) watchZoneRecords(ctx context.Context) {
-	evtHandler := func(ev *clientv3.Event) {
-		z.recordsSync.Lock()
-		defer z.recordsSync.Unlock()
-		rec, err := z.recordFromKV(ev.Kv)
-		if _, ok := z.records[rec.recordKey]; !ok {
-			z.records[rec.recordKey] = make(map[string]*Record)
-		}
-		if ev.Type == clientv3.EventTypeDelete {
-			delete(z.records[rec.recordKey], rec.uid)
-			dnsRecordsMetric.WithLabelValues(z.Name).Dec()
-		} else {
-			// Check if the record parsed above actually was parsed correctly,
-			// we don't care for that when removing, but prevent adding
-			// empty records
-			if err != nil {
-				return
-			}
-			if _, ok := z.records[rec.recordKey][rec.uid]; !ok {
-				dnsRecordsMetric.WithLabelValues(z.Name).Inc()
-			}
-			z.records[rec.recordKey][rec.uid] = rec
-		}
-	}
-	ctx, canc := context.WithCancel(ctx)
-	z.recordsWatchCtx = canc
-
-	prefix := z.inst.KV().Key(z.etcdKey).Prefix(true).String()
-
-	records, err := z.inst.KV().Get(ctx, prefix, clientv3.WithPrefix())
-	if err != nil {
-		z.log.Warn("failed to list initial records", zap.Error(err))
-		time.Sleep(5 * time.Second)
-		z.watchZoneRecords(ctx)
-		return
-	}
-	for _, record := range records.Kvs {
-		evtHandler(&clientv3.Event{
-			Type: mvccpb.PUT,
-			Kv:   record,
-		})
-	}
-
-	watchChan := z.inst.KV().Watch(
-		ctx,
-		prefix,
-		clientv3.WithPrefix(),
-	)
-	go func() {
-		for watchResp := range watchChan {
-			for _, event := range watchResp.Events {
-				go evtHandler(event)
-			}
-		}
-	}()
+	z.records.Start(ctx)
 }
 
 func (z *Zone) StopWatchingRecords() {
-	if z != nil && z.recordsWatchCtx != nil {
-		z.recordsWatchCtx()
+	if z != nil && z.records != nil {
+		z.records.Stop()
 	}
 }
 
