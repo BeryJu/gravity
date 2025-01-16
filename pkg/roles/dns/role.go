@@ -49,7 +49,7 @@ func New(instance roles.Instance) *Role {
 				return nil, err
 			}
 			z.Init(r.ctx)
-			return nil, nil
+			return z, nil
 		},
 		r.i.KV(),
 		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true),

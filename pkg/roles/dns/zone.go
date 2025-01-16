@@ -163,22 +163,6 @@ func (r *Role) newZone(name string) *Zone {
 		h:          make([]Handler, 0),
 		role:       r,
 	}
-	z.records = watcher.New(
-		func(kv *mvccpb.KeyValue) (map[string]*Record, error) {
-			rr, err := z.recordFromKV(kv)
-			if err != nil {
-				return nil, err
-			}
-			uidMap, ok := z.records.GetPrefix(rr.recordKey)
-			if !ok {
-				uidMap = make(map[string]*Record)
-			}
-			uidMap[rr.uid] = rr
-			return uidMap, nil
-		},
-		z.inst.KV(),
-		z.inst.KV().Key(z.etcdKey).Prefix(true),
-	)
 	return z
 }
 
@@ -196,6 +180,22 @@ func (r *Role) zoneFromKV(raw *mvccpb.KeyValue) (*Zone, error) {
 }
 
 func (z *Zone) Init(ctx context.Context) {
+	z.records = watcher.New(
+		func(kv *mvccpb.KeyValue) (map[string]*Record, error) {
+			rr, err := z.recordFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			uidMap, ok := z.records.GetPrefix(rr.recordKey)
+			if !ok {
+				uidMap = make(map[string]*Record)
+			}
+			uidMap[rr.uid] = rr
+			return uidMap, nil
+		},
+		z.inst.KV(),
+		z.inst.KV().Key(z.etcdKey).Prefix(true),
+	)
 	for _, handlerCfg := range z.HandlerConfigs {
 		t := handlerCfg["type"].(string)
 		hc, ok := HandlerRegistry.Find(t)

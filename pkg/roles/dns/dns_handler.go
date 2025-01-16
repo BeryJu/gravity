@@ -83,7 +83,7 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 		}
 	}
 	if longestZone == nil {
-		longestZone = ro.zones.Get(types.DNSRootZone)
+		longestZone, _ = ro.zones.GetPrefix(types.DNSRootZone)
 	}
 	if longestZone == nil {
 		ro.log.Warn("no matching zone and no global zone")
