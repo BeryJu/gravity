@@ -1,5 +1,5 @@
 ---
-title: "DHCP"
+title: "DHCP Role"
 weight: 6
 description:
   Configure Gravity as your DHCP server and optionally import existing leases/reservations.

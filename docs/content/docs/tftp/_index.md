@@ -1,5 +1,5 @@
 ---
-title: "TFTP"
+title: "TFTP Role"
 ---
 
 Gravity provides a TFTP server that can store router/switch configurations and can be used for chain network booting.

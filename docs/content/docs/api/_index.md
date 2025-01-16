@@ -1,5 +1,5 @@
 ---
-title: "API"
+title: "API Role"
 ---
 
 Gravity's API is accessible by default on port 8008 under `/api/v1`. OpenAPI is used to document the schema and automate the generation of client libraries.

@@ -1,5 +1,5 @@
 ---
-title: "Discovery"
+title: "Discovery Role"
 ---
 
 Gravity can run periodical scans of your network(s) to discover devices. Once Gravity has discovered a device, you can create a DHCP lease and/or DNS record based on the discovered information.

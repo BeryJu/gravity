@@ -1,5 +1,5 @@
 ---
-title: "DNS"
+title: "DNS Role"
 weight: 6
 ---
 
