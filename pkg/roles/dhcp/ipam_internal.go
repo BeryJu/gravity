@@ -149,13 +149,13 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 	// check for existing leases
 	for l := range i.role.leases.Iter() {
 		// Ignore leases from other scopes
-		if l.ScopeKey != i.scope.Name {
+		if l.Value.ScopeKey != i.scope.Name {
 			continue
 		}
-		if l.Address != ip.String() {
+		if l.Value.Address != ip.String() {
 			continue
 		}
-		if identifier != nil && l.Identifier == *identifier {
+		if identifier != nil && l.Value.Identifier == *identifier {
 			i.UseIP(ip, *identifier)
 			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing matching lease"))
 			return true

@@ -38,7 +38,7 @@ func (s *Scope) calculateUsage() {
 	dhcpScopeSize.WithLabelValues(s.Name).Set(float64(usable.Uint64()))
 	used := big.NewInt(0)
 	for lease := range s.role.leases.Iter() {
-		if lease.ScopeKey != s.Name {
+		if lease.Value.ScopeKey != s.Name {
 			continue
 		}
 		used = used.Add(used, big.NewInt(1))
