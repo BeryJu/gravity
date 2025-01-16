@@ -27,6 +27,8 @@ type Watcher[T any] struct {
 	afterInitialLoad func()
 	beforeUpdate     func(entry T)
 
+	keyFunc func(string) string
+
 	watchCancel context.CancelFunc
 }
 
@@ -44,6 +46,9 @@ func New[T any](
 		prefix:      prefix,
 		client:      client,
 		withPrefix:  false,
+		keyFunc: func(s string) string {
+			return s
+		},
 	}
 	for _, opt := range opts {
 		opt(w)
@@ -101,33 +106,33 @@ func (w *Watcher[T]) startWatch(ctx context.Context) {
 
 func (w *Watcher[T]) handleEvent(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) bool {
 	watcherEvents.WithLabelValues(w.prefix.String(), mvccpb.Event_EventType_name[int32(t)]).Inc()
+	key := w.keyFunc(string(kv.Key))
 	// we only care about scope-level updates, everything underneath doesn't matter
-	relKey := strings.TrimPrefix(string(kv.Key), w.prefix.String())
+	relKey := strings.TrimPrefix(key, w.prefix.String())
 	if !w.withPrefix && strings.Contains(relKey, "/") {
 		return false
 	}
 	if w.beforeUpdate != nil {
 		w.mutex.RLock()
-		old := w.entries[string(kv.Key)]
+		old := w.entries[key]
 		w.beforeUpdate(old)
 		w.mutex.RUnlock()
 	}
 	if t == mvccpb.DELETE {
-		w.log.Debug("removed entry", zap.String("key", string(kv.Key)))
+		w.log.Debug("removed entry", zap.String("key", key))
 		w.mutex.Lock()
 		defer w.mutex.Unlock()
-		delete(w.entries, string(kv.Key))
+		delete(w.entries, key)
 	} else if t == mvccpb.PUT {
 		e, err := w.constructor(kv)
 		if err != nil {
 			w.log.Warn("failed to construct entry", zap.Error(err))
 			return false
 		}
-		// s.calculateUsage()
 		w.mutex.Lock()
-		w.entries[string(kv.Key)] = e
+		w.entries[key] = e
 		w.mutex.Unlock()
-		w.log.Debug("added entry", zap.String("key", string(kv.Key)))
+		w.log.Debug("added entry", zap.String("key", key))
 	}
 	return true
 }

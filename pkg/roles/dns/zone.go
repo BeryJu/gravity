@@ -12,6 +12,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
+	"beryju.io/gravity/pkg/storage"
 	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
@@ -196,6 +197,11 @@ func (z *Zone) Init(ctx context.Context) {
 		z.inst.KV(),
 		z.inst.KV().Key(z.etcdKey).Prefix(true),
 		watcher.WithPrefix[map[string]*Record](),
+		watcher.WithKeyFunc[map[string]*Record](func(key string) string {
+			// Trim last element from string as that's the UID, which we save in a map
+			// and not as part of the outside cache key
+			return storage.KeyFromString(key).Up().String()
+		}),
 	)
 	z.records.Start(ctx)
 	for _, handlerCfg := range z.HandlerConfigs {

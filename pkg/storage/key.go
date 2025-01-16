@@ -9,6 +9,20 @@ type Key struct {
 	prefix bool
 }
 
+func KeyFromString(raw string) *Key {
+	// Remove first element as keys always start with a slash
+	parts := strings.Split(raw, string(SEP))[1:]
+	prefix := false
+	if strings.HasSuffix(raw, string(SEP)) {
+		prefix = true
+		parts = parts[:len(parts)-1]
+	}
+	return &Key{
+		parts:  parts,
+		prefix: prefix,
+	}
+}
+
 func (c *Client) Key(parts ...string) *Key {
 	return &Key{
 		parts: parts,
@@ -17,6 +31,11 @@ func (c *Client) Key(parts ...string) *Key {
 
 func (k *Key) Add(parts ...string) *Key {
 	k.parts = append(k.parts, parts...)
+	return k
+}
+
+func (k *Key) Up() *Key {
+	k.parts = k.parts[:len(k.parts)-1]
 	return k
 }
 
