@@ -18,14 +18,14 @@ const IterationMax = 20
 func (r *Role) FindZone(fqdn string) *Zone {
 	lastLongest := 0
 	var longestZone *Zone
-	for kv := range r.zones.Iter() {
+	for name, zone := range r.zones.Iter() {
 		// Zone doesn't have the correct suffix for the question
-		if !strings.HasSuffix(fqdn, kv.Key) {
+		if !strings.HasSuffix(fqdn, name) {
 			continue
 		}
-		if len(kv.Key) > lastLongest {
-			lastLongest = len(kv.Key)
-			longestZone = kv.Value
+		if len(name) > lastLongest {
+			lastLongest = len(name)
+			longestZone = zone
 		}
 	}
 	return longestZone
@@ -71,14 +71,14 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 	span := sentry.SpanFromContext(r.Context())
 	for _, question := range r.Question {
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
-		for kv := range ro.zones.Iter() {
+		for name, zone := range ro.zones.Iter() {
 			// Zone doesn't have the correct suffix for the question
-			if !strings.HasSuffix(strings.ToLower(question.Name), strings.ToLower(kv.Key)) {
+			if !strings.HasSuffix(strings.ToLower(question.Name), strings.ToLower(name)) {
 				continue
 			}
-			if len(kv.Key) > lastLongest {
-				lastLongest = len(kv.Key)
-				longestZone = kv.Value
+			if len(name) > lastLongest {
+				lastLongest = len(name)
+				longestZone = zone
 			}
 		}
 	}

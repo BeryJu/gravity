@@ -3,6 +3,7 @@ package watcher
 import (
 	"context"
 	"errors"
+	"iter"
 	"strings"
 	"sync"
 	"time"
@@ -78,22 +79,16 @@ type KV[T any] struct {
 	Value T
 }
 
-func (w *Watcher[T]) Iter() chan KV[T] {
-	c := make(chan KV[T])
-	go func() {
+func (w *Watcher[T]) Iter() iter.Seq2[string, T] {
+	return func(yield func(string, T) bool) {
 		w.mutex.RLock()
 		defer w.mutex.RUnlock()
 		for k, v := range w.entries {
-			select {
-			case c <- KV[T]{Key: k, Value: v}:
-			case <-c:
-				close(c)
+			if !yield(k, v) {
 				return
 			}
 		}
-		close(c)
-	}()
-	return c
+	}
 }
 
 func (w *Watcher[T]) Start(ctx context.Context) {

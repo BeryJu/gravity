@@ -71,8 +71,8 @@ func New(instance roles.Instance) *Role {
 		types.KeyLeases,
 	).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
 		// Re-calculate scope usage after all leases are loaded
-		for s := range r.scopes.Iter() {
-			s.Value.calculateUsage()
+		for _, s := range r.scopes.Iter() {
+			s.calculateUsage()
 		}
 	}))
 
