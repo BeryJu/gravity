@@ -202,6 +202,15 @@ func (z *Zone) Init(ctx context.Context) {
 			// and not as part of the outside cache key
 			return storage.KeyFromString(key).Up().String()
 		}),
+		watcher.WithBeforeUpdate[map[string]*Record](func(entry map[string]*Record, direction mvccpb.Event_EventType) {
+			// Update metrics
+			switch direction {
+			case mvccpb.DELETE:
+				dnsRecordsMetric.WithLabelValues(z.Name).Dec()
+			case mvccpb.PUT:
+				dnsRecordsMetric.WithLabelValues(z.Name).Inc()
+			}
+		}),
 	)
 	z.records.Start(ctx)
 	for _, handlerCfg := range z.HandlerConfigs {
