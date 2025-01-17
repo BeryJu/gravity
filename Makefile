@@ -209,6 +209,17 @@ test-e2e: internal/resources/macoui internal/resources/blocky internal/resources
 		-t gravity-testing:dns \
 		-f dns.Dockerfile \
 		.
+	go test \
+		-p 1 \
+		-v \
+		-coverprofile=coverage.txt \
+		-covermode=atomic \
+		-tags=e2e \
+		-count=${TEST_COUNT} \
+		${TEST_FLAGS} \
+		beryju.io/gravity/tests \
+			2>&1 | tee test-output
+	go tool cover -html coverage.txt -o coverage.html
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
