@@ -44,6 +44,30 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+  test-e2e:
+    name: Test (e2e)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: web/package.json
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - run: make web-install gen-client-ts web-build
+      - run: make install-deps gen-clean gen-client-go
+      - run: make test-e2e
+      - if: ${{ always() }}
+        run: |
+          go tool covdata textfmt -i hack/e2e/coverage/ -o coverage.txt
+      - if: ${{ always() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   lint:
     name: Lint
     runs-on: ubuntu-latest

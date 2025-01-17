@@ -21,7 +21,7 @@ networks:
 
 services:
   gravity:
-    image: ghcr.io/beryju/gravity:latest
+    image: gravity:e2e-test
     networks:
       network-A:
         ipv4_address: 10.100.0.10
@@ -30,11 +30,13 @@ services:
     hostname: gravity1
     volumes:
       - ./config.json:/config.json
+      - ./coverage:/coverage
     environment:
       BOOTSTRAP_ROLES: dns;dhcp;api;etcd;discovery;backup;monitoring;tftp
       IMPORT_CONFIGS: file:///config.json
       LOG_LEVEL: debug
       ADMIN_PASSWORD: test # testing password
+      GOCOVERDIR: /coverage
   relay:
     build:
       context: .

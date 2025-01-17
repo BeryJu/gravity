@@ -30,6 +30,7 @@ FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.23 AS builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
+ARG GRAVITY_BUILD_ARGS
 
 ENV GIT_BUILD_HASH=$GIT_BUILD_HASH
 ENV CGO_ENABLED=0
@@ -47,7 +48,7 @@ COPY . .
 COPY --from=downloader /workspace/ /workspace/
 COPY --from=web-builder /work/web/dist/ /workspace/web/dist/
 
-RUN make docker-build
+RUN make ${GRAVITY_BUILD_ARGS} docker-build
 
 # Stage 4: Run
 FROM docker.io/library/debian:stable-slim

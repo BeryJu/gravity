@@ -20,6 +20,7 @@ ci--env:
 docker-build: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
+		${GO_BUILD_FLAGS} \
 		-v -a -o gravity ${PWD}
 
 clean:
@@ -189,6 +190,28 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			2>&1 | tee test-output
 	go tool cover -html coverage.txt -o coverage.html
+
+test-e2e: internal/resources/macoui internal/resources/blocky internal/resources/tftp
+	docker build \
+		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
+		-t gravity:e2e-test \
+		.
+	cd ${PWD}/hack/e2e/
+	export COMPOSE_PROJECT_NAME=gravity-e2e
+	docker compose up -d
+	docker exec gravity-e2e-ubuntu-net-a-1 dhclient -v
+	docker exec gravity-e2e-ubuntu-net-a-2 dhclient -v
+	docker exec gravity-e2e-ubuntu-net-a-3 dhclient -v
+	docker exec gravity-e2e-ubuntu-net-a-4 dhclient -v
+	docker exec gravity-e2e-ubuntu-net-a-5 dhclient -v
+	docker exec gravity-e2e-ubuntu-net-a-6 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-1 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-2 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-3 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-4 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-5 dhclient -v
+	# docker exec gravity-e2e-ubuntu-net-b-6 dhclient -v
+	docker compose down -v
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
