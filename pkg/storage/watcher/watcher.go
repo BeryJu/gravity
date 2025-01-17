@@ -25,7 +25,7 @@ type Watcher[T any] struct {
 
 	withPrefix       bool
 	afterInitialLoad func()
-	beforeUpdate     func(entry T)
+	beforeUpdate     func(entry T, direction mvccpb.Event_EventType)
 
 	keyFunc func(string) string
 
@@ -115,7 +115,7 @@ func (w *Watcher[T]) handleEvent(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 	if w.beforeUpdate != nil {
 		w.mutex.RLock()
 		old := w.entries[key]
-		w.beforeUpdate(old)
+		w.beforeUpdate(old, t)
 		w.mutex.RUnlock()
 	}
 	if t == mvccpb.DELETE {
