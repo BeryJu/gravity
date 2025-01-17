@@ -197,21 +197,18 @@ test-e2e: internal/resources/macoui internal/resources/blocky internal/resources
 		-t gravity:e2e-test \
 		.
 	cd ${PWD}/hack/e2e/
-	export COMPOSE_PROJECT_NAME=gravity-e2e
-	docker compose up -d
-	docker exec gravity-e2e-ubuntu-net-a-1 dhclient -v
-	docker exec gravity-e2e-ubuntu-net-a-2 dhclient -v
-	docker exec gravity-e2e-ubuntu-net-a-3 dhclient -v
-	docker exec gravity-e2e-ubuntu-net-a-4 dhclient -v
-	docker exec gravity-e2e-ubuntu-net-a-5 dhclient -v
-	docker exec gravity-e2e-ubuntu-net-a-6 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-1 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-2 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-3 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-4 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-5 dhclient -v
-	# docker exec gravity-e2e-ubuntu-net-b-6 dhclient -v
-	docker compose down -v
+	docker build \
+		-t gravity-testing:dhcp-client \
+		-f dhcp-client.Dockerfile \
+		.
+	docker build \
+		-t gravity-testing:dhcp-relay \
+		-f dhcp-relay.Dockerfile \
+		.
+	docker build \
+		-t gravity-testing:dns \
+		-f dns.Dockerfile \
+		.
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"

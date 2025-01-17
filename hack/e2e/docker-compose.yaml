@@ -64,9 +64,6 @@ services:
       - network-A
     depends_on:
       - gravity
-    deploy:
-      mode: replicated
-      replicas: 6
   ubuntu-net-b:
     build:
       context: .
@@ -78,6 +75,3 @@ services:
       - network-B
     depends_on:
       - gravity
-    deploy:
-      mode: replicated
-      replicas: 6
