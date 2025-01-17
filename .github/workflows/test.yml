@@ -63,9 +63,6 @@ jobs:
       - run: make install-deps gen-clean gen-client-go
       - run: make test-e2e
       - if: ${{ always() }}
-        run: |
-          go tool covdata textfmt -i hack/e2e/coverage/ -o coverage.txt
-      - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

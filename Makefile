@@ -209,6 +209,7 @@ test-e2e: internal/resources/macoui internal/resources/blocky internal/resources
 		-t gravity-testing:dns \
 		-f dns.Dockerfile \
 		.
+	cd ${PWD}
 	go test \
 		-p 1 \
 		-v \
@@ -219,6 +220,7 @@ test-e2e: internal/resources/macoui internal/resources/blocky internal/resources
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
+	go tool covdata textfmt -i coverage/ -o coverage.txt
 	go tool cover -html coverage.txt -o coverage.html
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
