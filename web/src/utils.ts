@@ -36,22 +36,20 @@ export function first<T>(...args: Array<T | undefined | null>): T {
     throw new Error(`No compatible arg given: ${args}`);
 }
 
-export function ip(raw: string): AbstractIPNum {
-    let ip: AbstractIPNum;
+export function ip(raw: string): AbstractIPNum & { getValue(): bigint } {
     try {
-        ip = IPv6.fromString(raw);
+        return IPv6.fromString(raw);
     } catch {
-        ip = IPv4.fromString(raw);
+        return IPv4.fromString(raw);
     }
-    return ip;
 }
 
 export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number {
     return (a: T, b: T) => {
         const aIP = ip(getter(a));
         const bIP = ip(getter(b));
-        if (aIP > bIP) return 1;
-        if (aIP < bIP) return -1;
+        if (aIP.getValue() > bIP.getValue()) return 1;
+        if (aIP.getValue() < bIP.getValue()) return -1;
         return 0;
     };
 }
