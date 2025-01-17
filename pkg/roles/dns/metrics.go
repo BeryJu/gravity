@@ -21,12 +21,11 @@ var (
 			"instance": extconfig.Get().Instance.Identifier,
 		},
 	}, []string{"queryType", "handler", "zone"})
+	dnsRecordsMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "gravity_dns_records",
+		Help: "DNS records",
+		ConstLabels: prometheus.Labels{
+			"instance": extconfig.Get().Instance.Identifier,
+		},
+	}, []string{"zone"})
 )
-
-var dnsRecordsMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-	Name: "gravity_dns_records",
-	Help: "DNS records",
-	ConstLabels: prometheus.Labels{
-		"instance": extconfig.Get().Instance.Identifier,
-	},
-}, []string{"zone"})

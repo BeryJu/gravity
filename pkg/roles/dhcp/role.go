@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/getsentry/sentry-go"
 	"github.com/swaggest/rest/web"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/zap"
 	"golang.org/x/net/ipv4"
 
@@ -25,17 +26,15 @@ type Role struct {
 	i   roles.Instance
 	ctx context.Context
 
-	scopes map[string]*Scope
-	leases map[string]*Lease
+	scopes *watcher.Watcher[*Scope]
+	leases *watcher.Watcher[*Lease]
 
 	cfg *RoleConfig
 
 	s4  *handler4
 	log *zap.Logger
 
-	oui     *oui.OuiDb
-	scopesM sync.RWMutex
-	leasesM sync.RWMutex
+	oui *oui.OuiDb
 }
 
 func init() {
@@ -46,14 +45,46 @@ func init() {
 
 func New(instance roles.Instance) *Role {
 	r := &Role{
-		log:     instance.Log(),
-		i:       instance,
-		scopes:  make(map[string]*Scope),
-		scopesM: sync.RWMutex{},
-		leases:  make(map[string]*Lease),
-		leasesM: sync.RWMutex{},
-		ctx:     instance.Context(),
+		log: instance.Log(),
+		i:   instance,
+		ctx: instance.Context(),
 	}
+	r.scopes = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Scope, error) {
+			s, err := r.scopeFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			s.calculateUsage()
+			return s, nil
+		},
+		instance.KV(),
+		instance.KV().Key(
+			types.KeyRole,
+			types.KeyScopes,
+		).Prefix(true),
+	)
+
+	r.leases = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Lease, error) {
+			s, err := r.leaseFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			return s, nil
+		},
+		instance.KV(),
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
+			// Re-calculate scope usage after all leases are loaded
+			for _, s := range r.scopes.Iter() {
+				s.calculateUsage()
+			}
+		}),
+	)
+
 	r.s4 = &handler4{
 		role: r,
 	}
@@ -89,17 +120,9 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
 	defer start.Finish()
-	r.loadInitialScopes(start.Context())
-	r.loadInitialLeases(start.Context())
 
-	// Since scope usage relies on r.leases, but r.leases is loaded after the scopes,
-	// manually update the usage
-	for _, s := range r.scopes {
-		s.calculateUsage()
-	}
-
-	go r.startWatchScopes()
-	go r.startWatchLeases()
+	r.scopes.Start(r.ctx)
+	r.leases.Start(r.ctx)
 
 	if r.cfg.Port < 1 {
 		return nil
@@ -176,6 +199,8 @@ func (r *Role) startServer4() error {
 }
 
 func (r *Role) Stop() {
+	r.scopes.Stop()
+	r.leases.Stop()
 	if r.s4 != nil && r.s4.pc != nil {
 		r.s4.pc.Close()
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"runtime"
-	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
@@ -12,21 +11,22 @@ import (
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
+	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"github.com/swaggest/rest/web"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/zap"
 )
 
 type Role struct {
 	i     roles.Instance
 	ctx   context.Context
-	zones map[string]*Zone
+	zones *watcher.Watcher[*Zone]
 
 	cfg     *RoleConfig
 	log     *zap.Logger
 	servers []*dns.Server
-	zonesM  sync.RWMutex
 }
 
 func init() {
@@ -38,12 +38,27 @@ func init() {
 func New(instance roles.Instance) *Role {
 	r := &Role{
 		servers: make([]*dns.Server, 0),
-		zones:   make(map[string]*Zone, 0),
-		zonesM:  sync.RWMutex{},
 		log:     instance.Log(),
 		i:       instance,
 		ctx:     instance.Context(),
 	}
+	r.zones = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Zone, error) {
+			z, err := r.zoneFromKV(kv)
+			if err != nil {
+				return nil, err
+			}
+			z.Init(r.ctx)
+			return z, nil
+		},
+		r.i.KV(),
+		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true),
+		watcher.WithBeforeUpdate(func(zone *Zone, direction mvccpb.Event_EventType) {
+			if direction == mvccpb.DELETE {
+				zone.StopWatchingRecords()
+			}
+		}),
+	)
 	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeasePut)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateForward, r.eventHandlerCreateForward)
 	r.i.AddEventListener(types.EventTopicDNSRecordCreateReverse, r.eventHandlerCreateReverse)
@@ -89,8 +104,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dns.start")
 	defer start.Finish()
 
-	r.loadInitialZones(start.Context())
-	go r.startWatchZones(start.Context())
+	r.zones.Start(r.ctx)
 
 	dnsMux := dns.NewServeMux()
 	dnsMux.HandleFunc(
@@ -136,6 +150,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) Stop() {
+	r.zones.Stop()
 	for _, server := range r.servers {
 		err := server.Shutdown()
 		if err != nil && err.Error() != "dns: server not started" {

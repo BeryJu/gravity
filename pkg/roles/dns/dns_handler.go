@@ -18,7 +18,7 @@ const IterationMax = 20
 func (r *Role) FindZone(fqdn string) *Zone {
 	lastLongest := 0
 	var longestZone *Zone
-	for name, zone := range r.zones {
+	for name, zone := range r.zones.IterRelativeKey() {
 		// Zone doesn't have the correct suffix for the question
 		if !strings.HasSuffix(fqdn, name) {
 			continue
@@ -71,8 +71,7 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 	span := sentry.SpanFromContext(r.Context())
 	for _, question := range r.Question {
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
-		ro.zonesM.RLock()
-		for name, zone := range ro.zones {
+		for name, zone := range ro.zones.IterRelativeKey() {
 			// Zone doesn't have the correct suffix for the question
 			if !strings.HasSuffix(strings.ToLower(question.Name), strings.ToLower(name)) {
 				continue
@@ -82,10 +81,9 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 				longestZone = zone
 			}
 		}
-		ro.zonesM.RUnlock()
 	}
 	if longestZone == nil {
-		longestZone = ro.zones[types.DNSRootZone]
+		longestZone, _ = ro.zones.GetPrefix(types.DNSRootZone)
 	}
 	if longestZone == nil {
 		ro.log.Warn("no matching zone and no global zone")

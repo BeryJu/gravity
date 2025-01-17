@@ -30,15 +30,13 @@ func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 	}
 	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
-		mh.z.recordsSync.RLock()
-		defer mh.z.recordsSync.RUnlock()
 		var recs map[string]*Record = make(map[string]*Record)
 		var ok bool
 		if k.IsPrefix() {
 			prefix := k.String()
 			// If the key is a prefix, we can't just directly look it up in the map,
 			// and have to fall back to a "slightly" slower method of iterating through the map
-			for key, rr := range mh.z.records {
+			for key, rr := range mh.z.records.Iter() {
 				if !strings.HasPrefix(key, prefix) {
 					continue
 				}
@@ -47,7 +45,7 @@ func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 				}
 			}
 		} else {
-			recs, ok = mh.z.records[k.String()]
+			recs, ok = mh.z.records.GetOK(k.String())
 			if !ok {
 				return answers
 			}
