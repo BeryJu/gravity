@@ -196,20 +196,6 @@ test-e2e:
 		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
 		-t gravity:e2e-test \
 		.
-	cd ${PWD}/hack/e2e/
-	docker build \
-		-t gravity-testing:dhcp-client \
-		-f dhcp-client.Dockerfile \
-		.
-	docker build \
-		-t gravity-testing:dhcp-relay \
-		-f dhcp-relay.Dockerfile \
-		.
-	docker build \
-		-t gravity-testing:dns \
-		-f dns.Dockerfile \
-		.
-	cd ${PWD}
 	go test \
 		-p 1 \
 		-v \

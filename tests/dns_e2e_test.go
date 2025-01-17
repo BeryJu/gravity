@@ -17,7 +17,10 @@ func TestDNS_Single(t *testing.T) {
 	// DHCP tester
 	tester, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image: "gravity-testing:dns",
+			FromDockerfile: testcontainers.FromDockerfile{
+				Context:    "../hack/e2e/",
+				Dockerfile: "dns.Dockerfile",
+			},
 		},
 		Started: true,
 	})

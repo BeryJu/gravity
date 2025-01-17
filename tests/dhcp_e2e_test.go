@@ -53,7 +53,10 @@ func TestDHCP_Single(t *testing.T) {
 	// DHCP tester
 	tester, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image:    "gravity-testing:dhcp-client",
+			FromDockerfile: testcontainers.FromDockerfile{
+				Context:    "../hack/e2e/",
+				Dockerfile: "dhcp-client.Dockerfile",
+			},
 			Networks: []string{net.Name},
 			HostConfigModifier: func(hostConfig *container.HostConfig) {
 				hostConfig.CapAdd = strslice.StrSlice{"NET_ADMIN"}
