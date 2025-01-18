@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 .ONESHELL:
 .SHELLFLAGS += -x -e -o pipefail
 .PHONY:  web
