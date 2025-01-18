@@ -49,6 +49,22 @@ func TestDiscoveryConvert(t *testing.T) {
 			},
 		}),
 	))
+	// Create DNS Zone for reverse
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			dnsTypes.KeyRole,
+			dnsTypes.KeyZones,
+			"200.10.in-addr.arpa.",
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]interface{}{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
 
 	// Create DHCP Scope to register host in
 	tests.PanicIfError(inst.KV().Put(
@@ -61,6 +77,9 @@ func TestDiscoveryConvert(t *testing.T) {
 		tests.MustJSON(dhcp.Scope{
 			SubnetCIDR: DockerNetworkCIDR,
 			TTL:        86400,
+			DNS: &dhcp.ScopeDNS{
+				Zone: "example.com.",
+			},
 			IPAM: map[string]string{
 				"type":        "internal",
 				"range_start": "10.200.0.1",
@@ -108,20 +127,7 @@ func TestDiscoveryConvert(t *testing.T) {
 	}, &struct{}{})
 	assert.NoError(t, err)
 
-	// tests.AssertEtcd(
-	// 	t,
-	// 	inst.KV(),
-	// 	inst.KV().Key(
-	// 		dnsTypes.KeyRole,
-	// 		dnsTypes.KeyZones,
-	// 		"example.com.",
-	// 	),
-	// 	dhcp.Lease{
-	// 		ScopeKey: scope.Name,
-	// 		Address:  "192.0.2.1",
-	// 		Hostname: "gravity.home.arpa",
-	// 	},
-	// )
+	// Check DHCP lease
 	tests.AssertEtcd(
 		t,
 		inst.KV(),
@@ -136,6 +142,38 @@ func TestDiscoveryConvert(t *testing.T) {
 			Hostname:    "foo",
 			Expiry:      0,
 			Description: "",
+		},
+	)
+	// Check forward DNS Record
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			dnsTypes.KeyRole,
+			dnsTypes.KeyZones,
+			"example.com.",
+			"foo",
+			"A",
+			mac,
+		),
+		dns.Record{
+			Data: "10.200.0.1",
+		},
+	)
+	// Check reverse DNS Record
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			dnsTypes.KeyRole,
+			dnsTypes.KeyZones,
+			"200.10.in-addr.arpa.",
+			"1.0",
+			"PTR",
+			mac,
+		),
+		dns.Record{
+			Data: "foo.example.com.",
 		},
 	)
 }
