@@ -194,7 +194,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-html ${PWD}/coverage.txt \
 		-o ${PWD}/coverage.html
 
-test-e2e:
+test-e2e: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	docker build \
 		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
 		-t gravity:e2e-test \
