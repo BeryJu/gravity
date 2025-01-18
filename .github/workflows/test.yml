@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  test-unit:
-    name: Test (unit)
+  test-unittest:
+    name: Test (unittest)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -67,6 +67,16 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: e2e
+  test-mark:
+    if: always()
+    needs:
+      - test-unittest
+      - test-e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
   lint:
     name: Lint
     runs-on: ubuntu-latest
