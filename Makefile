@@ -210,7 +210,9 @@ test-e2e:
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
 	go tool covdata textfmt \
-		-i ${PWD}/tests/coverage/ \
+		-i ${PWD}/tests/coverage-node-1/ \
+		-i ${PWD}/tests/coverage-node-2/ \
+		-i ${PWD}/tests/coverage-node-3/ \
 		-o ${PWD}/coverage_in_container_tmp.txt
 	# Exclude API client from coverage
 	cat ${PWD}/coverage_in_container_tmp.txt  | grep -v \^beryju.io/gravity/api > ${PWD}/coverage_in_container.txt
