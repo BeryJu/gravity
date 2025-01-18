@@ -58,7 +58,7 @@ func (r *Role) FindLease(req *Request4) *Lease {
 		go func() {
 			err := lease.Put(req.Context, lease.scope.TTL)
 			if err != nil {
-				r.log.Warn("failed to update lease", zap.Error(err))
+				r.log.Warn("failed to update lease for re-assigned IP", zap.Error(err))
 			}
 		}()
 	}
@@ -228,7 +228,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		go func() {
 			err := l.Put(req.Context, l.Expiry)
 			if err != nil {
-				l.log.Warn("failed to update lease", zap.Error(err))
+				l.log.Warn("failed to update lease for updated hostname", zap.Error(err))
 			}
 		}()
 	}
