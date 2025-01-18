@@ -60,6 +60,10 @@ func New(instance roles.Instance) *Role {
 	return r
 }
 
+func (r *Role) Mux() *mux.Router {
+	return r.m
+}
+
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.i.DispatchEvent(types.EventTopicDebugMuxSetup, roles.NewEvent(
 		ctx,
