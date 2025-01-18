@@ -241,6 +241,11 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 	go test \
 		-run=^$$ \
 		-bench=^Benchmark \
+		-coverprofile=${PWD}/coverage.txt \
+		-covermode=atomic \
 		-benchmem \
 		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			| tee test-output
+	go tool cover \
+		-html ${PWD}/coverage.txt \
+		-o ${PWD}/coverage.html
