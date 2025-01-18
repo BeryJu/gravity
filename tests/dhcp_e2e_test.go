@@ -2,7 +2,6 @@ package tests
 
 import (
 	"fmt"
-	"io"
 	"testing"
 
 	"beryju.io/gravity/api"
@@ -68,10 +67,7 @@ func TestDHCP_Simple(t *testing.T) {
 	testcontainers.CleanupContainer(t, tester)
 	assert.NoError(t, err)
 
-	_, out, err := tester.Exec(ctx, []string{"dhclient", "-v"})
-	assert.NoError(t, err)
-	body, err := io.ReadAll(out)
-	assert.NoError(t, err)
+	_, body := ExecCommand(t, tester, []string{"dhclient", "-v"})
 	assert.Contains(t, string(body), "DHCPOFFER of")
 	assert.Contains(t, string(body), "DHCPREQUEST for")
 	assert.Contains(t, string(body), "DHCPACK of")
@@ -139,10 +135,7 @@ func TestDHCP_Parallel(t *testing.T) {
 			testcontainers.CleanupContainer(t, tester)
 			assert.NoError(t, err)
 
-			_, out, err := tester.Exec(ctx, []string{"dhclient", "-v"})
-			assert.NoError(t, err)
-			body, err := io.ReadAll(out)
-			assert.NoError(t, err)
+			_, body := ExecCommand(t, tester, []string{"dhclient", "-v"})
 			assert.Contains(t, string(body), "DHCPOFFER of")
 			assert.Contains(t, string(body), "DHCPREQUEST for")
 			assert.Contains(t, string(body), "DHCPACK of")
@@ -261,10 +254,7 @@ func TestDHCP_Relay(t *testing.T) {
 	testcontainers.CleanupContainer(t, tester)
 	assert.NoError(t, err)
 
-	_, out, err := tester.Exec(ctx, []string{"dhclient", "-v"})
-	assert.NoError(t, err)
-	body, err := io.ReadAll(out)
-	assert.NoError(t, err)
+	_, body := ExecCommand(t, tester, []string{"dhclient", "-v"})
 	assert.Contains(t, string(body), "DHCPOFFER of")
 	assert.Contains(t, string(body), "DHCPREQUEST for")
 	assert.Contains(t, string(body), "DHCPACK of")
