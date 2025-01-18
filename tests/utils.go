@@ -53,7 +53,6 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009"),
 		Hostname:     "gravity-1",
 		Env: map[string]string{
-			"LOG_LEVEL":      "debug",
 			"ADMIN_PASSWORD": GravityPassword,
 			"ADMIN_TOKEN":    GravityToken,
 			"GOCOVERDIR":     "/coverage",
