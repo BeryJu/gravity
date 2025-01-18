@@ -24,9 +24,11 @@ type Role struct {
 	ctx   context.Context
 	zones *watcher.Watcher[*Zone]
 
-	cfg     *RoleConfig
-	log     *zap.Logger
+	cfg *RoleConfig
+	log *zap.Logger
+
 	servers []*dns.Server
+	m       *dns.ServeMux
 }
 
 func init() {
@@ -41,6 +43,7 @@ func New(instance roles.Instance) *Role {
 		log:     instance.Log(),
 		i:       instance,
 		ctx:     instance.Context(),
+		m:       dns.NewServeMux(),
 	}
 	r.zones = watcher.New(
 		func(kv *mvccpb.KeyValue) (*Zone, error) {
@@ -106,12 +109,11 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 
 	r.zones.Start(r.ctx)
 
-	dnsMux := dns.NewServeMux()
-	dnsMux.HandleFunc(
+	r.m.HandleFunc(
 		types.DNSRootZone,
 		r.recoverMiddleware(
 			r.loggingMiddleware(
-				r.Handler,
+				r.handler,
 			),
 		),
 	)
@@ -136,17 +138,21 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		{
 			Addr:    listen,
 			Net:     "udp",
-			Handler: dnsMux,
+			Handler: r.m,
 		},
 		{
 			Addr:    listen,
 			Net:     "tcp",
-			Handler: dnsMux,
+			Handler: r.m,
 		},
 	}
 	go srv(0)
 	go srv(1)
 	return nil
+}
+
+func (r *Role) Handler(w dns.ResponseWriter, req *dns.Msg) {
+	r.m.ServeDNS(w, req)
 }
 
 func (r *Role) Stop() {
