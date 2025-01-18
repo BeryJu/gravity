@@ -213,10 +213,8 @@ test-e2e:
 		-i ${PWD}/tests/coverage-node-1/ \
 		-i ${PWD}/tests/coverage-node-2/ \
 		-i ${PWD}/tests/coverage-node-3/ \
-		-o ${PWD}/coverage_in_container_tmp.txt
-	# Exclude API client from coverage
-	cat ${PWD}/coverage_in_container_tmp.txt  | grep -v \^beryju.io/gravity/api > ${PWD}/coverage_in_container.txt
-	rm ${PWD}/coverage_in_container_tmp.txt
+		--pkg $(shell go list ./... | grep -v ./api | sed 's/\n/,/g') \
+		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
 		-html ${PWD}/coverage_in_container.txt \
 		-o ${PWD}/coverage.html
