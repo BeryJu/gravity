@@ -22,8 +22,6 @@ func getIP(addr net.Addr) net.IP {
 	switch addr := addr.(type) {
 	case *net.UDPAddr:
 		clientIP = addr.IP.String()
-	case *net.TCPAddr:
-		clientIP = addr.IP.String()
 	}
 	return net.ParseIP(clientIP)
 }

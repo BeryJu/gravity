@@ -37,7 +37,10 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export DEBUG=true
 	export LISTEN_ONLY=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
-	go run ${GO_FLAGS} ${PWD}/cmd/server/main server
+	go run \
+		${GO_FLAGS} \
+		${PWD}/cmd/server/main \
+			server
 
 # Web
 web: web-lint web-build
@@ -93,7 +96,11 @@ internal/resources/tftp:
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ${PWD}/internal/resources/tftp/netboot.xyz.efi
 
 gen-build:
-	DEBUG=true go run ${GO_FLAGS} ${PWD}/cmd/server/main generateSchema ${SCHEMA_FILE}
+	export DEBUG=true
+	go run \
+		${GO_FLAGS} \
+		${PWD}/cmd/server/main \
+			generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
 gen-proto:
