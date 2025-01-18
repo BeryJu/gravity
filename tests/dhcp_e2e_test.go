@@ -192,8 +192,8 @@ func TestDHCP_Relay(t *testing.T) {
 	testcontainers.CleanupNetwork(t, netB)
 
 	g := gravity.New(t,
-		gravity.WithNet(netA),
-		gravity.WithNet(netB))
+		gravity.WithEnv("GRAVITY_DEBUG_DHCP_GATEWAY_REPLY_CIADDR", "true"),
+		gravity.WithNet(netA))
 	gip, err := g.Container().ContainerIP(ctx)
 	assert.NoError(t, err)
 

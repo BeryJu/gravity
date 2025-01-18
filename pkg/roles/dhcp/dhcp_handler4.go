@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"os"
 	"strings"
 	"sync"
 
@@ -15,6 +16,17 @@ import (
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
 )
+
+func getIP(addr net.Addr) net.IP {
+	clientIP := ""
+	switch addr := addr.(type) {
+	case *net.UDPAddr:
+		clientIP = addr.IP.String()
+	case *net.TCPAddr:
+		clientIP = addr.IP.String()
+	}
+	return net.ParseIP(clientIP)
+}
 
 var ErrNilResponse = errors.New("no DHCP response")
 
@@ -95,7 +107,15 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	var p *net.UDPAddr
 	if !r.GatewayIPAddr.IsUnspecified() {
 		r.log.Debug("sending response to gateway")
+		// giaddr should be set to the Relay's IP Address, however it is the IP of the subnet
+		// the client should get an IP for. We might not always be able to directly reply to that IP
+		// especially in environments where we can't adjust firewall/routing rules. (like e2e tests)
+		// when this environment variable is set, reply directly to the IP we got the UDP request from,
+		// which is not the RFC defined behaviour
 		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
+		if os.Getenv("GRAVITY_DEBUG_DHCP_GATEWAY_REPLY_CIADDR") != "" {
+			p.IP = getIP(r.peer)
+		}
 	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
 		r.log.Debug("sending response to bcast (NAK)")
 		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
