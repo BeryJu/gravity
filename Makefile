@@ -1,5 +1,5 @@
 .ONESHELL:
-.SHELLFLAGS += -x -e
+.SHELLFLAGS += -x -e -o pipefail
 .PHONY:  web
 PWD = $(shell pwd)
 UID = $(shell id -u)
