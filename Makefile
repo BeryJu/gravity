@@ -27,6 +27,7 @@ docker-build: internal/resources/macoui internal/resources/blocky internal/resou
 clean:
 	rm -rf ${PWD}/data/
 	rm -rf ${PWD}/bin/
+	rm -rf ${PWD}/tests/coverage-*/
 
 run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export INSTANCE_LISTEN=0.0.0.0
@@ -219,7 +220,6 @@ test-e2e: test-e2e-container-build
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage-node-1/ \
 		-i ${PWD}/tests/coverage-node-2/ \
-		-i ${PWD}/tests/coverage-node-3/ \
 		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
