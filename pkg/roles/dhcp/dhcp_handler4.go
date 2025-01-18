@@ -63,6 +63,12 @@ func (h *handler4) Serve() error {
 	}
 }
 
+var debugDHCPGatewayReplyPeer bool
+
+func init() {
+	debugDHCPGatewayReplyPeer = os.Getenv("GRAVITY_DEBUG_DHCP_GATEWAY_REPLY_CIADDR") != ""
+}
+
 func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) error {
 	if extconfig.Get().ListenOnlyMode {
 		return nil
@@ -113,7 +119,7 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 		// when this environment variable is set, reply directly to the IP we got the UDP request from,
 		// which is not the RFC defined behaviour
 		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
-		if os.Getenv("GRAVITY_DEBUG_DHCP_GATEWAY_REPLY_CIADDR") != "" {
+		if debugDHCPGatewayReplyPeer {
 			p.IP = getIP(r.peer)
 		}
 	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
