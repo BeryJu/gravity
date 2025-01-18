@@ -110,10 +110,6 @@ func Setup(t *testing.T) func() {
 	}
 }
 
-func HasLocalDocker() bool {
-	return runtime.GOOS == "linux"
-}
-
 func Listen(port int32) string {
 	if runtime.GOOS == "darwin" {
 		return fmt.Sprintf(":%d", port)

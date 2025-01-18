@@ -1,32 +1,27 @@
 package discovery_test
 
 import (
+	"net"
 	"testing"
 
-	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
 	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/discovery"
+	"beryju.io/gravity/pkg/roles/discovery/types"
 	"beryju.io/gravity/pkg/roles/dns"
 	dnsTypes "beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/tests"
+	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
 )
 
 const (
 	DockerNetworkCIDR = "10.200.0.0/28"
-
-	DockerIPCoreDNS = "10.200.0.4"
 )
 
 func TestDiscoveryConvert(t *testing.T) {
 	defer tests.Setup(t)()
-	if !tests.HasLocalDocker() {
-		t.Skip("Local docker required")
-		return
-	}
-	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
 	role := discovery.New(rootInst.ForRole("discovery", ctx))
@@ -89,17 +84,58 @@ func TestDiscoveryConvert(t *testing.T) {
 	}))))
 	defer dhcpr.Stop()
 
-	// Run discovery
-	sub := role.NewSubnet("docker-test")
-	sub.CIDR = DockerNetworkCIDR
-	sub.DNSResolver = DockerIPCoreDNS
-	devices := sub.RunDiscovery(ctx)
+	// Manually create a device
+	mac := net.HardwareAddr(securecookie.GenerateRandomKey(6)).String()
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyDevices,
+			"test",
+		).String(),
+		tests.MustJSON(discovery.Device{
+			IP:       "10.200.0.1",
+			Hostname: "foo",
+			MAC:      mac,
+		}),
+	))
 
 	err := role.APIDevicesApply().Interact(ctx, discovery.APIDevicesApplyInput{
-		Identifier: devices[0].Identifier,
+		Identifier: "test",
 		To:         "dhcp",
 		DHCPScope:  "test",
 		DNSZone:    "example.com.",
 	}, &struct{}{})
 	assert.NoError(t, err)
+
+	// tests.AssertEtcd(
+	// 	t,
+	// 	inst.KV(),
+	// 	inst.KV().Key(
+	// 		dnsTypes.KeyRole,
+	// 		dnsTypes.KeyZones,
+	// 		"example.com.",
+	// 	),
+	// 	dhcp.Lease{
+	// 		ScopeKey: scope.Name,
+	// 		Address:  "192.0.2.1",
+	// 		Hostname: "gravity.home.arpa",
+	// 	},
+	// )
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(
+			dhcpTypes.KeyRole,
+			dhcpTypes.KeyLeases,
+			mac,
+		),
+		dhcp.Lease{
+			ScopeKey:    "test",
+			Address:     "10.200.0.1",
+			Hostname:    "foo",
+			Expiry:      0,
+			Description: "",
+		},
+	)
 }
