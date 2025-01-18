@@ -17,7 +17,6 @@
             "ignoreCase": false
         }
     ],
-    "go.buildTags": "e2e",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifierEnding": "index",
     "typescript.tsdk": "./web/node_modules/typescript/lib",

@@ -183,31 +183,32 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 	go test \
 		-p 1 \
 		-v \
-		-coverprofile=coverage.txt \
+		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
 		${TEST_FLAGS} \
 		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			2>&1 | tee test-output
-	go tool cover -html coverage.txt -o coverage.html
+	go tool cover -html ${PWD}/coverage.txt -o ${PWD}/coverage.html
 
 test-e2e:
 	docker build \
 		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
 		-t gravity:e2e-test \
 		.
+	cd ${PWD}/tests
+	go get .
 	go test \
 		-p 1 \
 		-v \
-		-coverprofile=coverage.txt \
+		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
-		-tags=e2e \
 		-count=${TEST_COUNT} \
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
-	go tool covdata textfmt -i ${PWD}/tests/coverage/ -o coverage.txt
-	go tool cover -html coverage.txt -o coverage.html
+	go tool covdata textfmt -i ${PWD}/tests/coverage/ -o ${PWD}/coverage_in_container.txt
+	go tool cover -html ${PWD}/coverage_in_container.txt -o ${PWD}/coverage.html
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"

@@ -1,6 +1,7 @@
 data
 gen-ts-api/
 coverage.txt
+coverage*.txt
 coverage.html
 *.pcap
 ./*.sock
