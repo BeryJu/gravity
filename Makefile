@@ -194,7 +194,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-html ${PWD}/coverage.txt \
 		-o ${PWD}/coverage.html
 
-test-e2e: internal/resources/macoui internal/resources/blocky internal/resources/tftp
+test-e2e:
 	docker build \
 		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
 		-t gravity:e2e-test \
@@ -211,6 +211,9 @@ test-e2e: internal/resources/macoui internal/resources/blocky internal/resources
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
 	cd ${PWD}
+	mkdir -p ${PWD}/tests/coverage-node-1/ \
+		${PWD}/tests/coverage-node-2/ \
+		${PWD}/tests/coverage-node-3/
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage-node-1/ \
 		-i ${PWD}/tests/coverage-node-2/ \
