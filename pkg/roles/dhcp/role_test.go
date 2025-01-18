@@ -14,6 +14,7 @@ import (
 func generateHW() net.HardwareAddr {
 	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
 }
+
 func RoleConfig() []byte {
 	return []byte(tests.MustJSON(dhcp.RoleConfig{
 		Port: 0,

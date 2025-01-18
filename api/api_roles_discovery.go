@@ -970,10 +970,16 @@ type ApiDiscoverySubnetStartRequest struct {
 	ctx        context.Context
 	ApiService *RolesDiscoveryApiService
 	identifier *string
+	wait       *bool
 }
 
 func (r ApiDiscoverySubnetStartRequest) Identifier(identifier string) ApiDiscoverySubnetStartRequest {
 	r.identifier = &identifier
+	return r
+}
+
+func (r ApiDiscoverySubnetStartRequest) Wait(wait bool) ApiDiscoverySubnetStartRequest {
+	r.wait = &wait
 	return r
 }
 
@@ -1015,8 +1021,12 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 	if r.identifier == nil {
 		return nil, reportError("identifier is required and must be specified")
 	}
+	if r.wait == nil {
+		return nil, reportError("wait is required and must be specified")
+	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

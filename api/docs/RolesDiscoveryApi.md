@@ -519,7 +519,7 @@ No authorization required
 
 ## DiscoverySubnetStart
 
-> DiscoverySubnetStart(ctx).Identifier(identifier).Execute()
+> DiscoverySubnetStart(ctx).Identifier(identifier).Wait(wait).Execute()
 
 Discovery Subnets
 
@@ -537,10 +537,11 @@ import (
 
 func main() {
     identifier := "identifier_example" // string | 
+    wait := true // bool | 
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoverySubnetStart(context.Background()).Identifier(identifier).Execute()
+    r, err := apiClient.RolesDiscoveryApi.DiscoverySubnetStart(context.Background()).Identifier(identifier).Wait(wait).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoverySubnetStart``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -560,6 +561,7 @@ Other parameters are passed through a pointer to a apiDiscoverySubnetStartReques
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **identifier** | **string** |  | 
+ **wait** | **bool** |  | 
 
 ### Return type
 

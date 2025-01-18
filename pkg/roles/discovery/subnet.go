@@ -125,7 +125,11 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 				dev.MAC = addr.Addr
 			} else {
 				dev.IP = addr.Addr
+				dev.Identifier = addr.Addr
 			}
+		}
+		if dev.Identifier == "" {
+			continue
 		}
 		devices = append(devices, *dev)
 		err := dev.put(tr.Context(), int64(s.DiscoveryTTL))

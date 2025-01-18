@@ -12,7 +12,7 @@ func TestDNS_SimpleDefault(t *testing.T) {
 	ctx := Context(t)
 	gravity.New(t)
 
-	// DHCP tester
+	// DNS tester
 	tester, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
 			FromDockerfile: testcontainers.FromDockerfile{

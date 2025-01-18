@@ -2,7 +2,9 @@ package discovery
 
 import (
 	"context"
-	"net/netip"
+	"errors"
+	"fmt"
+	"net"
 
 	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
@@ -63,14 +65,14 @@ func New(instance roles.Instance) *Role {
 	})
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a subnet based on the instance IP
-		subnet := r.NewSubnet("default-instance-subnet")
-		ip := netip.MustParseAddr(extconfig.Get().Instance.IP)
-		prefix, err := ip.Prefix(24)
+		subnet := r.NewSubnet(fmt.Sprintf("instance-subnet-%s", extconfig.Get().Instance.Identifier))
+
+		cidr, err := GetCIDRFromIP()
 		if err != nil {
 			r.log.Warn("failed to get prefix", zap.Error(err))
 			return
 		}
-		subnet.CIDR = prefix.String()
+		subnet.CIDR = cidr
 		subnet.DNSResolver = extconfig.Get().FallbackDNS
 		subnet.DiscoveryTTL = 86400
 		err = subnet.put(ev.Context)
@@ -81,6 +83,28 @@ func New(instance roles.Instance) *Role {
 		go subnet.RunDiscovery(context.Background())
 	})
 	return r
+}
+
+func GetCIDRFromIP() (string, error) {
+	ip := net.ParseIP(extconfig.Get().Instance.IP)
+	intf, err := extconfig.Get().GetInterfaceForIP(ip)
+	if err != nil {
+		return "", err
+	}
+	addrs, err := intf.Addrs()
+	if err != nil {
+		return "", err
+	}
+	for _, addr := range addrs {
+		iip, net, err := net.ParseCIDR(addr.String())
+		if err != nil {
+			continue
+		}
+		if ip.Equal(iip) {
+			return net.String(), nil
+		}
+	}
+	return "", errors.New("no CIDR found")
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
