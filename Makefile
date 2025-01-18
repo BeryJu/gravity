@@ -210,11 +210,12 @@ test-e2e:
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
+	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage-node-1/ \
 		-i ${PWD}/tests/coverage-node-2/ \
 		-i ${PWD}/tests/coverage-node-3/ \
-		--pkg $(shell go list ./... | grep -v ./api | sed 's/\n/,/g') \
+		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
 		-html ${PWD}/coverage_in_container.txt \
@@ -230,5 +231,5 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-run=^$$ \
 		-bench=^Benchmark \
 		-benchmem \
-		$(shell go list ./... | grep -v ./api) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			| tee test-output
