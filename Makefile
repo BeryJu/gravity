@@ -189,7 +189,9 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		${TEST_FLAGS} \
 		$(shell go list ./... | grep -v beryju.io/gravity/api) \
 			2>&1 | tee test-output
-	go tool cover -html ${PWD}/coverage.txt -o ${PWD}/coverage.html
+	go tool cover \
+		-html ${PWD}/coverage.txt \
+		-o ${PWD}/coverage.html
 
 test-e2e:
 	docker build \
@@ -207,8 +209,15 @@ test-e2e:
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
-	go tool covdata textfmt -i ${PWD}/tests/coverage/ -o ${PWD}/coverage_in_container.txt
-	go tool cover -html ${PWD}/coverage_in_container.txt -o ${PWD}/coverage.html
+	go tool covdata textfmt \
+		-i ${PWD}/tests/coverage/ \
+		-o ${PWD}/coverage_in_container_tmp.txt
+	# Exclude API client from coverage
+	cat ${PWD}/coverage_in_container_tmp.txt  | grep -v \^beryju.io/gravity/api > ${PWD}/coverage_in_container.txt
+	rm ${PWD}/coverage_in_container_tmp.txt
+	go tool cover \
+		-html ${PWD}/coverage_in_container.txt \
+		-o ${PWD}/coverage.html
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"
