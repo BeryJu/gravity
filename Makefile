@@ -22,7 +22,7 @@ docker-build: internal/resources/macoui internal/resources/blocky internal/resou
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		${GO_BUILD_FLAGS} \
-		-v -a -o gravity ${PWD}
+		-v -a -o gravity ${PWD}/cmd/server/main
 
 clean:
 	rm -rf ${PWD}/data/
@@ -34,7 +34,7 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export DEBUG=true
 	export LISTEN_ONLY=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
-	go run ${GO_FLAGS} ${PWD} server
+	go run ${GO_FLAGS} ${PWD}/cmd/server/main server
 
 # Web
 web: web-lint web-build
@@ -90,13 +90,13 @@ internal/resources/tftp:
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ${PWD}/internal/resources/tftp/netboot.xyz.efi
 
 gen-build:
-	DEBUG=true go run ${GO_FLAGS} ${PWD} generateSchema ${SCHEMA_FILE}
+	DEBUG=true go run ${GO_FLAGS} ${PWD}/cmd/server/main generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
 gen-proto:
 	protoc \
 		--proto_path . \
-		--go_out . \
+		--go_out ${PWD} \
 		protobuf/**
 
 gen-clean:
@@ -128,10 +128,10 @@ gen-client-go:
 	cd ${PWD}/api/
 	rm -f .travis.yml go.mod go.sum
 	go get
-	go fmt .
+	go fmt ${PWD}
 	go mod tidy
-	gofumpt -l -w . || true
-	git add .
+	gofumpt -l -w ${PWD} || true
+	git add ${PWD}
 
 gen-client-ts:
 	docker run \
