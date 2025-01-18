@@ -42,7 +42,21 @@ type Gravity struct {
 	t         *testing.T
 }
 
-func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
+type GravityOption func(req testcontainers.ContainerRequest)
+
+func WithEnv(key string, value string) GravityOption {
+	return func(req testcontainers.ContainerRequest) {
+		req.Env[key] = value
+	}
+}
+
+func WithNet(net *testcontainers.DockerNetwork) GravityOption {
+	return func(req testcontainers.ContainerRequest) {
+		req.Networks = append(req.Networks, net.Name)
+	}
+}
+
+func RunGravity(t *testing.T, opts ...GravityOption) *Gravity {
 	ctx := Context(t)
 	cwd, err := os.Getwd()
 	assert.NoError(t, err)
@@ -53,10 +67,12 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009"),
 		Hostname:     "gravity-1",
 		Env: map[string]string{
+			"LOG_LEVEL":      "debug",
 			"ADMIN_PASSWORD": GravityPassword,
 			"ADMIN_TOKEN":    GravityToken,
 			"GOCOVERDIR":     "/coverage",
 		},
+		Networks: []string{},
 		HostConfigModifier: func(hostConfig *container.HostConfig) {
 			hostConfig.Binds = []string{
 				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
@@ -64,8 +80,8 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		},
 	}
 
-	if net != nil {
-		req.Networks = []string{net.Name}
+	for _, opt := range opts {
+		opt(req)
 	}
 
 	gravityContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

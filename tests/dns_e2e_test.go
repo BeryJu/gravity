@@ -9,7 +9,7 @@ import (
 
 func TestDNS_SimpleDefault(t *testing.T) {
 	ctx := Context(t)
-	RunGravity(t, nil)
+	RunGravity(t)
 
 	// DHCP tester
 	tester, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

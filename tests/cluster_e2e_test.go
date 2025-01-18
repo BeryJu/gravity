@@ -21,7 +21,7 @@ func TestCluster_Join(t *testing.T) {
 	testcontainers.CleanupNetwork(t, net)
 
 	// Create initial gravity node
-	gr := RunGravity(t, net)
+	gr := RunGravity(t, WithNet(net))
 
 	cwd, err := os.Getwd()
 	assert.NoError(t, err)

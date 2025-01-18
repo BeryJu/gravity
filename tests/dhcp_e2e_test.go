@@ -32,7 +32,7 @@ func TestDHCP_Simple(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, net)
 
-	g := RunGravity(t, net)
+	g := RunGravity(t, WithNet(net))
 
 	ac := g.APIClient()
 	// Create test network
@@ -101,7 +101,7 @@ func TestDHCP_Parallel(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, net)
 
-	g := RunGravity(t, net)
+	g := RunGravity(t, WithNet(net))
 
 	ac := g.APIClient()
 	// Create test network
@@ -190,7 +190,7 @@ func TestDHCP_Relay(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, netB)
 
-	g := RunGravity(t, netA)
+	g := RunGravity(t, WithEnv("GRAVITY_DEBUG_DHCP_UNICAST_ONLY", "true"), WithNet(netA), WithNet(netB))
 	gip, err := g.container.ContainerIP(ctx)
 	assert.NoError(t, err)
 
