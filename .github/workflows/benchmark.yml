@@ -28,6 +28,8 @@ jobs:
       - run: make test-env-start
       - run: make install-deps
       - run: make bench
+      - if: ${{ always() }}
+        run: make test-env-stop
       - uses: benchmark-action/github-action-benchmark@v1
         with:
           name: Gravity Benchmark
