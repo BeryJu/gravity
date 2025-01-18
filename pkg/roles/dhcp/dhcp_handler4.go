@@ -94,12 +94,16 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	useEthernet := false
 	var p *net.UDPAddr
 	if !r.GatewayIPAddr.IsUnspecified() {
+		r.log.Debug("sending response to gateway")
 		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
 	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
+		r.log.Debug("sending response to bcast (NAK)")
 		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 	} else if !r.ClientIPAddr.IsUnspecified() {
+		r.log.Debug("sending response to client")
 		p = &net.UDPAddr{IP: r.ClientIPAddr, Port: dhcpv4.ClientPort}
 	} else if r.IsBroadcast() {
+		r.log.Debug("sending response to bcast")
 		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 	} else {
 		// sends a layer2 frame so that we can define the destination MAC address
