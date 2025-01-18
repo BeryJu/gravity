@@ -4,12 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net"
 	"net/netip"
 	"runtime"
 	"strings"
 	"testing"
-	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/storage"
@@ -121,25 +119,4 @@ func Listen(port int32) string {
 		return fmt.Sprintf(":%d", port)
 	}
 	return extconfig.Get().Listen(port)
-}
-
-func WaitForPort(port int32) {
-	max := 30
-	try := 0
-	listen := Listen(port)
-	time.Sleep(500 * time.Millisecond)
-	for {
-		ln, err := net.Listen("tcp", listen)
-		if ln != nil {
-			_ = ln.Close()
-		}
-		if err != nil {
-			return
-		}
-		try += 1
-		if try >= max {
-			panic(fmt.Errorf("failed to wait for port '%s' to be listening", listen))
-		}
-		time.Sleep(1 * time.Millisecond)
-	}
 }

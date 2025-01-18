@@ -3,13 +3,14 @@ package tests
 import (
 	"testing"
 
+	"beryju.io/gravity/tests/gravity"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 )
 
 func TestDNS_SimpleDefault(t *testing.T) {
 	ctx := Context(t)
-	RunGravity(t, nil)
+	gravity.New(t)
 
 	// DHCP tester
 	tester, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

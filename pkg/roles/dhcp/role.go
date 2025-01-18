@@ -147,7 +147,6 @@ func (r *Role) initServer4() error {
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
 	}
-	var err error
 	ifName := extconfig.Get().Instance.Interface
 	udpConn, err := server4.NewIPv4UDPConn(ifName, laddr)
 	if err != nil {

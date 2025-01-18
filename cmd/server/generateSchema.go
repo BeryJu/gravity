@@ -1,4 +1,4 @@
-package cmd
+package server
 
 import (
 	"context"
@@ -69,6 +69,8 @@ var generateSchemaCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(generateSchemaCmd)
+	if extconfig.Get().Debug {
+		rootCmd.AddCommand(generateSchemaCmd)
+	}
 	generateSchemaCmd.PersistentFlags().StringVarP(&schemaFormat, "format", "f", "yaml", "Output format (yaml/json)")
 }

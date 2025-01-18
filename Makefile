@@ -12,6 +12,9 @@ SCHEMA_FILE = schema.yml
 TEST_COUNT = 1
 TEST_FLAGS =
 
+GEN_API_TS = "gen-ts-api"
+GEN_API_GO = "api"
+
 ci--env:
 	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
 	echo "build=${GITHUB_RUN_ID}" >> ${GITHUB_OUTPUT}
@@ -22,7 +25,7 @@ docker-build: internal/resources/macoui internal/resources/blocky internal/resou
 	go build \
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		${GO_BUILD_FLAGS} \
-		-v -a -o gravity ${PWD}
+		-v -a -o gravity ${PWD}/cmd/server/main
 
 clean:
 	rm -rf ${PWD}/data/
@@ -34,7 +37,10 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export DEBUG=true
 	export LISTEN_ONLY=true
 	$(eval LD_FLAGS := -X beryju.io/gravity/pkg/extconfig.Version=${VERSION} -X beryju.io/gravity/pkg/extconfig.BuildHash=dev-$(shell git rev-parse HEAD))
-	go run ${GO_FLAGS} ${PWD} server
+	go run \
+		${GO_FLAGS} \
+		${PWD}/cmd/server/main \
+			server
 
 # Web
 web: web-lint web-build
@@ -90,21 +96,25 @@ internal/resources/tftp:
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ${PWD}/internal/resources/tftp/netboot.xyz.efi
 
 gen-build:
-	DEBUG=true go run ${GO_FLAGS} ${PWD} generateSchema ${SCHEMA_FILE}
+	export DEBUG=true
+	go run \
+		${GO_FLAGS} \
+		${PWD}/cmd/server/main \
+			generateSchema ${SCHEMA_FILE}
 	git add ${SCHEMA_FILE}
 
 gen-proto:
 	protoc \
 		--proto_path . \
-		--go_out . \
+		--go_out ${PWD} \
 		protobuf/**
 
 gen-clean:
-	rm -rf ${PWD}/gen-ts-api/
-	rm -rf ${PWD}/api/api/
-	rm -rf ${PWD}/api/docs/
-	rm -rf ${PWD}/api/test/
-	rm -rf ${PWD}/api/*.go
+	rm -rf ${PWD}/${GEN_API_TS}/
+	rm -rf ${PWD}/${GEN_API_GO}/api/
+	rm -rf ${PWD}/${GEN_API_GO}/docs/
+	rm -rf ${PWD}/${GEN_API_GO}/test/
+	rm -rf ${PWD}/${GEN_API_GO}/*.go
 
 gen-tag:
 	git add Makefile
@@ -123,15 +133,15 @@ gen-client-go:
 		--additional-properties=packageName=api \
 		-i /local/schema.yml \
 		-g go \
-		-o /local/api \
-		-c /local/api/config.yaml
-	cd ${PWD}/api/
+		-o /local/${GEN_API_GO} \
+		-c /local/${GEN_API_GO}/config.yaml
+	cd ${PWD}/${GEN_API_GO}/
 	rm -f .travis.yml go.mod go.sum
 	go get
-	go fmt .
+	go fmt ${PWD}/${GEN_API_GO}/
 	go mod tidy
-	gofumpt -l -w . || true
-	git add .
+	gofumpt -l -w ${PWD}/${GEN_API_GO}/ || true
+	git add ${PWD}/${GEN_API_GO}/
 
 gen-client-ts:
 	docker run \
@@ -140,15 +150,15 @@ gen-client-ts:
 		openapitools/openapi-generator-cli:v6.6.0 generate \
 		-i /local/${SCHEMA_FILE} \
 		-g typescript-fetch \
-		-o /local/gen-ts-api \
+		-o /local/${GEN_API_TS} \
 		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=${VERSION} \
 		--git-repo-id BeryJu \
 		--git-user-id gravity
-	cd ${PWD}/gen-ts-api && npm i
-	\cp -rf ${PWD}/gen-ts-api/* ${PWD}/web/node_modules/gravity-api
+	cd ${PWD}/${GEN_API_TS} && npm i
+	\cp -rf ${PWD}/${GEN_API_TS}/* ${PWD}/web/node_modules/gravity-api
 
 gen-client-ts-publish: gen-client-ts
-	cd ${PWD}/gen-ts-api
+	cd ${PWD}/${GEN_API_TS}
 	npm publish
 	cd ${PWD}/web
 	npm i gravity-api@${VERSION}

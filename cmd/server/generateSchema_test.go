@@ -1,10 +1,10 @@
-package cmd_test
+package server_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"beryju.io/gravity/cmd"
+	"beryju.io/gravity/cmd/server"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +12,7 @@ import (
 func TestGenerateSchema(t *testing.T) {
 	defer tests.Setup(t)()
 	called := false
-	cmd.GenerateSchema(tests.Context(), "json", func(schema []byte) {
+	server.GenerateSchema(tests.Context(), "json", func(schema []byte) {
 		assert.NotEqual(t, "", string(schema))
 		var out interface{}
 		err := json.Unmarshal(schema, &out)

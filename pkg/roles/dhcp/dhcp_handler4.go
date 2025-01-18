@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"os"
 	"strings"
 	"sync"
 
@@ -15,6 +16,15 @@ import (
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
 )
+
+func getIP(addr net.Addr) net.IP {
+	clientIP := ""
+	switch addr := addr.(type) {
+	case *net.UDPAddr:
+		clientIP = addr.IP.String()
+	}
+	return net.ParseIP(clientIP)
+}
 
 var ErrNilResponse = errors.New("no DHCP response")
 
@@ -49,6 +59,12 @@ func (h *handler4) Serve() error {
 			_ = h.Handle(buf, oob, peer)
 		}(b[:n], oob, peer.(*net.UDPAddr))
 	}
+}
+
+var debugDHCPGatewayReplyPeer bool
+
+func init() {
+	debugDHCPGatewayReplyPeer = os.Getenv("GRAVITY_DEBUG_DHCP_GATEWAY_REPLY_CIADDR") != ""
 }
 
 func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) error {
@@ -94,12 +110,24 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	useEthernet := false
 	var p *net.UDPAddr
 	if !r.GatewayIPAddr.IsUnspecified() {
+		r.log.Debug("sending response to gateway")
+		// giaddr should be set to the Relay's IP Address, however it is the IP of the subnet
+		// the client should get an IP for. We might not always be able to directly reply to that IP
+		// especially in environments where we can't adjust firewall/routing rules. (like e2e tests)
+		// when this environment variable is set, reply directly to the IP we got the UDP request from,
+		// which is not the RFC defined behaviour
 		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
+		if debugDHCPGatewayReplyPeer {
+			p.IP = getIP(r.peer)
+		}
 	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
+		r.log.Debug("sending response to bcast (NAK)")
 		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 	} else if !r.ClientIPAddr.IsUnspecified() {
+		r.log.Debug("sending response to client")
 		p = &net.UDPAddr{IP: r.ClientIPAddr, Port: dhcpv4.ClientPort}
 	} else if r.IsBroadcast() {
+		r.log.Debug("sending response to bcast")
 		p = &net.UDPAddr{IP: net.IPv4bcast, Port: dhcpv4.ClientPort}
 	} else {
 		// sends a layer2 frame so that we can define the destination MAC address
