@@ -16,7 +16,6 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
-	"beryju.io/gravity/pkg/roles/etcd"
 	"beryju.io/gravity/pkg/storage"
 )
 
@@ -44,7 +43,7 @@ type Instance struct {
 	identifier string
 
 	instanceSession *concurrency.Session
-	etcd            *etcd.Role
+	etcd            roles.Role
 }
 
 func New() *Instance {
@@ -89,7 +88,7 @@ func (i *Instance) startEtcd(ctx context.Context) bool {
 	i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
 	es := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.bootstrap_etcd")
 	defer es.Finish()
-	i.etcd = etcd.New(i.ForRole("etcd", es.Context()))
+	i.etcd = roles.GetRole("etcd")(i.ForRole("etcd", es.Context()))
 	if i.etcd == nil {
 		i.Stop()
 		return false

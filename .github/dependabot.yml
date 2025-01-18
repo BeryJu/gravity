@@ -17,6 +17,14 @@ updates:
     assignees:
       - BeryJu
   - package-ecosystem: gomod
+    directory: "/utils/pcap_to_bytes"
+    schedule:
+      interval: daily
+      time: "04:00"
+    open-pull-requests-limit: 10
+    assignees:
+      - BeryJu
+  - package-ecosystem: gomod
     directory: "/docs"
     schedule:
       interval: daily

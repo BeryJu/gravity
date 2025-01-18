@@ -60,7 +60,8 @@ jobs:
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
-      - run: make gen-clean gen-client-go
+      - run: make install-deps gen-clean gen-client-go
+      - run: make test-e2e-container-build
       - run: make test-e2e
       - if: ${{ always() }}
         uses: codecov/codecov-action@v5

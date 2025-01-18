@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"beryju.io/gravity/api"
@@ -50,6 +51,7 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		Image:        "gravity:e2e-test",
 		ExposedPorts: []string{"8008", "8009"},
 		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009"),
+		Hostname:     "gravity-1",
 		Env: map[string]string{
 			"LOG_LEVEL":      "debug",
 			"ADMIN_PASSWORD": GravityPassword,
@@ -58,7 +60,7 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		},
 		HostConfigModifier: func(hostConfig *container.HostConfig) {
 			hostConfig.Binds = []string{
-				fmt.Sprintf("%s/coverage:/coverage", cwd),
+				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 			}
 		},
 	}
