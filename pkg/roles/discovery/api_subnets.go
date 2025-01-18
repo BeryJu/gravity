@@ -87,6 +87,7 @@ func (r *Role) APISubnetsPut() usecase.Interactor {
 
 type APISubnetsStartInput struct {
 	Name string `query:"identifier" required:"true"`
+	Wait bool   `query:"wait" required:"true"`
 }
 
 func (r *Role) APISubnetsStart() usecase.Interactor {
@@ -107,7 +108,11 @@ func (r *Role) APISubnetsStart() usecase.Interactor {
 			r.log.Warn("failed to parse subnet from KV", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
-		go s.RunDiscovery(context.Background())
+		if input.Wait {
+			s.RunDiscovery(context.Background())
+		} else {
+			go s.RunDiscovery(context.Background())
+		}
 		return nil
 	})
 	u.SetName("discovery.subnet_start")

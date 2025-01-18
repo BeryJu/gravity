@@ -857,6 +857,13 @@ paths:
         schema:
           type: string
         style: form
+      - explode: true
+        in: query
+        name: wait
+        required: true
+        schema:
+          type: boolean
+        style: form
       responses:
         "204":
           description: No Content
