@@ -128,10 +128,10 @@ gen-client-go:
 	cd ${PWD}/api/
 	rm -f .travis.yml go.mod go.sum
 	go get
-	go fmt ${PWD}
+	go fmt ${PWD}/api/
 	go mod tidy
-	gofumpt -l -w ${PWD} || true
-	git add ${PWD}
+	gofumpt -l -w ${PWD}/api/ || true
+	git add ${PWD}/api/
 
 gen-client-ts:
 	docker run \
