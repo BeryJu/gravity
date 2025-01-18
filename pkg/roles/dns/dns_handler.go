@@ -31,7 +31,7 @@ func (r *Role) FindZone(fqdn string) *Zone {
 	return longestZone
 }
 
-func (ro *Role) Handler(w dns.ResponseWriter, r *dns.Msg) {
+func (ro *Role) handler(w dns.ResponseWriter, r *dns.Msg) {
 	span := sentry.StartTransaction(
 		context.TODO(),
 		"gravity.dns.request",
