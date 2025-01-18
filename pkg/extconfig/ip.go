@@ -63,7 +63,7 @@ func (e *ExtConfig) GetInterfaceForIP(forIp net.IP) (*net.Interface, error) {
 			}
 		}
 	}
-	return nil, fmt.Errorf("faild to find interface for %s", forIp.String())
+	return nil, fmt.Errorf("failed to find interface for %s", forIp.String())
 }
 
 func (e *ExtConfig) GetIP() (net.IP, error) {
