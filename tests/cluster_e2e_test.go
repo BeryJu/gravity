@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"beryju.io/gravity/tests/gravity"
 	"github.com/docker/docker/api/types/container"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
@@ -21,7 +22,7 @@ func TestCluster_Join(t *testing.T) {
 	testcontainers.CleanupNetwork(t, net)
 
 	// Create initial gravity node
-	gr := RunGravity(t, WithNet(net))
+	gr := gravity.New(t, gravity.WithNet(net))
 
 	cwd, err := os.Getwd()
 	assert.NoError(t, err)
@@ -36,7 +37,7 @@ func TestCluster_Join(t *testing.T) {
 			Networks:     []string{net.Name},
 			Env: map[string]string{
 				"LOG_LEVEL":         "debug",
-				"ETCD_JOIN_CLUSTER": fmt.Sprintf("%s,http://gravity-1:8008", GravityToken),
+				"ETCD_JOIN_CLUSTER": fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token()),
 				"GOCOVERDIR":        "/coverage",
 			},
 			HostConfigModifier: func(hostConfig *container.HostConfig) {

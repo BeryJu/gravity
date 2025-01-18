@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"os"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -147,9 +146,6 @@ func (r *Role) initServer4() error {
 	laddr := &net.UDPAddr{
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
-	}
-	if os.Getenv("GRAVITY_DEBUG_DHCP_UNICAST_ONLY") != "" {
-		laddr.IP = net.ParseIP(extconfig.Get().Instance.IP)
 	}
 	ifName := extconfig.Get().Instance.Interface
 	udpConn, err := server4.NewIPv4UDPConn(ifName, laddr)

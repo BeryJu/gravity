@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"beryju.io/gravity/api"
+	"beryju.io/gravity/tests/gravity"
 	"github.com/docker/docker/api/types/container"
 	dockernetwork "github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/api/types/strslice"
@@ -32,7 +33,7 @@ func TestDHCP_Simple(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, net)
 
-	g := RunGravity(t, WithNet(net))
+	g := gravity.New(t, gravity.WithNet(net))
 
 	ac := g.APIClient()
 	// Create test network
@@ -101,7 +102,7 @@ func TestDHCP_Parallel(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, net)
 
-	g := RunGravity(t, WithNet(net))
+	g := gravity.New(t, gravity.WithNet(net))
 
 	ac := g.APIClient()
 	// Create test network
@@ -190,8 +191,10 @@ func TestDHCP_Relay(t *testing.T) {
 	assert.NoError(t, err)
 	testcontainers.CleanupNetwork(t, netB)
 
-	g := RunGravity(t, WithEnv("GRAVITY_DEBUG_DHCP_UNICAST_ONLY", "true"), WithNet(netA), WithNet(netB))
-	gip, err := g.container.ContainerIP(ctx)
+	g := gravity.New(t,
+		gravity.WithNet(netA),
+		gravity.WithNet(netB))
+	gip, err := g.Container().ContainerIP(ctx)
 	assert.NoError(t, err)
 
 	ac := g.APIClient()
