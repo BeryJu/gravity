@@ -53,6 +53,8 @@ func TestDHCP_Single(t *testing.T) {
 			FromDockerfile: testcontainers.FromDockerfile{
 				Context:    "../hack/e2e/",
 				Dockerfile: "dhcp-client.Dockerfile",
+				Repo:       "gravity-dhcp-client",
+				KeepImage:  true,
 			},
 			Networks: []string{net.Name},
 			HostConfigModifier: func(hostConfig *container.HostConfig) {

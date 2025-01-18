@@ -7,7 +7,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 )
 
-func TestDNS_Single(t *testing.T) {
+func TestDNS_SimpleDefault(t *testing.T) {
 	ctx := Context(t)
 	RunGravity(t, nil)
 
@@ -17,6 +17,8 @@ func TestDNS_Single(t *testing.T) {
 			FromDockerfile: testcontainers.FromDockerfile{
 				Context:    "../hack/e2e/",
 				Dockerfile: "dns.Dockerfile",
+				Repo:       "gravity-dns-client",
+				KeepImage:  true,
 			},
 		},
 		Started: true,

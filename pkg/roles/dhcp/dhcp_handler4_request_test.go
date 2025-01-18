@@ -1,9 +1,9 @@
 package dhcp_test
 
 import (
+	"fmt"
 	"net"
 	"net/netip"
-	"sync"
 	"testing"
 	"time"
 
@@ -346,36 +346,42 @@ func TestDHCP_Parallel(t *testing.T) {
 	tests.PanicIfError(role.Start(ctx, RoleConfig()))
 	defer role.Stop()
 
-	wg := sync.WaitGroup{}
-	wg.Add(3)
+	for i := 0; i < 10; i++ {
+		t.Run(fmt.Sprintf("test %v", i), func(t *testing.T) {
+			t.Parallel()
+			time.Sleep(2 * time.Second)
+			fmt.Printf("p done %v\n", time.Now())
+		})
+	}
+
 	tester := func(cidr string) {
-		defer wg.Done()
 		c, err := netip.ParsePrefix(cidr)
 		if err != nil {
 			panic(err)
 		}
-		for i := 1; i < 100; i++ {
-			rr := &dhcpv4.DHCPv4{
-				GatewayIPAddr: net.ParseIP(c.Addr().Next().String()),
-				ClientHWAddr:  generateHW(),
-				OpCode:        dhcpv4.OpcodeBootRequest,
+		t.Run(cidr, func(t *testing.T) {
+			t.Parallel()
+			for i := 1; i < 100; i++ {
+				rr := &dhcpv4.DHCPv4{
+					GatewayIPAddr: net.ParseIP(c.Addr().Next().String()),
+					ClientHWAddr:  generateHW(),
+					OpCode:        dhcpv4.OpcodeBootRequest,
+				}
+				rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))
+				req4 := role.NewRequest4(rr)
+				res := role.Handle4(req4)
+				assert.NotNil(t, res)
+				a, err := netip.ParseAddr(res.YourIPAddr.String())
+				if err != nil {
+					panic(err)
+				}
+				assert.True(t, c.Contains(a))
 			}
-			rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))
-			req4 := role.NewRequest4(rr)
-			res := role.Handle4(req4)
-			assert.NotNil(t, res)
-			a, err := netip.ParseAddr(res.YourIPAddr.String())
-			if err != nil {
-				panic(err)
-			}
-			assert.True(t, c.Contains(a))
-		}
+		})
 	}
-	go tester("10.100.0.0/24")
-	go tester("10.100.1.0/24")
-	go tester("10.100.2.0/24")
-
-	wg.Wait()
+	tester("10.100.0.0/24")
+	tester("10.100.1.0/24")
+	tester("10.100.2.0/24")
 }
 
 func TestDHCPRequest_Options(t *testing.T) {
