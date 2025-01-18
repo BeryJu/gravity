@@ -79,7 +79,7 @@ type Instance interface {
 	DispatchEvent(topic string, ev *Event)
 	AddEventListener(topic string, handler EventHandler)
 	Context() context.Context
-	ExecuteHook(HookOptions, ...interface{})
+	ExecuteHook(HookOptions, ...interface{}) interface{}
 	Migrator() RoleMigrator
 }
 

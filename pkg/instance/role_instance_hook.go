@@ -32,9 +32,9 @@ func (ri *RoleInstance) HookEnvironment(options roles.HookOptions) map[string]in
 	}
 }
 
-func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface{}) {
+func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface{}) interface{} {
 	if options.Source == "" {
-		return
+		return nil
 	}
 	log := ri.log.With(zap.String("hook", options.Method))
 
@@ -55,22 +55,24 @@ func (ri *RoleInstance) ExecuteHook(options roles.HookOptions, args ...interface
 	_, err := vm.RunString(options.Source)
 	if err != nil {
 		log.Warn("failed to run scope hook", zap.Error(err))
-		return
+		return nil
 	}
 	m := vm.Get(options.Method)
 	hookMeth, ok := goja.AssertFunction(m)
 	if !ok {
-		return
+		return nil
 	}
 	convertedArgs := []goja.Value{}
 	for _, rv := range args {
 		convertedArgs = append(convertedArgs, vm.ToValue(rv))
 	}
 	before := time.Now()
-	_, err = hookMeth(vm.ToValue(ri), convertedArgs...)
+	v, err := hookMeth(vm.ToValue(ri), convertedArgs...)
 	duration := time.Since(before)
 	instanceRoleHooks.WithLabelValues(ri.roleId, options.Method).Observe(duration.Seconds())
 	if err != nil {
 		log.Warn("failed to call hook function", zap.Error(err))
+		return nil
 	}
+	return v.Export()
 }
