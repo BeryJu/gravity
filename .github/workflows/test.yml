@@ -93,6 +93,7 @@ jobs:
     needs:
       - test-unittest
       - test-e2e
+      - test-bench
     runs-on: ubuntu-latest
     steps:
       - uses: re-actors/alls-green@release/v1
