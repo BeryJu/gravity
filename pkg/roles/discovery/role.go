@@ -96,12 +96,12 @@ func GetCIDRFromIP() (string, error) {
 		return "", err
 	}
 	for _, addr := range addrs {
-		iip, _, err := net.ParseCIDR(addr.String())
+		iip, net, err := net.ParseCIDR(addr.String())
 		if err != nil {
 			continue
 		}
 		if ip.Equal(iip) {
-			return addr.String(), nil
+			return net.String(), nil
 		}
 	}
 	return "", errors.New("no CIDR found")
