@@ -40,16 +40,16 @@ type Gravity struct {
 	t         *testing.T
 }
 
-type GravityOption func(req testcontainers.ContainerRequest)
+type GravityOption func(req *testcontainers.ContainerRequest)
 
 func WithEnv(key string, value string) GravityOption {
-	return func(req testcontainers.ContainerRequest) {
+	return func(req *testcontainers.ContainerRequest) {
 		req.Env[key] = value
 	}
 }
 
 func WithNet(net *testcontainers.DockerNetwork) GravityOption {
-	return func(req testcontainers.ContainerRequest) {
+	return func(req *testcontainers.ContainerRequest) {
 		req.Networks = append(req.Networks, net.Name)
 	}
 }
@@ -79,7 +79,7 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 	}
 
 	for _, opt := range opts {
-		opt(req)
+		opt(&req)
 	}
 
 	gravityContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
