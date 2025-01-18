@@ -60,7 +60,7 @@ func RunGravity(t *testing.T, net *testcontainers.DockerNetwork) *Gravity {
 		},
 		HostConfigModifier: func(hostConfig *container.HostConfig) {
 			hostConfig.Binds = []string{
-				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage-node-1")),
+				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 			}
 		},
 	}

@@ -41,7 +41,7 @@ func TestCluster_Join(t *testing.T) {
 			},
 			HostConfigModifier: func(hostConfig *container.HostConfig) {
 				hostConfig.Binds = []string{
-					fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage-node-2")),
+					fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 				}
 			},
 		},
@@ -65,7 +65,7 @@ func TestCluster_Join(t *testing.T) {
 	// 		},
 	// 		HostConfigModifier: func(hostConfig *container.HostConfig) {
 	// 			hostConfig.Binds = []string{
-	// 				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage-node-3")),
+	// 				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 	// 			}
 	// 		},
 	// 	},

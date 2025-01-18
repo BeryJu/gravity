@@ -214,12 +214,8 @@ test-e2e: test-e2e-container-build
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
 	cd ${PWD}
-	mkdir -p ${PWD}/tests/coverage-node-1/ \
-		${PWD}/tests/coverage-node-2/ \
-		${PWD}/tests/coverage-node-3/
 	go tool covdata textfmt \
-		-i ${PWD}/tests/coverage-node-1/ \
-		-i ${PWD}/tests/coverage-node-2/ \
+		-i ${PWD}/tests/coverage/ \
 		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
