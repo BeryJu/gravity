@@ -2,6 +2,7 @@ package discovery
 
 import (
 	"context"
+	"fmt"
 	"net/netip"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -63,8 +64,9 @@ func New(instance roles.Instance) *Role {
 	})
 	r.i.AddEventListener(instanceTypes.EventTopicInstanceFirstStart, func(ev *roles.Event) {
 		// On first start create a subnet based on the instance IP
-		subnet := r.NewSubnet("default-instance-subnet")
+		subnet := r.NewSubnet(fmt.Sprintf("instance-subnet-%s", extconfig.Get().Instance.Identifier))
 		ip := netip.MustParseAddr(extconfig.Get().Instance.IP)
+		// TODO: Check interface to see if it's actually a /24
 		prefix, err := ip.Prefix(24)
 		if err != nil {
 			r.log.Warn("failed to get prefix", zap.Error(err))
