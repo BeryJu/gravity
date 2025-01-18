@@ -10,7 +10,6 @@ import (
 	dhcptypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	dnstypes "beryju.io/gravity/pkg/roles/dns/types"
-	"github.com/google/uuid"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -27,8 +26,7 @@ type Device struct {
 
 func (r *Role) newDevice() *Device {
 	return &Device{
-		Identifier: uuid.New().String(),
-		inst:       r.i,
+		inst: r.i,
 	}
 }
 
