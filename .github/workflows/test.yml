@@ -65,6 +65,11 @@ jobs:
       - run: make bench
       - if: ${{ always() }}
         run: make test-env-stop
+      - if: ${{ always() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittest
   test-e2e:
     name: Test (e2e)
     runs-on: ubuntu-latest
