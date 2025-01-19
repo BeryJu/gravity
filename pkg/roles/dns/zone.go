@@ -214,7 +214,12 @@ func (z *Zone) Init(ctx context.Context) {
 	)
 	z.records.Start(ctx)
 	for _, handlerCfg := range z.HandlerConfigs {
-		t := handlerCfg["type"].(string)
+		tt := handlerCfg["type"]
+		if tt == nil {
+			z.log.Warn("forwarder entry without type")
+			continue
+		}
+		t := tt.(string)
 		hc, ok := HandlerRegistry.Find(t)
 		if !ok {
 			z.log.Warn("invalid forwarder type", zap.String("type", t))
