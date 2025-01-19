@@ -69,6 +69,7 @@ func (w *Watcher[T]) Start(ctx context.Context) {
 }
 
 func (w *Watcher[T]) Stop() {
+	w.log.Debug("Stopping watcher")
 	if w.watchCancel != nil {
 		w.watchCancel()
 	}

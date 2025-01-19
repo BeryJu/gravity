@@ -57,9 +57,7 @@ func New(instance roles.Instance) *Role {
 		r.i.KV(),
 		r.i.KV().Key(types.KeyRole, types.KeyZones).Prefix(true),
 		watcher.WithBeforeUpdate(func(zone *Zone, direction mvccpb.Event_EventType) {
-			if direction == mvccpb.DELETE {
-				zone.StopWatchingRecords()
-			}
+			zone.StopWatchingRecords()
 		}),
 	)
 	r.i.AddEventListener(dhcpTypes.EventTopicDHCPLeasePut, r.eventHandlerDHCPLeasePut)
