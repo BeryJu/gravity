@@ -73,6 +73,14 @@ func (w *Watcher[T]) Stop() {
 	if w.watchCancel != nil {
 		w.watchCancel()
 	}
+	if w.beforeUpdate == nil {
+		return
+	}
+	w.mutex.RLock()
+	for _, e := range w.entries {
+		w.beforeUpdate(e, mvccpb.DELETE)
+	}
+	w.mutex.RUnlock()
 }
 
 func (w *Watcher[T]) loadInitial(ctx context.Context) {
