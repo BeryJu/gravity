@@ -51,7 +51,7 @@ func New(instance roles.Instance) *Role {
 			if err != nil {
 				return nil, err
 			}
-			z.Init(r.ctx)
+			z.Init(r.i.Context())
 			return z, nil
 		},
 		r.i.KV(),
@@ -105,7 +105,7 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dns.start")
 	defer start.Finish()
 
-	r.zones.Start(r.ctx)
+	r.zones.Start(start.Context())
 
 	r.m.HandleFunc(
 		types.DNSRootZone,

@@ -62,7 +62,7 @@ func (w *Watcher[T]) Prefix() *storage.Key {
 
 func (w *Watcher[T]) Start(ctx context.Context) {
 	w.log.Debug("Starting watcher")
-	w.loadInitial(ctx)
+	w.loadInitial()
 	cctx, cancel := context.WithCancel(ctx)
 	w.watchCancel = cancel
 	go w.startWatch(cctx)
@@ -83,16 +83,16 @@ func (w *Watcher[T]) Stop() {
 	w.mutex.RUnlock()
 }
 
-func (w *Watcher[T]) loadInitial(ctx context.Context) {
+func (w *Watcher[T]) loadInitial() {
 	w.log.Debug("Loading initial")
-	tx := sentry.StartTransaction(ctx, "gravity.storage.watcher.loadInitial")
+	tx := sentry.StartTransaction(context.Background(), "gravity.storage.watcher.loadInitial")
 	defer tx.Finish()
 	entries, err := w.client.Get(tx.Context(), w.prefix.String(), clientv3.WithPrefix())
 	if err != nil {
 		w.log.Warn("failed to list entries", zap.Error(err))
 		if !errors.Is(err, context.Canceled) {
-			time.Sleep(5 * time.Second)
-			w.loadInitial(tx.Context())
+			time.Sleep(1 * time.Second)
+			w.loadInitial()
 		}
 		return
 	}

@@ -3,6 +3,7 @@ package instance
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -19,6 +20,12 @@ import (
 	"beryju.io/gravity/pkg/storage"
 )
 
+var (
+	ErrRoleRestarting   = errors.New("Role restarting")
+	ErrRoleStopping     = errors.New("Role stopping")
+	ErrInstanceStopping = errors.New("Instance stopping")
+)
+
 type ClusterInfo struct {
 	Setup bool `json:"setup"`
 }
@@ -26,7 +33,7 @@ type ClusterInfo struct {
 type RoleContext struct {
 	Role              roles.Role
 	RoleInstance      *RoleInstance
-	ContextCancelFunc context.CancelFunc
+	ContextCancelFunc context.CancelCauseFunc
 }
 
 type Instance struct {
@@ -38,7 +45,7 @@ type Instance struct {
 
 	eventHandlers     map[string]map[string][]roles.EventHandler
 	eventHandlersM    sync.RWMutex
-	rootContextCancel context.CancelFunc
+	rootContextCancel context.CancelCauseFunc
 
 	identifier string
 
@@ -48,7 +55,7 @@ type Instance struct {
 
 func New() *Instance {
 	extCfg := extconfig.Get()
-	ctx, canc := context.WithCancel(context.Background())
+	ctx, canc := context.WithCancelCause(context.Background())
 	log := extCfg.Logger().With(zap.String("instance", extCfg.Instance.Identifier)).Named("instance")
 	return &Instance{
 		roles:             make(map[string]RoleContext),
@@ -161,7 +168,7 @@ func (i *Instance) bootstrap(ctx context.Context) {
 	rootInstance := i.ForRole("root", ctx)
 	for _, roleId := range i.getRoles(ctx) {
 		instanceRoles.WithLabelValues(roleId).Add(1)
-		rctx, cancel := context.WithCancel(i.rootContext)
+		rctx, cancel := context.WithCancelCause(i.rootContext)
 		rc := RoleContext{
 			RoleInstance:      i.ForRole(roleId, rctx),
 			ContextCancelFunc: cancel,
@@ -202,9 +209,11 @@ func (i *Instance) eventRoleRestart(ev *roles.Event) {
 	config := ev.Payload.Data["config"].([]byte)
 	ctx := context.Background()
 	tx := sentry.StartTransaction(ctx, "gravity.instance.role.restart")
+	tx.Description = id
+	tx.SetTag("gravity.role", id)
 	defer tx.Finish()
-	i.stopRole(tx.Context(), id)
-	i.startRole(i.rootContext, id, config)
+	i.stopRole(tx.Context(), ErrRoleRestarting, id)
+	i.startRole(tx.Context(), id, config)
 }
 
 func (i *Instance) checkFirstStart(ctx context.Context) {
@@ -292,7 +301,7 @@ func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback 
 			if ev.Type != clientv3.EventTypeDelete && len(ev.Kv.Value) > 0 {
 				rawConfig = ev.Kv.Value
 			}
-			i.log.Info("stopping role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
+			i.log.Info("restarting role due to config change", zap.String("roleId", id), zap.String("key", string(ev.Kv.Key)))
 			i.DispatchEvent(types.EventTopicRoleRestart, roles.NewEvent(
 				ctx,
 				map[string]interface{}{
@@ -305,7 +314,7 @@ func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback 
 }
 
 func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) bool {
-	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.start_role")
+	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.role.start")
 	srs.Description = id
 	srs.SetTag("gravity.role", id)
 	defer srs.Finish()
@@ -343,16 +352,16 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	return true
 }
 
-func (i *Instance) stopRole(ctx context.Context, id string) {
-	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.stop_role")
+func (i *Instance) stopRole(ctx context.Context, cause error, id string) {
+	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.role.stop")
 	srs.Description = id
 	srs.SetTag("gravity.role", id)
 	defer srs.Finish()
 	i.log.Info("stopping role", zap.String("roleId", id))
 	i.roles[id].Role.Stop()
 	// Cancel context and re-create the context
-	i.roles[id].ContextCancelFunc()
-	ctx, cancel := context.WithCancel(i.rootContext)
+	i.roles[id].ContextCancelFunc(cause)
+	ctx, cancel := context.WithCancelCause(i.rootContext)
 	i.rolesM.Lock()
 	i.roles[id] = RoleContext{
 		Role:              i.roles[id].Role,
@@ -366,13 +375,13 @@ func (i *Instance) Stop() {
 	i.log.Info("stopping")
 	for id, role := range i.roles {
 		i.log.Info("stopping role", zap.String("roleId", id))
-		role.ContextCancelFunc()
+		role.ContextCancelFunc(ErrInstanceStopping)
 		role.Role.Stop()
 	}
 	if i.etcd != nil {
 		i.log.Info("stopping role", zap.String("roleId", "etcd"))
 		i.etcd.Stop()
 	}
-	i.rootContextCancel()
+	i.rootContextCancel(ErrInstanceStopping)
 	sentry.Flush(2 * time.Second)
 }
