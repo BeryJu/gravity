@@ -20,13 +20,13 @@ func NewKV(c clientv3.KV, opWithoutSpan opWithoutSpan) clientv3.KV {
 
 func NameFromOp(op clientv3.Op) string {
 	if op.IsGet() {
-		return "etcd.get"
+		return "get"
 	} else if op.IsPut() {
-		return "etcd.put"
+		return "put"
 	} else if op.IsDelete() {
-		return "etcd.delete"
+		return "delete"
 	} else {
-		return "etcd.unknown"
+		return "unknown"
 	}
 }
 
@@ -36,9 +36,10 @@ func (kv traceKV) trace(ctx context.Context, op clientv3.Op) func() {
 		kv.opWithoutSpan(op)
 		return func() {}
 	}
-	span := tx.StartChild(NameFromOp(op))
+	span := tx.StartChild("db")
 	span.Description = string(op.KeyBytes())
-	span.SetTag("etcd.key", span.Description)
+	span.SetTag("db.system", "other_sql")
+	span.SetTag("db.operation.name", NameFromOp(op))
 	return func() {
 		span.Finish()
 	}
