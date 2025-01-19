@@ -200,8 +200,11 @@ func (i *Instance) bootstrap(ctx context.Context) {
 func (i *Instance) eventRoleRestart(ev *roles.Event) {
 	id := ev.Payload.Data["id"].(string)
 	config := ev.Payload.Data["config"].([]byte)
-	i.stopRole(ev.Context, id)
-	i.startRole(ev.Context, id, config)
+	ctx := context.Background()
+	tx := sentry.StartTransaction(ctx, "gravity.instance.role.restart")
+	defer tx.Finish()
+	i.stopRole(tx.Context(), id)
+	i.startRole(i.rootContext, id, config)
 }
 
 func (i *Instance) checkFirstStart(ctx context.Context) {
