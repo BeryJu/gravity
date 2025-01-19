@@ -7,7 +7,7 @@ import (
 
 // Set via ldflags
 var (
-	Version   = ""
+	Version   = "99.99.99"
 	BuildHash = ""
 )
 

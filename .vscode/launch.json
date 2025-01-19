@@ -6,14 +6,15 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/server/main",
             "args": [
                 "server",
             ],
+            "cwd": "${workspaceFolder}",
             "env": {
-                "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb;tftp",
                 "DEBUG": "true",
-                "INSTANCE_IP": "0.0.0.0"
+                "INSTANCE_IP": "0.0.0.0",
+                "LISTEN_ONLY": "true"
             }
         }
     ]
