@@ -97,7 +97,7 @@ func (eh *EtcdHandler) handleSingleQuestion(question dns.Question, r *utils.DNSR
 		eh.z.etcdKey,
 		strings.ToLower(relRecordName),
 	)
-	if question.Qtype != dns.TypeNone && question.Qtype != dns.TypeANY {
+	if question.Qtype != dns.TypeNone {
 		// If we're looking for a specific key, include that in the etcd key
 		directRecordKey = directRecordKey.Add(dns.Type(question.Qtype).String())
 	} else {
@@ -149,7 +149,6 @@ func (eh *EtcdHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest) *dns.
 				nq := dns.Question{
 					Name:   cn.Target,
 					Qclass: dns.ClassINET,
-					Qtype:  dns.TypeANY,
 				}
 				nr := utils.NewFakeDNSWriter(w)
 				r.Meta().ResolveRequest(nr, r.Chain(&dns.Msg{Question: []dns.Question{nq}}, r.Context(), r.Meta()))
