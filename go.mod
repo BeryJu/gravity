@@ -40,7 +40,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.54
-	github.com/swaggest/rest v0.2.70
+	github.com/swaggest/rest v0.2.71
 	github.com/swaggest/usecase v1.3.1
 	go.etcd.io/etcd/api/v3 v3.5.17
 	go.etcd.io/etcd/client/v3 v3.5.17
@@ -121,7 +121,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
-	github.com/go-chi/chi/v5 v5.1.0 // indirect
+	github.com/go-chi/chi/v5 v5.2.0 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-jose/go-jose/v4 v4.0.4 // indirect
@@ -216,7 +216,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/swaggest/form/v5 v5.1.1 // indirect
-	github.com/swaggest/jsonschema-go v0.3.72 // indirect
+	github.com/swaggest/jsonschema-go v0.3.73 // indirect
 	github.com/swaggest/refl v1.3.0 // indirect
 	github.com/tinylib/msgp v1.2.4 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
