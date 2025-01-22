@@ -185,7 +185,7 @@ func (r *Role) APIZonesImport() usecase.Interactor {
 		var err error
 		ac := apiUtils.APIClientFromRequest(ctx)
 		if ac == nil {
-			return status.Wrap(err, status.Internal)
+			return status.Wrap(errors.New("failed to get API Client from context"), status.Internal)
 		}
 		switch input.Type {
 		case "bind":

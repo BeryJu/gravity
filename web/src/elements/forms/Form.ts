@@ -95,6 +95,14 @@ export function serializeForm<T extends KeyUnknown>(
                 assignValue(inputElement, inputElement.checked, json);
             } else if (
                 inputElement.tagName.toLowerCase() === "input" &&
+                inputElement.type === "radio"
+            ) {
+                if (!inputElement.checked) {
+                    return;
+                }
+                assignValue(inputElement, inputElement.value, json);
+            } else if (
+                inputElement.tagName.toLowerCase() === "input" &&
                 inputElement.type === "number"
             ) {
                 assignValue(inputElement, parseInt(inputElement.value, 10), json);

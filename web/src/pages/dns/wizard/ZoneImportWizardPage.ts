@@ -37,7 +37,7 @@ export class ZoneImportWizardPage extends WizardFormPage {
                 zone: name,
                 dnsAPIZonesImportInput: {
                     payload: contents || "",
-                    type: data.Type as DnsAPIZonesImporterType,
+                    type: data.type as DnsAPIZonesImporterType,
                 },
             });
             return result.successful || false;
@@ -54,7 +54,7 @@ export class ZoneImportWizardPage extends WizardFormPage {
                             type="radio"
                             name="type"
                             id=${type}
-                            value=${type}
+                            value=${type.toLowerCase()}
                         />
                         <label class="pf-c-radio__label" for=${type}>${convertToTitle(type)}</label>
                     </div>`;

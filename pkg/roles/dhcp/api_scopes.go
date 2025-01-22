@@ -240,7 +240,7 @@ func (r *Role) APIScopesImport() usecase.Interactor {
 		var err error
 		ac := utils.APIClientFromRequest(ctx)
 		if ac == nil {
-			return status.Wrap(err, status.Internal)
+			return status.Wrap(errors.New("failed to get API Client from context"), status.Internal)
 		}
 		switch input.Type {
 		case "ms_dhcp":
