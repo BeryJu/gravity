@@ -14,6 +14,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/dhcp/options"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -245,9 +246,10 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	rep.UpdateOption(dhcpv4.OptServerIdentifier(rep.ServerIPAddr))
 	rep.YourIPAddr = net.ParseIP(l.Address)
 
+	// Legacy custom option handling
 	for _, opt := range l.scope.Options {
 		finalVal := make([]byte, 0)
-		if opt == nil || opt.Tag == nil && opt.TagName == "" {
+		if opt == nil || opt.Tag == 0 && opt.TagName == "" {
 			continue
 		}
 		if opt.TagName != "" {
@@ -256,14 +258,14 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 				req.log.Warn("invalid tag name", zap.String("tagName", opt.TagName))
 				continue
 			}
-			opt.Tag = &tag
+			opt.Tag = uint32(tag)
 		}
 
 		// Values which are directly converted from string to byte
-		if opt.Value != nil {
-			finalVal = []byte(*opt.Value)
-			if _, ok := types.IPTags[*opt.Tag]; ok {
-				i := net.ParseIP(*opt.Value)
+		if opt.ValueLegacy != "" {
+			finalVal = []byte(opt.ValueLegacy)
+			if _, ok := types.IPTags[uint8(opt.Tag)]; ok {
+				i := net.ParseIP(opt.ValueLegacy)
 				finalVal = dhcpv4.IPs([]net.IP{i}).ToBytes()
 			}
 		}
@@ -293,11 +295,13 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 			}
 			finalVal = valuesHex
 		}
-		dopt := dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(*opt.Tag), finalVal)
+		dopt := dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(opt.Tag), finalVal)
 		rep.UpdateOption(dopt)
 		if dopt.Code.Code() == uint8(dhcpv4.OptionBootfileName) {
 			rep.BootFileName = dhcpv4.GetString(dopt.Code, rep.Options)
 		}
 	}
+	// New definition-based option handling
+	options.ApplyToResponse(l.scope.Options, l.scope.role.optionDefinitions, req.DHCPv4, rep)
 	return rep
 }
