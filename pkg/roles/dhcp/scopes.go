@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
+	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -26,22 +27,21 @@ type ScopeDNS struct {
 type Scope struct {
 	ipam IPAM
 	inst roles.Instance
-	DNS  *ScopeDNS `json:"dns"`
-
-	IPAM map[string]string `json:"ipam"`
 	role *Role
 	log  *zap.Logger
 
-	cidr netip.Prefix
-	Name string `json:"-"`
+	Name string            `json:"-"`
+	DNS  *ScopeDNS         `json:"dns"`
+	IPAM map[string]string `json:"ipam"`
 
+	SubnetCIDR string             `json:"subnetCidr"`
+	Options    []*optTypes.Option `json:"options"`
+	TTL        int64              `json:"ttl"`
+	Default    bool               `json:"default"`
+	Hook       string             `json:"hook"`
+
+	cidr    netip.Prefix
 	etcdKey string
-
-	SubnetCIDR string              `json:"subnetCidr"`
-	Options    []*types.DHCPOption `json:"options"`
-	TTL        int64               `json:"ttl"`
-	Default    bool                `json:"default"`
-	Hook       string              `json:"hook"`
 }
 
 func (r *Role) NewScope(name string) *Scope {
