@@ -4,7 +4,7 @@ go 1.23.4
 
 require (
 	beryju.io/gravity v0.25.0
-	github.com/docker/docker v27.5.0+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/gorilla/securecookie v1.1.2
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.35.0
