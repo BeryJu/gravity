@@ -190,7 +190,7 @@ func (i *Instance) bootstrap(ctx context.Context) {
 	rootInstance.AddEventListener(types.EventTopicRoleRestart, i.eventRoleRestart)
 	rootInstance.DispatchEvent(
 		types.EventTopicInstanceBootstrapped,
-		roles.NewEvent(i.rootContext, map[string]interface{}{}),
+		roles.NewEvent(ctx, map[string]interface{}{}),
 	)
 	i.checkFirstStart(ctx)
 	wg := sync.WaitGroup{}

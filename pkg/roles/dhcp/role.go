@@ -7,8 +7,10 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/dhcp/options"
 	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -98,6 +100,7 @@ func New(instance roles.Instance) *Role {
 	r.s4 = &handler4{
 		role: r,
 	}
+	r.i.AddEventListener(instanceTypes.EventTopicInstanceBootstrapped, options.Bootstrap(r.i))
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
