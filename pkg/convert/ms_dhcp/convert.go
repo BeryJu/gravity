@@ -91,7 +91,7 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 			"range_start": sc.StartRange,
 			"range_end":   sc.EndRange,
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 		Hook:    "",
 	}
 	for _, optv := range sc.OptionValues.OptionValue {
@@ -102,9 +102,9 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 		}
 		t := int32(tag)
 		v := optv.Value[0]
-		gscope.Options = append(gscope.Options, api.TypesDHCPOption{
-			Tag:   *api.NewNullableInt32(&t),
-			Value: *api.NewNullableString(&v),
+		gscope.Options = append(gscope.Options, api.TypesOption{
+			Tag:         api.PtrInt32(t),
+			ValueLegacy: api.PtrString(v),
 		})
 	}
 	name := slug.Make(sc.Name)
