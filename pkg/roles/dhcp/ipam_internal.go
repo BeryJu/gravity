@@ -114,6 +114,12 @@ func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 	}, true)
 }
 
+func (i *InternalIPAM) FreeIP(ip netip.Addr) {
+	i.ipsm.Lock()
+	defer i.ipsm.Unlock()
+	delete(i.ips, ip.String())
+}
+
 func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
 	i.ipsm.Lock()
 	defer i.ipsm.Unlock()
