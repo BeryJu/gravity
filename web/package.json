@@ -45,7 +45,7 @@
         "moment": "^2.30.1",
         "prettier": "^3.4.2",
         "rapidoc": "^9.3.8",
-        "rollup": "^4.34.0",
+        "rollup": "^4.34.1",
         "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-cssimport": "^1.0.3",
         "rollup-plugin-esbuild": "^6.1.1",
