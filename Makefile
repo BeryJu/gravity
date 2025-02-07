@@ -42,6 +42,11 @@ run: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 		${PWD}/cmd/server/main \
 			server
 
+tidy:
+	go mod tidy
+	cd ${PWD}/utils/pcap_to_bytes/ && go mod tidy
+	cd ${PWD}/tests/ && go mod tidy
+
 # Web
 web: web-lint web-build
 
