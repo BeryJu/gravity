@@ -2563,24 +2563,32 @@ components:
           zone: zone
           addZoneInHostname: true
         options:
-        - value64:
+        - valueLegacy: valueLegacy
+          value64:
           - value64
           - value64
+          def: def
           valueHex:
           - valueHex
           - valueHex
           tag: 0
           tagName: tagName
-          value: value
-        - value64:
+          value:
+          - value
+          - value
+        - valueLegacy: valueLegacy
+          value64:
           - value64
           - value64
+          def: def
           valueHex:
           - valueHex
           - valueHex
           tag: 0
           tagName: tagName
-          value: value
+          value:
+          - value
+          - value
         ttl: 5
         statistics:
           usable: 0
@@ -2599,7 +2607,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         scope:
@@ -2651,24 +2659,32 @@ components:
             zone: zone
             addZoneInHostname: true
           options:
-          - value64:
+          - valueLegacy: valueLegacy
+            value64:
             - value64
             - value64
+            def: def
             valueHex:
             - valueHex
             - valueHex
             tag: 0
             tagName: tagName
-            value: value
-          - value64:
+            value:
+            - value
+            - value
+          - valueLegacy: valueLegacy
+            value64:
             - value64
             - value64
+            def: def
             valueHex:
             - valueHex
             - valueHex
             tag: 0
             tagName: tagName
-            value: value
+            value:
+            - value
+            - value
           ttl: 5
           statistics:
             usable: 0
@@ -2686,24 +2702,32 @@ components:
             zone: zone
             addZoneInHostname: true
           options:
-          - value64:
+          - valueLegacy: valueLegacy
+            value64:
             - value64
             - value64
+            def: def
             valueHex:
             - valueHex
             - valueHex
             tag: 0
             tagName: tagName
-            value: value
-          - value64:
+            value:
+            - value
+            - value
+          - valueLegacy: valueLegacy
+            value64:
             - value64
             - value64
+            def: def
             valueHex:
             - valueHex
             - valueHex
             tag: 0
             tagName: tagName
-            value: value
+            value:
+            - value
+            - value
           ttl: 5
           statistics:
             usable: 0
@@ -2758,24 +2782,32 @@ components:
           zone: zone
           addZoneInHostname: true
         options:
-        - value64:
+        - valueLegacy: valueLegacy
+          value64:
           - value64
           - value64
+          def: def
           valueHex:
           - valueHex
           - valueHex
           tag: 0
           tagName: tagName
-          value: value
-        - value64:
+          value:
+          - value
+          - value
+        - valueLegacy: valueLegacy
+          value64:
           - value64
           - value64
+          def: def
           valueHex:
           - valueHex
           - valueHex
           tag: 0
           tagName: tagName
-          value: value
+          value:
+          - value
+          - value
         ttl: 0
       properties:
         default:
@@ -2791,7 +2823,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         subnetCidr:
@@ -3560,38 +3592,6 @@ components:
       - system
       - dns
       type: string
-    TypesDHCPOption:
-      example:
-        value64:
-        - value64
-        - value64
-        valueHex:
-        - valueHex
-        - valueHex
-        tag: 0
-        tagName: tagName
-        value: value
-      properties:
-        tag:
-          minimum: 0
-          nullable: true
-          type: integer
-        tagName:
-          type: string
-        value:
-          nullable: true
-          type: string
-        value64:
-          items:
-            type: string
-          nullable: true
-          type: array
-        valueHex:
-          items:
-            type: string
-          nullable: true
-          type: array
-      type: object
     TypesOIDCConfig:
       example:
         tokenUsernameField: tokenUsernameField
@@ -3617,5 +3617,44 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesOption:
+      example:
+        valueLegacy: valueLegacy
+        value64:
+        - value64
+        - value64
+        def: def
+        valueHex:
+        - valueHex
+        - valueHex
+        tag: 0
+        tagName: tagName
+        value:
+        - value
+        - value
+      properties:
+        def:
+          type: string
+        tag:
+          minimum: 0
+          type: integer
+        tagName:
+          type: string
+        value:
+          items:
+            format: base64
+            type: string
+          type: array
+        value64:
+          items:
+            type: string
+          type: array
+        valueHex:
+          items:
+            type: string
+          type: array
+        valueLegacy:
           type: string
       type: object
