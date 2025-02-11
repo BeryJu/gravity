@@ -1,0 +1,7 @@
+go 1.23.6
+
+use (
+	.
+	./tests
+	./utils/pcap_to_bytes
+)
