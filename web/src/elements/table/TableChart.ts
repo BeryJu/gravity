@@ -95,7 +95,10 @@ export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {
             tension: 0.4,
             pointStyle: false,
             data:
-                data.records?.map((record) => {
+                // Data is sorted by timestamp here as we might get data for multiple nodes
+                // however we only want to show a single dataset so we've got to make sure the data is linear
+                // otherwise we get a chart that's jumping around
+                data.records?.sort((a, b) => a.time.getTime() - b.time.getTime()).map((record) => {
                     return {
                         x: record.time.getTime(),
                         y: record.value,
