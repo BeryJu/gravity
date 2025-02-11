@@ -40,7 +40,11 @@ export function ip(raw: string): AbstractIPNum & { getValue(): bigint } {
     try {
         return IPv6.fromString(raw);
     } catch {
-        return IPv4.fromString(raw);
+        try {
+            return IPv4.fromString(raw);
+        } catch {
+            return new IPv4(0);
+        }
     }
 }
 
