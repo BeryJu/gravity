@@ -6,4 +6,3 @@ internal/resources/blocky
 internal/resources/macoui
 bin/**
 hack/
-tests/
