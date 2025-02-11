@@ -203,6 +203,15 @@ func (r *Role) APIScopesDelete() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
+		for _, l := range r.leases.Iter() {
+			if l.ScopeKey != input.Scope {
+				continue
+			}
+			err = l.Delete(ctx)
+			if err != nil {
+				return status.Wrap(err, status.Internal)
+			}
+		}
 		return nil
 	})
 	u.SetName("dhcp.delete_scopes")
