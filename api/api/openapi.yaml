@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.26.4
+  version: 0.26.5
 servers:
 - url: /
 paths:
