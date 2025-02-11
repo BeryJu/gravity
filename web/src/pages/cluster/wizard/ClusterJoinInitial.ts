@@ -10,6 +10,8 @@ import "../../../elements/forms/HorizontalFormElement";
 import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
 import { Roles } from "../RolesPage";
 
+export const joinUserUsername = "gravity-system:cluster:join";
+
 @customElement("gravity-cluster-join-initial")
 export class ClusterJoinInitial extends WizardFormPage {
     sidebarLabel = () => "Node details";
@@ -33,10 +35,21 @@ export class ClusterJoinInitial extends WizardFormPage {
         const info = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstanceInfo();
         this.host.state["node_ip"] = info.instanceIP;
 
-        const user = await new RolesApiApi(DEFAULT_CONFIG).apiUsersMe();
+        await new RolesApiApi(DEFAULT_CONFIG).apiPutUsers({
+            username: joinUserUsername,
+            authAPIUsersPutInput: {
+                password: "",
+                permissions: [
+                    {
+                        methods: ["POST"],
+                        path: "/api/v1/etcd/join",
+                    },
+                ],
+            },
+        });
 
         const token = await new RolesApiApi(DEFAULT_CONFIG).apiPutTokens({
-            username: user.username,
+            username: joinUserUsername,
         });
         this.host.state["join_token"] = token.key;
         return true;
