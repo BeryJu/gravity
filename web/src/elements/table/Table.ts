@@ -132,7 +132,7 @@ export abstract class Table<T extends object> extends AKElement {
     selectedElements: T[] = [];
 
     @property({ type: Boolean })
-    paginated = true;
+    paginated = false;
 
     @property({ type: Boolean })
     expandable = false;
