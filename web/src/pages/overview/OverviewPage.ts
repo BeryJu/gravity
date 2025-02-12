@@ -12,13 +12,13 @@ import { DEFAULT_CONFIG } from "../../api/Config";
 import { AKElement } from "../../elements/Base";
 import "../../elements/PageHeader";
 import "../../elements/cards/AggregateCard";
+import "./DHCPUsageTable";
 import "./cards/BackupCard";
 import "./cards/CurrentInstanceCard";
 import "./cards/DHCPScopeCard";
 import "./cards/DNSZoneCard";
 import "./cards/VersionCard";
 import "./charts/CPUUsageChart";
-import "./charts/DHCPUsageChart";
 import "./charts/DNSRequestsChart";
 import "./charts/MemoryUsageChart";
 
@@ -78,8 +78,12 @@ export class OverviewPage extends AKElement {
                     <div
                         class="pf-l-grid__item pf-m-12-col pf-m-3-col-on-xl pf-m-3-col-on-2xl big-graph-container"
                     >
-                        <ak-aggregate-card icon="pf-icon pf-icon-server" header="DHCP Scope usage">
-                            <gravity-overview-charts-dhcp-usage></gravity-overview-charts-dhcp-usage>
+                        <ak-aggregate-card
+                            icon="pf-icon pf-icon-server"
+                            header="DHCP Scope usage"
+                            flush
+                        >
+                            <gravity-overview-dhcp-usage-table></gravity-overview-dhcp-usage-table>
                         </ak-aggregate-card>
                     </div>
                     <div

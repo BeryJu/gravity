@@ -22,6 +22,9 @@ export class AggregateCard extends AKElement {
     @property({ type: Boolean })
     isCenter = true;
 
+    @property({ type: Boolean })
+    flush = false;
+
     static get styles(): CSSResult[] {
         return [PFBase, PFCard, PFFlex, AKElement.GlobalStyle].concat([
             css`
@@ -63,7 +66,11 @@ export class AggregateCard extends AKElement {
                 </div>
                 ${this.renderHeaderLink()}
             </div>
-            <div class="pf-c-card__body ${this.isCenter ? "center-value" : ""}">
+            <div
+                class="${this.flush ? "" : "pf-c-card__body"} ${this.isCenter
+                    ? "center-value"
+                    : ""}"
+            >
                 ${this.renderInner()}
             </div>
         </div>`;
