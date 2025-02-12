@@ -23,3 +23,21 @@ The format should be the API token followed by a command followed by the HTTP UR
 For example, given the token `bootstrap-token` and the IP `10.0.0.1`, the value should be:
 
 `bootstrap-token,http://10.0.0.1:8008`
+
+## Removing nodes from a cluster
+
+Nodes can be removed from a cluster by running a CLI command.
+
+In the container of a gravity node that should stay in the cluster, run this command:
+
+```
+gravity cli etcdctl member list
+```
+
+This command outputs a list of all nodes in the cluster. Note the ID of the node you want to remove (the first column), and run this command to remove the node:
+
+```
+gravity cli etcdctl member remove <node-ID>
+```
+
+Afterwards the node can be stopped and decommissioned.
