@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "@codecov/rollup-plugin": "^1.9.0",
-        "@codemirror/lang-javascript": "^6.2.2",
+        "@codemirror/lang-javascript": "^6.2.3",
         "@codemirror/legacy-modes": "^6.4.3",
         "@fsegurai/codemirror-theme-vscode-dark": "^6.1.2",
         "@fsegurai/codemirror-theme-vscode-light": "^6.1.2",
