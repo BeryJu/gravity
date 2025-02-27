@@ -42,7 +42,7 @@ jobs:
             latest=false
           tags: |
             type=raw,value=v${{ steps.vars.outputs.version }}
-      - uses: docker/build-push-action@v6.14.0
+      - uses: docker/build-push-action@v6.15.0
         id: push
         with:
           tags: |
