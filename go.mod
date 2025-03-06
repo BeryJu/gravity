@@ -43,7 +43,7 @@ require (
 	github.com/swaggest/usecase v1.3.1
 	go.etcd.io/etcd/api/v3 v3.5.19
 	go.etcd.io/etcd/client/v3 v3.5.19
-	go.etcd.io/etcd/etcdctl/v3 v3.5.18
+	go.etcd.io/etcd/etcdctl/v3 v3.5.19
 	go.etcd.io/etcd/etcdutl/v3 v3.5.19
 	go.etcd.io/etcd/server/v3 v3.5.19
 	go.uber.org/zap v1.27.0
