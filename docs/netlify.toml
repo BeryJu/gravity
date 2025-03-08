@@ -11,15 +11,3 @@ command = "hugo mod get && hugo --gc --minify"
 
 [context.deploy-preview]
 command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
-
-[[redirects]]
-  from = "/js/script.js"
-  to = "https://plausible.io/js/plausible.outbound-links.js"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/event"
-  to = "https://analytics.beryju.io/api/event"
-  status = 200
-  force = true
