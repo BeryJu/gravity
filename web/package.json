@@ -34,7 +34,7 @@
         "construct-style-sheets-polyfill": "^3.1.0",
         "deepmerge": "^4.3.1",
         "esbuild": "^0.25.0",
-        "eslint": "^9.21.0",
+        "eslint": "^9.22.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-lit": "^1.15.0",
         "eslint-plugin-wc": "^2.2.1",
