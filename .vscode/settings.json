@@ -6,7 +6,6 @@
         "INSTANCE_IP": "0.0.0.0",
         "CI": "true",
     },
-    "go.testTimeout": "60s",
     "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v"],
     "go.coverOnSingleTest": true,
     "go.coverOnTestPackage": true,

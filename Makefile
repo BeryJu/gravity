@@ -220,7 +220,6 @@ test-e2e: test-e2e-container-build
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
-		-timeout=60s \
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee test-output
