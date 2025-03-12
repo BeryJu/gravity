@@ -19,7 +19,7 @@
         "@patternfly/patternfly": "^4.224.2",
         "@rollup/plugin-commonjs": "^28.0.3",
         "@rollup/plugin-json": "^6.1.0",
-        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-typescript": "^12.1.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/chart.js": "^2.9.41",
