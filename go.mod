@@ -1,7 +1,7 @@
 module beryju.io/gravity
 
 go 1.23
-toolchain go1.23.6
+toolchain go1.24.1
 
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20241022123918-76aa6cc84cd1
@@ -12,7 +12,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/coredns/caddy v1.1.2-0.20241029205200-8de985351a98
 	github.com/coredns/coredns v1.12.0
-	github.com/coreos/go-oidc/v3 v3.12.0
+	github.com/coreos/go-oidc/v3 v3.13.0
 	github.com/creasty/defaults v1.8.0
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/felixge/fgprof v0.9.5
