@@ -1,6 +1,7 @@
 module beryju.io/gravity
 
-go 1.23
+go 1.24.0
+
 toolchain go1.24.1
 
 require (
@@ -248,7 +249,7 @@ require (
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	golang.org/x/time v0.8.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/api v0.207.0 // indirect
