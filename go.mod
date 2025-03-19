@@ -24,7 +24,7 @@ require (
 	github.com/gorilla/sessions v1.4.0
 	github.com/gosimple/slug v1.15.0
 	github.com/insomniacslk/dhcp v0.0.0-20240829085014-a3a4c1f04475
-	github.com/miekg/dns v1.1.63
+	github.com/miekg/dns v1.1.64
 	github.com/minio/minio-go/v7 v7.0.88
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/ori-edge/k8s_gateway v0.4.0
@@ -244,12 +244,12 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
-	golang.org/x/tools v0.27.0 // indirect
+	golang.org/x/tools v0.30.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/api v0.207.0 // indirect
 	google.golang.org/genproto v0.0.0-20241118233622-e639e219e697 // indirect
