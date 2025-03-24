@@ -48,7 +48,7 @@
         "rollup": "^4.37.0",
         "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-cssimport": "^1.0.3",
-        "rollup-plugin-esbuild": "^6.1.1",
+        "rollup-plugin-esbuild": "^6.2.1",
         "sha.js": "^2.4.11",
         "ts-lit-plugin": "^2.0.2",
         "yaml": "^2.7.0"
