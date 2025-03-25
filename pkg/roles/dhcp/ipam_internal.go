@@ -82,12 +82,9 @@ func (i *InternalIPAM) UpdateConfig(s *Scope) error {
 
 func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 	currentIP := i.Start
-	for {
-		// Since we start checking at the beginning of the range, check in the loop if we've
-		// hit the end and just give up, as the range is full
-		if i.End.Compare(currentIP) == -1 {
-			break
-		}
+	// Since we start checking at the beginning of the range, check in the loop if we've
+	// hit the end and just give up, as the range is full
+	for i.End.Compare(currentIP) != -1 {
 		i.log.Debug("checking for free IP", zap.String("ip", currentIP.String()))
 		// Check if IP is in the correct subnet
 		if !i.SubnetCIDR.Contains(currentIP) {

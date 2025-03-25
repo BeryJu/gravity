@@ -50,7 +50,7 @@ func (d *Device) put(ctx context.Context, expiry int64, opts ...clientv3.OpOptio
 	}
 
 	if expiry > 0 {
-		exp, err := d.inst.KV().Lease.Grant(ctx, expiry)
+		exp, err := d.inst.KV().Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}

@@ -166,7 +166,7 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 	fs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.lookup")
 	resolver := ipf.pickResolver()
 	fs.SetTag("resolver", resolver)
-	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver), zap.String("dnsMsg", r.Msg.String()))
+	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver), zap.String("dnsMsg", r.String()))
 	m, rtt, err := ipf.c.ExchangeContext(r.Context(), r.Msg, resolver)
 	ipf.log.Debug("dns rtt", zap.Duration("rtt", rtt))
 	fs.Finish()

@@ -160,7 +160,6 @@ func TestBindImport(t *testing.T) {
 
 			x, err := os.Open(file.file)
 			assert.NoError(t, err)
-			defer x.Close()
 
 			c, err := bind.New(api, x)
 			assert.NoError(t, err)
@@ -168,6 +167,7 @@ func TestBindImport(t *testing.T) {
 			for _, kv := range file.kv {
 				tests.AssertEtcd(t, ri.KV(), kv.key, kv.values...)
 			}
+			assert.NoError(t, x.Close())
 		})
 	}
 }

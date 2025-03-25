@@ -127,12 +127,13 @@ func (w *Watcher[T]) handleEvent(t mvccpb.Event_EventType, kv *mvccpb.KeyValue) 
 		w.beforeUpdate(old, t)
 		w.mutex.RUnlock()
 	}
-	if t == mvccpb.DELETE {
+	switch t {
+	case mvccpb.DELETE:
 		w.log.Debug("removed entry", zap.String("key", key))
 		w.mutex.Lock()
 		defer w.mutex.Unlock()
 		delete(w.entries, key)
-	} else if t == mvccpb.PUT {
+	case mvccpb.PUT:
 		e, err := w.constructor(kv)
 		if err != nil {
 			w.log.Warn("failed to construct entry", zap.Error(err))

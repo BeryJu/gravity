@@ -201,7 +201,10 @@ func (r *Role) Stop() {
 	r.scopes.Stop()
 	r.leases.Stop()
 	if r.s4 != nil && r.s4.pc != nil {
-		r.s4.pc.Close()
+		err := r.s4.pc.Close()
+		if err != nil {
+			r.log.Warn("Failed to stop packet conn", zap.Error(err))
+		}
 	}
 }
 

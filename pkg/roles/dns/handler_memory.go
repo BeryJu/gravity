@@ -30,7 +30,7 @@ func NewMemoryHandler(z *Zone, config map[string]interface{}) *MemoryHandler {
 	}
 	mh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
-		var recs map[string]*Record = make(map[string]*Record)
+		var recs = make(map[string]*Record)
 		var ok bool
 		if k.IsPrefix() {
 			prefix := k.String()

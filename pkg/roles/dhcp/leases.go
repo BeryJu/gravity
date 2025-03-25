@@ -137,7 +137,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	if expiry > 0 && !l.IsReservation() {
 		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
-		exp, err := l.inst.KV().Lease.Grant(ctx, expiry)
+		exp, err := l.inst.KV().Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}

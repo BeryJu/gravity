@@ -169,7 +169,7 @@ func (s *Scope) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	}
 
 	if expiry > 0 {
-		exp, err := s.inst.KV().Lease.Grant(ctx, expiry)
+		exp, err := s.inst.KV().Grant(ctx, expiry)
 		if err != nil {
 			return err
 		}

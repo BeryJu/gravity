@@ -224,5 +224,8 @@ func (r *Role) Stop() {
 	if extconfig.Get().Debug {
 		socketPath = path.Join("./", GRAVITY_SOCK)
 	}
-	os.Remove(socketPath)
+	err = os.Remove(socketPath)
+	if err != nil {
+		r.log.Warn("failed to remove socket", zap.Error(err))
+	}
 }
