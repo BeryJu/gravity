@@ -30,7 +30,12 @@ func (l *Lease) sendWOL() error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			l.log.Warn("failed to close WOL connection", zap.Error(err))
+		}
+	}()
 
 	l.log.Info("Attempting WOL", zap.String("mac", l.Identifier), zap.String("raddr", bcast.String()), zap.String("laddr", laddr.String()))
 	n, err := conn.Write(bs)

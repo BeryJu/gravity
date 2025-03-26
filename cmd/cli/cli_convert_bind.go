@@ -21,7 +21,12 @@ var cliConverrtBind = &cobra.Command{
 				logger.Warn("failed to open file", zap.Error(err), zap.String("file", file))
 				continue
 			}
-			defer x.Close()
+			defer func() {
+				err := x.Close()
+				if err != nil {
+					logger.Warn("failed to close file", zap.Error(err))
+				}
+			}()
 
 			conv, err := bind.New(apiClient, x)
 			if err != nil {
