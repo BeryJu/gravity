@@ -1,9 +1,6 @@
 module beryju.io/gravity
 
 go 1.24.0
-
-toolchain go1.24.1
-
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20241022123918-76aa6cc84cd1
 	github.com/Masterminds/semver/v3 v3.3.1
@@ -42,7 +39,7 @@ require (
 	github.com/swaggest/openapi-go v0.2.57
 	github.com/swaggest/rest v0.2.73
 	github.com/swaggest/usecase v1.3.1
-	go.etcd.io/etcd/api/v3 v3.5.20
+	go.etcd.io/etcd/api/v3 v3.5.21
 	go.etcd.io/etcd/client/v3 v3.5.20
 	go.etcd.io/etcd/etcdctl/v3 v3.5.20
 	go.etcd.io/etcd/etcdutl/v3 v3.5.20
@@ -50,7 +47,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.36.0
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.38.0
 	golang.org/x/oauth2 v0.28.0
 	golang.org/x/term v0.30.0
 	google.golang.org/protobuf v1.36.6
