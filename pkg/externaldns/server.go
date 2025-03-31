@@ -8,7 +8,7 @@ import (
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/externaldns/generated/externaldnsapi"
-	apiRole "beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/api/middleware"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
@@ -32,12 +32,12 @@ func New(api *api.APIClient) *Server {
 		externaldnsapi.NewListingAPIController(s),
 		externaldnsapi.NewUpdateAPIController(s),
 	)
-	s.apiRouter.Use(apiRole.NewRecoverMiddleware(s.log))
-	s.apiRouter.Use(apiRole.NewLoggingMiddleware(s.log, nil))
+	s.apiRouter.Use(middleware.NewRecoverMiddleware(s.log))
+	s.apiRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
 
 	s.metricsRouter = mux.NewRouter()
 	s.metricsRouter.Path("/metrics").Handler(promhttp.Handler())
-	s.metricsRouter.Use(apiRole.NewLoggingMiddleware(s.log, nil))
+	s.metricsRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
 	return s
 }
 
@@ -65,14 +65,15 @@ func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, er
 	return externaldnsapi.Response(200, externaldnsapi.Filters{}), nil
 }
 
-func (s *Server) GetRecords(context.Context) (externaldnsapi.ImplResponse, error) {
+func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
+	s.api.RolesDnsApi.DnsGetRecords(ctx)
+	return externaldnsapi.Response(200, []externaldnsapi.Endpoint{}), nil
+}
+
+func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes) (externaldnsapi.ImplResponse, error) {
 	return externaldnsapi.Response(200, struct{}{}), nil
 }
 
-func (s *Server) SetRecords(context.Context, externaldnsapi.Changes) (externaldnsapi.ImplResponse, error) {
-	return externaldnsapi.Response(200, struct{}{}), nil
-}
-
-func (s *Server) AdjustRecords(context.Context, []externaldnsapi.Endpoint) (externaldnsapi.ImplResponse, error) {
+func (s *Server) AdjustRecords(ctx context.Context, endpoints []externaldnsapi.Endpoint) (externaldnsapi.ImplResponse, error) {
 	return externaldnsapi.Response(200, struct{}{}), nil
 }

@@ -15,6 +15,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/auth"
+	"beryju.io/gravity/pkg/roles/api/middleware"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/api7/etcdstore"
 	"github.com/gorilla/mux"
@@ -60,12 +61,12 @@ func New(instance roles.Instance) *Role {
 		ctx:          instance.Context(),
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
-	r.m.Use(NewRecoverMiddleware(r.log))
+	r.m.Use(middleware.NewRecoverMiddleware(r.log))
 	r.m.Use(sentryhttp.New(sentryhttp.Options{
 		Repanic: true,
 	}).Handle)
-	r.m.Use(r.SessionMiddleware)
-	r.m.Use(NewLoggingMiddleware(r.log, nil))
+	r.m.Use(middleware.NewSessionMiddleware(r.sessions, r.log))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
 	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
