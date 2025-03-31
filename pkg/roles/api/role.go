@@ -61,13 +61,6 @@ func New(instance roles.Instance) *Role {
 		ctx:          instance.Context(),
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
-	r.m.Use(middleware.NewRecoverMiddleware(r.log))
-	r.m.Use(sentryhttp.New(sentryhttp.Options{
-		Repanic: true,
-	}).Handle)
-	r.m.Use(middleware.NewSessionMiddleware(r.sessions, r.log))
-	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
-	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -119,6 +112,13 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		return err
 	}
 	r.sessions = sess
+	r.m.Use(middleware.NewRecoverMiddleware(r.log))
+	r.m.Use(sentryhttp.New(sentryhttp.Options{
+		Repanic: true,
+	}).Handle)
+	r.m.Use(middleware.NewSessionMiddleware(r.sessions, r.log))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
+	r.m.Use(NewAPIConfigMiddleware())
 
 	if r.cfg.OIDC != nil {
 		err := r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
