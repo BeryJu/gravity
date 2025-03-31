@@ -1,3 +1,4 @@
+Dockerfile
 README.md
 api/openapi.yaml
 externaldnsapi/api.go
@@ -16,3 +17,5 @@ externaldnsapi/model_endpoint.go
 externaldnsapi/model_filters.go
 externaldnsapi/model_provider_specific_property.go
 externaldnsapi/routers.go
+go.mod
+main.go
