@@ -195,7 +195,7 @@ gen-external-dns:
 	gofumpt -l -w ${PWD}/${GEN_ED_GO}/ || true
 	# git add ${PWD}/${GEN_ED_GO}/
 
-release: gen-build gen-clean gen-client-go gen-client-ts-publish gen-tag
+release: gen-build gen-clean gen-client-go gen-external-dns gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s
