@@ -65,7 +65,7 @@ func New(instance roles.Instance) *Role {
 	r.m.Use(sentryhttp.New(sentryhttp.Options{
 		Repanic: true,
 	}).Handle)
-	r.m.Use(middleware.NewSessionMiddleware(r.sessions, r.log))
+	r.m.Use(r.SessionMiddleware)
 	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
 	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
