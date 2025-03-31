@@ -1,31 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: gomod
-    directory: "/"
-    schedule:
-      interval: daily
-      time: "04:00"
-    open-pull-requests-limit: 10
-    assignees:
-      - BeryJu
-  - package-ecosystem: gomod
-    directory: "/tests"
-    schedule:
-      interval: daily
-      time: "04:00"
-    open-pull-requests-limit: 10
-    assignees:
-      - BeryJu
-  - package-ecosystem: gomod
-    directory: "/utils/pcap_to_bytes"
-    schedule:
-      interval: daily
-      time: "04:00"
-    open-pull-requests-limit: 10
-    assignees:
-      - BeryJu
-  - package-ecosystem: gomod
-    directory: "/docs"
+    directories:
+      - /
+      - /tests
+      - /utils/pcap_to_bytes
+      - /docs
     schedule:
       interval: daily
       time: "04:00"
@@ -33,7 +13,9 @@ updates:
     assignees:
       - BeryJu
   - package-ecosystem: docker
-    directory: "/"
+    directories:
+      - /
+      - /cmd/external-dns
     schedule:
       interval: daily
       time: "04:00"

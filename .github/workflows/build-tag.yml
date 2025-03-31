@@ -60,6 +60,24 @@ jobs:
           subject-name: ghcr.io/beryju/gravity
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+      - uses: docker/build-push-action@v6.15.0
+        id: push-external-dns
+        with:
+          tags: |
+            ghcr.io/beryju/gravity-external-dns:stable
+            ghcr.io/beryju/gravity-external-dns:v${{ steps.vars.outputs.version }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          context: .
+          build-args: |
+            BUILD=${{ steps.vars.outputs.build }}
+            GIT_BUILD_HASH=release
+          labels: ${{ steps.meta.outputs.labels }}
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/beryju/gravity-external-dns
+          subject-digest: ${{ steps.push-external-dns.outputs.digest }}
+          push-to-registry: true
       - uses: actions/create-release@v1.1.4
         id: create_release
         env:
@@ -86,6 +104,12 @@ jobs:
 
             ```
             go get beryju.io/gravity@v${{ steps.vars.outputs.version }}
+            ```
+
+            Upgrade external-dns to use this container image:
+
+            ```
+            ghcr.io/beryju/gravity-external-dns:v${{ steps.vars.outputs.version }}
             ```
   build-cli:
     name: Build CLI

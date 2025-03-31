@@ -1,6 +1,7 @@
 module beryju.io/gravity
 
 go 1.24.0
+
 require (
 	github.com/0xERR0R/blocky v0.9.2-0.20241022123918-76aa6cc84cd1
 	github.com/Masterminds/semver/v3 v3.3.1
