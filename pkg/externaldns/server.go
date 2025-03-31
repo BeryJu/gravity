@@ -34,6 +34,11 @@ func New(api *api.APIClient) *Server {
 	)
 	s.apiRouter.Use(middleware.NewRecoverMiddleware(s.log))
 	s.apiRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
+	// This endpoint is "required" but not defined in the API specs
+	s.apiRouter.Path("/healthz").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("ok"))
+	})
 
 	s.metricsRouter = mux.NewRouter()
 	s.metricsRouter.Path("/metrics").Handler(promhttp.Handler())
@@ -61,13 +66,41 @@ func (s *Server) Run() {
 	wg.Wait()
 }
 
+func (s *Server) errorResponse(err error) (externaldnsapi.ImplResponse, error) {
+	return externaldnsapi.Response(500, struct{}{}), err
+}
+
 func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, error) {
 	return externaldnsapi.Response(200, externaldnsapi.Filters{}), nil
 }
 
 func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
-	s.api.RolesDnsApi.DnsGetRecords(ctx)
-	return externaldnsapi.Response(200, []externaldnsapi.Endpoint{}), nil
+	zones, _, err := s.api.RolesDnsApi.DnsGetZones(ctx).Execute()
+	if err != nil {
+		return s.errorResponse(err)
+	}
+	endpoints := []externaldnsapi.Endpoint{}
+	// TODO: Pagination
+	for _, zone := range zones.Zones {
+		records, _, err := s.api.RolesDnsApi.DnsGetRecords(ctx).Zone(zone.Name).Execute()
+		if err != nil {
+			return s.errorResponse(err)
+		}
+		for _, record := range records.Records {
+			endpoints = append(endpoints, externaldnsapi.Endpoint{
+				DnsName:    record.Hostname,
+				Targets:    []string{record.Data},
+				RecordType: record.Type,
+				ProviderSpecific: []externaldnsapi.ProviderSpecificProperty{
+					{
+						Name:  "gravity_uid",
+						Value: record.Uid,
+					},
+				},
+			})
+		}
+	}
+	return externaldnsapi.Response(200, endpoints), nil
 }
 
 func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes) (externaldnsapi.ImplResponse, error) {
