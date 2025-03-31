@@ -34,14 +34,13 @@ func New(api *api.APIClient) *Server {
 	)
 	s.apiRouter.Use(middleware.NewRecoverMiddleware(s.log))
 	s.apiRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
-	// This endpoint is "required" but not defined in the API specs
-	s.apiRouter.Path("/healthz").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
-		w.Write([]byte("ok"))
-	})
 
 	s.metricsRouter = mux.NewRouter()
 	s.metricsRouter.Path("/metrics").Handler(promhttp.Handler())
+	s.metricsRouter.Path("/healthz").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("ok"))
+	})
 	s.metricsRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
 	return s
 }
@@ -49,7 +48,7 @@ func New(api *api.APIClient) *Server {
 func (s *Server) Run() {
 	// https://kubernetes-sigs.github.io/external-dns/v0.14.2/tutorials/webhook-provider/
 	apiListen := "localhost:8888"
-	metricsListen := "localhost:8080"
+	metricsListen := "0.0.0.0:8080"
 
 	wg := sync.WaitGroup{}
 	wg.Add(2)
