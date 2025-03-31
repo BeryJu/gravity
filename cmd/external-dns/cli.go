@@ -1,16 +1,12 @@
 package externaldns
 
 import (
-	"context"
 	"fmt"
-	"io"
-	"net"
-	"net/http"
 	"net/url"
-	"os"
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/externaldns"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -38,43 +34,20 @@ var ExternalDNSCommand = &cobra.Command{
 		config := api.NewConfiguration()
 		config.Host = url.Host
 		config.Scheme = url.Scheme
-		if url.Scheme == "unix" {
-			config.Scheme = "http"
-			config.Host = "socket"
-			config.HTTPClient = &http.Client{
-				Transport: &http.Transport{
-					DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
-						return net.Dial("unix", url.Path)
-					},
-				},
-			}
-		}
 		if apiToken != "" {
 			config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", apiToken))
 		}
 		config.UserAgent = fmt.Sprintf("gravity-cli/%s", extconfig.FullVersion())
 		apiClient = api.NewAPIClient(config)
 	},
+	Run: func(cmd *cobra.Command, args []string) {
+		s := externaldns.New(apiClient)
+		s.Run()
+	},
 }
 
 func init() {
-	defUrl := "unix:///var/run/gravity.sock"
-	if extconfig.Get().Debug {
-		cwd, err := os.Getwd()
-		if err != nil {
-			panic(err)
-		}
-		defUrl = fmt.Sprintf("unix://%s/gravity.sock", cwd)
-	}
-	logger = extconfig.Get().Logger().Named("cli")
-	ExternalDNSCommand.PersistentFlags().StringVarP(&apiUrl, "host", "s", defUrl, "API Host")
+	logger = extconfig.Get().Logger().Named("external-dns")
+	ExternalDNSCommand.PersistentFlags().StringVarP(&apiUrl, "host", "s", "", "API Host")
 	ExternalDNSCommand.PersistentFlags().StringVarP(&apiToken, "token", "t", "", "API Token")
-}
-
-func checkApiError(hr *http.Response, err error) {
-	if err == nil {
-		return
-	}
-	b, _ := io.ReadAll(hr.Body)
-	logger.Error("failed to send request", zap.String("response", string(b)), zap.Error(err))
 }
