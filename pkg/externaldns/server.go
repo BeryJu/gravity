@@ -88,9 +88,10 @@ func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, e
 		}
 		for _, record := range records.Records {
 			endpoints = append(endpoints, externaldnsapi.Endpoint{
-				DnsName:    record.Hostname,
+				DnsName:    record.Fqdn,
 				Targets:    []string{record.Data},
 				RecordType: record.Type,
+				RecordTTL:  int64(zone.DefaultTTL),
 				ProviderSpecific: []externaldnsapi.ProviderSpecificProperty{
 					{
 						Name:  "gravity_uid",
