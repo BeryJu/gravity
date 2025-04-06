@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"net/http"
 	"syscall"
 
 	"beryju.io/gravity/api"
@@ -29,6 +30,12 @@ var cliUsersAddCmd = &cobra.Command{
 		fmt.Println("")
 		hr, err := apiClient.RolesApiApi.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
 			Password: string(bytePassword),
+			Permissions: []api.AuthPermission{
+				{
+					Path:    api.PtrString("/*"),
+					Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
+				},
+			},
 		}).Execute()
 		checkApiError(hr, err)
 	},
