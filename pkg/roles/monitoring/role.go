@@ -8,7 +8,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
-	"beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/api/middleware"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
@@ -45,8 +45,8 @@ func New(instance roles.Instance) *Role {
 		ready: false,
 		ctx:   instance.Context(),
 	}
-	r.m.Use(api.NewRecoverMiddleware(r.log))
-	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
+	r.m.Use(middleware.NewRecoverMiddleware(r.log))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
 	r.m.Path("/healthz/live").HandlerFunc(r.HandleHealthLive)
 	r.m.Path("/healthz/ready").HandlerFunc(r.HandleHealthReady)
 	r.m.Path("/metrics").HandlerFunc(r.HandleMetrics)

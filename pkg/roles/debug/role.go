@@ -12,7 +12,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
-	"beryju.io/gravity/pkg/roles/api"
+	"beryju.io/gravity/pkg/roles/api/middleware"
 	"beryju.io/gravity/pkg/roles/debug/types"
 	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/mux"
@@ -41,8 +41,8 @@ func New(instance roles.Instance) *Role {
 		m:   mux,
 		ctx: instance.Context(),
 	}
-	r.m.Use(api.NewRecoverMiddleware(r.log))
-	r.m.Use(api.NewLoggingMiddleware(r.log, nil))
+	r.m.Use(middleware.NewRecoverMiddleware(r.log))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
 	r.m.HandleFunc("/", r.Index)
 	r.m.HandleFunc("/debug/pprof/", pprof.Index)
 	r.m.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
