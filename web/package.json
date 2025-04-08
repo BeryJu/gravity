@@ -16,7 +16,7 @@
         "@codemirror/legacy-modes": "^6.5.0",
         "@fsegurai/codemirror-theme-vscode-dark": "^6.1.2",
         "@fsegurai/codemirror-theme-vscode-light": "^6.1.2",
-        "@patternfly/patternfly": "^4.224.2",
+        "@patternfly/patternfly": "^6.2.0",
         "@rollup/plugin-commonjs": "^28.0.3",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.1",
