@@ -30,7 +30,7 @@ require (
 	github.com/pin/tftp/v3 v3.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-community/pro-bing v0.7.0
-	github.com/prometheus/client_golang v1.21.1
+	github.com/prometheus/client_golang v1.22.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sabhiram/go-wol v0.0.0-20211224004021-c83b0c2f887d
 	github.com/sirupsen/logrus v1.9.3
