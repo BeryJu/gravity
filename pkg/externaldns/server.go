@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"sync"
 
+	"log"
+
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/externaldns/generated/externaldnsapi"
@@ -27,6 +29,7 @@ func New(api *api.APIClient) *Server {
 		log: extconfig.Get().Logger().Named("external-dns"),
 	}
 
+	log.SetOutput(io.Discard)
 	s.apiRouter = externaldnsapi.NewRouter(
 		externaldnsapi.NewInitializationAPIController(s),
 		externaldnsapi.NewListingAPIController(s),
