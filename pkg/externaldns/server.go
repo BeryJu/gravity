@@ -2,7 +2,12 @@ package externaldns
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"net/http"
+	"net/url"
+	"slices"
+	"strings"
 	"sync"
 
 	"log"
@@ -16,6 +21,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	ProviderSpecificUid  = "gravity_uid"
+	ProviderSpecificZone = "gravity_zone"
+)
+
 type Server struct {
 	apiRouter     *mux.Router
 	metricsRouter *mux.Router
@@ -23,12 +33,27 @@ type Server struct {
 	log           *zap.Logger
 }
 
-func New(api *api.APIClient) *Server {
+func New() (*Server, error) {
+	url, err := url.Parse(Get().Gravity.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	config := api.NewConfiguration()
+	config.Host = url.Host
+	config.Scheme = url.Scheme
+	if Get().Gravity.Token != "" {
+		config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", Get().Gravity.Token))
+	}
+	config.UserAgent = fmt.Sprintf("gravity-cli/%s", extconfig.FullVersion())
+	apiClient := api.NewAPIClient(config)
+
 	s := &Server{
-		api: api,
+		api: apiClient,
 		log: extconfig.Get().Logger().Named("external-dns"),
 	}
 
+	// Discard go's inbuilt log as its used by the generated code and can't be disabled...
 	log.SetOutput(io.Discard)
 	s.apiRouter = externaldnsapi.NewRouter(
 		externaldnsapi.NewInitializationAPIController(s),
@@ -42,38 +67,43 @@ func New(api *api.APIClient) *Server {
 	s.metricsRouter.Path("/metrics").Handler(promhttp.Handler())
 	s.metricsRouter.Path("/healthz").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte("ok"))
+		_, _ = w.Write([]byte("ok"))
 	})
 	s.metricsRouter.Use(middleware.NewLoggingMiddleware(s.log, nil))
-	return s
+	return s, nil
 }
 
 func (s *Server) Run() {
-	// https://kubernetes-sigs.github.io/external-dns/v0.14.2/tutorials/webhook-provider/
-	apiListen := "localhost:8888"
-	metricsListen := "0.0.0.0:8080"
-
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		s.log.Info("Serving external-dns API", zap.String("listen", apiListen))
-		http.ListenAndServe(apiListen, s.apiRouter)
+		s.log.Info("Serving external-dns API", zap.String("listen", Get().Listen.API))
+		err := http.ListenAndServe(Get().Listen.API, s.apiRouter)
+		if err != nil {
+			s.log.Warn("Failed to listen", zap.Error(err))
+		}
 	}()
 	go func() {
 		defer wg.Done()
-		s.log.Info("Serving metrics", zap.String("listen", metricsListen))
-		http.ListenAndServe(metricsListen, s.metricsRouter)
+		s.log.Info("Serving metrics", zap.String("listen", Get().Listen.Metrics))
+		err := http.ListenAndServe(Get().Listen.Metrics, s.metricsRouter)
+		if err != nil {
+			s.log.Warn("Failed to listen", zap.Error(err))
+		}
 	}()
 	wg.Wait()
 }
 
 func (s *Server) errorResponse(err error) (externaldnsapi.ImplResponse, error) {
-	return externaldnsapi.Response(500, struct{}{}), err
+	s.log.Warn("Error", zap.Error(err))
+	return externaldnsapi.Response(http.StatusInternalServerError, struct{}{}), err
 }
 
 func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, error) {
-	return externaldnsapi.Response(200, externaldnsapi.Filters{}), nil
+	return externaldnsapi.Response(http.StatusOK, externaldnsapi.Filters{
+		Filters: Get().DomainFilter,
+	}), nil
 }
 
 func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
@@ -84,6 +114,9 @@ func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, e
 	endpoints := []externaldnsapi.Endpoint{}
 	// TODO: Pagination
 	for _, zone := range zones.Zones {
+		if !slices.Contains(Get().DomainFilter, zone.Name) {
+			continue
+		}
 		records, _, err := s.api.RolesDnsApi.DnsGetRecords(ctx).Zone(zone.Name).Execute()
 		if err != nil {
 			return s.errorResponse(err)
@@ -96,20 +129,74 @@ func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, e
 				RecordTTL:  int64(zone.DefaultTTL),
 				ProviderSpecific: []externaldnsapi.ProviderSpecificProperty{
 					{
-						Name:  "gravity_uid",
+						Name:  ProviderSpecificUid,
 						Value: record.Uid,
+					},
+					{
+						Name:  ProviderSpecificZone,
+						Value: zone.Name,
 					},
 				},
 			})
 		}
 	}
-	return externaldnsapi.Response(200, endpoints), nil
+	return externaldnsapi.Response(http.StatusOK, endpoints), nil
 }
 
 func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes) (externaldnsapi.ImplResponse, error) {
-	return externaldnsapi.Response(200, struct{}{}), nil
+	for _, endpoint := range changes.Delete {
+		if err := s.endpointToDelete(ctx, endpoint); err != nil {
+			return s.errorResponse(err)
+		}
+	}
+	for _, endpoint := range append(changes.Create, changes.UpdateNew...) {
+		if err := s.endpointToWrite(ctx, endpoint); err != nil {
+			return s.errorResponse(err)
+		}
+	}
+	return externaldnsapi.Response(http.StatusOK, struct{}{}), nil
 }
 
 func (s *Server) AdjustRecords(ctx context.Context, endpoints []externaldnsapi.Endpoint) (externaldnsapi.ImplResponse, error) {
-	return externaldnsapi.Response(200, struct{}{}), nil
+	for _, endpoint := range endpoints {
+		if err := s.endpointToWrite(ctx, endpoint); err != nil {
+			return s.errorResponse(err)
+		}
+	}
+	return externaldnsapi.Response(http.StatusOK, []externaldnsapi.Endpoint{}), nil
+}
+
+func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.Endpoint) error {
+	uid := ""
+	zone := ""
+	for _, pv := range endpoint.ProviderSpecific {
+		switch pv.Name {
+		case ProviderSpecificUid:
+			uid = pv.Value
+		case ProviderSpecificZone:
+			zone = pv.Value
+		}
+	}
+	hostname := strings.TrimSuffix(strings.Replace(endpoint.DnsName, zone, "", 1), ".")
+	_, err := s.api.RolesDnsApi.DnsDeleteRecords(ctx).Zone(zone).Hostname(hostname).Type_(endpoint.RecordType).Uid(uid).Execute()
+	return err
+}
+
+func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.Endpoint) error {
+	uid := ""
+	zone := ""
+	for _, pv := range endpoint.ProviderSpecific {
+		switch pv.Name {
+		case ProviderSpecificUid:
+			uid = pv.Value
+		case ProviderSpecificZone:
+			zone = pv.Value
+		}
+	}
+	hostname := strings.TrimSuffix(strings.Replace(endpoint.DnsName, zone, "", 1), ".")
+	_, err := s.api.RolesDnsApi.DnsPutRecords(ctx).Zone(zone).Hostname(hostname).Uid(uid).DnsAPIRecordsPutInput(api.DnsAPIRecordsPutInput{
+		Type: endpoint.RecordType,
+		Data: endpoint.Targets[0],
+	}).Execute()
+	return err
 }
