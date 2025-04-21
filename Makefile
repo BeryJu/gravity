@@ -188,6 +188,7 @@ gen-external-dns:
 		-o /local/${GEN_ED_GO} \
 		-c /local/${GEN_API_GO}/config.yaml
 	cd ${PWD}/${GEN_ED_GO}/
+	sed -i '' 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/routers.go
 	rm -f .travis.yml go.mod go.sum main.go Dockerfile
 	go fmt ${PWD}/${GEN_ED_GO}/externaldnsapi
 	gofumpt -l -w ${PWD}/${GEN_ED_GO}/ || true

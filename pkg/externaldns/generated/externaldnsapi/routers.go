@@ -82,7 +82,7 @@ func EncodeJSONResponse(i interface{}, status *int, w http.ResponseWriter) error
 		_, err = w.Write(data)
 		return err
 	}
-	wHeader.Set("Content-Type", "application/json; charset=UTF-8")
+	wHeader.Set("Content-Type", "application/external.dns.webhook+json;version=1")
 
 	if status != nil {
 		w.WriteHeader(*status)
