@@ -144,7 +144,7 @@ gen-client-go:
 		-o /local/${GEN_API_GO} \
 		-c /local/${GEN_API_GO}/config.yaml
 	cd ${PWD}/${GEN_API_GO}/
-	rm -f .travis.yml go.mod go.sum
+	rm -rf .travis.yml go.mod go.sum test/
 	go get
 	go fmt ${PWD}/${GEN_API_GO}/
 	gofumpt -l -w ${PWD}/${GEN_API_GO}/ || true
