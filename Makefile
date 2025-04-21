@@ -232,7 +232,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
 		${TEST_FLAGS} \
-		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
 			2>&1 | tee test-output
 	go tool cover \
 		-html ${PWD}/coverage.txt \
@@ -259,7 +259,7 @@ test-e2e: test-e2e-container-build
 	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage/ \
-		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | xargs | sed 's/ /,/g') \
+		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
 		-html ${PWD}/coverage_in_container.txt \
@@ -277,7 +277,7 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
 		-benchmem \
-		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
 			| tee test-output
 	go tool cover \
 		-html ${PWD}/coverage.txt \
