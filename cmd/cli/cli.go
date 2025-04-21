@@ -26,8 +26,9 @@ var (
 )
 
 var CLICmd = &cobra.Command{
-	Use:   "cli",
-	Short: "Interact with a running Gravity server",
+	Use:     "cli",
+	Short:   "Interact with a running Gravity server",
+	Version: extconfig.FullVersion(),
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		url, err := url.Parse(apiUrl)
 		if err != nil {

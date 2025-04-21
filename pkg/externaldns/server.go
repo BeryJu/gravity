@@ -1,12 +1,12 @@
 package externaldns
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"slices"
 	"strings"
 	"sync"
 
@@ -16,14 +16,14 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/externaldns/generated/externaldnsapi"
 	"beryju.io/gravity/pkg/roles/api/middleware"
+	"beryju.io/gravity/pkg/roles/dns/types"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )
 
 const (
-	ProviderSpecificUid  = "gravity_uid"
-	ProviderSpecificZone = "gravity_zone"
+	ProviderSpecificUid = "gravity_uid"
 )
 
 type Server struct {
@@ -31,6 +31,8 @@ type Server struct {
 	metricsRouter *mux.Router
 	api           *api.APIClient
 	log           *zap.Logger
+
+	zones []api.DnsAPIZone
 }
 
 func New() (*Server, error) {
@@ -45,12 +47,14 @@ func New() (*Server, error) {
 	if Get().Gravity.Token != "" {
 		config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", Get().Gravity.Token))
 	}
-	config.UserAgent = fmt.Sprintf("gravity-cli/%s", extconfig.FullVersion())
+	config.UserAgent = fmt.Sprintf("gravity-external-dns/%s", extconfig.FullVersion())
+	config.Debug = extconfig.Get().Debug
 	apiClient := api.NewAPIClient(config)
 
 	s := &Server{
-		api: apiClient,
-		log: extconfig.Get().Logger().Named("external-dns"),
+		api:   apiClient,
+		log:   extconfig.Get().Logger().Named("external-dns"),
+		zones: []api.DnsAPIZone{},
 	}
 
 	// Discard go's inbuilt log as its used by the generated code and can't be disabled...
@@ -73,7 +77,13 @@ func New() (*Server, error) {
 	return s, nil
 }
 
-func (s *Server) Run() {
+func (s *Server) Run() error {
+	s.log.Info("Pre-fetching zones...")
+	err := s.prefetchZones(context.Background())
+	if err != nil {
+		s.log.Warn("failed to pre-fetch zones", zap.Error(err))
+		return err
+	}
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	go func() {
@@ -93,11 +103,28 @@ func (s *Server) Run() {
 		}
 	}()
 	wg.Wait()
+	return nil
 }
 
 func (s *Server) errorResponse(err error) (externaldnsapi.ImplResponse, error) {
 	s.log.Warn("Error", zap.Error(err))
 	return externaldnsapi.Response(http.StatusInternalServerError, struct{}{}), err
+}
+
+func (s *Server) apiError(r *http.Response, err error) error {
+	if err == nil {
+		return nil
+	}
+	if r == nil {
+		return fmt.Errorf("HTTP Error without http response: %v", err)
+	}
+	buff := &bytes.Buffer{}
+	_, er := io.Copy(buff, r.Body)
+	if er != nil {
+		s.log.Warn("Gravity: failed to read response", zap.Error(er))
+	}
+	s.log.Warn("Gravity: error response", zap.String("body", buff.String()))
+	return fmt.Errorf("HTTP Error '%s' during request '%s %s': \"%s\"", err.Error(), r.Request.Method, r.Request.URL.Path, buff.String())
 }
 
 func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, error) {
@@ -107,23 +134,15 @@ func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, er
 }
 
 func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
-	zones, _, err := s.api.RolesDnsApi.DnsGetZones(ctx).Execute()
-	if err != nil {
-		return s.errorResponse(err)
-	}
 	endpoints := []externaldnsapi.Endpoint{}
-	// TODO: Pagination
-	for _, zone := range zones.Zones {
-		if !slices.Contains(Get().DomainFilter, zone.Name) {
-			continue
-		}
-		records, _, err := s.api.RolesDnsApi.DnsGetRecords(ctx).Zone(zone.Name).Execute()
+	for _, zone := range s.zones {
+		records, hr, err := s.api.RolesDnsApi.DnsGetRecords(ctx).Zone(zone.Name).Execute()
 		if err != nil {
-			return s.errorResponse(err)
+			return s.errorResponse(s.apiError(hr, err))
 		}
 		for _, record := range records.Records {
 			endpoints = append(endpoints, externaldnsapi.Endpoint{
-				DnsName:    record.Fqdn,
+				DnsName:    strings.TrimSuffix(record.Fqdn, types.DNSSep),
 				Targets:    []string{record.Data},
 				RecordType: record.Type,
 				RecordTTL:  int64(zone.DefaultTTL),
@@ -131,10 +150,6 @@ func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, e
 					{
 						Name:  ProviderSpecificUid,
 						Value: record.Uid,
-					},
-					{
-						Name:  ProviderSpecificZone,
-						Value: zone.Name,
 					},
 				},
 			})
@@ -150,7 +165,7 @@ func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes)
 		}
 	}
 	for _, endpoint := range append(changes.Create, changes.UpdateNew...) {
-		if err := s.endpointToWrite(ctx, endpoint); err != nil {
+		if _, err := s.endpointToWrite(ctx, endpoint); err != nil {
 			return s.errorResponse(err)
 		}
 	}
@@ -159,44 +174,60 @@ func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes)
 
 func (s *Server) AdjustRecords(ctx context.Context, endpoints []externaldnsapi.Endpoint) (externaldnsapi.ImplResponse, error) {
 	for _, endpoint := range endpoints {
-		if err := s.endpointToWrite(ctx, endpoint); err != nil {
+		if _, err := s.endpointToWrite(ctx, endpoint); err != nil {
 			return s.errorResponse(err)
 		}
 	}
 	return externaldnsapi.Response(http.StatusOK, []externaldnsapi.Endpoint{}), nil
 }
 
-func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.Endpoint) error {
-	uid := ""
-	zone := ""
-	for _, pv := range endpoint.ProviderSpecific {
-		switch pv.Name {
-		case ProviderSpecificUid:
-			uid = pv.Value
-		case ProviderSpecificZone:
-			zone = pv.Value
-		}
-	}
-	hostname := strings.TrimSuffix(strings.Replace(endpoint.DnsName, zone, "", 1), ".")
-	_, err := s.api.RolesDnsApi.DnsDeleteRecords(ctx).Zone(zone).Hostname(hostname).Type_(endpoint.RecordType).Uid(uid).Execute()
-	return err
+func (s *Server) recordUID(uid string) string {
+	return fmt.Sprintf("external-dns-%s", uid)
 }
 
-func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.Endpoint) error {
-	uid := ""
-	zone := ""
-	for _, pv := range endpoint.ProviderSpecific {
-		switch pv.Name {
-		case ProviderSpecificUid:
-			uid = pv.Value
-		case ProviderSpecificZone:
-			zone = pv.Value
+func (s *Server) recordUIDEndpointTarget(endpoint externaldnsapi.Endpoint, target string) string {
+	return s.recordUID(fmt.Sprintf("%s-%s", endpoint.DnsName, target))
+}
+
+func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.Endpoint) error {
+	zone, hostname := s.findZoneForRecord(endpoint.DnsName)
+	if zone == nil {
+		return fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
+	}
+	for _, target := range endpoint.Targets {
+		hr, err := s.api.RolesDnsApi.
+			DnsDeleteRecords(ctx).
+			Zone(zone.Name).
+			Hostname(hostname).
+			Type_(endpoint.RecordType).
+			Uid(s.recordUIDEndpointTarget(endpoint, target)).
+			Execute()
+		if err != nil {
+			return s.apiError(hr, err)
 		}
 	}
-	hostname := strings.TrimSuffix(strings.Replace(endpoint.DnsName, zone, "", 1), ".")
-	_, err := s.api.RolesDnsApi.DnsPutRecords(ctx).Zone(zone).Hostname(hostname).Uid(uid).DnsAPIRecordsPutInput(api.DnsAPIRecordsPutInput{
-		Type: endpoint.RecordType,
-		Data: endpoint.Targets[0],
-	}).Execute()
-	return err
+	return nil
+}
+
+func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.Endpoint) (*externaldnsapi.Endpoint, error) {
+	zone, hostname := s.findZoneForRecord(endpoint.DnsName)
+	if zone == nil {
+		return nil, fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
+	}
+	for _, target := range endpoint.Targets {
+		hr, err := s.api.RolesDnsApi.
+			DnsPutRecords(ctx).
+			Zone(zone.Name).
+			Hostname(hostname).
+			Uid(s.recordUIDEndpointTarget(endpoint, target)).
+			DnsAPIRecordsPutInput(api.DnsAPIRecordsPutInput{
+				Type: endpoint.RecordType,
+				Data: target,
+			}).
+			Execute()
+		if err != nil {
+			return nil, s.apiError(hr, err)
+		}
+	}
+	return &endpoint, nil
 }

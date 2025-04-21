@@ -23,17 +23,11 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/external-dns/main/",
-            "args": [
-                "-s",
-                "http://localhost:8008",
-                "-t",
-                "test",
-            ],
             "cwd": "${workspaceFolder}",
             "env": {
                 "DEBUG": "true",
-                "INSTANCE_IP": "0.0.0.0",
-                "LISTEN_ONLY": "true"
+                "GRAVITY_URL": "http://localhost:8008",
+                "GRAVITY_TOKEN": "test"
             }
         }
     ]
