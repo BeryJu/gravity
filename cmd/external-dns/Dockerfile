@@ -28,4 +28,6 @@ WORKDIR /
 
 COPY --from=builder /workspace/gravity-external-dns /bin/gravity-external-dns
 
+USER 1000:1000
+
 ENTRYPOINT ["/bin/gravity-external-dns"]
