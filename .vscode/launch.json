@@ -16,6 +16,19 @@
                 "INSTANCE_IP": "0.0.0.0",
                 "LISTEN_ONLY": "true"
             }
+        },
+        {
+            "name": "Launch gravity external-dns",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/external-dns/main/",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "DEBUG": "true",
+                "GRAVITY_URL": "http://localhost:8008",
+                "GRAVITY_TOKEN": "test"
+            }
         }
     ]
 }

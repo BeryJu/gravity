@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
       - run: make test-env-start
-      - run: make install-deps gen-clean gen-client-go
+      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
       - run: make test
       - if: ${{ always() }}
         run: |
@@ -61,7 +61,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
       - run: make test-env-start
-      - run: make install-deps gen-clean gen-client-go
+      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
       - run: make bench
       - if: ${{ always() }}
         run: make test-env-stop
@@ -85,7 +85,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
-      - run: make install-deps gen-clean gen-client-go
+      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
       - run: make test-e2e-container-build
       - run: make test-e2e
       - if: ${{ always() }}

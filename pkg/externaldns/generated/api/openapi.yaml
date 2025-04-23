@@ -1,0 +1,297 @@
+openapi: 3.0.0
+info:
+  contact:
+    url: https://github.com/kubernetes-sigs/external-dns
+  description: Implements the external DNS webhook endpoints.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: External DNS Webhook Server
+  version: v0.15.0
+servers:
+- description: Server url for a Kubernetes deployment.
+  url: http://localhost:8888
+tags:
+- description: Endpoints for initial negotiation.
+  name: initialization
+- description: Endpoints to get listings of DNS records.
+  name: listing
+- description: Endpoints to update DNS records.
+  name: update
+paths:
+  /:
+    get:
+      description: |
+        Initialisation and negotiates headers and returns domain
+        filter.
+      operationId: negotiate
+      responses:
+        "200":
+          content:
+            application/external.dns.webhook+json;version=1:
+              example:
+                filters:
+                - example.com
+              schema:
+                $ref: '#/components/schemas/filters'
+          description: |
+            The list of domains this DNS provider serves.
+        "500":
+          description: |
+            Negotiation failed.
+      summary: Initialisation and negotiates headers and returns domain filter.
+      tags:
+      - initialization
+  /records:
+    get:
+      description: |
+        Get the current records from the DNS provider and return them.
+      operationId: getRecords
+      responses:
+        "200":
+          content:
+            application/external.dns.webhook+json;version=1:
+              example:
+              - dnsName: test.example.com
+                recordTTL: 10
+                recordType: A
+                targets:
+                - 1.2.3.4
+              schema:
+                $ref: '#/components/schemas/endpoints'
+          description: |
+            Provided the list of DNS records successfully.
+        "500":
+          description: |
+            Failed to provide the list of DNS records.
+      summary: Returns the current records.
+      tags:
+      - listing
+    post:
+      description: |
+        Set the records in the DNS provider based on those supplied here.
+      operationId: setRecords
+      requestBody:
+        content:
+          application/external.dns.webhook+json;version=1:
+            example:
+              create:
+              - dnsName: test.example.com
+                recordTTL: 10
+                recordType: A
+            schema:
+              $ref: '#/components/schemas/changes'
+        description: |
+          This is the list of changes that need to be applied.  There are
+          four lists of endpoints.  The `create` and `delete` lists are lists
+          of records to create and delete respectively.  The `updateOld` and
+          `updateNew` lists are paired.  For each entry there's the old version
+          of the record and a new version of the record.
+        required: true
+      responses:
+        "204":
+          description: |
+            Changes were accepted.
+        "500":
+          description: |
+            Changes were not accepted.
+      summary: Applies the changes.
+      tags:
+      - update
+  /adjustendpoints:
+    post:
+      description: |
+        Adjusts the records in the provider based on those supplied here.
+      operationId: adjustRecords
+      requestBody:
+        content:
+          application/external.dns.webhook+json;version=1:
+            example:
+            - dnsName: test.example.com
+              recordTTL: 10
+              recordType: A
+              targets:
+              - 1.2.3.4
+            schema:
+              $ref: '#/components/schemas/endpoints'
+        description: |
+          This is the list of changes to be applied.
+        required: true
+      responses:
+        "200":
+          content:
+            application/external.dns.webhook+json;version=1:
+              example:
+              - dnsName: test.example.com
+                recordTTL: 0
+                recordType: A
+                targets:
+                - 1.2.3.4
+              schema:
+                $ref: '#/components/schemas/endpoints'
+          description: |
+            Adjustments were accepted.
+        "500":
+          description: |
+            Adjustments were not accepted.
+      summary: Executes the AdjustEndpoints method.
+      tags:
+      - update
+components:
+  schemas:
+    filters:
+      description: |
+        external-dns will only create DNS records for host names (specified in ingress objects and services with the external-dns annotation) related to zones that match filters. They can set in external-dns deployment manifest.
+      example:
+        filters:
+        - .example.com
+        - .example.org
+      properties:
+        filters:
+          example:
+          - .example.com
+          items:
+            example: foo.example.com
+            type: string
+          type: array
+      type: object
+    endpoints:
+      description: |
+        This is a list of DNS records.
+      example:
+      - dnsName: foo.example.com
+        recordType: A
+        recordTTL: 60
+      items:
+        $ref: '#/components/schemas/endpoint'
+      type: array
+    endpoint:
+      description: |
+        This is a DNS record.
+      example:
+        dnsName: foo.example.com
+        recordType: A
+        recordTTL: 60
+      properties:
+        dnsName:
+          example: foo.example.org
+          type: string
+        targets:
+          description: |
+            This is the list of targets that this DNS record points to.
+            So for an A record it will be a list of IP addresses.
+          example:
+          - 1.2.3.4
+          - test.example.org
+          items:
+            example: ::1
+            type: string
+          type: array
+        recordType:
+          example: CNAME
+          type: string
+        setIdentifier:
+          example: v1
+          type: string
+        recordTTL:
+          example: 60
+          format: int64
+          type: integer
+        labels:
+          additionalProperties:
+            example: foo
+            type: string
+          example:
+            foo: bar
+          type: object
+        providerSpecific:
+          example:
+          - name: foo
+            value: bar
+          items:
+            $ref: '#/components/schemas/providerSpecificProperty'
+          type: array
+      type: object
+    targets:
+      description: |
+        This is the list of targets that this DNS record points to.
+        So for an A record it will be a list of IP addresses.
+      example:
+      - 1.2.3.4
+      - test.example.org
+      items:
+        example: ::1
+        type: string
+      type: array
+    providerSpecificProperty:
+      description: |
+        Allows provider to pass property specific to their implementation.
+      example:
+        name: foo
+        value: bar
+      properties:
+        name:
+          example: foo
+          type: string
+        value:
+          example: bar
+          type: string
+      type: object
+    changes:
+      description: |
+        This is the list of changes send by `external-dns` that need to
+        be applied.  There are four lists of endpoints.  The `create`
+        and `delete` lists are lists of records to create and delete
+        respectively.  The `updateOld` and `updateNew` lists are paired.
+        For each entry there's the old version of the record and a new
+        version of the record.
+      example:
+        create:
+        - dnsName: foo.example.com
+          recordType: A
+          recordTTL: 60
+        delete:
+        - dnsName: foo.example.org
+          recordType: CNAME
+      properties:
+        create:
+          description: |
+            This is a list of DNS records.
+          example:
+          - dnsName: foo.example.com
+            recordType: A
+            recordTTL: 60
+          items:
+            $ref: '#/components/schemas/endpoint'
+          type: array
+        updateOld:
+          description: |
+            This is a list of DNS records.
+          example:
+          - dnsName: foo.example.com
+            recordType: A
+            recordTTL: 60
+          items:
+            $ref: '#/components/schemas/endpoint'
+          type: array
+        updateNew:
+          description: |
+            This is a list of DNS records.
+          example:
+          - dnsName: foo.example.com
+            recordType: A
+            recordTTL: 60
+          items:
+            $ref: '#/components/schemas/endpoint'
+          type: array
+        delete:
+          description: |
+            This is a list of DNS records.
+          example:
+          - dnsName: foo.example.com
+            recordType: A
+            recordTTL: 60
+          items:
+            $ref: '#/components/schemas/endpoint'
+          type: array
+      type: object

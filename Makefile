@@ -14,6 +14,7 @@ TEST_FLAGS =
 
 GEN_API_TS = "gen-ts-api"
 GEN_API_GO = "api"
+GEN_ED_GO = "pkg/externaldns/generated/"
 
 ci--env:
 	echo "sha=${GITHUB_SHA}" >> ${GITHUB_OUTPUT}
@@ -26,6 +27,12 @@ docker-build: internal/resources/macoui internal/resources/blocky internal/resou
 		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
 		${GO_BUILD_FLAGS} \
 		-v -a -o gravity ${PWD}/cmd/server/main
+
+docker-build-external-dns:
+	go build \
+		-ldflags "${LD_FLAGS} -X beryju.io/gravity/pkg/extconfig.BuildHash=${GIT_BUILD_HASH}" \
+		${GO_BUILD_FLAGS} \
+		-v -a -o gravity-external-dns ${PWD}/cmd/external-dns/main
 
 clean:
 	rm -rf ${PWD}/data/
@@ -111,6 +118,7 @@ gen-proto:
 
 gen-clean:
 	rm -rf ${PWD}/${GEN_API_TS}/
+	rm -rf ${PWD}/${GEN_ED_GO}/
 	rm -rf ${PWD}/${GEN_API_GO}/api/
 	rm -rf ${PWD}/${GEN_API_GO}/docs/
 	rm -rf ${PWD}/${GEN_API_GO}/test/
@@ -136,10 +144,9 @@ gen-client-go:
 		-o /local/${GEN_API_GO} \
 		-c /local/${GEN_API_GO}/config.yaml
 	cd ${PWD}/${GEN_API_GO}/
-	rm -f .travis.yml go.mod go.sum
+	rm -rf .travis.yml go.mod go.sum test/
 	go get
 	go fmt ${PWD}/${GEN_API_GO}/
-	go mod tidy
 	gofumpt -l -w ${PWD}/${GEN_API_GO}/ || true
 	git add ${PWD}/${GEN_API_GO}/
 
@@ -165,7 +172,33 @@ gen-client-ts-publish: gen-client-ts
 	npm version ${VERSION} || true
 	git add package*.json
 
-release: gen-build gen-clean gen-client-go gen-client-ts-publish gen-tag
+gen-external-dns:
+	wget https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/tags/v0.16.1/api/webhook.yaml -O pkg/externaldns/schema.yaml
+	docker run \
+		--rm -v ${PWD}:/local \
+		--user ${UID}:${GID} \
+		openapitools/openapi-generator-cli:v7.12.0 generate \
+		--git-host beryju.io \
+		--git-user-id gravity \
+		--git-repo-id api \
+		--additional-properties=packageName=externaldnsapi \
+		--additional-properties=sourceFolder=externaldnsapi \
+		-i /local/pkg/externaldns/schema.yaml \
+		-g go-server \
+		-o /local/${GEN_ED_GO} \
+		-c /local/${GEN_API_GO}/config.yaml
+	cd ${PWD}/${GEN_ED_GO}/
+	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/routers.go
+	rm -f .travis.yml go.mod go.sum main.go Dockerfile
+	go fmt ${PWD}/${GEN_ED_GO}/externaldnsapi
+	gofumpt -l -w ${PWD}/${GEN_ED_GO}/ || true
+	git add ${PWD}/${GEN_ED_GO}/
+
+gen-go-tidy:
+	go mod tidy
+	git add go.mod go.sum
+
+release: gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s
@@ -199,7 +232,7 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
 		${TEST_FLAGS} \
-		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
 			2>&1 | tee test-output
 	go tool cover \
 		-html ${PWD}/coverage.txt \
@@ -226,7 +259,7 @@ test-e2e: test-e2e-container-build
 	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage/ \
-		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | xargs | sed 's/ /,/g') \
+		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
 		-html ${PWD}/coverage_in_container.txt \
@@ -244,7 +277,7 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
 		-benchmem \
-		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd) \
+		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
 			| tee test-output
 	go tool cover \
 		-html ${PWD}/coverage.txt \
