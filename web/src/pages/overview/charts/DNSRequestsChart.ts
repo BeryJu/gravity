@@ -21,6 +21,12 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
         return "line";
     }
 
+    getOptions() {
+        const opts = super.getOptions();
+        opts.scales!.y!.min = 0;
+        return opts;
+    }
+
     getChartData(data: TypesAPIMetricsGetOutput): ChartData {
         const chartData: ChartData = {
             datasets: [],

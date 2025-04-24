@@ -3,7 +3,7 @@ import { Legend, Tooltip } from "chart.js";
 import { BarController, DoughnutController, LineController } from "chart.js";
 import { ArcElement, BarElement, LineElement, PointElement } from "chart.js";
 import { Filler, LinearScale, TimeScale } from "chart.js";
-import "chartjs-adapter-moment";
+import "chartjs-adapter-date-fns";
 import { sha256 } from "sha.js";
 
 import { CSSResult, TemplateResult, css, html } from "lit";

@@ -21,6 +21,13 @@ export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
         return "line";
     }
 
+    getOptions() {
+        const opts = super.getOptions();
+        opts.scales!.y!.min = 0;
+        opts.scales!.y!.max = 100;
+        return opts;
+    }
+
     getChartData(data: TypesAPIMetricsGetOutput): ChartData {
         const chartData: ChartData = {
             datasets: [],
