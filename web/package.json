@@ -39,7 +39,7 @@
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-lit": "^2.1.1",
         "eslint-plugin-wc": "^3.0.1",
-        "globals": "^16.0.0",
+        "globals": "^16.1.0",
         "gravity-api": "^0.26.5",
         "ip-num": "^1.5.1",
         "lit": "^3.3.0",
