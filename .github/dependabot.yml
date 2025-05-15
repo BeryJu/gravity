@@ -12,6 +12,10 @@ updates:
     open-pull-requests-limit: 10
     assignees:
       - BeryJu
+    groups:
+      etcd:
+        patterns:
+          - go.etcd.io/etcd/*
   - package-ecosystem: docker
     directories:
       - /
