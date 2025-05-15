@@ -59,10 +59,8 @@ func New(instance roles.Instance) *Role {
 		certDir: dirs.CertDir,
 	}
 	cfg.Dir = dirs.EtcdDir
-	cfg.ZapLoggerBuilder = embed.NewZapCoreLoggerBuilder(
+	cfg.ZapLoggerBuilder = embed.NewZapLoggerBuilder(
 		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
-		nil,
-		nil,
 	)
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
