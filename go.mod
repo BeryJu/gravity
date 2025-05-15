@@ -40,9 +40,9 @@ require (
 	github.com/swaggest/openapi-go v0.2.58
 	github.com/swaggest/rest v0.2.74
 	github.com/swaggest/usecase v1.3.1
-	go.etcd.io/etcd/api/v3 v3.5.21
-	go.etcd.io/etcd/client/v3 v3.5.21
-	go.etcd.io/etcd/etcdctl/v3 v3.5.21
+	go.etcd.io/etcd/api/v3 v3.6.0
+	go.etcd.io/etcd/client/v3 v3.6.0
+	go.etcd.io/etcd/etcdctl/v3 v3.6.0
 	go.etcd.io/etcd/etcdutl/v3 v3.5.21
 	go.etcd.io/etcd/server/v3 v3.5.21
 	go.uber.org/zap v1.27.0
@@ -86,6 +86,7 @@ require (
 	github.com/DataDog/sketches-go v1.4.6 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ThinkChaos/parcour v0.0.0-20230710171753-fbf917c9eaef // indirect
+	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef // indirect
@@ -109,6 +110,7 @@ require (
 	github.com/bgentry/speakeasy v0.2.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/cheggaaa/pb/v3 v3.1.6 // indirect
 	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
@@ -123,6 +125,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/expr-lang/expr v1.17.2 // indirect
 	github.com/farsightsec/golang-framestream v0.3.0 // indirect
+	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
@@ -157,7 +160,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.25.1 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -182,7 +185,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/lufia/plan9stats v0.0.0-20220913051719-115f729f3c8c // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
@@ -237,9 +240,9 @@ require (
 	github.com/xiang90/probing v0.0.0-20221125231312-a49e3df8f510 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.etcd.io/bbolt v1.3.11 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.21 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.6.0 // indirect
 	go.etcd.io/etcd/client/v2 v2.305.21 // indirect
-	go.etcd.io/etcd/pkg/v3 v3.5.21 // indirect
+	go.etcd.io/etcd/pkg/v3 v3.6.0 // indirect
 	go.etcd.io/etcd/raft/v3 v3.5.21 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/collector/component v0.104.0 // indirect
@@ -269,11 +272,10 @@ require (
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/api v0.227.0 // indirect
 	google.golang.org/genproto v0.0.0-20241118233622-e639e219e697 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250115164207-1a7da9e5054f // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250313205543-e70fdf4c4cb4 // indirect
-	google.golang.org/grpc v1.71.0 // indirect
+	google.golang.org/grpc v1.71.1 // indirect
 	gopkg.in/DataDog/dd-trace-go.v1 v1.72.2 // indirect
-	gopkg.in/cheggaaa/pb.v1 v1.0.28 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
