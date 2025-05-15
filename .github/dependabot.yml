@@ -16,6 +16,9 @@ updates:
       etcd:
         patterns:
           - go.etcd.io/etcd/*
+      k8s:
+        patterns:
+          - k8s.io/*
   - package-ecosystem: docker
     directories:
       - /
