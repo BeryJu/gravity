@@ -95,7 +95,7 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 		IPAddress: strings.Split(peer.String(), ":")[0],
 	})
 
-	span.SetTag("http.request.method", m.MessageType().String())
+	span.SetData("http.request.method", m.MessageType().String())
 	defer span.Finish()
 	resp := h.HandleRequest(r)
 

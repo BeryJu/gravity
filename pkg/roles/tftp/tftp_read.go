@@ -25,7 +25,7 @@ func (r *Role) readHandler(filename string, rf io.ReaderFrom) error {
 	defer canc()
 	span := sentry.StartTransaction(ctx, filename)
 	span.Op = "gravity.tftp.request"
-	span.SetTag("http.request.method", "GET")
+	span.SetData("http.request.method", "GET")
 	defer span.Finish()
 	hub := sentry.GetHubFromContext(span.Context())
 	if hub == nil {

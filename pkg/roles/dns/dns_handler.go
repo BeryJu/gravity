@@ -69,7 +69,7 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 	span := sentry.SpanFromContext(r.Context())
 	for _, question := range r.Question {
 		span.Name = question.Name
-		span.SetTag("http.request.method", dns.TypeToString[question.Qtype])
+		span.SetData("http.request.method", dns.TypeToString[question.Qtype])
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
 		for name, zone := range ro.zones.IterRelativeKey() {
 			// Zone doesn't have the correct suffix for the question
