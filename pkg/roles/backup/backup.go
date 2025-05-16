@@ -112,6 +112,7 @@ func (r *Role) snapshotToFile(ctx context.Context) (*os.File, error) {
 
 func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 	tr := sentry.StartTransaction(ctx, "gravity.backup.snapshot")
+	tr.Op = "gravity.backup.snapshot"
 	defer tr.Finish()
 	start := time.Now()
 	status := &BackupStatus{

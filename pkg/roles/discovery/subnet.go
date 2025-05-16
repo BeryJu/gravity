@@ -56,6 +56,7 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 	dev := []Device{}
 	tr := sentry.StartTransaction(ctx, "gravity.discovery.run")
+	tr.Op = "gravity.discovery.run"
 	defer tr.Finish()
 	se, err := concurrency.NewSession(s.inst.KV().Client)
 	if err != nil {

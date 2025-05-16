@@ -84,10 +84,8 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	r.Context = context
 	r.oob = oob
 
-	span := sentry.StartTransaction(
-		r.Context,
-		"gravity.dhcp.request",
-	)
+	span := sentry.StartTransaction(r.Context, h.role.DeviceIdentifier(r.DHCPv4))
+	span.Op = "gravity.dhcp.request"
 	hub := sentry.GetHubFromContext(span.Context())
 	if hub == nil {
 		hub = sentry.CurrentHub()
@@ -97,7 +95,7 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 		IPAddress: strings.Split(peer.String(), ":")[0],
 	})
 
-	span.Description = m.MessageType().String()
+	span.SetTag("http.request.method", m.MessageType().String())
 	defer span.Finish()
 	resp := h.HandleRequest(r)
 

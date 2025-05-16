@@ -86,6 +86,7 @@ func (w *Watcher[T]) Stop() {
 func (w *Watcher[T]) loadInitial() {
 	w.log.Debug("Loading initial")
 	tx := sentry.StartTransaction(context.Background(), "gravity.storage.watcher.loadInitial")
+	tx.Op = "gravity.storage.watcher.loadInitial"
 	defer tx.Finish()
 	entries, err := w.client.Get(tx.Context(), w.prefix.String(), clientv3.WithPrefix())
 	if err != nil {

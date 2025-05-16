@@ -178,7 +178,10 @@ func (i *Instance) bootstrap(ctx context.Context) {
 			// Special handling
 			continue
 		default:
+			span := sentry.StartSpan(ctx, "gravity.instance.bootstrap.role")
+			span.SetTag("gravity.role", roleId)
 			rc.Role = roles.GetRole(roleId)(rc.RoleInstance)
+			span.Finish()
 		}
 		i.rolesM.Lock()
 		i.roles[roleId] = rc

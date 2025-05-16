@@ -32,10 +32,8 @@ func (r *Role) FindZone(fqdn string) *Zone {
 }
 
 func (ro *Role) handler(w dns.ResponseWriter, r *dns.Msg) {
-	span := sentry.StartTransaction(
-		context.TODO(),
-		"gravity.dns.request",
-	)
+	span := sentry.StartTransaction(context.TODO(), "")
+	span.Op = "gravity.dns.request"
 	clientIP := ""
 	switch addr := w.RemoteAddr().(type) {
 	case *net.UDPAddr:
@@ -70,6 +68,8 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 	var longestZone *Zone
 	span := sentry.SpanFromContext(r.Context())
 	for _, question := range r.Question {
+		span.Name = question.Name
+		span.SetTag("http.request.method", dns.TypeToString[question.Qtype])
 		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
 		for name, zone := range ro.zones.IterRelativeKey() {
 			// Zone doesn't have the correct suffix for the question

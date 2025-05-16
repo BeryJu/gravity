@@ -21,7 +21,9 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 	it := wt.(tftp.IncomingTransfer)
 	ctx, canc := context.WithCancel(context.Background())
 	defer canc()
-	span := sentry.StartTransaction(ctx, "gravity.tftp.request")
+	span := sentry.StartTransaction(ctx, filename)
+	span.Op = "gravity.tftp.request"
+	span.SetTag("http.request.method", "PUT")
 	defer span.Finish()
 	hub := sentry.GetHubFromContext(span.Context())
 	if hub == nil {
