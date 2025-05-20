@@ -24,7 +24,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/insomniacslk/dhcp v0.0.0-20240829085014-a3a4c1f04475
 	github.com/miekg/dns v1.1.66
-	github.com/minio/minio-go/v7 v7.0.91
+	github.com/minio/minio-go/v7 v7.0.92
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/ori-edge/k8s_gateway v0.4.0
 	github.com/pin/tftp/v3 v3.1.0
@@ -230,7 +230,7 @@ require (
 	github.com/swaggest/form/v5 v5.1.1 // indirect
 	github.com/swaggest/jsonschema-go v0.3.74 // indirect
 	github.com/swaggest/refl v1.3.1 // indirect
-	github.com/tinylib/msgp v1.2.4 // indirect
+	github.com/tinylib/msgp v1.3.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75 // indirect
