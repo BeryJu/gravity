@@ -23,7 +23,7 @@
         "@rollup/plugin-typescript": "^12.1.2",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/chart.js": "^2.9.41",
-        "@types/codemirror": "5.60.15",
+        "@types/codemirror": "5.60.16",
         "@types/sha.js": "^2.4.4",
         "@typescript-eslint/eslint-plugin": "^8.33.0",
         "@typescript-eslint/parser": "^8.32.1",
