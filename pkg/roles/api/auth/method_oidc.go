@@ -151,6 +151,5 @@ func (ap *AuthProvider) checkJWTToken(r *http.Request) bool {
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
 	session.Values[types.SessionKeyUser] = *user
-	session.Values[types.SessionKeyDirty] = true
 	return false
 }
