@@ -2114,7 +2114,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         scope:
@@ -2191,7 +2191,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: '#/components/schemas/TypesOption'
           nullable: true
           type: array
         subnetCidr:
@@ -2709,28 +2709,6 @@ components:
       - system
       - dns
       type: string
-    TypesDHCPOption:
-      properties:
-        tag:
-          minimum: 0
-          nullable: true
-          type: integer
-        tagName:
-          type: string
-        value:
-          nullable: true
-          type: string
-        value64:
-          items:
-            type: string
-          nullable: true
-          type: array
-        valueHex:
-          items:
-            type: string
-          nullable: true
-          type: array
-      type: object
     TypesOIDCConfig:
       properties:
         clientID:
@@ -2747,5 +2725,30 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesOption:
+      properties:
+        def:
+          type: string
+        tag:
+          minimum: 0
+          type: integer
+        tagName:
+          type: string
+        value:
+          items:
+            format: base64
+            type: string
+          type: array
+        value64:
+          items:
+            type: string
+          type: array
+        valueHex:
+          items:
+            type: string
+          type: array
+        valueLegacy:
           type: string
       type: object
