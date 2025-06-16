@@ -90,8 +90,8 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label="UID" required name="uid">
                 <input
-                    type="number"
-                    value="${this.instance?.uid || 0}"
+                    type="text"
+                    value="${this.instance?.uid || ""}"
                     class="pf-c-form-control"
                     required
                 />
