@@ -89,10 +89,18 @@ jobs:
       - run: make test-e2e-container-build
       - run: make test-e2e
       - if: ${{ always() }}
+        run: |
+          go install github.com/jstemmer/go-junit-report/v2@latest
+          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy -out junit.xml
+      - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: e2e
+      - if: ${{ always() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   test-mark:
     if: always()
     needs:

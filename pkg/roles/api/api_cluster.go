@@ -93,7 +93,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 		}
 
 		go func() {
-			_, err = r.i.KV().MemberAdd(ctx, []string{input.Peer})
+			_, err = r.i.KV().MemberAdd(context.Background(), []string{input.Peer})
 			if err != nil {
 				r.log.Warn("failed to add member", zap.Error(err))
 			}
