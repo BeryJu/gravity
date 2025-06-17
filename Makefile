@@ -256,7 +256,7 @@ test-e2e: test-e2e-container-build
 		-timeout=300s \
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
-			2>&1 | tee test-output
+			2>&1 | tee ${PWD}/test-output
 	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage/ \
