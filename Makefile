@@ -97,7 +97,8 @@ internal/resources/blocky:
 
 internal/resources/tftp:
 	mkdir -p internal/resources/tftp
-	curl -L http://boot.ipxe.org/undionly.kpxe -o ${PWD}/internal/resources/tftp/ipxe.undionly.kpxe
+	curl -L https://boot.ipxe.org/ipxe.efi -o ${PWD}/internal/resources/tftp/ipxe.efi
+	curl -L https://boot.ipxe.org/undionly.kpxe -o ${PWD}/internal/resources/tftp/ipxe.undionly.kpxe
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe -o ${PWD}/internal/resources/tftp/netboot.xyz.kpxe
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz-undionly.kpxe -o ${PWD}/internal/resources/tftp/netboot.xyz-undionly.kpxe
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.efi -o ${PWD}/internal/resources/tftp/netboot.xyz.efi

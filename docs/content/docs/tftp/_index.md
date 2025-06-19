@@ -21,6 +21,7 @@ Included files are:
  - `bundled/netboot.xyz.efi`: (UEFI) [Netboot](https://netboot.xyz) DHCP boot image file, uses built-in iPXE NIC drivers
  - `bundled/netboot.xyz.kpxe`: (Legacy) [Netboot](https://netboot.xyz) DHCP boot image file, uses built-in iPXE NIC drivers
  - `bundled/netboot.xyz-undionly.kpxe`: (Legacy) [Netboot](https://netboot.xyz) DHCP boot image file, use if you have NIC issues
+ - `bundled/ipxe.efi`: (UEFI) [iPXE](https://ipxe.org) Chain image file
  - `bundled/ipxe.undionly.kpxe`: (Legacy) [iPXE](https://ipxe.org) Chain image file
 
 ### Local files
