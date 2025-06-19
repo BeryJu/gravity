@@ -10,6 +10,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/avast/retry-go/v4"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -121,10 +122,16 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.sessions = sess
 
 	if r.cfg.OIDC != nil {
-		err := r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
-		if err != nil {
-			r.log.Warn("failed to setup OpenID Connect, ignoring", zap.Error(err))
-		}
+		_ = retry.Do(
+			func() error {
+				return r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
+			},
+			retry.DelayType(retry.BackOffDelay),
+			retry.Attempts(50),
+			retry.OnRetry(func(attempt uint, err error) {
+				r.log.Warn("failed to setup OpenID Connect, retrying", zap.Error(err))
+			}),
+		)
 	}
 	r.prepareOpenAPI(ctx)
 	go r.ListenAndServeHTTP()
