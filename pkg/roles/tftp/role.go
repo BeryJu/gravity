@@ -46,6 +46,7 @@ func New(instance roles.Instance) *Role {
 		localfs: os.DirFS(extconfig.Get().Dirs().TFTPLocalDir),
 	}
 	s := tftp.NewServer(r.Reader, r.Writer)
+	s.SetHook(r)
 	r.s = s
 	s.SetTimeout(5 * time.Second)
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {

@@ -64,3 +64,18 @@ func TestTFTP_Read_Bundled(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, len(buff.Bytes()) > 0)
 }
+
+func TestTFTP_Read_NonExistent(t *testing.T) {
+	defer tests.Setup(t)()
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("tftp", ctx)
+	role := tftp.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, []byte{}))
+	defer role.Stop()
+
+	buff := bytes.NewBuffer([]byte{})
+	err := role.Reader("bundled/foo", OutgoingTransfer{buff})
+	assert.Error(t, err)
+}

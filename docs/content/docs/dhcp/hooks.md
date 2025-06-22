@@ -46,7 +46,7 @@ function onDHCPRequestAfter(req, res) {
 ### Set Boot filename for iPXE
 
 ```javascript
-const iPXEScript = "";
+const iPXEScript = "https://boot.ipxe.org/demo/";
 function onDHCPRequestAfter(req, res) {
     if (dhcp.GetString(77, req.Options) == "iPXE") {
         res.BootFileName = iPXEScript;
