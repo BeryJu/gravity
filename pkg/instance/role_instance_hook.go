@@ -29,6 +29,11 @@ func (ri *RoleInstance) HookEnvironment(options roles.HookOptions) map[string]in
 				return parsed
 			},
 		},
+		"strconv": map[string]interface{}{
+			"toBytes": func(input goja.Value) []byte {
+				return []byte(input.String())
+			},
+		},
 	}
 }
 

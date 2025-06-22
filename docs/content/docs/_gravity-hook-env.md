@@ -20,4 +20,10 @@ A reference to the [Role instance](https://pkg.go.dev/beryju.io/gravity/pkg/inst
 
 #### `parseIP(ip: string, family: string)`
 
-Parse an IP address from the string `ip` and return it as an array of bytes. `family` determines if the IP should be parsed as IPv4 or IPv6.</p>
+Parse an IP address from the string `ip` and return it as an array of bytes. `family` determines if the IP should be parsed as IPv4 or IPv6.
+
+### `strconv` Object
+
+#### `toBytes(input: string)`
+
+Convert a string to an array of bytes.

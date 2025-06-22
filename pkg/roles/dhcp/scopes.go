@@ -202,6 +202,9 @@ func (s *Scope) executeHook(method string, args ...interface{}) {
 				"Opt": func(code uint8, data []byte) dhcpv4.Option {
 					return dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(code), data)
 				},
+				"GetString": func(code uint8, o dhcpv4.Options) string {
+					return dhcpv4.GetString(dhcpv4.GenericOptionCode(code), o)
+				},
 			},
 		},
 	}, args...)
