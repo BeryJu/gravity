@@ -114,6 +114,12 @@ func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 	}, true)
 }
 
+func (i *InternalIPAM) FreeIP(ip netip.Addr) {
+	i.ipsm.Lock()
+	defer i.ipsm.Unlock()
+	delete(i.ips, ip.String())
+}
+
 func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
 	i.ipsm.Lock()
 	defer i.ipsm.Unlock()
@@ -130,6 +136,10 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 	mem := i.ips[ip.String()]
 	i.ipsm.RUnlock()
 	if mem != nil {
+		if identifier != nil && mem.identifier == *identifier {
+			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP (in memory)"))
+			return true
+		}
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
 		return false
 	}
