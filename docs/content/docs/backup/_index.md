@@ -21,6 +21,13 @@ This snapshot can be restored just like other snapshots.
 5. Remove the `etcd` folder in the `data` volume.
 6. Rename `restore` to `etcd`.
 7. Start the container.
+8. Run `gravity cli etcdctl member list -w table` in the Gravity container to list all nodes.
+9. If the value under `PEER ADDRS` is `http://localhost:2380`, run the following command:
+
+    ```
+    # Replace <ID> with the value `ID` from the command above.
+    gravity cli etcdctl member update <ID> --peer-urls http://$INSTANCE_IP:2380
+    ```
 
 Snapshots don't include any cluster information, so if you were using a cluster, you'll have to re-join nodes.
 
