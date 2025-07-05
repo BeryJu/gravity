@@ -1,7 +1,9 @@
 package tsdb
 
 import (
+	"cmp"
 	"context"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -67,6 +69,9 @@ func (r *Role) APIMetrics() usecase.Interactor {
 				Value: v.Value,
 			})
 		}
+		slices.SortFunc(output.Records, func(a, b types.APIMetricsRecord) int {
+			return cmp.Compare(a.Time.Unix(), b.Time.Unix())
+		})
 		return nil
 	})
 	u.SetName("tsdb.get_metrics")
