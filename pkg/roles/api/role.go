@@ -122,16 +122,18 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.sessions = sess
 
 	if r.cfg.OIDC != nil {
-		_ = retry.Do(
-			func() error {
-				return r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
-			},
-			retry.DelayType(retry.BackOffDelay),
-			retry.Attempts(50),
-			retry.OnRetry(func(attempt uint, err error) {
-				r.log.Warn("failed to setup OpenID Connect, retrying", zap.Error(err))
-			}),
-		)
+		go func() {
+			_ = retry.Do(
+				func() error {
+					return r.auth.ConfigureOpenIDConnect(ctx, r.cfg.OIDC)
+				},
+				retry.DelayType(retry.BackOffDelay),
+				retry.Attempts(50),
+				retry.OnRetry(func(attempt uint, err error) {
+					r.log.Warn("failed to setup OpenID Connect, retrying", zap.Uint("attempt", attempt), zap.Error(err))
+				}),
+			)
+		}()
 	}
 	r.prepareOpenAPI(ctx)
 	go r.ListenAndServeHTTP()
