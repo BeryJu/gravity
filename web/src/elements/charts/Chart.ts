@@ -112,6 +112,7 @@ export abstract class AKChart<T> extends AKElement {
                 return false;
             }
             this.chart = this.configureChart(r, ctx);
+            return true;
         });
     }
 

@@ -2,7 +2,6 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import lit from "eslint-plugin-lit";
 import { configs } from "eslint-plugin-wc";
 import globals from "globals";
 import path from "node:path";
@@ -29,7 +28,6 @@ export default [
         ...configs.recommended,
         plugins: {
             "@typescript-eslint": typescriptEslint,
-            lit,
         },
 
         languageOptions: {
