@@ -20,10 +20,6 @@ docs/ApiAPIExportOutput.md
 docs/ApiAPIImportInput.md
 docs/ApiAPILogMessage.md
 docs/ApiAPILogMessages.md
-docs/ApiAPIMember.md
-docs/ApiAPIMemberJoinInput.md
-docs/ApiAPIMemberJoinOutput.md
-docs/ApiAPIMembersOutput.md
 docs/ApiAPIRoleConfigInput.md
 docs/ApiAPIRoleConfigOutput.md
 docs/ApiAPIToolPingInput.md
@@ -91,6 +87,10 @@ docs/DnsAPIZonesImportOutput.md
 docs/DnsAPIZonesImporterType.md
 docs/DnsAPIZonesPutInput.md
 docs/DnsRoleConfig.md
+docs/EtcdAPIMember.md
+docs/EtcdAPIMemberJoinInput.md
+docs/EtcdAPIMemberJoinOutput.md
+docs/EtcdAPIMembersOutput.md
 docs/ExtconfigExtConfigDirs.md
 docs/InstanceAPIClusterInfoOutput.md
 docs/InstanceAPIInstanceInfo.md
@@ -132,10 +132,6 @@ model_api_api_export_output.go
 model_api_api_import_input.go
 model_api_api_log_message.go
 model_api_api_log_messages.go
-model_api_api_member.go
-model_api_api_member_join_input.go
-model_api_api_member_join_output.go
-model_api_api_members_output.go
 model_api_api_role_config_input.go
 model_api_api_role_config_output.go
 model_api_api_tool_ping_input.go
@@ -201,6 +197,10 @@ model_dns_api_zones_import_output.go
 model_dns_api_zones_importer_type.go
 model_dns_api_zones_put_input.go
 model_dns_role_config.go
+model_etcd_api_member.go
+model_etcd_api_member_join_input.go
+model_etcd_api_member_join_output.go
+model_etcd_api_members_output.go
 model_extconfig_ext_config_dirs.go
 model_instance_api_cluster_info_output.go
 model_instance_api_instance_info.go
