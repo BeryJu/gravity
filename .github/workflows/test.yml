@@ -7,6 +7,25 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - run: make web-install gen-client-ts web-build
+      - run: make install-deps
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          args: --timeout 5000s
   test-unittest:
     name: Test (unittest)
     runs-on: ubuntu-latest
@@ -104,6 +123,7 @@ jobs:
   test-mark:
     if: always()
     needs:
+      - lint
       - test-unittest
       - test-e2e
       - test-bench
@@ -112,22 +132,3 @@ jobs:
       - uses: re-actors/alls-green@release/v1
         with:
           jobs: ${{ toJSON(needs) }}
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-      - run: make web-install gen-client-ts web-build
-      - run: make install-deps
-      - uses: golangci/golangci-lint-action@v8
-        with:
-          args: --timeout 5000s
