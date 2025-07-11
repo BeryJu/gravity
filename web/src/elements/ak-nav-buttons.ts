@@ -14,7 +14,6 @@ import PFBase from "@patternfly/patternfly/patternfly-base.css";
 import PFDisplay from "@patternfly/patternfly/utilities/Display/display.css";
 
 import { DEFAULT_CONFIG } from "../api/Config";
-import { EVENT_API_DRAWER_TOGGLE } from "../common/constants";
 import { AKElement } from "./Base";
 
 @customElement("ak-nav-buttons")
@@ -57,19 +56,6 @@ export class NavigationButtons extends AKElement {
 
     renderApiDrawerTrigger() {
         return nothing;
-        const onClick = (ev: Event) => {
-            ev.stopPropagation();
-            this.dispatchEvent(
-                new Event(EVENT_API_DRAWER_TOGGLE, { bubbles: true, composed: true }),
-            );
-        };
-        return html`<div class="pf-c-page__header-tools-item pf-m-hidden pf-m-visible-on-lg">
-            <button class="pf-c-button pf-m-plain" type="button" @click=${onClick}>
-                <pf-tooltip position="top" content="Open API drawer">
-                    <i class="fas fa-code" aria-hidden="true"></i>
-                </pf-tooltip>
-            </button>
-        </div>`;
     }
 
     get userDisplayName() {

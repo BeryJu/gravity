@@ -66,6 +66,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
                     .apiRequest=${async () => {
                         await new RolesDiscoveryApi(DEFAULT_CONFIG).discoverySubnetStart({
                             identifier: item.name,
+                            wait: false,
                         });
                         showMessage({
                             level: MessageLevel.info,
