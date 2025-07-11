@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
+	"io/fs"
 	"net"
 	"net/http"
 	"os"
@@ -77,8 +78,6 @@ func New(instance roles.Instance) *Role {
 		svc.Post("/api/v1/cluster/import", r.APIClusterImport())
 		svc.Get("/api/v1/roles/api", r.APIRoleConfigGet())
 		svc.Post("/api/v1/roles/api", r.APIRoleConfigPut())
-		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
-		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
 		svc.Post("/api/v1/tools/ping", r.APIToolPing())
 		svc.Post("/api/v1/tools/traceroute", r.APIToolTraceroute())
 		svc.Post("/api/v1/tools/portmap", r.APIToolPortmap())
@@ -235,7 +234,7 @@ func (r *Role) Stop() {
 		socketPath = path.Join("./", GRAVITY_SOCK)
 	}
 	err = os.Remove(socketPath)
-	if err != nil {
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		r.log.Warn("failed to remove socket", zap.Error(err))
 	}
 }

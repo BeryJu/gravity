@@ -1,4 +1,4 @@
-package api
+package etcd
 
 import (
 	"context"
@@ -37,9 +37,9 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 		}
 		return nil
 	})
-	u.SetName("api.get_members")
+	u.SetName("etcd.get_members")
 	u.SetTitle("Etcd members")
-	u.SetTags("roles/api")
+	u.SetTags("roles/etcd")
 	u.SetExpectedErrors(status.Internal)
 	return u
 }
@@ -104,6 +104,30 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 	})
 	u.SetName("etcd.join_member")
 	u.SetTitle("Etcd join")
+	u.SetTags("roles/etcd")
+	u.SetExpectedErrors(status.Internal)
+	return u
+}
+
+type APIMemberRemoveInput struct {
+	PeerID uint64 `query:"peerID" required:"true"`
+}
+
+func (r *Role) APIClusterRemove() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberRemoveInput, output *struct{}) error {
+		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
+		r.i.Log().Debug("Removing instance", zap.Uint64("id", input.PeerID))
+		go func() {
+			_, err := r.i.KV().MemberRemove(context.Background(), input.PeerID)
+			if err != nil {
+				r.log.Warn("failed to remove member", zap.Error(err))
+			}
+		}()
+
+		return nil
+	})
+	u.SetName("etcd.remove_member")
+	u.SetTitle("Etcd remove")
 	u.SetTags("roles/etcd")
 	u.SetExpectedErrors(status.Internal)
 	return u

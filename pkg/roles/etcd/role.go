@@ -12,7 +12,9 @@ import (
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/pkg/errors"
+	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -51,7 +53,7 @@ func urlMustParse(raw string) url.URL {
 func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
 	cfg := embed.NewConfig()
-	ee := &Role{
+	r := &Role{
 		cfg:     cfg,
 		log:     instance.Log(),
 		i:       instance,
@@ -79,17 +81,23 @@ func New(instance roles.Instance) *Role {
 	cfg.Name = extconfig.Get().Instance.Identifier
 	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.PeerPort))
 	cfg.PeerAutoTLS = true
-	cfg.PeerTLSInfo.ClientCertFile = path.Join(ee.certDir, "peer", relInstCertPath)
-	cfg.PeerTLSInfo.ClientKeyFile = path.Join(ee.certDir, "peer", relInstKeyPath)
+	cfg.PeerTLSInfo.ClientCertFile = path.Join(r.certDir, "peer", relInstCertPath)
+	cfg.PeerTLSInfo.ClientKeyFile = path.Join(r.certDir, "peer", relInstKeyPath)
 	cfg.PeerTLSInfo.ClientCertAuth = true
 	cfg.SelfSignedCertValidity = 1
 	cfg.MaxRequestBytes = 10 * 1024 * 1024 // 10 MB
-	err := ee.prepareJoin(cfg)
+	err := r.prepareJoin(cfg)
 	if err != nil {
 		instance.Log().Warn("failed to join cluster", zap.Error(err))
 		return nil
 	}
-	return ee
+	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
+		svc := ev.Payload.Data["svc"].(*web.Service)
+		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
+		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
+		svc.Delete("/api/v1/etcd/remove", r.APIClusterRemove())
+	})
+	return r
 }
 
 func (ee *Role) prepareJoin(cfg *embed.Config) error {
