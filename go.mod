@@ -41,11 +41,11 @@ require (
 	github.com/swaggest/openapi-go v0.2.58
 	github.com/swaggest/rest v0.2.74
 	github.com/swaggest/usecase v1.3.1
-	go.etcd.io/etcd/api/v3 v3.6.1
-	go.etcd.io/etcd/client/v3 v3.6.1
-	go.etcd.io/etcd/etcdctl/v3 v3.6.1
-	go.etcd.io/etcd/etcdutl/v3 v3.6.1
-	go.etcd.io/etcd/server/v3 v3.6.1
+	go.etcd.io/etcd/api/v3 v3.6.2
+	go.etcd.io/etcd/client/v3 v3.6.2
+	go.etcd.io/etcd/etcdctl/v3 v3.6.2
+	go.etcd.io/etcd/etcdutl/v3 v3.6.2
+	go.etcd.io/etcd/server/v3 v3.6.2
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.40.0
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
@@ -242,9 +242,9 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xiang90/probing v0.0.0-20221125231312-a49e3df8f510 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	go.etcd.io/bbolt v1.4.0 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.6.1 // indirect
-	go.etcd.io/etcd/pkg/v3 v3.6.1 // indirect
+	go.etcd.io/bbolt v1.4.2 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.6.2 // indirect
+	go.etcd.io/etcd/pkg/v3 v3.6.2 // indirect
 	go.etcd.io/raft/v3 v3.6.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/collector/component v0.120.0 // indirect
