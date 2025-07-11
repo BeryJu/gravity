@@ -57,3 +57,74 @@ export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number
         return 0;
     };
 }
+
+/**
+ * @file Temporal utilitie for working with dates and times.
+ */
+
+/**
+ * Duration in milliseconds for time units used by the `Intl.RelativeTimeFormat` API.
+ */
+export const Duration = {
+    /**
+     * The number of milliseconds in a year.
+     */
+    year: 1000 * 60 * 60 * 24 * 365,
+    /**
+     * The number of milliseconds in a month.
+     */
+    month: (24 * 60 * 60 * 1000 * 365) / 12,
+    /**
+     * The number of milliseconds in a day.
+     */
+    day: 1000 * 60 * 60 * 24,
+    /**
+     * The number of milliseconds in an hour.
+     */
+    hour: 1000 * 60 * 60,
+    /**
+     * The number of milliseconds in a minute.
+     */
+    minute: 1000 * 60,
+    /**
+     * The number of milliseconds in a second.
+     */
+    second: 1000,
+} as const satisfies Partial<Record<Intl.RelativeTimeFormatUnit, number>>;
+
+export type DurationUnit = keyof typeof Duration;
+
+/**
+ * The order of time units used by the `Intl.RelativeTimeFormat` API.
+ */
+const DurationGranularity = [
+    "year",
+    "month",
+    "day",
+    "hour",
+    "minute",
+    "second",
+] as const satisfies DurationUnit[];
+
+/**
+ * Given two dates, return a human-readable string describing the time elapsed between them.
+ */
+export function formatElapsedTime(d1: Date, d2: Date = new Date()): string {
+    const elapsed = d1.getTime() - d2.getTime();
+    const rtf = new Intl.RelativeTimeFormat("default", { numeric: "auto" });
+
+    for (const unit of DurationGranularity) {
+        const duration = Duration[unit];
+
+        if (Math.abs(elapsed) > duration || unit === "second") {
+            let rounded = Math.round(elapsed / duration);
+
+            if (!isFinite(rounded)) {
+                rounded = 0;
+            }
+
+            return rtf.format(rounded, unit);
+        }
+    }
+    return rtf.format(Math.round(elapsed / 1000), "second");
+}

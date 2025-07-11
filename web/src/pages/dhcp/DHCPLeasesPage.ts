@@ -11,7 +11,7 @@ import "../../elements/forms/ModalForm";
 import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper, firstElement, ip, sortByIP } from "../../utils";
+import { PaginationWrapper, firstElement, formatElapsedTime, ip, sortByIP } from "../../utils";
 import "./DHCPLeaseForm";
 
 @customElement("gravity-dhcp-leases")
@@ -178,7 +178,8 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                 ${item.info ? html` (${item.info.vendor})` : nothing}`,
             html`${(item.expiry || 0) <= -1
                 ? html`Reservation`
-                : new Date((item.expiry || 0) * 1000).toLocaleString()}`,
+                : html`<div>${new Date((item.expiry || 0) * 1000).toLocaleString()}</div>
+                      <small>${formatElapsedTime(new Date((item.expiry || 0) * 1000))}</small>`}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Lease"} </span>
