@@ -131,8 +131,8 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
 	apiClient := api.NewAPIClient(config)
 
-	res, _, err := apiClient.RolesEtcdApi.EtcdJoinMember(context.Background()).ApiAPIMemberJoinInput(
-		api.ApiAPIMemberJoinInput{
+	res, _, err := apiClient.RolesEtcdApi.EtcdJoinMember(context.Background()).EtcdAPIMemberJoinInput(
+		api.EtcdAPIMemberJoinInput{
 			Peer: api.PtrString(
 				fmt.Sprintf(
 					"https://%s:%d",
