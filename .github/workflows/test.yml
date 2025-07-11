@@ -18,7 +18,7 @@ jobs:
           cache: true
       - uses: actions/setup-node@v4
         with:
-          node-version-file: package.json
+          node-version-file: web/package.json
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
