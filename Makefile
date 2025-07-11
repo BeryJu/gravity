@@ -69,6 +69,7 @@ web-lint:
 	cd ${PWD}/web
 	npm run prettier
 	npm run lint
+	npm run tsc
 	npm run lit-analyse
 
 # CLI

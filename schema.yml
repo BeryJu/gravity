@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.27.1
+  version: 0.27.2
 paths:
   /api/v1/auth/config:
     get:
@@ -1088,13 +1088,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIMemberJoinInput'
+              $ref: '#/components/schemas/EtcdAPIMemberJoinInput'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIMemberJoinOutput'
+                $ref: '#/components/schemas/EtcdAPIMemberJoinOutput'
           description: OK
         "500":
           content:
@@ -1107,13 +1107,13 @@ paths:
       - roles/etcd
   /api/v1/etcd/members:
     get:
-      operationId: api.get_members
+      operationId: etcd.get_members
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIMembersOutput'
+                $ref: '#/components/schemas/EtcdAPIMembersOutput'
           description: OK
         "500":
           content:
@@ -1123,7 +1123,29 @@ paths:
           description: Internal Server Error
       summary: Etcd members
       tags:
-      - roles/api
+      - roles/etcd
+  /api/v1/etcd/remove:
+    delete:
+      operationId: etcd.remove_member
+      parameters:
+      - in: query
+        name: peerID
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Etcd remove
+      tags:
+      - roles/etcd
   /api/v1/roles/api:
     get:
       operationId: api.get_role_config
@@ -1685,37 +1707,6 @@ components:
         messages:
           items:
             $ref: '#/components/schemas/ApiAPILogMessage'
-          nullable: true
-          type: array
-      type: object
-    ApiAPIMember:
-      properties:
-        id:
-          minimum: 0
-          type: integer
-        name:
-          type: string
-      type: object
-    ApiAPIMemberJoinInput:
-      properties:
-        identifier:
-          type: string
-        peer:
-          maxLength: 255
-          type: string
-        roles:
-          type: string
-      type: object
-    ApiAPIMemberJoinOutput:
-      properties:
-        etcdInitialCluster:
-          type: string
-      type: object
-    ApiAPIMembersOutput:
-      properties:
-        members:
-          items:
-            $ref: '#/components/schemas/ApiAPIMember'
           nullable: true
           type: array
       type: object
@@ -2479,6 +2470,37 @@ components:
       properties:
         port:
           type: integer
+      type: object
+    EtcdAPIMember:
+      properties:
+        id:
+          minimum: 0
+          type: integer
+        name:
+          type: string
+      type: object
+    EtcdAPIMemberJoinInput:
+      properties:
+        identifier:
+          type: string
+        peer:
+          maxLength: 255
+          type: string
+        roles:
+          type: string
+      type: object
+    EtcdAPIMemberJoinOutput:
+      properties:
+        etcdInitialCluster:
+          type: string
+      type: object
+    EtcdAPIMembersOutput:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/EtcdAPIMember'
+          nullable: true
+          type: array
       type: object
     ExtconfigExtConfigDirs:
       properties:

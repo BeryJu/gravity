@@ -9,7 +9,6 @@ Method | HTTP request | Description
 [**ApiDeleteUsers**](RolesApiApi.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
 [**ApiExport**](RolesApiApi.md#ApiExport) | **Post** /api/v1/cluster/export | Export Cluster
 [**ApiGetLogMessages**](RolesApiApi.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
-[**ApiGetMembers**](RolesApiApi.md#ApiGetMembers) | **Get** /api/v1/etcd/members | Etcd members
 [**ApiGetRoleConfig**](RolesApiApi.md#ApiGetRoleConfig) | **Get** /api/v1/roles/api | API role config
 [**ApiGetTokens**](RolesApiApi.md#ApiGetTokens) | **Get** /api/v1/auth/tokens | Tokens
 [**ApiGetUsers**](RolesApiApi.md#ApiGetUsers) | **Get** /api/v1/auth/users | API Users
@@ -316,65 +315,6 @@ Other parameters are passed through a pointer to a apiApiGetLogMessagesRequest s
 ### Return type
 
 [**ApiAPILogMessages**](ApiAPILogMessages.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ApiGetMembers
-
-> ApiAPIMembersOutput ApiGetMembers(ctx).Execute()
-
-Etcd members
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetMembers(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetMembers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetMembers`: ApiAPIMembersOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetMembers`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiApiGetMembersRequest struct via the builder pattern
-
-
-### Return type
-
-[**ApiAPIMembersOutput**](ApiAPIMembersOutput.md)
 
 ### Authorization
 

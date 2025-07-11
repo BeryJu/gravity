@@ -1,11 +1,18 @@
-import { ClusterApi, InstanceInstanceInfo, TypesAPIMetricsRole } from "gravity-api";
+import {
+    ClusterApi,
+    EtcdAPIMembersOutput,
+    InstanceInstanceInfo,
+    RolesEtcdApi,
+    TypesAPIMetricsRole,
+} from "gravity-api";
 
 import { TemplateResult, html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/chips/Chip";
 import "../../elements/chips/ChipGroup";
+import "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import "../../elements/table/TableChart";
@@ -15,6 +22,11 @@ import "./wizard/ClusterJoinWizard";
 
 @customElement("gravity-cluster-nodes")
 export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
+    @state()
+    etcdNodes?: EtcdAPIMembersOutput;
+
+    checkbox = true;
+
     pageTitle(): string {
         return "Cluster nodes";
     }
@@ -27,6 +39,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
 
     async apiEndpoint(): Promise<PaginatedResponse<InstanceInstanceInfo>> {
         const inst = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
+        this.etcdNodes = await new RolesEtcdApi(DEFAULT_CONFIG).etcdGetMembers();
         return PaginationWrapper(inst.instances || []);
     }
 
@@ -59,7 +72,37 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
         ];
     }
 
+    renderToolbarSelected(): TemplateResult {
+        const disabled = this.selectedElements.length < 1;
+        return html`<ak-forms-delete-bulk
+            objectLabel=${"Cluster Node(s)"}
+            .objects=${this.selectedElements}
+            .metadata=${(item: InstanceInstanceInfo) => {
+                return [
+                    { key: "Identifier", value: item.identifier },
+                    { key: "IP", value: item.ip },
+                ];
+            }}
+            .delete=${(item: InstanceInstanceInfo) => {
+                const peerId =
+                    this.etcdNodes?.members?.filter((member) => member.name === item.identifier) ||
+                    [];
+                if (peerId?.length < 1) {
+                    return;
+                }
+                return new RolesEtcdApi(DEFAULT_CONFIG).etcdRemoveMember({
+                    peerID: peerId[0].id!,
+                });
+            }}
+        >
+            <span slot="notice"> </span>
+            <button ?disabled=${disabled} slot="trigger" class="pf-c-button pf-m-danger">
+                ${"Delete"}
+            </button>
+        </ak-forms-delete-bulk>`;
+    }
+
     renderObjectCreate(): TemplateResult {
-        return html` <gravity-cluster-join-wizard></gravity-cluster-join-wizard> `;
+        return html`<gravity-cluster-join-wizard></gravity-cluster-join-wizard>`;
     }
 }
