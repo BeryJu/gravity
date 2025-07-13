@@ -18,6 +18,8 @@ type IPAM interface {
 	GetSubnetMask() net.IPMask
 	// Mark an IP as used
 	UseIP(addr netip.Addr, identifier string)
+	// Mark an IP as unused
+	FreeIP(ip netip.Addr)
 	// Update config when scope is updated
 	UpdateConfig(s *Scope) error
 	// Amount of usable IPs excluding any exclusions
