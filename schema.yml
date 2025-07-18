@@ -1690,6 +1690,10 @@ components:
       type: object
     ApiAPILogMessage:
       properties:
+        fields:
+          additionalProperties: {}
+          nullable: true
+          type: object
         level:
           type: string
         logger:
@@ -1701,6 +1705,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - message
+      - time
+      - level
+      - logger
+      - fields
+      - node
       type: object
     ApiAPILogMessages:
       properties:
