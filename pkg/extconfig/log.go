@@ -44,12 +44,17 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	}
 	config.EncoderConfig.EncodeDuration = zapcore.MillisDurationEncoder
-	log, err := config.Build()
+	core, err := config.Build()
 	if err != nil {
 		panic(err)
 	}
+	hookedCore := &log_iml.ZapCore{
+		Core: core.Core(),
+	}
+	log := zap.New(hookedCore)
+	log.Debug("test")
 	return log.With(
 		zap.String("instance", e.Instance.Identifier),
 		zap.String("version", FullVersion()),
-	).WithOptions(log_iml.Get().Hook())
+	)
 }

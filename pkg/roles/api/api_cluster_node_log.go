@@ -11,12 +11,12 @@ import (
 )
 
 type APILogMessage struct {
-	Message string    `json:"message"`
-	Time    time.Time `json:"time"`
-	Level   string    `json:"level"`
-	Logger  string    `json:"logger"`
-
-	Node string `json:"node"`
+	Message string                 `json:"message" required:"true"`
+	Time    time.Time              `json:"time" required:"true"`
+	Level   string                 `json:"level" required:"true"`
+	Logger  string                 `json:"logger" required:"true"`
+	Fields  map[string]interface{} `json:"fields" required:"true"`
+	Node    string                 `json:"node" required:"true"`
 }
 
 type APILogMessages struct {
@@ -27,10 +27,11 @@ func (r *Role) APIClusterNodeLogMessages() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APILogMessages) error {
 		for _, lm := range log_iml.Get().Messages() {
 			output.Messages = append(output.Messages, APILogMessage{
-				Message: lm.Message,
-				Level:   lm.Level.CapitalString(),
-				Time:    lm.Time,
-				Logger:  lm.LoggerName,
+				Message: lm.Entry.Message,
+				Level:   lm.Entry.Level.CapitalString(),
+				Time:    lm.Entry.Time,
+				Logger:  lm.Entry.LoggerName,
+				Fields:  lm.FieldsToMap(),
 				Node:    extconfig.Get().Instance.Identifier,
 			})
 		}
