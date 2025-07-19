@@ -23,7 +23,7 @@ require (
 	github.com/gorilla/securecookie v1.1.2
 	github.com/gorilla/sessions v1.4.0
 	github.com/gosimple/slug v1.15.0
-	github.com/insomniacslk/dhcp v0.0.0-20240829085014-a3a4c1f04475
+	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
 	github.com/miekg/dns v1.1.66
 	github.com/minio/minio-go/v7 v7.0.94
 	github.com/netdata/go.d.plugin v0.58.1
