@@ -33,3 +33,15 @@ var IPTags = map[uint8]bool{
 	dhcpv4.OptionDomainNameServer.Code(): true,
 	dhcpv4.OptionTimeServer.Code():       true,
 }
+
+type DHCPOption struct {
+	Tag      *uint8   `json:"tag"`
+	TagName  string   `json:"tagName"`
+	Value    *string  `json:"value"`
+	Value64  []string `json:"value64"`
+	ValueHex []string `json:"valueHex"`
+}
+
+func OptionValue(input string) *string {
+	return &input
+}

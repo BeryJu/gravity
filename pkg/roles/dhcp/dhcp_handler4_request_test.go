@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
-	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
@@ -452,22 +452,22 @@ func TestDHCPRequest_Options(t *testing.T) {
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
-			Options: []*optTypes.Option{
+			Options: []*types.DHCPOption{
 				{
-					TagName:     types.TagNameRouter,
-					ValueLegacy: "1.2.3.4",
+					TagName: types.TagNameRouter,
+					Value:   api.PtrString("1.2.3.4"),
 				},
 				{
-					TagName:     types.TagNameBootfile,
-					ValueLegacy: "foo",
+					TagName: types.TagNameBootfile,
+					Value:   api.PtrString("foo"),
 				},
 				{
-					TagName:     "",
-					ValueLegacy: "1.2.3.4",
+					TagName: "",
+					Value:   api.PtrString("1.2.3.4"),
 				},
 				{
-					TagName:     "foo",
-					ValueLegacy: "1.2.3.4",
+					TagName: "foo",
+					Value:   api.PtrString("1.2.3.4"),
 				},
 			},
 			IPAM: map[string]string{

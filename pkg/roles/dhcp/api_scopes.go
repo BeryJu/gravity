@@ -8,7 +8,6 @@ import (
 
 	"beryju.io/gravity/pkg/convert/ms_dhcp"
 	"beryju.io/gravity/pkg/roles/api/utils"
-	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
@@ -25,15 +24,15 @@ type APIScopeStatistics struct {
 	Used   uint64 `json:"used" required:"true"`
 }
 type APIScope struct {
-	IPAM       map[string]string  `json:"ipam" required:"true"`
-	DNS        *ScopeDNS          `json:"dns"`
-	Name       string             `json:"scope" required:"true"`
-	SubnetCIDR string             `json:"subnetCidr" required:"true"`
-	Options    []*optTypes.Option `json:"options" required:"true"`
-	TTL        int64              `json:"ttl" required:"true"`
-	Default    bool               `json:"default" required:"true"`
-	Hook       string             `json:"hook" required:"true"`
-	Statistics APIScopeStatistics `json:"statistics" required:"true"`
+	IPAM       map[string]string   `json:"ipam" required:"true"`
+	DNS        *ScopeDNS           `json:"dns"`
+	Name       string              `json:"scope" required:"true"`
+	SubnetCIDR string              `json:"subnetCidr" required:"true"`
+	Options    []*types.DHCPOption `json:"options" required:"true"`
+	TTL        int64               `json:"ttl" required:"true"`
+	Default    bool                `json:"default" required:"true"`
+	Hook       string              `json:"hook" required:"true"`
+	Statistics APIScopeStatistics  `json:"statistics" required:"true"`
 }
 type APIScopesGetOutput struct {
 	Scopes     []*APIScope        `json:"scopes" required:"true"`
@@ -130,11 +129,11 @@ type APIScopesPutInput struct {
 	DNS  *ScopeDNS         `json:"dns"`
 	Name string            `query:"scope" required:"true" maxLength:"255"`
 
-	SubnetCIDR string             `json:"subnetCidr" required:"true" maxLength:"40"`
-	Options    []*optTypes.Option `json:"options" required:"true"`
-	TTL        int64              `json:"ttl" required:"true"`
-	Default    bool               `json:"default" required:"true"`
-	Hook       string             `json:"hook" required:"true"`
+	SubnetCIDR string              `json:"subnetCidr" required:"true" maxLength:"40"`
+	Options    []*types.DHCPOption `json:"options" required:"true"`
+	TTL        int64               `json:"ttl" required:"true"`
+	Default    bool                `json:"default" required:"true"`
+	Hook       string              `json:"hook" required:"true"`
 }
 
 func (r *Role) APIScopesPut() usecase.Interactor {
@@ -148,7 +147,7 @@ func (r *Role) APIScopesPut() usecase.Interactor {
 		s.Options = input.Options
 		// validate options
 		for _, opt := range s.Options {
-			if opt.Tag != 0 && opt.TagName == "" {
+			if opt.Tag != nil && opt.TagName == "" {
 				continue
 			}
 			_, ok := types.TagMap[types.OptionTagName(opt.TagName)]

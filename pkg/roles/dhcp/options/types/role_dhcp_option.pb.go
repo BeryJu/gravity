@@ -20,25 +20,114 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type OptionData struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to Data:
+	//
+	//	*OptionData_DataByte
+	//	*OptionData_Ip
+	//	*OptionData_DataString
+	Data isOptionData_Data `protobuf_oneof:"data"`
+}
+
+func (x *OptionData) Reset() {
+	*x = OptionData{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_protobuf_role_dhcp_option_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *OptionData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OptionData) ProtoMessage() {}
+
+func (x *OptionData) ProtoReflect() protoreflect.Message {
+	mi := &file_protobuf_role_dhcp_option_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OptionData.ProtoReflect.Descriptor instead.
+func (*OptionData) Descriptor() ([]byte, []int) {
+	return file_protobuf_role_dhcp_option_proto_rawDescGZIP(), []int{0}
+}
+
+func (m *OptionData) GetData() isOptionData_Data {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (x *OptionData) GetDataByte() []byte {
+	if x, ok := x.GetData().(*OptionData_DataByte); ok {
+		return x.DataByte
+	}
+	return nil
+}
+
+func (x *OptionData) GetIp() []byte {
+	if x, ok := x.GetData().(*OptionData_Ip); ok {
+		return x.Ip
+	}
+	return nil
+}
+
+func (x *OptionData) GetDataString() string {
+	if x, ok := x.GetData().(*OptionData_DataString); ok {
+		return x.DataString
+	}
+	return ""
+}
+
+type isOptionData_Data interface {
+	isOptionData_Data()
+}
+
+type OptionData_DataByte struct {
+	DataByte []byte `protobuf:"bytes,10,opt,name=data_byte,json=dataByte,proto3,oneof"`
+}
+
+type OptionData_Ip struct {
+	Ip []byte `protobuf:"bytes,11,opt,name=ip,proto3,oneof"`
+}
+
+type OptionData_DataString struct {
+	DataString string `protobuf:"bytes,12,opt,name=data_string,json=dataString,proto3,oneof"`
+}
+
+func (*OptionData_DataByte) isOptionData_Data() {}
+
+func (*OptionData_Ip) isOptionData_Data() {}
+
+func (*OptionData_DataString) isOptionData_Data() {}
+
 type Option struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Def   string   `protobuf:"bytes,1,opt,name=def,proto3" json:"def,omitempty"`
-	Value [][]byte `protobuf:"bytes,2,rep,name=value,json=valueBytes,proto3" json:"value,omitempty"`
-	// Legacy fields
-	Tag         uint32   `protobuf:"varint,100,opt,name=tag,proto3" json:"tag,omitempty"`
-	TagName     string   `protobuf:"bytes,101,opt,name=tagName,proto3" json:"tagName,omitempty"`
-	ValueLegacy string   `protobuf:"bytes,102,opt,name=valueLegacy,json=value,proto3" json:"valueLegacy,omitempty"`
-	Value64     []string `protobuf:"bytes,103,rep,name=value64,proto3" json:"value64,omitempty"`
-	ValueHex    []string `protobuf:"bytes,104,rep,name=valueHex,proto3" json:"valueHex,omitempty"`
+	Tag  uint32        `protobuf:"varint,1,opt,name=tag,proto3" json:"tag,omitempty"`
+	Data []*OptionData `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty"`
 }
 
 func (x *Option) Reset() {
 	*x = Option{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_protobuf_role_dhcp_option_proto_msgTypes[0]
+		mi := &file_protobuf_role_dhcp_option_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -51,7 +140,7 @@ func (x *Option) String() string {
 func (*Option) ProtoMessage() {}
 
 func (x *Option) ProtoReflect() protoreflect.Message {
-	mi := &file_protobuf_role_dhcp_option_proto_msgTypes[0]
+	mi := &file_protobuf_role_dhcp_option_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,21 +153,7 @@ func (x *Option) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Option.ProtoReflect.Descriptor instead.
 func (*Option) Descriptor() ([]byte, []int) {
-	return file_protobuf_role_dhcp_option_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Option) GetDef() string {
-	if x != nil {
-		return x.Def
-	}
-	return ""
-}
-
-func (x *Option) GetValue() [][]byte {
-	if x != nil {
-		return x.Value
-	}
-	return nil
+	return file_protobuf_role_dhcp_option_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Option) GetTag() uint32 {
@@ -88,30 +163,9 @@ func (x *Option) GetTag() uint32 {
 	return 0
 }
 
-func (x *Option) GetTagName() string {
+func (x *Option) GetData() []*OptionData {
 	if x != nil {
-		return x.TagName
-	}
-	return ""
-}
-
-func (x *Option) GetValueLegacy() string {
-	if x != nil {
-		return x.ValueLegacy
-	}
-	return ""
-}
-
-func (x *Option) GetValue64() []string {
-	if x != nil {
-		return x.Value64
-	}
-	return nil
-}
-
-func (x *Option) GetValueHex() []string {
-	if x != nil {
-		return x.ValueHex
+		return x.Data
 	}
 	return nil
 }
@@ -121,20 +175,19 @@ var File_protobuf_role_dhcp_option_proto protoreflect.FileDescriptor
 var file_protobuf_role_dhcp_option_proto_rawDesc = []byte{
 	0x0a, 0x1f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x5f,
 	0x64, 0x68, 0x63, 0x70, 0x5f, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x22, 0xb3, 0x01, 0x0a, 0x06, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03,
-	0x64, 0x65, 0x66, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x64, 0x65, 0x66, 0x12, 0x19,
-	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x0a, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x42, 0x79, 0x74, 0x65, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x61, 0x67,
-	0x18, 0x64, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x03, 0x74, 0x61, 0x67, 0x12, 0x18, 0x0a, 0x07, 0x74,
-	0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x65, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x74, 0x61,
-	0x67, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x0b, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x4c, 0x65,
-	0x67, 0x61, 0x63, 0x79, 0x18, 0x66, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
-	0x65, 0x12, 0x18, 0x0a, 0x07, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x36, 0x34, 0x18, 0x67, 0x20, 0x03,
-	0x28, 0x09, 0x52, 0x07, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x36, 0x34, 0x12, 0x1a, 0x0a, 0x08, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x48, 0x65, 0x78, 0x18, 0x68, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x48, 0x65, 0x78, 0x42, 0x1e, 0x5a, 0x1c, 0x70, 0x6b, 0x67, 0x2f, 0x72,
-	0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x64, 0x68, 0x63, 0x70, 0x2f, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-	0x73, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x22, 0x68, 0x0a, 0x0a, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x12,
+	0x1d, 0x0a, 0x09, 0x64, 0x61, 0x74, 0x61, 0x5f, 0x62, 0x79, 0x74, 0x65, 0x18, 0x0a, 0x20, 0x01,
+	0x28, 0x0c, 0x48, 0x00, 0x52, 0x08, 0x64, 0x61, 0x74, 0x61, 0x42, 0x79, 0x74, 0x65, 0x12, 0x10,
+	0x0a, 0x02, 0x69, 0x70, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x02, 0x69, 0x70,
+	0x12, 0x21, 0x0a, 0x0b, 0x64, 0x61, 0x74, 0x61, 0x5f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x18,
+	0x0c, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0a, 0x64, 0x61, 0x74, 0x61, 0x53, 0x74, 0x72,
+	0x69, 0x6e, 0x67, 0x42, 0x06, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x3b, 0x0a, 0x06, 0x4f,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x61, 0x67, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0d, 0x52, 0x03, 0x74, 0x61, 0x67, 0x12, 0x1f, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18,
+	0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61,
+	0x74, 0x61, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x42, 0x1e, 0x5a, 0x1c, 0x70, 0x6b, 0x67, 0x2f,
+	0x72, 0x6f, 0x6c, 0x65, 0x73, 0x2f, 0x64, 0x68, 0x63, 0x70, 0x2f, 0x6f, 0x70, 0x74, 0x69, 0x6f,
+	0x6e, 0x73, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -149,16 +202,18 @@ func file_protobuf_role_dhcp_option_proto_rawDescGZIP() []byte {
 	return file_protobuf_role_dhcp_option_proto_rawDescData
 }
 
-var file_protobuf_role_dhcp_option_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_protobuf_role_dhcp_option_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_protobuf_role_dhcp_option_proto_goTypes = []any{
-	(*Option)(nil), // 0: Option
+	(*OptionData)(nil), // 0: OptionData
+	(*Option)(nil),     // 1: Option
 }
 var file_protobuf_role_dhcp_option_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: Option.data:type_name -> OptionData
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_protobuf_role_dhcp_option_proto_init() }
@@ -168,6 +223,18 @@ func file_protobuf_role_dhcp_option_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_protobuf_role_dhcp_option_proto_msgTypes[0].Exporter = func(v any, i int) any {
+			switch v := v.(*OptionData); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_protobuf_role_dhcp_option_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Option); i {
 			case 0:
 				return &v.state
@@ -180,13 +247,18 @@ func file_protobuf_role_dhcp_option_proto_init() {
 			}
 		}
 	}
+	file_protobuf_role_dhcp_option_proto_msgTypes[0].OneofWrappers = []any{
+		(*OptionData_DataByte)(nil),
+		(*OptionData_Ip)(nil),
+		(*OptionData_DataString)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_protobuf_role_dhcp_option_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -5,7 +5,6 @@ import (
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
-	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/tests"
 	"github.com/stretchr/testify/assert"
@@ -16,10 +15,10 @@ func testScope() dhcp.Scope {
 		Name:       tests.RandomString(),
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
-		Options: []*optTypes.Option{
+		Options: []*types.DHCPOption{
 			{
-				TagName:     types.TagNameRouter,
-				ValueLegacy: "10.200.0.1/24",
+				TagName: types.TagNameRouter,
+				Value:   types.OptionValue("10.200.0.1/24"),
 			},
 		},
 		IPAM: map[string]string{
@@ -75,10 +74,10 @@ func TestAPIScopesPut(t *testing.T) {
 		Name:       name,
 		SubnetCIDR: "10.200.0.0/24",
 		Default:    true,
-		Options: []*optTypes.Option{
+		Options: []*types.DHCPOption{
 			{
-				TagName:     types.TagNameRouter,
-				ValueLegacy: "10.200.0.1/24",
+				TagName: types.TagNameRouter,
+				Value:   types.OptionValue("10.200.0.1/24"),
 			},
 		},
 		IPAM: map[string]string{
@@ -99,10 +98,10 @@ func TestAPIScopesPut(t *testing.T) {
 		dhcp.Scope{
 			SubnetCIDR: "10.200.0.0/24",
 			Default:    true,
-			Options: []*optTypes.Option{
+			Options: []*types.DHCPOption{
 				{
-					TagName:     types.TagNameRouter,
-					ValueLegacy: "10.200.0.1/24",
+					TagName: types.TagNameRouter,
+					Value:   types.OptionValue("10.200.0.1/24"),
 				},
 			},
 			IPAM: map[string]string{

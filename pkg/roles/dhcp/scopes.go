@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/roles"
-	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -34,11 +33,11 @@ type Scope struct {
 	DNS  *ScopeDNS         `json:"dns"`
 	IPAM map[string]string `json:"ipam"`
 
-	SubnetCIDR string             `json:"subnetCidr"`
-	Options    []*optTypes.Option `json:"options"`
-	TTL        int64              `json:"ttl"`
-	Default    bool               `json:"default"`
-	Hook       string             `json:"hook"`
+	SubnetCIDR string              `json:"subnetCidr"`
+	Options    []*types.DHCPOption `json:"options"`
+	TTL        int64               `json:"ttl"`
+	Default    bool                `json:"default"`
+	Hook       string              `json:"hook"`
 
 	cidr    netip.Prefix
 	etcdKey string

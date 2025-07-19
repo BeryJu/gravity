@@ -5,7 +5,8 @@ option go_package = "pkg/roles/dhcp/options/types";
 enum DataType {
     BYTE = 0;
     IP_ADDRESS = 1;
-    STRING = 2;
+    IP_MASK = 2;
+    STRING = 3;
 }
 
 message OptionDefinition {

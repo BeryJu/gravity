@@ -2,19 +2,15 @@ syntax = "proto3";
 
 option go_package = "pkg/roles/dhcp/options/types";
 
-message Option {
-    string def = 1;
-    repeated bytes value = 2 [json_name="valueBytes"];
+message OptionData {
+    oneof data {
+        bytes data_byte = 10;
+        bytes ip = 11;
+        string data_string = 12;
+    }
+}
 
-    // Legacy fields
-    uint32 tag = 100;
-    string tagName = 101;
-    string valueLegacy = 102 [json_name="value"];
-    repeated string value64  = 103;
-    repeated string valueHex = 104;
-	// Tag      *uint8   `json:"tag"`
-	// TagName  string   `json:"tagName"`
-	// Value    *string  `json:"value"`
-	// Value64  []string `json:"value64"`
-	// ValueHex []string `json:"valueHex"`
+message Option {
+    uint32 tag = 1;
+    repeated OptionData data = 2;
 }

@@ -8,58 +8,75 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+func OptionsIP() []dhcpv4.OptionCode {
+	return []dhcpv4.OptionCode{
+		dhcpv4.OptionBroadcastAddress,
+		dhcpv4.OptionRequestedIPAddress,
+		dhcpv4.OptionServerIdentifier,
+	}
+}
+
+func OptionsIPS() []dhcpv4.OptionCode {
+	return []dhcpv4.OptionCode{
+		dhcpv4.OptionRouter,
+		dhcpv4.OptionNTPServers,
+		dhcpv4.OptionDomainNameServer,
+	}
+}
+
+func OptionsMask() []dhcpv4.OptionCode {
+	return []dhcpv4.OptionCode{
+		dhcpv4.OptionSubnetMask,
+	}
+}
+
+func OptionsString() []dhcpv4.OptionCode {
+	return []dhcpv4.OptionCode{
+		dhcpv4.OptionHostName,
+		dhcpv4.OptionDomainName,
+		dhcpv4.OptionRootPath,
+		dhcpv4.OptionBootfileName,
+		dhcpv4.OptionTFTPServerName,
+		dhcpv4.OptionClassIdentifier,
+		dhcpv4.OptionUserClassInformation,
+		// dhcpv4.OptionMessage,
+	}
+}
+
 func Bootstrap(r roles.Instance) func(ev *roles.Event) {
 	return func(ev *roles.Event) {
-		opts := []*types.OptionDefinition{
-			{
-				Name:        "Subnet Mask",
-				Code:        int32(dhcpv4.OptionSubnetMask.Code()),
-				IsArray:     false,
-				Type:        types.DataType_IP_ADDRESS,
-				Description: "Set the subnet mask",
-			},
-			{
-				Name:        "Router",
-				Code:        int32(dhcpv4.OptionRouter.Code()),
-				IsArray:     false,
-				Type:        types.DataType_IP_ADDRESS,
-				Description: "Set the router",
-			},
-			{
-				Name:        "Time server",
-				Code:        int32(dhcpv4.OptionTimeServer.Code()),
-				IsArray:     true,
-				Type:        types.DataType_IP_ADDRESS,
-				Description: "Set the time server(s)",
-			},
-			{
-				Name:        "Domain name server",
-				Code:        int32(dhcpv4.OptionDomainNameServer.Code()),
-				IsArray:     true,
-				Type:        types.DataType_IP_ADDRESS,
-				Description: "Set the DNS server(s)",
-			},
-			{
-				Name:        "Domain name",
-				Code:        int32(dhcpv4.OptionDomainName.Code()),
-				IsArray:     false,
-				Type:        types.DataType_STRING,
-				Description: "Set the DNS domain name",
-			},
-			{
-				Name:        "Bootfile",
-				Code:        int32(dhcpv4.OptionBootfileName.Code()),
-				IsArray:     false,
-				Type:        types.DataType_STRING,
-				Description: "Set the PXE Bootfile",
-			},
-			{
-				Name:        "TFTP Server",
-				Code:        int32(dhcpv4.OptionTFTPServerName.Code()),
-				IsArray:     false,
-				Type:        types.DataType_STRING,
-				Description: "Set the TFTP Server name",
-			},
+		opts := []*types.OptionDefinition{}
+		for _, opt := range OptionsIP() {
+			opts = append(opts, &types.OptionDefinition{
+				Name:    opt.String(),
+				Code:    int32(opt.Code()),
+				IsArray: false,
+				Type:    types.DataType_IP_ADDRESS,
+			})
+		}
+		for _, opt := range OptionsIPS() {
+			opts = append(opts, &types.OptionDefinition{
+				Name:    opt.String(),
+				Code:    int32(opt.Code()),
+				IsArray: true,
+				Type:    types.DataType_IP_ADDRESS,
+			})
+		}
+		for _, opt := range OptionsMask() {
+			opts = append(opts, &types.OptionDefinition{
+				Name:    opt.String(),
+				Code:    int32(opt.Code()),
+				IsArray: false,
+				Type:    types.DataType_IP_MASK,
+			})
+		}
+		for _, opt := range OptionsString() {
+			opts = append(opts, &types.OptionDefinition{
+				Name:    opt.String(),
+				Code:    int32(opt.Code()),
+				IsArray: false,
+				Type:    types.DataType_STRING,
+			})
 		}
 		for _, opt := range opts {
 			rv, err := proto.Marshal(opt)

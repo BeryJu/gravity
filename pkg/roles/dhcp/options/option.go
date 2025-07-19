@@ -34,7 +34,7 @@ func ApplyToResponse(
 
 func (op *Option) toDHCPv4() dhcpv4.Option {
 	v := []byte{}
-	for idx, vv := range op.Value {
+	for idx, vv := range op.Data {
 		if idx > 1 && !op.def.IsArray {
 			break
 		}
@@ -43,14 +43,16 @@ func (op *Option) toDHCPv4() dhcpv4.Option {
 	return dhcpv4.OptGeneric(dhcpv4.GenericOptionCode(op.def.Code), v)
 }
 
-func (op *Option) encodeSingle(raw []byte) []byte {
+func (op *Option) encodeSingle(raw *types.OptionData) []byte {
 	switch op.def.Type {
 	case types.DataType_BYTE:
-		return raw
+		return raw.GetDataByte()
 	case types.DataType_STRING:
-		return dhcpv4.String(string(raw)).ToBytes()
+		return dhcpv4.String(raw.GetDataString()).ToBytes()
 	case types.DataType_IP_ADDRESS:
-		return dhcpv4.IP(net.ParseIP(string(raw))).ToBytes()
+		return dhcpv4.IP(net.IP(raw.GetIp()))
+	case types.DataType_IP_MASK:
+		return dhcpv4.IPMask(net.IPMask(raw.GetIp()))
 	}
-	return []byte{}
+	return []byte{} // unreachable
 }
