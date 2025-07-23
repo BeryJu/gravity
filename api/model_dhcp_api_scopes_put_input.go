@@ -23,7 +23,7 @@ type DhcpAPIScopesPutInput struct {
 	Dns        *DhcpScopeDNS     `json:"dns,omitempty"`
 	Hook       string            `json:"hook"`
 	Ipam       map[string]string `json:"ipam,omitempty"`
-	Options    []TypesDHCPOption `json:"options"`
+	Options    []TypesOption     `json:"options"`
 	SubnetCidr string            `json:"subnetCidr"`
 	Ttl        int32             `json:"ttl"`
 }
@@ -32,7 +32,7 @@ type DhcpAPIScopesPutInput struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int32) *DhcpAPIScopesPutInput {
+func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesOption, subnetCidr string, ttl int32) *DhcpAPIScopesPutInput {
 	this := DhcpAPIScopesPutInput{}
 	this.Default = default_
 	this.Hook = hook
@@ -164,10 +164,10 @@ func (o *DhcpAPIScopesPutInput) SetIpam(v map[string]string) {
 }
 
 // GetOptions returns the Options field value
-// If the value is explicit nil, the zero value for []TypesDHCPOption will be returned
-func (o *DhcpAPIScopesPutInput) GetOptions() []TypesDHCPOption {
+// If the value is explicit nil, the zero value for []TypesOption will be returned
+func (o *DhcpAPIScopesPutInput) GetOptions() []TypesOption {
 	if o == nil {
-		var ret []TypesDHCPOption
+		var ret []TypesOption
 		return ret
 	}
 
@@ -177,7 +177,7 @@ func (o *DhcpAPIScopesPutInput) GetOptions() []TypesDHCPOption {
 // GetOptionsOk returns a tuple with the Options field value
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *DhcpAPIScopesPutInput) GetOptionsOk() ([]TypesDHCPOption, bool) {
+func (o *DhcpAPIScopesPutInput) GetOptionsOk() ([]TypesOption, bool) {
 	if o == nil || IsNil(o.Options) {
 		return nil, false
 	}
@@ -185,7 +185,7 @@ func (o *DhcpAPIScopesPutInput) GetOptionsOk() ([]TypesDHCPOption, bool) {
 }
 
 // SetOptions sets field value
-func (o *DhcpAPIScopesPutInput) SetOptions(v []TypesDHCPOption) {
+func (o *DhcpAPIScopesPutInput) SetOptions(v []TypesOption) {
 	o.Options = v
 }
 
