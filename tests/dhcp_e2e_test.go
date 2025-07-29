@@ -47,7 +47,7 @@ func TestDHCP_Simple(t *testing.T) {
 			"type":        "internal",
 			"should_ping": "true",
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 	}).Scope("network-A").Execute()
 	assert.NoError(t, err)
 
@@ -113,7 +113,7 @@ func TestDHCP_Parallel(t *testing.T) {
 			"range_start": "10.100.0.100",
 			"type":        "internal",
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 	}).Scope("network-A").Execute()
 	assert.NoError(t, err)
 
@@ -203,7 +203,7 @@ func TestDHCP_Relay(t *testing.T) {
 			"range_start": "10.100.0.100",
 			"type":        "internal",
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 	}).Scope("network-A").Execute()
 	assert.NoError(t, err)
 	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
@@ -214,7 +214,7 @@ func TestDHCP_Relay(t *testing.T) {
 			"range_start": "10.101.0.100",
 			"type":        "internal",
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 	}).Scope("network-B").Execute()
 	assert.NoError(t, err)
 
@@ -301,7 +301,7 @@ func TestDHCP_WOL(t *testing.T) {
 			"type":        "internal",
 			"should_ping": "true",
 		},
-		Options: []api.TypesDHCPOption{},
+		Options: []api.TypesOption{},
 	}).Scope("network-A").Execute()
 	assert.NoError(t, err)
 
