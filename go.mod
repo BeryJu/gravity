@@ -12,7 +12,7 @@ require (
 	github.com/avast/retry-go/v4 v4.6.1
 	github.com/coredns/caddy v1.1.2-0.20241029205200-8de985351a98
 	github.com/coredns/coredns v1.12.2
-	github.com/coreos/go-oidc/v3 v3.14.1
+	github.com/coreos/go-oidc/v3 v3.15.0
 	github.com/creasty/defaults v1.8.0
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/felixge/fgprof v0.9.5
