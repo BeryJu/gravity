@@ -36,7 +36,7 @@ jobs:
       - id: vars
         run: make ci--env
       - id: meta
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@v5.8.0
         with:
           flavor: |
             latest=false
