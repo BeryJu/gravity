@@ -213,9 +213,10 @@ test-env-stop:
 	cd ${PWD}/hack/tests/
 	docker compose --project-name gravity-test-env down -v
 
-install-deps: internal/resources/macoui internal/resources/blocky internal/resources/tftp
-	sudo apt-get install -y nmap libpcap-dev
+install-deps:
+	sudo apt-get install -y nmap libpcap-dev tshark
 	sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
+	$(MAKE) internal/resources/macoui internal/resources/blocky internal/resources/tftp
 
 test-local:
 	$(eval TEST_COUNT := 100)
