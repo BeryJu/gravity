@@ -175,7 +175,7 @@ gen-client-ts-publish: gen-client-ts
 	git add package*.json
 
 gen-external-dns:
-	wget https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/tags/v0.16.1/api/webhook.yaml -O pkg/externaldns/schema.yaml
+	wget https://kubernetes-sigs.github.io/external-dns/v0.18.0/api/webhook.yaml -O pkg/externaldns/schema.yaml
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
