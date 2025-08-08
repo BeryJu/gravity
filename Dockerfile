@@ -1,29 +1,29 @@
 # Stage 1: Build web
 FROM --platform=${BUILDPLATFORM} docker.io/library/node:24 AS web-builder
 
+ENV NODE_ENV=production
+
 WORKDIR /work
 
 COPY ./Makefile /work/Makefile
 COPY ./web/package.json /work/web/package.json
 COPY ./web/package-lock.json /work/web/package-lock.json
 
-RUN cd web && npm ci
+RUN make web-install
 
 COPY ./web /work/web
 
-ENV NODE_ENV=production
 RUN make web-build
 
 # Stage 2: Prepare external files
-FROM --platform=${BUILDPLATFORM} docker.io/library/debian:stable-slim AS downloader
+FROM --platform=${BUILDPLATFORM} docker.io/library/ubuntu:24.04 AS downloader
 
 WORKDIR /workspace
 COPY Makefile .
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends make curl ca-certificates && \
-    mkdir -p ./internal/macoui ./internal/blocky && \
-    make internal/resources/macoui internal/resources/blocky
+    apt-get install -y --no-install-recommends make curl ca-certificates tshark && \
+    make internal/resources/macoui internal/resources/blocky internal/resources/tftp
 
 # Stage 3: Build
 FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.24 AS builder

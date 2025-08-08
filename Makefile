@@ -84,11 +84,11 @@ website-watch:
 	open http://localhost:1313/ && hugo server --noBuildLock
 
 internal/resources/macoui:
-	mkdir -p internal/resources/macoui
-	curl -L https://raw.githubusercontent.com/wireshark/wireshark/6885d787fda5f74a2d1f9eeea443fecf8dd58528/manuf -o ${PWD}/internal/resources/macoui/db.txt
+	mkdir -p ${PWD}/internal/resources/macoui
+	tshark -G manuf > ${PWD}/internal/resources/macoui/db.txt
 
 internal/resources/blocky:
-	mkdir -p internal/resources/blocky
+	mkdir -p ${PWD}/internal/resources/blocky
 	curl -L https://adaway.org/hosts.txt -o ${PWD}/internal/resources/blocky/adaway.org.txt
 	curl -L https://big.oisd.nl/domainswild -o ${PWD}/internal/resources/blocky/big.oisd.nl.txt
 	curl -L https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o ${PWD}/internal/resources/blocky/StevenBlack.hosts.txt
@@ -97,7 +97,7 @@ internal/resources/blocky:
 	curl -L https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt -o ${PWD}/internal/resources/blocky/AdGuardSDNSFilter.txt
 
 internal/resources/tftp:
-	mkdir -p internal/resources/tftp
+	mkdir -p ${PWD}/internal/resources/tftp
 	curl -L https://boot.ipxe.org/ipxe.efi -o ${PWD}/internal/resources/tftp/ipxe.efi
 	curl -L https://boot.ipxe.org/undionly.kpxe -o ${PWD}/internal/resources/tftp/ipxe.undionly.kpxe
 	curl -L https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe -o ${PWD}/internal/resources/tftp/netboot.xyz.kpxe
