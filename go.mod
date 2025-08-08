@@ -49,7 +49,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.41.0
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
-	golang.org/x/net v0.42.0
+	golang.org/x/net v0.43.0
 	golang.org/x/oauth2 v0.30.0
 	golang.org/x/term v0.34.0
 	google.golang.org/protobuf v1.36.7
