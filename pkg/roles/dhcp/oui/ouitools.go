@@ -167,7 +167,7 @@ func byteIndex(s string, c byte) int {
 
 func (m *OuiDb) Load(file io.Reader) error {
 	// fieldsRe := regexp.MustCompile(`^(\S+)\t+(\S+)(\s+#\s+(\S.*))?`)
-	fieldsRe := regexp.MustCompile(`^(\S+)\t+(\S+)(\s+(\S.*))?`)
+	fieldsRe := regexp.MustCompile(`^(\S+)\s+(\S+)\s+(\S.*)?`)
 
 	re := regexp.MustCompile(`((?:(?:[0-9a-zA-Z]{2})[-:]){2,5}(?:[0-9a-zA-Z]{2}))(?:/(\w{1,2}))?`)
 
@@ -184,8 +184,8 @@ func (m *OuiDb) Load(file io.Reader) error {
 		// and full organization name
 		fields := fieldsRe.FindAllStringSubmatch(text, -1)
 		addr := fields[0][1]
-		if fields[0][4] != "" {
-			block.Organization = fields[0][4]
+		if fields[0][3] != "" {
+			block.Organization = fields[0][3]
 		} else {
 			block.Organization = fields[0][2]
 		}
