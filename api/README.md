@@ -243,8 +243,8 @@ Class | Method | HTTP request | Description
  - [TypesAPIMetricsGetOutput](docs/TypesAPIMetricsGetOutput.md)
  - [TypesAPIMetricsRecord](docs/TypesAPIMetricsRecord.md)
  - [TypesAPIMetricsRole](docs/TypesAPIMetricsRole.md)
- - [TypesDHCPOption](docs/TypesDHCPOption.md)
  - [TypesOIDCConfig](docs/TypesOIDCConfig.md)
+ - [TypesOption](docs/TypesOption.md)
 
 
 ## Documentation For Authorization
