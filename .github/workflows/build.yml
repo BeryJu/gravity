@@ -51,7 +51,7 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           subject-name: ghcr.io/beryju/gravity

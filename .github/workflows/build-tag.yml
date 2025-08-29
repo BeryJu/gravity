@@ -55,7 +55,7 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/beryju/gravity
           subject-digest: ${{ steps.push.outputs.digest }}
@@ -73,7 +73,7 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/beryju/gravity-external-dns
           subject-digest: ${{ steps.push-external-dns.outputs.digest }}
