@@ -52,7 +52,7 @@ services:
     volumes:
       - ./nginx:/usr/share/nginx/html
   dex:
-    image: ghcr.io/dexidp/dex:v2.43.1
+    image: ghcr.io/dexidp/dex:v2.44.0
     ports:
       - 5556:5556
     networks:
