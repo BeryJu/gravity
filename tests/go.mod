@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	beryju.io/gravity v0.0.0-00010101000000-000000000000
-	github.com/docker/docker v28.3.3+incompatible
+	github.com/docker/docker v28.4.0+incompatible
 	github.com/gorilla/securecookie v1.1.2
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.38.0
