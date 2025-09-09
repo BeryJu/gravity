@@ -33,11 +33,6 @@ export const resources = [
 // eslint-disable-next-line no-undef
 export const isProdBuild = process.env.NODE_ENV === "production";
 
-const codecovToken = () => {
-    // eslint-disable-next-line no-undef
-    return process.env.CODECOV_TOKEN;
-};
-
 export default {
     input: "./src/main.ts",
     output: [
@@ -61,10 +56,11 @@ export default {
             copyOnce: false,
         }),
         codecovRollupPlugin({
-            enableBundleAnalysis: codecovToken() !== undefined,
             bundleName: "gravity-ui",
-            uploadToken: codecovToken(),
             gitService: "github",
+            oidc: {
+                useGitHubOIDC: true,
+            },
         }),
     ],
     watch: {

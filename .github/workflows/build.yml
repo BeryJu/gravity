@@ -76,6 +76,9 @@ jobs:
   build-web:
     name: Build Web
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -84,5 +87,3 @@ jobs:
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - run: make web-install gen-client-ts web-build
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

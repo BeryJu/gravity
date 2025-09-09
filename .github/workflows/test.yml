@@ -29,6 +29,9 @@ jobs:
   test-unittest:
     name: Test (unittest)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
@@ -58,15 +61,18 @@ jobs:
       - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: unittest
       - if: ${{ always() }}
         uses: codecov/test-results-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
   test-bench:
     name: Test (bench)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
@@ -87,11 +93,14 @@ jobs:
       - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: unittest
   test-e2e:
     name: Test (e2e)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
@@ -114,12 +123,12 @@ jobs:
       - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           flags: e2e
       - if: ${{ always() }}
         uses: codecov/test-results-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
   test-mark:
     if: always()
     needs:
