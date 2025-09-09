@@ -7,8 +7,11 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	instanceTypes "beryju.io/gravity/pkg/instance/types"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/roles/dhcp/options"
+	optTypes "beryju.io/gravity/pkg/roles/dhcp/options/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/storage/watcher"
@@ -26,8 +29,9 @@ type Role struct {
 	i   roles.Instance
 	ctx context.Context
 
-	scopes *watcher.Watcher[*Scope]
-	leases *watcher.Watcher[*Lease]
+	scopes            *watcher.Watcher[*Scope]
+	leases            *watcher.Watcher[*Lease]
+	optionDefinitions *watcher.Watcher[*optTypes.OptionDefinition]
 
 	cfg *RoleConfig
 
@@ -58,8 +62,8 @@ func New(instance roles.Instance) *Role {
 			s.calculateUsage()
 			return s, nil
 		},
-		instance.KV(),
-		instance.KV().Key(
+		r.i.KV(),
+		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 		).Prefix(true),
@@ -73,7 +77,7 @@ func New(instance roles.Instance) *Role {
 			}
 			return s, nil
 		},
-		instance.KV(),
+		r.i.KV(),
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,
@@ -85,9 +89,18 @@ func New(instance roles.Instance) *Role {
 		}),
 	)
 
+	r.optionDefinitions = watcher.NewProto[*optTypes.OptionDefinition](
+		r.i.KV(),
+		r.i.KV().Key(
+			types.KeyRole,
+			types.KeyOptionDefinitions,
+		).Prefix(true),
+	)
+
 	r.s4 = &handler4{
 		role: r,
 	}
+	r.i.AddEventListener(instanceTypes.EventTopicInstanceBootstrapped, options.Bootstrap(r.i))
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)

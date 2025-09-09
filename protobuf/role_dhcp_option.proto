@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/dhcp/options/types";
+
+message OptionData {
+    oneof data {
+        bytes data_byte = 10;
+        bytes ip = 11;
+        string data_string = 12;
+    }
+}
+
+message Option {
+    uint32 tag = 1;
+    repeated OptionData data = 2;
+}
