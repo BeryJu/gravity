@@ -16,8 +16,9 @@ import (
 )
 
 type APIMember struct {
-	Name string `json:"name"`
-	ID   uint64 `json:"id"`
+	Name      string `json:"name"`
+	ID        uint64 `json:"id"`
+	IsLearner bool   `json:"isLearner"`
 }
 type APIMembersOutput struct {
 	Members []APIMember `json:"members"`
@@ -31,8 +32,9 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 		}
 		for _, mem := range members.Members {
 			output.Members = append(output.Members, APIMember{
-				ID:   mem.ID,
-				Name: mem.Name,
+				ID:        mem.ID,
+				Name:      mem.Name,
+				IsLearner: mem.IsLearner,
 			})
 		}
 		return nil
@@ -55,6 +57,10 @@ type APIMemberJoinOutput struct {
 
 func (r *Role) APIClusterJoin() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberJoinInput, output *APIMemberJoinOutput) error {
+		if !r.clusterCanJoin(ctx) {
+			return status.Unavailable
+		}
+
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
 		initialCluster := []string{}
 		members, err := r.i.KV().MemberList(ctx)
@@ -92,12 +98,10 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			r.log.Warn("failed to put roles for node", zap.Error(err))
 		}
 
-		go func() {
-			_, err = r.i.KV().MemberAdd(context.Background(), []string{input.Peer})
-			if err != nil {
-				r.log.Warn("failed to add member", zap.Error(err))
-			}
-		}()
+		_, err = r.i.KV().MemberAddAsLearner(context.Background(), []string{input.Peer})
+		if err != nil {
+			r.log.Warn("failed to add member", zap.Error(err))
+		}
 
 		output.EtcdInitialCluster = strings.Join(initialCluster, ",")
 		return nil
@@ -105,7 +109,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 	u.SetName("etcd.join_member")
 	u.SetTitle("Etcd join")
 	u.SetTags("roles/etcd")
-	u.SetExpectedErrors(status.Internal)
+	u.SetExpectedErrors(status.Internal, status.Unavailable)
 	return u
 }
 

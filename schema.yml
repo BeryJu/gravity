@@ -1102,6 +1102,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestErrResponse'
           description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Service Unavailable
       summary: Etcd join
       tags:
       - roles/etcd
@@ -2487,6 +2493,8 @@ components:
         id:
           minimum: 0
           type: integer
+        isLearner:
+          type: boolean
         name:
           type: string
       type: object
