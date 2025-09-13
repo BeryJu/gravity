@@ -50,11 +50,31 @@ func NewUpdateAPIController(s UpdateAPIServicer, opts ...UpdateAPIOption) *Updat
 func (c *UpdateAPIController) Routes() Routes {
 	return Routes{
 		"SetRecords": Route{
+			"SetRecords",
 			strings.ToUpper("Post"),
 			"/records",
 			c.SetRecords,
 		},
 		"AdjustRecords": Route{
+			"AdjustRecords",
+			strings.ToUpper("Post"),
+			"/adjustendpoints",
+			c.AdjustRecords,
+		},
+	}
+}
+
+// OrderedRoutes returns all the api routes in a deterministic order for the UpdateAPIController
+func (c *UpdateAPIController) OrderedRoutes() []Route {
+	return []Route{
+		Route{
+			"SetRecords",
+			strings.ToUpper("Post"),
+			"/records",
+			c.SetRecords,
+		},
+		Route{
+			"AdjustRecords",
 			strings.ToUpper("Post"),
 			"/adjustendpoints",
 			c.AdjustRecords,

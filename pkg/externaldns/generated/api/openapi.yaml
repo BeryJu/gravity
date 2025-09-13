@@ -33,7 +33,7 @@ paths:
                 filters:
                 - example.com
               schema:
-                $ref: '#/components/schemas/filters'
+                $ref: "#/components/schemas/filters"
           description: |
             The list of domains this DNS provider serves.
         "500":
@@ -58,7 +58,7 @@ paths:
                 targets:
                 - 1.2.3.4
               schema:
-                $ref: '#/components/schemas/endpoints'
+                $ref: "#/components/schemas/endpoints"
           description: |
             Provided the list of DNS records successfully.
         "500":
@@ -80,7 +80,7 @@ paths:
                 recordTTL: 10
                 recordType: A
             schema:
-              $ref: '#/components/schemas/changes'
+              $ref: "#/components/schemas/changes"
         description: |
           This is the list of changes that need to be applied.  There are
           four lists of endpoints.  The `create` and `delete` lists are lists
@@ -113,7 +113,7 @@ paths:
               targets:
               - 1.2.3.4
             schema:
-              $ref: '#/components/schemas/endpoints'
+              $ref: "#/components/schemas/endpoints"
         description: |
           This is the list of changes to be applied.
         required: true
@@ -128,7 +128,7 @@ paths:
                 targets:
                 - 1.2.3.4
               schema:
-                $ref: '#/components/schemas/endpoints'
+                $ref: "#/components/schemas/endpoints"
           description: |
             Adjustments were accepted.
         "500":
@@ -163,7 +163,7 @@ components:
         recordType: A
         recordTTL: 60
       items:
-        $ref: '#/components/schemas/endpoint'
+        $ref: "#/components/schemas/endpoint"
       type: array
     endpoint:
       description: |
@@ -209,7 +209,7 @@ components:
           - name: foo
             value: bar
           items:
-            $ref: '#/components/schemas/providerSpecificProperty'
+            $ref: "#/components/schemas/providerSpecificProperty"
           type: array
       type: object
     targets:
@@ -262,7 +262,7 @@ components:
             recordType: A
             recordTTL: 60
           items:
-            $ref: '#/components/schemas/endpoint'
+            $ref: "#/components/schemas/endpoint"
           type: array
         updateOld:
           description: |
@@ -272,7 +272,7 @@ components:
             recordType: A
             recordTTL: 60
           items:
-            $ref: '#/components/schemas/endpoint'
+            $ref: "#/components/schemas/endpoint"
           type: array
         updateNew:
           description: |
@@ -282,7 +282,7 @@ components:
             recordType: A
             recordTTL: 60
           items:
-            $ref: '#/components/schemas/endpoint'
+            $ref: "#/components/schemas/endpoint"
           type: array
         delete:
           description: |
@@ -292,6 +292,6 @@ components:
             recordType: A
             recordTTL: 60
           items:
-            $ref: '#/components/schemas/endpoint'
+            $ref: "#/components/schemas/endpoint"
           type: array
       type: object
