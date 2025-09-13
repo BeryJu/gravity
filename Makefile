@@ -250,7 +250,6 @@ test-e2e-container-build:
 		.
 
 test-e2e: test-e2e-container-build
-	cd ${PWD}/tests
 	go get .
 	go test \
 		-p 1 \
@@ -260,6 +259,7 @@ test-e2e: test-e2e-container-build
 		-count=${TEST_COUNT} \
 		-timeout=300s \
 		-json \
+		-tags=e2e \
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee ${TEST_OUTPUT}
