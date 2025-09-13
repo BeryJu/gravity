@@ -20,12 +20,6 @@ var ulaPrefix = mustParseCIDR("fc00::/7")
 
 func (e *ExtConfig) checkInterface(i net.Interface) ([]net.IP, error) {
 	ips := []net.IP{}
-	if i.Flags&net.FlagLoopback != 0 {
-		return ips, errors.New("interface is loopback")
-	}
-	if i.Flags&net.FlagUp == 0 {
-		return ips, errors.New("interface is down")
-	}
 	addrs, err := i.Addrs()
 	if err != nil {
 		return ips, err
@@ -52,6 +46,9 @@ func (e *ExtConfig) GetInterfaceForIP(forIp net.IP) (*net.Interface, error) {
 		return nil, err
 	}
 	for _, i := range ifaces {
+		if i.Flags&net.FlagLoopback != 0 || i.Flags&net.FlagUp == 0 {
+			continue
+		}
 		addrs, err := e.checkInterface(i)
 		if err != nil {
 			e.intLog().Debug("failed to get IPs from interface", zap.Error(err), zap.String("if", i.Name))
