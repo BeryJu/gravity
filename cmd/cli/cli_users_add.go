@@ -22,7 +22,7 @@ var cliUsersAddCmd = &cobra.Command{
 			panic(err)
 		}
 		fmt.Println("")
-		hr, err := apiClient.RolesApiApi.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
+		hr, err := apiClient.RolesApiAPI.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
 			Password: string(bytePassword),
 			Permissions: []api.AuthPermission{
 				{

@@ -4,17 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Level** | Pointer to **string** |  | [optional] 
-**Logger** | Pointer to **string** |  | [optional] 
-**Message** | Pointer to **string** |  | [optional] 
-**Node** | Pointer to **string** |  | [optional] 
-**Time** | Pointer to **time.Time** |  | [optional] 
+**Fields** | **map[string]interface{}** |  | 
+**Level** | **string** |  | 
+**Logger** | **string** |  | 
+**Message** | **string** |  | 
+**Node** | **string** |  | 
+**Time** | **time.Time** |  | 
 
 ## Methods
 
 ### NewApiAPILogMessage
 
-`func NewApiAPILogMessage() *ApiAPILogMessage`
+`func NewApiAPILogMessage(fields map[string]interface{}, level string, logger string, message string, node string, time time.Time, ) *ApiAPILogMessage`
 
 NewApiAPILogMessage instantiates a new ApiAPILogMessage object
 This constructor will assign default values to properties that have it defined,
@@ -29,6 +30,36 @@ NewApiAPILogMessageWithDefaults instantiates a new ApiAPILogMessage object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
+### GetFields
+
+`func (o *ApiAPILogMessage) GetFields() map[string]interface{}`
+
+GetFields returns the Fields field if non-nil, zero value otherwise.
+
+### GetFieldsOk
+
+`func (o *ApiAPILogMessage) GetFieldsOk() (*map[string]interface{}, bool)`
+
+GetFieldsOk returns a tuple with the Fields field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFields
+
+`func (o *ApiAPILogMessage) SetFields(v map[string]interface{})`
+
+SetFields sets Fields field to given value.
+
+
+### SetFieldsNil
+
+`func (o *ApiAPILogMessage) SetFieldsNil(b bool)`
+
+ SetFieldsNil sets the value for Fields to be an explicit nil
+
+### UnsetFields
+`func (o *ApiAPILogMessage) UnsetFields()`
+
+UnsetFields ensures that no value is present for Fields, not even an explicit nil
 ### GetLevel
 
 `func (o *ApiAPILogMessage) GetLevel() string`
@@ -48,11 +79,6 @@ and a boolean to check if the value has been set.
 
 SetLevel sets Level field to given value.
 
-### HasLevel
-
-`func (o *ApiAPILogMessage) HasLevel() bool`
-
-HasLevel returns a boolean if a field has been set.
 
 ### GetLogger
 
@@ -73,11 +99,6 @@ and a boolean to check if the value has been set.
 
 SetLogger sets Logger field to given value.
 
-### HasLogger
-
-`func (o *ApiAPILogMessage) HasLogger() bool`
-
-HasLogger returns a boolean if a field has been set.
 
 ### GetMessage
 
@@ -98,11 +119,6 @@ and a boolean to check if the value has been set.
 
 SetMessage sets Message field to given value.
 
-### HasMessage
-
-`func (o *ApiAPILogMessage) HasMessage() bool`
-
-HasMessage returns a boolean if a field has been set.
 
 ### GetNode
 
@@ -123,11 +139,6 @@ and a boolean to check if the value has been set.
 
 SetNode sets Node field to given value.
 
-### HasNode
-
-`func (o *ApiAPILogMessage) HasNode() bool`
-
-HasNode returns a boolean if a field has been set.
 
 ### GetTime
 
@@ -148,11 +159,6 @@ and a boolean to check if the value has been set.
 
 SetTime sets Time field to given value.
 
-### HasTime
-
-`func (o *ApiAPILogMessage) HasTime() bool`
-
-HasTime returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

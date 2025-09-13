@@ -108,7 +108,7 @@ func (c *Converter) convertScope(sc Scope, ctx context.Context) error {
 		})
 	}
 	name := slug.Make(sc.Name)
-	_, err = c.a.RolesDhcpApi.DhcpPutScopes(ctx).Scope(name).DhcpAPIScopesPutInput(gscope).Execute()
+	_, err = c.a.RolesDhcpAPI.DhcpPutScopes(ctx).Scope(name).DhcpAPIScopesPutInput(gscope).Execute()
 	if err != nil {
 		c.l.Warn("failed to convert scope", zap.Error(err))
 		return err
@@ -150,7 +150,7 @@ func (c *Converter) convertReservation(scope string, ctx context.Context, r Rese
 		Hostname: r.Name,
 		Expiry:   api.PtrInt32(-1),
 	}
-	_, err := c.a.RolesDhcpApi.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(r.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
+	_, err := c.a.RolesDhcpAPI.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(r.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
 	return err
 }
 
@@ -165,6 +165,6 @@ func (c *Converter) convertLease(scope string, ctx context.Context, l Lease) err
 		Address:  l.IPAddress,
 		Hostname: l.HostName,
 	}
-	_, err := c.a.RolesDhcpApi.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(l.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
+	_, err := c.a.RolesDhcpAPI.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(l.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
 	return err
 }

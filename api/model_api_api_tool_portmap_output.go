@@ -60,7 +60,7 @@ func (o *ApiAPIToolPortmapOutput) GetPortsOk() ([]ApiAPIToolPortmapOutputPort, b
 
 // HasPorts returns a boolean if a field has been set.
 func (o *ApiAPIToolPortmapOutput) HasPorts() bool {
-	if o != nil && IsNil(o.Ports) {
+	if o != nil && !IsNil(o.Ports) {
 		return true
 	}
 

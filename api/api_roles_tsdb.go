@@ -20,12 +20,12 @@ import (
 	"time"
 )
 
-// RolesTsdbApiService RolesTsdbApi service
-type RolesTsdbApiService service
+// RolesTsdbAPIService RolesTsdbAPI service
+type RolesTsdbAPIService service
 
 type ApiTsdbGetMetricsRequest struct {
 	ctx        context.Context
-	ApiService *RolesTsdbApiService
+	ApiService *RolesTsdbAPIService
 	role       *TypesAPIMetricsRole
 	category   *string
 	extraKeys  *[]string
@@ -69,7 +69,7 @@ TsdbGetMetrics Retrieve Metrics
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTsdbGetMetricsRequest
 */
-func (a *RolesTsdbApiService) TsdbGetMetrics(ctx context.Context) ApiTsdbGetMetricsRequest {
+func (a *RolesTsdbAPIService) TsdbGetMetrics(ctx context.Context) ApiTsdbGetMetricsRequest {
 	return ApiTsdbGetMetricsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -79,7 +79,7 @@ func (a *RolesTsdbApiService) TsdbGetMetrics(ctx context.Context) ApiTsdbGetMetr
 // Execute executes the request
 //
 //	@return TypesAPIMetricsGetOutput
-func (a *RolesTsdbApiService) TsdbGetMetricsExecute(r ApiTsdbGetMetricsRequest) (*TypesAPIMetricsGetOutput, *http.Response, error) {
+func (a *RolesTsdbAPIService) TsdbGetMetricsExecute(r ApiTsdbGetMetricsRequest) (*TypesAPIMetricsGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -87,7 +87,7 @@ func (a *RolesTsdbApiService) TsdbGetMetricsExecute(r ApiTsdbGetMetricsRequest) 
 		localVarReturnValue *TypesAPIMetricsGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbApiService.TsdbGetMetrics")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbAPIService.TsdbGetMetrics")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -101,26 +101,26 @@ func (a *RolesTsdbApiService) TsdbGetMetricsExecute(r ApiTsdbGetMetricsRequest) 
 		return localVarReturnValue, nil, reportError("role is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "form", "")
 	if r.category != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "category", r.category, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "category", r.category, "form", "")
 	}
 	if r.extraKeys != nil {
 		t := *r.extraKeys
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "extraKeys", s.Index(i), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "extraKeys", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "extraKeys", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "extraKeys", t, "form", "multi")
 		}
 	}
 	if r.node != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "node", r.node, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "node", r.node, "form", "")
 	}
 	if r.since != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "since", r.since, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "since", r.since, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -188,7 +188,7 @@ func (a *RolesTsdbApiService) TsdbGetMetricsExecute(r ApiTsdbGetMetricsRequest) 
 
 type ApiTsdbGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesTsdbApiService
+	ApiService *RolesTsdbAPIService
 }
 
 func (r ApiTsdbGetRoleConfigRequest) Execute() (*TsdbAPIRoleConfigOutput, *http.Response, error) {
@@ -201,7 +201,7 @@ TsdbGetRoleConfig TSDB role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTsdbGetRoleConfigRequest
 */
-func (a *RolesTsdbApiService) TsdbGetRoleConfig(ctx context.Context) ApiTsdbGetRoleConfigRequest {
+func (a *RolesTsdbAPIService) TsdbGetRoleConfig(ctx context.Context) ApiTsdbGetRoleConfigRequest {
 	return ApiTsdbGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -211,7 +211,7 @@ func (a *RolesTsdbApiService) TsdbGetRoleConfig(ctx context.Context) ApiTsdbGetR
 // Execute executes the request
 //
 //	@return TsdbAPIRoleConfigOutput
-func (a *RolesTsdbApiService) TsdbGetRoleConfigExecute(r ApiTsdbGetRoleConfigRequest) (*TsdbAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesTsdbAPIService) TsdbGetRoleConfigExecute(r ApiTsdbGetRoleConfigRequest) (*TsdbAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -219,7 +219,7 @@ func (a *RolesTsdbApiService) TsdbGetRoleConfigExecute(r ApiTsdbGetRoleConfigReq
 		localVarReturnValue *TsdbAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbApiService.TsdbGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbAPIService.TsdbGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -286,7 +286,7 @@ func (a *RolesTsdbApiService) TsdbGetRoleConfigExecute(r ApiTsdbGetRoleConfigReq
 
 type ApiTsdbPutRoleConfigRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesTsdbApiService
+	ApiService             *RolesTsdbAPIService
 	tsdbAPIRoleConfigInput *TsdbAPIRoleConfigInput
 }
 
@@ -305,7 +305,7 @@ TsdbPutRoleConfig TSDB role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTsdbPutRoleConfigRequest
 */
-func (a *RolesTsdbApiService) TsdbPutRoleConfig(ctx context.Context) ApiTsdbPutRoleConfigRequest {
+func (a *RolesTsdbAPIService) TsdbPutRoleConfig(ctx context.Context) ApiTsdbPutRoleConfigRequest {
 	return ApiTsdbPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -313,14 +313,14 @@ func (a *RolesTsdbApiService) TsdbPutRoleConfig(ctx context.Context) ApiTsdbPutR
 }
 
 // Execute executes the request
-func (a *RolesTsdbApiService) TsdbPutRoleConfigExecute(r ApiTsdbPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesTsdbAPIService) TsdbPutRoleConfigExecute(r ApiTsdbPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbApiService.TsdbPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTsdbAPIService.TsdbPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}

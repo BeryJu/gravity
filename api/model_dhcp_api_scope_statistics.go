@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the DhcpAPIScopeStatistics type satisfies the MappedNullable interface at compile time
@@ -22,6 +24,8 @@ type DhcpAPIScopeStatistics struct {
 	Usable int32 `json:"usable"`
 	Used   int32 `json:"used"`
 }
+
+type _DhcpAPIScopeStatistics DhcpAPIScopeStatistics
 
 // NewDhcpAPIScopeStatistics instantiates a new DhcpAPIScopeStatistics object
 // This constructor will assign default values to properties that have it defined,
@@ -103,6 +107,44 @@ func (o DhcpAPIScopeStatistics) ToMap() (map[string]interface{}, error) {
 	toSerialize["usable"] = o.Usable
 	toSerialize["used"] = o.Used
 	return toSerialize, nil
+}
+
+func (o *DhcpAPIScopeStatistics) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"usable",
+		"used",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varDhcpAPIScopeStatistics := _DhcpAPIScopeStatistics{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varDhcpAPIScopeStatistics)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DhcpAPIScopeStatistics(varDhcpAPIScopeStatistics)
+
+	return err
 }
 
 type NullableDhcpAPIScopeStatistics struct {

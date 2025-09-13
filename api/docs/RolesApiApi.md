@@ -1,26 +1,26 @@
-# \RolesApiApi
+# \RolesApiAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ApiAuthConfig**](RolesApiApi.md#ApiAuthConfig) | **Get** /api/v1/auth/config | API Users
-[**ApiDeleteTokens**](RolesApiApi.md#ApiDeleteTokens) | **Delete** /api/v1/auth/tokens | Tokens
-[**ApiDeleteUsers**](RolesApiApi.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
-[**ApiExport**](RolesApiApi.md#ApiExport) | **Post** /api/v1/cluster/export | Export Cluster
-[**ApiGetLogMessages**](RolesApiApi.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
-[**ApiGetRoleConfig**](RolesApiApi.md#ApiGetRoleConfig) | **Get** /api/v1/roles/api | API role config
-[**ApiGetTokens**](RolesApiApi.md#ApiGetTokens) | **Get** /api/v1/auth/tokens | Tokens
-[**ApiGetUsers**](RolesApiApi.md#ApiGetUsers) | **Get** /api/v1/auth/users | API Users
-[**ApiImport**](RolesApiApi.md#ApiImport) | **Post** /api/v1/cluster/import | Import Cluster
-[**ApiLoginUser**](RolesApiApi.md#ApiLoginUser) | **Post** /api/v1/auth/login | API Users
-[**ApiPutRoleConfig**](RolesApiApi.md#ApiPutRoleConfig) | **Post** /api/v1/roles/api | API role config
-[**ApiPutTokens**](RolesApiApi.md#ApiPutTokens) | **Post** /api/v1/auth/tokens | Tokens
-[**ApiPutUsers**](RolesApiApi.md#ApiPutUsers) | **Post** /api/v1/auth/users | API Users
-[**ApiUsersMe**](RolesApiApi.md#ApiUsersMe) | **Get** /api/v1/auth/me | API Users
-[**ToolsPing**](RolesApiApi.md#ToolsPing) | **Post** /api/v1/tools/ping | Ping tool
-[**ToolsPortmap**](RolesApiApi.md#ToolsPortmap) | **Post** /api/v1/tools/portmap | Portmap tool
-[**ToolsTraceroute**](RolesApiApi.md#ToolsTraceroute) | **Post** /api/v1/tools/traceroute | Traceroute tool
+[**ApiAuthConfig**](RolesApiAPI.md#ApiAuthConfig) | **Get** /api/v1/auth/config | API Users
+[**ApiDeleteTokens**](RolesApiAPI.md#ApiDeleteTokens) | **Delete** /api/v1/auth/tokens | Tokens
+[**ApiDeleteUsers**](RolesApiAPI.md#ApiDeleteUsers) | **Delete** /api/v1/auth/users | API Users
+[**ApiExport**](RolesApiAPI.md#ApiExport) | **Post** /api/v1/cluster/export | Export Cluster
+[**ApiGetLogMessages**](RolesApiAPI.md#ApiGetLogMessages) | **Get** /api/v1/cluster/node/logs | Log messages
+[**ApiGetRoleConfig**](RolesApiAPI.md#ApiGetRoleConfig) | **Get** /api/v1/roles/api | API role config
+[**ApiGetTokens**](RolesApiAPI.md#ApiGetTokens) | **Get** /api/v1/auth/tokens | Tokens
+[**ApiGetUsers**](RolesApiAPI.md#ApiGetUsers) | **Get** /api/v1/auth/users | API Users
+[**ApiImport**](RolesApiAPI.md#ApiImport) | **Post** /api/v1/cluster/import | Import Cluster
+[**ApiLoginUser**](RolesApiAPI.md#ApiLoginUser) | **Post** /api/v1/auth/login | API Users
+[**ApiPutRoleConfig**](RolesApiAPI.md#ApiPutRoleConfig) | **Post** /api/v1/roles/api | API role config
+[**ApiPutTokens**](RolesApiAPI.md#ApiPutTokens) | **Post** /api/v1/auth/tokens | Tokens
+[**ApiPutUsers**](RolesApiAPI.md#ApiPutUsers) | **Post** /api/v1/auth/users | API Users
+[**ApiUsersMe**](RolesApiAPI.md#ApiUsersMe) | **Get** /api/v1/auth/me | API Users
+[**ToolsPing**](RolesApiAPI.md#ToolsPing) | **Post** /api/v1/tools/ping | Ping tool
+[**ToolsPortmap**](RolesApiAPI.md#ToolsPortmap) | **Post** /api/v1/tools/portmap | Portmap tool
+[**ToolsTraceroute**](RolesApiAPI.md#ToolsTraceroute) | **Post** /api/v1/tools/traceroute | Traceroute tool
 
 
 
@@ -36,23 +36,23 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiAuthConfig(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiAuthConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiAuthConfig`: AuthAPIConfigOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiAuthConfig`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiAuthConfig(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiAuthConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiAuthConfig`: AuthAPIConfigOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiAuthConfig`: %v\n", resp)
 }
 ```
 
@@ -95,22 +95,22 @@ Tokens
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    key := "key_example" // string | 
+	key := "key_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesApiApi.ApiDeleteTokens(context.Background()).Key(key).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiDeleteTokens``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesApiAPI.ApiDeleteTokens(context.Background()).Key(key).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiDeleteTokens``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -157,22 +157,22 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    username := "username_example" // string | 
+	username := "username_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesApiApi.ApiDeleteUsers(context.Background()).Username(username).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiDeleteUsers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesApiAPI.ApiDeleteUsers(context.Background()).Username(username).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiDeleteUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -219,24 +219,24 @@ Export Cluster
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIExportInput := *openapiclient.NewApiAPIExportInput() // ApiAPIExportInput |  (optional)
+	apiAPIExportInput := *openapiclient.NewApiAPIExportInput() // ApiAPIExportInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiExport(context.Background()).ApiAPIExportInput(apiAPIExportInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiExport``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiExport`: ApiAPIExportOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiExport`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiExport(context.Background()).ApiAPIExportInput(apiAPIExportInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiExport``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiExport`: ApiAPIExportOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiExport`: %v\n", resp)
 }
 ```
 
@@ -283,23 +283,23 @@ Log messages
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetLogMessages(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetLogMessages``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetLogMessages`: ApiAPILogMessages
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetLogMessages`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiGetLogMessages(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiGetLogMessages``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiGetLogMessages`: ApiAPILogMessages
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiGetLogMessages`: %v\n", resp)
 }
 ```
 
@@ -342,23 +342,23 @@ API role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetRoleConfig(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetRoleConfig`: ApiAPIRoleConfigOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetRoleConfig`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiGetRoleConfig(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiGetRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiGetRoleConfig`: ApiAPIRoleConfigOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiGetRoleConfig`: %v\n", resp)
 }
 ```
 
@@ -401,23 +401,23 @@ Tokens
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetTokens(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetTokens``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetTokens`: AuthAPITokensGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetTokens`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiGetTokens(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiGetTokens``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiGetTokens`: AuthAPITokensGetOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiGetTokens`: %v\n", resp)
 }
 ```
 
@@ -460,24 +460,24 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    username := "username_example" // string | Optional username of a user to get (optional)
+	username := "username_example" // string | Optional username of a user to get (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiGetUsers(context.Background()).Username(username).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiGetUsers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiGetUsers`: AuthAPIUsersGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiGetUsers`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiGetUsers(context.Background()).Username(username).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiGetUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiGetUsers`: AuthAPIUsersGetOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiGetUsers`: %v\n", resp)
 }
 ```
 
@@ -524,22 +524,22 @@ Import Cluster
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIImportInput := *openapiclient.NewApiAPIImportInput() // ApiAPIImportInput |  (optional)
+	apiAPIImportInput := *openapiclient.NewApiAPIImportInput() // ApiAPIImportInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesApiApi.ApiImport(context.Background()).ApiAPIImportInput(apiAPIImportInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiImport``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesApiAPI.ApiImport(context.Background()).ApiAPIImportInput(apiAPIImportInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiImport``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -586,24 +586,24 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    authAPILoginInput := *openapiclient.NewAuthAPILoginInput() // AuthAPILoginInput |  (optional)
+	authAPILoginInput := *openapiclient.NewAuthAPILoginInput() // AuthAPILoginInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiLoginUser(context.Background()).AuthAPILoginInput(authAPILoginInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiLoginUser``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiLoginUser`: AuthAPILoginOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiLoginUser`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiLoginUser(context.Background()).AuthAPILoginInput(authAPILoginInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiLoginUser``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiLoginUser`: AuthAPILoginOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiLoginUser`: %v\n", resp)
 }
 ```
 
@@ -650,22 +650,22 @@ API role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIRoleConfigInput := *openapiclient.NewApiAPIRoleConfigInput(*openapiclient.NewApiRoleConfig()) // ApiAPIRoleConfigInput |  (optional)
+	apiAPIRoleConfigInput := *openapiclient.NewApiAPIRoleConfigInput(*openapiclient.NewApiRoleConfig()) // ApiAPIRoleConfigInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesApiApi.ApiPutRoleConfig(context.Background()).ApiAPIRoleConfigInput(apiAPIRoleConfigInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiPutRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesApiAPI.ApiPutRoleConfig(context.Background()).ApiAPIRoleConfigInput(apiAPIRoleConfigInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiPutRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -712,24 +712,24 @@ Tokens
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    username := "username_example" // string | 
+	username := "username_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiPutTokens(context.Background()).Username(username).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiPutTokens``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiPutTokens`: AuthAPITokensPutOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiPutTokens`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiPutTokens(context.Background()).Username(username).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiPutTokens``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiPutTokens`: AuthAPITokensPutOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiPutTokens`: %v\n", resp)
 }
 ```
 
@@ -776,23 +776,23 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    username := "username_example" // string | 
-    authAPIUsersPutInput := *openapiclient.NewAuthAPIUsersPutInput("Password_example", []openapiclient.AuthPermission{*openapiclient.NewAuthPermission()}) // AuthAPIUsersPutInput |  (optional)
+	username := "username_example" // string | 
+	authAPIUsersPutInput := *openapiclient.NewAuthAPIUsersPutInput("Password_example", []openapiclient.AuthPermission{*openapiclient.NewAuthPermission()}) // AuthAPIUsersPutInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesApiApi.ApiPutUsers(context.Background()).Username(username).AuthAPIUsersPutInput(authAPIUsersPutInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiPutUsers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesApiAPI.ApiPutUsers(context.Background()).Username(username).AuthAPIUsersPutInput(authAPIUsersPutInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiPutUsers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -840,23 +840,23 @@ API Users
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ApiUsersMe(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ApiUsersMe``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ApiUsersMe`: AuthAPIMeOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ApiUsersMe`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ApiUsersMe(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ApiUsersMe``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ApiUsersMe`: AuthAPIMeOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ApiUsersMe`: %v\n", resp)
 }
 ```
 
@@ -899,24 +899,24 @@ Ping tool
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIToolPingInput := *openapiclient.NewApiAPIToolPingInput() // ApiAPIToolPingInput |  (optional)
+	apiAPIToolPingInput := *openapiclient.NewApiAPIToolPingInput() // ApiAPIToolPingInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ToolsPing(context.Background()).ApiAPIToolPingInput(apiAPIToolPingInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsPing``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ToolsPing`: ApiAPIToolPingOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsPing`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ToolsPing(context.Background()).ApiAPIToolPingInput(apiAPIToolPingInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ToolsPing``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ToolsPing`: ApiAPIToolPingOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ToolsPing`: %v\n", resp)
 }
 ```
 
@@ -963,24 +963,24 @@ Portmap tool
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIToolPortmapInput := *openapiclient.NewApiAPIToolPortmapInput() // ApiAPIToolPortmapInput |  (optional)
+	apiAPIToolPortmapInput := *openapiclient.NewApiAPIToolPortmapInput() // ApiAPIToolPortmapInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ToolsPortmap(context.Background()).ApiAPIToolPortmapInput(apiAPIToolPortmapInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsPortmap``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ToolsPortmap`: ApiAPIToolPortmapOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsPortmap`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ToolsPortmap(context.Background()).ApiAPIToolPortmapInput(apiAPIToolPortmapInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ToolsPortmap``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ToolsPortmap`: ApiAPIToolPortmapOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ToolsPortmap`: %v\n", resp)
 }
 ```
 
@@ -1027,24 +1027,24 @@ Traceroute tool
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    apiAPIToolTracerouteInput := *openapiclient.NewApiAPIToolTracerouteInput() // ApiAPIToolTracerouteInput |  (optional)
+	apiAPIToolTracerouteInput := *openapiclient.NewApiAPIToolTracerouteInput() // ApiAPIToolTracerouteInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesApiApi.ToolsTraceroute(context.Background()).ApiAPIToolTracerouteInput(apiAPIToolTracerouteInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesApiApi.ToolsTraceroute``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ToolsTraceroute`: ApiAPIToolTracerouteOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesApiApi.ToolsTraceroute`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesApiAPI.ToolsTraceroute(context.Background()).ApiAPIToolTracerouteInput(apiAPIToolTracerouteInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesApiAPI.ToolsTraceroute``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ToolsTraceroute`: ApiAPIToolTracerouteOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesApiAPI.ToolsTraceroute`: %v\n", resp)
 }
 ```
 
