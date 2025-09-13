@@ -52,6 +52,26 @@ func (r *Role) clusterStatus(ctx context.Context) (*ClusterStatus, error) {
 	return cst, nil
 }
 
+func (cst *ClusterStatus) FindLeaderStatus() (uint64, *clientv3.StatusResponse) {
+	for i := range cst.MemberStatus {
+		status := cst.MemberStatus[i].Raw
+		if status.Leader == status.Header.MemberId {
+			return status.Header.MemberId, status
+		}
+	}
+	return 0, nil
+}
+
+func (cst *ClusterStatus) FindLearnerStatus() (uint64, *clientv3.StatusResponse) {
+	for i := range cst.MemberStatus {
+		status := cst.MemberStatus[i].Raw
+		if status.IsLearner {
+			return status.Header.MemberId, status
+		}
+	}
+	return 0, nil
+}
+
 func (r *Role) clusterCanJoin(ctx context.Context) bool {
 	st, err := r.clusterStatus(ctx)
 	if err != nil {
@@ -61,6 +81,17 @@ func (r *Role) clusterCanJoin(ctx context.Context) bool {
 	if st.Healthy != nil {
 		r.log.Warn("cluster is not healthy", zap.Error(err))
 		return false
+	}
+	_, lds := st.FindLeaderStatus()
+	if id, st := st.FindLearnerStatus(); id > 0 {
+		r.log.Info("Found learner")
+		if IsLearnerReady(lds, st) {
+			r.log.Info("Learner is ready to be promoted")
+			r.i.KV().MemberPromote(ctx, id)
+		} else {
+			r.log.Info("Learner is not ready yet")
+			return false
+		}
 	}
 	return true
 }
