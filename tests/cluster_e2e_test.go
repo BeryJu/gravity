@@ -77,7 +77,7 @@ func TestCluster_Join(t *testing.T) {
 
 	// Check that all nodes are in the cluster
 	ac := gr.APIClient()
-	c, _, err := ac.ClusterApi.ClusterGetClusterInfo(ctx).Execute()
+	c, _, err := ac.ClusterAPI.ClusterGetClusterInfo(ctx).Execute()
 	assert.NoError(t, err)
 	assert.Len(t, c.Instances, 2)
 }
