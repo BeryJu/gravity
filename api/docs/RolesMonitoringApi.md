@@ -1,11 +1,11 @@
-# \RolesMonitoringApi
+# \RolesMonitoringAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**MonitoringGetRoleConfig**](RolesMonitoringApi.md#MonitoringGetRoleConfig) | **Get** /api/v1/roles/monitoring | Monitoring role config
-[**MonitoringPutRoleConfig**](RolesMonitoringApi.md#MonitoringPutRoleConfig) | **Post** /api/v1/roles/monitoring | Monitoring role config
+[**MonitoringGetRoleConfig**](RolesMonitoringAPI.md#MonitoringGetRoleConfig) | **Get** /api/v1/roles/monitoring | Monitoring role config
+[**MonitoringPutRoleConfig**](RolesMonitoringAPI.md#MonitoringPutRoleConfig) | **Post** /api/v1/roles/monitoring | Monitoring role config
 
 
 
@@ -21,23 +21,23 @@ Monitoring role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesMonitoringApi.MonitoringGetRoleConfig(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesMonitoringApi.MonitoringGetRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MonitoringGetRoleConfig`: MonitoringAPIRoleConfigOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesMonitoringApi.MonitoringGetRoleConfig`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesMonitoringAPI.MonitoringGetRoleConfig(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesMonitoringAPI.MonitoringGetRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `MonitoringGetRoleConfig`: MonitoringAPIRoleConfigOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesMonitoringAPI.MonitoringGetRoleConfig`: %v\n", resp)
 }
 ```
 
@@ -80,22 +80,22 @@ Monitoring role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    monitoringAPIRoleConfigInput := *openapiclient.NewMonitoringAPIRoleConfigInput(*openapiclient.NewMonitoringRoleConfig()) // MonitoringAPIRoleConfigInput |  (optional)
+	monitoringAPIRoleConfigInput := *openapiclient.NewMonitoringAPIRoleConfigInput(*openapiclient.NewMonitoringRoleConfig()) // MonitoringAPIRoleConfigInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesMonitoringApi.MonitoringPutRoleConfig(context.Background()).MonitoringAPIRoleConfigInput(monitoringAPIRoleConfigInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesMonitoringApi.MonitoringPutRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesMonitoringAPI.MonitoringPutRoleConfig(context.Background()).MonitoringAPIRoleConfigInput(monitoringAPIRoleConfigInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesMonitoringAPI.MonitoringPutRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 

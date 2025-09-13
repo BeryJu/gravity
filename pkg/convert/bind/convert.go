@@ -81,7 +81,7 @@ func (c *Converter) Run(ctx context.Context) error {
 
 func (c *Converter) createZone(rr dns.RR, ctx context.Context) error {
 	_r := rr.(*dns.SOA)
-	_, err := c.a.RolesDnsApi.DnsPutZones(ctx).DnsAPIZonesPutInput(api.DnsAPIZonesPutInput{
+	_, err := c.a.RolesDnsAPI.DnsPutZones(ctx).DnsAPIZonesPutInput(api.DnsAPIZonesPutInput{
 		Authoritative: true,
 		DefaultTTL:    int32(_r.Expire),
 		HandlerConfigs: []map[string]interface{}{
@@ -135,7 +135,7 @@ func (c *Converter) convertRecord(rr dns.RR, ctx context.Context) error {
 	hasher := sha512.New()
 	hasher.Write([]byte(rr.String()))
 
-	_, err := c.a.RolesDnsApi.DnsPutRecords(ctx).
+	_, err := c.a.RolesDnsAPI.DnsPutRecords(ctx).
 		DnsAPIRecordsPutInput(req).
 		Zone(c.zone).
 		Hostname(relName).

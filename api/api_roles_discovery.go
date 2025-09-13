@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesDiscoveryApiService RolesDiscoveryApi service
-type RolesDiscoveryApiService service
+// RolesDiscoveryAPIService RolesDiscoveryAPI service
+type RolesDiscoveryAPIService service
 
 type ApiDiscoveryApplyDeviceRequest struct {
 	ctx                           context.Context
-	ApiService                    *RolesDiscoveryApiService
+	ApiService                    *RolesDiscoveryAPIService
 	identifier                    *string
 	discoveryAPIDevicesApplyInput *DiscoveryAPIDevicesApplyInput
 }
@@ -48,7 +48,7 @@ DiscoveryApplyDevice Apply Discovered devices
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryApplyDeviceRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryApplyDevice(ctx context.Context) ApiDiscoveryApplyDeviceRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryApplyDevice(ctx context.Context) ApiDiscoveryApplyDeviceRequest {
 	return ApiDiscoveryApplyDeviceRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -56,14 +56,14 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDevice(ctx context.Context) Api
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApplyDeviceRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApplyDeviceRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryApplyDevice")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryApplyDevice")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -77,7 +77,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 		return nil, reportError("identifier is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -159,7 +159,7 @@ func (a *RolesDiscoveryApiService) DiscoveryApplyDeviceExecute(r ApiDiscoveryApp
 
 type ApiDiscoveryDeleteDevicesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 	identifier *string
 }
 
@@ -178,7 +178,7 @@ DiscoveryDeleteDevices Discovery devices
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryDeleteDevicesRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryDeleteDevices(ctx context.Context) ApiDiscoveryDeleteDevicesRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryDeleteDevices(ctx context.Context) ApiDiscoveryDeleteDevicesRequest {
 	return ApiDiscoveryDeleteDevicesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -186,14 +186,14 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevices(ctx context.Context) A
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryDeleteDevicesRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryDeleteDevicesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryDeleteDevices")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryDeleteDevices")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -205,7 +205,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -275,7 +275,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteDevicesExecute(r ApiDiscoveryD
 
 type ApiDiscoveryDeleteSubnetsRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 	identifier *string
 }
 
@@ -294,7 +294,7 @@ DiscoveryDeleteSubnets Discovery Subnets
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryDeleteSubnetsRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnets(ctx context.Context) ApiDiscoveryDeleteSubnetsRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryDeleteSubnets(ctx context.Context) ApiDiscoveryDeleteSubnetsRequest {
 	return ApiDiscoveryDeleteSubnetsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -302,14 +302,14 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnets(ctx context.Context) A
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryDeleteSubnetsRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryDeleteSubnetsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryDeleteSubnets")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryDeleteSubnets")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -321,7 +321,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -391,7 +391,7 @@ func (a *RolesDiscoveryApiService) DiscoveryDeleteSubnetsExecute(r ApiDiscoveryD
 
 type ApiDiscoveryGetDevicesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 	identifier *string
 }
 
@@ -411,7 +411,7 @@ DiscoveryGetDevices Discovery devices
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryGetDevicesRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryGetDevices(ctx context.Context) ApiDiscoveryGetDevicesRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryGetDevices(ctx context.Context) ApiDiscoveryGetDevicesRequest {
 	return ApiDiscoveryGetDevicesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -421,7 +421,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevices(ctx context.Context) ApiD
 // Execute executes the request
 //
 //	@return DiscoveryAPIDevicesGetOutput
-func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetDevicesRequest) (*DiscoveryAPIDevicesGetOutput, *http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetDevicesRequest) (*DiscoveryAPIDevicesGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -429,7 +429,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 		localVarReturnValue *DiscoveryAPIDevicesGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryGetDevices")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryGetDevices")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -441,7 +441,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -509,7 +509,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetDevicesExecute(r ApiDiscoveryGetD
 
 type ApiDiscoveryGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 }
 
 func (r ApiDiscoveryGetRoleConfigRequest) Execute() (*DiscoveryAPIRoleConfigOutput, *http.Response, error) {
@@ -522,7 +522,7 @@ DiscoveryGetRoleConfig Discovery role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryGetRoleConfigRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfig(ctx context.Context) ApiDiscoveryGetRoleConfigRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryGetRoleConfig(ctx context.Context) ApiDiscoveryGetRoleConfigRequest {
 	return ApiDiscoveryGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -532,7 +532,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfig(ctx context.Context) A
 // Execute executes the request
 //
 //	@return DiscoveryAPIRoleConfigOutput
-func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfigExecute(r ApiDiscoveryGetRoleConfigRequest) (*DiscoveryAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryGetRoleConfigExecute(r ApiDiscoveryGetRoleConfigRequest) (*DiscoveryAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -540,7 +540,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfigExecute(r ApiDiscoveryG
 		localVarReturnValue *DiscoveryAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -607,7 +607,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetRoleConfigExecute(r ApiDiscoveryG
 
 type ApiDiscoveryGetSubnetsRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 	name       *string
 }
 
@@ -627,7 +627,7 @@ DiscoveryGetSubnets Discovery subnets
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryGetSubnetsRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryGetSubnets(ctx context.Context) ApiDiscoveryGetSubnetsRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryGetSubnets(ctx context.Context) ApiDiscoveryGetSubnetsRequest {
 	return ApiDiscoveryGetSubnetsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -637,7 +637,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnets(ctx context.Context) ApiD
 // Execute executes the request
 //
 //	@return DiscoveryAPISubnetsGetOutput
-func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetSubnetsRequest) (*DiscoveryAPISubnetsGetOutput, *http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetSubnetsRequest) (*DiscoveryAPISubnetsGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -645,7 +645,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 		localVarReturnValue *DiscoveryAPISubnetsGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryGetSubnets")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryGetSubnets")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -657,7 +657,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -725,7 +725,7 @@ func (a *RolesDiscoveryApiService) DiscoveryGetSubnetsExecute(r ApiDiscoveryGetS
 
 type ApiDiscoveryPutRoleConfigRequest struct {
 	ctx                         context.Context
-	ApiService                  *RolesDiscoveryApiService
+	ApiService                  *RolesDiscoveryAPIService
 	discoveryAPIRoleConfigInput *DiscoveryAPIRoleConfigInput
 }
 
@@ -744,7 +744,7 @@ DiscoveryPutRoleConfig Discovery role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryPutRoleConfigRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfig(ctx context.Context) ApiDiscoveryPutRoleConfigRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryPutRoleConfig(ctx context.Context) ApiDiscoveryPutRoleConfigRequest {
 	return ApiDiscoveryPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -752,14 +752,14 @@ func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfig(ctx context.Context) A
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -840,7 +840,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutRoleConfigExecute(r ApiDiscoveryP
 
 type ApiDiscoveryPutSubnetsRequest struct {
 	ctx                         context.Context
-	ApiService                  *RolesDiscoveryApiService
+	ApiService                  *RolesDiscoveryAPIService
 	identifier                  *string
 	discoveryAPISubnetsPutInput *DiscoveryAPISubnetsPutInput
 }
@@ -865,7 +865,7 @@ DiscoveryPutSubnets Discovery Subnets
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoveryPutSubnetsRequest
 */
-func (a *RolesDiscoveryApiService) DiscoveryPutSubnets(ctx context.Context) ApiDiscoveryPutSubnetsRequest {
+func (a *RolesDiscoveryAPIService) DiscoveryPutSubnets(ctx context.Context) ApiDiscoveryPutSubnetsRequest {
 	return ApiDiscoveryPutSubnetsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -873,14 +873,14 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnets(ctx context.Context) ApiD
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutSubnetsRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutSubnetsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoveryPutSubnets")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoveryPutSubnets")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -897,7 +897,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 		return nil, reportError("identifier must have less than 255 elements")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -968,7 +968,7 @@ func (a *RolesDiscoveryApiService) DiscoveryPutSubnetsExecute(r ApiDiscoveryPutS
 
 type ApiDiscoverySubnetStartRequest struct {
 	ctx        context.Context
-	ApiService *RolesDiscoveryApiService
+	ApiService *RolesDiscoveryAPIService
 	identifier *string
 	wait       *bool
 }
@@ -993,7 +993,7 @@ DiscoverySubnetStart Discovery Subnets
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDiscoverySubnetStartRequest
 */
-func (a *RolesDiscoveryApiService) DiscoverySubnetStart(ctx context.Context) ApiDiscoverySubnetStartRequest {
+func (a *RolesDiscoveryAPIService) DiscoverySubnetStart(ctx context.Context) ApiDiscoverySubnetStartRequest {
 	return ApiDiscoverySubnetStartRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1001,14 +1001,14 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStart(ctx context.Context) Api
 }
 
 // Execute executes the request
-func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySubnetStartRequest) (*http.Response, error) {
+func (a *RolesDiscoveryAPIService) DiscoverySubnetStartExecute(r ApiDiscoverySubnetStartRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryApiService.DiscoverySubnetStart")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDiscoveryAPIService.DiscoverySubnetStart")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1025,8 +1025,8 @@ func (a *RolesDiscoveryApiService) DiscoverySubnetStartExecute(r ApiDiscoverySub
 		return nil, reportError("wait is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

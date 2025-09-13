@@ -49,6 +49,19 @@ func NewListingAPIController(s ListingAPIServicer, opts ...ListingAPIOption) *Li
 func (c *ListingAPIController) Routes() Routes {
 	return Routes{
 		"GetRecords": Route{
+			"GetRecords",
+			strings.ToUpper("Get"),
+			"/records",
+			c.GetRecords,
+		},
+	}
+}
+
+// OrderedRoutes returns all the api routes in a deterministic order for the ListingAPIController
+func (c *ListingAPIController) OrderedRoutes() []Route {
+	return []Route{
+		Route{
+			"GetRecords",
 			strings.ToUpper("Get"),
 			"/records",
 			c.GetRecords,

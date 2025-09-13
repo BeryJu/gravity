@@ -13,13 +13,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPIConfigOutput'
+                $ref: "#/components/schemas/AuthAPIConfigOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -31,25 +31,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthAPILoginInput'
+              $ref: "#/components/schemas/AuthAPILoginInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPILoginOutput'
+                $ref: "#/components/schemas/AuthAPILoginOutput"
           description: OK
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Unauthorized
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -62,13 +62,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPIMeOutput'
+                $ref: "#/components/schemas/AuthAPIMeOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -91,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Tokens
       tags:
@@ -103,13 +103,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPITokensGetOutput'
+                $ref: "#/components/schemas/AuthAPITokensGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Tokens
       tags:
@@ -129,13 +129,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPITokensPutOutput'
+                $ref: "#/components/schemas/AuthAPITokensPutOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Tokens
       tags:
@@ -158,7 +158,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -180,13 +180,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthAPIUsersGetOutput'
+                $ref: "#/components/schemas/AuthAPIUsersGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -205,7 +205,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthAPIUsersPutInput'
+              $ref: "#/components/schemas/AuthAPIUsersPutInput"
       responses:
         "204":
           description: No Content
@@ -213,7 +213,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API Users
       tags:
@@ -234,7 +234,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BackupBackupStatus'
+                $ref: "#/components/schemas/BackupBackupStatus"
           description: OK
       summary: Backup start
       tags:
@@ -247,13 +247,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BackupAPIBackupStatusOutput'
+                $ref: "#/components/schemas/BackupAPIBackupStatusOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Backup status
       tags:
@@ -266,13 +266,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceAPIClusterInfoOutput'
+                $ref: "#/components/schemas/InstanceAPIClusterInfoOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Cluster
       tags:
@@ -284,19 +284,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIExportInput'
+              $ref: "#/components/schemas/ApiAPIExportInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIExportOutput'
+                $ref: "#/components/schemas/ApiAPIExportOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Export Cluster
       tags:
@@ -308,7 +308,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIImportInput'
+              $ref: "#/components/schemas/ApiAPIImportInput"
       responses:
         "204":
           description: No Content
@@ -316,7 +316,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Import Cluster
       tags:
@@ -329,13 +329,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceAPIInstanceInfo'
+                $ref: "#/components/schemas/InstanceAPIInstanceInfo"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Instance
       tags:
@@ -348,13 +348,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPILogMessages'
+                $ref: "#/components/schemas/ApiAPILogMessages"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Log messages
       tags:
@@ -366,7 +366,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InstanceAPIRoleRestartInput'
+              $ref: "#/components/schemas/InstanceAPIRoleRestartInput"
       responses:
         "204":
           description: No Content
@@ -374,13 +374,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Instance roles
       tags:
@@ -403,13 +403,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Scopes
       tags:
@@ -431,7 +431,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpAPIScopesGetOutput'
+                $ref: "#/components/schemas/DhcpAPIScopesGetOutput"
           description: OK
       summary: DHCP Scopes
       tags:
@@ -451,7 +451,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpAPIScopesPutInput'
+              $ref: "#/components/schemas/DhcpAPIScopesPutInput"
       responses:
         "204":
           description: No Content
@@ -459,13 +459,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Scopes
       tags:
@@ -485,25 +485,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpAPIScopesImportInput'
+              $ref: "#/components/schemas/DhcpAPIScopesImportInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpAPIScopesImportOutput'
+                $ref: "#/components/schemas/DhcpAPIScopesImportOutput"
           description: OK
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Scopes
       tags:
@@ -533,13 +533,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Leases
       tags:
@@ -568,13 +568,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpAPILeasesGetOutput'
+                $ref: "#/components/schemas/DhcpAPILeasesGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Leases
       tags:
@@ -602,7 +602,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpAPILeasesPutInput'
+              $ref: "#/components/schemas/DhcpAPILeasesPutInput"
       responses:
         "204":
           description: No Content
@@ -610,13 +610,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Leases
       tags:
@@ -646,13 +646,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP Leases
       tags:
@@ -675,13 +675,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveryAPIDevicesGetOutput'
+                $ref: "#/components/schemas/DiscoveryAPIDevicesGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery devices
       tags:
@@ -701,7 +701,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryAPIDevicesApplyInput'
+              $ref: "#/components/schemas/DiscoveryAPIDevicesApplyInput"
       responses:
         "204":
           description: No Content
@@ -709,19 +709,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "404":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Apply Discovered devices
       tags:
@@ -744,13 +744,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery devices
       tags:
@@ -773,13 +773,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery Subnets
       tags:
@@ -801,13 +801,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveryAPISubnetsGetOutput'
+                $ref: "#/components/schemas/DiscoveryAPISubnetsGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery subnets
       tags:
@@ -827,7 +827,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryAPISubnetsPutInput'
+              $ref: "#/components/schemas/DiscoveryAPISubnetsPutInput"
       responses:
         "204":
           description: No Content
@@ -835,13 +835,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery Subnets
       tags:
@@ -871,13 +871,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery Subnets
       tags:
@@ -900,13 +900,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Zones
       tags:
@@ -928,13 +928,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsAPIZonesGetOutput'
+                $ref: "#/components/schemas/DnsAPIZonesGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Zones
       tags:
@@ -954,7 +954,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsAPIZonesPutInput'
+              $ref: "#/components/schemas/DnsAPIZonesPutInput"
       responses:
         "204":
           description: No Content
@@ -962,13 +962,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Zones
       tags:
@@ -988,25 +988,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsAPIZonesImportInput'
+              $ref: "#/components/schemas/DnsAPIZonesImportInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsAPIZonesImportOutput'
+                $ref: "#/components/schemas/DnsAPIZonesImportOutput"
           description: OK
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Zones
       tags:
@@ -1050,19 +1050,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "404":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Records
       tags:
@@ -1105,25 +1105,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsAPIRecordsGetOutput'
+                $ref: "#/components/schemas/DnsAPIRecordsGetOutput"
           description: OK
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "404":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Records
       tags:
@@ -1159,7 +1159,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsAPIRecordsPutInput'
+              $ref: "#/components/schemas/DnsAPIRecordsPutInput"
       responses:
         "204":
           description: No Content
@@ -1167,19 +1167,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "404":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS Records
       tags:
@@ -1191,19 +1191,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EtcdAPIMemberJoinInput'
+              $ref: "#/components/schemas/EtcdAPIMemberJoinInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtcdAPIMemberJoinOutput'
+                $ref: "#/components/schemas/EtcdAPIMemberJoinOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Etcd join
       tags:
@@ -1216,13 +1216,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtcdAPIMembersOutput'
+                $ref: "#/components/schemas/EtcdAPIMembersOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Etcd members
       tags:
@@ -1246,7 +1246,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Etcd remove
       tags:
@@ -1259,7 +1259,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIRoleConfigOutput'
+                $ref: "#/components/schemas/ApiAPIRoleConfigOutput"
           description: OK
       summary: API role config
       tags:
@@ -1270,7 +1270,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIRoleConfigInput'
+              $ref: "#/components/schemas/ApiAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1278,13 +1278,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: API role config
       tags:
@@ -1297,7 +1297,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BackupAPIRoleConfigOutput'
+                $ref: "#/components/schemas/BackupAPIRoleConfigOutput"
           description: OK
       summary: Backup role config
       tags:
@@ -1308,7 +1308,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BackupAPIRoleConfigInput'
+              $ref: "#/components/schemas/BackupAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1316,13 +1316,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Backup role config
       tags:
@@ -1335,7 +1335,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DhcpAPIRoleConfigOutput'
+                $ref: "#/components/schemas/DhcpAPIRoleConfigOutput"
           description: OK
       summary: DHCP role config
       tags:
@@ -1346,7 +1346,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DhcpAPIRoleConfigInput'
+              $ref: "#/components/schemas/DhcpAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1354,13 +1354,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DHCP role config
       tags:
@@ -1373,7 +1373,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveryAPIRoleConfigOutput'
+                $ref: "#/components/schemas/DiscoveryAPIRoleConfigOutput"
           description: OK
       summary: Discovery role config
       tags:
@@ -1384,7 +1384,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryAPIRoleConfigInput'
+              $ref: "#/components/schemas/DiscoveryAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1392,13 +1392,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Discovery role config
       tags:
@@ -1411,7 +1411,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsAPIRoleConfigOutput'
+                $ref: "#/components/schemas/DnsAPIRoleConfigOutput"
           description: OK
       summary: DNS role config
       tags:
@@ -1422,7 +1422,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsAPIRoleConfigInput'
+              $ref: "#/components/schemas/DnsAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1430,13 +1430,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: DNS role config
       tags:
@@ -1449,7 +1449,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MonitoringAPIRoleConfigOutput'
+                $ref: "#/components/schemas/MonitoringAPIRoleConfigOutput"
           description: OK
       summary: Monitoring role config
       tags:
@@ -1460,7 +1460,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MonitoringAPIRoleConfigInput'
+              $ref: "#/components/schemas/MonitoringAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1468,13 +1468,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Monitoring role config
       tags:
@@ -1487,7 +1487,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TftpAPIRoleConfigOutput'
+                $ref: "#/components/schemas/TftpAPIRoleConfigOutput"
           description: OK
       summary: TFTP role config
       tags:
@@ -1498,7 +1498,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TftpAPIRoleConfigInput'
+              $ref: "#/components/schemas/TftpAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1506,13 +1506,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TFTP role config
       tags:
@@ -1525,7 +1525,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TsdbAPIRoleConfigOutput'
+                $ref: "#/components/schemas/TsdbAPIRoleConfigOutput"
           description: OK
       summary: TSDB role config
       tags:
@@ -1536,7 +1536,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TsdbAPIRoleConfigInput'
+              $ref: "#/components/schemas/TsdbAPIRoleConfigInput"
       responses:
         "204":
           description: No Content
@@ -1544,13 +1544,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Bad Request
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TSDB role config
       tags:
@@ -1580,7 +1580,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TFTP Files
       tags:
@@ -1592,13 +1592,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TftpAPIFilesGetOutput'
+                $ref: "#/components/schemas/TftpAPIFilesGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TFTP Files
       tags:
@@ -1609,7 +1609,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TftpAPIFilesPutInput'
+              $ref: "#/components/schemas/TftpAPIFilesPutInput"
       responses:
         "204":
           description: No Content
@@ -1617,7 +1617,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TFTP Files
       tags:
@@ -1645,19 +1645,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TftpAPIFilesDownloadOutput'
+                $ref: "#/components/schemas/TftpAPIFilesDownloadOutput"
           description: OK
         "404":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Not Found
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: TFTP Files
       tags:
@@ -1669,19 +1669,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIToolPingInput'
+              $ref: "#/components/schemas/ApiAPIToolPingInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIToolPingOutput'
+                $ref: "#/components/schemas/ApiAPIToolPingOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Ping tool
       tags:
@@ -1693,19 +1693,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIToolPortmapInput'
+              $ref: "#/components/schemas/ApiAPIToolPortmapInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIToolPortmapOutput'
+                $ref: "#/components/schemas/ApiAPIToolPortmapOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Portmap tool
       tags:
@@ -1717,19 +1717,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiAPIToolTracerouteInput'
+              $ref: "#/components/schemas/ApiAPIToolTracerouteInput"
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiAPIToolTracerouteOutput'
+                $ref: "#/components/schemas/ApiAPIToolTracerouteOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Traceroute tool
       tags:
@@ -1743,7 +1743,7 @@ paths:
         name: role
         required: true
         schema:
-          $ref: '#/components/schemas/TypesAPIMetricsRole'
+          $ref: "#/components/schemas/TypesAPIMetricsRole"
         style: form
       - explode: true
         in: query
@@ -1785,13 +1785,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TypesAPIMetricsGetOutput'
+                $ref: "#/components/schemas/TypesAPIMetricsGetOutput"
           description: OK
         "500":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestErrResponse'
+                $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
       summary: Retrieve Metrics
       tags:
@@ -1815,7 +1815,7 @@ components:
       properties:
         entries:
           items:
-            $ref: '#/components/schemas/ApiAPITransportEntry'
+            $ref: "#/components/schemas/ApiAPITransportEntry"
           nullable: true
           type: array
       type: object
@@ -1829,7 +1829,7 @@ components:
       properties:
         entries:
           items:
-            $ref: '#/components/schemas/ApiAPITransportEntry'
+            $ref: "#/components/schemas/ApiAPITransportEntry"
           nullable: true
           type: array
       type: object
@@ -1839,8 +1839,14 @@ components:
         level: level
         logger: logger
         time: 2000-01-23T04:56:07.000+00:00
+        fields:
+          key: ""
         message: message
       properties:
+        fields:
+          additionalProperties: {}
+          nullable: true
+          type: object
         level:
           type: string
         logger:
@@ -1852,6 +1858,13 @@ components:
         time:
           format: date-time
           type: string
+      required:
+      - fields
+      - level
+      - logger
+      - message
+      - node
+      - time
       type: object
     ApiAPILogMessages:
       example:
@@ -1860,16 +1873,20 @@ components:
           level: level
           logger: logger
           time: 2000-01-23T04:56:07.000+00:00
+          fields:
+            key: ""
           message: message
         - node: node
           level: level
           logger: logger
           time: 2000-01-23T04:56:07.000+00:00
+          fields:
+            key: ""
           message: message
       properties:
         messages:
           items:
-            $ref: '#/components/schemas/ApiAPILogMessage'
+            $ref: "#/components/schemas/ApiAPILogMessage"
           nullable: true
           type: array
       type: object
@@ -1891,7 +1908,7 @@ components:
             issuer: issuer
       properties:
         config:
-          $ref: '#/components/schemas/ApiRoleConfig'
+          $ref: "#/components/schemas/ApiRoleConfig"
       required:
       - config
       type: object
@@ -1913,7 +1930,7 @@ components:
             issuer: issuer
       properties:
         config:
-          $ref: '#/components/schemas/ApiRoleConfig'
+          $ref: "#/components/schemas/ApiRoleConfig"
       required:
       - config
       type: object
@@ -1973,7 +1990,7 @@ components:
       properties:
         ports:
           items:
-            $ref: '#/components/schemas/ApiAPIToolPortmapOutputPort'
+            $ref: "#/components/schemas/ApiAPIToolPortmapOutputPort"
           nullable: true
           type: array
       type: object
@@ -2013,7 +2030,7 @@ components:
       properties:
         hops:
           items:
-            $ref: '#/components/schemas/ApiAPIToolTracerouteOutputHop'
+            $ref: "#/components/schemas/ApiAPIToolTracerouteOutputHop"
           nullable: true
           type: array
       type: object
@@ -2061,7 +2078,7 @@ components:
         listenOverride:
           type: string
         oidc:
-          $ref: '#/components/schemas/TypesOIDCConfig'
+          $ref: "#/components/schemas/TypesOIDCConfig"
         port:
           type: integer
         sessionDuration:
@@ -2112,7 +2129,7 @@ components:
           type: boolean
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: "#/components/schemas/AuthPermission"
           nullable: true
           type: array
         username:
@@ -2145,7 +2162,7 @@ components:
       properties:
         tokens:
           items:
-            $ref: '#/components/schemas/AuthAPIToken'
+            $ref: "#/components/schemas/AuthAPIToken"
           nullable: true
           type: array
       required:
@@ -2175,7 +2192,7 @@ components:
       properties:
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: "#/components/schemas/AuthPermission"
           nullable: true
           type: array
         username:
@@ -2210,7 +2227,7 @@ components:
       properties:
         users:
           items:
-            $ref: '#/components/schemas/AuthAPIUser'
+            $ref: "#/components/schemas/AuthAPIUser"
           nullable: true
           type: array
       required:
@@ -2233,7 +2250,7 @@ components:
           type: string
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: "#/components/schemas/AuthPermission"
           nullable: true
           type: array
       required:
@@ -2308,7 +2325,7 @@ components:
       properties:
         status:
           items:
-            $ref: '#/components/schemas/BackupAPIBackupStatus'
+            $ref: "#/components/schemas/BackupAPIBackupStatus"
           nullable: true
           type: array
       required:
@@ -2325,7 +2342,7 @@ components:
           accessKey: accessKey
       properties:
         config:
-          $ref: '#/components/schemas/BackupRoleConfig'
+          $ref: "#/components/schemas/BackupRoleConfig"
       required:
       - config
       type: object
@@ -2340,7 +2357,7 @@ components:
           accessKey: accessKey
       properties:
         config:
-          $ref: '#/components/schemas/BackupRoleConfig'
+          $ref: "#/components/schemas/BackupRoleConfig"
       required:
       - config
       type: object
@@ -2424,7 +2441,7 @@ components:
         identifier:
           type: string
         info:
-          $ref: '#/components/schemas/DhcpAPILeaseInfo'
+          $ref: "#/components/schemas/DhcpAPILeaseInfo"
         scopeKey:
           type: string
       required:
@@ -2468,7 +2485,7 @@ components:
       properties:
         leases:
           items:
-            $ref: '#/components/schemas/DhcpAPILease'
+            $ref: "#/components/schemas/DhcpAPILease"
           nullable: true
           type: array
       required:
@@ -2511,7 +2528,7 @@ components:
           port: 6
       properties:
         config:
-          $ref: '#/components/schemas/DhcpRoleConfig'
+          $ref: "#/components/schemas/DhcpRoleConfig"
       required:
       - config
       type: object
@@ -2522,7 +2539,7 @@ components:
           port: 6
       properties:
         config:
-          $ref: '#/components/schemas/DhcpRoleConfig'
+          $ref: "#/components/schemas/DhcpRoleConfig"
       required:
       - config
       type: object
@@ -2567,7 +2584,7 @@ components:
         default:
           type: boolean
         dns:
-          $ref: '#/components/schemas/DhcpScopeDNS'
+          $ref: "#/components/schemas/DhcpScopeDNS"
         hook:
           type: string
         ipam:
@@ -2577,13 +2594,13 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: "#/components/schemas/TypesDHCPOption"
           nullable: true
           type: array
         scope:
           type: string
         statistics:
-          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
+          $ref: "#/components/schemas/DhcpAPIScopeStatistics"
         subnetCidr:
           type: string
         ttl:
@@ -2692,11 +2709,11 @@ components:
       properties:
         scopes:
           items:
-            $ref: '#/components/schemas/DhcpAPIScope'
+            $ref: "#/components/schemas/DhcpAPIScope"
           nullable: true
           type: array
         statistics:
-          $ref: '#/components/schemas/DhcpAPIScopeStatistics'
+          $ref: "#/components/schemas/DhcpAPIScopeStatistics"
       required:
       - scopes
       - statistics
@@ -2704,12 +2721,12 @@ components:
     DhcpAPIScopesImportInput:
       example:
         payload: payload
-        type: null
+        type: ms_dhcp
       properties:
         payload:
           type: string
         type:
-          $ref: '#/components/schemas/DhcpAPIScopesImporterType'
+          $ref: "#/components/schemas/DhcpAPIScopesImporterType"
       type: object
     DhcpAPIScopesImportOutput:
       example:
@@ -2759,7 +2776,7 @@ components:
         default:
           type: boolean
         dns:
-          $ref: '#/components/schemas/DhcpScopeDNS'
+          $ref: "#/components/schemas/DhcpScopeDNS"
         hook:
           type: string
         ipam:
@@ -2769,7 +2786,7 @@ components:
           type: object
         options:
           items:
-            $ref: '#/components/schemas/TypesDHCPOption'
+            $ref: "#/components/schemas/TypesDHCPOption"
           nullable: true
           type: array
         subnetCidr:
@@ -2867,7 +2884,7 @@ components:
       properties:
         devices:
           items:
-            $ref: '#/components/schemas/DiscoveryAPIDevice'
+            $ref: "#/components/schemas/DiscoveryAPIDevice"
           nullable: true
           type: array
       type: object
@@ -2877,7 +2894,7 @@ components:
           enabled: true
       properties:
         config:
-          $ref: '#/components/schemas/DiscoveryRoleConfig'
+          $ref: "#/components/schemas/DiscoveryRoleConfig"
       required:
       - config
       type: object
@@ -2887,7 +2904,7 @@ components:
           enabled: true
       properties:
         config:
-          $ref: '#/components/schemas/DiscoveryRoleConfig'
+          $ref: "#/components/schemas/DiscoveryRoleConfig"
       required:
       - config
       type: object
@@ -2926,7 +2943,7 @@ components:
       properties:
         subnets:
           items:
-            $ref: '#/components/schemas/DiscoveryAPISubnet'
+            $ref: "#/components/schemas/DiscoveryAPISubnet"
           nullable: true
           type: array
       type: object
@@ -3021,7 +3038,7 @@ components:
       properties:
         records:
           items:
-            $ref: '#/components/schemas/DnsAPIRecord'
+            $ref: "#/components/schemas/DnsAPIRecord"
           nullable: true
           type: array
       required:
@@ -3062,7 +3079,7 @@ components:
           port: 0
       properties:
         config:
-          $ref: '#/components/schemas/DnsRoleConfig'
+          $ref: "#/components/schemas/DnsRoleConfig"
       required:
       - config
       type: object
@@ -3072,7 +3089,7 @@ components:
           port: 0
       properties:
         config:
-          $ref: '#/components/schemas/DnsRoleConfig'
+          $ref: "#/components/schemas/DnsRoleConfig"
       required:
       - config
       type: object
@@ -3134,7 +3151,7 @@ components:
       properties:
         zones:
           items:
-            $ref: '#/components/schemas/DnsAPIZone'
+            $ref: "#/components/schemas/DnsAPIZone"
           nullable: true
           type: array
       required:
@@ -3143,12 +3160,12 @@ components:
     DnsAPIZonesImportInput:
       example:
         payload: payload
-        type: null
+        type: bind
       properties:
         payload:
           type: string
         type:
-          $ref: '#/components/schemas/DnsAPIZonesImporterType'
+          $ref: "#/components/schemas/DnsAPIZonesImporterType"
       type: object
     DnsAPIZonesImportOutput:
       example:
@@ -3239,7 +3256,7 @@ components:
       properties:
         members:
           items:
-            $ref: '#/components/schemas/EtcdAPIMember'
+            $ref: "#/components/schemas/EtcdAPIMember"
           nullable: true
           type: array
       type: object
@@ -3283,7 +3300,7 @@ components:
           type: string
         instances:
           items:
-            $ref: '#/components/schemas/InstanceInstanceInfo'
+            $ref: "#/components/schemas/InstanceInstanceInfo"
           nullable: true
           type: array
       required:
@@ -3306,7 +3323,7 @@ components:
         buildHash:
           type: string
         dirs:
-          $ref: '#/components/schemas/ExtconfigExtConfigDirs'
+          $ref: "#/components/schemas/ExtconfigExtConfigDirs"
         instanceIP:
           type: string
         instanceIdentifier:
@@ -3359,7 +3376,7 @@ components:
           port: 0
       properties:
         config:
-          $ref: '#/components/schemas/MonitoringRoleConfig'
+          $ref: "#/components/schemas/MonitoringRoleConfig"
       required:
       - config
       type: object
@@ -3369,7 +3386,7 @@ components:
           port: 0
       properties:
         config:
-          $ref: '#/components/schemas/MonitoringRoleConfig'
+          $ref: "#/components/schemas/MonitoringRoleConfig"
       required:
       - config
       type: object
@@ -3381,6 +3398,12 @@ components:
           type: integer
       type: object
     RestErrResponse:
+      example:
+        code: 0
+        context:
+          key: ""
+        error: error
+        status: status
       properties:
         code:
           description: Application-specific error code.
@@ -3435,7 +3458,7 @@ components:
       properties:
         files:
           items:
-            $ref: '#/components/schemas/TftpAPIFile'
+            $ref: "#/components/schemas/TftpAPIFile"
           nullable: true
           type: array
       required:
@@ -3466,7 +3489,7 @@ components:
           enableLocal: true
       properties:
         config:
-          $ref: '#/components/schemas/TftpRoleConfig'
+          $ref: "#/components/schemas/TftpRoleConfig"
       required:
       - config
       type: object
@@ -3477,7 +3500,7 @@ components:
           enableLocal: true
       properties:
         config:
-          $ref: '#/components/schemas/TftpRoleConfig'
+          $ref: "#/components/schemas/TftpRoleConfig"
       required:
       - config
       type: object
@@ -3499,7 +3522,7 @@ components:
           enabled: true
       properties:
         config:
-          $ref: '#/components/schemas/TsdbRoleConfig'
+          $ref: "#/components/schemas/TsdbRoleConfig"
       required:
       - config
       type: object
@@ -3511,7 +3534,7 @@ components:
           enabled: true
       properties:
         config:
-          $ref: '#/components/schemas/TsdbRoleConfig'
+          $ref: "#/components/schemas/TsdbRoleConfig"
       required:
       - config
       type: object
@@ -3546,7 +3569,7 @@ components:
       properties:
         records:
           items:
-            $ref: '#/components/schemas/TypesAPIMetricsRecord'
+            $ref: "#/components/schemas/TypesAPIMetricsRecord"
           nullable: true
           type: array
       required:

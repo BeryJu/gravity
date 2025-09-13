@@ -49,6 +49,19 @@ func NewInitializationAPIController(s InitializationAPIServicer, opts ...Initial
 func (c *InitializationAPIController) Routes() Routes {
 	return Routes{
 		"Negotiate": Route{
+			"Negotiate",
+			strings.ToUpper("Get"),
+			"/",
+			c.Negotiate,
+		},
+	}
+}
+
+// OrderedRoutes returns all the api routes in a deterministic order for the InitializationAPIController
+func (c *InitializationAPIController) OrderedRoutes() []Route {
+	return []Route{
+		Route{
+			"Negotiate",
 			strings.ToUpper("Get"),
 			"/",
 			c.Negotiate,

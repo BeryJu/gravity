@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the InstanceAPIClusterInfoOutput type satisfies the MappedNullable interface at compile time
@@ -23,6 +25,8 @@ type InstanceAPIClusterInfoOutput struct {
 	ClusterVersionShort string                 `json:"clusterVersionShort"`
 	Instances           []InstanceInstanceInfo `json:"instances"`
 }
+
+type _InstanceAPIClusterInfoOutput InstanceAPIClusterInfoOutput
 
 // NewInstanceAPIClusterInfoOutput instantiates a new InstanceAPIClusterInfoOutput object
 // This constructor will assign default values to properties that have it defined,
@@ -134,6 +138,45 @@ func (o InstanceAPIClusterInfoOutput) ToMap() (map[string]interface{}, error) {
 		toSerialize["instances"] = o.Instances
 	}
 	return toSerialize, nil
+}
+
+func (o *InstanceAPIClusterInfoOutput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"clusterVersion",
+		"clusterVersionShort",
+		"instances",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varInstanceAPIClusterInfoOutput := _InstanceAPIClusterInfoOutput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varInstanceAPIClusterInfoOutput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InstanceAPIClusterInfoOutput(varInstanceAPIClusterInfoOutput)
+
+	return err
 }
 
 type NullableInstanceAPIClusterInfoOutput struct {

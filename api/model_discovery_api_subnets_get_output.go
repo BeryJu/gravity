@@ -60,7 +60,7 @@ func (o *DiscoveryAPISubnetsGetOutput) GetSubnetsOk() ([]DiscoveryAPISubnet, boo
 
 // HasSubnets returns a boolean if a field has been set.
 func (o *DiscoveryAPISubnetsGetOutput) HasSubnets() bool {
-	if o != nil && IsNil(o.Subnets) {
+	if o != nil && !IsNil(o.Subnets) {
 		return true
 	}
 

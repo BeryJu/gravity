@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the DhcpAPILease type satisfies the MappedNullable interface at compile time
@@ -29,6 +31,8 @@ type DhcpAPILease struct {
 	Info             *DhcpAPILeaseInfo `json:"info,omitempty"`
 	ScopeKey         string            `json:"scopeKey"`
 }
+
+type _DhcpAPILease DhcpAPILease
 
 // NewDhcpAPILease instantiates a new DhcpAPILease object
 // This constructor will assign default values to properties that have it defined,
@@ -319,6 +323,48 @@ func (o DhcpAPILease) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["scopeKey"] = o.ScopeKey
 	return toSerialize, nil
+}
+
+func (o *DhcpAPILease) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"address",
+		"addressLeaseTime",
+		"description",
+		"hostname",
+		"identifier",
+		"scopeKey",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varDhcpAPILease := _DhcpAPILease{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varDhcpAPILease)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DhcpAPILease(varDhcpAPILease)
+
+	return err
 }
 
 type NullableDhcpAPILease struct {

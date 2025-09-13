@@ -137,7 +137,7 @@ gen-client-go:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v6.6.0 generate \
+		openapitools/openapi-generator-cli:v7.15.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \
@@ -157,7 +157,7 @@ gen-client-ts:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v6.6.0 generate \
+		openapitools/openapi-generator-cli:v7.15.0 generate \
 		-i /local/${SCHEMA_FILE} \
 		-g typescript-fetch \
 		-o /local/${GEN_API_TS} \
@@ -180,7 +180,7 @@ gen-external-dns:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v7.12.0 generate \
+		openapitools/openapi-generator-cli:v7.15.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \

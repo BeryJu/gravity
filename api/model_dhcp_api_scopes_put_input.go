@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the DhcpAPIScopesPutInput type satisfies the MappedNullable interface at compile time
@@ -27,6 +29,8 @@ type DhcpAPIScopesPutInput struct {
 	SubnetCidr string            `json:"subnetCidr"`
 	Ttl        int32             `json:"ttl"`
 }
+
+type _DhcpAPIScopesPutInput DhcpAPIScopesPutInput
 
 // NewDhcpAPIScopesPutInput instantiates a new DhcpAPIScopesPutInput object
 // This constructor will assign default values to properties that have it defined,
@@ -151,7 +155,7 @@ func (o *DhcpAPIScopesPutInput) GetIpamOk() (*map[string]string, bool) {
 
 // HasIpam returns a boolean if a field has been set.
 func (o *DhcpAPIScopesPutInput) HasIpam() bool {
-	if o != nil && IsNil(o.Ipam) {
+	if o != nil && !IsNil(o.Ipam) {
 		return true
 	}
 
@@ -261,6 +265,47 @@ func (o DhcpAPIScopesPutInput) ToMap() (map[string]interface{}, error) {
 	toSerialize["subnetCidr"] = o.SubnetCidr
 	toSerialize["ttl"] = o.Ttl
 	return toSerialize, nil
+}
+
+func (o *DhcpAPIScopesPutInput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"default",
+		"hook",
+		"options",
+		"subnetCidr",
+		"ttl",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varDhcpAPIScopesPutInput := _DhcpAPIScopesPutInput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varDhcpAPIScopesPutInput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DhcpAPIScopesPutInput(varDhcpAPIScopesPutInput)
+
+	return err
 }
 
 type NullableDhcpAPIScopesPutInput struct {

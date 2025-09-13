@@ -73,7 +73,7 @@ func (c *Converter) checkDomainExists(ctx context.Context, domain string) error 
 	if _, ok := c.createdZones[domain]; ok {
 		return nil
 	}
-	_, err := c.a.RolesDnsApi.DnsPutZones(ctx).DnsAPIZonesPutInput(api.DnsAPIZonesPutInput{
+	_, err := c.a.RolesDnsAPI.DnsPutZones(ctx).DnsAPIZonesPutInput(api.DnsAPIZonesPutInput{
 		Authoritative: true,
 		DefaultTTL:    86400,
 		HandlerConfigs: []map[string]interface{}{
@@ -104,7 +104,7 @@ func (c *Converter) convertHost(ctx context.Context, r OpnsenseHost) error {
 	}
 	req.Data = r.Ip
 
-	_, err = c.a.RolesDnsApi.DnsPutRecords(ctx).
+	_, err = c.a.RolesDnsAPI.DnsPutRecords(ctx).
 		DnsAPIRecordsPutInput(req).
 		Zone(utils.EnsureTrailingPeriod(r.Domain)).
 		Hostname(r.Host).
@@ -133,7 +133,7 @@ func (c *Converter) convertAlias(ctx context.Context, h OpnsenseHost, r Opnsense
 	}
 	req.Data = fmt.Sprintf("%s.%s.", h.Host, h.Domain)
 
-	_, err := c.a.RolesDnsApi.DnsPutRecords(ctx).
+	_, err := c.a.RolesDnsAPI.DnsPutRecords(ctx).
 		DnsAPIRecordsPutInput(req).
 		Zone(utils.EnsureTrailingPeriod(r.Domain)).
 		Hostname(r.Host).

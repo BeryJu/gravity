@@ -1,18 +1,18 @@
-# \RolesDiscoveryApi
+# \RolesDiscoveryAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**DiscoveryApplyDevice**](RolesDiscoveryApi.md#DiscoveryApplyDevice) | **Post** /api/v1/discovery/devices/apply | Apply Discovered devices
-[**DiscoveryDeleteDevices**](RolesDiscoveryApi.md#DiscoveryDeleteDevices) | **Delete** /api/v1/discovery/devices/delete | Discovery devices
-[**DiscoveryDeleteSubnets**](RolesDiscoveryApi.md#DiscoveryDeleteSubnets) | **Delete** /api/v1/discovery/subnets | Discovery Subnets
-[**DiscoveryGetDevices**](RolesDiscoveryApi.md#DiscoveryGetDevices) | **Get** /api/v1/discovery/devices | Discovery devices
-[**DiscoveryGetRoleConfig**](RolesDiscoveryApi.md#DiscoveryGetRoleConfig) | **Get** /api/v1/roles/discovery | Discovery role config
-[**DiscoveryGetSubnets**](RolesDiscoveryApi.md#DiscoveryGetSubnets) | **Get** /api/v1/discovery/subnets | Discovery subnets
-[**DiscoveryPutRoleConfig**](RolesDiscoveryApi.md#DiscoveryPutRoleConfig) | **Post** /api/v1/roles/discovery | Discovery role config
-[**DiscoveryPutSubnets**](RolesDiscoveryApi.md#DiscoveryPutSubnets) | **Post** /api/v1/discovery/subnets | Discovery Subnets
-[**DiscoverySubnetStart**](RolesDiscoveryApi.md#DiscoverySubnetStart) | **Post** /api/v1/discovery/subnets/start | Discovery Subnets
+[**DiscoveryApplyDevice**](RolesDiscoveryAPI.md#DiscoveryApplyDevice) | **Post** /api/v1/discovery/devices/apply | Apply Discovered devices
+[**DiscoveryDeleteDevices**](RolesDiscoveryAPI.md#DiscoveryDeleteDevices) | **Delete** /api/v1/discovery/devices/delete | Discovery devices
+[**DiscoveryDeleteSubnets**](RolesDiscoveryAPI.md#DiscoveryDeleteSubnets) | **Delete** /api/v1/discovery/subnets | Discovery Subnets
+[**DiscoveryGetDevices**](RolesDiscoveryAPI.md#DiscoveryGetDevices) | **Get** /api/v1/discovery/devices | Discovery devices
+[**DiscoveryGetRoleConfig**](RolesDiscoveryAPI.md#DiscoveryGetRoleConfig) | **Get** /api/v1/roles/discovery | Discovery role config
+[**DiscoveryGetSubnets**](RolesDiscoveryAPI.md#DiscoveryGetSubnets) | **Get** /api/v1/discovery/subnets | Discovery subnets
+[**DiscoveryPutRoleConfig**](RolesDiscoveryAPI.md#DiscoveryPutRoleConfig) | **Post** /api/v1/roles/discovery | Discovery role config
+[**DiscoveryPutSubnets**](RolesDiscoveryAPI.md#DiscoveryPutSubnets) | **Post** /api/v1/discovery/subnets | Discovery Subnets
+[**DiscoverySubnetStart**](RolesDiscoveryAPI.md#DiscoverySubnetStart) | **Post** /api/v1/discovery/subnets/start | Discovery Subnets
 
 
 
@@ -28,23 +28,23 @@ Apply Discovered devices
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string | 
-    discoveryAPIDevicesApplyInput := *openapiclient.NewDiscoveryAPIDevicesApplyInput("DhcpScope_example", "DnsZone_example", "To_example") // DiscoveryAPIDevicesApplyInput |  (optional)
+	identifier := "identifier_example" // string | 
+	discoveryAPIDevicesApplyInput := *openapiclient.NewDiscoveryAPIDevicesApplyInput("DhcpScope_example", "DnsZone_example", "To_example") // DiscoveryAPIDevicesApplyInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoveryApplyDevice(context.Background()).Identifier(identifier).DiscoveryAPIDevicesApplyInput(discoveryAPIDevicesApplyInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryApplyDevice``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoveryApplyDevice(context.Background()).Identifier(identifier).DiscoveryAPIDevicesApplyInput(discoveryAPIDevicesApplyInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryApplyDevice``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -92,22 +92,22 @@ Discovery devices
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string |  (optional)
+	identifier := "identifier_example" // string |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoveryDeleteDevices(context.Background()).Identifier(identifier).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryDeleteDevices``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoveryDeleteDevices(context.Background()).Identifier(identifier).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryDeleteDevices``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -154,22 +154,22 @@ Discovery Subnets
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string |  (optional)
+	identifier := "identifier_example" // string |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoveryDeleteSubnets(context.Background()).Identifier(identifier).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryDeleteSubnets``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoveryDeleteSubnets(context.Background()).Identifier(identifier).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryDeleteSubnets``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -216,24 +216,24 @@ Discovery devices
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string | Optionally get device by identifier (optional)
+	identifier := "identifier_example" // string | Optionally get device by identifier (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetDevices(context.Background()).Identifier(identifier).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryGetDevices``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `DiscoveryGetDevices`: DiscoveryAPIDevicesGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryApi.DiscoveryGetDevices`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesDiscoveryAPI.DiscoveryGetDevices(context.Background()).Identifier(identifier).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryGetDevices``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DiscoveryGetDevices`: DiscoveryAPIDevicesGetOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryAPI.DiscoveryGetDevices`: %v\n", resp)
 }
 ```
 
@@ -280,23 +280,23 @@ Discovery role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetRoleConfig(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryGetRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `DiscoveryGetRoleConfig`: DiscoveryAPIRoleConfigOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryApi.DiscoveryGetRoleConfig`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesDiscoveryAPI.DiscoveryGetRoleConfig(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryGetRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DiscoveryGetRoleConfig`: DiscoveryAPIRoleConfigOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryAPI.DiscoveryGetRoleConfig`: %v\n", resp)
 }
 ```
 
@@ -339,24 +339,24 @@ Discovery subnets
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    name := "name_example" // string | Optionally get Subnet by name (optional)
+	name := "name_example" // string | Optionally get Subnet by name (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesDiscoveryApi.DiscoveryGetSubnets(context.Background()).Name(name).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryGetSubnets``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `DiscoveryGetSubnets`: DiscoveryAPISubnetsGetOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryApi.DiscoveryGetSubnets`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesDiscoveryAPI.DiscoveryGetSubnets(context.Background()).Name(name).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryGetSubnets``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `DiscoveryGetSubnets`: DiscoveryAPISubnetsGetOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesDiscoveryAPI.DiscoveryGetSubnets`: %v\n", resp)
 }
 ```
 
@@ -403,22 +403,22 @@ Discovery role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    discoveryAPIRoleConfigInput := *openapiclient.NewDiscoveryAPIRoleConfigInput(*openapiclient.NewDiscoveryRoleConfig()) // DiscoveryAPIRoleConfigInput |  (optional)
+	discoveryAPIRoleConfigInput := *openapiclient.NewDiscoveryAPIRoleConfigInput(*openapiclient.NewDiscoveryRoleConfig()) // DiscoveryAPIRoleConfigInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoveryPutRoleConfig(context.Background()).DiscoveryAPIRoleConfigInput(discoveryAPIRoleConfigInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryPutRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoveryPutRoleConfig(context.Background()).DiscoveryAPIRoleConfigInput(discoveryAPIRoleConfigInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryPutRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -465,23 +465,23 @@ Discovery Subnets
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string | 
-    discoveryAPISubnetsPutInput := *openapiclient.NewDiscoveryAPISubnetsPutInput(int32(123), "DnsResolver_example", "SubnetCidr_example") // DiscoveryAPISubnetsPutInput |  (optional)
+	identifier := "identifier_example" // string | 
+	discoveryAPISubnetsPutInput := *openapiclient.NewDiscoveryAPISubnetsPutInput(int32(123), "DnsResolver_example", "SubnetCidr_example") // DiscoveryAPISubnetsPutInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoveryPutSubnets(context.Background()).Identifier(identifier).DiscoveryAPISubnetsPutInput(discoveryAPISubnetsPutInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoveryPutSubnets``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoveryPutSubnets(context.Background()).Identifier(identifier).DiscoveryAPISubnetsPutInput(discoveryAPISubnetsPutInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoveryPutSubnets``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -529,23 +529,23 @@ Discovery Subnets
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    identifier := "identifier_example" // string | 
-    wait := true // bool | 
+	identifier := "identifier_example" // string | 
+	wait := true // bool | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesDiscoveryApi.DiscoverySubnetStart(context.Background()).Identifier(identifier).Wait(wait).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryApi.DiscoverySubnetStart``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesDiscoveryAPI.DiscoverySubnetStart(context.Background()).Identifier(identifier).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesDiscoveryAPI.DiscoverySubnetStart``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 

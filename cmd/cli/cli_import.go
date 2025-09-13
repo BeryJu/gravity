@@ -26,7 +26,7 @@ var importCmd = &cobra.Command{
 				logger.Error("failed to unmarshal", zap.Error(err))
 				continue
 			}
-			hr, err := apiClient.RolesApiApi.ApiImport(cmd.Context()).ApiAPIImportInput(entries).Execute()
+			hr, err := apiClient.RolesApiAPI.ApiImport(cmd.Context()).ApiAPIImportInput(entries).Execute()
 			if err != nil {
 				checkApiError(hr, err)
 				continue
