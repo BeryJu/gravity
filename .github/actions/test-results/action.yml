@@ -11,12 +11,12 @@ runs:
   steps:
     - shell: bash
       run: make test-env-stop
+    - shell: bash
+      run: make test-convert
     - uses: test-summary/action@v2
       with:
         paths: ${{ github.workspace }}/junit.xml
         show: "fail"
-    - shell: bash
-      run: make test-convert
     - uses: codecov/codecov-action@v5
       with:
         use_oidc: true
