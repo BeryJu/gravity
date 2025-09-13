@@ -48,9 +48,7 @@ jobs:
       - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
       - run: make test
       - if: ${{ always() }}
-        run: |
-          go install github.com/jstemmer/go-junit-report/v2@latest
-          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy -out junit.xml
+        run: make test-convert
       - if: ${{ always() }}
         uses: test-summary/action@v2
         with:
@@ -117,9 +115,7 @@ jobs:
       - run: make test-e2e-container-build
       - run: make test-e2e
       - if: ${{ always() }}
-        run: |
-          go install github.com/jstemmer/go-junit-report/v2@latest
-          $(go env GOPATH)/bin/go-junit-report -in test-output -set-exit-code -iocopy -out junit.xml
+        run: make test-convert
       - if: ${{ always() }}
         uses: codecov/codecov-action@v5
         with:
