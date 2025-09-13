@@ -34,39 +34,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: go.mod
-          cache: true
-      - uses: actions/setup-node@v5
-        with:
-          node-version-file: web/package.json
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-      - run: make web-install gen-client-ts web-build
-      - run: make test-env-start
-      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
+      - uses: ./.github/actions/setup
       - run: make test
-      - if: ${{ always() }}
-        run: make test-convert
-      - if: ${{ always() }}
-        uses: test-summary/action@v2
+      - uses: ./.github/actions/test-results
+        if: ${{ always() }}
         with:
-          paths: junit.xml
-          show: "fail"
-      - if: ${{ always() }}
-        run: make test-env-stop
-      - if: ${{ always() }}
-        uses: codecov/codecov-action@v5
-        with:
-          use_oidc: true
           flags: unittest
-      - if: ${{ always() }}
-        uses: codecov/test-results-action@v1
-        with:
-          use_oidc: true
-          flags: unittest
-          files: ./junit.xml
   test-bench:
     name: Test (bench)
     runs-on: ubuntu-latest
@@ -75,26 +48,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: go.mod
-          cache: true
-      - uses: actions/setup-node@v5
-        with:
-          node-version-file: web/package.json
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-      - run: make web-install gen-client-ts web-build
-      - run: make test-env-start
-      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
+      - uses: ./.github/actions/setup
       - run: make bench
-      - if: ${{ always() }}
-        run: make test-env-stop
-      - if: ${{ always() }}
-        uses: codecov/codecov-action@v5
+      - uses: ./.github/actions/test-results
+        if: ${{ always() }}
         with:
-          use_oidc: true
-          flags: unittest
+          flags: bench
   test-e2e:
     name: Test (e2e)
     runs-on: ubuntu-latest
@@ -103,32 +62,13 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: go.mod
-          cache: true
-      - uses: actions/setup-node@v5
-        with:
-          node-version-file: web/package.json
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-      - run: make web-install gen-client-ts web-build
-      - run: make install-deps gen-clean gen-client-go gen-external-dns gen-go-tidy
+      - uses: ./.github/actions/setup
       - run: make test-e2e-container-build
       - run: make test-e2e
-      - if: ${{ always() }}
-        run: make test-convert
-      - if: ${{ always() }}
-        uses: codecov/codecov-action@v5
+      - uses: ./.github/actions/test-results
+        if: ${{ always() }}
         with:
-          use_oidc: true
           flags: e2e
-      - if: ${{ always() }}
-        uses: codecov/test-results-action@v1
-        with:
-          use_oidc: true
-          flags: e2e
-          files: ./junit.xml
   test-mark:
     if: always()
     needs:

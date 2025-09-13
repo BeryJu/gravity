@@ -1,0 +1,28 @@
+name: "Process test results"
+description: Convert test results to JUnit, add them to GitHub Actions and codecov
+
+inputs:
+  flags:
+    description: "codecov flags"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: make test-env-stop
+    - uses: test-summary/action@v2
+      with:
+        paths: junit.xml
+        show: "fail"
+    - shell: bash
+      run: make test-convert
+    - uses: codecov/codecov-action@v5
+      with:
+        use_oidc: true
+        flags: ${{ inputs.flags }}
+    - uses: codecov/test-results-action@v1
+      with:
+        use_oidc: true
+        flags: ${{ inputs.flags }}
+        files: ./junit.xml
