@@ -40,6 +40,8 @@ type Role struct {
 	log     *zap.Logger
 	etcdDir string
 	certDir string
+
+	joining bool
 }
 
 func urlMustParse(raw string) url.URL {
@@ -89,6 +91,10 @@ func New(instance roles.Instance) *Role {
 	err := r.prepareJoin(cfg)
 	if err != nil {
 		instance.Log().Warn("failed to join cluster", zap.Error(err))
+		err = os.RemoveAll(path.Join(r.etcdDir, "member"))
+		if err != nil {
+			r.log.Warn("failed to remove etcd data", zap.Error(err))
+		}
 		return nil
 	}
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
@@ -150,6 +156,7 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	cfg.ClusterState = embed.ClusterStateFlagExisting
 	cfg.InitialCluster = res.GetEtcdInitialCluster()
 	ee.log.Info("joining etcd cluster", zap.String("initialCluster", cfg.InitialCluster))
+	ee.joining = true
 	return nil
 }
 
@@ -173,6 +180,12 @@ func (ee *Role) Start(ctx context.Context, cfg []byte) error {
 	}()
 	<-e.Server.ReadyNotify()
 	ee.log.Info("embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
+	if ee.joining {
+		_, err := ee.i.KV().MemberPromote(ctx, uint64(e.Server.MemberID()))
+		if err != nil {
+			ee.log.Warn("Failed to promote node from learner", zap.Error(err))
+		}
+	}
 	return nil
 }
 
