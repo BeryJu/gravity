@@ -60,7 +60,7 @@ func (o *DiscoveryAPIDevicesGetOutput) GetDevicesOk() ([]DiscoveryAPIDevice, boo
 
 // HasDevices returns a boolean if a field has been set.
 func (o *DiscoveryAPIDevicesGetOutput) HasDevices() bool {
-	if o != nil && IsNil(o.Devices) {
+	if o != nil && !IsNil(o.Devices) {
 		return true
 	}
 

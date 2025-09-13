@@ -94,7 +94,7 @@ func (o *DhcpScopeDNS) GetSearchOk() ([]string, bool) {
 
 // HasSearch returns a boolean if a field has been set.
 func (o *DhcpScopeDNS) HasSearch() bool {
-	if o != nil && IsNil(o.Search) {
+	if o != nil && !IsNil(o.Search) {
 		return true
 	}
 

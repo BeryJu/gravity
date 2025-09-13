@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesApiApiService RolesApiApi service
-type RolesApiApiService service
+// RolesApiAPIService RolesApiAPI service
+type RolesApiAPIService service
 
 type ApiApiAuthConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 }
 
 func (r ApiApiAuthConfigRequest) Execute() (*AuthAPIConfigOutput, *http.Response, error) {
@@ -36,7 +36,7 @@ ApiAuthConfig API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiAuthConfigRequest
 */
-func (a *RolesApiApiService) ApiAuthConfig(ctx context.Context) ApiApiAuthConfigRequest {
+func (a *RolesApiAPIService) ApiAuthConfig(ctx context.Context) ApiApiAuthConfigRequest {
 	return ApiApiAuthConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *RolesApiApiService) ApiAuthConfig(ctx context.Context) ApiApiAuthConfig
 // Execute executes the request
 //
 //	@return AuthAPIConfigOutput
-func (a *RolesApiApiService) ApiAuthConfigExecute(r ApiApiAuthConfigRequest) (*AuthAPIConfigOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiAuthConfigExecute(r ApiApiAuthConfigRequest) (*AuthAPIConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *RolesApiApiService) ApiAuthConfigExecute(r ApiApiAuthConfigRequest) (*A
 		localVarReturnValue *AuthAPIConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiAuthConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiAuthConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -131,7 +131,7 @@ func (a *RolesApiApiService) ApiAuthConfigExecute(r ApiApiAuthConfigRequest) (*A
 
 type ApiApiDeleteTokensRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 	key        *string
 }
 
@@ -150,7 +150,7 @@ ApiDeleteTokens Tokens
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiDeleteTokensRequest
 */
-func (a *RolesApiApiService) ApiDeleteTokens(ctx context.Context) ApiApiDeleteTokensRequest {
+func (a *RolesApiAPIService) ApiDeleteTokens(ctx context.Context) ApiApiDeleteTokensRequest {
 	return ApiApiDeleteTokensRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -158,14 +158,14 @@ func (a *RolesApiApiService) ApiDeleteTokens(ctx context.Context) ApiApiDeleteTo
 }
 
 // Execute executes the request
-func (a *RolesApiApiService) ApiDeleteTokensExecute(r ApiApiDeleteTokensRequest) (*http.Response, error) {
+func (a *RolesApiAPIService) ApiDeleteTokensExecute(r ApiApiDeleteTokensRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiDeleteTokens")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiDeleteTokens")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -179,7 +179,7 @@ func (a *RolesApiApiService) ApiDeleteTokensExecute(r ApiApiDeleteTokensRequest)
 		return nil, reportError("key is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -237,7 +237,7 @@ func (a *RolesApiApiService) ApiDeleteTokensExecute(r ApiApiDeleteTokensRequest)
 
 type ApiApiDeleteUsersRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 	username   *string
 }
 
@@ -256,7 +256,7 @@ ApiDeleteUsers API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiDeleteUsersRequest
 */
-func (a *RolesApiApiService) ApiDeleteUsers(ctx context.Context) ApiApiDeleteUsersRequest {
+func (a *RolesApiAPIService) ApiDeleteUsers(ctx context.Context) ApiApiDeleteUsersRequest {
 	return ApiApiDeleteUsersRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -264,14 +264,14 @@ func (a *RolesApiApiService) ApiDeleteUsers(ctx context.Context) ApiApiDeleteUse
 }
 
 // Execute executes the request
-func (a *RolesApiApiService) ApiDeleteUsersExecute(r ApiApiDeleteUsersRequest) (*http.Response, error) {
+func (a *RolesApiAPIService) ApiDeleteUsersExecute(r ApiApiDeleteUsersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiDeleteUsers")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiDeleteUsers")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -285,7 +285,7 @@ func (a *RolesApiApiService) ApiDeleteUsersExecute(r ApiApiDeleteUsersRequest) (
 		return nil, reportError("username is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -343,7 +343,7 @@ func (a *RolesApiApiService) ApiDeleteUsersExecute(r ApiApiDeleteUsersRequest) (
 
 type ApiApiExportRequest struct {
 	ctx               context.Context
-	ApiService        *RolesApiApiService
+	ApiService        *RolesApiAPIService
 	apiAPIExportInput *ApiAPIExportInput
 }
 
@@ -362,7 +362,7 @@ ApiExport Export Cluster
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiExportRequest
 */
-func (a *RolesApiApiService) ApiExport(ctx context.Context) ApiApiExportRequest {
+func (a *RolesApiAPIService) ApiExport(ctx context.Context) ApiApiExportRequest {
 	return ApiApiExportRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -372,7 +372,7 @@ func (a *RolesApiApiService) ApiExport(ctx context.Context) ApiApiExportRequest 
 // Execute executes the request
 //
 //	@return ApiAPIExportOutput
-func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExportOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExportOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -380,7 +380,7 @@ func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExp
 		localVarReturnValue *ApiAPIExportOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiExport")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiExport")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -459,7 +459,7 @@ func (a *RolesApiApiService) ApiExportExecute(r ApiApiExportRequest) (*ApiAPIExp
 
 type ApiApiGetLogMessagesRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 }
 
 func (r ApiApiGetLogMessagesRequest) Execute() (*ApiAPILogMessages, *http.Response, error) {
@@ -472,7 +472,7 @@ ApiGetLogMessages Log messages
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiGetLogMessagesRequest
 */
-func (a *RolesApiApiService) ApiGetLogMessages(ctx context.Context) ApiApiGetLogMessagesRequest {
+func (a *RolesApiAPIService) ApiGetLogMessages(ctx context.Context) ApiApiGetLogMessagesRequest {
 	return ApiApiGetLogMessagesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -482,7 +482,7 @@ func (a *RolesApiApiService) ApiGetLogMessages(ctx context.Context) ApiApiGetLog
 // Execute executes the request
 //
 //	@return ApiAPILogMessages
-func (a *RolesApiApiService) ApiGetLogMessagesExecute(r ApiApiGetLogMessagesRequest) (*ApiAPILogMessages, *http.Response, error) {
+func (a *RolesApiAPIService) ApiGetLogMessagesExecute(r ApiApiGetLogMessagesRequest) (*ApiAPILogMessages, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -490,7 +490,7 @@ func (a *RolesApiApiService) ApiGetLogMessagesExecute(r ApiApiGetLogMessagesRequ
 		localVarReturnValue *ApiAPILogMessages
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiGetLogMessages")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiGetLogMessages")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -567,7 +567,7 @@ func (a *RolesApiApiService) ApiGetLogMessagesExecute(r ApiApiGetLogMessagesRequ
 
 type ApiApiGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 }
 
 func (r ApiApiGetRoleConfigRequest) Execute() (*ApiAPIRoleConfigOutput, *http.Response, error) {
@@ -580,7 +580,7 @@ ApiGetRoleConfig API role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiGetRoleConfigRequest
 */
-func (a *RolesApiApiService) ApiGetRoleConfig(ctx context.Context) ApiApiGetRoleConfigRequest {
+func (a *RolesApiAPIService) ApiGetRoleConfig(ctx context.Context) ApiApiGetRoleConfigRequest {
 	return ApiApiGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -590,7 +590,7 @@ func (a *RolesApiApiService) ApiGetRoleConfig(ctx context.Context) ApiApiGetRole
 // Execute executes the request
 //
 //	@return ApiAPIRoleConfigOutput
-func (a *RolesApiApiService) ApiGetRoleConfigExecute(r ApiApiGetRoleConfigRequest) (*ApiAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiGetRoleConfigExecute(r ApiApiGetRoleConfigRequest) (*ApiAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -598,7 +598,7 @@ func (a *RolesApiApiService) ApiGetRoleConfigExecute(r ApiApiGetRoleConfigReques
 		localVarReturnValue *ApiAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -665,7 +665,7 @@ func (a *RolesApiApiService) ApiGetRoleConfigExecute(r ApiApiGetRoleConfigReques
 
 type ApiApiGetTokensRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 }
 
 func (r ApiApiGetTokensRequest) Execute() (*AuthAPITokensGetOutput, *http.Response, error) {
@@ -678,7 +678,7 @@ ApiGetTokens Tokens
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiGetTokensRequest
 */
-func (a *RolesApiApiService) ApiGetTokens(ctx context.Context) ApiApiGetTokensRequest {
+func (a *RolesApiAPIService) ApiGetTokens(ctx context.Context) ApiApiGetTokensRequest {
 	return ApiApiGetTokensRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -688,7 +688,7 @@ func (a *RolesApiApiService) ApiGetTokens(ctx context.Context) ApiApiGetTokensRe
 // Execute executes the request
 //
 //	@return AuthAPITokensGetOutput
-func (a *RolesApiApiService) ApiGetTokensExecute(r ApiApiGetTokensRequest) (*AuthAPITokensGetOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiGetTokensExecute(r ApiApiGetTokensRequest) (*AuthAPITokensGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -696,7 +696,7 @@ func (a *RolesApiApiService) ApiGetTokensExecute(r ApiApiGetTokensRequest) (*Aut
 		localVarReturnValue *AuthAPITokensGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiGetTokens")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiGetTokens")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -773,7 +773,7 @@ func (a *RolesApiApiService) ApiGetTokensExecute(r ApiApiGetTokensRequest) (*Aut
 
 type ApiApiGetUsersRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 	username   *string
 }
 
@@ -793,7 +793,7 @@ ApiGetUsers API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiGetUsersRequest
 */
-func (a *RolesApiApiService) ApiGetUsers(ctx context.Context) ApiApiGetUsersRequest {
+func (a *RolesApiAPIService) ApiGetUsers(ctx context.Context) ApiApiGetUsersRequest {
 	return ApiApiGetUsersRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -803,7 +803,7 @@ func (a *RolesApiApiService) ApiGetUsers(ctx context.Context) ApiApiGetUsersRequ
 // Execute executes the request
 //
 //	@return AuthAPIUsersGetOutput
-func (a *RolesApiApiService) ApiGetUsersExecute(r ApiApiGetUsersRequest) (*AuthAPIUsersGetOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiGetUsersExecute(r ApiApiGetUsersRequest) (*AuthAPIUsersGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -811,7 +811,7 @@ func (a *RolesApiApiService) ApiGetUsersExecute(r ApiApiGetUsersRequest) (*AuthA
 		localVarReturnValue *AuthAPIUsersGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiGetUsers")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiGetUsers")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -823,7 +823,7 @@ func (a *RolesApiApiService) ApiGetUsersExecute(r ApiApiGetUsersRequest) (*AuthA
 	localVarFormParams := url.Values{}
 
 	if r.username != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -891,7 +891,7 @@ func (a *RolesApiApiService) ApiGetUsersExecute(r ApiApiGetUsersRequest) (*AuthA
 
 type ApiApiImportRequest struct {
 	ctx               context.Context
-	ApiService        *RolesApiApiService
+	ApiService        *RolesApiAPIService
 	apiAPIImportInput *ApiAPIImportInput
 }
 
@@ -910,7 +910,7 @@ ApiImport Import Cluster
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiImportRequest
 */
-func (a *RolesApiApiService) ApiImport(ctx context.Context) ApiApiImportRequest {
+func (a *RolesApiAPIService) ApiImport(ctx context.Context) ApiApiImportRequest {
 	return ApiApiImportRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -918,14 +918,14 @@ func (a *RolesApiApiService) ApiImport(ctx context.Context) ApiApiImportRequest 
 }
 
 // Execute executes the request
-func (a *RolesApiApiService) ApiImportExecute(r ApiApiImportRequest) (*http.Response, error) {
+func (a *RolesApiAPIService) ApiImportExecute(r ApiApiImportRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiImport")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiImport")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -995,7 +995,7 @@ func (a *RolesApiApiService) ApiImportExecute(r ApiApiImportRequest) (*http.Resp
 
 type ApiApiLoginUserRequest struct {
 	ctx               context.Context
-	ApiService        *RolesApiApiService
+	ApiService        *RolesApiAPIService
 	authAPILoginInput *AuthAPILoginInput
 }
 
@@ -1014,7 +1014,7 @@ ApiLoginUser API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiLoginUserRequest
 */
-func (a *RolesApiApiService) ApiLoginUser(ctx context.Context) ApiApiLoginUserRequest {
+func (a *RolesApiAPIService) ApiLoginUser(ctx context.Context) ApiApiLoginUserRequest {
 	return ApiApiLoginUserRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1024,7 +1024,7 @@ func (a *RolesApiApiService) ApiLoginUser(ctx context.Context) ApiApiLoginUserRe
 // Execute executes the request
 //
 //	@return AuthAPILoginOutput
-func (a *RolesApiApiService) ApiLoginUserExecute(r ApiApiLoginUserRequest) (*AuthAPILoginOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiLoginUserExecute(r ApiApiLoginUserRequest) (*AuthAPILoginOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1032,7 +1032,7 @@ func (a *RolesApiApiService) ApiLoginUserExecute(r ApiApiLoginUserRequest) (*Aut
 		localVarReturnValue *AuthAPILoginOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiLoginUser")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiLoginUser")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1122,7 +1122,7 @@ func (a *RolesApiApiService) ApiLoginUserExecute(r ApiApiLoginUserRequest) (*Aut
 
 type ApiApiPutRoleConfigRequest struct {
 	ctx                   context.Context
-	ApiService            *RolesApiApiService
+	ApiService            *RolesApiAPIService
 	apiAPIRoleConfigInput *ApiAPIRoleConfigInput
 }
 
@@ -1141,7 +1141,7 @@ ApiPutRoleConfig API role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiPutRoleConfigRequest
 */
-func (a *RolesApiApiService) ApiPutRoleConfig(ctx context.Context) ApiApiPutRoleConfigRequest {
+func (a *RolesApiAPIService) ApiPutRoleConfig(ctx context.Context) ApiApiPutRoleConfigRequest {
 	return ApiApiPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1149,14 +1149,14 @@ func (a *RolesApiApiService) ApiPutRoleConfig(ctx context.Context) ApiApiPutRole
 }
 
 // Execute executes the request
-func (a *RolesApiApiService) ApiPutRoleConfigExecute(r ApiApiPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesApiAPIService) ApiPutRoleConfigExecute(r ApiApiPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1237,7 +1237,7 @@ func (a *RolesApiApiService) ApiPutRoleConfigExecute(r ApiApiPutRoleConfigReques
 
 type ApiApiPutTokensRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 	username   *string
 }
 
@@ -1256,7 +1256,7 @@ ApiPutTokens Tokens
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiPutTokensRequest
 */
-func (a *RolesApiApiService) ApiPutTokens(ctx context.Context) ApiApiPutTokensRequest {
+func (a *RolesApiAPIService) ApiPutTokens(ctx context.Context) ApiApiPutTokensRequest {
 	return ApiApiPutTokensRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1266,7 +1266,7 @@ func (a *RolesApiApiService) ApiPutTokens(ctx context.Context) ApiApiPutTokensRe
 // Execute executes the request
 //
 //	@return AuthAPITokensPutOutput
-func (a *RolesApiApiService) ApiPutTokensExecute(r ApiApiPutTokensRequest) (*AuthAPITokensPutOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiPutTokensExecute(r ApiApiPutTokensRequest) (*AuthAPITokensPutOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1274,7 +1274,7 @@ func (a *RolesApiApiService) ApiPutTokensExecute(r ApiApiPutTokensRequest) (*Aut
 		localVarReturnValue *AuthAPITokensPutOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiPutTokens")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiPutTokens")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1288,7 +1288,7 @@ func (a *RolesApiApiService) ApiPutTokensExecute(r ApiApiPutTokensRequest) (*Aut
 		return localVarReturnValue, nil, reportError("username is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1355,7 +1355,7 @@ func (a *RolesApiApiService) ApiPutTokensExecute(r ApiApiPutTokensRequest) (*Aut
 
 type ApiApiPutUsersRequest struct {
 	ctx                  context.Context
-	ApiService           *RolesApiApiService
+	ApiService           *RolesApiAPIService
 	username             *string
 	authAPIUsersPutInput *AuthAPIUsersPutInput
 }
@@ -1380,7 +1380,7 @@ ApiPutUsers API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiPutUsersRequest
 */
-func (a *RolesApiApiService) ApiPutUsers(ctx context.Context) ApiApiPutUsersRequest {
+func (a *RolesApiAPIService) ApiPutUsers(ctx context.Context) ApiApiPutUsersRequest {
 	return ApiApiPutUsersRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1388,14 +1388,14 @@ func (a *RolesApiApiService) ApiPutUsers(ctx context.Context) ApiApiPutUsersRequ
 }
 
 // Execute executes the request
-func (a *RolesApiApiService) ApiPutUsersExecute(r ApiApiPutUsersRequest) (*http.Response, error) {
+func (a *RolesApiAPIService) ApiPutUsersExecute(r ApiApiPutUsersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiPutUsers")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiPutUsers")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1409,7 +1409,7 @@ func (a *RolesApiApiService) ApiPutUsersExecute(r ApiApiPutUsersRequest) (*http.
 		return nil, reportError("username is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "username", r.username, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1469,7 +1469,7 @@ func (a *RolesApiApiService) ApiPutUsersExecute(r ApiApiPutUsersRequest) (*http.
 
 type ApiApiUsersMeRequest struct {
 	ctx        context.Context
-	ApiService *RolesApiApiService
+	ApiService *RolesApiAPIService
 }
 
 func (r ApiApiUsersMeRequest) Execute() (*AuthAPIMeOutput, *http.Response, error) {
@@ -1482,7 +1482,7 @@ ApiUsersMe API Users
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiApiUsersMeRequest
 */
-func (a *RolesApiApiService) ApiUsersMe(ctx context.Context) ApiApiUsersMeRequest {
+func (a *RolesApiAPIService) ApiUsersMe(ctx context.Context) ApiApiUsersMeRequest {
 	return ApiApiUsersMeRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1492,7 +1492,7 @@ func (a *RolesApiApiService) ApiUsersMe(ctx context.Context) ApiApiUsersMeReques
 // Execute executes the request
 //
 //	@return AuthAPIMeOutput
-func (a *RolesApiApiService) ApiUsersMeExecute(r ApiApiUsersMeRequest) (*AuthAPIMeOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ApiUsersMeExecute(r ApiApiUsersMeRequest) (*AuthAPIMeOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1500,7 +1500,7 @@ func (a *RolesApiApiService) ApiUsersMeExecute(r ApiApiUsersMeRequest) (*AuthAPI
 		localVarReturnValue *AuthAPIMeOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ApiUsersMe")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ApiUsersMe")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1577,7 +1577,7 @@ func (a *RolesApiApiService) ApiUsersMeExecute(r ApiApiUsersMeRequest) (*AuthAPI
 
 type ApiToolsPingRequest struct {
 	ctx                 context.Context
-	ApiService          *RolesApiApiService
+	ApiService          *RolesApiAPIService
 	apiAPIToolPingInput *ApiAPIToolPingInput
 }
 
@@ -1596,7 +1596,7 @@ ToolsPing Ping tool
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiToolsPingRequest
 */
-func (a *RolesApiApiService) ToolsPing(ctx context.Context) ApiToolsPingRequest {
+func (a *RolesApiAPIService) ToolsPing(ctx context.Context) ApiToolsPingRequest {
 	return ApiToolsPingRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1606,7 +1606,7 @@ func (a *RolesApiApiService) ToolsPing(ctx context.Context) ApiToolsPingRequest 
 // Execute executes the request
 //
 //	@return ApiAPIToolPingOutput
-func (a *RolesApiApiService) ToolsPingExecute(r ApiToolsPingRequest) (*ApiAPIToolPingOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ToolsPingExecute(r ApiToolsPingRequest) (*ApiAPIToolPingOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1614,7 +1614,7 @@ func (a *RolesApiApiService) ToolsPingExecute(r ApiToolsPingRequest) (*ApiAPIToo
 		localVarReturnValue *ApiAPIToolPingOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ToolsPing")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ToolsPing")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1693,7 +1693,7 @@ func (a *RolesApiApiService) ToolsPingExecute(r ApiToolsPingRequest) (*ApiAPIToo
 
 type ApiToolsPortmapRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesApiApiService
+	ApiService             *RolesApiAPIService
 	apiAPIToolPortmapInput *ApiAPIToolPortmapInput
 }
 
@@ -1712,7 +1712,7 @@ ToolsPortmap Portmap tool
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiToolsPortmapRequest
 */
-func (a *RolesApiApiService) ToolsPortmap(ctx context.Context) ApiToolsPortmapRequest {
+func (a *RolesApiAPIService) ToolsPortmap(ctx context.Context) ApiToolsPortmapRequest {
 	return ApiToolsPortmapRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1722,7 +1722,7 @@ func (a *RolesApiApiService) ToolsPortmap(ctx context.Context) ApiToolsPortmapRe
 // Execute executes the request
 //
 //	@return ApiAPIToolPortmapOutput
-func (a *RolesApiApiService) ToolsPortmapExecute(r ApiToolsPortmapRequest) (*ApiAPIToolPortmapOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ToolsPortmapExecute(r ApiToolsPortmapRequest) (*ApiAPIToolPortmapOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1730,7 +1730,7 @@ func (a *RolesApiApiService) ToolsPortmapExecute(r ApiToolsPortmapRequest) (*Api
 		localVarReturnValue *ApiAPIToolPortmapOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ToolsPortmap")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ToolsPortmap")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1809,7 +1809,7 @@ func (a *RolesApiApiService) ToolsPortmapExecute(r ApiToolsPortmapRequest) (*Api
 
 type ApiToolsTracerouteRequest struct {
 	ctx                       context.Context
-	ApiService                *RolesApiApiService
+	ApiService                *RolesApiAPIService
 	apiAPIToolTracerouteInput *ApiAPIToolTracerouteInput
 }
 
@@ -1828,7 +1828,7 @@ ToolsTraceroute Traceroute tool
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiToolsTracerouteRequest
 */
-func (a *RolesApiApiService) ToolsTraceroute(ctx context.Context) ApiToolsTracerouteRequest {
+func (a *RolesApiAPIService) ToolsTraceroute(ctx context.Context) ApiToolsTracerouteRequest {
 	return ApiToolsTracerouteRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1838,7 +1838,7 @@ func (a *RolesApiApiService) ToolsTraceroute(ctx context.Context) ApiToolsTracer
 // Execute executes the request
 //
 //	@return ApiAPIToolTracerouteOutput
-func (a *RolesApiApiService) ToolsTracerouteExecute(r ApiToolsTracerouteRequest) (*ApiAPIToolTracerouteOutput, *http.Response, error) {
+func (a *RolesApiAPIService) ToolsTracerouteExecute(r ApiToolsTracerouteRequest) (*ApiAPIToolTracerouteOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1846,7 +1846,7 @@ func (a *RolesApiApiService) ToolsTracerouteExecute(r ApiToolsTracerouteRequest)
 		localVarReturnValue *ApiAPIToolTracerouteOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiApiService.ToolsTraceroute")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiAPIService.ToolsTraceroute")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}

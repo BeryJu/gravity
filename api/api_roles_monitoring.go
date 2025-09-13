@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesMonitoringApiService RolesMonitoringApi service
-type RolesMonitoringApiService service
+// RolesMonitoringAPIService RolesMonitoringAPI service
+type RolesMonitoringAPIService service
 
 type ApiMonitoringGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesMonitoringApiService
+	ApiService *RolesMonitoringAPIService
 }
 
 func (r ApiMonitoringGetRoleConfigRequest) Execute() (*MonitoringAPIRoleConfigOutput, *http.Response, error) {
@@ -36,7 +36,7 @@ MonitoringGetRoleConfig Monitoring role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiMonitoringGetRoleConfigRequest
 */
-func (a *RolesMonitoringApiService) MonitoringGetRoleConfig(ctx context.Context) ApiMonitoringGetRoleConfigRequest {
+func (a *RolesMonitoringAPIService) MonitoringGetRoleConfig(ctx context.Context) ApiMonitoringGetRoleConfigRequest {
 	return ApiMonitoringGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *RolesMonitoringApiService) MonitoringGetRoleConfig(ctx context.Context)
 // Execute executes the request
 //
 //	@return MonitoringAPIRoleConfigOutput
-func (a *RolesMonitoringApiService) MonitoringGetRoleConfigExecute(r ApiMonitoringGetRoleConfigRequest) (*MonitoringAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesMonitoringAPIService) MonitoringGetRoleConfigExecute(r ApiMonitoringGetRoleConfigRequest) (*MonitoringAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *RolesMonitoringApiService) MonitoringGetRoleConfigExecute(r ApiMonitori
 		localVarReturnValue *MonitoringAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesMonitoringApiService.MonitoringGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesMonitoringAPIService.MonitoringGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -121,7 +121,7 @@ func (a *RolesMonitoringApiService) MonitoringGetRoleConfigExecute(r ApiMonitori
 
 type ApiMonitoringPutRoleConfigRequest struct {
 	ctx                          context.Context
-	ApiService                   *RolesMonitoringApiService
+	ApiService                   *RolesMonitoringAPIService
 	monitoringAPIRoleConfigInput *MonitoringAPIRoleConfigInput
 }
 
@@ -140,7 +140,7 @@ MonitoringPutRoleConfig Monitoring role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiMonitoringPutRoleConfigRequest
 */
-func (a *RolesMonitoringApiService) MonitoringPutRoleConfig(ctx context.Context) ApiMonitoringPutRoleConfigRequest {
+func (a *RolesMonitoringAPIService) MonitoringPutRoleConfig(ctx context.Context) ApiMonitoringPutRoleConfigRequest {
 	return ApiMonitoringPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -148,14 +148,14 @@ func (a *RolesMonitoringApiService) MonitoringPutRoleConfig(ctx context.Context)
 }
 
 // Execute executes the request
-func (a *RolesMonitoringApiService) MonitoringPutRoleConfigExecute(r ApiMonitoringPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesMonitoringAPIService) MonitoringPutRoleConfigExecute(r ApiMonitoringPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesMonitoringApiService.MonitoringPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesMonitoringAPIService.MonitoringPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}

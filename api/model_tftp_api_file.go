@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the TftpAPIFile type satisfies the MappedNullable interface at compile time
@@ -23,6 +25,8 @@ type TftpAPIFile struct {
 	Name      string `json:"name"`
 	SizeBytes int32  `json:"sizeBytes"`
 }
+
+type _TftpAPIFile TftpAPIFile
 
 // NewTftpAPIFile instantiates a new TftpAPIFile object
 // This constructor will assign default values to properties that have it defined,
@@ -130,6 +134,45 @@ func (o TftpAPIFile) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["sizeBytes"] = o.SizeBytes
 	return toSerialize, nil
+}
+
+func (o *TftpAPIFile) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"host",
+		"name",
+		"sizeBytes",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varTftpAPIFile := _TftpAPIFile{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varTftpAPIFile)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TftpAPIFile(varTftpAPIFile)
+
+	return err
 }
 
 type NullableTftpAPIFile struct {

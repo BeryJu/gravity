@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -28,6 +30,8 @@ type BackupAPIBackupStatus struct {
 	Status   string    `json:"status"`
 	Time     time.Time `json:"time"`
 }
+
+type _BackupAPIBackupStatus BackupAPIBackupStatus
 
 // NewBackupAPIBackupStatus instantiates a new BackupAPIBackupStatus object
 // This constructor will assign default values to properties that have it defined,
@@ -248,6 +252,48 @@ func (o BackupAPIBackupStatus) ToMap() (map[string]interface{}, error) {
 	toSerialize["status"] = o.Status
 	toSerialize["time"] = o.Time
 	return toSerialize, nil
+}
+
+func (o *BackupAPIBackupStatus) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"duration",
+		"error",
+		"filename",
+		"size",
+		"status",
+		"time",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varBackupAPIBackupStatus := _BackupAPIBackupStatus{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varBackupAPIBackupStatus)
+
+	if err != nil {
+		return err
+	}
+
+	*o = BackupAPIBackupStatus(varBackupAPIBackupStatus)
+
+	return err
 }
 
 type NullableBackupAPIBackupStatus struct {

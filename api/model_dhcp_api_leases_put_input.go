@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the DhcpAPILeasesPutInput type satisfies the MappedNullable interface at compile time
@@ -26,6 +28,8 @@ type DhcpAPILeasesPutInput struct {
 	Expiry           *int32  `json:"expiry,omitempty"`
 	Hostname         string  `json:"hostname"`
 }
+
+type _DhcpAPILeasesPutInput DhcpAPILeasesPutInput
 
 // NewDhcpAPILeasesPutInput instantiates a new DhcpAPILeasesPutInput object
 // This constructor will assign default values to properties that have it defined,
@@ -238,6 +242,45 @@ func (o DhcpAPILeasesPutInput) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["hostname"] = o.Hostname
 	return toSerialize, nil
+}
+
+func (o *DhcpAPILeasesPutInput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"address",
+		"addressLeaseTime",
+		"hostname",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varDhcpAPILeasesPutInput := _DhcpAPILeasesPutInput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varDhcpAPILeasesPutInput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DhcpAPILeasesPutInput(varDhcpAPILeasesPutInput)
+
+	return err
 }
 
 type NullableDhcpAPILeasesPutInput struct {

@@ -1,11 +1,11 @@
-# \ClusterInstancesApi
+# \ClusterInstancesAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ClusterGetInstanceInfo**](ClusterInstancesApi.md#ClusterGetInstanceInfo) | **Get** /api/v1/cluster/instance | Instance
-[**ClusterInstanceRoleRestart**](ClusterInstancesApi.md#ClusterInstanceRoleRestart) | **Post** /api/v1/cluster/roles/restart | Instance roles
+[**ClusterGetInstanceInfo**](ClusterInstancesAPI.md#ClusterGetInstanceInfo) | **Get** /api/v1/cluster/instance | Instance
+[**ClusterInstanceRoleRestart**](ClusterInstancesAPI.md#ClusterInstanceRoleRestart) | **Post** /api/v1/cluster/roles/restart | Instance roles
 
 
 
@@ -21,23 +21,23 @@ Instance
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ClusterInstancesApi.ClusterGetInstanceInfo(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ClusterInstancesApi.ClusterGetInstanceInfo``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ClusterGetInstanceInfo`: InstanceAPIInstanceInfo
-    fmt.Fprintf(os.Stdout, "Response from `ClusterInstancesApi.ClusterGetInstanceInfo`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClusterInstancesAPI.ClusterGetInstanceInfo(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClusterInstancesAPI.ClusterGetInstanceInfo``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ClusterGetInstanceInfo`: InstanceAPIInstanceInfo
+	fmt.Fprintf(os.Stdout, "Response from `ClusterInstancesAPI.ClusterGetInstanceInfo`: %v\n", resp)
 }
 ```
 
@@ -80,22 +80,22 @@ Instance roles
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    instanceAPIRoleRestartInput := *openapiclient.NewInstanceAPIRoleRestartInput() // InstanceAPIRoleRestartInput |  (optional)
+	instanceAPIRoleRestartInput := *openapiclient.NewInstanceAPIRoleRestartInput() // InstanceAPIRoleRestartInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.ClusterInstancesApi.ClusterInstanceRoleRestart(context.Background()).InstanceAPIRoleRestartInput(instanceAPIRoleRestartInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ClusterInstancesApi.ClusterInstanceRoleRestart``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.ClusterInstancesAPI.ClusterInstanceRoleRestart(context.Background()).InstanceAPIRoleRestartInput(instanceAPIRoleRestartInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClusterInstancesAPI.ClusterInstanceRoleRestart``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 

@@ -1,12 +1,12 @@
-# \RolesEtcdApi
+# \RolesEtcdAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**EtcdGetMembers**](RolesEtcdApi.md#EtcdGetMembers) | **Get** /api/v1/etcd/members | Etcd members
-[**EtcdJoinMember**](RolesEtcdApi.md#EtcdJoinMember) | **Post** /api/v1/etcd/join | Etcd join
-[**EtcdRemoveMember**](RolesEtcdApi.md#EtcdRemoveMember) | **Delete** /api/v1/etcd/remove | Etcd remove
+[**EtcdGetMembers**](RolesEtcdAPI.md#EtcdGetMembers) | **Get** /api/v1/etcd/members | Etcd members
+[**EtcdJoinMember**](RolesEtcdAPI.md#EtcdJoinMember) | **Post** /api/v1/etcd/join | Etcd join
+[**EtcdRemoveMember**](RolesEtcdAPI.md#EtcdRemoveMember) | **Delete** /api/v1/etcd/remove | Etcd remove
 
 
 
@@ -22,23 +22,23 @@ Etcd members
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesEtcdApi.EtcdGetMembers(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdApi.EtcdGetMembers``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `EtcdGetMembers`: EtcdAPIMembersOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesEtcdApi.EtcdGetMembers`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesEtcdAPI.EtcdGetMembers(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdAPI.EtcdGetMembers``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `EtcdGetMembers`: EtcdAPIMembersOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesEtcdAPI.EtcdGetMembers`: %v\n", resp)
 }
 ```
 
@@ -81,24 +81,24 @@ Etcd join
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    etcdAPIMemberJoinInput := *openapiclient.NewEtcdAPIMemberJoinInput() // EtcdAPIMemberJoinInput |  (optional)
+	etcdAPIMemberJoinInput := *openapiclient.NewEtcdAPIMemberJoinInput() // EtcdAPIMemberJoinInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesEtcdApi.EtcdJoinMember(context.Background()).EtcdAPIMemberJoinInput(etcdAPIMemberJoinInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdApi.EtcdJoinMember``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `EtcdJoinMember`: EtcdAPIMemberJoinOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesEtcdApi.EtcdJoinMember`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesEtcdAPI.EtcdJoinMember(context.Background()).EtcdAPIMemberJoinInput(etcdAPIMemberJoinInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdAPI.EtcdJoinMember``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `EtcdJoinMember`: EtcdAPIMemberJoinOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesEtcdAPI.EtcdJoinMember`: %v\n", resp)
 }
 ```
 
@@ -145,22 +145,22 @@ Etcd remove
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    peerID := int32(56) // int32 | 
+	peerID := int32(56) // int32 | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesEtcdApi.EtcdRemoveMember(context.Background()).PeerID(peerID).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdApi.EtcdRemoveMember``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesEtcdAPI.EtcdRemoveMember(context.Background()).PeerID(peerID).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdAPI.EtcdRemoveMember``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 

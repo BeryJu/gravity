@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesTftpApiService RolesTftpApi service
-type RolesTftpApiService service
+// RolesTftpAPIService RolesTftpAPI service
+type RolesTftpAPIService service
 
 type ApiTftpDeleteFilesRequest struct {
 	ctx        context.Context
-	ApiService *RolesTftpApiService
+	ApiService *RolesTftpAPIService
 	host       *string
 	name       *string
 }
@@ -48,7 +48,7 @@ TftpDeleteFiles TFTP Files
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpDeleteFilesRequest
 */
-func (a *RolesTftpApiService) TftpDeleteFiles(ctx context.Context) ApiTftpDeleteFilesRequest {
+func (a *RolesTftpAPIService) TftpDeleteFiles(ctx context.Context) ApiTftpDeleteFilesRequest {
 	return ApiTftpDeleteFilesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -56,14 +56,14 @@ func (a *RolesTftpApiService) TftpDeleteFiles(ctx context.Context) ApiTftpDelete
 }
 
 // Execute executes the request
-func (a *RolesTftpApiService) TftpDeleteFilesExecute(r ApiTftpDeleteFilesRequest) (*http.Response, error) {
+func (a *RolesTftpAPIService) TftpDeleteFilesExecute(r ApiTftpDeleteFilesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpDeleteFiles")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpDeleteFiles")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -75,10 +75,10 @@ func (a *RolesTftpApiService) TftpDeleteFilesExecute(r ApiTftpDeleteFilesRequest
 	localVarFormParams := url.Values{}
 
 	if r.host != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "host", r.host, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "host", r.host, "form", "")
 	}
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -137,7 +137,7 @@ func (a *RolesTftpApiService) TftpDeleteFilesExecute(r ApiTftpDeleteFilesRequest
 
 type ApiTftpDownloadFilesRequest struct {
 	ctx        context.Context
-	ApiService *RolesTftpApiService
+	ApiService *RolesTftpAPIService
 	host       *string
 	name       *string
 }
@@ -162,7 +162,7 @@ TftpDownloadFiles TFTP Files
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpDownloadFilesRequest
 */
-func (a *RolesTftpApiService) TftpDownloadFiles(ctx context.Context) ApiTftpDownloadFilesRequest {
+func (a *RolesTftpAPIService) TftpDownloadFiles(ctx context.Context) ApiTftpDownloadFilesRequest {
 	return ApiTftpDownloadFilesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -172,7 +172,7 @@ func (a *RolesTftpApiService) TftpDownloadFiles(ctx context.Context) ApiTftpDown
 // Execute executes the request
 //
 //	@return TftpAPIFilesDownloadOutput
-func (a *RolesTftpApiService) TftpDownloadFilesExecute(r ApiTftpDownloadFilesRequest) (*TftpAPIFilesDownloadOutput, *http.Response, error) {
+func (a *RolesTftpAPIService) TftpDownloadFilesExecute(r ApiTftpDownloadFilesRequest) (*TftpAPIFilesDownloadOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -180,7 +180,7 @@ func (a *RolesTftpApiService) TftpDownloadFilesExecute(r ApiTftpDownloadFilesReq
 		localVarReturnValue *TftpAPIFilesDownloadOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpDownloadFiles")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpDownloadFiles")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -192,10 +192,10 @@ func (a *RolesTftpApiService) TftpDownloadFilesExecute(r ApiTftpDownloadFilesReq
 	localVarFormParams := url.Values{}
 
 	if r.host != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "host", r.host, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "host", r.host, "form", "")
 	}
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -274,7 +274,7 @@ func (a *RolesTftpApiService) TftpDownloadFilesExecute(r ApiTftpDownloadFilesReq
 
 type ApiTftpGetFilesRequest struct {
 	ctx        context.Context
-	ApiService *RolesTftpApiService
+	ApiService *RolesTftpAPIService
 }
 
 func (r ApiTftpGetFilesRequest) Execute() (*TftpAPIFilesGetOutput, *http.Response, error) {
@@ -287,7 +287,7 @@ TftpGetFiles TFTP Files
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpGetFilesRequest
 */
-func (a *RolesTftpApiService) TftpGetFiles(ctx context.Context) ApiTftpGetFilesRequest {
+func (a *RolesTftpAPIService) TftpGetFiles(ctx context.Context) ApiTftpGetFilesRequest {
 	return ApiTftpGetFilesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -297,7 +297,7 @@ func (a *RolesTftpApiService) TftpGetFiles(ctx context.Context) ApiTftpGetFilesR
 // Execute executes the request
 //
 //	@return TftpAPIFilesGetOutput
-func (a *RolesTftpApiService) TftpGetFilesExecute(r ApiTftpGetFilesRequest) (*TftpAPIFilesGetOutput, *http.Response, error) {
+func (a *RolesTftpAPIService) TftpGetFilesExecute(r ApiTftpGetFilesRequest) (*TftpAPIFilesGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -305,7 +305,7 @@ func (a *RolesTftpApiService) TftpGetFilesExecute(r ApiTftpGetFilesRequest) (*Tf
 		localVarReturnValue *TftpAPIFilesGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpGetFiles")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpGetFiles")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -382,7 +382,7 @@ func (a *RolesTftpApiService) TftpGetFilesExecute(r ApiTftpGetFilesRequest) (*Tf
 
 type ApiTftpGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesTftpApiService
+	ApiService *RolesTftpAPIService
 }
 
 func (r ApiTftpGetRoleConfigRequest) Execute() (*TftpAPIRoleConfigOutput, *http.Response, error) {
@@ -395,7 +395,7 @@ TftpGetRoleConfig TFTP role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpGetRoleConfigRequest
 */
-func (a *RolesTftpApiService) TftpGetRoleConfig(ctx context.Context) ApiTftpGetRoleConfigRequest {
+func (a *RolesTftpAPIService) TftpGetRoleConfig(ctx context.Context) ApiTftpGetRoleConfigRequest {
 	return ApiTftpGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -405,7 +405,7 @@ func (a *RolesTftpApiService) TftpGetRoleConfig(ctx context.Context) ApiTftpGetR
 // Execute executes the request
 //
 //	@return TftpAPIRoleConfigOutput
-func (a *RolesTftpApiService) TftpGetRoleConfigExecute(r ApiTftpGetRoleConfigRequest) (*TftpAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesTftpAPIService) TftpGetRoleConfigExecute(r ApiTftpGetRoleConfigRequest) (*TftpAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -413,7 +413,7 @@ func (a *RolesTftpApiService) TftpGetRoleConfigExecute(r ApiTftpGetRoleConfigReq
 		localVarReturnValue *TftpAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -480,7 +480,7 @@ func (a *RolesTftpApiService) TftpGetRoleConfigExecute(r ApiTftpGetRoleConfigReq
 
 type ApiTftpPutFilesRequest struct {
 	ctx                  context.Context
-	ApiService           *RolesTftpApiService
+	ApiService           *RolesTftpAPIService
 	tftpAPIFilesPutInput *TftpAPIFilesPutInput
 }
 
@@ -499,7 +499,7 @@ TftpPutFiles TFTP Files
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpPutFilesRequest
 */
-func (a *RolesTftpApiService) TftpPutFiles(ctx context.Context) ApiTftpPutFilesRequest {
+func (a *RolesTftpAPIService) TftpPutFiles(ctx context.Context) ApiTftpPutFilesRequest {
 	return ApiTftpPutFilesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -507,14 +507,14 @@ func (a *RolesTftpApiService) TftpPutFiles(ctx context.Context) ApiTftpPutFilesR
 }
 
 // Execute executes the request
-func (a *RolesTftpApiService) TftpPutFilesExecute(r ApiTftpPutFilesRequest) (*http.Response, error) {
+func (a *RolesTftpAPIService) TftpPutFilesExecute(r ApiTftpPutFilesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpPutFiles")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpPutFiles")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -584,7 +584,7 @@ func (a *RolesTftpApiService) TftpPutFilesExecute(r ApiTftpPutFilesRequest) (*ht
 
 type ApiTftpPutRoleConfigRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesTftpApiService
+	ApiService             *RolesTftpAPIService
 	tftpAPIRoleConfigInput *TftpAPIRoleConfigInput
 }
 
@@ -603,7 +603,7 @@ TftpPutRoleConfig TFTP role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiTftpPutRoleConfigRequest
 */
-func (a *RolesTftpApiService) TftpPutRoleConfig(ctx context.Context) ApiTftpPutRoleConfigRequest {
+func (a *RolesTftpAPIService) TftpPutRoleConfig(ctx context.Context) ApiTftpPutRoleConfigRequest {
 	return ApiTftpPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -611,14 +611,14 @@ func (a *RolesTftpApiService) TftpPutRoleConfig(ctx context.Context) ApiTftpPutR
 }
 
 // Execute executes the request
-func (a *RolesTftpApiService) TftpPutRoleConfigExecute(r ApiTftpPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesTftpAPIService) TftpPutRoleConfigExecute(r ApiTftpPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpApiService.TftpPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesTftpAPIService.TftpPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}

@@ -60,7 +60,7 @@ func (o *ApiAPIToolTracerouteOutput) GetHopsOk() ([]ApiAPIToolTracerouteOutputHo
 
 // HasHops returns a boolean if a field has been set.
 func (o *ApiAPIToolTracerouteOutput) HasHops() bool {
-	if o != nil && IsNil(o.Hops) {
+	if o != nil && !IsNil(o.Hops) {
 		return true
 	}
 

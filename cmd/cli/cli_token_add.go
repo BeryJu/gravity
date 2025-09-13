@@ -12,7 +12,7 @@ var cliTokensAddCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		username := args[0]
-		token, hr, err := apiClient.RolesApiApi.ApiPutTokens(cmd.Context()).Username(username).Execute()
+		token, hr, err := apiClient.RolesApiAPI.ApiPutTokens(cmd.Context()).Username(username).Execute()
 		if err != nil {
 			checkApiError(hr, err)
 			return

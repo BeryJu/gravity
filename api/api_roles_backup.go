@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesBackupApiService RolesBackupApi service
-type RolesBackupApiService service
+// RolesBackupAPIService RolesBackupAPI service
+type RolesBackupAPIService service
 
 type ApiBackupGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesBackupApiService
+	ApiService *RolesBackupAPIService
 }
 
 func (r ApiBackupGetRoleConfigRequest) Execute() (*BackupAPIRoleConfigOutput, *http.Response, error) {
@@ -36,7 +36,7 @@ BackupGetRoleConfig Backup role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiBackupGetRoleConfigRequest
 */
-func (a *RolesBackupApiService) BackupGetRoleConfig(ctx context.Context) ApiBackupGetRoleConfigRequest {
+func (a *RolesBackupAPIService) BackupGetRoleConfig(ctx context.Context) ApiBackupGetRoleConfigRequest {
 	return ApiBackupGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *RolesBackupApiService) BackupGetRoleConfig(ctx context.Context) ApiBack
 // Execute executes the request
 //
 //	@return BackupAPIRoleConfigOutput
-func (a *RolesBackupApiService) BackupGetRoleConfigExecute(r ApiBackupGetRoleConfigRequest) (*BackupAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesBackupAPIService) BackupGetRoleConfigExecute(r ApiBackupGetRoleConfigRequest) (*BackupAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *RolesBackupApiService) BackupGetRoleConfigExecute(r ApiBackupGetRoleCon
 		localVarReturnValue *BackupAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupApiService.BackupGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupAPIService.BackupGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -121,7 +121,7 @@ func (a *RolesBackupApiService) BackupGetRoleConfigExecute(r ApiBackupGetRoleCon
 
 type ApiBackupPutRoleConfigRequest struct {
 	ctx                      context.Context
-	ApiService               *RolesBackupApiService
+	ApiService               *RolesBackupAPIService
 	backupAPIRoleConfigInput *BackupAPIRoleConfigInput
 }
 
@@ -140,7 +140,7 @@ BackupPutRoleConfig Backup role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiBackupPutRoleConfigRequest
 */
-func (a *RolesBackupApiService) BackupPutRoleConfig(ctx context.Context) ApiBackupPutRoleConfigRequest {
+func (a *RolesBackupAPIService) BackupPutRoleConfig(ctx context.Context) ApiBackupPutRoleConfigRequest {
 	return ApiBackupPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -148,14 +148,14 @@ func (a *RolesBackupApiService) BackupPutRoleConfig(ctx context.Context) ApiBack
 }
 
 // Execute executes the request
-func (a *RolesBackupApiService) BackupPutRoleConfigExecute(r ApiBackupPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesBackupAPIService) BackupPutRoleConfigExecute(r ApiBackupPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupApiService.BackupPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupAPIService.BackupPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -236,7 +236,7 @@ func (a *RolesBackupApiService) BackupPutRoleConfigExecute(r ApiBackupPutRoleCon
 
 type ApiBackupStartRequest struct {
 	ctx        context.Context
-	ApiService *RolesBackupApiService
+	ApiService *RolesBackupAPIService
 	wait       *bool
 }
 
@@ -255,7 +255,7 @@ BackupStart Backup start
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiBackupStartRequest
 */
-func (a *RolesBackupApiService) BackupStart(ctx context.Context) ApiBackupStartRequest {
+func (a *RolesBackupAPIService) BackupStart(ctx context.Context) ApiBackupStartRequest {
 	return ApiBackupStartRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -265,7 +265,7 @@ func (a *RolesBackupApiService) BackupStart(ctx context.Context) ApiBackupStartR
 // Execute executes the request
 //
 //	@return BackupBackupStatus
-func (a *RolesBackupApiService) BackupStartExecute(r ApiBackupStartRequest) (*BackupBackupStatus, *http.Response, error) {
+func (a *RolesBackupAPIService) BackupStartExecute(r ApiBackupStartRequest) (*BackupBackupStatus, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -273,7 +273,7 @@ func (a *RolesBackupApiService) BackupStartExecute(r ApiBackupStartRequest) (*Ba
 		localVarReturnValue *BackupBackupStatus
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupApiService.BackupStart")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupAPIService.BackupStart")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -287,7 +287,7 @@ func (a *RolesBackupApiService) BackupStartExecute(r ApiBackupStartRequest) (*Ba
 		return localVarReturnValue, nil, reportError("wait is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "wait", r.wait, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -344,7 +344,7 @@ func (a *RolesBackupApiService) BackupStartExecute(r ApiBackupStartRequest) (*Ba
 
 type ApiBackupStatusRequest struct {
 	ctx        context.Context
-	ApiService *RolesBackupApiService
+	ApiService *RolesBackupAPIService
 }
 
 func (r ApiBackupStatusRequest) Execute() (*BackupAPIBackupStatusOutput, *http.Response, error) {
@@ -357,7 +357,7 @@ BackupStatus Backup status
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiBackupStatusRequest
 */
-func (a *RolesBackupApiService) BackupStatus(ctx context.Context) ApiBackupStatusRequest {
+func (a *RolesBackupAPIService) BackupStatus(ctx context.Context) ApiBackupStatusRequest {
 	return ApiBackupStatusRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -367,7 +367,7 @@ func (a *RolesBackupApiService) BackupStatus(ctx context.Context) ApiBackupStatu
 // Execute executes the request
 //
 //	@return BackupAPIBackupStatusOutput
-func (a *RolesBackupApiService) BackupStatusExecute(r ApiBackupStatusRequest) (*BackupAPIBackupStatusOutput, *http.Response, error) {
+func (a *RolesBackupAPIService) BackupStatusExecute(r ApiBackupStatusRequest) (*BackupAPIBackupStatusOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -375,7 +375,7 @@ func (a *RolesBackupApiService) BackupStatusExecute(r ApiBackupStatusRequest) (*
 		localVarReturnValue *BackupAPIBackupStatusOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupApiService.BackupStatus")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesBackupAPIService.BackupStatus")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}

@@ -1,13 +1,13 @@
-# \RolesBackupApi
+# \RolesBackupAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**BackupGetRoleConfig**](RolesBackupApi.md#BackupGetRoleConfig) | **Get** /api/v1/roles/backup | Backup role config
-[**BackupPutRoleConfig**](RolesBackupApi.md#BackupPutRoleConfig) | **Post** /api/v1/roles/backup | Backup role config
-[**BackupStart**](RolesBackupApi.md#BackupStart) | **Post** /api/v1/backup/start | Backup start
-[**BackupStatus**](RolesBackupApi.md#BackupStatus) | **Get** /api/v1/backup/status | Backup status
+[**BackupGetRoleConfig**](RolesBackupAPI.md#BackupGetRoleConfig) | **Get** /api/v1/roles/backup | Backup role config
+[**BackupPutRoleConfig**](RolesBackupAPI.md#BackupPutRoleConfig) | **Post** /api/v1/roles/backup | Backup role config
+[**BackupStart**](RolesBackupAPI.md#BackupStart) | **Post** /api/v1/backup/start | Backup start
+[**BackupStatus**](RolesBackupAPI.md#BackupStatus) | **Get** /api/v1/backup/status | Backup status
 
 
 
@@ -23,23 +23,23 @@ Backup role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesBackupApi.BackupGetRoleConfig(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupApi.BackupGetRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BackupGetRoleConfig`: BackupAPIRoleConfigOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesBackupApi.BackupGetRoleConfig`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesBackupAPI.BackupGetRoleConfig(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupAPI.BackupGetRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `BackupGetRoleConfig`: BackupAPIRoleConfigOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesBackupAPI.BackupGetRoleConfig`: %v\n", resp)
 }
 ```
 
@@ -82,22 +82,22 @@ Backup role config
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    backupAPIRoleConfigInput := *openapiclient.NewBackupAPIRoleConfigInput(*openapiclient.NewBackupRoleConfig()) // BackupAPIRoleConfigInput |  (optional)
+	backupAPIRoleConfigInput := *openapiclient.NewBackupAPIRoleConfigInput(*openapiclient.NewBackupRoleConfig()) // BackupAPIRoleConfigInput |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    r, err := apiClient.RolesBackupApi.BackupPutRoleConfig(context.Background()).BackupAPIRoleConfigInput(backupAPIRoleConfigInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupApi.BackupPutRoleConfig``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesBackupAPI.BackupPutRoleConfig(context.Background()).BackupAPIRoleConfigInput(backupAPIRoleConfigInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupAPI.BackupPutRoleConfig``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -144,24 +144,24 @@ Backup start
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
-    wait := true // bool | 
+	wait := true // bool | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesBackupApi.BackupStart(context.Background()).Wait(wait).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupApi.BackupStart``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BackupStart`: BackupBackupStatus
-    fmt.Fprintf(os.Stdout, "Response from `RolesBackupApi.BackupStart`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesBackupAPI.BackupStart(context.Background()).Wait(wait).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupAPI.BackupStart``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `BackupStart`: BackupBackupStatus
+	fmt.Fprintf(os.Stdout, "Response from `RolesBackupAPI.BackupStart`: %v\n", resp)
 }
 ```
 
@@ -208,23 +208,23 @@ Backup status
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.RolesBackupApi.BackupStatus(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupApi.BackupStatus``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BackupStatus`: BackupAPIBackupStatusOutput
-    fmt.Fprintf(os.Stdout, "Response from `RolesBackupApi.BackupStatus`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.RolesBackupAPI.BackupStatus(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesBackupAPI.BackupStatus``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `BackupStatus`: BackupAPIBackupStatusOutput
+	fmt.Fprintf(os.Stdout, "Response from `RolesBackupAPI.BackupStatus`: %v\n", resp)
 }
 ```
 

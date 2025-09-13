@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesDnsApiService RolesDnsApi service
-type RolesDnsApiService service
+// RolesDnsAPIService RolesDnsAPI service
+type RolesDnsAPIService service
 
 type ApiDnsDeleteRecordsRequest struct {
 	ctx        context.Context
-	ApiService *RolesDnsApiService
+	ApiService *RolesDnsAPIService
 	zone       *string
 	hostname   *string
 	uid        *string
@@ -60,7 +60,7 @@ DnsDeleteRecords DNS Records
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsDeleteRecordsRequest
 */
-func (a *RolesDnsApiService) DnsDeleteRecords(ctx context.Context) ApiDnsDeleteRecordsRequest {
+func (a *RolesDnsAPIService) DnsDeleteRecords(ctx context.Context) ApiDnsDeleteRecordsRequest {
 	return ApiDnsDeleteRecordsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -68,14 +68,14 @@ func (a *RolesDnsApiService) DnsDeleteRecords(ctx context.Context) ApiDnsDeleteR
 }
 
 // Execute executes the request
-func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsRequest) (*http.Response, error) {
+func (a *RolesDnsAPIService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsDeleteRecords")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsDeleteRecords")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -98,10 +98,10 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 		return nil, reportError("type_ is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -181,7 +181,7 @@ func (a *RolesDnsApiService) DnsDeleteRecordsExecute(r ApiDnsDeleteRecordsReques
 
 type ApiDnsDeleteZonesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDnsApiService
+	ApiService *RolesDnsAPIService
 	zone       *string
 }
 
@@ -200,7 +200,7 @@ DnsDeleteZones DNS Zones
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsDeleteZonesRequest
 */
-func (a *RolesDnsApiService) DnsDeleteZones(ctx context.Context) ApiDnsDeleteZonesRequest {
+func (a *RolesDnsAPIService) DnsDeleteZones(ctx context.Context) ApiDnsDeleteZonesRequest {
 	return ApiDnsDeleteZonesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -208,14 +208,14 @@ func (a *RolesDnsApiService) DnsDeleteZones(ctx context.Context) ApiDnsDeleteZon
 }
 
 // Execute executes the request
-func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (*http.Response, error) {
+func (a *RolesDnsAPIService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsDeleteZones")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsDeleteZones")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -227,7 +227,7 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 	localVarFormParams := url.Values{}
 
 	if r.zone != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -297,7 +297,7 @@ func (a *RolesDnsApiService) DnsDeleteZonesExecute(r ApiDnsDeleteZonesRequest) (
 
 type ApiDnsGetRecordsRequest struct {
 	ctx        context.Context
-	ApiService *RolesDnsApiService
+	ApiService *RolesDnsAPIService
 	zone       *string
 	hostname   *string
 	type_      *string
@@ -335,7 +335,7 @@ DnsGetRecords DNS Records
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsGetRecordsRequest
 */
-func (a *RolesDnsApiService) DnsGetRecords(ctx context.Context) ApiDnsGetRecordsRequest {
+func (a *RolesDnsAPIService) DnsGetRecords(ctx context.Context) ApiDnsGetRecordsRequest {
 	return ApiDnsGetRecordsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -345,7 +345,7 @@ func (a *RolesDnsApiService) DnsGetRecords(ctx context.Context) ApiDnsGetRecords
 // Execute executes the request
 //
 //	@return DnsAPIRecordsGetOutput
-func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*DnsAPIRecordsGetOutput, *http.Response, error) {
+func (a *RolesDnsAPIService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*DnsAPIRecordsGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -353,7 +353,7 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 		localVarReturnValue *DnsAPIRecordsGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsGetRecords")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsGetRecords")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -365,16 +365,16 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 	localVarFormParams := url.Values{}
 
 	if r.zone != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
 	}
 	if r.hostname != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "form", "")
 	}
 	if r.type_ != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "form", "")
 	}
 	if r.uid != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -464,7 +464,7 @@ func (a *RolesDnsApiService) DnsGetRecordsExecute(r ApiDnsGetRecordsRequest) (*D
 
 type ApiDnsGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesDnsApiService
+	ApiService *RolesDnsAPIService
 }
 
 func (r ApiDnsGetRoleConfigRequest) Execute() (*DnsAPIRoleConfigOutput, *http.Response, error) {
@@ -477,7 +477,7 @@ DnsGetRoleConfig DNS role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsGetRoleConfigRequest
 */
-func (a *RolesDnsApiService) DnsGetRoleConfig(ctx context.Context) ApiDnsGetRoleConfigRequest {
+func (a *RolesDnsAPIService) DnsGetRoleConfig(ctx context.Context) ApiDnsGetRoleConfigRequest {
 	return ApiDnsGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -487,7 +487,7 @@ func (a *RolesDnsApiService) DnsGetRoleConfig(ctx context.Context) ApiDnsGetRole
 // Execute executes the request
 //
 //	@return DnsAPIRoleConfigOutput
-func (a *RolesDnsApiService) DnsGetRoleConfigExecute(r ApiDnsGetRoleConfigRequest) (*DnsAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesDnsAPIService) DnsGetRoleConfigExecute(r ApiDnsGetRoleConfigRequest) (*DnsAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -495,7 +495,7 @@ func (a *RolesDnsApiService) DnsGetRoleConfigExecute(r ApiDnsGetRoleConfigReques
 		localVarReturnValue *DnsAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -562,7 +562,7 @@ func (a *RolesDnsApiService) DnsGetRoleConfigExecute(r ApiDnsGetRoleConfigReques
 
 type ApiDnsGetZonesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDnsApiService
+	ApiService *RolesDnsAPIService
 	name       *string
 }
 
@@ -582,7 +582,7 @@ DnsGetZones DNS Zones
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsGetZonesRequest
 */
-func (a *RolesDnsApiService) DnsGetZones(ctx context.Context) ApiDnsGetZonesRequest {
+func (a *RolesDnsAPIService) DnsGetZones(ctx context.Context) ApiDnsGetZonesRequest {
 	return ApiDnsGetZonesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -592,7 +592,7 @@ func (a *RolesDnsApiService) DnsGetZones(ctx context.Context) ApiDnsGetZonesRequ
 // Execute executes the request
 //
 //	@return DnsAPIZonesGetOutput
-func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAPIZonesGetOutput, *http.Response, error) {
+func (a *RolesDnsAPIService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAPIZonesGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -600,7 +600,7 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 		localVarReturnValue *DnsAPIZonesGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsGetZones")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsGetZones")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -612,7 +612,7 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -680,7 +680,7 @@ func (a *RolesDnsApiService) DnsGetZonesExecute(r ApiDnsGetZonesRequest) (*DnsAP
 
 type ApiDnsImportZonesRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesDnsApiService
+	ApiService             *RolesDnsAPIService
 	zone                   *string
 	dnsAPIZonesImportInput *DnsAPIZonesImportInput
 }
@@ -705,7 +705,7 @@ DnsImportZones DNS Zones
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsImportZonesRequest
 */
-func (a *RolesDnsApiService) DnsImportZones(ctx context.Context) ApiDnsImportZonesRequest {
+func (a *RolesDnsAPIService) DnsImportZones(ctx context.Context) ApiDnsImportZonesRequest {
 	return ApiDnsImportZonesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -715,7 +715,7 @@ func (a *RolesDnsApiService) DnsImportZones(ctx context.Context) ApiDnsImportZon
 // Execute executes the request
 //
 //	@return DnsAPIZonesImportOutput
-func (a *RolesDnsApiService) DnsImportZonesExecute(r ApiDnsImportZonesRequest) (*DnsAPIZonesImportOutput, *http.Response, error) {
+func (a *RolesDnsAPIService) DnsImportZonesExecute(r ApiDnsImportZonesRequest) (*DnsAPIZonesImportOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -723,7 +723,7 @@ func (a *RolesDnsApiService) DnsImportZonesExecute(r ApiDnsImportZonesRequest) (
 		localVarReturnValue *DnsAPIZonesImportOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsImportZones")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsImportZones")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -735,7 +735,7 @@ func (a *RolesDnsApiService) DnsImportZonesExecute(r ApiDnsImportZonesRequest) (
 	localVarFormParams := url.Values{}
 
 	if r.zone != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -816,7 +816,7 @@ func (a *RolesDnsApiService) DnsImportZonesExecute(r ApiDnsImportZonesRequest) (
 
 type ApiDnsPutRecordsRequest struct {
 	ctx                   context.Context
-	ApiService            *RolesDnsApiService
+	ApiService            *RolesDnsAPIService
 	zone                  *string
 	hostname              *string
 	uid                   *string
@@ -853,7 +853,7 @@ DnsPutRecords DNS Records
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsPutRecordsRequest
 */
-func (a *RolesDnsApiService) DnsPutRecords(ctx context.Context) ApiDnsPutRecordsRequest {
+func (a *RolesDnsAPIService) DnsPutRecords(ctx context.Context) ApiDnsPutRecordsRequest {
 	return ApiDnsPutRecordsRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -861,14 +861,14 @@ func (a *RolesDnsApiService) DnsPutRecords(ctx context.Context) ApiDnsPutRecords
 }
 
 // Execute executes the request
-func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*http.Response, error) {
+func (a *RolesDnsAPIService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsPutRecords")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsPutRecords")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -891,10 +891,10 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 		return nil, reportError("hostname must have less than 255 elements")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "hostname", r.hostname, "form", "")
 	if r.uid != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "uid", r.uid, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -977,7 +977,7 @@ func (a *RolesDnsApiService) DnsPutRecordsExecute(r ApiDnsPutRecordsRequest) (*h
 
 type ApiDnsPutRoleConfigRequest struct {
 	ctx                   context.Context
-	ApiService            *RolesDnsApiService
+	ApiService            *RolesDnsAPIService
 	dnsAPIRoleConfigInput *DnsAPIRoleConfigInput
 }
 
@@ -996,7 +996,7 @@ DnsPutRoleConfig DNS role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsPutRoleConfigRequest
 */
-func (a *RolesDnsApiService) DnsPutRoleConfig(ctx context.Context) ApiDnsPutRoleConfigRequest {
+func (a *RolesDnsAPIService) DnsPutRoleConfig(ctx context.Context) ApiDnsPutRoleConfigRequest {
 	return ApiDnsPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1004,14 +1004,14 @@ func (a *RolesDnsApiService) DnsPutRoleConfig(ctx context.Context) ApiDnsPutRole
 }
 
 // Execute executes the request
-func (a *RolesDnsApiService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesDnsAPIService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1092,7 +1092,7 @@ func (a *RolesDnsApiService) DnsPutRoleConfigExecute(r ApiDnsPutRoleConfigReques
 
 type ApiDnsPutZonesRequest struct {
 	ctx                 context.Context
-	ApiService          *RolesDnsApiService
+	ApiService          *RolesDnsAPIService
 	zone                *string
 	dnsAPIZonesPutInput *DnsAPIZonesPutInput
 }
@@ -1117,7 +1117,7 @@ DnsPutZones DNS Zones
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDnsPutZonesRequest
 */
-func (a *RolesDnsApiService) DnsPutZones(ctx context.Context) ApiDnsPutZonesRequest {
+func (a *RolesDnsAPIService) DnsPutZones(ctx context.Context) ApiDnsPutZonesRequest {
 	return ApiDnsPutZonesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1125,14 +1125,14 @@ func (a *RolesDnsApiService) DnsPutZones(ctx context.Context) ApiDnsPutZonesRequ
 }
 
 // Execute executes the request
-func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.Response, error) {
+func (a *RolesDnsAPIService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsApiService.DnsPutZones")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDnsAPIService.DnsPutZones")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1149,7 +1149,7 @@ func (a *RolesDnsApiService) DnsPutZonesExecute(r ApiDnsPutZonesRequest) (*http.
 		return nil, reportError("zone must have less than 255 elements")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "zone", r.zone, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

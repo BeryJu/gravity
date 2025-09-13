@@ -1,10 +1,10 @@
-# \ClusterApi
+# \ClusterAPI
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ClusterGetClusterInfo**](ClusterApi.md#ClusterGetClusterInfo) | **Get** /api/v1/cluster | Cluster
+[**ClusterGetClusterInfo**](ClusterAPI.md#ClusterGetClusterInfo) | **Get** /api/v1/cluster | Cluster
 
 
 
@@ -20,23 +20,23 @@ Cluster
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "beryju.io/gravity/api"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
 )
 
 func main() {
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ClusterApi.ClusterGetClusterInfo(context.Background()).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ClusterApi.ClusterGetClusterInfo``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ClusterGetClusterInfo`: InstanceAPIClusterInfoOutput
-    fmt.Fprintf(os.Stdout, "Response from `ClusterApi.ClusterGetClusterInfo`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ClusterAPI.ClusterGetClusterInfo(context.Background()).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ClusterAPI.ClusterGetClusterInfo``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ClusterGetClusterInfo`: InstanceAPIClusterInfoOutput
+	fmt.Fprintf(os.Stdout, "Response from `ClusterAPI.ClusterGetClusterInfo`: %v\n", resp)
 }
 ```
 

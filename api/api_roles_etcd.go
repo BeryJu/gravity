@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesEtcdApiService RolesEtcdApi service
-type RolesEtcdApiService service
+// RolesEtcdAPIService RolesEtcdAPI service
+type RolesEtcdAPIService service
 
 type ApiEtcdGetMembersRequest struct {
 	ctx        context.Context
-	ApiService *RolesEtcdApiService
+	ApiService *RolesEtcdAPIService
 }
 
 func (r ApiEtcdGetMembersRequest) Execute() (*EtcdAPIMembersOutput, *http.Response, error) {
@@ -36,7 +36,7 @@ EtcdGetMembers Etcd members
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiEtcdGetMembersRequest
 */
-func (a *RolesEtcdApiService) EtcdGetMembers(ctx context.Context) ApiEtcdGetMembersRequest {
+func (a *RolesEtcdAPIService) EtcdGetMembers(ctx context.Context) ApiEtcdGetMembersRequest {
 	return ApiEtcdGetMembersRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *RolesEtcdApiService) EtcdGetMembers(ctx context.Context) ApiEtcdGetMemb
 // Execute executes the request
 //
 //	@return EtcdAPIMembersOutput
-func (a *RolesEtcdApiService) EtcdGetMembersExecute(r ApiEtcdGetMembersRequest) (*EtcdAPIMembersOutput, *http.Response, error) {
+func (a *RolesEtcdAPIService) EtcdGetMembersExecute(r ApiEtcdGetMembersRequest) (*EtcdAPIMembersOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *RolesEtcdApiService) EtcdGetMembersExecute(r ApiEtcdGetMembersRequest) 
 		localVarReturnValue *EtcdAPIMembersOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdApiService.EtcdGetMembers")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdAPIService.EtcdGetMembers")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -131,7 +131,7 @@ func (a *RolesEtcdApiService) EtcdGetMembersExecute(r ApiEtcdGetMembersRequest) 
 
 type ApiEtcdJoinMemberRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesEtcdApiService
+	ApiService             *RolesEtcdAPIService
 	etcdAPIMemberJoinInput *EtcdAPIMemberJoinInput
 }
 
@@ -150,7 +150,7 @@ EtcdJoinMember Etcd join
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiEtcdJoinMemberRequest
 */
-func (a *RolesEtcdApiService) EtcdJoinMember(ctx context.Context) ApiEtcdJoinMemberRequest {
+func (a *RolesEtcdAPIService) EtcdJoinMember(ctx context.Context) ApiEtcdJoinMemberRequest {
 	return ApiEtcdJoinMemberRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -160,7 +160,7 @@ func (a *RolesEtcdApiService) EtcdJoinMember(ctx context.Context) ApiEtcdJoinMem
 // Execute executes the request
 //
 //	@return EtcdAPIMemberJoinOutput
-func (a *RolesEtcdApiService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) (*EtcdAPIMemberJoinOutput, *http.Response, error) {
+func (a *RolesEtcdAPIService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) (*EtcdAPIMemberJoinOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -168,7 +168,7 @@ func (a *RolesEtcdApiService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) 
 		localVarReturnValue *EtcdAPIMemberJoinOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdApiService.EtcdJoinMember")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdAPIService.EtcdJoinMember")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -247,7 +247,7 @@ func (a *RolesEtcdApiService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) 
 
 type ApiEtcdRemoveMemberRequest struct {
 	ctx        context.Context
-	ApiService *RolesEtcdApiService
+	ApiService *RolesEtcdAPIService
 	peerID     *int32
 }
 
@@ -266,7 +266,7 @@ EtcdRemoveMember Etcd remove
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiEtcdRemoveMemberRequest
 */
-func (a *RolesEtcdApiService) EtcdRemoveMember(ctx context.Context) ApiEtcdRemoveMemberRequest {
+func (a *RolesEtcdAPIService) EtcdRemoveMember(ctx context.Context) ApiEtcdRemoveMemberRequest {
 	return ApiEtcdRemoveMemberRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -274,14 +274,14 @@ func (a *RolesEtcdApiService) EtcdRemoveMember(ctx context.Context) ApiEtcdRemov
 }
 
 // Execute executes the request
-func (a *RolesEtcdApiService) EtcdRemoveMemberExecute(r ApiEtcdRemoveMemberRequest) (*http.Response, error) {
+func (a *RolesEtcdAPIService) EtcdRemoveMemberExecute(r ApiEtcdRemoveMemberRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdApiService.EtcdRemoveMember")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesEtcdAPIService.EtcdRemoveMember")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -298,7 +298,7 @@ func (a *RolesEtcdApiService) EtcdRemoveMemberExecute(r ApiEtcdRemoveMemberReque
 		return nil, reportError("peerID must be greater than 0")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "peerID", r.peerID, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "peerID", r.peerID, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

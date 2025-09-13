@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the InstanceInstanceInfo type satisfies the MappedNullable interface at compile time
@@ -24,6 +26,8 @@ type InstanceInstanceInfo struct {
 	Roles      []string `json:"roles"`
 	Version    string   `json:"version"`
 }
+
+type _InstanceInstanceInfo InstanceInstanceInfo
 
 // NewInstanceInstanceInfo instantiates a new InstanceInstanceInfo object
 // This constructor will assign default values to properties that have it defined,
@@ -161,6 +165,46 @@ func (o InstanceInstanceInfo) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["version"] = o.Version
 	return toSerialize, nil
+}
+
+func (o *InstanceInstanceInfo) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"identifier",
+		"ip",
+		"roles",
+		"version",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varInstanceInstanceInfo := _InstanceInstanceInfo{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varInstanceInstanceInfo)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InstanceInstanceInfo(varInstanceInstanceInfo)
+
+	return err
 }
 
 type NullableInstanceInstanceInfo struct {

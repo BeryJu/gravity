@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// RolesDhcpApiService RolesDhcpApi service
-type RolesDhcpApiService service
+// RolesDhcpAPIService RolesDhcpAPI service
+type RolesDhcpAPIService service
 
 type ApiDhcpDeleteLeasesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 	identifier *string
 	scope      *string
 }
@@ -48,7 +48,7 @@ DhcpDeleteLeases DHCP Leases
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpDeleteLeasesRequest
 */
-func (a *RolesDhcpApiService) DhcpDeleteLeases(ctx context.Context) ApiDhcpDeleteLeasesRequest {
+func (a *RolesDhcpAPIService) DhcpDeleteLeases(ctx context.Context) ApiDhcpDeleteLeasesRequest {
 	return ApiDhcpDeleteLeasesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -56,14 +56,14 @@ func (a *RolesDhcpApiService) DhcpDeleteLeases(ctx context.Context) ApiDhcpDelet
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpDeleteLeases")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpDeleteLeases")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -75,10 +75,10 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 	localVarFormParams := url.Values{}
 
 	if r.identifier != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	}
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -148,7 +148,7 @@ func (a *RolesDhcpApiService) DhcpDeleteLeasesExecute(r ApiDhcpDeleteLeasesReque
 
 type ApiDhcpDeleteScopesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 	scope      *string
 }
 
@@ -167,7 +167,7 @@ DhcpDeleteScopes DHCP Scopes
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpDeleteScopesRequest
 */
-func (a *RolesDhcpApiService) DhcpDeleteScopes(ctx context.Context) ApiDhcpDeleteScopesRequest {
+func (a *RolesDhcpAPIService) DhcpDeleteScopes(ctx context.Context) ApiDhcpDeleteScopesRequest {
 	return ApiDhcpDeleteScopesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -175,14 +175,14 @@ func (a *RolesDhcpApiService) DhcpDeleteScopes(ctx context.Context) ApiDhcpDelet
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpDeleteScopes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpDeleteScopes")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -196,7 +196,7 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 		return nil, reportError("scope is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -265,7 +265,7 @@ func (a *RolesDhcpApiService) DhcpDeleteScopesExecute(r ApiDhcpDeleteScopesReque
 
 type ApiDhcpGetLeasesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 	scope      *string
 	identifier *string
 }
@@ -291,7 +291,7 @@ DhcpGetLeases DHCP Leases
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpGetLeasesRequest
 */
-func (a *RolesDhcpApiService) DhcpGetLeases(ctx context.Context) ApiDhcpGetLeasesRequest {
+func (a *RolesDhcpAPIService) DhcpGetLeases(ctx context.Context) ApiDhcpGetLeasesRequest {
 	return ApiDhcpGetLeasesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -301,7 +301,7 @@ func (a *RolesDhcpApiService) DhcpGetLeases(ctx context.Context) ApiDhcpGetLease
 // Execute executes the request
 //
 //	@return DhcpAPILeasesGetOutput
-func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*DhcpAPILeasesGetOutput, *http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*DhcpAPILeasesGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -309,7 +309,7 @@ func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*
 		localVarReturnValue *DhcpAPILeasesGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpGetLeases")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpGetLeases")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -321,10 +321,10 @@ func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*
 	localVarFormParams := url.Values{}
 
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	}
 	if r.identifier != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -392,7 +392,7 @@ func (a *RolesDhcpApiService) DhcpGetLeasesExecute(r ApiDhcpGetLeasesRequest) (*
 
 type ApiDhcpGetRoleConfigRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 }
 
 func (r ApiDhcpGetRoleConfigRequest) Execute() (*DhcpAPIRoleConfigOutput, *http.Response, error) {
@@ -405,7 +405,7 @@ DhcpGetRoleConfig DHCP role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpGetRoleConfigRequest
 */
-func (a *RolesDhcpApiService) DhcpGetRoleConfig(ctx context.Context) ApiDhcpGetRoleConfigRequest {
+func (a *RolesDhcpAPIService) DhcpGetRoleConfig(ctx context.Context) ApiDhcpGetRoleConfigRequest {
 	return ApiDhcpGetRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -415,7 +415,7 @@ func (a *RolesDhcpApiService) DhcpGetRoleConfig(ctx context.Context) ApiDhcpGetR
 // Execute executes the request
 //
 //	@return DhcpAPIRoleConfigOutput
-func (a *RolesDhcpApiService) DhcpGetRoleConfigExecute(r ApiDhcpGetRoleConfigRequest) (*DhcpAPIRoleConfigOutput, *http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpGetRoleConfigExecute(r ApiDhcpGetRoleConfigRequest) (*DhcpAPIRoleConfigOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -423,7 +423,7 @@ func (a *RolesDhcpApiService) DhcpGetRoleConfigExecute(r ApiDhcpGetRoleConfigReq
 		localVarReturnValue *DhcpAPIRoleConfigOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpGetRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpGetRoleConfig")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -490,7 +490,7 @@ func (a *RolesDhcpApiService) DhcpGetRoleConfigExecute(r ApiDhcpGetRoleConfigReq
 
 type ApiDhcpGetScopesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 	name       *string
 }
 
@@ -510,7 +510,7 @@ DhcpGetScopes DHCP Scopes
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpGetScopesRequest
 */
-func (a *RolesDhcpApiService) DhcpGetScopes(ctx context.Context) ApiDhcpGetScopesRequest {
+func (a *RolesDhcpAPIService) DhcpGetScopes(ctx context.Context) ApiDhcpGetScopesRequest {
 	return ApiDhcpGetScopesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -520,7 +520,7 @@ func (a *RolesDhcpApiService) DhcpGetScopes(ctx context.Context) ApiDhcpGetScope
 // Execute executes the request
 //
 //	@return DhcpAPIScopesGetOutput
-func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*DhcpAPIScopesGetOutput, *http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*DhcpAPIScopesGetOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -528,7 +528,7 @@ func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*
 		localVarReturnValue *DhcpAPIScopesGetOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpGetScopes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpGetScopes")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -540,7 +540,7 @@ func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*
 	localVarFormParams := url.Values{}
 
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -598,7 +598,7 @@ func (a *RolesDhcpApiService) DhcpGetScopesExecute(r ApiDhcpGetScopesRequest) (*
 
 type ApiDhcpImportScopesRequest struct {
 	ctx                      context.Context
-	ApiService               *RolesDhcpApiService
+	ApiService               *RolesDhcpAPIService
 	scope                    *string
 	dhcpAPIScopesImportInput *DhcpAPIScopesImportInput
 }
@@ -623,7 +623,7 @@ DhcpImportScopes DHCP Scopes
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpImportScopesRequest
 */
-func (a *RolesDhcpApiService) DhcpImportScopes(ctx context.Context) ApiDhcpImportScopesRequest {
+func (a *RolesDhcpAPIService) DhcpImportScopes(ctx context.Context) ApiDhcpImportScopesRequest {
 	return ApiDhcpImportScopesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -633,7 +633,7 @@ func (a *RolesDhcpApiService) DhcpImportScopes(ctx context.Context) ApiDhcpImpor
 // Execute executes the request
 //
 //	@return DhcpAPIScopesImportOutput
-func (a *RolesDhcpApiService) DhcpImportScopesExecute(r ApiDhcpImportScopesRequest) (*DhcpAPIScopesImportOutput, *http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpImportScopesExecute(r ApiDhcpImportScopesRequest) (*DhcpAPIScopesImportOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -641,7 +641,7 @@ func (a *RolesDhcpApiService) DhcpImportScopesExecute(r ApiDhcpImportScopesReque
 		localVarReturnValue *DhcpAPIScopesImportOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpImportScopes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpImportScopes")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -653,7 +653,7 @@ func (a *RolesDhcpApiService) DhcpImportScopesExecute(r ApiDhcpImportScopesReque
 	localVarFormParams := url.Values{}
 
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -734,7 +734,7 @@ func (a *RolesDhcpApiService) DhcpImportScopesExecute(r ApiDhcpImportScopesReque
 
 type ApiDhcpPutLeasesRequest struct {
 	ctx                   context.Context
-	ApiService            *RolesDhcpApiService
+	ApiService            *RolesDhcpAPIService
 	identifier            *string
 	scope                 *string
 	dhcpAPILeasesPutInput *DhcpAPILeasesPutInput
@@ -765,7 +765,7 @@ DhcpPutLeases DHCP Leases
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpPutLeasesRequest
 */
-func (a *RolesDhcpApiService) DhcpPutLeases(ctx context.Context) ApiDhcpPutLeasesRequest {
+func (a *RolesDhcpAPIService) DhcpPutLeases(ctx context.Context) ApiDhcpPutLeasesRequest {
 	return ApiDhcpPutLeasesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -773,14 +773,14 @@ func (a *RolesDhcpApiService) DhcpPutLeases(ctx context.Context) ApiDhcpPutLease
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpPutLeases")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpPutLeases")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -803,8 +803,8 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 		return nil, reportError("scope must have less than 255 elements")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -875,7 +875,7 @@ func (a *RolesDhcpApiService) DhcpPutLeasesExecute(r ApiDhcpPutLeasesRequest) (*
 
 type ApiDhcpPutRoleConfigRequest struct {
 	ctx                    context.Context
-	ApiService             *RolesDhcpApiService
+	ApiService             *RolesDhcpAPIService
 	dhcpAPIRoleConfigInput *DhcpAPIRoleConfigInput
 }
 
@@ -894,7 +894,7 @@ DhcpPutRoleConfig DHCP role config
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpPutRoleConfigRequest
 */
-func (a *RolesDhcpApiService) DhcpPutRoleConfig(ctx context.Context) ApiDhcpPutRoleConfigRequest {
+func (a *RolesDhcpAPIService) DhcpPutRoleConfig(ctx context.Context) ApiDhcpPutRoleConfigRequest {
 	return ApiDhcpPutRoleConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -902,14 +902,14 @@ func (a *RolesDhcpApiService) DhcpPutRoleConfig(ctx context.Context) ApiDhcpPutR
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpPutRoleConfig")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpPutRoleConfig")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -990,7 +990,7 @@ func (a *RolesDhcpApiService) DhcpPutRoleConfigExecute(r ApiDhcpPutRoleConfigReq
 
 type ApiDhcpPutScopesRequest struct {
 	ctx                   context.Context
-	ApiService            *RolesDhcpApiService
+	ApiService            *RolesDhcpAPIService
 	scope                 *string
 	dhcpAPIScopesPutInput *DhcpAPIScopesPutInput
 }
@@ -1015,7 +1015,7 @@ DhcpPutScopes DHCP Scopes
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpPutScopesRequest
 */
-func (a *RolesDhcpApiService) DhcpPutScopes(ctx context.Context) ApiDhcpPutScopesRequest {
+func (a *RolesDhcpAPIService) DhcpPutScopes(ctx context.Context) ApiDhcpPutScopesRequest {
 	return ApiDhcpPutScopesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1023,14 +1023,14 @@ func (a *RolesDhcpApiService) DhcpPutScopes(ctx context.Context) ApiDhcpPutScope
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpPutScopes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpPutScopes")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1047,7 +1047,7 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 		return nil, reportError("scope must have less than 255 elements")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1118,7 +1118,7 @@ func (a *RolesDhcpApiService) DhcpPutScopesExecute(r ApiDhcpPutScopesRequest) (*
 
 type ApiDhcpWolLeasesRequest struct {
 	ctx        context.Context
-	ApiService *RolesDhcpApiService
+	ApiService *RolesDhcpAPIService
 	identifier *string
 	scope      *string
 }
@@ -1143,7 +1143,7 @@ DhcpWolLeases DHCP Leases
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiDhcpWolLeasesRequest
 */
-func (a *RolesDhcpApiService) DhcpWolLeases(ctx context.Context) ApiDhcpWolLeasesRequest {
+func (a *RolesDhcpAPIService) DhcpWolLeases(ctx context.Context) ApiDhcpWolLeasesRequest {
 	return ApiDhcpWolLeasesRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -1151,14 +1151,14 @@ func (a *RolesDhcpApiService) DhcpWolLeases(ctx context.Context) ApiDhcpWolLease
 }
 
 // Execute executes the request
-func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*http.Response, error) {
+func (a *RolesDhcpAPIService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpApiService.DhcpWolLeases")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesDhcpAPIService.DhcpWolLeases")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1175,8 +1175,8 @@ func (a *RolesDhcpApiService) DhcpWolLeasesExecute(r ApiDhcpWolLeasesRequest) (*
 		return nil, reportError("scope is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "identifier", r.identifier, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

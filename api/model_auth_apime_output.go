@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the AuthAPIMeOutput type satisfies the MappedNullable interface at compile time
@@ -23,6 +25,8 @@ type AuthAPIMeOutput struct {
 	Permissions   []AuthPermission `json:"permissions"`
 	Username      string           `json:"username"`
 }
+
+type _AuthAPIMeOutput AuthAPIMeOutput
 
 // NewAuthAPIMeOutput instantiates a new AuthAPIMeOutput object
 // This constructor will assign default values to properties that have it defined,
@@ -134,6 +138,45 @@ func (o AuthAPIMeOutput) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["username"] = o.Username
 	return toSerialize, nil
+}
+
+func (o *AuthAPIMeOutput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"authenticated",
+		"permissions",
+		"username",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varAuthAPIMeOutput := _AuthAPIMeOutput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varAuthAPIMeOutput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthAPIMeOutput(varAuthAPIMeOutput)
+
+	return err
 }
 
 type NullableAuthAPIMeOutput struct {

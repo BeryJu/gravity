@@ -182,7 +182,7 @@ func (o *TypesDHCPOption) GetValue64Ok() ([]string, bool) {
 
 // HasValue64 returns a boolean if a field has been set.
 func (o *TypesDHCPOption) HasValue64() bool {
-	if o != nil && IsNil(o.Value64) {
+	if o != nil && !IsNil(o.Value64) {
 		return true
 	}
 
@@ -215,7 +215,7 @@ func (o *TypesDHCPOption) GetValueHexOk() ([]string, bool) {
 
 // HasValueHex returns a boolean if a field has been set.
 func (o *TypesDHCPOption) HasValueHex() bool {
-	if o != nil && IsNil(o.ValueHex) {
+	if o != nil && !IsNil(o.ValueHex) {
 		return true
 	}
 

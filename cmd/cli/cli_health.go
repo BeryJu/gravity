@@ -13,7 +13,7 @@ var healthCmd = &cobra.Command{
 	Use:   "health",
 	Short: "Check health and version",
 	Run: func(cmd *cobra.Command, args []string) {
-		c, hr, err := apiClient.ClusterApi.ClusterGetClusterInfo(cmd.Context()).Execute()
+		c, hr, err := apiClient.ClusterAPI.ClusterGetClusterInfo(cmd.Context()).Execute()
 		if err != nil {
 			checkApiError(hr, err)
 			os.Exit(1)

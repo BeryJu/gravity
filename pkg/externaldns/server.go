@@ -136,7 +136,7 @@ func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, er
 func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
 	endpoints := []externaldnsapi.Endpoint{}
 	for _, zone := range s.zones {
-		records, hr, err := s.api.RolesDnsApi.DnsGetRecords(ctx).Zone(zone.Name).Execute()
+		records, hr, err := s.api.RolesDnsAPI.DnsGetRecords(ctx).Zone(zone.Name).Execute()
 		if err != nil {
 			return s.errorResponse(s.apiError(hr, err))
 		}
@@ -195,7 +195,7 @@ func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.E
 		return fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
 	}
 	for _, target := range endpoint.Targets {
-		hr, err := s.api.RolesDnsApi.
+		hr, err := s.api.RolesDnsAPI.
 			DnsDeleteRecords(ctx).
 			Zone(zone.Name).
 			Hostname(hostname).
@@ -215,7 +215,7 @@ func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.En
 		return nil, fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
 	}
 	for _, target := range endpoint.Targets {
-		hr, err := s.api.RolesDnsApi.
+		hr, err := s.api.RolesDnsAPI.
 			DnsPutRecords(ctx).
 			Zone(zone.Name).
 			Hostname(hostname).

@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the AuthAPIToken type satisfies the MappedNullable interface at compile time
@@ -22,6 +24,8 @@ type AuthAPIToken struct {
 	Key      string `json:"key"`
 	Username string `json:"username"`
 }
+
+type _AuthAPIToken AuthAPIToken
 
 // NewAuthAPIToken instantiates a new AuthAPIToken object
 // This constructor will assign default values to properties that have it defined,
@@ -103,6 +107,44 @@ func (o AuthAPIToken) ToMap() (map[string]interface{}, error) {
 	toSerialize["key"] = o.Key
 	toSerialize["username"] = o.Username
 	return toSerialize, nil
+}
+
+func (o *AuthAPIToken) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"key",
+		"username",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varAuthAPIToken := _AuthAPIToken{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varAuthAPIToken)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthAPIToken(varAuthAPIToken)
+
+	return err
 }
 
 type NullableAuthAPIToken struct {

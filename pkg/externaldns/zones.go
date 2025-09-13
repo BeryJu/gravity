@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Server) prefetchZones(ctx context.Context) error {
-	zones, hr, err := s.api.RolesDnsApi.DnsGetZones(ctx).Execute()
+	zones, hr, err := s.api.RolesDnsAPI.DnsGetZones(ctx).Execute()
 	if err != nil {
 		return s.apiError(hr, err)
 	}

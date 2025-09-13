@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// ClusterApiService ClusterApi service
-type ClusterApiService service
+// ClusterAPIService ClusterAPI service
+type ClusterAPIService service
 
 type ApiClusterGetClusterInfoRequest struct {
 	ctx        context.Context
-	ApiService *ClusterApiService
+	ApiService *ClusterAPIService
 }
 
 func (r ApiClusterGetClusterInfoRequest) Execute() (*InstanceAPIClusterInfoOutput, *http.Response, error) {
@@ -36,7 +36,7 @@ ClusterGetClusterInfo Cluster
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiClusterGetClusterInfoRequest
 */
-func (a *ClusterApiService) ClusterGetClusterInfo(ctx context.Context) ApiClusterGetClusterInfoRequest {
+func (a *ClusterAPIService) ClusterGetClusterInfo(ctx context.Context) ApiClusterGetClusterInfoRequest {
 	return ApiClusterGetClusterInfoRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *ClusterApiService) ClusterGetClusterInfo(ctx context.Context) ApiCluste
 // Execute executes the request
 //
 //	@return InstanceAPIClusterInfoOutput
-func (a *ClusterApiService) ClusterGetClusterInfoExecute(r ApiClusterGetClusterInfoRequest) (*InstanceAPIClusterInfoOutput, *http.Response, error) {
+func (a *ClusterAPIService) ClusterGetClusterInfoExecute(r ApiClusterGetClusterInfoRequest) (*InstanceAPIClusterInfoOutput, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *ClusterApiService) ClusterGetClusterInfoExecute(r ApiClusterGetClusterI
 		localVarReturnValue *InstanceAPIClusterInfoOutput
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterApiService.ClusterGetClusterInfo")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterAPIService.ClusterGetClusterInfo")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}

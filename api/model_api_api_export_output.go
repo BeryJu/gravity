@@ -60,7 +60,7 @@ func (o *ApiAPIExportOutput) GetEntriesOk() ([]ApiAPITransportEntry, bool) {
 
 // HasEntries returns a boolean if a field has been set.
 func (o *ApiAPIExportOutput) HasEntries() bool {
-	if o != nil && IsNil(o.Entries) {
+	if o != nil && !IsNil(o.Entries) {
 		return true
 	}
 

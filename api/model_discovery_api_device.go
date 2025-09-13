@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the DiscoveryAPIDevice type satisfies the MappedNullable interface at compile time
@@ -24,6 +26,8 @@ type DiscoveryAPIDevice struct {
 	Ip         string `json:"ip"`
 	Mac        string `json:"mac"`
 }
+
+type _DiscoveryAPIDevice DiscoveryAPIDevice
 
 // NewDiscoveryAPIDevice instantiates a new DiscoveryAPIDevice object
 // This constructor will assign default values to properties that have it defined,
@@ -157,6 +161,46 @@ func (o DiscoveryAPIDevice) ToMap() (map[string]interface{}, error) {
 	toSerialize["ip"] = o.Ip
 	toSerialize["mac"] = o.Mac
 	return toSerialize, nil
+}
+
+func (o *DiscoveryAPIDevice) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"hostname",
+		"identifier",
+		"ip",
+		"mac",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varDiscoveryAPIDevice := _DiscoveryAPIDevice{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varDiscoveryAPIDevice)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DiscoveryAPIDevice(varDiscoveryAPIDevice)
+
+	return err
 }
 
 type NullableDiscoveryAPIDevice struct {
