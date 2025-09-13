@@ -13,7 +13,7 @@ runs:
       run: make test-env-stop
     - uses: test-summary/action@v2
       with:
-        paths: junit.xml
+        paths: ${{ github.workspace }}/junit.xml
         show: "fail"
     - shell: bash
       run: make test-convert
@@ -21,8 +21,9 @@ runs:
       with:
         use_oidc: true
         flags: ${{ inputs.flags }}
+        files: ${{ github.workspace }}/coverage.txt
     - uses: codecov/test-results-action@v1
       with:
         use_oidc: true
         flags: ${{ inputs.flags }}
-        files: ./junit.xml
+        files: ${{ github.workspace }}/junit.xml
