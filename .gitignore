@@ -6,5 +6,5 @@ coverage.html
 *.pcap
 ./*.sock
 tests.json
-test-output
+.test-output
 bin/**
