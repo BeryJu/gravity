@@ -49,14 +49,14 @@ func TestDiscovery_Simple(t *testing.T) {
 	testcontainers.CleanupContainer(t, tester)
 	assert.NoError(t, err)
 
-	_, err = gr.APIClient().RolesDiscoveryApi.
+	_, err = gr.APIClient().RolesDiscoveryAPI.
 		DiscoverySubnetStart(ctx).
 		Identifier("instance-subnet-gravity-1").
 		Wait(true).
 		Execute()
 	assert.NoError(t, err)
 
-	d, _, err := gr.APIClient().RolesDiscoveryApi.DiscoveryGetDevices(ctx).Execute()
+	d, _, err := gr.APIClient().RolesDiscoveryAPI.DiscoveryGetDevices(ctx).Execute()
 	assert.NoError(t, err)
 
 	assert.Len(t, d.Devices, 3)

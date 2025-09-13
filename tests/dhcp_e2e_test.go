@@ -38,7 +38,7 @@ func TestDHCP_Simple(t *testing.T) {
 
 	ac := g.APIClient()
 	// Create test network
-	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
+	_, err = ac.RolesDhcpAPI.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
 		SubnetCidr: "10.100.0.0/24",
 		Ttl:        86400,
 		Ipam: map[string]string{
@@ -77,7 +77,7 @@ func TestDHCP_Simple(t *testing.T) {
 	assert.Contains(t, string(body), "bound to")
 
 	// Check correct lease exists
-	sc, _, err := ac.RolesDhcpApi.DhcpGetLeases(ctx).Scope("network-A").Execute()
+	sc, _, err := ac.RolesDhcpAPI.DhcpGetLeases(ctx).Scope("network-A").Execute()
 	assert.NoError(t, err)
 	assert.Len(t, sc.Leases, 1)
 	assert.Equal(t, "10.100.0.100", sc.Leases[0].Address)
@@ -105,7 +105,7 @@ func TestDHCP_Parallel(t *testing.T) {
 
 	ac := g.APIClient()
 	// Create test network
-	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
+	_, err = ac.RolesDhcpAPI.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
 		SubnetCidr: "10.100.0.0/24",
 		Ttl:        86400,
 		Ipam: map[string]string{
@@ -148,7 +148,7 @@ func TestDHCP_Parallel(t *testing.T) {
 
 	// // Check correct lease exists
 	// defer func() {
-	// 	sc, _, err := ac.RolesDhcpApi.DhcpGetLeases(ctx).Scope("network-A").Execute()
+	// 	sc, _, err := ac.RolesDhcpAPI.DhcpGetLeases(ctx).Scope("network-A").Execute()
 	// 	assert.NoError(t, err)
 	// 	assert.Len(t, sc.Leases, 50)
 	// }()
@@ -195,7 +195,7 @@ func TestDHCP_Relay(t *testing.T) {
 
 	ac := g.APIClient()
 	// Create test network
-	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
+	_, err = ac.RolesDhcpAPI.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
 		SubnetCidr: "10.100.0.0/24",
 		Ttl:        86400,
 		Ipam: map[string]string{
@@ -206,7 +206,7 @@ func TestDHCP_Relay(t *testing.T) {
 		Options: []api.TypesDHCPOption{},
 	}).Scope("network-A").Execute()
 	assert.NoError(t, err)
-	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
+	_, err = ac.RolesDhcpAPI.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
 		SubnetCidr: "10.101.0.0/24",
 		Ttl:        86400,
 		Ipam: map[string]string{
@@ -264,7 +264,7 @@ func TestDHCP_Relay(t *testing.T) {
 	assert.Contains(t, string(body), "bound to")
 
 	// Check correct lease exists
-	sc, _, err := ac.RolesDhcpApi.DhcpGetLeases(ctx).Scope("network-B").Execute()
+	sc, _, err := ac.RolesDhcpAPI.DhcpGetLeases(ctx).Scope("network-B").Execute()
 	assert.NoError(t, err)
 	assert.Len(t, sc.Leases, 1)
 	assert.Equal(t, "10.101.0.100", sc.Leases[0].Address)
@@ -292,7 +292,7 @@ func TestDHCP_WOL(t *testing.T) {
 
 	ac := g.APIClient()
 	// Create test network
-	_, err = ac.RolesDhcpApi.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
+	_, err = ac.RolesDhcpAPI.DhcpPutScopes(ctx).DhcpAPIScopesPutInput(api.DhcpAPIScopesPutInput{
 		SubnetCidr: "10.100.0.0/24",
 		Ttl:        86400,
 		Ipam: map[string]string{
@@ -331,7 +331,7 @@ func TestDHCP_WOL(t *testing.T) {
 	assert.Contains(t, string(body), "bound to")
 
 	// Check correct lease exists
-	sc, _, err := ac.RolesDhcpApi.DhcpGetLeases(ctx).Scope("network-A").Execute()
+	sc, _, err := ac.RolesDhcpAPI.DhcpGetLeases(ctx).Scope("network-A").Execute()
 	assert.NoError(t, err)
 	assert.Len(t, sc.Leases, 1)
 	assert.Equal(t, "10.100.0.100", sc.Leases[0].Address)
@@ -348,7 +348,7 @@ func TestDHCP_WOL(t *testing.T) {
 	time.Sleep(3 * time.Second)
 	go func() {
 		defer wg.Done()
-		_, err := ac.RolesDhcpApi.DhcpWolLeases(ctx).Scope("network-A").Identifier(sc.Leases[0].Identifier).Execute()
+		_, err := ac.RolesDhcpAPI.DhcpWolLeases(ctx).Scope("network-A").Identifier(sc.Leases[0].Identifier).Execute()
 		assert.NoError(t, err)
 	}()
 	wg.Wait()

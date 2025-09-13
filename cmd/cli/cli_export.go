@@ -15,7 +15,7 @@ var exportCmd = &cobra.Command{
 	Use:   "export [file]",
 	Short: "Output entire database into JSON file",
 	Run: func(cmd *cobra.Command, args []string) {
-		exp, hr, err := apiClient.RolesApiApi.ApiExport(cmd.Context()).ApiAPIExportInput(api.ApiAPIExportInput{
+		exp, hr, err := apiClient.RolesApiAPI.ApiExport(cmd.Context()).ApiAPIExportInput(api.ApiAPIExportInput{
 			Safe: &exportSafe,
 		}).Execute()
 		if err != nil {

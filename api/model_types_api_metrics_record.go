@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -25,6 +27,8 @@ type TypesAPIMetricsRecord struct {
 	Time  time.Time `json:"time"`
 	Value int32     `json:"value"`
 }
+
+type _TypesAPIMetricsRecord TypesAPIMetricsRecord
 
 // NewTypesAPIMetricsRecord instantiates a new TypesAPIMetricsRecord object
 // This constructor will assign default values to properties that have it defined,
@@ -162,6 +166,46 @@ func (o TypesAPIMetricsRecord) ToMap() (map[string]interface{}, error) {
 	toSerialize["time"] = o.Time
 	toSerialize["value"] = o.Value
 	return toSerialize, nil
+}
+
+func (o *TypesAPIMetricsRecord) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"keys",
+		"node",
+		"time",
+		"value",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varTypesAPIMetricsRecord := _TypesAPIMetricsRecord{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varTypesAPIMetricsRecord)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TypesAPIMetricsRecord(varTypesAPIMetricsRecord)
+
+	return err
 }
 
 type NullableTypesAPIMetricsRecord struct {

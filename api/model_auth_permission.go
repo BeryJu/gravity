@@ -61,7 +61,7 @@ func (o *AuthPermission) GetMethodsOk() ([]string, bool) {
 
 // HasMethods returns a boolean if a field has been set.
 func (o *AuthPermission) HasMethods() bool {
-	if o != nil && IsNil(o.Methods) {
+	if o != nil && !IsNil(o.Methods) {
 		return true
 	}
 

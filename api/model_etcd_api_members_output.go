@@ -60,7 +60,7 @@ func (o *EtcdAPIMembersOutput) GetMembersOk() ([]EtcdAPIMember, bool) {
 
 // HasMembers returns a boolean if a field has been set.
 func (o *EtcdAPIMembersOutput) HasMembers() bool {
-	if o != nil && IsNil(o.Members) {
+	if o != nil && !IsNil(o.Members) {
 		return true
 	}
 

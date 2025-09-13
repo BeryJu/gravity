@@ -18,12 +18,12 @@ import (
 	"net/url"
 )
 
-// ClusterInstancesApiService ClusterInstancesApi service
-type ClusterInstancesApiService service
+// ClusterInstancesAPIService ClusterInstancesAPI service
+type ClusterInstancesAPIService service
 
 type ApiClusterGetInstanceInfoRequest struct {
 	ctx        context.Context
-	ApiService *ClusterInstancesApiService
+	ApiService *ClusterInstancesAPIService
 }
 
 func (r ApiClusterGetInstanceInfoRequest) Execute() (*InstanceAPIInstanceInfo, *http.Response, error) {
@@ -36,7 +36,7 @@ ClusterGetInstanceInfo Instance
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiClusterGetInstanceInfoRequest
 */
-func (a *ClusterInstancesApiService) ClusterGetInstanceInfo(ctx context.Context) ApiClusterGetInstanceInfoRequest {
+func (a *ClusterInstancesAPIService) ClusterGetInstanceInfo(ctx context.Context) ApiClusterGetInstanceInfoRequest {
 	return ApiClusterGetInstanceInfoRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -46,7 +46,7 @@ func (a *ClusterInstancesApiService) ClusterGetInstanceInfo(ctx context.Context)
 // Execute executes the request
 //
 //	@return InstanceAPIInstanceInfo
-func (a *ClusterInstancesApiService) ClusterGetInstanceInfoExecute(r ApiClusterGetInstanceInfoRequest) (*InstanceAPIInstanceInfo, *http.Response, error) {
+func (a *ClusterInstancesAPIService) ClusterGetInstanceInfoExecute(r ApiClusterGetInstanceInfoRequest) (*InstanceAPIInstanceInfo, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -54,7 +54,7 @@ func (a *ClusterInstancesApiService) ClusterGetInstanceInfoExecute(r ApiClusterG
 		localVarReturnValue *InstanceAPIInstanceInfo
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterInstancesApiService.ClusterGetInstanceInfo")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterInstancesAPIService.ClusterGetInstanceInfo")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -131,7 +131,7 @@ func (a *ClusterInstancesApiService) ClusterGetInstanceInfoExecute(r ApiClusterG
 
 type ApiClusterInstanceRoleRestartRequest struct {
 	ctx                         context.Context
-	ApiService                  *ClusterInstancesApiService
+	ApiService                  *ClusterInstancesAPIService
 	instanceAPIRoleRestartInput *InstanceAPIRoleRestartInput
 }
 
@@ -150,7 +150,7 @@ ClusterInstanceRoleRestart Instance roles
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiClusterInstanceRoleRestartRequest
 */
-func (a *ClusterInstancesApiService) ClusterInstanceRoleRestart(ctx context.Context) ApiClusterInstanceRoleRestartRequest {
+func (a *ClusterInstancesAPIService) ClusterInstanceRoleRestart(ctx context.Context) ApiClusterInstanceRoleRestartRequest {
 	return ApiClusterInstanceRoleRestartRequest{
 		ApiService: a,
 		ctx:        ctx,
@@ -158,14 +158,14 @@ func (a *ClusterInstancesApiService) ClusterInstanceRoleRestart(ctx context.Cont
 }
 
 // Execute executes the request
-func (a *ClusterInstancesApiService) ClusterInstanceRoleRestartExecute(r ApiClusterInstanceRoleRestartRequest) (*http.Response, error) {
+func (a *ClusterInstancesAPIService) ClusterInstanceRoleRestartExecute(r ApiClusterInstanceRoleRestartRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterInstancesApiService.ClusterInstanceRoleRestart")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ClusterInstancesAPIService.ClusterInstanceRoleRestart")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}

@@ -11,7 +11,9 @@ API version: 0.27.2
 package api
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the AuthAPIUsersPutInput type satisfies the MappedNullable interface at compile time
@@ -22,6 +24,8 @@ type AuthAPIUsersPutInput struct {
 	Password    string           `json:"password"`
 	Permissions []AuthPermission `json:"permissions"`
 }
+
+type _AuthAPIUsersPutInput AuthAPIUsersPutInput
 
 // NewAuthAPIUsersPutInput instantiates a new AuthAPIUsersPutInput object
 // This constructor will assign default values to properties that have it defined,
@@ -107,6 +111,44 @@ func (o AuthAPIUsersPutInput) ToMap() (map[string]interface{}, error) {
 		toSerialize["permissions"] = o.Permissions
 	}
 	return toSerialize, nil
+}
+
+func (o *AuthAPIUsersPutInput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"password",
+		"permissions",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varAuthAPIUsersPutInput := _AuthAPIUsersPutInput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varAuthAPIUsersPutInput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthAPIUsersPutInput(varAuthAPIUsersPutInput)
+
+	return err
 }
 
 type NullableAuthAPIUsersPutInput struct {
