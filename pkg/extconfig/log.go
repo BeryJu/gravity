@@ -52,7 +52,6 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 		Core: core.Core(),
 	}
 	log := zap.New(hookedCore)
-	log.Debug("test")
 	return log.With(
 		zap.String("instance", e.Instance.Identifier),
 		zap.String("version", FullVersion()),

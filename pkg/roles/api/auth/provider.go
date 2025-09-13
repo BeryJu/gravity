@@ -37,6 +37,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 			"/api/v1/auth/me",
 			"/api/v1/auth/config",
 			"/api/v1/auth/login",
+			"/api/v1/openapi.json",
 		},
 	}
 	gob.Register(User{})
