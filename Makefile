@@ -115,9 +115,9 @@ gen-build:
 
 gen-proto:
 	protoc \
-		--proto_path . \
+		--proto_path ${PWD} \
 		--go_out ${PWD} \
-		protobuf/**
+		${PWD}/protobuf/**
 
 gen-clean:
 	rm -rf ${PWD}/${GEN_API_TS}/
