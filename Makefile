@@ -250,7 +250,6 @@ test-e2e-container-build:
 		.
 
 test-e2e: test-e2e-container-build
-	go get .
 	go test \
 		-p 1 \
 		-v \
