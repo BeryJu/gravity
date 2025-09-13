@@ -292,4 +292,4 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-o ${PWD}/coverage.html
 
 test-convert:
-	go tool github.com/jstemmer/go-junit-report/v2 -in ${TEST_OUTPUT} -set-exit-code -iocopy -out ${PWD}/junit.xml
+	go tool github.com/jstemmer/go-junit-report/v2 -parser gojson -in ${TEST_OUTPUT} -out ${PWD}/junit.xml
