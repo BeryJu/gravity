@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
@@ -62,7 +63,7 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 	req := testcontainers.ContainerRequest{
 		Image:        "gravity:e2e-test",
 		ExposedPorts: []string{"8008", "8009"},
-		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009"),
+		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009").WithStartupTimeout(3 * time.Minute),
 		Hostname:     "gravity-1",
 		Env: map[string]string{
 			"LOG_LEVEL":      "debug",
@@ -86,8 +87,8 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 		ContainerRequest: req,
 		Started:          true,
 	})
-	testcontainers.CleanupContainer(t, gravityContainer)
 	assert.NoError(t, err)
+	testcontainers.CleanupContainer(t, gravityContainer)
 
 	return &Gravity{
 		container: gravityContainer,

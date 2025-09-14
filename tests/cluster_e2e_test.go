@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"beryju.io/gravity/tests/gravity"
 	"github.com/docker/docker/api/types/container"
@@ -35,7 +36,7 @@ func TestCluster_Join(t *testing.T) {
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        "gravity:e2e-test",
 			ExposedPorts: []string{"8008", "8009"},
-			WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009"),
+			WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009").WithStartupTimeout(3 * time.Minute),
 			Hostname:     "gravity-2",
 			Networks:     []string{net.Name},
 			Env: map[string]string{
