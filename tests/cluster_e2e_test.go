@@ -5,17 +5,12 @@ package tests
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"testing"
-	"time"
 
 	"beryju.io/gravity/tests/gravity"
-	"github.com/docker/docker/api/types/container"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/network"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 func TestCluster_Join(t *testing.T) {
@@ -28,32 +23,13 @@ func TestCluster_Join(t *testing.T) {
 	// Create initial gravity node
 	gr := gravity.New(t, gravity.WithNet(net))
 
-	cwd, err := os.Getwd()
-	assert.NoError(t, err)
-
 	// Create 2nd gravity node
-	gravity2, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        "gravity:e2e-test",
-			ExposedPorts: []string{"8008", "8009"},
-			WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009").WithStartupTimeout(3 * time.Minute),
-			Hostname:     "gravity-2",
-			Networks:     []string{net.Name},
-			Env: map[string]string{
-				"LOG_LEVEL":         "debug",
-				"ETCD_JOIN_CLUSTER": fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token()),
-				"GOCOVERDIR":        "/coverage",
-			},
-			HostConfigModifier: func(hostConfig *container.HostConfig) {
-				hostConfig.Binds = []string{
-					fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
-				}
-			},
-		},
-		Started: true,
-	})
-	testcontainers.CleanupContainer(t, gravity2)
-	assert.NoError(t, err)
+	gravity.New(
+		t,
+		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
+		gravity.WithHostname("gravity-2"),
+		gravity.WithNet(net),
+	)
 
 	// // Create 3rd gravity node
 	// gravity3, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
