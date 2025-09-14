@@ -6,7 +6,6 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/storage"
 	clientv3 "go.etcd.io/etcd/client/v3"
-	"go.uber.org/zap"
 )
 
 func IsLearnerReady(leaderStatus, learnerStatus *clientv3.StatusResponse) bool {
@@ -25,8 +24,8 @@ type MemberStatus struct {
 	Raw *clientv3.StatusResponse
 }
 
-func (r *Role) clusterStatus(ctx context.Context) (*ClusterStatus, error) {
-	members, err := r.i.KV().MemberList(ctx, clientv3.WithSerializable())
+func (lcr *LeaderClusterReconciler) ClusterStatus(ctx context.Context) (*ClusterStatus, error) {
+	members, err := lcr.i.KV().MemberList(ctx, clientv3.WithSerializable())
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func (r *Role) clusterStatus(ctx context.Context) (*ClusterStatus, error) {
 	for _, member := range members.Members {
 		c := storage.NewClient(
 			extconfig.Get().Etcd.Prefix,
-			r.log.Named("etcd").Named(member.Name),
+			lcr.log.Named("etcd").Named(member.Name),
 			extconfig.Get().Debug,
 			member.ClientURLs...,
 		)
@@ -70,32 +69,4 @@ func (cst *ClusterStatus) FindLearnerStatus() (uint64, *clientv3.StatusResponse)
 		}
 	}
 	return 0, nil
-}
-
-func (r *Role) clusterCanJoin(ctx context.Context) bool {
-	st, err := r.clusterStatus(ctx)
-	if err != nil {
-		r.log.Warn("failed to check cluster status", zap.Error(err))
-		return false
-	}
-	if st.Healthy != nil {
-		r.log.Warn("cluster is not healthy", zap.Error(err))
-		return false
-	}
-	_, lds := st.FindLeaderStatus()
-	if id, st := st.FindLearnerStatus(); id > 0 {
-		r.log.Info("Found learner")
-		if IsLearnerReady(lds, st) {
-			r.log.Info("Learner is ready to be promoted")
-			_, err := r.i.KV().MemberPromote(ctx, id)
-			if err != nil {
-				r.log.Info("Failed to promote member", zap.Error(err))
-				return false
-			}
-		} else {
-			r.log.Info("Learner is not ready yet")
-			return false
-		}
-	}
-	return true
 }

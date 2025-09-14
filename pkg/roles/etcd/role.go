@@ -42,6 +42,7 @@ type Role struct {
 	etcdDir string
 	certDir string
 
+	lcr     *LeaderClusterReconciler
 	joining bool
 }
 
@@ -65,6 +66,7 @@ func New(instance roles.Instance) *Role {
 		etcdDir: dirs.EtcdDir,
 		certDir: dirs.CertDir,
 	}
+	r.lcr = NewLeaderClusterConciler(instance)
 	cfg.Dir = dirs.EtcdDir
 	cfg.ZapLoggerBuilder = embed.NewZapLoggerBuilder(
 		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
@@ -198,15 +200,44 @@ func (ee *Role) Start(ctx context.Context, cfg []byte) error {
 			ee.log.Warn("failed to start/stop etcd", zap.Error(err))
 		}
 	}()
+	go ee.watchLeader()
 	<-e.Server.ReadyNotify()
 	ee.log.Info("embedded etcd Ready!", zap.Duration("runtime", time.Since(start)))
 	if ee.joining {
-		_, err := ee.i.KV().MemberPromote(ctx, uint64(e.Server.MemberID()))
-		if err != nil {
-			ee.log.Warn("Failed to promote node from learner", zap.Error(err))
-		}
+		return ee.waitForPromotion()
 	}
 	return nil
+}
+
+func (ee *Role) watchLeader() {
+	for {
+		<-ee.e.Server.LeaderChangedNotify()
+		ee.log.Info("etcd Leader changed", zap.Uint64("new-id", ee.e.Server.Lead()))
+		if ee.e.Server.Leader() == ee.e.Server.MemberID() {
+			ee.log.Info("We're the leader now.")
+			ee.lcr.Start()
+		} else {
+			ee.log.Info("We're no longer the leader.")
+			ee.lcr.Stop()
+		}
+	}
+}
+
+func (ee *Role) waitForPromotion() error {
+	return retry.Do(
+		func() error {
+			l := ee.e.Server.IsLearner()
+			if l {
+				return errors.New("etcd is not promoted yet")
+			}
+			return nil
+		},
+		retry.DelayType(retry.BackOffDelay),
+		retry.Attempts(50),
+		retry.OnRetry(func(attempt uint, err error) {
+			ee.log.Info("Checking if we're still learner", zap.Uint("attempt", attempt), zap.Error(err))
+		}),
+	)
 }
 
 func (ee *Role) Stop() {

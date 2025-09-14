@@ -19,6 +19,7 @@ type APIMember struct {
 	Name      string `json:"name"`
 	ID        uint64 `json:"id"`
 	IsLearner bool   `json:"isLearner"`
+	IsLeader  bool   `json:"isLeader"`
 }
 type APIMembersOutput struct {
 	Members []APIMember `json:"members"`
@@ -35,6 +36,7 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 				ID:        mem.ID,
 				Name:      mem.Name,
 				IsLearner: mem.IsLearner,
+				IsLeader:  mem.ID == r.e.Server.Lead(),
 			})
 		}
 		return nil
@@ -135,4 +137,27 @@ func (r *Role) APIClusterRemove() usecase.Interactor {
 	u.SetTags("roles/etcd")
 	u.SetExpectedErrors(status.Internal)
 	return u
+}
+
+func (r *Role) clusterCanJoin(ctx context.Context) bool {
+	st, err := r.lcr.ClusterStatus(ctx)
+	if err != nil {
+		r.log.Warn("failed to check cluster status", zap.Error(err))
+		return false
+	}
+	if st.Healthy != nil {
+		r.log.Warn("cluster is not healthy", zap.Error(err))
+		return false
+	}
+	_, lds := st.FindLeaderStatus()
+	if id, st := st.FindLearnerStatus(); id > 0 {
+		r.log.Info("Found learner")
+		if IsLearnerReady(lds, st) {
+			r.log.Info("Learner is ready, leader should promote it")
+		} else {
+			r.log.Info("Learner is not ready yet")
+		}
+		return false
+	}
+	return true
 }
