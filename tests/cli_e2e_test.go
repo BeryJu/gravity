@@ -11,7 +11,7 @@ import (
 )
 
 func TestCLI_Health(t *testing.T) {
-	gr := gravity.New(t, gravity.WithEnv("LOG_LEVEL", "warn"))
+	gr := gravity.New(t)
 
 	_, health := ExecCommand(t, gr.Container(), []string{"gravity", "cli", "health"})
 	assert.Contains(t, string(health), "gravity-1")
