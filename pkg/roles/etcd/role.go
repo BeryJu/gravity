@@ -13,6 +13,7 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/avast/retry-go/v4"
 	"github.com/pkg/errors"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
@@ -51,6 +52,8 @@ func urlMustParse(raw string) url.URL {
 	}
 	return *u
 }
+
+var errRetry = errors.New("retry")
 
 func New(instance roles.Instance) *Role {
 	dirs := extconfig.Get().Dirs()
@@ -137,21 +140,38 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", token))
 	apiClient := api.NewAPIClient(config)
 
-	res, _, err := apiClient.RolesEtcdAPI.EtcdJoinMember(context.Background()).EtcdAPIMemberJoinInput(
-		api.EtcdAPIMemberJoinInput{
-			Peer: api.PtrString(
-				fmt.Sprintf(
-					"https://%s:%d",
-					extconfig.Get().Instance.IP,
-					extconfig.Get().Etcd.PeerPort,
-				),
-			),
-			Identifier: &extconfig.Get().Instance.Identifier,
-			Roles:      &extconfig.Get().BootstrapRoles,
+	res, err := retry.DoWithData(
+		func() (*api.EtcdAPIMemberJoinOutput, error) {
+			res, hr, err := apiClient.RolesEtcdAPI.EtcdJoinMember(context.Background()).EtcdAPIMemberJoinInput(
+				api.EtcdAPIMemberJoinInput{
+					Peer: api.PtrString(
+						fmt.Sprintf(
+							"https://%s:%d",
+							extconfig.Get().Instance.IP,
+							extconfig.Get().Etcd.PeerPort,
+						),
+					),
+					Identifier: &extconfig.Get().Instance.Identifier,
+					Roles:      &extconfig.Get().BootstrapRoles,
+				},
+			).Execute()
+			if hr != nil && hr.StatusCode == 500 {
+				return nil, errRetry
+			}
+			if err != nil || res.EtcdInitialCluster == nil {
+				return nil, err
+			}
+			return res, nil
 		},
-	).Execute()
-	if err != nil || res.EtcdInitialCluster == nil {
-		return errors.Wrap(err, "failed to send api request to join")
+		retry.DelayType(retry.BackOffDelay),
+		retry.AttemptsForError(20, errRetry),
+		retry.OnRetry(func(attempt uint, err error) {
+			ee.log.Info("Join attempt", zap.Uint("attempt", attempt), zap.Error(err))
+		}),
+	)
+	if err != nil {
+		ee.log.Info("Failed to join", zap.Error(err))
+		return err
 	}
 	cfg.ClusterState = embed.ClusterStateFlagExisting
 	cfg.InitialCluster = res.GetEtcdInitialCluster()

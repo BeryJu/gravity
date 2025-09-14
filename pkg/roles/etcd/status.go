@@ -87,7 +87,11 @@ func (r *Role) clusterCanJoin(ctx context.Context) bool {
 		r.log.Info("Found learner")
 		if IsLearnerReady(lds, st) {
 			r.log.Info("Learner is ready to be promoted")
-			r.i.KV().MemberPromote(ctx, id)
+			_, err := r.i.KV().MemberPromote(ctx, id)
+			if err != nil {
+				r.log.Info("Failed to promote member", zap.Error(err))
+				return false
+			}
 		} else {
 			r.log.Info("Learner is not ready yet")
 			return false

@@ -60,6 +60,11 @@ func WithHostname(name string) GravityOption {
 		req.ConfigModifier = func(c *container.Config) {
 			c.Hostname = name
 		}
+		req.LogConsumerCfg = &testcontainers.LogConsumerConfig{
+			Consumers: []testcontainers.LogConsumer{
+				&StdoutLogConsumer{Prefix: name},
+			},
+		}
 	}
 }
 
@@ -86,6 +91,11 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 			hostConfig.Binds = []string{
 				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 			}
+		},
+		LogConsumerCfg: &testcontainers.LogConsumerConfig{
+			Consumers: []testcontainers.LogConsumer{
+				&StdoutLogConsumer{Prefix: "gravity-1"},
+			},
 		},
 	}
 
