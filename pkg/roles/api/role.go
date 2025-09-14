@@ -41,8 +41,8 @@ type Role struct {
 	log          *zap.Logger
 	cfg          *RoleConfig
 	auth         *auth.AuthProvider
-	httpServer   http.Server
-	socketServer http.Server
+	httpServer   *http.Server
+	socketServer *http.Server
 }
 
 func init() {
@@ -58,8 +58,8 @@ func New(instance roles.Instance) *Role {
 		i:            instance,
 		m:            mux,
 		cfg:          &RoleConfig{},
-		httpServer:   http.Server{},
-		socketServer: http.Server{},
+		httpServer:   &http.Server{},
+		socketServer: &http.Server{},
 		ctx:          instance.Context(),
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
@@ -161,7 +161,7 @@ func (r *Role) prepareOpenAPI(ctx context.Context) {
 }
 
 func (r *Role) ListenAndServeHTTP() {
-	r.httpServer = http.Server{}
+	r.httpServer = &http.Server{}
 	r.httpServer.Handler = r.m
 	listen := extconfig.Get().Listen(r.cfg.Port)
 	if r.cfg.ListenOverride != "" {
@@ -181,7 +181,7 @@ func (r *Role) ListenAndServeSocket() {
 		r.log.Info("/var/run doesn't exist or is not a dir, not starting socket API server")
 		return
 	}
-	r.socketServer = http.Server{}
+	r.socketServer = &http.Server{}
 	r.socketServer.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		ctx := context.WithValue(req.Context(), types.RequestSession, &sessions.Session{
 			Values: map[interface{}]interface{}{
@@ -221,19 +221,23 @@ func (r *Role) Schema(ctx context.Context) *openapi3.Spec {
 }
 
 func (r *Role) Stop() {
-	err := r.httpServer.Shutdown(r.ctx)
-	if err != nil {
-		r.log.Warn("failed to shutdown http server", zap.Error(err))
+	if r.httpServer != nil {
+		err := r.httpServer.Shutdown(r.ctx)
+		if err != nil {
+			r.log.Warn("failed to shutdown http server", zap.Error(err))
+		}
 	}
-	err = r.socketServer.Shutdown(r.ctx)
-	if err != nil {
-		r.log.Warn("failed to shutdown socket server", zap.Error(err))
+	if r.socketServer != nil {
+		err := r.socketServer.Shutdown(r.ctx)
+		if err != nil {
+			r.log.Warn("failed to shutdown socket server", zap.Error(err))
+		}
 	}
 	socketPath := path.Join(VAR_RUN, GRAVITY_SOCK)
 	if extconfig.Get().Debug {
 		socketPath = path.Join("./", GRAVITY_SOCK)
 	}
-	err = os.Remove(socketPath)
+	err := os.Remove(socketPath)
 	if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		r.log.Warn("failed to remove socket", zap.Error(err))
 	}

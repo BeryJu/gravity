@@ -11,6 +11,7 @@ GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
 TEST_COUNT = 1
 TEST_FLAGS =
+TEST_OUTPUT = ${PWD}/.test-output
 
 GEN_API_TS = "gen-ts-api"
 GEN_API_GO = "api"
@@ -114,9 +115,9 @@ gen-build:
 
 gen-proto:
 	protoc \
-		--proto_path . \
+		--proto_path ${PWD} \
 		--go_out ${PWD} \
-		protobuf/**
+		${PWD}/protobuf/**
 
 gen-clean:
 	rm -rf ${PWD}/${GEN_API_TS}/
@@ -234,9 +235,10 @@ test: internal/resources/macoui internal/resources/blocky internal/resources/tft
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
+		-json \
 		${TEST_FLAGS} \
 		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
-			2>&1 | tee test-output
+			2>&1 | tee ${TEST_OUTPUT}
 	go tool cover \
 		-html ${PWD}/coverage.txt \
 		-o ${PWD}/coverage.html
@@ -248,8 +250,6 @@ test-e2e-container-build:
 		.
 
 test-e2e: test-e2e-container-build
-	cd ${PWD}/tests
-	go get .
 	go test \
 		-p 1 \
 		-v \
@@ -257,9 +257,11 @@ test-e2e: test-e2e-container-build
 		-covermode=atomic \
 		-count=${TEST_COUNT} \
 		-timeout=300s \
+		-json \
+		-tags=e2e \
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
-			2>&1 | tee ${PWD}/test-output
+			2>&1 | tee ${TEST_OUTPUT}
 	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage/ \
@@ -280,9 +282,13 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-bench=^Benchmark \
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
+		-json \
 		-benchmem \
 		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
-			| tee test-output
+			2>&1 | tee ${TEST_OUTPUT}
 	go tool cover \
 		-html ${PWD}/coverage.txt \
 		-o ${PWD}/coverage.html
+
+test-convert:
+	go tool github.com/jstemmer/go-junit-report/v2 -parser gojson -in ${TEST_OUTPUT} -out ${PWD}/junit.xml

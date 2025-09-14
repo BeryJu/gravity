@@ -7,6 +7,13 @@
         "CI": "true",
     },
     "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v"],
+    "gopls": {
+        "build.buildFlags": [
+            "-tags=e2e",
+        ]
+    },
+    "go.testTags": "e2e",
+    "go.testTimeout": "300s",
     "go.coverOnSingleTest": true,
     "go.coverOnTestPackage": true,
     "gitlens.autolinks": [

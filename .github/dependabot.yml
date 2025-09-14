@@ -3,7 +3,6 @@ updates:
   - package-ecosystem: gomod
     directories:
       - /
-      - /tests
       - /utils/pcap_to_bytes
       - /docs
     schedule:
