@@ -36,7 +36,9 @@ func (i *Instance) getInfo() *InstanceInfo {
 
 func (i *Instance) keepAliveInstanceInfo(ctx context.Context) {
 	restarter := func() {
-		<-i.instanceSession.Done()
+		if i.instanceSession != nil {
+			<-i.instanceSession.Done()
+		}
 		i.keepAliveInstanceInfo(ctx)
 	}
 	defer func() {

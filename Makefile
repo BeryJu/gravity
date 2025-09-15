@@ -247,9 +247,10 @@ test-e2e-container-build:
 	docker build \
 		--build-arg=GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-cover \
 		-t gravity:e2e-test \
-		.
+		${PWD}
 
 test-e2e: test-e2e-container-build
+	export CI="true"
 	go test \
 		-p 1 \
 		-v \
@@ -262,14 +263,13 @@ test-e2e: test-e2e-container-build
 		${TEST_FLAGS} \
 		beryju.io/gravity/tests \
 			2>&1 | tee ${TEST_OUTPUT}
-	cd ${PWD}
 	go tool covdata textfmt \
 		-i ${PWD}/tests/coverage/ \
 		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
 		-html ${PWD}/coverage_in_container.txt \
-		-o ${PWD}/coverage.html
+		-o ${PWD}/coverage_in_container.html
 
 bench: internal/resources/macoui internal/resources/blocky internal/resources/tftp
 	export BOOTSTRAP_ROLES="dns;dhcp;api;discovery;backup;debug;tsdb;tftp"

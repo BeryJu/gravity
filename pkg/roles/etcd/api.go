@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -16,8 +17,10 @@ import (
 )
 
 type APIMember struct {
-	Name string `json:"name"`
-	ID   uint64 `json:"id"`
+	Name      string `json:"name"`
+	ID        string `json:"id"`
+	IsLearner bool   `json:"isLearner"`
+	IsLeader  bool   `json:"isLeader"`
 }
 type APIMembersOutput struct {
 	Members []APIMember `json:"members"`
@@ -31,8 +34,10 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 		}
 		for _, mem := range members.Members {
 			output.Members = append(output.Members, APIMember{
-				ID:   mem.ID,
-				Name: mem.Name,
+				ID:        fmt.Sprintf("%x", mem.ID),
+				Name:      mem.Name,
+				IsLearner: mem.IsLearner,
+				IsLeader:  mem.ID == r.e.Server.Lead(),
 			})
 		}
 		return nil
@@ -55,6 +60,10 @@ type APIMemberJoinOutput struct {
 
 func (r *Role) APIClusterJoin() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberJoinInput, output *APIMemberJoinOutput) error {
+		if !r.clusterCanJoin(ctx) {
+			return status.Unavailable
+		}
+
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
 		initialCluster := []string{}
 		members, err := r.i.KV().MemberList(ctx)
@@ -92,12 +101,10 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 			r.log.Warn("failed to put roles for node", zap.Error(err))
 		}
 
-		go func() {
-			_, err = r.i.KV().MemberAdd(context.Background(), []string{input.Peer})
-			if err != nil {
-				r.log.Warn("failed to add member", zap.Error(err))
-			}
-		}()
+		_, err = r.i.KV().MemberAddAsLearner(context.Background(), []string{input.Peer})
+		if err != nil {
+			r.log.Warn("failed to add member", zap.Error(err))
+		}
 
 		output.EtcdInitialCluster = strings.Join(initialCluster, ",")
 		return nil
@@ -105,20 +112,24 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 	u.SetName("etcd.join_member")
 	u.SetTitle("Etcd join")
 	u.SetTags("roles/etcd")
-	u.SetExpectedErrors(status.Internal)
+	u.SetExpectedErrors(status.Internal, status.Unavailable)
 	return u
 }
 
-type APIMemberRemoveInput struct {
-	PeerID uint64 `query:"peerID" required:"true"`
+type APIMemberInput struct {
+	PeerID string `query:"peerID" required:"true"`
 }
 
 func (r *Role) APIClusterRemove() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberRemoveInput, output *struct{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberInput, output *struct{}) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
-		r.i.Log().Debug("Removing instance", zap.Uint64("id", input.PeerID))
+		iid, err := strconv.ParseUint(input.PeerID, 16, 64)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		r.i.Log().Debug("Removing instance", zap.Uint64("id", iid))
 		go func() {
-			_, err := r.i.KV().MemberRemove(context.Background(), input.PeerID)
+			_, err := r.i.KV().MemberRemove(context.Background(), iid)
 			if err != nil {
 				r.log.Warn("failed to remove member", zap.Error(err))
 			}
@@ -131,4 +142,48 @@ func (r *Role) APIClusterRemove() usecase.Interactor {
 	u.SetTags("roles/etcd")
 	u.SetExpectedErrors(status.Internal)
 	return u
+}
+
+func (r *Role) APIClusterMoveLeader() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberInput, output *struct{}) error {
+		iid, err := strconv.ParseUint(input.PeerID, 16, 64)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		r.i.Log().Debug("Moving leader", zap.Uint64("id", iid))
+
+		_, err = r.i.KV().MoveLeader(ctx, iid)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("etcd.move_leader")
+	u.SetTitle("Etcd move leader")
+	u.SetTags("roles/etcd")
+	u.SetExpectedErrors(status.Internal)
+	return u
+}
+
+func (r *Role) clusterCanJoin(ctx context.Context) bool {
+	st, err := r.lcr.ClusterStatus(ctx)
+	if err != nil {
+		r.log.Warn("failed to check cluster status", zap.Error(err))
+		return false
+	}
+	if st.Healthy != nil {
+		r.log.Warn("cluster is not healthy", zap.Error(err))
+		return false
+	}
+	lds := st.FindLeaderStatus()
+	if st := st.FindLearnerStatus(); st != nil {
+		r.log.Info("Found learner")
+		if IsLearnerReady(lds, st) {
+			r.log.Info("Learner is ready, leader should promote it")
+		} else {
+			r.log.Info("Learner is not ready yet")
+		}
+		return false
+	}
+	return true
 }

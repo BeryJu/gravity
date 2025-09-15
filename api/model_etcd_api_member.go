@@ -19,8 +19,10 @@ var _ MappedNullable = &EtcdAPIMember{}
 
 // EtcdAPIMember struct for EtcdAPIMember
 type EtcdAPIMember struct {
-	Id   *int32  `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	IsLeader  *bool   `json:"isLeader,omitempty"`
+	IsLearner *bool   `json:"isLearner,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // NewEtcdAPIMember instantiates a new EtcdAPIMember object
@@ -41,9 +43,9 @@ func NewEtcdAPIMemberWithDefaults() *EtcdAPIMember {
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
-func (o *EtcdAPIMember) GetId() int32 {
+func (o *EtcdAPIMember) GetId() string {
 	if o == nil || IsNil(o.Id) {
-		var ret int32
+		var ret string
 		return ret
 	}
 	return *o.Id
@@ -51,7 +53,7 @@ func (o *EtcdAPIMember) GetId() int32 {
 
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EtcdAPIMember) GetIdOk() (*int32, bool) {
+func (o *EtcdAPIMember) GetIdOk() (*string, bool) {
 	if o == nil || IsNil(o.Id) {
 		return nil, false
 	}
@@ -67,9 +69,73 @@ func (o *EtcdAPIMember) HasId() bool {
 	return false
 }
 
-// SetId gets a reference to the given int32 and assigns it to the Id field.
-func (o *EtcdAPIMember) SetId(v int32) {
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *EtcdAPIMember) SetId(v string) {
 	o.Id = &v
+}
+
+// GetIsLeader returns the IsLeader field value if set, zero value otherwise.
+func (o *EtcdAPIMember) GetIsLeader() bool {
+	if o == nil || IsNil(o.IsLeader) {
+		var ret bool
+		return ret
+	}
+	return *o.IsLeader
+}
+
+// GetIsLeaderOk returns a tuple with the IsLeader field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EtcdAPIMember) GetIsLeaderOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsLeader) {
+		return nil, false
+	}
+	return o.IsLeader, true
+}
+
+// HasIsLeader returns a boolean if a field has been set.
+func (o *EtcdAPIMember) HasIsLeader() bool {
+	if o != nil && !IsNil(o.IsLeader) {
+		return true
+	}
+
+	return false
+}
+
+// SetIsLeader gets a reference to the given bool and assigns it to the IsLeader field.
+func (o *EtcdAPIMember) SetIsLeader(v bool) {
+	o.IsLeader = &v
+}
+
+// GetIsLearner returns the IsLearner field value if set, zero value otherwise.
+func (o *EtcdAPIMember) GetIsLearner() bool {
+	if o == nil || IsNil(o.IsLearner) {
+		var ret bool
+		return ret
+	}
+	return *o.IsLearner
+}
+
+// GetIsLearnerOk returns a tuple with the IsLearner field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EtcdAPIMember) GetIsLearnerOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsLearner) {
+		return nil, false
+	}
+	return o.IsLearner, true
+}
+
+// HasIsLearner returns a boolean if a field has been set.
+func (o *EtcdAPIMember) HasIsLearner() bool {
+	if o != nil && !IsNil(o.IsLearner) {
+		return true
+	}
+
+	return false
+}
+
+// SetIsLearner gets a reference to the given bool and assigns it to the IsLearner field.
+func (o *EtcdAPIMember) SetIsLearner(v bool) {
+	o.IsLearner = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -116,6 +182,12 @@ func (o EtcdAPIMember) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
+	}
+	if !IsNil(o.IsLeader) {
+		toSerialize["isLeader"] = o.IsLeader
+	}
+	if !IsNil(o.IsLearner) {
+		toSerialize["isLearner"] = o.IsLearner
 	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name

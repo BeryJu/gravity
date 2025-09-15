@@ -132,6 +132,7 @@ Class | Method | HTTP request | Description
 *RolesDnsAPI* | [**DnsPutZones**](docs/RolesDnsAPI.md#dnsputzones) | **Post** /api/v1/dns/zones | DNS Zones
 *RolesEtcdAPI* | [**EtcdGetMembers**](docs/RolesEtcdAPI.md#etcdgetmembers) | **Get** /api/v1/etcd/members | Etcd members
 *RolesEtcdAPI* | [**EtcdJoinMember**](docs/RolesEtcdAPI.md#etcdjoinmember) | **Post** /api/v1/etcd/join | Etcd join
+*RolesEtcdAPI* | [**EtcdMoveLeader**](docs/RolesEtcdAPI.md#etcdmoveleader) | **Post** /api/v1/etcd/move_leader | Etcd move leader
 *RolesEtcdAPI* | [**EtcdRemoveMember**](docs/RolesEtcdAPI.md#etcdremovemember) | **Delete** /api/v1/etcd/remove | Etcd remove
 *RolesMonitoringAPI* | [**MonitoringGetRoleConfig**](docs/RolesMonitoringAPI.md#monitoringgetroleconfig) | **Get** /api/v1/roles/monitoring | Monitoring role config
 *RolesMonitoringAPI* | [**MonitoringPutRoleConfig**](docs/RolesMonitoringAPI.md#monitoringputroleconfig) | **Post** /api/v1/roles/monitoring | Monitoring role config

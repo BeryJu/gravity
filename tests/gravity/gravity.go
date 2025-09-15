@@ -28,7 +28,7 @@ func init() {
 	gravityToken = base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 }
 
-func Passowrd() string {
+func Password() string {
 	return gravityPassword
 }
 
@@ -37,29 +37,42 @@ func Token() string {
 }
 
 type Gravity struct {
+	name      string
 	container testcontainers.Container
 	t         *testing.T
 }
 
-type GravityOption func(req *testcontainers.ContainerRequest)
+type GravityOption func(t *testing.T, req *testcontainers.ContainerRequest)
 
 func WithEnv(key string, value string) GravityOption {
-	return func(req *testcontainers.ContainerRequest) {
+	return func(t *testing.T, req *testcontainers.ContainerRequest) {
 		req.Env[key] = value
 	}
 }
 
 func WithNet(net *testcontainers.DockerNetwork) GravityOption {
-	return func(req *testcontainers.ContainerRequest) {
+	return func(t *testing.T, req *testcontainers.ContainerRequest) {
 		req.Networks = append(req.Networks, net.Name)
 	}
 }
 
 func WithHostname(name string) GravityOption {
-	return func(req *testcontainers.ContainerRequest) {
+	return func(t *testing.T, req *testcontainers.ContainerRequest) {
 		req.ConfigModifier = func(c *container.Config) {
 			c.Hostname = name
 		}
+		req.LogConsumerCfg = &testcontainers.LogConsumerConfig{
+			Consumers: []testcontainers.LogConsumer{
+				&StdoutLogConsumer{T: t, Prefix: name},
+			},
+		}
+		req.Name = name
+	}
+}
+
+func WithoutWait() GravityOption {
+	return func(t *testing.T, req *testcontainers.ContainerRequest) {
+		req.WaitingFor = nil
 	}
 }
 
@@ -72,9 +85,6 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 		Image:        "gravity:e2e-test",
 		ExposedPorts: []string{"8008", "8009"},
 		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009").WithStartupTimeout(3 * time.Minute),
-		ConfigModifier: func(c *container.Config) {
-			c.Hostname = "gravity-1"
-		},
 		Env: map[string]string{
 			"LOG_LEVEL":      "debug",
 			"ADMIN_PASSWORD": gravityPassword,
@@ -89,9 +99,12 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 		},
 	}
 
+	WithHostname("gravity-1")(t, &req)
 	for _, opt := range opts {
-		opt(&req)
+		opt(t, &req)
 	}
+	name := req.Name
+	req.Name = fmt.Sprintf("gravity-%s-%s", t.Name(), req.Name)
 
 	gravityContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
@@ -103,6 +116,7 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 	return &Gravity{
 		container: gravityContainer,
 		t:         t,
+		name:      name,
 	}
 }
 
@@ -120,6 +134,17 @@ func (g *Gravity) APIClient() *api.APIClient {
 	config.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", gravityToken))
 	config.UserAgent = fmt.Sprintf("gravity-e2e-testing/%s", extconfig.FullVersion())
 	return api.NewAPIClient(config)
+}
+
+func (g *Gravity) EtcdID() string {
+	nodes, _, err := g.APIClient().RolesEtcdAPI.EtcdGetMembers(context.Background()).Execute()
+	assert.NoError(g.t, err)
+	for _, node := range nodes.Members {
+		if node.GetName() == g.name {
+			return node.GetId()
+		}
+	}
+	return ""
 }
 
 func (g *Gravity) Container() testcontainers.Container {

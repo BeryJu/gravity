@@ -4,7 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **int32** |  | [optional] 
+**Id** | Pointer to **string** |  | [optional] 
+**IsLeader** | Pointer to **bool** |  | [optional] 
+**IsLearner** | Pointer to **bool** |  | [optional] 
 **Name** | Pointer to **string** |  | [optional] 
 
 ## Methods
@@ -28,20 +30,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetId
 
-`func (o *EtcdAPIMember) GetId() int32`
+`func (o *EtcdAPIMember) GetId() string`
 
 GetId returns the Id field if non-nil, zero value otherwise.
 
 ### GetIdOk
 
-`func (o *EtcdAPIMember) GetIdOk() (*int32, bool)`
+`func (o *EtcdAPIMember) GetIdOk() (*string, bool)`
 
 GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetId
 
-`func (o *EtcdAPIMember) SetId(v int32)`
+`func (o *EtcdAPIMember) SetId(v string)`
 
 SetId sets Id field to given value.
 
@@ -50,6 +52,56 @@ SetId sets Id field to given value.
 `func (o *EtcdAPIMember) HasId() bool`
 
 HasId returns a boolean if a field has been set.
+
+### GetIsLeader
+
+`func (o *EtcdAPIMember) GetIsLeader() bool`
+
+GetIsLeader returns the IsLeader field if non-nil, zero value otherwise.
+
+### GetIsLeaderOk
+
+`func (o *EtcdAPIMember) GetIsLeaderOk() (*bool, bool)`
+
+GetIsLeaderOk returns a tuple with the IsLeader field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIsLeader
+
+`func (o *EtcdAPIMember) SetIsLeader(v bool)`
+
+SetIsLeader sets IsLeader field to given value.
+
+### HasIsLeader
+
+`func (o *EtcdAPIMember) HasIsLeader() bool`
+
+HasIsLeader returns a boolean if a field has been set.
+
+### GetIsLearner
+
+`func (o *EtcdAPIMember) GetIsLearner() bool`
+
+GetIsLearner returns the IsLearner field if non-nil, zero value otherwise.
+
+### GetIsLearnerOk
+
+`func (o *EtcdAPIMember) GetIsLearnerOk() (*bool, bool)`
+
+GetIsLearnerOk returns a tuple with the IsLearner field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIsLearner
+
+`func (o *EtcdAPIMember) SetIsLearner(v bool)`
+
+SetIsLearner sets IsLearner field to given value.
+
+### HasIsLearner
+
+`func (o *EtcdAPIMember) HasIsLearner() bool`
+
+HasIsLearner returns a boolean if a field has been set.
 
 ### GetName
 

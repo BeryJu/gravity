@@ -1205,6 +1205,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RestErrResponse"
           description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestErrResponse"
+          description: Service Unavailable
       summary: Etcd join
       tags:
       - roles/etcd
@@ -1227,6 +1233,29 @@ paths:
       summary: Etcd members
       tags:
       - roles/etcd
+  /api/v1/etcd/move_leader:
+    post:
+      operationId: etcd.move_leader
+      parameters:
+      - explode: true
+        in: query
+        name: peerID
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestErrResponse"
+          description: Internal Server Error
+      summary: Etcd move leader
+      tags:
+      - roles/etcd
   /api/v1/etcd/remove:
     delete:
       operationId: etcd.remove_member
@@ -1236,8 +1265,7 @@ paths:
         name: peerID
         required: true
         schema:
-          minimum: 0
-          type: integer
+          type: string
         style: form
       responses:
         "204":
@@ -3216,12 +3244,17 @@ components:
       type: object
     EtcdAPIMember:
       example:
+        isLeader: true
         name: name
-        id: 0
+        id: id
+        isLearner: true
       properties:
         id:
-          minimum: 0
-          type: integer
+          type: string
+        isLeader:
+          type: boolean
+        isLearner:
+          type: boolean
         name:
           type: string
       type: object
@@ -3249,10 +3282,14 @@ components:
     EtcdAPIMembersOutput:
       example:
         members:
-        - name: name
-          id: 0
-        - name: name
-          id: 0
+        - isLeader: true
+          name: name
+          id: id
+          isLearner: true
+        - isLeader: true
+          name: name
+          id: id
+          isLearner: true
       properties:
         members:
           items:
