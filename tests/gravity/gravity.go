@@ -57,6 +57,11 @@ func WithNet(net *testcontainers.DockerNetwork) GravityOption {
 
 func WithHostname(name string) GravityOption {
 	return func(req *testcontainers.ContainerRequest) {
+		cwd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+
 		req.ConfigModifier = func(c *container.Config) {
 			c.Hostname = name
 		}
@@ -66,6 +71,11 @@ func WithHostname(name string) GravityOption {
 			},
 		}
 		req.Name = fmt.Sprintf("gravity-tc-%s", name)
+		req.HostConfigModifier = func(hostConfig *container.HostConfig) {
+			hostConfig.Binds = []string{
+				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage/", name)),
+			}
+		}
 	}
 }
 
@@ -77,8 +87,6 @@ func WithoutWait() GravityOption {
 
 func New(t *testing.T, opts ...GravityOption) *Gravity {
 	ctx := context.Background()
-	cwd, err := os.Getwd()
-	assert.NoError(t, err)
 
 	req := testcontainers.ContainerRequest{
 		Image:        "gravity:e2e-test",
@@ -91,11 +99,6 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 			"GOCOVERDIR":     "/coverage",
 		},
 		Networks: []string{},
-		HostConfigModifier: func(hostConfig *container.HostConfig) {
-			hostConfig.Binds = []string{
-				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
-			}
-		},
 	}
 
 	WithHostname("gravity-1")(&req)
