@@ -112,7 +112,7 @@ func TestCluster_Join_Move_Join(t *testing.T) {
 	gr := gravity.New(t, gravity.WithNet(net))
 
 	// Create 2nd gravity node
-	gravity.New(
+	gr2 := gravity.New(
 		t,
 		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
 		gravity.WithHostname("gravity-2"),
@@ -120,14 +120,7 @@ func TestCluster_Join_Move_Join(t *testing.T) {
 	)
 
 	// Get all node IDs, move leader to gravity-2
-	nodes, _, err := gr.APIClient().RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
-	assert.NoError(t, err)
-	gravity_2 := ""
-	for _, node := range nodes.Members {
-		if node.GetName() == "gravity-2" {
-			gravity_2 = node.GetId()
-		}
-	}
+	gravity_2 := gr2.EtcdID()
 	assert.NotEqual(t, "", gravity_2)
 	// Move leader
 	_, err = gr.APIClient().RolesEtcdAPI.EtcdMoveLeader(ctx).PeerID(gravity_2).Execute()
@@ -146,4 +139,43 @@ func TestCluster_Join_Move_Join(t *testing.T) {
 	c, _, err := ac.RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
 	assert.NoError(t, err)
 	assert.Len(t, c.Members, 3)
+}
+
+// Test joining a node, then removing it, then adding a new node
+func TestCluster_Join_Leave_Join(t *testing.T) {
+	ctx := Context(t)
+
+	net, err := network.New(ctx, network.WithAttachable())
+	assert.NoError(t, err)
+	testcontainers.CleanupNetwork(t, net)
+
+	// Create initial gravity node
+	gr := gravity.New(t, gravity.WithNet(net))
+
+	// Create 2nd gravity node
+	gr2 := gravity.New(
+		t,
+		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
+		gravity.WithHostname("gravity-2"),
+		gravity.WithNet(net),
+	)
+
+	gr2ID := gr2.EtcdID()
+	_, err = gr.APIClient().RolesEtcdAPI.EtcdRemoveMember(ctx).PeerID(gr2ID).Execute()
+	assert.NoError(t, err)
+	assert.NoError(t, gr2.Container().Stop(ctx, nil))
+
+	// Create 3rd gravity node
+	gravity.New(
+		t,
+		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
+		gravity.WithHostname("gravity-3"),
+		gravity.WithNet(net),
+	)
+
+	// Check that all nodes are in the cluster
+	ac := gr.APIClient()
+	c, _, err := ac.RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
+	assert.NoError(t, err)
+	assert.Len(t, c.Members, 2)
 }
