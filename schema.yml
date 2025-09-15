@@ -1138,8 +1138,7 @@ paths:
         name: peerID
         required: true
         schema:
-          minimum: 0
-          type: integer
+          type: string
       responses:
         "204":
           description: No Content
@@ -2491,8 +2490,9 @@ components:
     EtcdAPIMember:
       properties:
         id:
-          minimum: 0
-          type: integer
+          type: string
+        isLeader:
+          type: boolean
         isLearner:
           type: boolean
         name:

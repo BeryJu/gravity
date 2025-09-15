@@ -72,6 +72,7 @@ The following environment variables can be set.
 - `SENTRY_ENABLED`: Enable Sentry error reporting and tracing. Defaults to `false`.
 - `SENTRY_DSN`: Configure a custom Sentry DSN.
 - `ETCD_PREFIX`: Global etcd prefix. Defaults to `/gravity`.
+- `ETCD_CLIENT_PORT`: Port used for etcd client traffic. Defaults to `2379`. This may need to be changed when running in Kubernetes.
 - `ETCD_PEER_PORT`: Port used for etcd peer traffic. Defaults to `2380`. This may need to be changed when running in Kubernetes.
 - `ETCD_ENDPOINT`: etcd Client endpoint. Defaults to `localhost:2379` when using embedded etcd.
 - `ETCD_JOIN_CLUSTER`: Set to a join cluster token to join the node to a cluster. See [Clustering](./cluster).

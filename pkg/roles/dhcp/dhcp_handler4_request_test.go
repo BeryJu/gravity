@@ -400,7 +400,7 @@ func TestDHCP_Parallel(t *testing.T) {
 		t.Run(fmt.Sprintf("test %v", i), func(t *testing.T) {
 			t.Parallel()
 			time.Sleep(2 * time.Second)
-			fmt.Printf("p done %v\n", time.Now())
+			t.Logf("p done %v\n", time.Now())
 		})
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
@@ -17,7 +18,7 @@ import (
 
 type APIMember struct {
 	Name      string `json:"name"`
-	ID        uint64 `json:"id"`
+	ID        string `json:"id"`
 	IsLearner bool   `json:"isLearner"`
 	IsLeader  bool   `json:"isLeader"`
 }
@@ -33,7 +34,7 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 		}
 		for _, mem := range members.Members {
 			output.Members = append(output.Members, APIMember{
-				ID:        mem.ID,
+				ID:        fmt.Sprintf("%x", mem.ID),
 				Name:      mem.Name,
 				IsLearner: mem.IsLearner,
 				IsLeader:  mem.ID == r.e.Server.Lead(),
@@ -116,15 +117,19 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 }
 
 type APIMemberRemoveInput struct {
-	PeerID uint64 `query:"peerID" required:"true"`
+	PeerID string `query:"peerID" required:"true"`
 }
 
 func (r *Role) APIClusterRemove() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberRemoveInput, output *struct{}) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
-		r.i.Log().Debug("Removing instance", zap.Uint64("id", input.PeerID))
+		iid, err := strconv.ParseUint(input.PeerID, 16, 64)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		r.i.Log().Debug("Removing instance", zap.Uint64("id", iid))
 		go func() {
-			_, err := r.i.KV().MemberRemove(context.Background(), input.PeerID)
+			_, err := r.i.KV().MemberRemove(context.Background(), iid)
 			if err != nil {
 				r.log.Warn("failed to remove member", zap.Error(err))
 			}
@@ -149,8 +154,8 @@ func (r *Role) clusterCanJoin(ctx context.Context) bool {
 		r.log.Warn("cluster is not healthy", zap.Error(err))
 		return false
 	}
-	_, lds := st.FindLeaderStatus()
-	if id, st := st.FindLearnerStatus(); id > 0 {
+	lds := st.FindLeaderStatus()
+	if st := st.FindLearnerStatus(); st != nil {
 		r.log.Info("Found learner")
 		if IsLearnerReady(lds, st) {
 			r.log.Info("Learner is ready, leader should promote it")

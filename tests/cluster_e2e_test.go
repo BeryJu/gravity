@@ -41,7 +41,7 @@ func TestCluster_Join(t *testing.T) {
 
 	// Check that all nodes are in the cluster
 	ac := gr.APIClient()
-	c, _, err := ac.ClusterAPI.ClusterGetClusterInfo(ctx).Execute()
+	c, _, err := ac.RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
 	assert.NoError(t, err)
-	assert.Len(t, c.Instances, 3)
+	assert.Len(t, c.Members, 3)
 }

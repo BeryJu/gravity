@@ -229,6 +229,17 @@ func (a *RolesEtcdAPIService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) 
 			}
 			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
 			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 503 {
+			var v RestErrResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -248,10 +259,10 @@ func (a *RolesEtcdAPIService) EtcdJoinMemberExecute(r ApiEtcdJoinMemberRequest) 
 type ApiEtcdRemoveMemberRequest struct {
 	ctx        context.Context
 	ApiService *RolesEtcdAPIService
-	peerID     *int32
+	peerID     *string
 }
 
-func (r ApiEtcdRemoveMemberRequest) PeerID(peerID int32) ApiEtcdRemoveMemberRequest {
+func (r ApiEtcdRemoveMemberRequest) PeerID(peerID string) ApiEtcdRemoveMemberRequest {
 	r.peerID = &peerID
 	return r
 }
@@ -293,9 +304,6 @@ func (a *RolesEtcdAPIService) EtcdRemoveMemberExecute(r ApiEtcdRemoveMemberReque
 	localVarFormParams := url.Values{}
 	if r.peerID == nil {
 		return nil, reportError("peerID is required and must be specified")
-	}
-	if *r.peerID < 0 {
-		return nil, reportError("peerID must be greater than 0")
 	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "peerID", r.peerID, "form", "")

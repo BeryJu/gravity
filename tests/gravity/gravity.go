@@ -65,6 +65,13 @@ func WithHostname(name string) GravityOption {
 				&StdoutLogConsumer{Prefix: name},
 			},
 		}
+		req.Name = fmt.Sprintf("gravity-tc-%s", name)
+	}
+}
+
+func WithoutWait() GravityOption {
+	return func(req *testcontainers.ContainerRequest) {
+		req.WaitingFor = nil
 	}
 }
 
@@ -77,9 +84,6 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 		Image:        "gravity:e2e-test",
 		ExposedPorts: []string{"8008", "8009"},
 		WaitingFor:   wait.ForHTTP("/healthz/ready").WithPort("8009").WithStartupTimeout(3 * time.Minute),
-		ConfigModifier: func(c *container.Config) {
-			c.Hostname = "gravity-1"
-		},
 		Env: map[string]string{
 			"LOG_LEVEL":      "debug",
 			"ADMIN_PASSWORD": gravityPassword,
@@ -92,13 +96,9 @@ func New(t *testing.T, opts ...GravityOption) *Gravity {
 				fmt.Sprintf("%s:/coverage", filepath.Join(cwd, "/coverage")),
 			}
 		},
-		LogConsumerCfg: &testcontainers.LogConsumerConfig{
-			Consumers: []testcontainers.LogConsumer{
-				&StdoutLogConsumer{Prefix: "gravity-1"},
-			},
-		},
 	}
 
+	WithHostname("gravity-1")(&req)
 	for _, opt := range opts {
 		opt(&req)
 	}

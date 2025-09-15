@@ -152,7 +152,7 @@ import (
 )
 
 func main() {
-	peerID := int32(56) // int32 | 
+	peerID := "peerID_example" // string | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -175,7 +175,7 @@ Other parameters are passed through a pointer to a apiEtcdRemoveMemberRequest st
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **peerID** | **int32** |  | 
+ **peerID** | **string** |  | 
 
 ### Return type
 

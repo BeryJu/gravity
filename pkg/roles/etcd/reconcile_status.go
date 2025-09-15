@@ -2,10 +2,12 @@ package etcd
 
 import (
 	"context"
+	"net/url"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/storage"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 func IsLearnerReady(leaderStatus, learnerStatus *clientv3.StatusResponse) bool {
@@ -18,10 +20,23 @@ func IsLearnerReady(leaderStatus, learnerStatus *clientv3.StatusResponse) bool {
 
 type ClusterStatus struct {
 	Healthy      error
-	MemberStatus map[uint64]MemberStatus
+	MemberStatus map[uint64]*clientv3.StatusResponse
 }
-type MemberStatus struct {
-	Raw *clientv3.StatusResponse
+
+func FindNonLocalhost(addrs []string) (string, error) {
+	var lastError error
+	for _, addr := range addrs {
+		url, err := url.Parse(addr)
+		if err != nil {
+			lastError = err
+			continue
+		}
+		if url.Hostname() == "localhost" {
+			continue
+		}
+		return url.String(), nil
+	}
+	return "", lastError
 }
 
 func (lcr *LeaderClusterReconciler) ClusterStatus(ctx context.Context) (*ClusterStatus, error) {
@@ -30,43 +45,44 @@ func (lcr *LeaderClusterReconciler) ClusterStatus(ctx context.Context) (*Cluster
 		return nil, err
 	}
 	cst := &ClusterStatus{
-		MemberStatus: map[uint64]MemberStatus{},
+		MemberStatus: map[uint64]*clientv3.StatusResponse{},
 	}
 	for _, member := range members.Members {
+		nonLocalhost, err := FindNonLocalhost(member.ClientURLs)
+		if err != nil {
+			lcr.log.Warn("failed to get member IP for non-localhost", zap.Error(err))
+			continue
+		}
 		c := storage.NewClient(
 			extconfig.Get().Etcd.Prefix,
-			lcr.log.Named("etcd").Named(member.Name),
+			lcr.log.Named(member.Name),
 			extconfig.Get().Debug,
-			member.ClientURLs...,
+			nonLocalhost,
 		)
-		st, err := c.Status(ctx, member.ClientURLs[0])
+		st, err := c.Status(ctx, nonLocalhost)
 		if err != nil {
 			cst.Healthy = err
 			continue
 		}
-		cst.MemberStatus[member.ID] = MemberStatus{
-			Raw: st,
-		}
+		cst.MemberStatus[member.ID] = st
 	}
 	return cst, nil
 }
 
-func (cst *ClusterStatus) FindLeaderStatus() (uint64, *clientv3.StatusResponse) {
-	for i := range cst.MemberStatus {
-		status := cst.MemberStatus[i].Raw
-		if status.Leader == status.Header.MemberId {
-			return status.Header.MemberId, status
+func (cst *ClusterStatus) FindLeaderStatus() *clientv3.StatusResponse {
+	for _, st := range cst.MemberStatus {
+		if st.Leader == st.Header.MemberId {
+			return st
 		}
 	}
-	return 0, nil
+	return nil
 }
 
-func (cst *ClusterStatus) FindLearnerStatus() (uint64, *clientv3.StatusResponse) {
-	for i := range cst.MemberStatus {
-		status := cst.MemberStatus[i].Raw
-		if status.IsLearner {
-			return status.Header.MemberId, status
+func (cst *ClusterStatus) FindLearnerStatus() *clientv3.StatusResponse {
+	for _, st := range cst.MemberStatus {
+		if st.IsLearner {
+			return st
 		}
 	}
-	return 0, nil
+	return nil
 }

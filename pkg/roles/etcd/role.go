@@ -75,9 +75,11 @@ func New(instance roles.Instance) *Role {
 	cfg.AutoCompactionRetention = "60m"
 	cfg.ListenClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
+		urlMustParse(fmt.Sprintf("http://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.ClientPort)))),
 	}
 	cfg.AdvertiseClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
+		urlMustParse(fmt.Sprintf("http://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.ClientPort)))),
 	}
 	cfg.ListenPeerUrls = []url.URL{
 		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.PeerPort)))),

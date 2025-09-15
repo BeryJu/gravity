@@ -22,7 +22,7 @@ type LeaderClusterReconciler struct {
 func NewLeaderClusterConciler(i roles.Instance) *LeaderClusterReconciler {
 	return &LeaderClusterReconciler{
 		i:     i,
-		log:   i.Log(),
+		log:   i.Log().Named("lcr"),
 		mutex: sync.Mutex{},
 	}
 }
@@ -92,12 +92,12 @@ func (lcr *LeaderClusterReconciler) Reconcile() {
 		lcr.log.Warn("cluster is not healthy", zap.Error(err))
 		return
 	}
-	_, lds := st.FindLeaderStatus()
-	if id, st := st.FindLearnerStatus(); id > 0 {
+	lds := st.FindLeaderStatus()
+	if st := st.FindLearnerStatus(); st != nil {
 		lcr.log.Info("Found learner")
 		if IsLearnerReady(lds, st) {
 			lcr.log.Info("Learner is ready to be promoted")
-			_, err := lcr.i.KV().MemberPromote(lcr.ctx, id)
+			_, err := lcr.i.KV().MemberPromote(lcr.ctx, st.Header.MemberId)
 			if err != nil {
 				lcr.log.Info("Failed to promote member", zap.Error(err))
 				return
