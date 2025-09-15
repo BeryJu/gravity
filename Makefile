@@ -264,7 +264,7 @@ test-e2e: test-e2e-container-build
 			2>&1 | tee ${TEST_OUTPUT}
 	cd ${PWD}
 	go tool covdata textfmt \
-		-i $(shell find ${PWD}/tests/coverage/ -type d -mindepth 1 | xargs | tr ' ' ',') \
+		-i ${PWD}/tests/coverage/ \
 		--pkg $(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated | xargs | sed 's/ /,/g') \
 		-o ${PWD}/coverage_in_container.txt
 	go tool cover \
