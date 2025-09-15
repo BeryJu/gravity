@@ -15,6 +15,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/network"
 )
 
+// Test joining 2 nodes the proper way
 func TestCluster_Join(t *testing.T) {
 	ctx := Context(t)
 
@@ -48,6 +49,7 @@ func TestCluster_Join(t *testing.T) {
 	assert.Len(t, c.Members, 3)
 }
 
+// Test joining 2 nodes to a node without waiting for anything to be ready
 func TestCluster_Join_NoWait(t *testing.T) {
 	ctx := Context(t)
 
@@ -96,4 +98,52 @@ func TestCluster_Join_NoWait(t *testing.T) {
 	)
 	assert.NoError(t, err)
 	assert.Equal(t, 3, c)
+}
+
+// Test joining a node to the cluster, then moving the leader, then adding another node
+func TestCluster_Join_Move_Join(t *testing.T) {
+	ctx := Context(t)
+
+	net, err := network.New(ctx, network.WithAttachable())
+	assert.NoError(t, err)
+	testcontainers.CleanupNetwork(t, net)
+
+	// Create initial gravity node
+	gr := gravity.New(t, gravity.WithNet(net))
+
+	// Create 2nd gravity node
+	gravity.New(
+		t,
+		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
+		gravity.WithHostname("gravity-2"),
+		gravity.WithNet(net),
+	)
+
+	// Get all node IDs, move leader to gravity-2
+	nodes, _, err := gr.APIClient().RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
+	assert.NoError(t, err)
+	gravity_2 := ""
+	for _, node := range nodes.Members {
+		if node.GetName() == "gravity-2" {
+			gravity_2 = node.GetId()
+		}
+	}
+	assert.NotEqual(t, "", gravity_2)
+	// Move leader
+	_, err = gr.APIClient().RolesEtcdAPI.EtcdMoveLeader(ctx).PeerID(gravity_2).Execute()
+	assert.NoError(t, err)
+
+	// Create 3rd gravity node
+	gravity.New(
+		t,
+		gravity.WithEnv("ETCD_JOIN_CLUSTER", fmt.Sprintf("%s,http://gravity-1:8008", gravity.Token())),
+		gravity.WithHostname("gravity-3"),
+		gravity.WithNet(net),
+	)
+
+	// Check that all nodes are in the cluster
+	ac := gr.APIClient()
+	c, _, err := ac.RolesEtcdAPI.EtcdGetMembers(ctx).Execute()
+	assert.NoError(t, err)
+	assert.Len(t, c.Members, 3)
 }

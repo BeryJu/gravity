@@ -116,12 +116,12 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 	return u
 }
 
-type APIMemberRemoveInput struct {
+type APIMemberInput struct {
 	PeerID string `query:"peerID" required:"true"`
 }
 
 func (r *Role) APIClusterRemove() usecase.Interactor {
-	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberRemoveInput, output *struct{}) error {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberInput, output *struct{}) error {
 		r.i.DispatchEvent(backup.EventTopicBackupRun, roles.NewEvent(ctx, map[string]interface{}{}))
 		iid, err := strconv.ParseUint(input.PeerID, 16, 64)
 		if err != nil {
@@ -139,6 +139,27 @@ func (r *Role) APIClusterRemove() usecase.Interactor {
 	})
 	u.SetName("etcd.remove_member")
 	u.SetTitle("Etcd remove")
+	u.SetTags("roles/etcd")
+	u.SetExpectedErrors(status.Internal)
+	return u
+}
+
+func (r *Role) APIClusterMoveLeader() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIMemberInput, output *struct{}) error {
+		iid, err := strconv.ParseUint(input.PeerID, 16, 64)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		r.i.Log().Debug("Moving leader", zap.Uint64("id", iid))
+
+		_, err = r.i.KV().MoveLeader(ctx, iid)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("etcd.move_leader")
+	u.SetTitle("Etcd move leader")
 	u.SetTags("roles/etcd")
 	u.SetExpectedErrors(status.Internal)
 	return u

@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**EtcdGetMembers**](RolesEtcdAPI.md#EtcdGetMembers) | **Get** /api/v1/etcd/members | Etcd members
 [**EtcdJoinMember**](RolesEtcdAPI.md#EtcdJoinMember) | **Post** /api/v1/etcd/join | Etcd join
+[**EtcdMoveLeader**](RolesEtcdAPI.md#EtcdMoveLeader) | **Post** /api/v1/etcd/move_leader | Etcd move leader
 [**EtcdRemoveMember**](RolesEtcdAPI.md#EtcdRemoveMember) | **Delete** /api/v1/etcd/remove | Etcd remove
 
 
@@ -126,6 +127,68 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## EtcdMoveLeader
+
+> EtcdMoveLeader(ctx).PeerID(peerID).Execute()
+
+Etcd move leader
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "beryju.io/gravity/api"
+)
+
+func main() {
+	peerID := "peerID_example" // string | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.RolesEtcdAPI.EtcdMoveLeader(context.Background()).PeerID(peerID).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `RolesEtcdAPI.EtcdMoveLeader``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiEtcdMoveLeaderRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **peerID** | **string** |  | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

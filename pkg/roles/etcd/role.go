@@ -108,6 +108,7 @@ func New(instance roles.Instance) *Role {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/etcd/members", r.APIClusterMembers())
 		svc.Post("/api/v1/etcd/join", r.APIClusterJoin())
+		svc.Post("/api/v1/etcd/move_leader", r.APIClusterMoveLeader())
 		svc.Delete("/api/v1/etcd/remove", r.APIClusterRemove())
 	})
 	return r

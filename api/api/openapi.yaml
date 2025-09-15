@@ -1233,6 +1233,29 @@ paths:
       summary: Etcd members
       tags:
       - roles/etcd
+  /api/v1/etcd/move_leader:
+    post:
+      operationId: etcd.move_leader
+      parameters:
+      - explode: true
+        in: query
+        name: peerID
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestErrResponse"
+          description: Internal Server Error
+      summary: Etcd move leader
+      tags:
+      - roles/etcd
   /api/v1/etcd/remove:
     delete:
       operationId: etcd.remove_member
