@@ -28,7 +28,7 @@ func init() {
 	gravityToken = base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 }
 
-func Passowrd() string {
+func Password() string {
 	return gravityPassword
 }
 

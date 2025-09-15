@@ -6,12 +6,13 @@
         "INSTANCE_IP": "0.0.0.0",
         "CI": "true",
     },
-    "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v"],
     "gopls": {
         "build.buildFlags": [
             "-tags=e2e",
         ]
     },
+    "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v", "-covermode=atomic"],
+    "go.coverOnSingleTestFile": true,
     "go.testTags": "e2e",
     "go.testTimeout": "300s",
     "go.coverOnSingleTest": true,
