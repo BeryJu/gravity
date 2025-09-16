@@ -7,7 +7,7 @@ on:
 
 permissions:
   packages: write
-  # Required to create relases
+  # Required to create releases
   contents: write
   pull-requests: read
 
@@ -19,7 +19,7 @@ jobs:
       id-token: write
       attestations: write
       packages: write
-      # Required to create relases
+      # Required to create releases
       contents: write
       pull-requests: read
     outputs:
@@ -78,15 +78,16 @@ jobs:
           subject-name: ghcr.io/beryju/gravity-external-dns
           subject-digest: ${{ steps.push-external-dns.outputs.digest }}
           push-to-registry: true
-      - uses: actions/create-release@v1.1.4
+      - uses: softprops/action-gh-release@v2
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ steps.vars.outputs.version }}
+          name: Release ${{ steps.vars.outputs.version }}
           draft: true
           prerelease: false
+          generate_release_notes: true
           body: |
             Upgrade to this version of gravity by using this container image:
 
