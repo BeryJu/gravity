@@ -17,7 +17,7 @@ require (
 	github.com/docker/docker v28.4.0+incompatible
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/felixge/fgprof v0.9.5
-	github.com/getsentry/sentry-go v0.35.2
+	github.com/getsentry/sentry-go v0.35.3
 	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
