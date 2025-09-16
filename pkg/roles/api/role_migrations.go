@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/instance/migrate"
-	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/Masterminds/semver/v3"
@@ -20,7 +19,7 @@ func (r *Role) RegisterMigrations() {
 		ActivateFunc:  func(v *semver.Version) bool { return true },
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			userPrefix := r.i.KV().Key(types.KeyRole, types.KeyUsers).Prefix(true).String()
-			defaultPerms := []auth.Permission{
+			defaultPerms := []types.Permission{
 				{
 					Path:    "/*",
 					Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},

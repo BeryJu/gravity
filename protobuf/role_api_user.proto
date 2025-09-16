@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/api/types";
+
+message Permission {
+    string path = 1;
+    repeated string methods = 2;
+}
+
+message User {
+    string username = 1;
+    string password = 2;
+    repeated Permission permissions = 3;
+}

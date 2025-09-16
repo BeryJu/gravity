@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"encoding/gob"
-	"encoding/json"
 	"net/http"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
@@ -15,6 +14,7 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
+	"google.golang.org/protobuf/proto"
 )
 
 type AuthProvider struct {
@@ -40,7 +40,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 			"/api/v1/openapi.json",
 		},
 	}
-	gob.Register(User{})
+	gob.Register(types.User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		mux := ev.Payload.Data["mux"].(*mux.Router)
@@ -70,16 +70,16 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 		return err
 	}
 
-	user := User{
+	user := types.User{
 		Password: string(hashedPw),
-		Permissions: []Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 			},
 		},
 	}
-	userJson, err := json.Marshal(user)
+	userProto, err := proto.Marshal(&user)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 			types.KeyUsers,
 			username,
 		).String(),
-		string(userJson),
+		string(userProto),
 	)
 	if err != nil {
 		return err

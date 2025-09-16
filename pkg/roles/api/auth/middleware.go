@@ -34,10 +34,11 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
+	uu := u.(*types.User)
 	hub.Scope().SetUser(sentry.User{
-		Username: u.(User).Username,
+		Username: uu.Username,
 	})
-	return ap.checkPermission(r, u.(User))
+	return ap.checkPermission(r, uu)
 }
 
 func (ap *AuthProvider) ServeHTTP(rw http.ResponseWriter, r *http.Request) {

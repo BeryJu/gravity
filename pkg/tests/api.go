@@ -29,9 +29,9 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		types.KeyRole,
 		types.KeyUsers,
 		username,
-	).String(), MustJSON(auth.User{
+	).String(), MustJSON(&types.User{
 		Username: username,
-		Permissions: []auth.Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
