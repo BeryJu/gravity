@@ -79,7 +79,7 @@ func New(instance roles.Instance) *Role {
 	}
 	cfg.AdvertiseClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
-		urlMustParse(fmt.Sprintf("http://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.ClientPort)))),
+		urlMustParse(fmt.Sprintf("http://%s", extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.ClientPort))),
 	}
 	cfg.ListenPeerUrls = []url.URL{
 		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.PeerPort)))),
