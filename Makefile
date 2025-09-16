@@ -282,7 +282,6 @@ bench: internal/resources/macoui internal/resources/blocky internal/resources/tf
 		-bench=^Benchmark \
 		-coverprofile=${PWD}/coverage.txt \
 		-covermode=atomic \
-		-json \
 		-benchmem \
 		$(shell go list ./... | grep -v beryju.io/gravity/api | grep -v beryju.io/gravity/cmd | grep -v beryju.io/gravity/pkg/externaldns/generated) \
 			2>&1 | tee ${TEST_OUTPUT}
