@@ -16,7 +16,7 @@ type ExtConfig struct {
 	Etcd   struct {
 		Prefix      string `env:"ETCD_PREFIX,default=/gravity"`
 		Endpoint    string `env:"ETCD_ENDPOINT,default=localhost:2379"`
-		ClientPort  int32  `env:"ETCD_CLIENT_PORT,default=2379"`
+		ClientPort  int32  `env:"ETCD_CLIENT_PORT,default=2381"`
 		PeerPort    int32  `env:"ETCD_PEER_PORT,default=2380"`
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
