@@ -23,7 +23,7 @@ jobs:
         with:
           name: Gravity Benchmark
           tool: 'go'
-          output-file-path: test-output
+          output-file-path: .test-output
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
           # Show alert with commit comment on detecting possible performance regression
