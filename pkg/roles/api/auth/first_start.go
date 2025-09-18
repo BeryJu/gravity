@@ -18,7 +18,7 @@ Password: '%s'`
 
 const firstStartFooter = `
 Open 'http://%s:8008/' to start using Gravity!
---------------------------------------------------------------------
+------------------------------------------------------------
 `
 
 func (ap *AuthProvider) FirstStart(ev *roles.Event) {
