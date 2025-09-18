@@ -2,10 +2,12 @@ package storage
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"beryju.io/gravity/pkg/storage/trace"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/namespace"
@@ -156,4 +158,29 @@ func (c *Client) Delete(ctx context.Context, key string, opts ...clientv3.OpOpti
 		res = _r
 	}
 	return res, err
+}
+
+func (c *Client) PutObj(ctx context.Context, key string, val any, opts ...clientv3.OpOption) (*clientv3.PutResponse, error) {
+	marshalled, err := c.Marshal(val)
+	if err != nil {
+		return nil, err
+	}
+	return c.Put(ctx, key, string(marshalled), opts...)
+}
+
+func (c *Client) Unmarshal(raw []byte, out any) error {
+	err := json.Unmarshal(raw, out)
+	if err != nil {
+		if p, ok := out.(proto.Message); ok {
+			return proto.Unmarshal(raw, p)
+		}
+	}
+	return err
+}
+
+func (c *Client) Marshal(in any) ([]byte, error) {
+	if p, ok := in.(proto.Message); ok {
+		return proto.Marshal(p)
+	}
+	return json.Marshal(in)
 }

@@ -14,7 +14,6 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
-	"google.golang.org/protobuf/proto"
 )
 
 type AuthProvider struct {
@@ -79,19 +78,15 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 			},
 		},
 	}
-	userProto, err := proto.Marshal(&user)
-	if err != nil {
-		return err
-	}
 
-	_, err = ap.inst.KV().Put(
+	_, err = ap.inst.KV().PutObj(
 		ctx,
 		ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
 			username,
 		).String(),
-		string(userProto),
+		&user,
 	)
 	if err != nil {
 		return err
