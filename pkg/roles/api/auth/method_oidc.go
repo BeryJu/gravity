@@ -92,10 +92,10 @@ func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to authenticate", http.StatusBadRequest)
 		return
 	}
-	user := User{
+	user := &types.User{
 		Username: claims.Email,
 		Password: "",
-		Permissions: []Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
@@ -150,6 +150,6 @@ func (ap *AuthProvider) checkJWTToken(r *http.Request) bool {
 		return false
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	session.Values[types.SessionKeyUser] = *user
+	session.Values[types.SessionKeyUser] = user
 	return false
 }
