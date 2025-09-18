@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/api/types"
@@ -15,39 +14,26 @@ const (
 	BearerType          = "bearer"
 )
 
-type Token struct {
-	ap  *AuthProvider
-	Key string `json:"-"`
-
-	Username string `json:"username"`
-}
-
-func (token *Token) put(ctx context.Context, opts ...clientv3.OpOption) error {
-	raw, err := json.Marshal(&token)
-	if err != nil {
-		return err
-	}
-	fullKey := token.ap.inst.KV().Key(
+func (ap *AuthProvider) putToken(t *types.Token, ctx context.Context, opts ...clientv3.OpOption) error {
+	fullKey := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
-		token.Key,
+		t.Key,
 	).String()
-	_, err = token.ap.inst.KV().Put(ctx, fullKey, string(raw), opts...)
+	_, err := ap.inst.KV().PutObj(ctx, fullKey, t, opts...)
 	return err
 }
 
-func (ap *AuthProvider) tokenFromKV(raw *mvccpb.KeyValue) (*Token, error) {
-	token := &Token{
-		ap: ap,
-	}
+func (ap *AuthProvider) tokenFromKV(raw *mvccpb.KeyValue) (*types.Token, error) {
+	token := &types.Token{}
 	prefix := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
 	).Prefix(true).String()
-	token.Key = strings.TrimPrefix(string(raw.Key), prefix)
-	err := json.Unmarshal(raw.Value, &token)
+	err := ap.inst.KV().Unmarshal(raw.Value, &token)
 	if err != nil {
 		return token, err
 	}
+	token.Key = strings.TrimPrefix(string(raw.Key), prefix)
 	return token, nil
 }

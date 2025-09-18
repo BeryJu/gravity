@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -30,15 +29,15 @@ func (r *Role) RegisterMigrations() {
 					shouldIntercept := res != nil && len(res.Kvs) > 0 && strings.HasPrefix(key, userPrefix)
 					// If we're fetching a user, intercept the response
 					if shouldIntercept {
-						u := map[string]interface{}{}
-						err := json.Unmarshal(res.Kvs[0].Value, &u)
+						u := map[string]any{}
+						err := r.i.KV().Unmarshal(res.Kvs[0].Value, &u)
 						if err != nil {
 							return res, nil
 						}
 						if _, set := u["permissions"]; !set {
 							u["permissions"] = defaultPerms
 						}
-						v, err := json.Marshal(u)
+						v, err := r.i.KV().Marshal(u)
 						if err != nil {
 							return res, nil
 						}

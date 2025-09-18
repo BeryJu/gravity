@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "pkg/roles/api/types";
+
+message Token {
+    string key = 1;
+    string username = 2;
+}
