@@ -23,12 +23,10 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 			req.log.Warn("failed to update lease during discover creation", zap.Error(err))
 		}
 	} else {
-		go func() {
-			err := match.Put(req.Context, match.scope.TTL)
-			if err != nil {
-				req.log.Warn("failed to update lease during discover", zap.Error(err))
-			}
-		}()
+		err := match.Put(req.Context, match.scope.TTL)
+		if err != nil {
+			req.log.Warn("failed to update lease during discover", zap.Error(err))
+		}
 	}
 
 	dhcpRequests.WithLabelValues(req.MessageType().String(), match.scope.Name).Inc()

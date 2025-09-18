@@ -55,12 +55,10 @@ func (r *Role) FindLease(req *Request4) *Lease {
 		lease.ScopeKey = expectedScope.Name
 		lease.setLeaseIP(req)
 		lease.log.Info("Re-assigning address for lease due to changed request scope", zap.String("newIP", lease.Address))
-		go func() {
-			err := lease.Put(req.Context, lease.scope.TTL)
-			if err != nil {
-				r.log.Warn("failed to update lease for re-assigned IP", zap.Error(err))
-			}
-		}()
+		err := lease.Put(req.Context, lease.scope.TTL)
+		if err != nil {
+			r.log.Warn("failed to update lease for re-assigned IP", zap.Error(err))
+		}
 	}
 	return lease
 }
@@ -225,12 +223,10 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	if req.HostName() != l.Hostname {
 		l.Hostname = req.HostName()
 		// Update lease with new hostname
-		go func() {
-			err := l.Put(req.Context, l.Expiry)
-			if err != nil {
-				l.log.Warn("failed to update lease for updated hostname", zap.Error(err))
-			}
-		}()
+		err := l.Put(req.Context, l.Expiry)
+		if err != nil {
+			l.log.Warn("failed to update lease for updated hostname", zap.Error(err))
+		}
 	}
 	if l.Hostname != "" {
 		hostname := l.Hostname
