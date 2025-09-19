@@ -100,11 +100,11 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 		nmap.WithForcedDNSResolution(),
 		nmap.WithCustomDNSServers(dns),
 	)
-	s.log.Debug("nmap args", zap.Strings("args", scanner.Args()))
 	if err != nil {
 		s.log.Warn("unable to create nmap scanner", zap.Error(err))
 		return dev
 	}
+	s.log.Debug("nmap args", zap.Strings("args", scanner.Args()))
 
 	result, warnings, err := scanner.Run()
 	if err != nil {
