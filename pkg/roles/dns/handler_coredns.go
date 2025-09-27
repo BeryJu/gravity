@@ -9,8 +9,8 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 	_ "github.com/coredns/coredns/core/plugin"
 	"github.com/coredns/coredns/coremain"
+	_ "github.com/k8s-gateway/k8s_gateway"
 	"github.com/miekg/dns"
-	_ "github.com/ori-edge/k8s_gateway"
 	"go.uber.org/zap"
 )
 
