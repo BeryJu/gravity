@@ -49,6 +49,8 @@ jobs:
             ghcr.io/beryju/gravity:stable
             ghcr.io/beryju/gravity:v${{ steps.vars.outputs.version }}
           push: true
+          sbom: true
+          provenance: true
           platforms: linux/amd64,linux/arm64
           context: .
           build-args: |

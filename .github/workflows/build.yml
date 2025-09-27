@@ -46,6 +46,8 @@ jobs:
             ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: linux/amd64,linux/arm64
+          sbom: true
+          provenance: true
           context: .
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
