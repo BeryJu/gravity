@@ -3,10 +3,10 @@ import { RolesTsdbApi, TsdbRoleConfig } from "gravity-api";
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { first } from "../../common/utils";
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { first } from "../../../common/utils";
+import { ModelForm } from "../../../elements/forms/ModelForm";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-tsdb-config")
 export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
