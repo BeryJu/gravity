@@ -25,10 +25,10 @@ jobs:
     outputs:
       release_upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
+      - uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -36,13 +36,13 @@ jobs:
       - id: vars
         run: make ci--env
       - id: meta
-        uses: docker/metadata-action@v5.8.0
+        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
           flavor: |
             latest=false
           tags: |
             type=raw,value=v${{ steps.vars.outputs.version }}
-      - uses: docker/build-push-action@v6.18.0
+      - uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         id: push
         with:
           tags: |
@@ -57,12 +57,12 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
           subject-name: ghcr.io/beryju/gravity
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-      - uses: docker/build-push-action@v6.18.0
+      - uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         id: push-external-dns
         with:
           tags: |
@@ -75,12 +75,12 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
           subject-name: ghcr.io/beryju/gravity-external-dns
           subject-digest: ${{ steps.push-external-dns.outputs.digest }}
           push-to-registry: true
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836 # v2
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -123,10 +123,10 @@ jobs:
         arch: [arm64, amd64]
         os: [darwin, linux]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - run: |
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} make bin/gravity-cli
-      - uses: actions/upload-release-asset@v1
+      - uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

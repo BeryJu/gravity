@@ -13,16 +13,16 @@ runs:
       run: make test-env-stop
     - shell: bash
       run: make test-convert
-    - uses: test-summary/action@v2
+    - uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2
       with:
         paths: ${{ github.workspace }}/junit.xml
         show: "fail"
-    - uses: codecov/codecov-action@v5
+    - uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
       with:
         use_oidc: true
         flags: ${{ inputs.flags }}
         files: ${{ github.workspace }}/coverage.txt
-    - uses: codecov/test-results-action@v1
+    - uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1
       with:
         use_oidc: true
         flags: ${{ inputs.flags }}
