@@ -325,6 +325,31 @@ paths:
       summary: Instance
       tags:
       - cluster/instances
+    put:
+      operationId: cluster.put_instance
+      parameters:
+      - in: query
+        name: identifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceAPIInstancesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instance
+      tags:
+      - cluster/instances
   /api/v1/cluster/node/logs:
     get:
       operationId: api.get_log_messages
@@ -1769,12 +1794,13 @@ components:
     ApiAPIToolPingOutput:
       properties:
         avgRtt:
-          type: integer
+          $ref: '#/components/schemas/TimeDuration'
         maxRtt:
-          type: integer
+          $ref: '#/components/schemas/TimeDuration'
         minRtt:
-          type: integer
+          $ref: '#/components/schemas/TimeDuration'
         packetLoss:
+          format: double
           type: number
         packetsRecv:
           type: integer
@@ -1783,7 +1809,7 @@ components:
         packetsSent:
           type: integer
         stdDevRtt:
-          type: integer
+          $ref: '#/components/schemas/TimeDuration'
       type: object
     ApiAPIToolPortmapInput:
       properties:
@@ -1828,7 +1854,7 @@ components:
         address:
           type: string
         elapsedTime:
-          type: integer
+          $ref: '#/components/schemas/TimeDuration'
         success:
           type: boolean
       type: object
@@ -1848,6 +1874,7 @@ components:
         oidc:
           $ref: '#/components/schemas/TypesOIDCConfig'
         port:
+          format: int32
           type: integer
         sessionDuration:
           type: string
@@ -1963,6 +1990,7 @@ components:
     BackupAPIBackupStatus:
       properties:
         duration:
+          format: int64
           type: integer
         error:
           type: string
@@ -1971,6 +1999,7 @@ components:
         node:
           type: string
         size:
+          format: int64
           type: integer
         status:
           type: string
@@ -2012,12 +2041,14 @@ components:
     BackupBackupStatus:
       properties:
         duration:
+          format: int64
           type: integer
         error:
           type: string
         filename:
           type: string
         size:
+          format: int64
           type: integer
         status:
           type: string
@@ -2058,6 +2089,7 @@ components:
         dnsZone:
           type: string
         expiry:
+          format: int64
           type: integer
         hostname:
           type: string
@@ -2104,6 +2136,7 @@ components:
           maxLength: 255
           type: string
         expiry:
+          format: int64
           type: integer
         hostname:
           maxLength: 255
@@ -2152,6 +2185,7 @@ components:
         subnetCidr:
           type: string
         ttl:
+          format: int64
           type: integer
       required:
       - ipam
@@ -2226,6 +2260,7 @@ components:
           maxLength: 40
           type: string
         ttl:
+          format: int64
           type: integer
       required:
       - subnetCidr
@@ -2506,6 +2541,7 @@ components:
     DnsRoleConfig:
       properties:
         port:
+          format: int32
           type: integer
       type: object
     EtcdAPIMember:
@@ -2527,7 +2563,10 @@ components:
           maxLength: 255
           type: string
         roles:
-          type: string
+          items:
+            type: string
+          nullable: true
+          type: array
       type: object
     EtcdAPIMemberJoinOutput:
       properties:
@@ -2588,6 +2627,16 @@ components:
       - instanceIdentifier
       - instanceIP
       type: object
+    InstanceAPIInstancesPutInput:
+      properties:
+        roles:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - roles
+      type: object
     InstanceAPIRoleRestartInput:
       properties:
         roleId:
@@ -2629,6 +2678,7 @@ components:
     MonitoringRoleConfig:
       properties:
         port:
+          format: int32
           type: integer
       type: object
     RestErrResponse:
@@ -2711,8 +2761,12 @@ components:
         enableLocal:
           type: boolean
         port:
+          format: int32
           type: integer
       type: object
+    TimeDuration:
+      format: int64
+      type: integer
     TsdbAPIRoleConfigInput:
       properties:
         config:
@@ -2732,8 +2786,10 @@ components:
         enabled:
           type: boolean
         expire:
+          format: int64
           type: integer
         scrape:
+          format: int64
           type: integer
       type: object
     TypesAPIMetricsGetOutput:
@@ -2759,6 +2815,7 @@ components:
           format: date-time
           type: string
         value:
+          format: int64
           type: integer
       required:
       - time

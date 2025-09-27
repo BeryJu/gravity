@@ -14,7 +14,7 @@ func TestAPIInstanceInfo(t *testing.T) {
 	rootInst := instance.New()
 
 	var output instance.APIInstanceInfo
-	assert.NoError(t, rootInst.APIInstanceInfo().Interact(tests.Context(), struct{}{}, &output))
+	assert.NoError(t, rootInst.APIInstanceGet().Interact(tests.Context(), struct{}{}, &output))
 	assert.NotNil(t, output)
 	assert.Equal(t, output.Version, extconfig.Version)
 }

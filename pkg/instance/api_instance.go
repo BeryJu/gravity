@@ -74,7 +74,7 @@ type APIInstanceInfo struct {
 	InstanceIP         string `json:"instanceIP" required:"true"`
 }
 
-func (i *Instance) APIInstanceInfo() usecase.Interactor {
+func (i *Instance) APIInstanceGet() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIInstanceInfo) error {
 		output.Version = extconfig.Version
 		output.BuildHash = extconfig.BuildHash
@@ -84,6 +84,35 @@ func (i *Instance) APIInstanceInfo() usecase.Interactor {
 		return nil
 	})
 	u.SetName("cluster.get_instance_info")
+	u.SetTitle("Instance")
+	u.SetTags("cluster/instances")
+	u.SetExpectedErrors(status.Internal)
+	return u
+}
+
+type APIInstancesPutInput struct {
+	Identifier string `query:"identifier" required:"true"`
+
+	Roles []string `json:"roles" required:"true"`
+}
+
+func (i *Instance) APIInstancePut() usecase.Interactor {
+	u := usecase.NewInteractor(func(ctx context.Context, input APIInstancesPutInput, output *struct{}) error {
+		_, err := i.kv.Put(
+			ctx,
+			i.kv.Key(
+				types.KeyInstance,
+				i.identifier,
+				types.KeyRoles,
+			).String(),
+			string(strings.Join(input.Roles, types.RoleSeparator)),
+		)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		return nil
+	})
+	u.SetName("cluster.put_instance")
 	u.SetTitle("Instance")
 	u.SetTags("cluster/instances")
 	u.SetExpectedErrors(status.Internal)

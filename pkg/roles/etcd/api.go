@@ -50,9 +50,9 @@ func (r *Role) APIClusterMembers() usecase.Interactor {
 }
 
 type APIMemberJoinInput struct {
-	Peer       string `json:"peer" maxLength:"255"`
-	Roles      string `json:"roles"`
-	Identifier string `json:"identifier"`
+	Peer       string   `json:"peer" maxLength:"255"`
+	Roles      []string `json:"roles"`
+	Identifier string   `json:"identifier"`
 }
 type APIMemberJoinOutput struct {
 	EtcdInitialCluster string `json:"etcdInitialCluster"`
@@ -80,11 +80,10 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 		))
 
 		// Pre-configure roles for new node
-		roles := strings.Split(input.Roles, ",")
-		if input.Roles == "" {
-			roles = strings.Split(extconfig.Get().BootstrapRoles, ",")
+		if len(input.Roles) == 0 {
+			input.Roles = strings.Split(extconfig.Get().BootstrapRoles, ",")
 			// If we're copying our roles, exclude backup
-			roles = slices.DeleteFunc(roles, func(role string) bool {
+			input.Roles = slices.DeleteFunc(input.Roles, func(role string) bool {
 				return role == "backup"
 			})
 		}
@@ -95,7 +94,7 @@ func (r *Role) APIClusterJoin() usecase.Interactor {
 				input.Identifier,
 				types.KeyRoles,
 			).String(),
-			strings.Join(roles, ","),
+			strings.Join(input.Roles, ","),
 		)
 		if err != nil {
 			r.log.Warn("failed to put roles for node", zap.Error(err))
