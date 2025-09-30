@@ -8,12 +8,12 @@
     },
     "gopls": {
         "build.buildFlags": [
-            "-tags=e2e",
+            "-tags=e2e,debug",
         ]
     },
     "go.testFlags": ["-count=1", "-failfast", "-shuffle=on", "-v", "-covermode=atomic"],
     "go.coverOnSingleTestFile": true,
-    "go.testTags": "e2e",
+    "go.testTags": "e2e,debug",
     "go.testTimeout": "300s",
     "go.coverOnSingleTest": true,
     "go.coverOnTestPackage": true,
