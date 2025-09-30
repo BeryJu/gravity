@@ -39,6 +39,12 @@
             "port": 8011,
             // Replace with IP of machine gravity is running on
             "host": "127.0.0.1",
+            "substitutePath": [
+                {
+                    "from": "${workspaceFolder}",
+                    "to": "/workspace"
+                },
+            ]
         }
     ]
 }

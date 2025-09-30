@@ -161,10 +161,14 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 			return fmt.Errorf("handler4: Cannot send Ethernet packet: %w", err)
 		}
 	} else {
-		_, err := h.pc.WriteTo(resp.ToBytes(), woob, p)
+		b := resp.ToBytes()
+		n, err := h.pc.WriteTo(b, woob, p)
 		if err != nil {
 			r.log.Error("handler4: conn.Write failed", zap.Error(err), zap.String("peer", p.String()))
 			return fmt.Errorf("handler4: failed to write response: %w", err)
+		}
+		if len(b) != n {
+			r.log.Warn("handler4: did not send all bytes", zap.Int("length", len(b)), zap.Int("sent", n))
 		}
 	}
 	return nil
