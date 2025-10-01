@@ -134,9 +134,6 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	}
 
 	var woob *ipv4.ControlMessage
-	if r.oob.IfIndex != 0 {
-		woob = &ipv4.ControlMessage{IfIndex: r.oob.IfIndex}
-	}
 	if p.IP.Equal(net.IPv4bcast) || p.IP.IsLinkLocalUnicast() || useEthernet {
 		// Direct broadcasts, link-local and layer2 unicasts to the interface the ruest was
 		// received on. Other packets should use the normal routing table in
