@@ -12,7 +12,7 @@ require (
 	github.com/avast/retry-go/v4 v4.6.1
 	github.com/coredns/caddy v1.1.3
 	github.com/coredns/coredns v1.12.3
-	github.com/coreos/go-oidc/v3 v3.15.0
+	github.com/coreos/go-oidc/v3 v3.16.0
 	github.com/creasty/defaults v1.8.0
 	github.com/docker/docker v28.5.0+incompatible
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
@@ -159,7 +159,7 @@ require (
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-delve/liner v1.2.3-0.20231231155935-4726ab1d7f62 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.3 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
