@@ -1,6 +1,8 @@
 package extconfig
 
 import (
+	"strings"
+
 	"beryju.io/gravity/pkg/extconfig/log_iml"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -15,14 +17,32 @@ func (e *ExtConfig) intLog() *zap.Logger {
 }
 
 func (e *ExtConfig) BuildLogger() *zap.Logger {
-	l, err := zapcore.ParseLevel(e.LogLevel)
+	return e.BuildLoggerWithLevel(e.LogLevelFor("root"))
+}
+
+func (e *ExtConfig) LogLevelFor(role string) zapcore.Level {
+	rawLevel := ""
+	if e.Debug {
+		rawLevel = "debug"
+	}
+	if role == "root" {
+		rawLevel = strings.SplitN(e.LogLevel, ",", 2)[0]
+	} else {
+		for _, pair := range strings.Split(e.LogLevel, ",") {
+			if !strings.Contains(pair, "=") {
+				continue
+			}
+			kv := strings.SplitN(pair, "=", 2)
+			if kv[0] == role {
+				rawLevel = kv[1]
+			}
+		}
+	}
+	l, err := zapcore.ParseLevel(rawLevel)
 	if err != nil {
 		l = zapcore.InfoLevel
 	}
-	if e.Debug {
-		l = zapcore.DebugLevel
-	}
-	return e.BuildLoggerWithLevel(l)
+	return l
 }
 
 func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
@@ -56,4 +76,22 @@ func (e *ExtConfig) BuildLoggerWithLevel(l zapcore.Level) *zap.Logger {
 		zap.String("instance", e.Instance.Identifier),
 		zap.String("version", FullVersion()),
 	)
+}
+
+func SetLevel(lvl zapcore.Level) zap.Option {
+	return zap.WrapCore(func(c zapcore.Core) zapcore.Core {
+		return &LevelLogger{
+			Core:  c,
+			Level: lvl,
+		}
+	})
+}
+
+type LevelLogger struct {
+	zapcore.Core
+	Level zapcore.Level
+}
+
+func (ll *LevelLogger) Enabled(l zapcore.Level) bool {
+	return l >= ll.Level
 }

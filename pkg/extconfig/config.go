@@ -26,7 +26,7 @@ type ExtConfig struct {
 		Interface  string `env:"INSTANCE_INTERFACE"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
-	LogLevel       string   `env:"LOG_LEVEL,default=info"`
+	LogLevel       string   `env:"LOG_LEVEL,default=info,etcd=error"`
 	DataPath       string   `env:"DATA_PATH,default=./data"`
 	BootstrapRoles string   `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
 	FallbackDNS    string   `env:"FALLBACK_DNS,default=1.1.1.1:53"`

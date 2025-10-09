@@ -57,7 +57,16 @@ The following environment variables can be set.
 ### Common
 
 - `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp`.
-- `LOG_LEVEL`: Log level. Defaults to `info`.
+- `LOG_LEVEL`: Log level. Defaults to `info,etcd=error`.
+
+  Starting with Gravity v0.28.2, separate log levels for roles can be specified.
+
+  For example to only output info logs but get debug logs for DHCP, set the log level to `info,dhcp=warn`.
+
+  Role names are one of `api`, `backup`, `debug`, `dhcp`, `discovery`, `dns`, `etcd`, `monitoring`, `tftp`, `tsdb`.
+
+  Level can be any of `debug`, `info`, `warn`, `error`, `panic`, `fatal`.
+
 - `DATA_PATH`: Path to store etcd data. Defaults to `./data`.
 - `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to the detected hostname. When running in Docker, this is configured via the `hostname` attribute.
 - `INSTANCE_IP`: This instance's reachable IP. When running in Docker and not using `network_mode: host`, this should be the host's IP.

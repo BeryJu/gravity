@@ -17,7 +17,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/swaggest/rest/web"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 
 	"go.etcd.io/etcd/server/v3/embed"
 )
@@ -68,9 +67,7 @@ func New(instance roles.Instance) *Role {
 	}
 	r.lcr = NewLeaderClusterConciler(instance)
 	cfg.Dir = dirs.EtcdDir
-	cfg.ZapLoggerBuilder = embed.NewZapLoggerBuilder(
-		extconfig.Get().BuildLoggerWithLevel(zapcore.WarnLevel).Named("role.etcd"),
-	)
+	cfg.ZapLoggerBuilder = embed.NewZapLoggerBuilder(instance.Log())
 	cfg.AutoCompactionMode = "periodic"
 	cfg.AutoCompactionRetention = "60m"
 	cfg.ListenClientUrls = []url.URL{
@@ -248,5 +245,6 @@ func (ee *Role) Stop() {
 		return
 	}
 	ee.log.Info("stopping etcd")
+	ee.e.Server.Stop()
 	ee.e.Close()
 }
