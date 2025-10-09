@@ -13,7 +13,7 @@ import (
 func TestInMemoryLogger(t *testing.T) {
 	iml := log_iml.Get()
 	iml.Flush()
-	extconfig.Get().Logger().Debug("test")
+	extconfig.Get().Logger().Warn("test")
 	msgs := iml.Messages()
 	assert.Len(t, msgs, 1)
 }
@@ -22,7 +22,7 @@ func TestInMemoryLogger_FieldsToMap(t *testing.T) {
 	iml := log_iml.Get()
 	iml.Flush()
 	n := time.Now()
-	extconfig.Get().Logger().With(zap.String("logger_level", "foo")).Debug(
+	extconfig.Get().Logger().With(zap.String("logger_level", "foo")).Warn(
 		"test",
 		zap.Bool("bool", true),
 		zap.Int8("int8", 123),
@@ -51,10 +51,10 @@ func TestInMemoryLogger_Trunc(t *testing.T) {
 	iml := log_iml.Get()
 	iml.Flush()
 	for i := 0; i <= iml.MaxSize(); i++ {
-		extconfig.Get().Logger().Debug("test")
+		extconfig.Get().Logger().Warn("test")
 	}
 	// Log one more message
-	extconfig.Get().Logger().Debug("test")
+	extconfig.Get().Logger().Warn("test")
 	msgs := iml.Messages()
 	assert.Len(t, msgs, iml.MaxSize())
 }

@@ -60,7 +60,7 @@ func Get() *ExtConfig {
 	if err != nil {
 		panic(err)
 	}
-	cfg.load()
+	cfg.Build()
 	globalExtConfig = &cfg
 	return &cfg
 }
@@ -99,7 +99,7 @@ func (e *ExtConfig) Listen(port int32) string {
 	return Listen(listen, port)
 }
 
-func (e *ExtConfig) load() {
+func (e *ExtConfig) Build() {
 	e.logger = e.BuildLogger()
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
@@ -124,5 +124,4 @@ func (e *ExtConfig) load() {
 			e.Instance.Interface = i.Name
 		}
 	}
-	e.logger = e.BuildLogger()
 }
