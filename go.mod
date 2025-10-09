@@ -14,7 +14,7 @@ require (
 	github.com/coredns/coredns v1.12.3
 	github.com/coreos/go-oidc/v3 v3.16.0
 	github.com/creasty/defaults v1.8.0
-	github.com/docker/docker v28.5.0+incompatible
+	github.com/docker/docker v28.5.1+incompatible
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/felixge/fgprof v0.9.5
 	github.com/getsentry/sentry-go v0.35.3
