@@ -15,14 +15,14 @@ import { ModalForm } from "../../elements/forms/ModalForm";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
-import "./RoleAPIConfigForm";
-import "./RoleBackupConfigForm";
-import "./RoleDHCPConfigForm";
-import "./RoleDNSConfigForm";
-import "./RoleDiscoveryConfigForm";
-import "./RoleMonitoringConfigForm";
-import "./RoleTFTPConfigForm";
-import "./RoleTSDBConfigForm";
+import "./roles/RoleAPIConfigForm";
+import "./roles/RoleBackupConfigForm";
+import "./roles/RoleDHCPConfigForm";
+import "./roles/RoleDNSConfigForm";
+import "./roles/RoleDiscoveryConfigForm";
+import "./roles/RoleMonitoringConfigForm";
+import "./roles/RoleTFTPConfigForm";
+import "./roles/RoleTSDBConfigForm";
 
 export interface Role {
     id: string;

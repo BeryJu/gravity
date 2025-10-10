@@ -7,3 +7,5 @@ const (
 	KeyCluster   = "cluster"
 	KeyMigration = "migration"
 )
+
+const RoleSeparator = ";"
