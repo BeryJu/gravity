@@ -80,7 +80,7 @@ jobs:
           subject-name: ghcr.io/beryju/gravity-external-dns
           subject-digest: ${{ steps.push-external-dns.outputs.digest }}
           push-to-registry: true
-      - uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5 # v2
+      - uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
