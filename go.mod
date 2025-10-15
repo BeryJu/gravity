@@ -9,7 +9,7 @@ require (
 	github.com/Ullaakut/nmap/v2 v2.2.2
 	github.com/aeden/traceroute v0.0.0-20210211061815-03f5f7cb7908
 	github.com/api7/etcdstore v1.1.0
-	github.com/avast/retry-go/v4 v4.6.1
+	github.com/avast/retry-go/v4 v4.7.0
 	github.com/coredns/caddy v1.1.3
 	github.com/coredns/coredns v1.12.3
 	github.com/coreos/go-oidc/v3 v3.16.0
