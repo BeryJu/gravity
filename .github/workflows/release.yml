@@ -1,0 +1,31 @@
+---
+name: Release - Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+        type: string
+
+jobs:
+  check-inputs:
+    name: Check inputs validity
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        run: |
+          echo "${{ inputs.version }}" | grep -E '^[0-9]{4}\.(0?[1-9]|1[0-2])\.[0-9]+(-rc[0-9]+)?$'
+  bump:
+    name: Bump gravity version
+    needs:
+      - check-inputs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - run:
+          sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
+      - run: make release
