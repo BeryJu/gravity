@@ -26,16 +26,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6
-        with:
-          go-version-file: go.mod
-          cache: true
-      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v5
-        with:
-          node-version-file: web/package.json
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
+      - uses: ./.github/actions/setup
       - run: |
           sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
-      - run: make install-deps web-build
       - run: make release
