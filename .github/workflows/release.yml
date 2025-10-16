@@ -30,4 +30,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: |
           sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
       - run: make release
