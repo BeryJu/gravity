@@ -334,6 +334,7 @@ require (
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff // indirect
 	k8s.io/utils v0.0.0-20241210054802-24370beab758 // indirect
+	mvdan.cc/gofumpt v0.9.1 // indirect
 	sigs.k8s.io/controller-runtime v0.21.0 // indirect
 	sigs.k8s.io/external-dns v0.18.0 // indirect
 	sigs.k8s.io/gateway-api v1.3.0 // indirect
@@ -344,4 +345,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-tool github.com/jstemmer/go-junit-report/v2
+tool (
+	github.com/jstemmer/go-junit-report/v2
+	mvdan.cc/gofumpt
+)

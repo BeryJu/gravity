@@ -151,7 +151,7 @@ gen-client-go:
 	rm -rf .travis.yml go.mod go.sum test/
 	go get
 	go fmt ${PWD}/${GEN_API_GO}/
-	gofumpt -l -w ${PWD}/${GEN_API_GO}/ || true
+	go tool mvdan.cc/gofumpt -l -w ${PWD}/${GEN_API_GO}/
 	git add ${PWD}/${GEN_API_GO}/
 
 gen-client-ts:
@@ -163,8 +163,8 @@ gen-client-ts:
 		-g typescript-fetch \
 		-o /local/${GEN_API_TS} \
 		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=${VERSION} \
-		--git-repo-id BeryJu \
-		--git-user-id gravity
+		--git-user-id BeryJu \
+		--git-repo-id gravity
 	cd ${PWD}/${GEN_API_TS} && npm i
 	\cp -rf ${PWD}/${GEN_API_TS}/* ${PWD}/web/node_modules/gravity-api
 
@@ -195,7 +195,7 @@ gen-external-dns:
 	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/routers.go
 	rm -f .travis.yml go.mod go.sum main.go Dockerfile
 	go fmt ${PWD}/${GEN_ED_GO}/externaldnsapi
-	gofumpt -l -w ${PWD}/${GEN_ED_GO}/ || true
+	go tool mvdan.cc/gofumpt -l -w ${PWD}/${GEN_ED_GO}/
 	git add ${PWD}/${GEN_ED_GO}/
 
 gen-go-tidy:
