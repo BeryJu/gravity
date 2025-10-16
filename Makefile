@@ -132,6 +132,7 @@ gen-tag:
 	cd ${PWD}
 	git commit -m "release version v${VERSION}"
 	git tag v${VERSION}
+	git push --tags
 
 gen-client-go:
 	docker run \
