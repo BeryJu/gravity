@@ -37,5 +37,5 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: |
           sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
-      - run: make install-deps
+      - run: make install-deps web-build
       - run: make release
