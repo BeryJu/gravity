@@ -10,13 +10,13 @@ Name | Type | Description | Notes
 **Ipam** | Pointer to **map[string]string** |  | [optional] 
 **Options** | [**[]TypesDHCPOption**](TypesDHCPOption.md) |  | 
 **SubnetCidr** | **string** |  | 
-**Ttl** | **int32** |  | 
+**Ttl** | **int64** |  | 
 
 ## Methods
 
 ### NewDhcpAPIScopesPutInput
 
-`func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int32, ) *DhcpAPIScopesPutInput`
+`func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int64, ) *DhcpAPIScopesPutInput`
 
 NewDhcpAPIScopesPutInput instantiates a new DhcpAPIScopesPutInput object
 This constructor will assign default values to properties that have it defined,
@@ -183,20 +183,20 @@ SetSubnetCidr sets SubnetCidr field to given value.
 
 ### GetTtl
 
-`func (o *DhcpAPIScopesPutInput) GetTtl() int32`
+`func (o *DhcpAPIScopesPutInput) GetTtl() int64`
 
 GetTtl returns the Ttl field if non-nil, zero value otherwise.
 
 ### GetTtlOk
 
-`func (o *DhcpAPIScopesPutInput) GetTtlOk() (*int32, bool)`
+`func (o *DhcpAPIScopesPutInput) GetTtlOk() (*int64, bool)`
 
 GetTtlOk returns a tuple with the Ttl field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTtl
 
-`func (o *DhcpAPIScopesPutInput) SetTtl(v int32)`
+`func (o *DhcpAPIScopesPutInput) SetTtl(v int64)`
 
 SetTtl sets Ttl field to given value.
 

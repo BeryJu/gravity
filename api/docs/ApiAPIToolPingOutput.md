@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AvgRtt** | Pointer to **int32** |  | [optional] 
-**MaxRtt** | Pointer to **int32** |  | [optional] 
-**MinRtt** | Pointer to **int32** |  | [optional] 
-**PacketLoss** | Pointer to **float32** |  | [optional] 
+**AvgRtt** | Pointer to **int64** |  | [optional] 
+**MaxRtt** | Pointer to **int64** |  | [optional] 
+**MinRtt** | Pointer to **int64** |  | [optional] 
+**PacketLoss** | Pointer to **float64** |  | [optional] 
 **PacketsRecv** | Pointer to **int32** |  | [optional] 
 **PacketsRecvDuplicates** | Pointer to **int32** |  | [optional] 
 **PacketsSent** | Pointer to **int32** |  | [optional] 
-**StdDevRtt** | Pointer to **int32** |  | [optional] 
+**StdDevRtt** | Pointer to **int64** |  | [optional] 
 
 ## Methods
 
@@ -34,20 +34,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetAvgRtt
 
-`func (o *ApiAPIToolPingOutput) GetAvgRtt() int32`
+`func (o *ApiAPIToolPingOutput) GetAvgRtt() int64`
 
 GetAvgRtt returns the AvgRtt field if non-nil, zero value otherwise.
 
 ### GetAvgRttOk
 
-`func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int32, bool)`
+`func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int64, bool)`
 
 GetAvgRttOk returns a tuple with the AvgRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAvgRtt
 
-`func (o *ApiAPIToolPingOutput) SetAvgRtt(v int32)`
+`func (o *ApiAPIToolPingOutput) SetAvgRtt(v int64)`
 
 SetAvgRtt sets AvgRtt field to given value.
 
@@ -59,20 +59,20 @@ HasAvgRtt returns a boolean if a field has been set.
 
 ### GetMaxRtt
 
-`func (o *ApiAPIToolPingOutput) GetMaxRtt() int32`
+`func (o *ApiAPIToolPingOutput) GetMaxRtt() int64`
 
 GetMaxRtt returns the MaxRtt field if non-nil, zero value otherwise.
 
 ### GetMaxRttOk
 
-`func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int32, bool)`
+`func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int64, bool)`
 
 GetMaxRttOk returns a tuple with the MaxRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMaxRtt
 
-`func (o *ApiAPIToolPingOutput) SetMaxRtt(v int32)`
+`func (o *ApiAPIToolPingOutput) SetMaxRtt(v int64)`
 
 SetMaxRtt sets MaxRtt field to given value.
 
@@ -84,20 +84,20 @@ HasMaxRtt returns a boolean if a field has been set.
 
 ### GetMinRtt
 
-`func (o *ApiAPIToolPingOutput) GetMinRtt() int32`
+`func (o *ApiAPIToolPingOutput) GetMinRtt() int64`
 
 GetMinRtt returns the MinRtt field if non-nil, zero value otherwise.
 
 ### GetMinRttOk
 
-`func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int32, bool)`
+`func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int64, bool)`
 
 GetMinRttOk returns a tuple with the MinRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMinRtt
 
-`func (o *ApiAPIToolPingOutput) SetMinRtt(v int32)`
+`func (o *ApiAPIToolPingOutput) SetMinRtt(v int64)`
 
 SetMinRtt sets MinRtt field to given value.
 
@@ -109,20 +109,20 @@ HasMinRtt returns a boolean if a field has been set.
 
 ### GetPacketLoss
 
-`func (o *ApiAPIToolPingOutput) GetPacketLoss() float32`
+`func (o *ApiAPIToolPingOutput) GetPacketLoss() float64`
 
 GetPacketLoss returns the PacketLoss field if non-nil, zero value otherwise.
 
 ### GetPacketLossOk
 
-`func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float32, bool)`
+`func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float64, bool)`
 
 GetPacketLossOk returns a tuple with the PacketLoss field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPacketLoss
 
-`func (o *ApiAPIToolPingOutput) SetPacketLoss(v float32)`
+`func (o *ApiAPIToolPingOutput) SetPacketLoss(v float64)`
 
 SetPacketLoss sets PacketLoss field to given value.
 
@@ -209,20 +209,20 @@ HasPacketsSent returns a boolean if a field has been set.
 
 ### GetStdDevRtt
 
-`func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32`
+`func (o *ApiAPIToolPingOutput) GetStdDevRtt() int64`
 
 GetStdDevRtt returns the StdDevRtt field if non-nil, zero value otherwise.
 
 ### GetStdDevRttOk
 
-`func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int32, bool)`
+`func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int64, bool)`
 
 GetStdDevRttOk returns a tuple with the StdDevRtt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetStdDevRtt
 
-`func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int32)`
+`func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int64)`
 
 SetStdDevRtt sets StdDevRtt field to given value.
 
