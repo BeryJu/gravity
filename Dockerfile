@@ -1,5 +1,5 @@
 # Stage 1: Build web
-FROM --platform=${BUILDPLATFORM} docker.io/library/node:24 AS web-builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/node:25 AS web-builder
 
 ENV NODE_ENV=production
 
