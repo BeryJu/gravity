@@ -81,6 +81,8 @@ func (i *InternalIPAM) UpdateConfig(s *Scope) error {
 }
 
 func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
+	i.ipf.Lock()
+	defer i.ipf.Unlock()
 	currentIP := i.Start
 	// Since we start checking at the beginning of the range, check in the loop if we've
 	// hit the end and just give up, as the range is full
@@ -130,8 +132,6 @@ func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
-	i.ipf.Lock()
-	defer i.ipf.Unlock()
 	i.ipsm.RLock()
 	mem := i.ips[ip.String()]
 	i.ipsm.RUnlock()
