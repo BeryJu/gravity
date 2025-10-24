@@ -93,5 +93,12 @@ type LevelLogger struct {
 }
 
 func (ll *LevelLogger) Enabled(l zapcore.Level) bool {
-	return l >= ll.Level
+	return ll.Level.Enabled(l)
+}
+
+func (ll *LevelLogger) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.CheckedEntry {
+	if ll.Enabled(ent.Level) {
+		return ce.AddCore(ent, ll)
+	}
+	return nil
 }

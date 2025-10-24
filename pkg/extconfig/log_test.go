@@ -3,6 +3,7 @@ package extconfig
 import (
 	"testing"
 
+	"beryju.io/gravity/pkg/extconfig/log_iml"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -52,6 +53,15 @@ func TestLogLevel_Role_Full_Decrease(t *testing.T) {
 	roleId := "test-role"
 	roleLogger := c.Logger().Named("role." + roleId).WithOptions(SetLevel(c.LogLevelFor(roleId)))
 
+	roleLogger.Debug("foo")
+
+	found := false
+	for _, msg := range log_iml.Get().Messages() {
+		if msg.Entry.Message == "foo" && msg.Entry.Level == zap.DebugLevel {
+			found = true
+		}
+	}
+	assert.True(t, found)
 	assert.Equal(t, c.LogLevelFor("root"), zapcore.WarnLevel)
 	assert.Equal(t, roleLogger.Level(), zapcore.DebugLevel)
 }
