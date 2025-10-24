@@ -71,6 +71,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           context: .
+          file: cmd/external-dns/Dockerfile
           build-args: |
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=release
