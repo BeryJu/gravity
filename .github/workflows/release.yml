@@ -34,3 +34,34 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - run: make release
+      - uses: goauthentik/action-gh-release@84da137b91a625a58fe8a34f3bd6bdb034a49138
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "v${{ inputs.version }}"
+          name: Release ${{ inputs.version }}
+          draft: true
+          generate_release_notes: true
+          body: |
+            Upgrade to this version of gravity by using this container image:
+
+            ```
+            ghcr.io/beryju/gravity:v${{ inputs.version }}
+            ```
+
+            Upgrade to the current JS API Client using
+
+            ```
+            npm i gravity-api@${{ inputs.version }}
+            ```
+
+            Upgrade to the current Golang API Client using
+
+            ```
+            go get beryju.io/gravity@v${{ inputs.version }}
+            ```
+
+            Upgrade external-dns to use this container image:
+
+            ```
+            ghcr.io/beryju/gravity-external-dns:v${{ inputs.version }}
+            ```

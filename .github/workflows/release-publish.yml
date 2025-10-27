@@ -1,14 +1,13 @@
-name: Build (Tag)
+---
+name: Release - Publish
 
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types: [published, created]
 
 permissions:
   packages: write
-  # Required to create releases
-  contents: write
+  contents: read
   pull-requests: read
 
 jobs:
@@ -19,11 +18,8 @@ jobs:
       id-token: write
       attestations: write
       packages: write
-      # Required to create releases
-      contents: write
+      contents: read
       pull-requests: read
-    outputs:
-      release_upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
@@ -81,43 +77,8 @@ jobs:
           subject-name: ghcr.io/beryju/gravity-external-dns
           subject-digest: ${{ steps.push-external-dns.outputs.digest }}
           push-to-registry: true
-      - uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ steps.vars.outputs.version }}
-          draft: true
-          prerelease: false
-          generate_release_notes: true
-          body: |
-            Upgrade to this version of gravity by using this container image:
-
-            ```
-            ghcr.io/beryju/gravity:v${{ steps.vars.outputs.version }}
-            ```
-
-            Upgrade to the current JS API Client using
-
-            ```
-            npm i gravity-api@${{ steps.vars.outputs.version }}
-            ```
-
-            Upgrade to the current Golang API Client using
-
-            ```
-            go get beryju.io/gravity@v${{ steps.vars.outputs.version }}
-            ```
-
-            Upgrade external-dns to use this container image:
-
-            ```
-            ghcr.io/beryju/gravity-external-dns:v${{ steps.vars.outputs.version }}
-            ```
   build-cli:
     name: Build CLI
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -127,11 +88,10 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - run: |
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} make bin/gravity-cli
-      - uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@81c65b7cd4de9b2570615ce3aad67a41de5b1a13 # v2
         with:
-          upload_url: ${{ needs.build.outputs.release_upload_url }}
-          asset_path: ./bin/gravity-cli
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./bin/gravity-cli
           asset_name: gravity-cli_${{ matrix.os }}_${{ matrix.arch }}
-          asset_content_type: application/octet-stream
+          tag: ${{ github.ref }}
