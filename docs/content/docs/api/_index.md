@@ -14,7 +14,7 @@ A default admin user is created on the first startup. You can find the credentia
 
 Session authentication using local users and OIDC is supported for browser usage. API keys can also be created for automation.
 
-To authenticate to the API using a token, create the token either using [ADMIN_TOKEN](../install/_index.md#advanced), or in the Web Interface under __Auth -> Tokens__. Upon creation, the token will be shown in the browser. Afterwards, add the `Authorization` header to API requests with the value of `Bearer <token>`.
+To authenticate to the API using a token, create the token either using [ADMIN_TOKEN](../install/#advanced), or in the Web Interface under __Auth -> Tokens__. Upon creation, the token will be shown in the browser. Afterwards, add the `Authorization` header to API requests with the value of `Bearer <token>`.
 
 Starting with Gravity 0.19, when OIDC is enabled, JWT tokens signed by the OIDC issuer can also be used. The role configuration parameter `tokenUsernameField` configures which claim from the JWT is used to lookup the user.
 
