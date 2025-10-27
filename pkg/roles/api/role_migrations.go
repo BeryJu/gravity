@@ -2,12 +2,10 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strings"
 
 	"beryju.io/gravity/pkg/instance/migrate"
-	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/storage"
 	"github.com/Masterminds/semver/v3"
@@ -20,7 +18,7 @@ func (r *Role) RegisterMigrations() {
 		ActivateFunc:  func(v *semver.Version) bool { return true },
 		HookFunc: func(ctx context.Context) (*storage.Client, error) {
 			userPrefix := r.i.KV().Key(types.KeyRole, types.KeyUsers).Prefix(true).String()
-			defaultPerms := []auth.Permission{
+			defaultPerms := []types.Permission{
 				{
 					Path:    "/*",
 					Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
@@ -31,15 +29,15 @@ func (r *Role) RegisterMigrations() {
 					shouldIntercept := res != nil && len(res.Kvs) > 0 && strings.HasPrefix(key, userPrefix)
 					// If we're fetching a user, intercept the response
 					if shouldIntercept {
-						u := map[string]interface{}{}
-						err := json.Unmarshal(res.Kvs[0].Value, &u)
+						u := map[string]any{}
+						err := r.i.KV().Unmarshal(res.Kvs[0].Value, &u)
 						if err != nil {
 							return res, nil
 						}
 						if _, set := u["permissions"]; !set {
 							u["permissions"] = defaultPerms
 						}
-						v, err := json.Marshal(u)
+						v, err := r.i.KV().Marshal(u)
 						if err != nil {
 							return res, nil
 						}
