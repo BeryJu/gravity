@@ -70,4 +70,4 @@ Additionally, `addZoneInHostname` can be set to make Gravity append the zone to 
 
 #### `hook`
 
-Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks.md)
+Optional hooks to dynamically modify requests and responses. See [Hooks](./hooks)
