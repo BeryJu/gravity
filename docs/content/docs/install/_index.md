@@ -95,7 +95,7 @@ The following environment variables can be set.
     IMPORT_CONFIGS=eyJlbnRyaWVzIjogW3sia2V5IjogIi9ncmF2aXR5L2ZvbyIsInZhbHVlIjogIlptOXYifV19
     ```
 
-    These json files should have the same format as the API endpoint `/api/v1/cluster/import`, see [Reference](../api/reference.md). To find out which keys control what setting, it is recommended to extract the config of a running cluster using `/api/v1/cluster/export` and extract the settings desired.
+    These json files should have the same format as the API endpoint `/api/v1/cluster/import`, see [Reference](../api/reference). To find out which keys control what setting, it is recommended to extract the config of a running cluster using `/api/v1/cluster/export` and extract the settings desired.
 
     For example:
 
