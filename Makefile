@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.28.1"
+VERSION = "0.28.6"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -204,7 +204,7 @@ gen-go-tidy:
 	git add go.mod go.sum
 
 release:
-	sed -i 's/VERSION = ".*"/VERSION = "${new_version}"/g' Makefile
+	sed -i 's/VERSION = "0.28.6"/g' Makefile
 	$(MAKE) -C ${PWD} gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
 
 lint: web-lint
