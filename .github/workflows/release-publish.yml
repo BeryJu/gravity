@@ -80,6 +80,8 @@ jobs:
   build-cli:
     name: Build CLI
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     strategy:
       matrix:
         arch: [arm64, amd64]
