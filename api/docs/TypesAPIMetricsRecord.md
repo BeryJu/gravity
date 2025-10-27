@@ -7,13 +7,13 @@ Name | Type | Description | Notes
 **Keys** | **[]string** |  | 
 **Node** | **string** |  | 
 **Time** | **time.Time** |  | 
-**Value** | **int32** |  | 
+**Value** | **int64** |  | 
 
 ## Methods
 
 ### NewTypesAPIMetricsRecord
 
-`func NewTypesAPIMetricsRecord(keys []string, node string, time time.Time, value int32, ) *TypesAPIMetricsRecord`
+`func NewTypesAPIMetricsRecord(keys []string, node string, time time.Time, value int64, ) *TypesAPIMetricsRecord`
 
 NewTypesAPIMetricsRecord instantiates a new TypesAPIMetricsRecord object
 This constructor will assign default values to properties that have it defined,
@@ -100,20 +100,20 @@ SetTime sets Time field to given value.
 
 ### GetValue
 
-`func (o *TypesAPIMetricsRecord) GetValue() int32`
+`func (o *TypesAPIMetricsRecord) GetValue() int64`
 
 GetValue returns the Value field if non-nil, zero value otherwise.
 
 ### GetValueOk
 
-`func (o *TypesAPIMetricsRecord) GetValueOk() (*int32, bool)`
+`func (o *TypesAPIMetricsRecord) GetValueOk() (*int64, bool)`
 
 GetValueOk returns a tuple with the Value field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetValue
 
-`func (o *TypesAPIMetricsRecord) SetValue(v int32)`
+`func (o *TypesAPIMetricsRecord) SetValue(v int64)`
 
 SetValue sets Value field to given value.
 

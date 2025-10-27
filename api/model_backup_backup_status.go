@@ -22,10 +22,10 @@ var _ MappedNullable = &BackupBackupStatus{}
 
 // BackupBackupStatus struct for BackupBackupStatus
 type BackupBackupStatus struct {
-	Duration int32     `json:"duration"`
+	Duration int64     `json:"duration"`
 	Error    string    `json:"error"`
 	Filename string    `json:"filename"`
-	Size     int32     `json:"size"`
+	Size     int64     `json:"size"`
 	Status   string    `json:"status"`
 	Time     time.Time `json:"time"`
 }
@@ -36,7 +36,7 @@ type _BackupBackupStatus BackupBackupStatus
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBackupBackupStatus(duration int32, error_ string, filename string, size int32, status string, time time.Time) *BackupBackupStatus {
+func NewBackupBackupStatus(duration int64, error_ string, filename string, size int64, status string, time time.Time) *BackupBackupStatus {
 	this := BackupBackupStatus{}
 	this.Duration = duration
 	this.Error = error_
@@ -56,9 +56,9 @@ func NewBackupBackupStatusWithDefaults() *BackupBackupStatus {
 }
 
 // GetDuration returns the Duration field value
-func (o *BackupBackupStatus) GetDuration() int32 {
+func (o *BackupBackupStatus) GetDuration() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -67,7 +67,7 @@ func (o *BackupBackupStatus) GetDuration() int32 {
 
 // GetDurationOk returns a tuple with the Duration field value
 // and a boolean to check if the value has been set.
-func (o *BackupBackupStatus) GetDurationOk() (*int32, bool) {
+func (o *BackupBackupStatus) GetDurationOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -75,7 +75,7 @@ func (o *BackupBackupStatus) GetDurationOk() (*int32, bool) {
 }
 
 // SetDuration sets field value
-func (o *BackupBackupStatus) SetDuration(v int32) {
+func (o *BackupBackupStatus) SetDuration(v int64) {
 	o.Duration = v
 }
 
@@ -128,9 +128,9 @@ func (o *BackupBackupStatus) SetFilename(v string) {
 }
 
 // GetSize returns the Size field value
-func (o *BackupBackupStatus) GetSize() int32 {
+func (o *BackupBackupStatus) GetSize() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -139,7 +139,7 @@ func (o *BackupBackupStatus) GetSize() int32 {
 
 // GetSizeOk returns a tuple with the Size field value
 // and a boolean to check if the value has been set.
-func (o *BackupBackupStatus) GetSizeOk() (*int32, bool) {
+func (o *BackupBackupStatus) GetSizeOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -147,7 +147,7 @@ func (o *BackupBackupStatus) GetSizeOk() (*int32, bool) {
 }
 
 // SetSize sets field value
-func (o *BackupBackupStatus) SetSize(v int32) {
+func (o *BackupBackupStatus) SetSize(v int64) {
 	o.Size = v
 }
 

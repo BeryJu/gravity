@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Duration** | **int32** |  | 
+**Duration** | **int64** |  | 
 **Error** | **string** |  | 
 **Filename** | **string** |  | 
-**Size** | **int32** |  | 
+**Size** | **int64** |  | 
 **Status** | **string** |  | 
 **Time** | **time.Time** |  | 
 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewBackupBackupStatus
 
-`func NewBackupBackupStatus(duration int32, error_ string, filename string, size int32, status string, time time.Time, ) *BackupBackupStatus`
+`func NewBackupBackupStatus(duration int64, error_ string, filename string, size int64, status string, time time.Time, ) *BackupBackupStatus`
 
 NewBackupBackupStatus instantiates a new BackupBackupStatus object
 This constructor will assign default values to properties that have it defined,
@@ -32,20 +32,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetDuration
 
-`func (o *BackupBackupStatus) GetDuration() int32`
+`func (o *BackupBackupStatus) GetDuration() int64`
 
 GetDuration returns the Duration field if non-nil, zero value otherwise.
 
 ### GetDurationOk
 
-`func (o *BackupBackupStatus) GetDurationOk() (*int32, bool)`
+`func (o *BackupBackupStatus) GetDurationOk() (*int64, bool)`
 
 GetDurationOk returns a tuple with the Duration field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDuration
 
-`func (o *BackupBackupStatus) SetDuration(v int32)`
+`func (o *BackupBackupStatus) SetDuration(v int64)`
 
 SetDuration sets Duration field to given value.
 
@@ -92,20 +92,20 @@ SetFilename sets Filename field to given value.
 
 ### GetSize
 
-`func (o *BackupBackupStatus) GetSize() int32`
+`func (o *BackupBackupStatus) GetSize() int64`
 
 GetSize returns the Size field if non-nil, zero value otherwise.
 
 ### GetSizeOk
 
-`func (o *BackupBackupStatus) GetSizeOk() (*int32, bool)`
+`func (o *BackupBackupStatus) GetSizeOk() (*int64, bool)`
 
 GetSizeOk returns a tuple with the Size field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetSize
 
-`func (o *BackupBackupStatus) SetSize(v int32)`
+`func (o *BackupBackupStatus) SetSize(v int64)`
 
 SetSize sets Size field to given value.
 

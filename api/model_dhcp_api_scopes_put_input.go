@@ -27,7 +27,7 @@ type DhcpAPIScopesPutInput struct {
 	Ipam       map[string]string `json:"ipam,omitempty"`
 	Options    []TypesDHCPOption `json:"options"`
 	SubnetCidr string            `json:"subnetCidr"`
-	Ttl        int32             `json:"ttl"`
+	Ttl        int64             `json:"ttl"`
 }
 
 type _DhcpAPIScopesPutInput DhcpAPIScopesPutInput
@@ -36,7 +36,7 @@ type _DhcpAPIScopesPutInput DhcpAPIScopesPutInput
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int32) *DhcpAPIScopesPutInput {
+func NewDhcpAPIScopesPutInput(default_ bool, hook string, options []TypesDHCPOption, subnetCidr string, ttl int64) *DhcpAPIScopesPutInput {
 	this := DhcpAPIScopesPutInput{}
 	this.Default = default_
 	this.Hook = hook
@@ -218,9 +218,9 @@ func (o *DhcpAPIScopesPutInput) SetSubnetCidr(v string) {
 }
 
 // GetTtl returns the Ttl field value
-func (o *DhcpAPIScopesPutInput) GetTtl() int32 {
+func (o *DhcpAPIScopesPutInput) GetTtl() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -229,7 +229,7 @@ func (o *DhcpAPIScopesPutInput) GetTtl() int32 {
 
 // GetTtlOk returns a tuple with the Ttl field value
 // and a boolean to check if the value has been set.
-func (o *DhcpAPIScopesPutInput) GetTtlOk() (*int32, bool) {
+func (o *DhcpAPIScopesPutInput) GetTtlOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -237,7 +237,7 @@ func (o *DhcpAPIScopesPutInput) GetTtlOk() (*int32, bool) {
 }
 
 // SetTtl sets field value
-func (o *DhcpAPIScopesPutInput) SetTtl(v int32) {
+func (o *DhcpAPIScopesPutInput) SetTtl(v int64) {
 	o.Ttl = v
 }
 

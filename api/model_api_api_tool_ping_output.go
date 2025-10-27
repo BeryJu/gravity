@@ -19,14 +19,14 @@ var _ MappedNullable = &ApiAPIToolPingOutput{}
 
 // ApiAPIToolPingOutput struct for ApiAPIToolPingOutput
 type ApiAPIToolPingOutput struct {
-	AvgRtt                *int32   `json:"avgRtt,omitempty"`
-	MaxRtt                *int32   `json:"maxRtt,omitempty"`
-	MinRtt                *int32   `json:"minRtt,omitempty"`
-	PacketLoss            *float32 `json:"packetLoss,omitempty"`
+	AvgRtt                *int64   `json:"avgRtt,omitempty"`
+	MaxRtt                *int64   `json:"maxRtt,omitempty"`
+	MinRtt                *int64   `json:"minRtt,omitempty"`
+	PacketLoss            *float64 `json:"packetLoss,omitempty"`
 	PacketsRecv           *int32   `json:"packetsRecv,omitempty"`
 	PacketsRecvDuplicates *int32   `json:"packetsRecvDuplicates,omitempty"`
 	PacketsSent           *int32   `json:"packetsSent,omitempty"`
-	StdDevRtt             *int32   `json:"stdDevRtt,omitempty"`
+	StdDevRtt             *int64   `json:"stdDevRtt,omitempty"`
 }
 
 // NewApiAPIToolPingOutput instantiates a new ApiAPIToolPingOutput object
@@ -47,9 +47,9 @@ func NewApiAPIToolPingOutputWithDefaults() *ApiAPIToolPingOutput {
 }
 
 // GetAvgRtt returns the AvgRtt field value if set, zero value otherwise.
-func (o *ApiAPIToolPingOutput) GetAvgRtt() int32 {
+func (o *ApiAPIToolPingOutput) GetAvgRtt() int64 {
 	if o == nil || IsNil(o.AvgRtt) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.AvgRtt
@@ -57,7 +57,7 @@ func (o *ApiAPIToolPingOutput) GetAvgRtt() int32 {
 
 // GetAvgRttOk returns a tuple with the AvgRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int32, bool) {
+func (o *ApiAPIToolPingOutput) GetAvgRttOk() (*int64, bool) {
 	if o == nil || IsNil(o.AvgRtt) {
 		return nil, false
 	}
@@ -73,15 +73,15 @@ func (o *ApiAPIToolPingOutput) HasAvgRtt() bool {
 	return false
 }
 
-// SetAvgRtt gets a reference to the given int32 and assigns it to the AvgRtt field.
-func (o *ApiAPIToolPingOutput) SetAvgRtt(v int32) {
+// SetAvgRtt gets a reference to the given int64 and assigns it to the AvgRtt field.
+func (o *ApiAPIToolPingOutput) SetAvgRtt(v int64) {
 	o.AvgRtt = &v
 }
 
 // GetMaxRtt returns the MaxRtt field value if set, zero value otherwise.
-func (o *ApiAPIToolPingOutput) GetMaxRtt() int32 {
+func (o *ApiAPIToolPingOutput) GetMaxRtt() int64 {
 	if o == nil || IsNil(o.MaxRtt) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.MaxRtt
@@ -89,7 +89,7 @@ func (o *ApiAPIToolPingOutput) GetMaxRtt() int32 {
 
 // GetMaxRttOk returns a tuple with the MaxRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int32, bool) {
+func (o *ApiAPIToolPingOutput) GetMaxRttOk() (*int64, bool) {
 	if o == nil || IsNil(o.MaxRtt) {
 		return nil, false
 	}
@@ -105,15 +105,15 @@ func (o *ApiAPIToolPingOutput) HasMaxRtt() bool {
 	return false
 }
 
-// SetMaxRtt gets a reference to the given int32 and assigns it to the MaxRtt field.
-func (o *ApiAPIToolPingOutput) SetMaxRtt(v int32) {
+// SetMaxRtt gets a reference to the given int64 and assigns it to the MaxRtt field.
+func (o *ApiAPIToolPingOutput) SetMaxRtt(v int64) {
 	o.MaxRtt = &v
 }
 
 // GetMinRtt returns the MinRtt field value if set, zero value otherwise.
-func (o *ApiAPIToolPingOutput) GetMinRtt() int32 {
+func (o *ApiAPIToolPingOutput) GetMinRtt() int64 {
 	if o == nil || IsNil(o.MinRtt) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.MinRtt
@@ -121,7 +121,7 @@ func (o *ApiAPIToolPingOutput) GetMinRtt() int32 {
 
 // GetMinRttOk returns a tuple with the MinRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int32, bool) {
+func (o *ApiAPIToolPingOutput) GetMinRttOk() (*int64, bool) {
 	if o == nil || IsNil(o.MinRtt) {
 		return nil, false
 	}
@@ -137,15 +137,15 @@ func (o *ApiAPIToolPingOutput) HasMinRtt() bool {
 	return false
 }
 
-// SetMinRtt gets a reference to the given int32 and assigns it to the MinRtt field.
-func (o *ApiAPIToolPingOutput) SetMinRtt(v int32) {
+// SetMinRtt gets a reference to the given int64 and assigns it to the MinRtt field.
+func (o *ApiAPIToolPingOutput) SetMinRtt(v int64) {
 	o.MinRtt = &v
 }
 
 // GetPacketLoss returns the PacketLoss field value if set, zero value otherwise.
-func (o *ApiAPIToolPingOutput) GetPacketLoss() float32 {
+func (o *ApiAPIToolPingOutput) GetPacketLoss() float64 {
 	if o == nil || IsNil(o.PacketLoss) {
-		var ret float32
+		var ret float64
 		return ret
 	}
 	return *o.PacketLoss
@@ -153,7 +153,7 @@ func (o *ApiAPIToolPingOutput) GetPacketLoss() float32 {
 
 // GetPacketLossOk returns a tuple with the PacketLoss field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float32, bool) {
+func (o *ApiAPIToolPingOutput) GetPacketLossOk() (*float64, bool) {
 	if o == nil || IsNil(o.PacketLoss) {
 		return nil, false
 	}
@@ -169,8 +169,8 @@ func (o *ApiAPIToolPingOutput) HasPacketLoss() bool {
 	return false
 }
 
-// SetPacketLoss gets a reference to the given float32 and assigns it to the PacketLoss field.
-func (o *ApiAPIToolPingOutput) SetPacketLoss(v float32) {
+// SetPacketLoss gets a reference to the given float64 and assigns it to the PacketLoss field.
+func (o *ApiAPIToolPingOutput) SetPacketLoss(v float64) {
 	o.PacketLoss = &v
 }
 
@@ -271,9 +271,9 @@ func (o *ApiAPIToolPingOutput) SetPacketsSent(v int32) {
 }
 
 // GetStdDevRtt returns the StdDevRtt field value if set, zero value otherwise.
-func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32 {
+func (o *ApiAPIToolPingOutput) GetStdDevRtt() int64 {
 	if o == nil || IsNil(o.StdDevRtt) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.StdDevRtt
@@ -281,7 +281,7 @@ func (o *ApiAPIToolPingOutput) GetStdDevRtt() int32 {
 
 // GetStdDevRttOk returns a tuple with the StdDevRtt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int32, bool) {
+func (o *ApiAPIToolPingOutput) GetStdDevRttOk() (*int64, bool) {
 	if o == nil || IsNil(o.StdDevRtt) {
 		return nil, false
 	}
@@ -297,8 +297,8 @@ func (o *ApiAPIToolPingOutput) HasStdDevRtt() bool {
 	return false
 }
 
-// SetStdDevRtt gets a reference to the given int32 and assigns it to the StdDevRtt field.
-func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int32) {
+// SetStdDevRtt gets a reference to the given int64 and assigns it to the StdDevRtt field.
+func (o *ApiAPIToolPingOutput) SetStdDevRtt(v int64) {
 	o.StdDevRtt = &v
 }
 

@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **AddressLeaseTime** | **string** |  | 
 **Description** | Pointer to **string** |  | [optional] 
 **DnsZone** | Pointer to **string** |  | [optional] 
-**Expiry** | Pointer to **int32** |  | [optional] 
+**Expiry** | Pointer to **int64** |  | [optional] 
 **Hostname** | **string** |  | 
 
 ## Methods
@@ -122,20 +122,20 @@ HasDnsZone returns a boolean if a field has been set.
 
 ### GetExpiry
 
-`func (o *DhcpAPILeasesPutInput) GetExpiry() int32`
+`func (o *DhcpAPILeasesPutInput) GetExpiry() int64`
 
 GetExpiry returns the Expiry field if non-nil, zero value otherwise.
 
 ### GetExpiryOk
 
-`func (o *DhcpAPILeasesPutInput) GetExpiryOk() (*int32, bool)`
+`func (o *DhcpAPILeasesPutInput) GetExpiryOk() (*int64, bool)`
 
 GetExpiryOk returns a tuple with the Expiry field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetExpiry
 
-`func (o *DhcpAPILeasesPutInput) SetExpiry(v int32)`
+`func (o *DhcpAPILeasesPutInput) SetExpiry(v int64)`
 
 SetExpiry sets Expiry field to given value.
 

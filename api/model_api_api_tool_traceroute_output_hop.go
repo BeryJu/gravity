@@ -20,7 +20,7 @@ var _ MappedNullable = &ApiAPIToolTracerouteOutputHop{}
 // ApiAPIToolTracerouteOutputHop struct for ApiAPIToolTracerouteOutputHop
 type ApiAPIToolTracerouteOutputHop struct {
 	Address     *string `json:"address,omitempty"`
-	ElapsedTime *int32  `json:"elapsedTime,omitempty"`
+	ElapsedTime *int64  `json:"elapsedTime,omitempty"`
 	Success     *bool   `json:"success,omitempty"`
 }
 
@@ -74,9 +74,9 @@ func (o *ApiAPIToolTracerouteOutputHop) SetAddress(v string) {
 }
 
 // GetElapsedTime returns the ElapsedTime field value if set, zero value otherwise.
-func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int32 {
+func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int64 {
 	if o == nil || IsNil(o.ElapsedTime) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.ElapsedTime
@@ -84,7 +84,7 @@ func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int32 {
 
 // GetElapsedTimeOk returns a tuple with the ElapsedTime field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int32, bool) {
+func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int64, bool) {
 	if o == nil || IsNil(o.ElapsedTime) {
 		return nil, false
 	}
@@ -100,8 +100,8 @@ func (o *ApiAPIToolTracerouteOutputHop) HasElapsedTime() bool {
 	return false
 }
 
-// SetElapsedTime gets a reference to the given int32 and assigns it to the ElapsedTime field.
-func (o *ApiAPIToolTracerouteOutputHop) SetElapsedTime(v int32) {
+// SetElapsedTime gets a reference to the given int64 and assigns it to the ElapsedTime field.
+func (o *ApiAPIToolTracerouteOutputHop) SetElapsedTime(v int64) {
 	o.ElapsedTime = &v
 }
 

@@ -20,8 +20,8 @@ var _ MappedNullable = &TsdbRoleConfig{}
 // TsdbRoleConfig struct for TsdbRoleConfig
 type TsdbRoleConfig struct {
 	Enabled *bool  `json:"enabled,omitempty"`
-	Expire  *int32 `json:"expire,omitempty"`
-	Scrape  *int32 `json:"scrape,omitempty"`
+	Expire  *int64 `json:"expire,omitempty"`
+	Scrape  *int64 `json:"scrape,omitempty"`
 }
 
 // NewTsdbRoleConfig instantiates a new TsdbRoleConfig object
@@ -74,9 +74,9 @@ func (o *TsdbRoleConfig) SetEnabled(v bool) {
 }
 
 // GetExpire returns the Expire field value if set, zero value otherwise.
-func (o *TsdbRoleConfig) GetExpire() int32 {
+func (o *TsdbRoleConfig) GetExpire() int64 {
 	if o == nil || IsNil(o.Expire) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.Expire
@@ -84,7 +84,7 @@ func (o *TsdbRoleConfig) GetExpire() int32 {
 
 // GetExpireOk returns a tuple with the Expire field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *TsdbRoleConfig) GetExpireOk() (*int32, bool) {
+func (o *TsdbRoleConfig) GetExpireOk() (*int64, bool) {
 	if o == nil || IsNil(o.Expire) {
 		return nil, false
 	}
@@ -100,15 +100,15 @@ func (o *TsdbRoleConfig) HasExpire() bool {
 	return false
 }
 
-// SetExpire gets a reference to the given int32 and assigns it to the Expire field.
-func (o *TsdbRoleConfig) SetExpire(v int32) {
+// SetExpire gets a reference to the given int64 and assigns it to the Expire field.
+func (o *TsdbRoleConfig) SetExpire(v int64) {
 	o.Expire = &v
 }
 
 // GetScrape returns the Scrape field value if set, zero value otherwise.
-func (o *TsdbRoleConfig) GetScrape() int32 {
+func (o *TsdbRoleConfig) GetScrape() int64 {
 	if o == nil || IsNil(o.Scrape) {
-		var ret int32
+		var ret int64
 		return ret
 	}
 	return *o.Scrape
@@ -116,7 +116,7 @@ func (o *TsdbRoleConfig) GetScrape() int32 {
 
 // GetScrapeOk returns a tuple with the Scrape field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *TsdbRoleConfig) GetScrapeOk() (*int32, bool) {
+func (o *TsdbRoleConfig) GetScrapeOk() (*int64, bool) {
 	if o == nil || IsNil(o.Scrape) {
 		return nil, false
 	}
@@ -132,8 +132,8 @@ func (o *TsdbRoleConfig) HasScrape() bool {
 	return false
 }
 
-// SetScrape gets a reference to the given int32 and assigns it to the Scrape field.
-func (o *TsdbRoleConfig) SetScrape(v int32) {
+// SetScrape gets a reference to the given int64 and assigns it to the Scrape field.
+func (o *TsdbRoleConfig) SetScrape(v int64) {
 	o.Scrape = &v
 }
 

@@ -29,7 +29,7 @@ type DhcpAPIScope struct {
 	Scope      string                 `json:"scope"`
 	Statistics DhcpAPIScopeStatistics `json:"statistics"`
 	SubnetCidr string                 `json:"subnetCidr"`
-	Ttl        int32                  `json:"ttl"`
+	Ttl        int64                  `json:"ttl"`
 }
 
 type _DhcpAPIScope DhcpAPIScope
@@ -38,7 +38,7 @@ type _DhcpAPIScope DhcpAPIScope
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, statistics DhcpAPIScopeStatistics, subnetCidr string, ttl int32) *DhcpAPIScope {
+func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, statistics DhcpAPIScopeStatistics, subnetCidr string, ttl int64) *DhcpAPIScope {
 	this := DhcpAPIScope{}
 	this.Default = default_
 	this.Hook = hook
@@ -264,9 +264,9 @@ func (o *DhcpAPIScope) SetSubnetCidr(v string) {
 }
 
 // GetTtl returns the Ttl field value
-func (o *DhcpAPIScope) GetTtl() int32 {
+func (o *DhcpAPIScope) GetTtl() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -275,7 +275,7 @@ func (o *DhcpAPIScope) GetTtl() int32 {
 
 // GetTtlOk returns a tuple with the Ttl field value
 // and a boolean to check if the value has been set.
-func (o *DhcpAPIScope) GetTtlOk() (*int32, bool) {
+func (o *DhcpAPIScope) GetTtlOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -283,7 +283,7 @@ func (o *DhcpAPIScope) GetTtlOk() (*int32, bool) {
 }
 
 // SetTtl sets field value
-func (o *DhcpAPIScope) SetTtl(v int32) {
+func (o *DhcpAPIScope) SetTtl(v int64) {
 	o.Ttl = v
 }
 

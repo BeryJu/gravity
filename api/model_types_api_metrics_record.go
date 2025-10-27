@@ -25,7 +25,7 @@ type TypesAPIMetricsRecord struct {
 	Keys  []string  `json:"keys"`
 	Node  string    `json:"node"`
 	Time  time.Time `json:"time"`
-	Value int32     `json:"value"`
+	Value int64     `json:"value"`
 }
 
 type _TypesAPIMetricsRecord TypesAPIMetricsRecord
@@ -34,7 +34,7 @@ type _TypesAPIMetricsRecord TypesAPIMetricsRecord
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTypesAPIMetricsRecord(keys []string, node string, time time.Time, value int32) *TypesAPIMetricsRecord {
+func NewTypesAPIMetricsRecord(keys []string, node string, time time.Time, value int64) *TypesAPIMetricsRecord {
 	this := TypesAPIMetricsRecord{}
 	this.Keys = keys
 	this.Node = node
@@ -126,9 +126,9 @@ func (o *TypesAPIMetricsRecord) SetTime(v time.Time) {
 }
 
 // GetValue returns the Value field value
-func (o *TypesAPIMetricsRecord) GetValue() int32 {
+func (o *TypesAPIMetricsRecord) GetValue() int64 {
 	if o == nil {
-		var ret int32
+		var ret int64
 		return ret
 	}
 
@@ -137,7 +137,7 @@ func (o *TypesAPIMetricsRecord) GetValue() int32 {
 
 // GetValueOk returns a tuple with the Value field value
 // and a boolean to check if the value has been set.
-func (o *TypesAPIMetricsRecord) GetValueOk() (*int32, bool) {
+func (o *TypesAPIMetricsRecord) GetValueOk() (*int64, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -145,7 +145,7 @@ func (o *TypesAPIMetricsRecord) GetValueOk() (*int32, bool) {
 }
 
 // SetValue sets field value
-func (o *TypesAPIMetricsRecord) SetValue(v int32) {
+func (o *TypesAPIMetricsRecord) SetValue(v int64) {
 	o.Value = v
 }
 

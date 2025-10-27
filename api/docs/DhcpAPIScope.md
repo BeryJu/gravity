@@ -12,13 +12,13 @@ Name | Type | Description | Notes
 **Scope** | **string** |  | 
 **Statistics** | [**DhcpAPIScopeStatistics**](DhcpAPIScopeStatistics.md) |  | 
 **SubnetCidr** | **string** |  | 
-**Ttl** | **int32** |  | 
+**Ttl** | **int64** |  | 
 
 ## Methods
 
 ### NewDhcpAPIScope
 
-`func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, statistics DhcpAPIScopeStatistics, subnetCidr string, ttl int32, ) *DhcpAPIScope`
+`func NewDhcpAPIScope(default_ bool, hook string, ipam map[string]string, options []TypesDHCPOption, scope string, statistics DhcpAPIScopeStatistics, subnetCidr string, ttl int64, ) *DhcpAPIScope`
 
 NewDhcpAPIScope instantiates a new DhcpAPIScope object
 This constructor will assign default values to properties that have it defined,
@@ -220,20 +220,20 @@ SetSubnetCidr sets SubnetCidr field to given value.
 
 ### GetTtl
 
-`func (o *DhcpAPIScope) GetTtl() int32`
+`func (o *DhcpAPIScope) GetTtl() int64`
 
 GetTtl returns the Ttl field if non-nil, zero value otherwise.
 
 ### GetTtlOk
 
-`func (o *DhcpAPIScope) GetTtlOk() (*int32, bool)`
+`func (o *DhcpAPIScope) GetTtlOk() (*int64, bool)`
 
 GetTtlOk returns a tuple with the Ttl field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTtl
 
-`func (o *DhcpAPIScope) SetTtl(v int32)`
+`func (o *DhcpAPIScope) SetTtl(v int64)`
 
 SetTtl sets Ttl field to given value.
 
