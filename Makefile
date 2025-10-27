@@ -203,9 +203,7 @@ gen-go-tidy:
 	go mod tidy
 	git add go.mod go.sum
 
-release:
-	sed -i 's/VERSION = "0.28.6"/g' Makefile
-	$(MAKE) -C ${PWD} gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
+release: gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s

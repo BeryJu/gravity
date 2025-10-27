@@ -31,7 +31,10 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: make release new_version=${{ inputs.version }}
+      - run:
+          sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
+          git add Makefile
+          make release
       - uses: goauthentik/action-gh-release@84da137b91a625a58fe8a34f3bd6bdb034a49138
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
