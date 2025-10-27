@@ -132,6 +132,7 @@ gen-tag:
 	cd ${PWD}
 	git commit -m "release version v${VERSION}"
 	git tag v${VERSION}
+	git push
 	git push --tags
 
 gen-client-go:
@@ -202,7 +203,9 @@ gen-go-tidy:
 	go mod tidy
 	git add go.mod go.sum
 
-release: gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
+release:
+	sed -i 's/VERSION = ".*"/VERSION = "${new_version}"/g' Makefile
+	$(MAKE) -C ${PWD} gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy gen-client-ts-publish gen-tag
 
 lint: web-lint
 	golangci-lint run -v --timeout 5000s

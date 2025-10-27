@@ -29,11 +29,9 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: |
-          sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
-      - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: make release
+      - run: make release new_version=${{ inputs.version }}
       - uses: goauthentik/action-gh-release@84da137b91a625a58fe8a34f3bd6bdb034a49138
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
