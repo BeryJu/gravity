@@ -19,7 +19,7 @@
         "@fsegurai/codemirror-theme-vscode-dark": "^6.1.4",
         "@fsegurai/codemirror-theme-vscode-light": "^6.1.4",
         "@patternfly/patternfly": "^4.224.2",
-        "@rollup/plugin-commonjs": "^28.0.9",
+        "@rollup/plugin-commonjs": "^29.0.0",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-typescript": "^12.3.0",
