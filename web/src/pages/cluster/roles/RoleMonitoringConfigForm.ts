@@ -3,10 +3,10 @@ import { MonitoringRoleConfig, RolesMonitoringApi } from "gravity-api";
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { first } from "../../common/utils";
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { first } from "../../../common/utils";
+import { ModelForm } from "../../../elements/forms/ModelForm";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-monitoring-config")
 export class RoleMonitoringConfigForm extends ModelForm<MonitoringRoleConfig, string> {
