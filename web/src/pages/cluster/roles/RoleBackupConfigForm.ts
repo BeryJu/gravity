@@ -4,9 +4,9 @@ import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import { DEFAULT_CONFIG } from "../../api/Config";
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { ModelForm } from "../../../elements/forms/ModelForm";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
 
 @customElement("gravity-cluster-role-backup-config")
 export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {

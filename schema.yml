@@ -325,6 +325,31 @@ paths:
       summary: Instance
       tags:
       - cluster/instances
+    put:
+      operationId: cluster.put_instance
+      parameters:
+      - in: query
+        name: identifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceAPIInstancesPutInput'
+      responses:
+        "204":
+          description: No Content
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestErrResponse'
+          description: Internal Server Error
+      summary: Instance
+      tags:
+      - cluster/instances
   /api/v1/cluster/node/logs:
     get:
       operationId: api.get_log_messages
@@ -2538,7 +2563,10 @@ components:
           maxLength: 255
           type: string
         roles:
-          type: string
+          items:
+            type: string
+          nullable: true
+          type: array
       type: object
     EtcdAPIMemberJoinOutput:
       properties:
@@ -2598,6 +2626,16 @@ components:
       - dirs
       - instanceIdentifier
       - instanceIP
+      type: object
+    InstanceAPIInstancesPutInput:
+      properties:
+        roles:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - roles
       type: object
     InstanceAPIRoleRestartInput:
       properties:

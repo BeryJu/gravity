@@ -18,6 +18,7 @@ import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import "../../elements/table/TableChart";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper } from "../../utils";
+import "./ClusterNodeForm";
 import "./wizard/ClusterJoinWizard";
 
 @customElement("gravity-cluster-nodes")
@@ -49,6 +50,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             new TableColumn("Roles"),
             new TableColumn("IP"),
             new TableColumn("Version"),
+            new TableColumn("Actions"),
             new TableColumn(""),
         ];
     }
@@ -63,6 +65,15 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
             >`,
             html`${item.ip}`,
             html`${item.version}`,
+            html`<ak-forms-modal>
+                <span slot="submit"> ${"Update"} </span>
+                <span slot="header"> ${"Update Lease"} </span>
+                <gravity-cluster-node-form slot="form" .instancePk=${item.identifier}>
+                </gravity-cluster-node-form>
+                <button slot="trigger" class="pf-c-button pf-m-plain">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </ak-forms-modal>`,
             html`<gravity-table-chart
                 role=${TypesAPIMetricsRole.System}
                 category="cpu"
