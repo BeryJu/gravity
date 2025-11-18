@@ -3,7 +3,7 @@ module beryju.io/gravity
 go 1.25.4
 
 require (
-	github.com/0xERR0R/blocky v0.28.1
+	github.com/0xERR0R/blocky v0.28.2
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/Netflix/go-env v0.1.2
 	github.com/Ullaakut/nmap/v2 v2.2.2
