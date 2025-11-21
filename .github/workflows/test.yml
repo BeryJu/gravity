@@ -11,7 +11,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v5
       - uses: ./.github/actions/setup
       - run: make gen-build gen-clean gen-client-go gen-external-dns gen-go-tidy
       - uses: golangci/golangci-lint-action@0a35821d5c230e903fcfe077583637dea1b27b47 # v8
@@ -24,7 +24,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v5
       - uses: ./.github/actions/setup
       - run: make test
       - uses: ./.github/actions/test-results
@@ -38,7 +38,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v5
       - uses: ./.github/actions/setup
       - run: make bench
       - uses: ./.github/actions/test-results
@@ -52,7 +52,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v5
       - uses: ./.github/actions/setup
       - run: make test-e2e-container-build
       - run: make test-e2e
