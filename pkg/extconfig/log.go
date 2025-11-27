@@ -102,3 +102,10 @@ func (ll *LevelLogger) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapco
 	}
 	return nil
 }
+
+func (ll *LevelLogger) With(fields []zapcore.Field) zapcore.Core {
+	return &LevelLogger{
+		Core:  ll.Core.With(fields),
+		Level: ll.Level,
+	}
+}

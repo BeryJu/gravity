@@ -51,7 +51,7 @@ func TestLogLevel_Role_Full_Decrease(t *testing.T) {
 	c.logger = c.BuildLogger()
 
 	roleId := "test-role"
-	roleLogger := c.Logger().Named("role." + roleId).WithOptions(SetLevel(c.LogLevelFor(roleId)))
+	roleLogger := c.Logger().Named("role." + roleId).WithOptions(SetLevel(c.LogLevelFor(roleId))).With(zap.String("foo", "bar"))
 
 	roleLogger.Debug("foo")
 

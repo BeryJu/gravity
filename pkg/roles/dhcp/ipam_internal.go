@@ -80,12 +80,16 @@ func (i *InternalIPAM) UpdateConfig(s *Scope) error {
 	return nil
 }
 
+// Return the next free IP in the range defined by `.Start` and `.End`, inclusive.
+// Any returned address is _not_ marked as used, as this is up to the caller of the function
+// Might return `nil` if no more free IP Address is available
 func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 	i.ipf.Lock()
 	defer i.ipf.Unlock()
 	currentIP := i.Start
 	// Since we start checking at the beginning of the range, check in the loop if we've
 	// hit the end and just give up, as the range is full
+	i.log.Debug("foo")
 	for i.End.Compare(currentIP) != -1 {
 		i.log.Debug("checking for free IP", zap.String("ip", currentIP.String()))
 		// Check if IP is in the correct subnet
@@ -93,8 +97,8 @@ func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 			break
 		}
 		if i.IsIPFree(currentIP, &identifier) {
-			// Actually mark IP as used
-			// i.UseIP(currentIP, identifier)
+			// Free IP is returned, _not_ marked as used, this the responsibility of the caller
+			// to mark the IP as used
 			return &currentIP
 		}
 		// As the IP is not free we're marking it as used, however this is a fallback if
@@ -109,17 +113,17 @@ func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 	return nil
 }
 
+func (i *InternalIPAM) FreeIP(ip netip.Addr) {
+	i.ipsm.Lock()
+	defer i.ipsm.Unlock()
+	delete(i.ips, ip.String())
+}
+
 func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 	i.useIP(ip, IPUse{
 		identifier: identifier,
 		unknown:    false,
 	}, true)
-}
-
-func (i *InternalIPAM) FreeIP(ip netip.Addr) {
-	i.ipsm.Lock()
-	defer i.ipsm.Unlock()
-	delete(i.ips, ip.String())
 }
 
 func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
@@ -143,12 +147,12 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
 		return false
 	}
-	// Ip is less than the start of the range
+	// IP is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "before started"))
 		return false
 	}
-	// Ip is more than the end of the range
+	// IP is more than the end of the range
 	if i.End.Compare(ip) == -1 {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "after end"))
 		return false
