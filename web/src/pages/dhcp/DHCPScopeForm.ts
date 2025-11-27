@@ -10,7 +10,7 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/FormGroup";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, firstElement } from "../../utils";
+import { KV, first, firstElement } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
@@ -133,6 +133,21 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                             required
                         />
                         <p class="pf-c-form__helper-text">End of the IP range, exclusive.</p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal name="ipam.should_ping">
+                        <div class="pf-c-check">
+                            <input
+                                type="checkbox"
+                                class="pf-c-check__input"
+                                ?checked=${first(
+                                    this.instance?.ipam?.should_ping as unknown as boolean,
+                                    false,
+                                )}
+                            />
+                            <label class="pf-c-check__label"
+                                >Ping IP Address before assigning it.</label
+                            >
+                        </div>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>

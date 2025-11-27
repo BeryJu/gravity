@@ -91,7 +91,7 @@ func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 		addrs <- next.String()
 		wg.Done()
 	}
-	for i := 0; i < iter; i++ {
+	for i := range iter {
 		go tester(i)
 	}
 	wg.Wait()
