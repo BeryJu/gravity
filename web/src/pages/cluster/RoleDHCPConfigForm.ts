@@ -35,7 +35,7 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
         return html` <ak-form-element-horizontal label="Port" required name="port">
                 <input
                     type="number"
-                    value="${first(this.instance?.port, 67)}"
+                    value=${first(this.instance?.port, 67)}
                     class="pf-c-form-control"
                     required
                 />
@@ -47,7 +47,7 @@ export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
             >
                 <input
                     type="number"
-                    value="${first(this.instance?.leaseNegotiateTimeout, 30)}"
+                    value=${first(this.instance?.leaseNegotiateTimeout, 30)}
                     class="pf-c-form-control"
                     required
                 />

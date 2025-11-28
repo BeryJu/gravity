@@ -32,7 +32,7 @@ export class AuthTokenForm extends Form<AuthAPIToken> {
                 ${until(
                     new RolesApiApi(DEFAULT_CONFIG).apiGetUsers().then((users) => {
                         return users.users?.map((user) => {
-                            return html`<option value="${user.username}">${user.username}</option>`;
+                            return html`<option value=${user.username}>${user.username}</option>`;
                         });
                     }),
                 )}

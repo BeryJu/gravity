@@ -45,7 +45,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
             <ak-form-element-horizontal label="Metrics expiry" required name="expire">
                 <input
                     type="number"
-                    value="${first(this.instance?.expire, 60 * 30)}"
+                    value=${first(this.instance?.expire, 60 * 30)}
                     class="pf-c-form-control"
                     required
                 />
@@ -56,7 +56,7 @@ export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
             <ak-form-element-horizontal label="Scrape interval" required name="scrape">
                 <input
                     type="number"
-                    value="${first(this.instance?.scrape, 30)}"
+                    value=${first(this.instance?.scrape, 30)}
                     class="pf-c-form-control"
                     required
                 />

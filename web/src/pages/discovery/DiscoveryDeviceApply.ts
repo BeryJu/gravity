@@ -34,7 +34,7 @@ export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput
                     ${until(
                         new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes().then((scopes) => {
                             return scopes.scopes?.map((scope) => {
-                                return html`<option value="${scope.scope}">
+                                return html`<option value=${scope.scope}>
                                     ${scope.scope} (${scope.subnetCidr})
                                 </option>`;
                             });
@@ -48,7 +48,7 @@ export class DiscoveryDeviceApplyForm extends Form<DiscoveryAPIDevicesApplyInput
                     ${until(
                         new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones().then((zones) => {
                             return zones.zones?.map((zone) => {
-                                return html`<option value="${zone.name}">${zone.name}</option>`;
+                                return html`<option value=${zone.name}>${zone.name}</option>`;
                             });
                         }),
                     )}

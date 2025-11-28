@@ -85,7 +85,7 @@ export class PageHeader extends AKElement {
     renderIcon(): TemplateResult {
         if (this.icon) {
             if (this.iconImage && !this.icon.startsWith("fa://")) {
-                return html`<img class="pf-icon" src="${this.icon}" />&nbsp;`;
+                return html`<img class="pf-icon" src=${this.icon} />&nbsp;`;
             }
             const icon = this.icon.replaceAll("fa://", "fa ");
             return html`<i class=${icon}></i>&nbsp;`;

@@ -79,7 +79,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 <div class="pf-c-input-group">
                     <input
                         type="text"
-                        value="${ifDefined(this.instance?.hostname)}"
+                        value=${ifDefined(this.instance?.hostname)}
                         class="pf-c-form-control"
                         required
                     />
@@ -91,7 +91,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
             <ak-form-element-horizontal label="UID" required name="uid">
                 <input
                     type="text"
-                    value="${this.instance?.uid || ""}"
+                    value=${this.instance?.uid || ""}
                     class="pf-c-form-control"
                     required
                 />
@@ -117,10 +117,10 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     <option value="TXT" ?selected=${this.recordType === "TXT"}>TXT</option>
                 </select>
             </ak-form-element-horizontal>
-            <ak-form-element-horizontal label="${this.getLabel()}" required name="data">
+            <ak-form-element-horizontal label=${this.getLabel()} required name="data">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.data)}"
+                    value=${ifDefined(this.instance?.data)}
                     class="pf-c-form-control"
                     required
                 />
@@ -134,7 +134,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                       >
                           <input
                               type="number"
-                              value="${ifDefined(this.instance?.mxPreference)}"
+                              value=${ifDefined(this.instance?.mxPreference)}
                               class="pf-c-form-control"
                               required
                           />
@@ -146,7 +146,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                       <ak-form-element-horizontal label="SRV Port" required name="srvPort">
                           <input
                               type="number"
-                              value="${ifDefined(this.instance?.srvPort)}"
+                              value=${ifDefined(this.instance?.srvPort)}
                               class="pf-c-form-control"
                               required
                           />
@@ -154,7 +154,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                       <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
                           <input
                               type="number"
-                              value="${ifDefined(this.instance?.srvPriority)}"
+                              value=${ifDefined(this.instance?.srvPriority)}
                               class="pf-c-form-control"
                               required
                           />
@@ -162,7 +162,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                       <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
                           <input
                               type="number"
-                              value="${ifDefined(this.instance?.srvWeight)}"
+                              value=${ifDefined(this.instance?.srvWeight)}
                               class="pf-c-form-control"
                               required
                           />

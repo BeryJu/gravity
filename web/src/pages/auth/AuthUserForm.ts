@@ -62,9 +62,7 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
             <ak-form-element-horizontal label=${"Permissions"} name="permissions">
                 <ak-codemirror
                     mode="yaml"
-                    value="${YAML.stringify(
-                        this.instance?.permissions || DEFAULT_ADMIN_PERMISSIONS,
-                    )}"
+                    value=${YAML.stringify(this.instance?.permissions || DEFAULT_ADMIN_PERMISSIONS)}
                 >
                 </ak-codemirror>
             </ak-form-element-horizontal>`;

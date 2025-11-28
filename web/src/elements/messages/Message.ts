@@ -55,7 +55,7 @@ export class Message extends AKElement {
                     : ""}"
             >
                 <div class="pf-c-alert__icon">
-                    <i class="${this.message ? LEVEL_ICON_MAP[this.message.level] : ""}"></i>
+                    <i class=${this.message ? LEVEL_ICON_MAP[this.message.level] : ""}></i>
                 </div>
                 <p class="pf-c-alert__title">${this.message?.message}</p>
                 ${this.message?.description &&
