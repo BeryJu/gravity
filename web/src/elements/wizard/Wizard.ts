@@ -137,7 +137,7 @@ export class Wizard extends ModalButton {
                     ? html`<button
                           class="pf-c-button pf-m-plain pf-c-wizard__close"
                           type="button"
-                          aria-label="${"Close"}"
+                          aria-label=${"Close"}
                           @click=${() => {
                               this.reset();
                           }}

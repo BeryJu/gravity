@@ -52,7 +52,7 @@ export class TableSearch extends AKElement {
                 name="search"
                 type="search"
                 placeholder=${"Search..."}
-                value="${ifDefined(this.value)}"
+                value=${ifDefined(this.value)}
                 @search=${(ev: Event) => {
                     if (!this.onSearch) return;
                     this.onSearch((ev.target as HTMLInputElement).value);

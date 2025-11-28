@@ -33,7 +33,7 @@ export class RoleDNSConfigForm extends ModelForm<DnsRoleConfig, string> {
         return html` <ak-form-element-horizontal label="Port" required name="port">
             <input
                 type="number"
-                value="${first(this.instance?.port, 53)}"
+                value=${first(this.instance?.port, 53)}
                 class="pf-c-form-control"
                 required
             />

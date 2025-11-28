@@ -74,7 +74,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
                     role="progressbar"
                     aria-valuemin="0"
                     aria-valuemax="100"
-                    aria-valuenow="${usage}"
+                    aria-valuenow=${usage}
                     aria-labelledby="progress-sm-example-description"
                 >
                     <div class="pf-c-progress__indicator" style="width:${usage}%;"></div>

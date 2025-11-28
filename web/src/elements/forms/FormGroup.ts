@@ -35,7 +35,7 @@ export class FormGroup extends AKElement {
                     <button
                         class="pf-c-button pf-m-plain"
                         type="button"
-                        aria-expanded="${this.expanded}"
+                        aria-expanded=${this.expanded}
                         aria-label="Details"
                         @click=${() => {
                             this.expanded = !this.expanded;

@@ -153,10 +153,10 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
             ${inner
                 ? inner
                 : html`<ak-empty-state
-                      icon="${this.zoneCanStoreRecords ? this.pageIcon() : "fa fa-times"}"
-                      header="${this.zoneCanStoreRecords
+                      icon=${this.zoneCanStoreRecords ? this.pageIcon() : "fa fa-times"}
+                      header=${this.zoneCanStoreRecords
                           ? "No objects found."
-                          : "Zone cannot store records."}"
+                          : "Zone cannot store records."}
                   >
                       <div slot="body">
                           ${this.zoneCanStoreRecords
