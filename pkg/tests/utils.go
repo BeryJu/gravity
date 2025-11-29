@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/netip"
 	"runtime"
 	"strings"
@@ -13,6 +14,7 @@ import (
 	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/protobuf/proto"
@@ -61,6 +63,10 @@ func Context() context.Context {
 func RandomString(prefix ...string) string {
 	str := append(prefix, uuid.New().String())
 	return strings.Join(str, "-")
+}
+
+func RandomMAC() net.HardwareAddr {
+	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
 }
 
 func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...interface{}) {

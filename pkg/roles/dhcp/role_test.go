@@ -1,19 +1,13 @@
 package dhcp_test
 
 import (
-	"net"
 	"testing"
 
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/tests"
-	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
 )
-
-func generateHW() net.HardwareAddr {
-	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
-}
 
 func RoleConfig() []byte {
 	return []byte(tests.MustJSON(dhcp.RoleConfig{

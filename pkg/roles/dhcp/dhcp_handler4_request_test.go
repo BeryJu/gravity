@@ -414,7 +414,7 @@ func TestDHCP_Parallel(t *testing.T) {
 			for i := 1; i < 100; i++ {
 				rr := &dhcpv4.DHCPv4{
 					GatewayIPAddr: net.ParseIP(c.Addr().Next().String()),
-					ClientHWAddr:  generateHW(),
+					ClientHWAddr:  tests.RandomMAC(),
 					OpCode:        dhcpv4.OpcodeBootRequest,
 				}
 				rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))
