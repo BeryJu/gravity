@@ -104,7 +104,9 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 		return ErrNilResponse
 	}
 
-	h.role.logDHCPMessage(r, resp, []zapcore.Field{})
+	h.role.logDHCPMessage(r, resp, []zapcore.Field{
+		zap.String("type", "response"),
+	})
 	useEthernet := false
 	var p *net.UDPAddr
 	if !r.GatewayIPAddr.IsUnspecified() {

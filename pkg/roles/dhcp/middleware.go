@@ -48,6 +48,7 @@ func (r *Role) loggingMiddleware4(inner Handler4) Handler4 {
 	return func(req *Request4) *dhcpv4.DHCPv4 {
 		f := []zap.Field{
 			zap.String("client", req.peer.String()),
+			zap.String("type", "request"),
 		}
 		r.logDHCPMessage(req, req.DHCPv4, f)
 		return inner(req)
