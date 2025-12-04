@@ -16,7 +16,7 @@
         "@codecov/rollup-plugin": "^1.9.1",
         "@codemirror/lang-javascript": "^6.2.4",
         "@codemirror/legacy-modes": "^6.5.2",
-        "@fsegurai/codemirror-theme-vscode-dark": "^6.1.4",
+        "@fsegurai/codemirror-theme-vscode-dark": "^6.2.3",
         "@fsegurai/codemirror-theme-vscode-light": "^6.1.4",
         "@patternfly/patternfly": "^4.224.2",
         "@rollup/plugin-commonjs": "^29.0.0",
