@@ -32,7 +32,7 @@ services:
     command: server /data --console-address ":9001"
   coredns:
     hostname: coredns.t.gravity.beryju.io
-    image: docker.io/coredns/coredns:1.13.1
+    image: docker.io/coredns/coredns:1.13.2
     ports:
       - "1053:53"
       - "1053:53/udp"
