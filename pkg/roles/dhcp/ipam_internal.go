@@ -16,19 +16,11 @@ import (
 
 const InternalIPAMType = "internal"
 
-type IPUse struct {
-	identifier string
-	unknown    bool
-}
-
 type InternalIPAM struct {
 	Start netip.Addr
 	End   netip.Addr
 
-	ips  map[string]*IPUse
-	ipsm sync.RWMutex
-	ipf  sync.Mutex
-
+	ipf        sync.Mutex
 	log        *zap.Logger
 	role       *Role
 	scope      *Scope
@@ -42,8 +34,6 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 		log:   role.log.With(zap.String("ipam", "internal")),
 		role:  role,
 		scope: s,
-		ips:   make(map[string]*IPUse),
-		ipsm:  sync.RWMutex{},
 		ipf:   sync.Mutex{},
 	}
 	err := ipam.UpdateConfig(s)
@@ -100,12 +90,6 @@ func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 			// to mark the IP as used
 			return &currentIP
 		}
-		// As the IP is not free we're marking it as used, however this is a fallback if
-		// `IsIPFree` didn't mark the IP as used by a specific lease
-		i.useIP(currentIP, IPUse{
-			identifier: identifier,
-			unknown:    true,
-		}, false)
 		currentIP = currentIP.Next()
 	}
 	i.log.Warn("no more empty IPs left", zap.String("lastIp", currentIP.String()))
@@ -113,38 +97,25 @@ func (i *InternalIPAM) NextFreeAddress(identifier string) *netip.Addr {
 }
 
 func (i *InternalIPAM) FreeIP(ip netip.Addr) {
-	i.ipsm.Lock()
-	defer i.ipsm.Unlock()
-	delete(i.ips, ip.String())
 }
 
 func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
-	i.useIP(ip, IPUse{
-		identifier: identifier,
-		unknown:    false,
-	}, true)
-}
-
-func (i *InternalIPAM) useIP(ip netip.Addr, ipu IPUse, overwrite bool) {
-	i.ipsm.Lock()
-	defer i.ipsm.Unlock()
-	if i.ips[ip.String()] != nil && !overwrite {
-		return
-	}
-	i.ips[ip.String()] = &ipu
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
-	i.ipsm.RLock()
-	mem := i.ips[ip.String()]
-	i.ipsm.RUnlock()
-	if mem != nil {
-		if identifier != nil && mem.identifier == *identifier {
-			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP (in memory)"))
+	if identifier != nil {
+		l := i.role.leases.Get(*identifier)
+		if l.Address == ip.String() {
+			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP of lease"))
 			return true
 		}
-		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
-		return false
+	} else {
+		for _, l := range i.role.leases.Iter() {
+			if l.Address == ip.String() {
+				i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
+				return false
+			}
+		}
 	}
 	// IP is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
@@ -176,12 +147,6 @@ func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 	// check for ping
 	if i.shouldPing && i.ping(ip) {
 		return false
-	}
-	if identifier != nil {
-		i.useIP(ip, IPUse{
-			identifier: *identifier,
-			unknown:    true,
-		}, false)
 	}
 	i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "free"))
 	return true
