@@ -105,16 +105,15 @@ func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
 	if identifier != nil {
 		l := i.role.leases.Get(*identifier)
-		if l.Address == ip.String() {
+		if l != nil && l.Address == ip.String() {
 			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP of lease"))
 			return true
 		}
-	} else {
-		for _, l := range i.role.leases.Iter() {
-			if l.Address == ip.String() {
-				i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
-				return false
-			}
+	}
+	for _, l := range i.role.leases.Iter() {
+		if l.Address == ip.String() {
+			i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
+			return false
 		}
 	}
 	// IP is less than the start of the range
