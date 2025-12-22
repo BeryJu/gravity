@@ -29,7 +29,7 @@ func TestAPIUsersGet(t *testing.T) {
 			types.KeyUsers,
 			tests.RandomString(),
 		).String(),
-		tests.MustJSON(auth.User{}),
+		string(tests.MustProto(&types.User{})),
 	))
 
 	var output auth.APIUsersGetOutput
@@ -92,7 +92,7 @@ func TestAPIUsersDelete(t *testing.T) {
 			types.KeyUsers,
 			name,
 		).String(),
-		tests.MustJSON(auth.User{}),
+		string(tests.MustProto(&types.User{})),
 	))
 
 	assert.NoError(t, prov.APIUsersDelete().Interact(ctx, auth.APIUsersDeleteInput{
