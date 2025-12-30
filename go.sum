@@ -296,8 +296,8 @@ github.com/containerd/platforms v0.2.1 h1:zvwtM3rz2YHPQsF2CHYM8+KtB5dvhISiXh5ZpS
 github.com/containerd/platforms v0.2.1/go.mod h1:XHCb+2/hzowdiut9rkudds9bE5yJ7npe7dG/wG+uFPw=
 github.com/containerd/ttrpc v0.0.0-20190828154514-0e0f228740de/go.mod h1:PvCDdDGpgqzQIzDW1TphrGLssLDZp2GuS+X5DkEJB8o=
 github.com/containerd/typeurl v0.0.0-20180627222232-a93fcdb778cd/go.mod h1:Cm3kwCdlkCfMSHURc+r6fwoGH6/F1hH3S4sg0rLFWPc=
-github.com/coredns/caddy v1.1.4-0.20250930002214-15135a999495 h1:JFeOmbjLnVRhvmLHyuO3M1pfXWlPWpwkdM8UqXZRtBg=
-github.com/coredns/caddy v1.1.4-0.20250930002214-15135a999495/go.mod h1:A6ntJQlAWuQfFlsd9hvigKbo2WS0VUs2l1e2F+BawD4=
+github.com/coredns/caddy v1.1.4 h1:+Lls5xASB0QsA2jpCroCOwpPlb5GjIGlxdjXxdX0XVo=
+github.com/coredns/caddy v1.1.4/go.mod h1:A6ntJQlAWuQfFlsd9hvigKbo2WS0VUs2l1e2F+BawD4=
 github.com/coredns/coredns v1.13.2 h1:PPICLK9DBxPC2sGp/tbTL9B4JkyHHIIek9JeWNuIwUw=
 github.com/coredns/coredns v1.13.2/go.mod h1:0mSg9IzNSCdf8vAcnzf1HNAKwXNElrrcoljOEVpT3uk=
 github.com/coreos/bbolt v1.3.1-coreos.6.0.20180223184059-4f5275f4ebbf/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
