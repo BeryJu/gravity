@@ -8,9 +8,11 @@ import (
 	"sync"
 	"time"
 
+	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"github.com/netdata/go.d.plugin/pkg/iprange"
 	"github.com/pkg/errors"
 	probing "github.com/prometheus-community/pro-bing"
+	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
 )
 
@@ -27,6 +29,7 @@ type InternalIPAM struct {
 	SubnetCIDR netip.Prefix
 
 	shouldPing bool
+	scopeLock  sync.Locker
 }
 
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
@@ -36,7 +39,16 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 		scope: s,
 		ipf:   sync.Mutex{},
 	}
-	err := ipam.UpdateConfig(s)
+	sess, err := concurrency.NewSession(role.i.KV().Client, concurrency.WithContext(role.ctx))
+	if err != nil {
+		return nil, err
+	}
+	ipam.scopeLock = concurrency.NewLocker(sess, role.i.KV().Key(
+		types.KeyRole,
+		types.KeyIPAM,
+		s.Name,
+	).String())
+	err = ipam.UpdateConfig(s)
 	if err != nil {
 		return nil, err
 	}
@@ -103,19 +115,23 @@ func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
+	i.scopeLock.Lock()
 	if identifier != nil {
 		l := i.role.leases.Get(*identifier)
 		if l != nil && l.Address == ip.String() {
 			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP of lease"))
+			i.scopeLock.Unlock()
 			return true
 		}
 	}
 	for _, l := range i.role.leases.Iter() {
 		if l.Address == ip.String() {
 			i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
+			i.scopeLock.Unlock()
 			return false
 		}
 	}
+	i.scopeLock.Unlock()
 	// IP is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "before started"))
