@@ -82,6 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+      contents: write
     strategy:
       matrix:
         arch: [arm64, amd64]
