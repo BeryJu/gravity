@@ -35,7 +35,7 @@ jobs:
           sed -i 's/VERSION = ".*"/VERSION = "${{ inputs.version }}"/g' Makefile
           git add Makefile
           make release
-      - uses: goauthentik/action-gh-release@84da137b91a625a58fe8a34f3bd6bdb034a49138
+      - uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           tag_name: "v${{ inputs.version }}"
