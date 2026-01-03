@@ -14,7 +14,7 @@ import (
 )
 
 func TestRoleStartNoConfig(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	api := api.New(rootInst.ForRole("api", ctx))
@@ -27,7 +27,7 @@ func TestRoleStartNoConfig(t *testing.T) {
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)
@@ -38,7 +38,7 @@ func TestRoleStartEmptyConfig(t *testing.T) {
 }
 
 func TestRoleStartInvalidListen(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)
@@ -53,7 +53,7 @@ func TestRoleStartInvalidListen(t *testing.T) {
 }
 
 func TestRoleHealth(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)
@@ -67,7 +67,7 @@ func TestRoleHealth(t *testing.T) {
 }
 
 func TestMetricsScrape(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("monitoring", ctx)

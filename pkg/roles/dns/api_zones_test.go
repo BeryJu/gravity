@@ -13,7 +13,7 @@ import (
 )
 
 func TestAPIZonesGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -35,7 +35,7 @@ func TestAPIZonesGet(t *testing.T) {
 }
 
 func TestAPIZonesPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -72,7 +72,7 @@ func TestAPIZonesPut(t *testing.T) {
 }
 
 func TestAPIZonesDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

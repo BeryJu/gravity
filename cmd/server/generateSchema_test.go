@@ -10,7 +10,7 @@ import (
 )
 
 func TestGenerateSchema(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	called := false
 	server.GenerateSchema(tests.Context(), "json", func(schema []byte) {
 		assert.NotEqual(t, "", string(schema))

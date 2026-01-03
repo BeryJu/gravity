@@ -34,7 +34,7 @@ func getRole() *backup.Role {
 }
 
 func TestRoleStartNoConfig(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("backup", ctx)
@@ -45,12 +45,12 @@ func TestRoleStartNoConfig(t *testing.T) {
 }
 
 func TestRoleStart(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	assert.NotNil(t, getRole())
 }
 
 func TestSaveBackup(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("backup", ctx)

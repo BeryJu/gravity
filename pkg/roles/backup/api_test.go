@@ -11,7 +11,7 @@ import (
 )
 
 func TestAPIBackupStart(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	role := getRole()
 	defer role.Stop()
 
@@ -23,7 +23,7 @@ func TestAPIBackupStart(t *testing.T) {
 }
 
 func TestAPIBackupStarNoWait(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	role := getRole()
 	defer role.Stop()
 
@@ -35,7 +35,7 @@ func TestAPIBackupStarNoWait(t *testing.T) {
 }
 
 func TestAPIBackupStatus(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	rootInst.ForRole("backup", ctx)

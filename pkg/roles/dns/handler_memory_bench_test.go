@@ -11,7 +11,7 @@ import (
 )
 
 func BenchmarkRoleDNS_Memory(b *testing.B) {
-	defer tests.Setup(nil)()
+	tests.Setup(b)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

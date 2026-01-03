@@ -14,7 +14,7 @@ import (
 )
 
 func TestIPAMInternal(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -26,7 +26,7 @@ func TestIPAMInternal(t *testing.T) {
 }
 
 func TestIPAMInternal_NextFreeAddress(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -42,7 +42,7 @@ func TestIPAMInternal_NextFreeAddress(t *testing.T) {
 
 func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
 	t.Skip()
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)

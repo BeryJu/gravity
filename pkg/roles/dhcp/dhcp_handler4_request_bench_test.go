@@ -13,7 +13,7 @@ import (
 )
 
 func BenchmarkRoleDHCP_Request(b *testing.B) {
-	defer tests.Setup(nil)()
+	tests.Setup(b)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
