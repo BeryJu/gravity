@@ -15,7 +15,7 @@ import (
 )
 
 func TestAPIDevicesGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -37,7 +37,7 @@ func TestAPIDevicesGet(t *testing.T) {
 }
 
 func TestDeviceApplyDHCP(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -109,7 +109,7 @@ func TestDeviceApplyDHCP(t *testing.T) {
 }
 
 func TestDeviceApplyDHCPWithDNS(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -235,7 +235,7 @@ func TestDeviceApplyDHCPWithDNS(t *testing.T) {
 }
 
 func TestDeviceApplyDNSWithReverse(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -320,7 +320,7 @@ func TestDeviceApplyDNSWithReverse(t *testing.T) {
 }
 
 func TestAPIDevicesDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)

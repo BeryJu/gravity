@@ -10,7 +10,7 @@ import (
 )
 
 func TestEvents(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	called := false
 	rootInst.ForRole("test", tests.Context()).AddEventListener("test-topic", func(ev *roles.Event) {

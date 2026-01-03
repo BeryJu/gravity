@@ -12,7 +12,7 @@ import (
 )
 
 func TestRoleDNS_ZoneFind(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -41,7 +41,7 @@ func TestRoleDNS_ZoneFind(t *testing.T) {
 }
 
 func TestRoleDNS_ZoneNoHandler(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -72,7 +72,7 @@ func TestRoleDNS_ZoneNoHandler(t *testing.T) {
 }
 
 func TestRoleDNS_NoZone(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

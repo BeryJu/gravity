@@ -23,7 +23,7 @@ func (ot OutgoingTransfer) RemoteAddr() net.UDPAddr {
 func (ot OutgoingTransfer) SetSize(n int64) {}
 
 func TestTFTP_Read(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)
@@ -50,7 +50,7 @@ func TestTFTP_Read(t *testing.T) {
 }
 
 func TestTFTP_Read_Bundled(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)
@@ -66,7 +66,7 @@ func TestTFTP_Read_Bundled(t *testing.T) {
 }
 
 func TestTFTP_Read_NonExistent(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)

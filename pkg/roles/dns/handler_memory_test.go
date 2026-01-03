@@ -12,7 +12,7 @@ import (
 )
 
 func TestRoleDNS_Memory(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -61,7 +61,7 @@ func TestRoleDNS_Memory(t *testing.T) {
 }
 
 func TestRoleDNS_Memory_Wildcard(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -110,7 +110,7 @@ func TestRoleDNS_Memory_Wildcard(t *testing.T) {
 }
 
 func TestRoleDNS_Memory_CNAME(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -202,7 +202,7 @@ func TestRoleDNS_Memory_CNAME(t *testing.T) {
 }
 
 func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -251,7 +251,7 @@ func TestRoleDNS_Memory_WildcardNested(t *testing.T) {
 }
 
 func TestRoleDNS_Memory_MixedCase(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -300,7 +300,7 @@ func TestRoleDNS_Memory_MixedCase(t *testing.T) {
 }
 
 func TestRoleDNS_Memory_MixedCase_Reverse(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

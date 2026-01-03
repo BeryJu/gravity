@@ -10,7 +10,7 @@ import (
 )
 
 func TestHook(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ri := rootInst.ForRole("test", tests.Context())
 	v := ri.ExecuteHook(roles.HookOptions{
@@ -24,7 +24,7 @@ func TestHook(t *testing.T) {
 }
 
 func TestHook_ParseIP(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ri := rootInst.ForRole("test", tests.Context())
 	v := ri.ExecuteHook(roles.HookOptions{

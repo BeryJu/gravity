@@ -13,7 +13,7 @@ import (
 )
 
 func TestAPIFilesGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)
@@ -41,7 +41,7 @@ func TestAPIFilesGet(t *testing.T) {
 }
 
 func TestAPIFilesPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)
@@ -68,7 +68,7 @@ func TestAPIFilesPut(t *testing.T) {
 }
 
 func TestAPIFilesDownload(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)
@@ -96,7 +96,7 @@ func TestAPIFilesDownload(t *testing.T) {
 }
 
 func TestAPIFilesDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)

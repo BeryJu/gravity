@@ -19,7 +19,7 @@ func testLease() dhcp.Lease {
 }
 
 func TestAPILeasesGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -54,7 +54,7 @@ func TestAPILeasesGet(t *testing.T) {
 }
 
 func TestAPILeasesPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -95,7 +95,7 @@ func TestAPILeasesPut(t *testing.T) {
 }
 
 func TestAPILeasesDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
