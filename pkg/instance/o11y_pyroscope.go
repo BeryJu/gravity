@@ -23,9 +23,11 @@ func (i *Instance) startPyroscope() {
 		BasicAuthPassword: extconfig.Get().Observability.Pyroscope.Password,
 		Logger:            i.log.Sugar(),
 		Tags: map[string]string{
-			"gravity.instance": extconfig.Get().Instance.Identifier,
-			"gravity.version":  extconfig.Version,
-			"gravity.hash":     extconfig.BuildHash,
+			"gravity_instance":   extconfig.Get().Instance.Identifier,
+			"gravity_version":    extconfig.Version,
+			"gravity_hash":       extconfig.BuildHash,
+			"service_repository": "https://github.com/BeryJu/gravity",
+			"service_git_ref":    extconfig.BuildHash,
 		},
 		DisableGCRuns: true,
 		HTTPClient: &http.Client{
