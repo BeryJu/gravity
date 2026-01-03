@@ -1,11 +1,11 @@
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
-import { LanguageSupport, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
+import { LanguageSupport, StreamLanguage } from "@codemirror/language";
 import * as yamlMode from "@codemirror/legacy-modes/mode/yaml";
 import { Compartment, EditorState, Extension } from "@codemirror/state";
 import { EditorView, drawSelection, keymap, lineNumbers } from "@codemirror/view";
-import { vsCodeDark, vsCodeDarkHighlightStyle } from "@fsegurai/codemirror-theme-vscode-dark";
-import { vsCodeLight, vsCodeLightHighlightStyle } from "@fsegurai/codemirror-theme-vscode-light";
+import { vsCodeDark } from "@fsegurai/codemirror-theme-vscode-dark";
+import { vsCodeLight } from "@fsegurai/codemirror-theme-vscode-light";
 import YAML from "yaml";
 
 import { customElement, property } from "lit/decorators.js";
@@ -32,9 +32,6 @@ export class CodeMirrorTextarea extends AKElement {
 
     themeLight = vsCodeLight;
     themeDark = vsCodeDark;
-
-    syntaxHighlightLight = syntaxHighlighting(vsCodeLightHighlightStyle);
-    syntaxHighlightDark = syntaxHighlighting(vsCodeDarkHighlightStyle);
 
     @property()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -98,19 +95,13 @@ export class CodeMirrorTextarea extends AKElement {
         const matcher = window.matchMedia("(prefers-color-scheme: light)");
         const handler = (ev?: MediaQueryListEvent) => {
             let theme;
-            let syntaxHighlight;
             if (ev?.matches || matcher.matches) {
                 theme = this.themeLight;
-                syntaxHighlight = this.syntaxHighlightLight;
             } else {
                 theme = this.themeDark;
-                syntaxHighlight = this.syntaxHighlightDark;
             }
             this.editor?.dispatch({
-                effects: [
-                    this.theme.reconfigure(theme),
-                    this.syntaxHighlight.reconfigure(syntaxHighlight),
-                ],
+                effects: [this.theme.reconfigure(theme)],
             });
         };
         const extensions = [
@@ -122,7 +113,6 @@ export class CodeMirrorTextarea extends AKElement {
             EditorView.lineWrapping,
             EditorState.readOnly.of(this.readOnly),
             EditorState.tabSize.of(2),
-            this.syntaxHighlight.of(this.syntaxHighlightLight),
             this.theme.of(this.themeLight),
         ];
         this.editor = new EditorView({
