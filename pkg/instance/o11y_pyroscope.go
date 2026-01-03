@@ -7,7 +7,10 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/grafana/pyroscope-go"
+	"go.uber.org/zap"
 )
+
+var profiler *pyroscope.Profiler
 
 func (i *Instance) startPyroscope() {
 	if !extconfig.Get().Observability.Pyroscope.Enabled || extconfig.Get().CI {
@@ -16,7 +19,7 @@ func (i *Instance) startPyroscope() {
 	release := fmt.Sprintf("gravity@%s", extconfig.FullVersion())
 	runtime.SetMutexProfileFraction(5)
 	runtime.SetBlockProfileRate(5)
-	pyroscope.Start(pyroscope.Config{
+	pr, err := pyroscope.Start(pyroscope.Config{
 		ApplicationName:   "gravity.beryju.io",
 		ServerAddress:     extconfig.Get().Observability.Pyroscope.Server,
 		BasicAuthUser:     extconfig.Get().Observability.Pyroscope.Username,
@@ -46,5 +49,20 @@ func (i *Instance) startPyroscope() {
 			pyroscope.ProfileBlockDuration,
 		},
 	})
+	if err != nil {
+		i.log.Warn("failed to init pyroscope", zap.Error(err))
+		return
+	}
+	profiler = pr
+}
 
+func (i *Instance) stopPyroscope() {
+	if profiler == nil {
+		return
+	}
+	profiler.Flush(true)
+	err := profiler.Stop()
+	if err != nil {
+		i.log.Warn("failed to flush pyroscope", zap.Error(err))
+	}
 }

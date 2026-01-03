@@ -2,6 +2,7 @@ package instance
 
 import (
 	"fmt"
+	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"github.com/getsentry/sentry-go"
@@ -35,4 +36,8 @@ func (i *Instance) startSentry() {
 		scope.SetTag("gravity.version", extconfig.Version)
 		scope.SetTag("gravity.hash", extconfig.BuildHash)
 	})
+}
+
+func (i *Instance) stopSentry() {
+	sentry.Flush(2 * time.Second)
 }

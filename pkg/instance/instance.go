@@ -6,7 +6,6 @@ import (
 	"errors"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/getsentry/sentry-go"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -357,5 +356,6 @@ func (i *Instance) Stop() {
 		i.etcd.Stop()
 	}
 	i.rootContextCancel(ErrInstanceStopping)
-	sentry.Flush(2 * time.Second)
+	i.stopSentry()
+	i.stopPyroscope()
 }
