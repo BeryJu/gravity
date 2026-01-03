@@ -1,0 +1,21 @@
+---
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    networks:
+      default:
+        ipv4_address: 10.200.0.7
+  coredns:
+    volumes:
+      - ../hack/tests/coredns/Corefile:/etc/coredns/Corefile
+  nginx:
+    volumes:
+      - ../hack/tests/nginx:/usr/share/nginx/html
+  dex:
+    volumes:
+      - ../hack/tests/dex/config.yml:/config/config.yml

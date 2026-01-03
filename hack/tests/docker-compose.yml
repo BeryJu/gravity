@@ -19,7 +19,7 @@ services:
     command: |
       /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2385 --advertise-client-urls http://127.0.0.1:2385
   minio:
-    image: minio/minio
+    image: docker.io/minio/minio
     ports:
       - 9001:9000
       - 9002:9001

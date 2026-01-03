@@ -1,0 +1,56 @@
+{
+  "name": "Gravity",
+  "dockerComposeFile": [
+    "docker-compose.yml",
+    "../hack/tests/docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go"
+      ],
+      "settings": {
+        "go.testEnvVars": {
+          "BOOTSTRAP_ROLES": "dns;dhcp;api;discovery;backup;monitoring;tsdb;tftp",
+          "ETCD_ENDPOINT": "localhost:2385",
+          "DEBUG": "true",
+          "INSTANCE_IP": "0.0.0.0",
+          "CI": "true"
+        },
+        "gopls": {
+          "build.buildFlags": ["-tags=e2e,debug"]
+        },
+        "go.testFlags": [
+          "-count=1",
+          "-failfast",
+          "-shuffle=on",
+          "-v",
+          "-covermode=atomic"
+        ],
+        "go.coverOnSingleTestFile": true,
+        "go.testTags": "e2e,debug",
+        "go.testTimeout": "300s",
+        "go.coverOnSingleTest": true,
+        "go.coverOnTestPackage": true,
+        "gitlens.autolinks": [
+          {
+            "alphanumeric": true,
+            "prefix": "#<num>",
+            "url": "https://github.com/beryju/gravity/issues/<num>",
+            "ignoreCase": false
+          }
+        ],
+        "typescript.preferences.importModuleSpecifier": "non-relative",
+        "typescript.preferences.importModuleSpecifierEnding": "index",
+        "typescript.tsdk": "./web/node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true
+      }
+    }
+  }
+}
