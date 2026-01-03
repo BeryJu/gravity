@@ -32,9 +32,17 @@ type ExtConfig struct {
 	FallbackDNS    string   `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 	ImportConfigs  []string `env:"IMPORT_CONFIGS"`
 
-	Sentry struct {
-		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
-		Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+	Observability struct {
+		Sentry struct {
+			Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+			DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
+		}
+		Pyroscope struct {
+			Enabled  bool   `env:"PYROSCOPE_ENABLED,default=false"`
+			Server   string `env:"PYROSCOPE_SERVER"`
+			Username string `env:"PYROSCOPE_USERNAME"`
+			Password string `env:"PYROSCOPE_PASSWORD"`
+		}
 	}
 
 	Debug          bool `env:"DEBUG,default=false"`
