@@ -24,7 +24,7 @@ func (i *Instance) startSentry() {
 		TracesSampleRate: rate,
 		HTTPTransport:    extconfig.NewUserAgentTransport(release, extconfig.Transport()),
 		Debug:            extconfig.Get().Debug,
-		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
+		DebugWriter:      NewSentryWriter(i.log.Named("o11y.sentry")),
 	})
 	if err != nil {
 		i.log.Warn("failed to init sentry", zap.Error(err))

@@ -21,7 +21,7 @@ func (i *Instance) startPyroscope() {
 		ServerAddress:     extconfig.Get().Observability.Pyroscope.Server,
 		BasicAuthUser:     extconfig.Get().Observability.Pyroscope.Username,
 		BasicAuthPassword: extconfig.Get().Observability.Pyroscope.Password,
-		Logger:            i.log.Sugar(),
+		Logger:            i.log.Named("o11y.pyroscope").Sugar(),
 		Tags: map[string]string{
 			"gravity_instance":   extconfig.Get().Instance.Identifier,
 			"gravity_version":    extconfig.Version,
