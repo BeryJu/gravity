@@ -41,7 +41,6 @@ func TestIPAMInternal_NextFreeAddress(t *testing.T) {
 }
 
 func TestIPAMInternal_NextFreeAddress_UniqueParallel(t *testing.T) {
-	t.Skip()
 	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
