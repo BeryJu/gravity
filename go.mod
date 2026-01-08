@@ -27,7 +27,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/grafana/pyroscope-go v1.2.7
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
-	github.com/k8s-gateway/k8s_gateway v1.6.1
+	github.com/k8s-gateway/k8s_gateway v1.6.2
 	github.com/miekg/dns v1.1.69
 	github.com/minio/minio-go/v7 v7.0.97
 	github.com/netdata/go.d.plugin v0.58.1
@@ -95,7 +95,7 @@ require (
 	github.com/DataDog/go-sqllexer v0.1.8 // indirect
 	github.com/DataDog/go-tuf v1.1.1-0.5.2 // indirect
 	github.com/DataDog/sketches-go v1.4.7 // indirect
-	github.com/F5Networks/k8s-bigip-ctlr/v2 v2.20.1 // indirect
+	github.com/F5Networks/k8s-bigip-ctlr/v2 v2.20.2 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ThinkChaos/parcour v0.0.0-20230710171753-fbf917c9eaef // indirect
@@ -263,7 +263,7 @@ require (
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
-	github.com/projectcontour/contour v1.32.1 // indirect
+	github.com/projectcontour/contour v1.33.0 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.67.4 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect
@@ -339,19 +339,19 @@ require (
 	gorm.io/driver/mysql v1.6.0 // indirect
 	gorm.io/driver/postgres v1.6.0 // indirect
 	gorm.io/gorm v1.31.1 // indirect
-	istio.io/api v1.27.0 // indirect
-	istio.io/client-go v1.27.0 // indirect
-	k8s.io/api v0.34.3 // indirect
-	k8s.io/apiextensions-apiserver v0.34.1 // indirect
-	k8s.io/apimachinery v0.34.3 // indirect
-	k8s.io/client-go v0.34.3 // indirect
+	istio.io/api v1.28.0 // indirect
+	istio.io/client-go v1.28.0 // indirect
+	k8s.io/api v0.35.0 // indirect
+	k8s.io/apiextensions-apiserver v0.35.0 // indirect
+	k8s.io/apimachinery v0.35.0 // indirect
+	k8s.io/client-go v0.35.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20250814151709-d7b6acb124c3 // indirect
-	k8s.io/utils v0.0.0-20250820121507-0af2bda4dd1d // indirect
+	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
+	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
 	mvdan.cc/gofumpt v0.9.1 // indirect
-	sigs.k8s.io/controller-runtime v0.22.1 // indirect
-	sigs.k8s.io/external-dns v0.19.0 // indirect
-	sigs.k8s.io/gateway-api v1.4.0 // indirect
+	sigs.k8s.io/controller-runtime v0.22.4 // indirect
+	sigs.k8s.io/external-dns v0.20.0 // indirect
+	sigs.k8s.io/gateway-api v1.4.1 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/mcs-api v0.3.0 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
