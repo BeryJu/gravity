@@ -3,20 +3,22 @@ package auth
 import (
 	"net/http"
 	"strings"
+
+	"beryju.io/gravity/pkg/roles/api/types"
 )
 
 const wildcard = "*"
 
-func (ap *AuthProvider) checkPermission(req *http.Request, u User) bool {
-	var longestMatch *Permission
+func (ap *AuthProvider) checkPermission(req *http.Request, u *types.User) bool {
+	var longestMatch *types.Permission
 	for _, perm := range u.Permissions {
 		if strings.HasSuffix(perm.Path, wildcard) && strings.HasPrefix(req.URL.Path, strings.TrimSuffix(perm.Path, wildcard)) {
 			if longestMatch == nil || len(perm.Path) > len(longestMatch.Path) {
-				longestMatch = &perm
+				longestMatch = perm
 			}
 		} else if perm.Path == req.URL.Path {
 			if longestMatch == nil || len(perm.Path) > len(longestMatch.Path) {
-				longestMatch = &perm
+				longestMatch = perm
 			}
 		}
 	}
