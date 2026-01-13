@@ -34,7 +34,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     send = (data: DhcpAPIScope): Promise<void> => {
         if (data.ipam) {
             data.ipam.type = "internal";
-            Object.keys(data.ipam).map(key => {
+            Object.keys(data.ipam).map((key) => {
                 data.ipam![key] = key.toString();
             });
         }
