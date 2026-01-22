@@ -46,7 +46,7 @@
         "lit": "^3.3.2",
         "prettier": "^3.8.0",
         "rapidoc": "^9.3.8",
-        "rollup": "^4.55.2",
+        "rollup": "^4.55.3",
         "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-cssimport": "^1.0.3",
         "rollup-plugin-esbuild": "^6.2.1",
