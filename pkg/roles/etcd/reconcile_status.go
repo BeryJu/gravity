@@ -59,6 +59,12 @@ func (lcr *LeaderClusterReconciler) ClusterStatus(ctx context.Context) (*Cluster
 			extconfig.Get().Debug,
 			nonLocalhost,
 		)
+		defer func() {
+			err := c.Close()
+			if err != nil {
+				lcr.log.Warn("failed to close etcd client", zap.Error(err))
+			}
+		}()
 		st, err := c.Status(ctx, nonLocalhost)
 		if err != nil {
 			cst.Healthy = err
