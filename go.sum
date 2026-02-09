@@ -817,8 +817,8 @@ github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfV
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/k8s-gateway/k8s_gateway v1.6.2 h1:JnzkFO8yVV+PoTICII98U0iG066H47rqn9eCP4mRMi4=
-github.com/k8s-gateway/k8s_gateway v1.6.2/go.mod h1:q9+n7xBpMtM4lh2pWJSX/5LaZKlnuff7+UnIgddVr2o=
+github.com/k8s-gateway/k8s_gateway v1.6.3 h1:jeD4n0y8+kftohnlSQME0ZNGoJzPnYp8kXx/a0NdtEw=
+github.com/k8s-gateway/k8s_gateway v1.6.3/go.mod h1:zHDrP3NuCejqSQ9m+UwBDCIExYnGPDuHWvrNwGmMBos=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
