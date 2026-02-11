@@ -26,7 +26,7 @@ RUN apt-get update && \
     make internal/resources/macoui internal/resources/blocky internal/resources/tftp
 
 # Stage 3: Build
-FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.25 AS builder
+FROM --platform=${BUILDPLATFORM} docker.io/library/golang:1.26 AS builder
 
 ARG GIT_BUILD_HASH
 ARG TARGETARCH
