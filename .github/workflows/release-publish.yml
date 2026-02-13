@@ -38,7 +38,7 @@ jobs:
             latest=false
           tags: |
             type=raw,value=v${{ steps.vars.outputs.version }}
-      - uses: docker/build-push-action@601a80b39c9405e50806ae38af30926f9d957c47 # v6.19.1
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         id: push
         with:
           tags: |
@@ -58,7 +58,7 @@ jobs:
           subject-name: ghcr.io/beryju/gravity
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-      - uses: docker/build-push-action@601a80b39c9405e50806ae38af30926f9d957c47 # v6.19.1
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         id: push-external-dns
         with:
           tags: |
