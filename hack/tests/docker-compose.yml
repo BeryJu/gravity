@@ -10,7 +10,7 @@ networks:
 
 services:
   etcd:
-    image: quay.io/coreos/etcd:v3.6.7
+    image: quay.io/coreos/etcd:v3.6.8
     ports:
       - 2385:2385
     networks:
