@@ -62,12 +62,11 @@ type APITokensPutOutput struct {
 
 func (ap *AuthProvider) APITokensPut() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APITokensPutInput, output *APITokensPutOutput) error {
-		token := &Token{
+		token := &types.Token{
 			Key:      base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64)),
 			Username: input.Username,
-			ap:       ap,
 		}
-		err := token.put(ctx)
+		err := ap.putToken(token, ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

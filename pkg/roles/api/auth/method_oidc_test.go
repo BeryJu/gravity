@@ -87,7 +87,7 @@ func TestAuthOIDC_Token(t *testing.T) {
 			types.KeyUsers,
 			"admin@example.com",
 		).String(),
-		tests.MustJSON(auth.User{}),
+		string(tests.MustProto(&types.User{})),
 	))
 
 	role := api.New(inst)
