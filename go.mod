@@ -27,7 +27,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/grafana/pyroscope-go v1.2.7
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
-	github.com/k8s-gateway/k8s_gateway v1.6.3
+	github.com/k8s-gateway/k8s_gateway v1.6.4
 	github.com/miekg/dns v1.1.72
 	github.com/minio/minio-go/v7 v7.0.98
 	github.com/netdata/go.d.plugin v0.58.1
@@ -341,10 +341,10 @@ require (
 	gorm.io/gorm v1.31.1 // indirect
 	istio.io/api v1.28.0 // indirect
 	istio.io/client-go v1.28.0 // indirect
-	k8s.io/api v0.35.0 // indirect
-	k8s.io/apiextensions-apiserver v0.35.0 // indirect
-	k8s.io/apimachinery v0.35.0 // indirect
-	k8s.io/client-go v0.35.0 // indirect
+	k8s.io/api v0.35.1 // indirect
+	k8s.io/apiextensions-apiserver v0.35.1 // indirect
+	k8s.io/apimachinery v0.35.1 // indirect
+	k8s.io/client-go v0.35.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
