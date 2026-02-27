@@ -52,7 +52,7 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@e4d4f7c39adfa4c260fb5c147f0622000aa14b99 # v3
+      - uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           subject-name: ghcr.io/beryju/gravity-external-dns
