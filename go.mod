@@ -18,7 +18,7 @@ require (
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
 	github.com/felixge/fgprof v0.9.5
 	github.com/getsentry/sentry-go v0.43.0
-	github.com/go-delve/delve v1.26.0
+	github.com/go-delve/delve v1.26.1
 	github.com/google/gopacket v1.1.19
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
