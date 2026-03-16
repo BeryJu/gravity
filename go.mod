@@ -27,7 +27,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/grafana/pyroscope-go v1.2.7
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
-	github.com/k8s-gateway/k8s_gateway v1.6.4
+	github.com/k8s-gateway/k8s_gateway v1.7.0
 	github.com/miekg/dns v1.1.72
 	github.com/minio/minio-go/v7 v7.0.99
 	github.com/netdata/go.d.plugin v0.58.1
@@ -345,7 +345,7 @@ require (
 	istio.io/api v1.28.0 // indirect
 	istio.io/client-go v1.28.0 // indirect
 	k8s.io/api v0.35.2 // indirect
-	k8s.io/apiextensions-apiserver v0.35.1 // indirect
+	k8s.io/apiextensions-apiserver v0.35.2 // indirect
 	k8s.io/apimachinery v0.35.2 // indirect
 	k8s.io/client-go v0.35.2 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
