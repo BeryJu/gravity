@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/api/types"
@@ -10,49 +9,26 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-type Permission struct {
-	Path    string   `json:"path"`
-	Methods []string `json:"methods"`
-}
-
-type User struct {
-	ap *AuthProvider
-
-	Username    string       `json:"-"`
-	Password    string       `json:"password"`
-	Permissions []Permission `json:"permissions"`
-}
-
-func (u *User) String() string {
-	return u.Username
-}
-
-func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*User, error) {
-	user := &User{
-		ap: ap,
-	}
+func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*types.User, error) {
+	user := &types.User{}
 	prefix := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyUsers,
 	).Prefix(true).String()
-	user.Username = strings.TrimPrefix(string(raw.Key), prefix)
-	err := json.Unmarshal(raw.Value, &user)
+	err := ap.inst.KV().Unmarshal(raw.Value, user)
 	if err != nil {
 		return user, err
 	}
+	user.Username = strings.TrimPrefix(string(raw.Key), prefix)
 	return user, nil
 }
 
-func (u *User) put(ctx context.Context, opts ...clientv3.OpOption) error {
-	raw, err := json.Marshal(&u)
-	if err != nil {
-		return err
-	}
-	fullKey := u.ap.inst.KV().Key(
+func (ap *AuthProvider) putUser(u *types.User, ctx context.Context, opts ...clientv3.OpOption) error {
+	fullKey := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyUsers,
 		u.Username,
 	).String()
-	_, err = u.ap.inst.KV().Put(ctx, fullKey, string(raw), opts...)
+	_, err := ap.inst.KV().PutObj(ctx, fullKey, u, opts...)
 	return err
 }

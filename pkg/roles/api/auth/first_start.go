@@ -7,6 +7,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
+	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/securecookie"
 	"go.uber.org/zap"
 )
@@ -36,12 +37,11 @@ func (ap *AuthProvider) FirstStart(ev *roles.Event) {
 
 	token := os.Getenv("ADMIN_TOKEN")
 	if token != "" {
-		t := Token{
+		t := &types.Token{
 			Key:      token,
 			Username: username,
-			ap:       ap,
 		}
-		err := t.put(ev.Context)
+		err := ap.putToken(t, ev.Context)
 		if err != nil {
 			ap.log.Warn("failed to create bootstrap token", zap.Error(err))
 			return

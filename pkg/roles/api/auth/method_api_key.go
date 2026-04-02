@@ -62,6 +62,6 @@ func (ap *AuthProvider) checkStaticToken(r *http.Request) bool {
 		return false
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	session.Values[types.SessionKeyUser] = *user
+	session.Values[types.SessionKeyUser] = user
 	return false
 }
