@@ -29,7 +29,7 @@ require (
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
 	github.com/k8s-gateway/k8s_gateway v1.7.0
 	github.com/miekg/dns v1.1.72
-	github.com/minio/minio-go/v7 v7.0.99
+	github.com/minio/minio-go/v7 v7.0.100
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/pin/tftp/v3 v3.2.0
 	github.com/pkg/errors v0.9.1
