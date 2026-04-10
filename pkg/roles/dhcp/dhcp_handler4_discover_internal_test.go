@@ -4,28 +4,24 @@ import (
 	"testing"
 	"time"
 
-	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
-	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
-	tests.Setup(t)
-	rootInst := instance.New()
-	ctx := tests.Context()
-	inst := rootInst.ForRole("dhcp", ctx)
+	ctx := setupDHCPInternalTest(t)
+	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	tests.PanicIfError(inst.KV().Put(
+	panicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		tests.MustJSON(Scope{
+		mustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -37,7 +33,7 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 		}),
 	))
 
-	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{
+	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{
 		Port:                  0,
 		LeaseNegotiateTimeout: 30,
 	}))))
@@ -51,7 +47,7 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 	lease.scope = scope
 	lease.ScopeKey = scope.Name
 	lease.Address = "10.100.0.100"
-	tests.PanicIfError(lease.Put(ctx, 3600))
+	panicIfError(lease.Put(ctx, 3600))
 
 	assert.Eventually(t, func() bool {
 		match, ok := role.leases.GetPrefix(lease.Identifier)
