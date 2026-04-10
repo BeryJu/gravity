@@ -47,6 +47,10 @@ func (r *Role) FindLease(req *Request4) *Lease {
 	if !ok {
 		return nil
 	}
+	return r.ensureLeaseScope(req, lease)
+}
+
+func (r *Role) ensureLeaseScope(req *Request4, lease *Lease) *Lease {
 	// Check if the leases's scope matches the expected scope to handle this request
 	expectedScope := r.findScopeForRequest(req)
 	if expectedScope != nil && lease.scope != expectedScope {
@@ -61,6 +65,28 @@ func (r *Role) FindLease(req *Request4) *Lease {
 		}
 	}
 	return lease
+}
+
+func (r *Role) FindLeaseInStore(req *Request4) *Lease {
+	leaseKey := r.i.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		r.DeviceIdentifier(req.DHCPv4),
+	)
+	res, err := r.i.KV().Get(req.Context, leaseKey.String())
+	if err != nil {
+		r.log.Warn("failed to fetch lease from store", zap.Error(err))
+		return nil
+	}
+	if len(res.Kvs) < 1 {
+		return nil
+	}
+	lease, err := r.leaseFromKV(res.Kvs[0])
+	if err != nil {
+		r.log.Warn("failed to parse lease from store", zap.Error(err))
+		return nil
+	}
+	return r.ensureLeaseScope(req, lease)
 }
 
 func (r *Role) NewLease(identifier string) *Lease {
@@ -142,7 +168,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
-	raw, err := json.Marshal(&l)
+	raw, err := json.Marshal(l)
 	if err != nil {
 		return err
 	}
@@ -161,6 +187,73 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	if err != nil {
 		return err
 	}
+
+	l.afterPut(ctx, expiry, opts...)
+	return nil
+}
+
+func (r *Role) CreateLeaseIfAbsent(ctx context.Context, lease *Lease, expiry int64) (*Lease, bool, error) {
+	opts := []clientv3.OpOption{}
+	var leaseGrant *clientv3.LeaseGrantResponse
+	var err error
+	if expiry > 0 && !lease.IsReservation() {
+		lease.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
+
+		leaseGrant, err = lease.inst.KV().Grant(ctx, expiry)
+		if err != nil {
+			return nil, false, err
+		}
+		opts = append(opts, clientv3.WithLease(leaseGrant.ID))
+	}
+
+	raw, err := json.Marshal(lease)
+	if err != nil {
+		return nil, false, err
+	}
+
+	leaseKey := lease.inst.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		lease.Identifier,
+	)
+	res, err := lease.inst.KV().Txn(ctx).
+		If(clientv3.Compare(clientv3.CreateRevision(leaseKey.String()), "=", 0)).
+		Then(clientv3.OpPut(leaseKey.String(), string(raw), opts...)).
+		Else(clientv3.OpGet(leaseKey.String())).
+		Commit()
+	if err != nil {
+		return nil, false, err
+	}
+	if res.Succeeded {
+		lease.afterPut(ctx, expiry, opts...)
+		return lease, true, nil
+	}
+	if leaseGrant != nil {
+		_, err := lease.inst.KV().Revoke(ctx, leaseGrant.ID)
+		if err != nil {
+			lease.log.Warn("failed to revoke unused lease grant", zap.Error(err))
+		}
+	}
+	if len(res.Responses) < 1 {
+		return nil, false, nil
+	}
+	rangeResp := res.Responses[0].GetResponseRange()
+	if rangeResp == nil || len(rangeResp.Kvs) < 1 {
+		return nil, false, nil
+	}
+	existing, err := r.leaseFromKV(rangeResp.Kvs[0])
+	if err != nil {
+		return nil, false, err
+	}
+	return existing, false, nil
+}
+
+func (l *Lease) afterPut(ctx context.Context, expiry int64, opts ...clientv3.OpOption) {
+	leaseKey := l.inst.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		l.Identifier,
+	)
 
 	var zone string
 	if l.scope != nil && l.scope.DNS != nil {
@@ -185,7 +278,6 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 
 	l.log.Debug("put lease", zap.Int64("expiry", expiry))
 	go l.scope.calculateUsage()
-	return nil
 }
 
 func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
