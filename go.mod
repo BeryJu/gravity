@@ -14,7 +14,6 @@ require (
 	github.com/coredns/coredns v1.14.2
 	github.com/coreos/go-oidc/v3 v3.18.0
 	github.com/creasty/defaults v1.8.0
-	github.com/docker/docker v28.5.2+incompatible
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
 	github.com/felixge/fgprof v0.9.5
 	github.com/getsentry/sentry-go v0.44.1
@@ -30,6 +29,7 @@ require (
 	github.com/k8s-gateway/k8s_gateway v1.7.0
 	github.com/miekg/dns v1.1.72
 	github.com/minio/minio-go/v7 v7.0.100
+	github.com/moby/moby/api v1.54.1
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/pin/tftp/v3 v3.2.0
 	github.com/pkg/errors v0.9.1
@@ -234,7 +234,6 @@ require (
 	github.com/mitchellh/mapstructure v1.5.1-0.20231216201459-8508981c8b6c // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/go-archive v0.2.0 // indirect
-	github.com/moby/moby/api v1.54.1 // indirect
 	github.com/moby/moby/client v0.4.0 // indirect
 	github.com/moby/patternmatcher v0.6.1 // indirect
 	github.com/moby/sys/sequential v0.6.0 // indirect
