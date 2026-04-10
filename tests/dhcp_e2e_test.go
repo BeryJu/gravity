@@ -4,15 +4,16 @@ package tests
 
 import (
 	"fmt"
+	"net/netip"
 	"sync"
 	"testing"
 	"time"
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/tests/gravity"
-	"github.com/docker/docker/api/types/container"
-	dockernetwork "github.com/docker/docker/api/types/network"
-	"github.com/docker/docker/api/types/strslice"
+	"github.com/moby/moby/api/types/container"
+	mobynetwork "github.com/moby/moby/api/types/network"
+	"github.com/moby/moby/api/types/strslice"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/network"
@@ -23,11 +24,11 @@ func TestDHCP_Simple(t *testing.T) {
 
 	net, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/24",
+					Subnet: netip.MustParsePrefix("10.100.0.0/24"),
 				},
 			},
 		}),
@@ -91,11 +92,11 @@ func TestDHCP_Parallel(t *testing.T) {
 
 	net, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/24",
+					Subnet: netip.MustParsePrefix("10.100.0.0/24"),
 				},
 			},
 		}),
@@ -162,11 +163,11 @@ func TestDHCP_Relay(t *testing.T) {
 
 	netA, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/24",
+					Subnet: netip.MustParsePrefix("10.100.0.0/24"),
 				},
 			},
 		}),
@@ -177,11 +178,11 @@ func TestDHCP_Relay(t *testing.T) {
 
 	netB, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.101.0.0/24",
+					Subnet: netip.MustParsePrefix("10.101.0.0/24"),
 				},
 			},
 		}),
@@ -279,11 +280,11 @@ func TestDHCP_WOL(t *testing.T) {
 
 	net, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/24",
+					Subnet: netip.MustParsePrefix("10.100.0.0/24"),
 				},
 			},
 		}),
@@ -363,11 +364,11 @@ func TestDHCP_RequestSpecific(t *testing.T) {
 
 	net, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/24",
+					Subnet: netip.MustParsePrefix("10.100.0.0/24"),
 				},
 			},
 		}),
