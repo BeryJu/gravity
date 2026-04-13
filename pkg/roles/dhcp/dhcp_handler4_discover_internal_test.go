@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
+	"beryju.io/gravity/pkg/storage/watcher"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
+	"go.etcd.io/etcd/api/v3/mvccpb"
 )
 
 func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
@@ -54,9 +56,16 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 		return ok && match != nil && match.Address == lease.Address
 	}, time.Second, 10*time.Millisecond)
 
-	role.leases.mutex.Lock()
-	role.leases.entries = map[string]*Lease{}
-	role.leases.mutex.Unlock()
+	role.leases = watcher.New(
+		func(kv *mvccpb.KeyValue) (*Lease, error) {
+			return role.leaseFromKV(kv)
+		},
+		inst.KV(),
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+		).Prefix(true),
+	)
 
 	req := &dhcpv4.DHCPv4{
 		OpCode:       dhcpv4.OpcodeBootRequest,

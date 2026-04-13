@@ -26,7 +26,7 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
-		match = r.ensureLeaseScope(req, match)
+		r.ensureLeaseScope(req, match)
 	}
 
 	err := match.Put(req.Context, match.scope.TTL)
