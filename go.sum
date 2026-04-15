@@ -232,8 +232,8 @@ github.com/blang/semver v3.5.0+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnweb
 github.com/bmatcuk/doublestar v1.1.1/go.mod h1:UD6OnuiIn0yFxxA2le/rnRU1G4RaI4UvFv1sNto9p6w=
 github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869/go.mod h1:Ekp36dRnpXw/yCqJaO+ZrUyxD+3VXMFFr56k5XYrpB4=
 github.com/bool64/dev v0.2.25/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
-github.com/bool64/dev v0.2.40 h1:LUSD+Aq+WB3KwVntqXstevJ0wB12ig1bEgoG8ZafsZU=
-github.com/bool64/dev v0.2.40/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
+github.com/bool64/dev v0.2.43 h1:yQ7qiZVef6WtCl2vDYU0Y+qSq+0aBrQzY8KXkklk9cQ=
+github.com/bool64/dev v0.2.43/go.mod h1:iJbh1y/HkunEPhgebWRNcs8wfGq7sjvJ6W5iabL8ACg=
 github.com/bool64/shared v0.1.5 h1:fp3eUhBsrSjNCQPcSdQqZxxh9bBwrYiZ+zOKFkM0/2E=
 github.com/bool64/shared v0.1.5/go.mod h1:081yz68YC9jeFB3+Bbmno2RFWvGKv1lPKkMP6MHJlPs=
 github.com/bshuster-repo/logrus-logstash-hook v0.4.1/go.mod h1:zsTqEiSzDgAa/8GZR7E1qaXrhYNDKBYy5/dWPTIflbk=
@@ -1283,8 +1283,8 @@ github.com/swaggest/form/v5 v5.1.1 h1:ct6/rOQBGrqWUQ0FUv3vW5sHvTUb31AwTUWj947N6c
 github.com/swaggest/form/v5 v5.1.1/go.mod h1:X1hraaoONee20PMnGNLQpO32f9zbQ0Czfm7iZThuEKg=
 github.com/swaggest/jsonschema-go v0.3.78 h1:5+YFQrLxOR8z6CHvgtZc42WRy/Q9zRQQ4HoAxlinlHw=
 github.com/swaggest/jsonschema-go v0.3.78/go.mod h1:4nniXBuE+FIGkOGuidjOINMH7OEqZK3HCSbfDuLRI0g=
-github.com/swaggest/openapi-go v0.2.60 h1:kglHH/WIfqAglfuWL4tu0LPakqNYySzklUWx06SjSKo=
-github.com/swaggest/openapi-go v0.2.60/go.mod h1:jmFOuYdsWGtHU0BOuILlHZQJxLqHiAE6en+baE+QQUk=
+github.com/swaggest/openapi-go v0.2.61 h1:psc+LE7pWhEjmJpmkti9tUmBPkkobdUNflBf5Ps6JSc=
+github.com/swaggest/openapi-go v0.2.61/go.mod h1:786CwSwleh1IorB0nfwYGESWf83JgQh6fBc1PeJe4Iw=
 github.com/swaggest/refl v1.4.0 h1:CftOSdTqRqs100xpFOT/Rifss5xBV/CT0S/FN60Xe9k=
 github.com/swaggest/refl v1.4.0/go.mod h1:4uUVFVfPJ0NSX9FPwMPspeHos9wPFlCMGoPRllUbpvA=
 github.com/swaggest/rest v0.2.75 h1:MW9zZ3d0kduJ2KdWnSYZIIrZJ1v3Kg+S7QZrDCZcXws=
