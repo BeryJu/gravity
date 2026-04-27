@@ -28,7 +28,7 @@ require (
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
 	github.com/k8s-gateway/k8s_gateway v1.8.0
 	github.com/miekg/dns v1.1.72
-	github.com/minio/minio-go/v7 v7.0.100
+	github.com/minio/minio-go/v7 v7.1.0
 	github.com/moby/moby/api v1.54.2
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/pin/tftp/v3 v3.2.0
@@ -301,6 +301,7 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xiang90/probing v0.0.0-20221125231312-a49e3df8f510 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
+	github.com/zeebo/xxh3 v1.1.0 // indirect
 	go.etcd.io/bbolt v1.4.3 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.6.10 // indirect
 	go.etcd.io/etcd/pkg/v3 v3.6.10 // indirect
