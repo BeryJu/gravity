@@ -18,6 +18,15 @@ func (r *Role) HandleDHCPRequest4(req *Request4) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
+		match, _, err := r.CreateLeaseIfAbsent(req.Context, match, match.scope.TTL)
+		if err != nil {
+			req.log.Warn("failed to create dhcp lease", zap.Error(err))
+			return nil
+		}
+		if match == nil {
+			return nil
+		}
+		r.ensureLeaseScope(req, match)
 	}
 
 	err := match.Put(req.Context, match.scope.TTL)

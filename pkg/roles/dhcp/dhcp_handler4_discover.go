@@ -18,9 +18,15 @@ func (r *Role) HandleDHCPDiscover4(req *Request4) *dhcpv4.DHCPv4 {
 		if match == nil {
 			return nil
 		}
-		err := match.Put(req.Context, int64(r.cfg.LeaseNegotiateTimeout))
+		match, created, err := r.CreateLeaseIfAbsent(req.Context, match, int64(r.cfg.LeaseNegotiateTimeout))
 		if err != nil {
 			req.log.Warn("failed to update lease during discover creation", zap.Error(err))
+		}
+		if match == nil {
+			return nil
+		}
+		if !created {
+			r.ensureLeaseScope(req, match)
 		}
 	} else {
 		err := match.Put(req.Context, match.scope.TTL)
