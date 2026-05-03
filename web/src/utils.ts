@@ -1,4 +1,4 @@
-import { AbstractIPNum, IPv4, IPv6 } from "ip-num";
+import { AbstractIPNum, IPv4, IPv4CidrRange, IPv6, IPv6CidrRange } from "ip-num";
 
 import { PaginatedResponse } from "./elements/table/Table";
 
@@ -127,4 +127,33 @@ export function formatElapsedTime(d1: Date, d2: Date = new Date()): string {
         }
     }
     return rtf.format(Math.round(elapsed / 1000), "second");
+}
+
+export function subnetToDnsZone(subnet: IPv4CidrRange | IPv6CidrRange) {
+    const prefix = Number(subnet.cidrPrefix.value);
+    if (subnet instanceof IPv4CidrRange) {
+        // IPv4 reverse zone
+        const octets = subnet.getFirst().toString().split(".").map(Number);
+
+        if (prefix % 8 !== 0) {
+            throw new Error("IPv4 prefix must be a multiple of 8 for a zone name.");
+        }
+
+        const octetCount = prefix / 8;
+        const reversed = octets.slice(0, octetCount).reverse().join(".");
+        return `${reversed}.in-addr.arpa`;
+    } else if (subnet instanceof IPv6CidrRange) {
+        // IPv6 reverse zone
+        const expanded = subnet.getPrefix().toString().replace(/:/g, "");
+        const nibbleCount = prefix / 4;
+
+        if (prefix % 4 !== 0) {
+            throw new Error("IPv6 prefix must be a multiple of 4 for a zone name.");
+        }
+
+        const nibbles = expanded.slice(0, nibbleCount).split("").reverse().join(".");
+        return `${nibbles}.ip6.arpa`;
+    }
+
+    throw new Error("Invalid IP address format.");
 }
