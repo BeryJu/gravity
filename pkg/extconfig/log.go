@@ -28,6 +28,7 @@ func (e *ExtConfig) LogLevelFor(role string) zapcore.Level {
 	if role == "root" {
 		rawLevel = strings.SplitN(e.LogLevel, ",", 2)[0]
 	} else {
+		found := false
 		for _, pair := range strings.Split(e.LogLevel, ",") {
 			if !strings.Contains(pair, "=") {
 				continue
@@ -35,7 +36,12 @@ func (e *ExtConfig) LogLevelFor(role string) zapcore.Level {
 			kv := strings.SplitN(pair, "=", 2)
 			if kv[0] == role {
 				rawLevel = kv[1]
+				found = true
 			}
+		}
+		// When no role-specific level is configured, fall back to root level
+		if !found && !e.Debug {
+			return e.LogLevelFor("root")
 		}
 	}
 	l, err := zapcore.ParseLevel(rawLevel)
