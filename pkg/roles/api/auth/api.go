@@ -43,7 +43,7 @@ func (ap *AuthProvider) APIMe() usecase.Interactor {
 			output.Authenticated = false
 			return nil
 		}
-		user := u.(types.User)
+		user := u.(*types.User)
 		output.Authenticated = true
 		output.Username = user.Username
 		output.Permissions = user.Permissions

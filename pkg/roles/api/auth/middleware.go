@@ -34,7 +34,7 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
-	uu := u.(types.User)
+	uu := u.(*types.User)
 	hub.Scope().SetUser(sentry.User{
 		Username: uu.Username,
 	})

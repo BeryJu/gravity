@@ -9,7 +9,7 @@ import (
 
 const wildcard = "*"
 
-func (ap *AuthProvider) checkPermission(req *http.Request, u types.User) bool {
+func (ap *AuthProvider) checkPermission(req *http.Request, u *types.User) bool {
 	var longestMatch *types.Permission
 	for _, perm := range u.Permissions {
 		if strings.HasSuffix(perm.Path, wildcard) && strings.HasPrefix(req.URL.Path, strings.TrimSuffix(perm.Path, wildcard)) {

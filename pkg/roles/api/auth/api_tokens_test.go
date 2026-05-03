@@ -60,6 +60,7 @@ func TestAPITokensPut(t *testing.T) {
 		),
 		&types.Token{
 			Username: name,
+			Key:      output.Key,
 		},
 	)
 }

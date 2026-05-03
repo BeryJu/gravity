@@ -112,7 +112,7 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		session := se.(*sessions.Session)
 		u, ok := session.Values[types.SessionKeyUser]
 		if ok && u != nil {
-			if uu, castOk := u.(types.User); castOk {
+			if uu, castOk := u.(*types.User); castOk {
 				fields = append(fields, zap.String("user", uu.Username))
 			}
 		}
