@@ -6,7 +6,6 @@ import { ifDefined } from "lit/directives/if-defined.js";
 
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
 import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
-import PFSplit from "@patternfly/patternfly/layouts/Split/split.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/DeleteBulkForm";
@@ -49,7 +48,6 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     static get styles(): CSSResult[] {
         return super.styles.concat(
             PFCard,
-            PFSplit,
             PFDescriptionList,
             css`
                 .pf-c-sidebar__content {

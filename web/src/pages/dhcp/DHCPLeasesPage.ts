@@ -1,7 +1,10 @@
-import { DhcpAPILease, RolesDhcpApi } from "gravity-api";
+import { DhcpAPILease, DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
-import { TemplateResult, html, nothing } from "lit";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
 
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { MessageLevel } from "../../common/messages";
@@ -13,11 +16,15 @@ import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper, firstElement, formatElapsedTime, ip, sortByIP } from "../../utils";
 import "./DHCPLeaseForm";
+import "./DHCPScopeForm";
 
 @customElement("gravity-dhcp-leases")
 export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
     @property()
     scope = "";
+
+    @state()
+    _scope?: DhcpAPIScope;
 
     @state()
     nextAddress?: string;
@@ -37,7 +44,27 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         return true;
     }
 
+    static get styles(): CSSResult[] {
+        return super.styles.concat(
+            PFCard,
+            PFDescriptionList,
+            css`
+                .pf-c-sidebar__content {
+                    background-color: transparent;
+                }
+                .pf-c-sidebar__panel {
+                    position: sticky;
+                    top: calc(var(--navbar-height) + var(--pf-global--spacer--lg));
+                }
+            `,
+        );
+    }
+
     async apiEndpoint(): Promise<PaginatedResponse<DhcpAPILease>> {
+        const scope = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
+            name: this.scope,
+        });
+        this._scope = scope.scopes![0];
         const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({
             scope: this.scope,
         });
@@ -86,6 +113,73 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             new TableColumn("Expiry"),
             new TableColumn("Actions"),
         ];
+    }
+
+    renderSidebarBefore() {
+        return html`<div class="pf-c-sidebar__panel">
+            <div class="pf-c-card">
+                <div class="pf-c-card__title">Scope details</div>
+                <div class="pf-c-card__body">
+                    <dl class="pf-c-description-list">
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Scope name</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">${this.scope}</div>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">CIDR</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">
+                                    ${this._scope?.subnetCidr}
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">DNS</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <a
+                                    class="pf-c-description-list__text"
+                                    href=${`#/dns/zones/${this._scope?.dns?.zone}.`}
+                                >
+                                    ${this._scope?.dns?.zone}
+                                </a>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Related actions</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">
+                                    <ak-forms-modal>
+                                        <span slot="submit"> ${"Update"} </span>
+                                        <span slot="header"> ${"Update Scope"} </span>
+                                        <gravity-dhcp-scope-form
+                                            slot="form"
+                                            .instancePk=${this.scope}
+                                        >
+                                        </gravity-dhcp-scope-form>
+                                        <button
+                                            slot="trigger"
+                                            class="pf-c-button pf-m-primary pf-m-block"
+                                        >
+                                            Edit
+                                        </button>
+                                    </ak-forms-modal>
+                                </div>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>`;
     }
 
     renderToolbarSelected(): TemplateResult {
