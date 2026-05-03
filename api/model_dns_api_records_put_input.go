@@ -21,12 +21,14 @@ var _ MappedNullable = &DnsAPIRecordsPutInput{}
 
 // DnsAPIRecordsPutInput struct for DnsAPIRecordsPutInput
 type DnsAPIRecordsPutInput struct {
-	Data         string `json:"data"`
-	MxPreference *int32 `json:"mxPreference,omitempty"`
-	SrvPort      *int32 `json:"srvPort,omitempty"`
-	SrvPriority  *int32 `json:"srvPriority,omitempty"`
-	SrvWeight    *int32 `json:"srvWeight,omitempty"`
-	Type         string `json:"type"`
+	Data          string  `json:"data"`
+	HttpsParams   *string `json:"httpsParams,omitempty"`
+	HttpsPriority *int32  `json:"httpsPriority,omitempty"`
+	MxPreference  *int32  `json:"mxPreference,omitempty"`
+	SrvPort       *int32  `json:"srvPort,omitempty"`
+	SrvPriority   *int32  `json:"srvPriority,omitempty"`
+	SrvWeight     *int32  `json:"srvWeight,omitempty"`
+	Type          string  `json:"type"`
 }
 
 type _DnsAPIRecordsPutInput DnsAPIRecordsPutInput
@@ -72,6 +74,70 @@ func (o *DnsAPIRecordsPutInput) GetDataOk() (*string, bool) {
 // SetData sets field value
 func (o *DnsAPIRecordsPutInput) SetData(v string) {
 	o.Data = v
+}
+
+// GetHttpsParams returns the HttpsParams field value if set, zero value otherwise.
+func (o *DnsAPIRecordsPutInput) GetHttpsParams() string {
+	if o == nil || IsNil(o.HttpsParams) {
+		var ret string
+		return ret
+	}
+	return *o.HttpsParams
+}
+
+// GetHttpsParamsOk returns a tuple with the HttpsParams field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DnsAPIRecordsPutInput) GetHttpsParamsOk() (*string, bool) {
+	if o == nil || IsNil(o.HttpsParams) {
+		return nil, false
+	}
+	return o.HttpsParams, true
+}
+
+// HasHttpsParams returns a boolean if a field has been set.
+func (o *DnsAPIRecordsPutInput) HasHttpsParams() bool {
+	if o != nil && !IsNil(o.HttpsParams) {
+		return true
+	}
+
+	return false
+}
+
+// SetHttpsParams gets a reference to the given string and assigns it to the HttpsParams field.
+func (o *DnsAPIRecordsPutInput) SetHttpsParams(v string) {
+	o.HttpsParams = &v
+}
+
+// GetHttpsPriority returns the HttpsPriority field value if set, zero value otherwise.
+func (o *DnsAPIRecordsPutInput) GetHttpsPriority() int32 {
+	if o == nil || IsNil(o.HttpsPriority) {
+		var ret int32
+		return ret
+	}
+	return *o.HttpsPriority
+}
+
+// GetHttpsPriorityOk returns a tuple with the HttpsPriority field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DnsAPIRecordsPutInput) GetHttpsPriorityOk() (*int32, bool) {
+	if o == nil || IsNil(o.HttpsPriority) {
+		return nil, false
+	}
+	return o.HttpsPriority, true
+}
+
+// HasHttpsPriority returns a boolean if a field has been set.
+func (o *DnsAPIRecordsPutInput) HasHttpsPriority() bool {
+	if o != nil && !IsNil(o.HttpsPriority) {
+		return true
+	}
+
+	return false
+}
+
+// SetHttpsPriority gets a reference to the given int32 and assigns it to the HttpsPriority field.
+func (o *DnsAPIRecordsPutInput) SetHttpsPriority(v int32) {
+	o.HttpsPriority = &v
 }
 
 // GetMxPreference returns the MxPreference field value if set, zero value otherwise.
@@ -237,6 +303,12 @@ func (o DnsAPIRecordsPutInput) MarshalJSON() ([]byte, error) {
 func (o DnsAPIRecordsPutInput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["data"] = o.Data
+	if !IsNil(o.HttpsParams) {
+		toSerialize["httpsParams"] = o.HttpsParams
+	}
+	if !IsNil(o.HttpsPriority) {
+		toSerialize["httpsPriority"] = o.HttpsPriority
+	}
 	if !IsNil(o.MxPreference) {
 		toSerialize["mxPreference"] = o.MxPreference
 	}

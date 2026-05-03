@@ -3,6 +3,7 @@ package dns
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net"
 	"strings"
 
@@ -29,6 +30,10 @@ type Record struct {
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	HTTPSPriority uint16 `json:"httpsPriority,omitempty"`
+	// Space-separated SVCB params, e.g. "alpn=h2,h3 port=443"
+	HTTPSParams string `json:"httpsParams,omitempty"`
 }
 
 func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
@@ -79,6 +84,8 @@ func (r *Record) RRType() uint16 {
 		return dns.TypeCNAME
 	case "txt":
 		return dns.TypeTXT
+	case "https":
+		return dns.TypeHTTPS
 	}
 	return dns.TypeNone
 }
@@ -146,6 +153,14 @@ func (r *Record) ToDNS(qname string) dns.RR {
 		rr = &dns.TXT{
 			Hdr: hdr,
 			Txt: strings.Split(r.Data, types.TXTSeparator),
+		}
+	case dns.TypeHTTPS:
+		target := utils.EnsureTrailingPeriod(r.Data)
+		rrStr := fmt.Sprintf("%s %d IN HTTPS %d %s %s",
+			hdr.Name, hdr.Ttl, r.HTTPSPriority, target, r.HTTPSParams)
+		parsed, err := dns.NewRR(strings.TrimSpace(rrStr))
+		if err == nil {
+			rr = parsed
 		}
 	}
 	return rr
