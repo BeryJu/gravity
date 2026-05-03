@@ -22,7 +22,11 @@ interface HandlerConfig {
 const HANDLER_TYPES = [
     { value: "memory", label: "Memory", description: "In-process cache for DNS records" },
     { value: "etcd", label: "etcd", description: "Distributed storage via etcd" },
-    { value: "forward_ip", label: "Forward (IP)", description: "Forward queries to an upstream resolver" },
+    {
+        value: "forward_ip",
+        label: "Forward (IP)",
+        description: "Forward queries to an upstream resolver",
+    },
     {
         value: "forward_blocky",
         label: "Forward (Blocky)",
@@ -33,11 +37,17 @@ const HANDLER_TYPES = [
 function toList(v: string[] | string | undefined): string[] {
     if (!v) return [];
     if (Array.isArray(v)) return v;
-    return v.split(";").map((s) => s.trim()).filter(Boolean);
+    return v
+        .split(";")
+        .map((s) => s.trim())
+        .filter(Boolean);
 }
 
 function parseTextarea(raw: string): string[] {
-    return raw.split("\n").map((s) => s.trim()).filter(Boolean);
+    return raw
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean);
 }
 
 @customElement("gravity-dns-handler-config-editor")
@@ -273,10 +283,14 @@ export class DNSHandlerConfigEditor extends AKElement {
                         @change=${(e: Event) => {
                             const raw = (e.target as HTMLInputElement).value;
                             const v = raw === "" ? undefined : parseInt(raw, 10);
-                            this.updateConfig(index, { cache_ttl: isNaN(v as number) ? undefined : v });
+                            this.updateConfig(index, {
+                                cache_ttl: isNaN(v as number) ? undefined : v,
+                            });
                         }}
                     />
-                    <p class="handler-field-hint">0 = disabled · −1 = never cache · −2 = cache forever (import mode)</p>
+                    <p class="handler-field-hint">
+                        0 = disabled · −1 = never cache · −2 = cache forever (import mode)
+                    </p>
                 </div>
                 <div class="handler-field">
                     <label class="handler-field-label">Network protocol</label>
@@ -289,7 +303,9 @@ export class DNSHandlerConfigEditor extends AKElement {
                     >
                         <option value="" ?selected=${!config.net}>Default (UDP)</option>
                         <option value="tcp" ?selected=${config.net === "tcp"}>TCP</option>
-                        <option value="udp" ?selected=${config.net === "udp"}>UDP (explicit)</option>
+                        <option value="udp" ?selected=${config.net === "udp"}>
+                            UDP (explicit)
+                        </option>
                     </select>
                 </div>
             </div>
@@ -326,10 +342,14 @@ export class DNSHandlerConfigEditor extends AKElement {
                         @change=${(e: Event) => {
                             const raw = (e.target as HTMLInputElement).value;
                             const v = raw === "" ? undefined : parseInt(raw, 10);
-                            this.updateConfig(index, { cache_ttl: isNaN(v as number) ? undefined : v });
+                            this.updateConfig(index, {
+                                cache_ttl: isNaN(v as number) ? undefined : v,
+                            });
                         }}
                     />
-                    <p class="handler-field-hint">0 = disabled · −1 = never cache · −2 = cache forever (import mode)</p>
+                    <p class="handler-field-hint">
+                        0 = disabled · −1 = never cache · −2 = cache forever (import mode)
+                    </p>
                 </div>
                 <div class="handler-field">
                     <label class="handler-field-label">Allowlists</label>
@@ -340,10 +360,14 @@ export class DNSHandlerConfigEditor extends AKElement {
                         .value=${allowVal}
                         @change=${(e: Event) => {
                             const lines = parseTextarea((e.target as HTMLTextAreaElement).value);
-                            this.updateConfig(index, { allowlists: lines.length ? lines : undefined });
+                            this.updateConfig(index, {
+                                allowlists: lines.length ? lines : undefined,
+                            });
                         }}
                     ></textarea>
-                    <p class="handler-field-hint">URLs or domain names (one per line). Domains in allowlists bypass blocking.</p>
+                    <p class="handler-field-hint">
+                        URLs or domain names (one per line). Domains in allowlists bypass blocking.
+                    </p>
                 </div>
                 <div class="handler-field">
                     <label class="handler-field-label">Blocklists</label>
@@ -354,16 +378,23 @@ export class DNSHandlerConfigEditor extends AKElement {
                         .value=${blockVal}
                         @change=${(e: Event) => {
                             const lines = parseTextarea((e.target as HTMLTextAreaElement).value);
-                            this.updateConfig(index, { blocklists: lines.length ? lines : undefined });
+                            this.updateConfig(index, {
+                                blocklists: lines.length ? lines : undefined,
+                            });
                         }}
                     ></textarea>
-                    <p class="handler-field-hint">URLs to blocklist files (one per line). Leave empty to use Blocky defaults.</p>
+                    <p class="handler-field-hint">
+                        URLs to blocklist files (one per line). Leave empty to use Blocky defaults.
+                    </p>
                 </div>
             </div>
         `;
     }
 
-    private renderHandlerBody(config: HandlerConfig, index: number): TemplateResult | typeof nothing {
+    private renderHandlerBody(
+        config: HandlerConfig,
+        index: number,
+    ): TemplateResult | typeof nothing {
         switch (config.type) {
             case "memory":
             case "etcd":
@@ -407,7 +438,9 @@ export class DNSHandlerConfigEditor extends AKElement {
                                           <div class="handler-type-info">
                                               <div class="handler-type-name">${meta.label}</div>
                                               ${meta.description
-                                                  ? html`<div class="handler-type-desc">${meta.description}</div>`
+                                                  ? html`<div class="handler-type-desc">
+                                                        ${meta.description}
+                                                    </div>`
                                                   : nothing}
                                           </div>
                                           <button
