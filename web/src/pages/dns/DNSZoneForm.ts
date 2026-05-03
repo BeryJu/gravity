@@ -1,5 +1,4 @@
 import { DnsAPIZone, RolesDnsApi } from "gravity-api";
-import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -9,6 +8,7 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 import { firstElement } from "../../utils";
+import "./DNSHandlerConfigEditor";
 
 export const DEFAULT_HANDLER_CONFIG = [
     {
@@ -78,14 +78,13 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
-                <ak-codemirror
-                    mode="yaml"
-                    value=${YAML.stringify(this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG)}
+                <gravity-dns-handler-config-editor
+                    .value=${this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG}
                 >
-                </ak-codemirror>
+                </gravity-dns-handler-config-editor>
                 <p class="pf-c-form__helper-text">
                     Configure where requests to this zone will be routed to and how they should be
-                    answered.
+                    answered. Drag handlers to reorder them.
                     <a href="https://gravity.beryju.io/docs/dns/zones/#handlers" target="_blank"
                         >Documentation</a
                     >
