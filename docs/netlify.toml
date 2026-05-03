@@ -8,6 +8,7 @@ command = "hugo mod get && hugo --gc --minify"
 [build.environment]
   HUGO_ENV = "production"
   HUGO_VERSION = "0.161.0"
+  NODE_OPTIONS = "--allow-fs-read=*"
 
 [context.deploy-preview]
 command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
