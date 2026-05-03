@@ -369,3 +369,7 @@ tool (
 	github.com/jstemmer/go-junit-report/v2
 	mvdan.cc/gofumpt
 )
+
+ignore (
+	./web/node_modules
+)
