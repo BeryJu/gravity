@@ -58,6 +58,10 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                 section.chart {
                     margin-bottom: 1.5rem;
                 }
+                .pf-c-sidebar__panel {
+                    position: sticky;
+                    top: calc(var(--navbar-height) + var(--pf-global--spacer--lg));
+                }
             `,
         );
     }
@@ -168,61 +172,64 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
               `
             : html``;
     }
+
     renderSidebarBefore() {
-        return html`<div class="pf-c-card">
-            <div class="pf-c-card__title">Zone details</div>
-            <div class="pf-c-card__body">
-                <dl class="pf-c-description-list">
-                    <div class="pf-c-description-list__group">
-                        <dt class="pf-c-description-list__term">
-                            <span class="pf-c-description-list__text">Zone name</span>
-                        </dt>
-                        <dd class="pf-c-description-list__description">
-                            <div class="pf-c-description-list__text">${this._zone?.name}</div>
-                        </dd>
-                    </div>
-                    <div class="pf-c-description-list__group">
-                        <dt class="pf-c-description-list__term">
-                            <span class="pf-c-description-list__text">Authoritative</span>
-                        </dt>
-                        <dd class="pf-c-description-list__description">
-                            <div class="pf-c-description-list__text">
-                                ${this._zone?.authoritative}
-                            </div>
-                        </dd>
-                    </div>
-                    <div class="pf-c-description-list__group">
-                        <dt class="pf-c-description-list__term">
-                            <span class="pf-c-description-list__text">Records</span>
-                        </dt>
-                        <dd class="pf-c-description-list__description">
-                            <div class="pf-c-description-list__text">
-                                ${this._zone?.recordCount}
-                            </div>
-                        </dd>
-                    </div>
-                    <div class="pf-c-description-list__group">
-                        <dt class="pf-c-description-list__term">
-                            <span class="pf-c-description-list__text">Related actions</span>
-                        </dt>
-                        <dd class="pf-c-description-list__description">
-                            <div class="pf-c-description-list__text">
-                                <ak-forms-modal>
-                                    <span slot="submit"> ${"Update"} </span>
-                                    <span slot="header"> ${"Update Zone"} </span>
-                                    <gravity-dns-zone-form slot="form" .instancePk=${this.zone}>
-                                    </gravity-dns-zone-form>
-                                    <button
-                                        slot="trigger"
-                                        class="pf-c-button pf-m-primary pf-m-block"
-                                    >
-                                        Edit
-                                    </button>
-                                </ak-forms-modal>
-                            </div>
-                        </dd>
-                    </div>
-                </dl>
+        return html`<div class="pf-c-sidebar__panel">
+            <div class="pf-c-card">
+                <div class="pf-c-card__title">Zone details</div>
+                <div class="pf-c-card__body">
+                    <dl class="pf-c-description-list">
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Zone name</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">${this._zone?.name}</div>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Authoritative</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">
+                                    ${this._zone?.authoritative}
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Records</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">
+                                    ${this._zone?.recordCount}
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="pf-c-description-list__group">
+                            <dt class="pf-c-description-list__term">
+                                <span class="pf-c-description-list__text">Related actions</span>
+                            </dt>
+                            <dd class="pf-c-description-list__description">
+                                <div class="pf-c-description-list__text">
+                                    <ak-forms-modal>
+                                        <span slot="submit"> ${"Update"} </span>
+                                        <span slot="header"> ${"Update Zone"} </span>
+                                        <gravity-dns-zone-form slot="form" .instancePk=${this.zone}>
+                                        </gravity-dns-zone-form>
+                                        <button
+                                            slot="trigger"
+                                            class="pf-c-button pf-m-primary pf-m-block"
+                                        >
+                                            Edit
+                                        </button>
+                                    </ak-forms-modal>
+                                </div>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
             </div>
         </div>`;
     }
