@@ -370,6 +370,4 @@ tool (
 	mvdan.cc/gofumpt
 )
 
-ignore (
-	./web/node_modules
-)
+ignore ./web/node_modules
