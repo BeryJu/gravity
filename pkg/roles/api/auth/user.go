@@ -42,6 +42,9 @@ func (ap *AuthProvider) GetUserFromSession(ctx context.Context) *types.User {
 	if !ok {
 		return nil
 	}
+	if ru, ok := raw.(*types.User); ok {
+		return ru
+	}
 	u := types.User{}
 	err := proto.Unmarshal(raw.([]byte), &u)
 	if err != nil {
