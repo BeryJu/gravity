@@ -1,4 +1,4 @@
-# AuthPermission
+# TypesPermission
 
 ## Properties
 
@@ -9,80 +9,70 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewAuthPermission
+### NewTypesPermission
 
-`func NewAuthPermission() *AuthPermission`
+`func NewTypesPermission() *TypesPermission`
 
-NewAuthPermission instantiates a new AuthPermission object
+NewTypesPermission instantiates a new TypesPermission object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewAuthPermissionWithDefaults
+### NewTypesPermissionWithDefaults
 
-`func NewAuthPermissionWithDefaults() *AuthPermission`
+`func NewTypesPermissionWithDefaults() *TypesPermission`
 
-NewAuthPermissionWithDefaults instantiates a new AuthPermission object
+NewTypesPermissionWithDefaults instantiates a new TypesPermission object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetMethods
 
-`func (o *AuthPermission) GetMethods() []string`
+`func (o *TypesPermission) GetMethods() []string`
 
 GetMethods returns the Methods field if non-nil, zero value otherwise.
 
 ### GetMethodsOk
 
-`func (o *AuthPermission) GetMethodsOk() (*[]string, bool)`
+`func (o *TypesPermission) GetMethodsOk() (*[]string, bool)`
 
 GetMethodsOk returns a tuple with the Methods field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMethods
 
-`func (o *AuthPermission) SetMethods(v []string)`
+`func (o *TypesPermission) SetMethods(v []string)`
 
 SetMethods sets Methods field to given value.
 
 ### HasMethods
 
-`func (o *AuthPermission) HasMethods() bool`
+`func (o *TypesPermission) HasMethods() bool`
 
 HasMethods returns a boolean if a field has been set.
 
-### SetMethodsNil
-
-`func (o *AuthPermission) SetMethodsNil(b bool)`
-
- SetMethodsNil sets the value for Methods to be an explicit nil
-
-### UnsetMethods
-`func (o *AuthPermission) UnsetMethods()`
-
-UnsetMethods ensures that no value is present for Methods, not even an explicit nil
 ### GetPath
 
-`func (o *AuthPermission) GetPath() string`
+`func (o *TypesPermission) GetPath() string`
 
 GetPath returns the Path field if non-nil, zero value otherwise.
 
 ### GetPathOk
 
-`func (o *AuthPermission) GetPathOk() (*string, bool)`
+`func (o *TypesPermission) GetPathOk() (*string, bool)`
 
 GetPathOk returns a tuple with the Path field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPath
 
-`func (o *AuthPermission) SetPath(v string)`
+`func (o *TypesPermission) SetPath(v string)`
 
 SetPath sets Path field to given value.
 
 ### HasPath
 
-`func (o *AuthPermission) HasPath() bool`
+`func (o *TypesPermission) HasPath() bool`
 
 HasPath returns a boolean if a field has been set.
 
