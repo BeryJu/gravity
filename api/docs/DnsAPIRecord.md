@@ -7,6 +7,8 @@ Name | Type | Description | Notes
 **Data** | **string** |  | 
 **Fqdn** | **string** |  | 
 **Hostname** | **string** |  | 
+**HttpsParams** | Pointer to **string** |  | [optional] 
+**HttpsPriority** | Pointer to **int32** |  | [optional] 
 **MxPreference** | Pointer to **int32** |  | [optional] 
 **SrvPort** | Pointer to **int32** |  | [optional] 
 **SrvPriority** | Pointer to **int32** |  | [optional] 
@@ -92,6 +94,56 @@ and a boolean to check if the value has been set.
 
 SetHostname sets Hostname field to given value.
 
+
+### GetHttpsParams
+
+`func (o *DnsAPIRecord) GetHttpsParams() string`
+
+GetHttpsParams returns the HttpsParams field if non-nil, zero value otherwise.
+
+### GetHttpsParamsOk
+
+`func (o *DnsAPIRecord) GetHttpsParamsOk() (*string, bool)`
+
+GetHttpsParamsOk returns a tuple with the HttpsParams field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHttpsParams
+
+`func (o *DnsAPIRecord) SetHttpsParams(v string)`
+
+SetHttpsParams sets HttpsParams field to given value.
+
+### HasHttpsParams
+
+`func (o *DnsAPIRecord) HasHttpsParams() bool`
+
+HasHttpsParams returns a boolean if a field has been set.
+
+### GetHttpsPriority
+
+`func (o *DnsAPIRecord) GetHttpsPriority() int32`
+
+GetHttpsPriority returns the HttpsPriority field if non-nil, zero value otherwise.
+
+### GetHttpsPriorityOk
+
+`func (o *DnsAPIRecord) GetHttpsPriorityOk() (*int32, bool)`
+
+GetHttpsPriorityOk returns a tuple with the HttpsPriority field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHttpsPriority
+
+`func (o *DnsAPIRecord) SetHttpsPriority(v int32)`
+
+SetHttpsPriority sets HttpsPriority field to given value.
+
+### HasHttpsPriority
+
+`func (o *DnsAPIRecord) HasHttpsPriority() bool`
+
+HasHttpsPriority returns a boolean if a field has been set.
 
 ### GetMxPreference
 

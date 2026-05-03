@@ -3021,6 +3021,8 @@ components:
         srvPort: 0
         uid: uid
         hostname: hostname
+        httpsParams: httpsParams
+        httpsPriority: 0
         mxPreference: 0
         data: data
         fqdn: fqdn
@@ -3034,6 +3036,11 @@ components:
           type: string
         hostname:
           type: string
+        httpsParams:
+          type: string
+        httpsPriority:
+          minimum: 0
+          type: integer
         mxPreference:
           minimum: 0
           type: integer
@@ -3063,6 +3070,8 @@ components:
         - srvPort: 0
           uid: uid
           hostname: hostname
+          httpsParams: httpsParams
+          httpsPriority: 0
           mxPreference: 0
           data: data
           fqdn: fqdn
@@ -3072,6 +3081,8 @@ components:
         - srvPort: 0
           uid: uid
           hostname: hostname
+          httpsParams: httpsParams
+          httpsPriority: 0
           mxPreference: 0
           data: data
           fqdn: fqdn
@@ -3090,6 +3101,8 @@ components:
     DnsAPIRecordsPutInput:
       example:
         srvPort: 0
+        httpsParams: httpsParams
+        httpsPriority: 0
         mxPreference: 0
         data: data
         srvPriority: 0
@@ -3098,6 +3111,11 @@ components:
       properties:
         data:
           type: string
+        httpsParams:
+          type: string
+        httpsPriority:
+          minimum: 0
+          type: integer
         mxPreference:
           minimum: 0
           type: integer

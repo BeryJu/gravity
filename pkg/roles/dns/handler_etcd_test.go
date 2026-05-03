@@ -597,3 +597,54 @@ func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
 		"bar.example.com.	0	IN	A	10.1.2.3",
 	)
 }
+
+func TestRoleDNS_Etcd_HTTPS(t *testing.T) {
+	tests.Setup(t)
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dns", ctx)
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+		).String(),
+		tests.MustJSON(dns.Zone{
+			HandlerConfigs: []map[string]interface{}{
+				{
+					"type": "etcd",
+				},
+			},
+		}),
+	))
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(
+			types.KeyRole,
+			types.KeyZones,
+			TestZone,
+			"@",
+			types.DNSRecordTypeHTTPS,
+			"0",
+		).String(),
+		tests.MustJSON(dns.Record{
+			Data:          ".",
+			HTTPSPriority: 1,
+			HTTPSParams:   "alpn=h2,h3",
+		}),
+	))
+
+	role := dns.New(inst)
+	assert.NotNil(t, role)
+	assert.Nil(t, role.Start(ctx, RoleConfig()))
+	defer role.Stop()
+
+	AssertDNS(t, role, []d.Question{
+		{
+			Name:   "example.com.",
+			Qtype:  d.TypeHTTPS,
+			Qclass: d.ClassINET,
+		},
+	}, "example.com.\t0\tIN\tHTTPS\t1 . alpn=\"h2,h3\"")
+}

@@ -74,8 +74,73 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
         }
     }
 
+    renderTypeSpecific() {
+        switch (this.recordType) {
+            case "MX":
+                return html`
+                    <ak-form-element-horizontal label="MX Preference" required name="mxPreference">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.mxPreference)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                `;
+            case "SRV":
+                return html`<ak-form-element-horizontal label="SRV Port" required name="srvPort">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvPort)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvPriority)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvWeight)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>`;
+            case "HTTPS":
+                return html`<ak-form-element-horizontal
+                        label="HTTPS Priority"
+                        required
+                        name="httpsPriority"
+                    >
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.httpsPriority)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="HTTPS Parameters" name="httpsParams">
+                        <input
+                            type="text"
+                            value=${ifDefined(this.instance?.httpsParams)}
+                            class="pf-c-form-control"
+                        />
+                        <p class="pf-c-form__helper-text">
+                            HTTP Record parameters such as alpn, port, ipv4hint, ipv6hint, etc.
+                        </p>
+                    </ak-form-element-horizontal>`;
+        }
+        return nothing;
+    }
+
     renderForm(): TemplateResult {
-        return html` <ak-form-element-horizontal label="Hostname" required name="hostname">
+        return html`<ak-form-element-horizontal label="Hostname" required name="hostname">
                 <div class="pf-c-input-group">
                     <input
                         type="text"
@@ -115,6 +180,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     <option value="MX" ?selected=${this.recordType === "MX"}>MX</option>
                     <option value="SRV" ?selected=${this.recordType === "SRV"}>SRV</option>
                     <option value="TXT" ?selected=${this.recordType === "TXT"}>TXT</option>
+                    <option value="HTTPS" ?selected=${this.recordType === "HTTPS"}>HTTPS</option>
                 </select>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${this.getLabel()} required name="data">
@@ -125,49 +191,6 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            ${this.recordType === "MX"
-                ? html`
-                      <ak-form-element-horizontal
-                          label="MX Preference"
-                          required
-                          name="mxPreference"
-                      >
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.mxPreference)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                  `
-                : html``}
-            ${this.recordType === "SRV"
-                ? html`
-                      <ak-form-element-horizontal label="SRV Port" required name="srvPort">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvPort)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                      <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvPriority)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                      <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvWeight)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                  `
-                : html``}`;
+            ${this.renderTypeSpecific()}`;
     }
 }

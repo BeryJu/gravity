@@ -29,6 +29,8 @@ type APIRecord struct {
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+	HTTPSPriority uint16 `json:"httpsPriority,omitempty"`
+	HTTPSParams   string `json:"httpsParams,omitempty"`
 }
 type APIRecordsGetOutput struct {
 	Records []APIRecord `json:"records" required:"true"`
@@ -80,15 +82,17 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				continue
 			}
 			output.Records = append(output.Records, APIRecord{
-				UID:          rec.uid,
-				Hostname:     rec.Name,
-				FQDN:         rec.Name + types.DNSSep + zone.Name,
-				Type:         rec.Type,
-				Data:         rec.Data,
-				MXPreference: rec.MXPreference,
-				SRVPort:      rec.SRVPort,
-				SRVPriority:  rec.SRVPriority,
-				SRVWeight:    rec.SRVWeight,
+				UID:           rec.uid,
+				Hostname:      rec.Name,
+				FQDN:          rec.Name + types.DNSSep + zone.Name,
+				Type:          rec.Type,
+				Data:          rec.Data,
+				MXPreference:  rec.MXPreference,
+				SRVPort:       rec.SRVPort,
+				SRVPriority:   rec.SRVPriority,
+				SRVWeight:     rec.SRVWeight,
+				HTTPSPriority: rec.HTTPSPriority,
+				HTTPSParams:   rec.HTTPSParams,
 			})
 		}
 		return nil
@@ -112,6 +116,8 @@ type APIRecordsPutInput struct {
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+	HTTPSPriority uint16 `json:"httpsPriority,omitempty"`
+	HTTPSParams   string `json:"httpsParams,omitempty"`
 }
 
 func (r *Role) APIRecordsPut() usecase.Interactor {
@@ -141,6 +147,8 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		rec.SRVPort = input.SRVPort
 		rec.SRVPriority = input.SRVPriority
 		rec.SRVWeight = input.SRVWeight
+		rec.HTTPSPriority = input.HTTPSPriority
+		rec.HTTPSParams = input.HTTPSParams
 		err = rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)

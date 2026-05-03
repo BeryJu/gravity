@@ -13,6 +13,7 @@ const (
 	DNSRecordTypeAAAA  = "AAAA"
 	DNSRecordTypePTR   = "PTR"
 	DNSRecordTypeCNAME = "CNAME"
+	DNSRecordTypeHTTPS = "HTTPS"
 )
 
 const (
