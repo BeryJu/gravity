@@ -5,8 +5,11 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/roles/api/types"
+	"github.com/gorilla/sessions"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 )
 
 func (ap *AuthProvider) userFromKV(raw *mvccpb.KeyValue) (*types.User, error) {
@@ -31,4 +34,19 @@ func (ap *AuthProvider) putUser(u *types.User, ctx context.Context, opts ...clie
 	).String()
 	_, err := ap.inst.KV().PutObj(ctx, fullKey, u, opts...)
 	return err
+}
+
+func (ap *AuthProvider) GetUserFromSession(ctx context.Context) *types.User {
+	session := ctx.Value(types.RequestSession).(*sessions.Session)
+	raw, ok := session.Values[types.SessionKeyUser]
+	if !ok {
+		return nil
+	}
+	u := types.User{}
+	err := proto.Unmarshal(raw.([]byte), &u)
+	if err != nil {
+		ap.log.Warn("failed to unmarshal user from session", zap.Error(err))
+		return nil
+	}
+	return &u
 }

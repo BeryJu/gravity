@@ -68,7 +68,13 @@ func New(instance roles.Instance) *Role {
 		Repanic: true,
 	}).Handle)
 	r.m.Use(r.SessionMiddleware)
-	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, func(l *zap.Logger, req *http.Request) *zap.Logger {
+		u := r.auth.GetUserFromSession(req.Context())
+		if u != nil {
+			return l.With(zap.String("user", u.Username))
+		}
+		return l
+	}))
 	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {

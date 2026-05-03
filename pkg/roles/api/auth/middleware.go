@@ -3,9 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/getsentry/sentry-go"
-	"github.com/gorilla/sessions"
 )
 
 func (ap *AuthProvider) isAllowedPath(r *http.Request) bool {
@@ -25,20 +23,18 @@ func (ap *AuthProvider) isRequestAllowed(r *http.Request) bool {
 	if ap.isAllowedPath(r) {
 		return true
 	}
-	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	u, ok := session.Values[types.SessionKeyUser]
-	if u == nil || !ok {
+	u := ap.GetUserFromSession(r.Context())
+	if u == nil {
 		return false
 	}
 	hub := sentry.GetHubFromContext(r.Context())
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
-	uu := u.(*types.User)
 	hub.Scope().SetUser(sentry.User{
-		Username: uu.Username,
+		Username: u.Username,
 	})
-	return ap.checkPermission(r, uu)
+	return ap.checkPermission(r, u)
 }
 
 func (ap *AuthProvider) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
