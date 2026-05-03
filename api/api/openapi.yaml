@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 99.99.99
+  version: 0.29.0
 servers:
 - url: /
 paths:
@@ -2164,7 +2164,7 @@ components:
           type: boolean
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2227,7 +2227,7 @@ components:
       properties:
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2285,27 +2285,12 @@ components:
           type: string
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
       required:
       - password
       - permissions
-      type: object
-    AuthPermission:
-      example:
-        path: path
-        methods:
-        - methods
-        - methods
-      properties:
-        methods:
-          items:
-            type: string
-          nullable: true
-          type: array
-        path:
-          type: string
       type: object
     BackupAPIBackupStatus:
       example:
@@ -3725,5 +3710,19 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesPermission:
+      example:
+        path: path
+        methods:
+        - methods
+        - methods
+      properties:
+        methods:
+          items:
+            type: string
+          type: array
+        path:
           type: string
       type: object

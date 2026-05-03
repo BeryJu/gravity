@@ -9,7 +9,6 @@ import (
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance"
 	roleAPI "beryju.io/gravity/pkg/roles/api"
-	"beryju.io/gravity/pkg/roles/api/auth"
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/securecookie"
 )
@@ -29,9 +28,9 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		types.KeyRole,
 		types.KeyUsers,
 		username,
-	).String(), MustJSON(auth.User{
+	).String(), MustJSON(&types.User{
 		Username: username,
-		Permissions: []auth.Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
@@ -42,7 +41,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		types.KeyRole,
 		types.KeyTokens,
 		token,
-	).String(), MustJSON(auth.Token{
+	).String(), MustJSON(&types.Token{
 		Key:      token,
 		Username: username,
 	})))
