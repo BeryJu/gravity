@@ -2610,6 +2610,9 @@ components:
           type: string
         ip:
           type: string
+        memoryBytes:
+          minimum: 0
+          type: integer
         roles:
           items:
             type: string
@@ -2622,6 +2625,7 @@ components:
       - roles
       - identifier
       - ip
+      - memoryBytes
       type: object
     MonitoringAPIRoleConfigInput:
       properties:
