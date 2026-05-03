@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 99.99.99
+  version: 0.32.0
 servers:
 - url: /
 paths:
@@ -3012,6 +3012,7 @@ components:
         srvPriority: 0
         srvWeight: 0
         type: type
+        ttl: 5
       properties:
         data:
           type: string
@@ -3031,6 +3032,9 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
           type: string
         uid:
@@ -3039,6 +3043,7 @@ components:
       - data
       - fqdn
       - hostname
+      - ttl
       - type
       - uid
       type: object
@@ -3054,6 +3059,7 @@ components:
           srvPriority: 0
           srvWeight: 0
           type: type
+          ttl: 5
         - srvPort: 0
           uid: uid
           hostname: hostname
@@ -3063,6 +3069,7 @@ components:
           srvPriority: 0
           srvWeight: 0
           type: type
+          ttl: 5
       properties:
         records:
           items:
@@ -3080,6 +3087,7 @@ components:
         srvPriority: 0
         srvWeight: 0
         type: type
+        ttl: 5
       properties:
         data:
           type: string
@@ -3095,10 +3103,14 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
           type: string
       required:
       - data
+      - ttl
       - type
       type: object
     DnsAPIRoleConfigInput:

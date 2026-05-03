@@ -427,7 +427,7 @@ func main() {
 	zone := "zone_example" // string | 
 	hostname := "hostname_example" // string | 
 	uid := "uid_example" // string |  (optional)
-	dnsAPIRecordsPutInput := *openapiclient.NewDnsAPIRecordsPutInput("Data_example", "Type_example") // DnsAPIRecordsPutInput |  (optional)
+	dnsAPIRecordsPutInput := *openapiclient.NewDnsAPIRecordsPutInput("Data_example", int64(123), "Type_example") // DnsAPIRecordsPutInput |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

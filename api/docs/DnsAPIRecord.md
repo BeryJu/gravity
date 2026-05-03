@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **SrvPort** | Pointer to **int32** |  | [optional] 
 **SrvPriority** | Pointer to **int32** |  | [optional] 
 **SrvWeight** | Pointer to **int32** |  | [optional] 
+**Ttl** | **int64** |  | 
 **Type** | **string** |  | 
 **Uid** | **string** |  | 
 
@@ -18,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewDnsAPIRecord
 
-`func NewDnsAPIRecord(data string, fqdn string, hostname string, type_ string, uid string, ) *DnsAPIRecord`
+`func NewDnsAPIRecord(data string, fqdn string, hostname string, ttl int64, type_ string, uid string, ) *DnsAPIRecord`
 
 NewDnsAPIRecord instantiates a new DnsAPIRecord object
 This constructor will assign default values to properties that have it defined,
@@ -192,6 +193,26 @@ SetSrvWeight sets SrvWeight field to given value.
 `func (o *DnsAPIRecord) HasSrvWeight() bool`
 
 HasSrvWeight returns a boolean if a field has been set.
+
+### GetTtl
+
+`func (o *DnsAPIRecord) GetTtl() int64`
+
+GetTtl returns the Ttl field if non-nil, zero value otherwise.
+
+### GetTtlOk
+
+`func (o *DnsAPIRecord) GetTtlOk() (*int64, bool)`
+
+GetTtlOk returns a tuple with the Ttl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTtl
+
+`func (o *DnsAPIRecord) SetTtl(v int64)`
+
+SetTtl sets Ttl field to given value.
+
 
 ### GetType
 
