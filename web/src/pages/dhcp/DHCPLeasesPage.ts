@@ -57,6 +57,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                     top: calc(var(--navbar-height) + var(--pf-global--spacer--lg));
                 }
             `,
+            this.GlobalStyle,
         );
     }
 

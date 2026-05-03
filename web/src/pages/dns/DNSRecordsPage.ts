@@ -46,7 +46,8 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
     }
 
     static get styles(): CSSResult[] {
-        return super.styles.concat(
+        return [
+            ...super.styles,
             PFCard,
             PFDescriptionList,
             css`
@@ -61,7 +62,8 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                     top: calc(var(--navbar-height) + var(--pf-global--spacer--lg));
                 }
             `,
-        );
+            this.GlobalStyle,
+        ];
     }
 
     async apiEndpoint(): Promise<PaginatedResponse<DnsAPIRecord>> {

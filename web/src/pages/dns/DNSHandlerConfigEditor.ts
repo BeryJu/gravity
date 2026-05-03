@@ -76,6 +76,11 @@ export class DNSHandlerConfigEditor extends AKElement {
                     background: var(--pf-global--BackgroundColor--100);
                     transition: box-shadow 0.15s;
                 }
+                @media (prefers-color-scheme: dark) {
+                    .handler-item {
+                        background: var(--ak-dark-background-light);
+                    }
+                }
                 .handler-item.drag-over {
                     border-color: var(--pf-global--primary-color--100);
                     box-shadow: 0 0 0 2px var(--pf-global--primary-color--100);
