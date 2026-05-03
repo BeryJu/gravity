@@ -7,6 +7,7 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
+	"github.com/shirou/gopsutil/v4/mem"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
@@ -14,10 +15,11 @@ import (
 )
 
 type InstanceInfo struct {
-	Version    string   `json:"version" required:"true"`
-	Roles      []string `json:"roles" required:"true"`
-	Identifier string   `json:"identifier" required:"true"`
-	IP         string   `json:"ip" required:"true"`
+	Version     string   `json:"version" required:"true"`
+	Roles       []string `json:"roles" required:"true"`
+	Identifier  string   `json:"identifier" required:"true"`
+	IP          string   `json:"ip" required:"true"`
+	MemoryBytes uint64   `json:"memoryBytes" required:"true"`
 }
 
 func (i *Instance) getInfo() *InstanceInfo {
@@ -26,12 +28,18 @@ func (i *Instance) getInfo() *InstanceInfo {
 		roles = append(roles, "etcd")
 	}
 	slices.Sort(roles)
-	return &InstanceInfo{
+	ii := &InstanceInfo{
 		Version:    extconfig.FullVersion(),
 		Roles:      roles,
 		Identifier: extconfig.Get().Instance.Identifier,
 		IP:         extconfig.Get().Instance.IP,
 	}
+	vm, err := mem.VirtualMemory()
+	if err != nil {
+		return ii
+	}
+	ii.MemoryBytes = vm.Total
+	return ii
 }
 
 func (i *Instance) keepAliveInstanceInfo(ctx context.Context) {
