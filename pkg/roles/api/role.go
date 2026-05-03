@@ -190,7 +190,7 @@ func (r *Role) ListenAndServeSocket() {
 	r.socketServer = &http.Server{}
 	r.socketServer.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		ctx := context.WithValue(req.Context(), types.RequestSession, &sessions.Session{
-			Values: map[interface{}]interface{}{
+			Values: map[any]any{
 				types.SessionKeyUser: &types.User{
 					Username: "gravity-socket",
 					Permissions: []*types.Permission{

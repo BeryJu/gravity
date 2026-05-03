@@ -25,15 +25,15 @@ func (ap *AuthProvider) putToken(t *types.Token, ctx context.Context, opts ...cl
 }
 
 func (ap *AuthProvider) tokenFromKV(raw *mvccpb.KeyValue) (*types.Token, error) {
-	token := &types.Token{}
+	token := types.Token{}
 	prefix := ap.inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
 	).Prefix(true).String()
 	err := ap.inst.KV().Unmarshal(raw.Value, &token)
 	if err != nil {
-		return token, err
+		return &token, err
 	}
 	token.Key = strings.TrimPrefix(string(raw.Key), prefix)
-	return token, nil
+	return &token, nil
 }

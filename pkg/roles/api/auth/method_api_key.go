@@ -7,6 +7,7 @@ import (
 	"beryju.io/gravity/pkg/roles/api/types"
 	"github.com/gorilla/sessions"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
 )
 
 func (ap *AuthProvider) checkStaticToken(r *http.Request) bool {
@@ -39,6 +40,7 @@ func (ap *AuthProvider) checkStaticToken(r *http.Request) bool {
 	}
 	key, err := ap.tokenFromKV(rawTokens.Kvs[0])
 	if err != nil {
+		ap.log.Warn("failed to parse token", zap.Error(err))
 		return false
 	}
 	// Get token's user
@@ -62,6 +64,6 @@ func (ap *AuthProvider) checkStaticToken(r *http.Request) bool {
 		return false
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	session.Values[types.SessionKeyUser] = user
+	session.Values[types.SessionKeyUser], _ = proto.Marshal(user)
 	return false
 }
