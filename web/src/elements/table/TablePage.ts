@@ -78,12 +78,12 @@ export abstract class TablePage<T extends object> extends Table<T> {
                 description=${ifDefined(this.pageDescription())}
             >
             </ak-page-header>
-            ${this.renderAboveTable()}
             <section class="pf-c-page__main-section pf-m-no-padding-mobile">
                 <div class="pf-c-sidebar pf-m-gutter">
                     <div class="pf-c-sidebar__main">
                         ${this.renderSidebarBefore()}
                         <div class="pf-c-sidebar__content">
+                            ${this.renderAboveTable()}
                             <div class="pf-c-card">${this.renderTable()}</div>
                         </div>
                         ${this.renderSidebarAfter()}

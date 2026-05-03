@@ -52,8 +52,11 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
             PFSplit,
             PFDescriptionList,
             css`
-                .pf-m-no-padding-bottom {
-                    padding-bottom: 0;
+                .pf-c-sidebar__content {
+                    background-color: transparent;
+                }
+                section.chart {
+                    margin-bottom: 1.5rem;
                 }
             `,
         );
@@ -165,89 +168,76 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
               `
             : html``;
     }
+    renderSidebarBefore() {
+        return html`<div class="pf-c-card">
+            <div class="pf-c-card__title">Zone details</div>
+            <div class="pf-c-card__body">
+                <dl class="pf-c-description-list">
+                    <div class="pf-c-description-list__group">
+                        <dt class="pf-c-description-list__term">
+                            <span class="pf-c-description-list__text">Zone name</span>
+                        </dt>
+                        <dd class="pf-c-description-list__description">
+                            <div class="pf-c-description-list__text">${this._zone?.name}</div>
+                        </dd>
+                    </div>
+                    <div class="pf-c-description-list__group">
+                        <dt class="pf-c-description-list__term">
+                            <span class="pf-c-description-list__text">Authoritative</span>
+                        </dt>
+                        <dd class="pf-c-description-list__description">
+                            <div class="pf-c-description-list__text">
+                                ${this._zone?.authoritative}
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="pf-c-description-list__group">
+                        <dt class="pf-c-description-list__term">
+                            <span class="pf-c-description-list__text">Records</span>
+                        </dt>
+                        <dd class="pf-c-description-list__description">
+                            <div class="pf-c-description-list__text">
+                                ${this._zone?.recordCount}
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="pf-c-description-list__group">
+                        <dt class="pf-c-description-list__term">
+                            <span class="pf-c-description-list__text">Related actions</span>
+                        </dt>
+                        <dd class="pf-c-description-list__description">
+                            <div class="pf-c-description-list__text">
+                                <ak-forms-modal>
+                                    <span slot="submit"> ${"Update"} </span>
+                                    <span slot="header"> ${"Update Zone"} </span>
+                                    <gravity-dns-zone-form slot="form" .instancePk=${this.zone}>
+                                    </gravity-dns-zone-form>
+                                    <button
+                                        slot="trigger"
+                                        class="pf-c-button pf-m-primary pf-m-block"
+                                    >
+                                        Edit
+                                    </button>
+                                </ak-forms-modal>
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>`;
+    }
 
     renderAboveTable() {
-        return html`<section class="pf-c-page__main-section pf-m-no-padding-bottom">
-            <div class="pf-l-split pf-m-gutter">
-                <div class="pf-l-split__item">
-                    <div class="pf-c-card">
-                        <div class="pf-c-card__title">Zone details</div>
-                        <div class="pf-c-card__body">
-                            <dl class="pf-c-description-list pf-m-horizontal pf-m-2-col">
-                                <div class="pf-c-description-list__group">
-                                    <dt class="pf-c-description-list__term">
-                                        <span class="pf-c-description-list__text">Zone name</span>
-                                    </dt>
-                                    <dd class="pf-c-description-list__description">
-                                        <div class="pf-c-description-list__text">
-                                            ${this._zone?.name}
-                                        </div>
-                                    </dd>
-                                </div>
-                                <div class="pf-c-description-list__group">
-                                    <dt class="pf-c-description-list__term">
-                                        <span class="pf-c-description-list__text"
-                                            >Authoritative</span
-                                        >
-                                    </dt>
-                                    <dd class="pf-c-description-list__description">
-                                        <div class="pf-c-description-list__text">
-                                            ${this._zone?.authoritative}
-                                        </div>
-                                    </dd>
-                                </div>
-                                <div class="pf-c-description-list__group">
-                                    <dt class="pf-c-description-list__term">
-                                        <span class="pf-c-description-list__text">Records</span>
-                                    </dt>
-                                    <dd class="pf-c-description-list__description">
-                                        <div class="pf-c-description-list__text">
-                                            ${this._zone?.recordCount}
-                                        </div>
-                                    </dd>
-                                </div>
-                                <div class="pf-c-description-list__group">
-                                    <dt class="pf-c-description-list__term">
-                                        <span class="pf-c-description-list__text"
-                                            >Related actions</span
-                                        >
-                                    </dt>
-                                    <dd class="pf-c-description-list__description">
-                                        <div class="pf-c-description-list__text">
-                                            <ak-forms-modal>
-                                                <span slot="submit"> ${"Update"} </span>
-                                                <span slot="header"> ${"Update Zone"} </span>
-                                                <gravity-dns-zone-form
-                                                    slot="form"
-                                                    .instancePk=${this.zone}
-                                                >
-                                                </gravity-dns-zone-form>
-                                                <button
-                                                    slot="trigger"
-                                                    class="pf-c-button pf-m-primary pf-m-block"
-                                                >
-                                                    Edit
-                                                </button>
-                                            </ak-forms-modal>
-                                        </div>
-                                    </dd>
-                                </div>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-                <div class="pf-l-split__item pf-m-fill">
-                    <div class="pf-c-card" style="height: 100%">
-                        <gravity-overview-charts-dns-requests
-                            style="height: 100%"
-                            .request=${{
-                                role: TypesAPIMetricsRole.Dns,
-                                category: "zones",
-                                extraKeys: [this.zone],
-                            }}
-                        ></gravity-overview-charts-dns-requests>
-                    </div>
-                </div>
+        return html`<section class="chart">
+            <div class="pf-c-card" style="height: 10rem;">
+                <gravity-overview-charts-dns-requests
+                    style="height: 100%"
+                    .request=${{
+                        role: TypesAPIMetricsRole.Dns,
+                        category: "zones",
+                        extraKeys: [this.zone],
+                    }}
+                ></gravity-overview-charts-dns-requests>
             </div>
         </section>`;
     }
