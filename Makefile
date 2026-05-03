@@ -107,6 +107,7 @@ internal/resources/tftp:
 
 gen-build:
 	export DEBUG=true
+	export CI=false
 	go run \
 		${GO_FLAGS} \
 		${PWD}/cmd/server/main \

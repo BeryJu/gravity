@@ -23,6 +23,7 @@ type APIRecord struct {
 	FQDN     string `json:"fqdn" required:"true"`
 	Hostname string `json:"hostname" required:"true"`
 	Type     string `json:"type" required:"true"`
+	TTL      int64  `json:"ttl" required:"true"`
 
 	Data         string `json:"data" required:"true"`
 	MXPreference uint16 `json:"mxPreference,omitempty"`
@@ -84,6 +85,7 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + types.DNSSep + zone.Name,
 				Type:         rec.Type,
+				TTL:          int64(rec.TTL),
 				Data:         rec.Data,
 				MXPreference: rec.MXPreference,
 				SRVPort:      rec.SRVPort,
@@ -106,6 +108,7 @@ type APIRecordsPutInput struct {
 	UID      string `query:"uid" maxLength:"255"`
 
 	Type string `json:"type" required:"true"`
+	TTL  int64  `json:"ttl" required:"true"`
 
 	Data         string `json:"data" required:"true"`
 	MXPreference uint16 `json:"mxPreference,omitempty"`
@@ -141,6 +144,7 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		rec.SRVPort = input.SRVPort
 		rec.SRVPriority = input.SRVPriority
 		rec.SRVWeight = input.SRVWeight
+		rec.TTL = uint32(input.TTL)
 		err = rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 99.99.99
+  version: 0.30.0
 paths:
   /api/v1/auth/config:
     get:
@@ -2371,6 +2371,9 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
           type: string
         uid:
@@ -2380,6 +2383,7 @@ components:
       - fqdn
       - hostname
       - type
+      - ttl
       - data
       type: object
     DnsAPIRecordsGetOutput:
@@ -2408,10 +2412,14 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
           type: string
       required:
       - type
+      - ttl
       - data
       type: object
     DnsAPIRoleConfigInput:
