@@ -7,9 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"beryju.io/gravity/pkg/roles/api/auth"
-	"beryju.io/gravity/pkg/roles/api/types"
-	"github.com/gorilla/sessions"
 	"go.uber.org/zap"
 )
 
@@ -107,16 +104,6 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		zap.Int("status", responseLogger.Status()),
 		zap.String("userAgent", req.UserAgent()),
 		zap.String("url", url.RequestURI()),
-	}
-	se := req.Context().Value(types.RequestSession)
-	if se != nil {
-		session := se.(*sessions.Session)
-		u, ok := session.Values[types.SessionKeyUser]
-		if ok && u != nil {
-			if uu, castOk := u.(auth.User); castOk {
-				fields = append(fields, zap.String("user", uu.Username))
-			}
-		}
 	}
 	h.afterHandler(h.logger.With(fields...), req).Info("HTTP Request")
 }

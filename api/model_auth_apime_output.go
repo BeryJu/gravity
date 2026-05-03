@@ -21,9 +21,9 @@ var _ MappedNullable = &AuthAPIMeOutput{}
 
 // AuthAPIMeOutput struct for AuthAPIMeOutput
 type AuthAPIMeOutput struct {
-	Authenticated bool             `json:"authenticated"`
-	Permissions   []AuthPermission `json:"permissions"`
-	Username      string           `json:"username"`
+	Authenticated bool              `json:"authenticated"`
+	Permissions   []TypesPermission `json:"permissions"`
+	Username      string            `json:"username"`
 }
 
 type _AuthAPIMeOutput AuthAPIMeOutput
@@ -32,7 +32,7 @@ type _AuthAPIMeOutput AuthAPIMeOutput
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAuthAPIMeOutput(authenticated bool, permissions []AuthPermission, username string) *AuthAPIMeOutput {
+func NewAuthAPIMeOutput(authenticated bool, permissions []TypesPermission, username string) *AuthAPIMeOutput {
 	this := AuthAPIMeOutput{}
 	this.Authenticated = authenticated
 	this.Permissions = permissions
@@ -73,10 +73,10 @@ func (o *AuthAPIMeOutput) SetAuthenticated(v bool) {
 }
 
 // GetPermissions returns the Permissions field value
-// If the value is explicit nil, the zero value for []AuthPermission will be returned
-func (o *AuthAPIMeOutput) GetPermissions() []AuthPermission {
+// If the value is explicit nil, the zero value for []TypesPermission will be returned
+func (o *AuthAPIMeOutput) GetPermissions() []TypesPermission {
 	if o == nil {
-		var ret []AuthPermission
+		var ret []TypesPermission
 		return ret
 	}
 
@@ -86,7 +86,7 @@ func (o *AuthAPIMeOutput) GetPermissions() []AuthPermission {
 // GetPermissionsOk returns a tuple with the Permissions field value
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *AuthAPIMeOutput) GetPermissionsOk() ([]AuthPermission, bool) {
+func (o *AuthAPIMeOutput) GetPermissionsOk() ([]TypesPermission, bool) {
 	if o == nil || IsNil(o.Permissions) {
 		return nil, false
 	}
@@ -94,7 +94,7 @@ func (o *AuthAPIMeOutput) GetPermissionsOk() ([]AuthPermission, bool) {
 }
 
 // SetPermissions sets field value
-func (o *AuthAPIMeOutput) SetPermissions(v []AuthPermission) {
+func (o *AuthAPIMeOutput) SetPermissions(v []TypesPermission) {
 	o.Permissions = v
 }
 

@@ -44,6 +44,17 @@ func TestLogLevel_Role_Full(t *testing.T) {
 	assert.Equal(t, roleLogger.Level(), zapcore.WarnLevel)
 }
 
+// When LOG_LEVEL=error and no role-specific override exists, the role should
+// inherit the root level (error), not fall back to info.
+func TestLogLevel_Role_NoOverride(t *testing.T) {
+	c := &ExtConfig{
+		LogLevel: "error",
+	}
+	assert.Equal(t, zapcore.ErrorLevel, c.LogLevelFor("root"))
+	assert.Equal(t, zapcore.ErrorLevel, c.LogLevelFor("etcd"))
+	assert.Equal(t, zapcore.ErrorLevel, c.LogLevelFor("dns"))
+}
+
 func TestLogLevel_Role_Full_Decrease(t *testing.T) {
 	c := &ExtConfig{
 		LogLevel: "warn,test-role=debug",

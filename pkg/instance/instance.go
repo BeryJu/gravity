@@ -150,7 +150,12 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		default:
 			span := sentry.StartSpan(ctx, "gravity.instance.bootstrap.role")
 			span.SetTag("gravity.role", roleId)
-			rc.Role = roles.GetRole(roleId)(rc.RoleInstance)
+			constr := roles.GetRole(roleId)
+			if constr == nil {
+				i.log.Warn("could not find role", zap.String("roleId", roleId))
+				continue
+			}
+			rc.Role = constr(rc.RoleInstance)
 			span.Finish()
 		}
 		i.rolesM.Lock()

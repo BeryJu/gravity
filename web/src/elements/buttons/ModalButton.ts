@@ -24,6 +24,9 @@ export const MODAL_BUTTON_STYLES = css`
     .pf-c-modal-box.pf-m-lg {
         overflow-y: auto;
     }
+    .pf-c-modal-box__body {
+        max-height: 75vh;
+    }
     .pf-c-modal-box > .pf-c-button + * {
         margin-right: 0;
     }

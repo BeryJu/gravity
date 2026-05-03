@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.29.0"
+VERSION = "0.30.0"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -107,6 +107,7 @@ internal/resources/tftp:
 
 gen-build:
 	export DEBUG=true
+	export CI=false
 	go run \
 		${GO_FLAGS} \
 		${PWD}/cmd/server/main \
@@ -139,7 +140,7 @@ gen-client-go:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v7.15.0 generate \
+		openapitools/openapi-generator-cli:v7.22.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \
@@ -172,17 +173,19 @@ gen-client-ts:
 gen-client-ts-publish: gen-client-ts
 	cd ${PWD}/${GEN_API_TS}
 	npm publish
+	@echo "Waiting for NPM package to become available"
+	sleep 30
 	cd ${PWD}/web
 	npm i gravity-api@${VERSION}
 	npm version ${VERSION} || true
 	git add package*.json
 
 gen-external-dns:
-	wget https://kubernetes-sigs.github.io/external-dns/v0.18.0/api/webhook.yaml -O pkg/externaldns/schema.yaml
+	wget https://kubernetes-sigs.github.io/external-dns/v0.21.0/api/webhook.yaml -O pkg/externaldns/schema.yaml
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v7.15.0 generate \
+		openapitools/openapi-generator-cli:v7.22.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \
@@ -193,7 +196,7 @@ gen-external-dns:
 		-o /local/${GEN_ED_GO} \
 		-c /local/${GEN_API_GO}/config.yaml
 	cd ${PWD}/${GEN_ED_GO}/
-	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/routers.go
+	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/*
 	rm -f .travis.yml go.mod go.sum main.go Dockerfile
 	go fmt ${PWD}/${GEN_ED_GO}/externaldnsapi
 	go tool mvdan.cc/gofumpt -l -w ${PWD}/${GEN_ED_GO}/

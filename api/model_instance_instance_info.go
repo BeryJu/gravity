@@ -21,10 +21,11 @@ var _ MappedNullable = &InstanceInstanceInfo{}
 
 // InstanceInstanceInfo struct for InstanceInstanceInfo
 type InstanceInstanceInfo struct {
-	Identifier string   `json:"identifier"`
-	Ip         string   `json:"ip"`
-	Roles      []string `json:"roles"`
-	Version    string   `json:"version"`
+	Identifier  string   `json:"identifier"`
+	Ip          string   `json:"ip"`
+	MemoryBytes int32    `json:"memoryBytes"`
+	Roles       []string `json:"roles"`
+	Version     string   `json:"version"`
 }
 
 type _InstanceInstanceInfo InstanceInstanceInfo
@@ -33,10 +34,11 @@ type _InstanceInstanceInfo InstanceInstanceInfo
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInstanceInstanceInfo(identifier string, ip string, roles []string, version string) *InstanceInstanceInfo {
+func NewInstanceInstanceInfo(identifier string, ip string, memoryBytes int32, roles []string, version string) *InstanceInstanceInfo {
 	this := InstanceInstanceInfo{}
 	this.Identifier = identifier
 	this.Ip = ip
+	this.MemoryBytes = memoryBytes
 	this.Roles = roles
 	this.Version = version
 	return &this
@@ -96,6 +98,30 @@ func (o *InstanceInstanceInfo) GetIpOk() (*string, bool) {
 // SetIp sets field value
 func (o *InstanceInstanceInfo) SetIp(v string) {
 	o.Ip = v
+}
+
+// GetMemoryBytes returns the MemoryBytes field value
+func (o *InstanceInstanceInfo) GetMemoryBytes() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.MemoryBytes
+}
+
+// GetMemoryBytesOk returns a tuple with the MemoryBytes field value
+// and a boolean to check if the value has been set.
+func (o *InstanceInstanceInfo) GetMemoryBytesOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.MemoryBytes, true
+}
+
+// SetMemoryBytes sets field value
+func (o *InstanceInstanceInfo) SetMemoryBytes(v int32) {
+	o.MemoryBytes = v
 }
 
 // GetRoles returns the Roles field value
@@ -160,6 +186,7 @@ func (o InstanceInstanceInfo) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["identifier"] = o.Identifier
 	toSerialize["ip"] = o.Ip
+	toSerialize["memoryBytes"] = o.MemoryBytes
 	if o.Roles != nil {
 		toSerialize["roles"] = o.Roles
 	}
@@ -174,6 +201,7 @@ func (o *InstanceInstanceInfo) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"identifier",
 		"ip",
+		"memoryBytes",
 		"roles",
 		"version",
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"beryju.io/gravity/pkg/roles/api/types"
-	"github.com/gorilla/sessions"
 	"github.com/swaggest/usecase"
 	"github.com/swaggest/usecase/status"
 )
@@ -30,23 +29,21 @@ func (ap *AuthProvider) APIConfig() usecase.Interactor {
 }
 
 type APIMeOutput struct {
-	Username      string       `json:"username" required:"true"`
-	Authenticated bool         `json:"authenticated" required:"true"`
-	Permissions   []Permission `json:"permissions" required:"true"`
+	Username      string              `json:"username" required:"true"`
+	Authenticated bool                `json:"authenticated" required:"true"`
+	Permissions   []*types.Permission `json:"permissions" required:"true"`
 }
 
 func (ap *AuthProvider) APIMe() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input struct{}, output *APIMeOutput) error {
-		session := ctx.Value(types.RequestSession).(*sessions.Session)
-		u, ok := session.Values[types.SessionKeyUser]
-		if u == nil || !ok {
+		u := ap.GetUserFromSession(ctx)
+		if u == nil {
 			output.Authenticated = false
 			return nil
 		}
-		user := u.(User)
 		output.Authenticated = true
-		output.Username = user.Username
-		output.Permissions = user.Permissions
+		output.Username = u.Username
+		output.Permissions = u.Permissions
 		return nil
 	})
 	u.SetName("api.users_me")

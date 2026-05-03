@@ -2164,7 +2164,7 @@ components:
           type: boolean
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2227,7 +2227,7 @@ components:
       properties:
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2285,27 +2285,12 @@ components:
           type: string
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
       required:
       - password
       - permissions
-      type: object
-    AuthPermission:
-      example:
-        path: path
-        methods:
-        - methods
-        - methods
-      properties:
-        methods:
-          items:
-            type: string
-          nullable: true
-          type: array
-        path:
-          type: string
       type: object
     BackupAPIBackupStatus:
       example:
@@ -3334,12 +3319,14 @@ components:
         clusterVersionShort: clusterVersionShort
         instances:
         - identifier: identifier
+          memoryBytes: 0
           ip: ip
           roles:
           - roles
           - roles
           version: version
         - identifier: identifier
+          memoryBytes: 0
           ip: ip
           roles:
           - roles
@@ -3400,6 +3387,7 @@ components:
     InstanceInstanceInfo:
       example:
         identifier: identifier
+        memoryBytes: 0
         ip: ip
         roles:
         - roles
@@ -3410,6 +3398,9 @@ components:
           type: string
         ip:
           type: string
+        memoryBytes:
+          minimum: 0
+          type: integer
         roles:
           items:
             type: string
@@ -3420,6 +3411,7 @@ components:
       required:
       - identifier
       - ip
+      - memoryBytes
       - roles
       - version
       type: object
@@ -3725,5 +3717,19 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesPermission:
+      example:
+        path: path
+        methods:
+        - methods
+        - methods
+      properties:
+        methods:
+          items:
+            type: string
+          type: array
+        path:
           type: string
       type: object

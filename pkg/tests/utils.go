@@ -85,12 +85,16 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 	assert.Equal(t, len(expected), len(values.Kvs))
 	for idx, res := range expected {
 		if rb, ok := res.([]byte); ok {
+			t.Logf("Comparing expected '%d' as []byte...", idx)
 			assert.Equal(t, rb, values.Kvs[idx].Value, key.String())
 		} else if rb, ok := res.(string); ok {
+			t.Logf("Comparing expected '%d' as string...", idx)
 			assert.Equal(t, rb, string(values.Kvs[idx].Value), key.String())
 		} else if rb, ok := res.(protoreflect.ProtoMessage); ok {
+			t.Logf("Comparing expected '%d' as proto...", idx)
 			assert.Equal(t, MustProto(rb), values.Kvs[idx].Value, key.String())
 		} else {
+			t.Logf("Comparing expected '%d' as json...", idx)
 			assert.Equal(t, MustJSON(res), string(values.Kvs[idx].Value), key.String())
 		}
 	}
