@@ -56,6 +56,19 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                 : html` <ak-form-element-horizontal label="Name" required name="name">
                       <input type="text" class="pf-c-form-control" required />
                   </ak-form-element-horizontal>`}
+            <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
+                <gravity-dns-handler-config-editor
+                    .value=${this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG}
+                >
+                </gravity-dns-handler-config-editor>
+                <p class="pf-c-form__helper-text">
+                    Configure where requests to this zone will be routed to and how they should be
+                    answered. Drag handlers to reorder them.
+                    <a href="https://gravity.beryju.io/docs/dns/zones/#handlers" target="_blank"
+                        >Documentation</a
+                    >
+                </p>
+            </ak-form-element-horizontal>
             <ak-form-element-horizontal name="authoritative">
                 <div class="pf-c-check">
                     <input
@@ -75,19 +88,6 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                 />
                 <p class="pf-c-form__helper-text">
                     Default TTL for records which don't specify a non-zero value.
-                </p>
-            </ak-form-element-horizontal>
-            <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
-                <gravity-dns-handler-config-editor
-                    .value=${this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG}
-                >
-                </gravity-dns-handler-config-editor>
-                <p class="pf-c-form__helper-text">
-                    Configure where requests to this zone will be routed to and how they should be
-                    answered. Drag handlers to reorder them.
-                    <a href="https://gravity.beryju.io/docs/dns/zones/#handlers" target="_blank"
-                        >Documentation</a
-                    >
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Hook"} name="hook">
