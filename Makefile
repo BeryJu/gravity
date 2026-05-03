@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PWD = $(shell pwd)
 UID = $(shell id -u)
 GID = $(shell id -g)
-VERSION = "0.28.1"
+VERSION = "0.29.0"
 LD_FLAGS = -X beryju.io/gravity/pkg/extconfig.Version=${VERSION}
 GO_FLAGS = -ldflags "${LD_FLAGS}" -v
 SCHEMA_FILE = schema.yml
@@ -132,12 +132,14 @@ gen-tag:
 	cd ${PWD}
 	git commit -m "release version v${VERSION}"
 	git tag v${VERSION}
+	git push
+	git push --tags
 
 gen-client-go:
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v7.15.0 generate \
+		openapitools/openapi-generator-cli:v7.22.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \
@@ -150,7 +152,7 @@ gen-client-go:
 	rm -rf .travis.yml go.mod go.sum test/
 	go get
 	go fmt ${PWD}/${GEN_API_GO}/
-	gofumpt -l -w ${PWD}/${GEN_API_GO}/ || true
+	go tool mvdan.cc/gofumpt -l -w ${PWD}/${GEN_API_GO}/
 	git add ${PWD}/${GEN_API_GO}/
 
 gen-client-ts:
@@ -162,8 +164,8 @@ gen-client-ts:
 		-g typescript-fetch \
 		-o /local/${GEN_API_TS} \
 		--additional-properties=typescriptThreePlus=true,supportsES6=true,npmName=gravity-api,npmVersion=${VERSION} \
-		--git-repo-id BeryJu \
-		--git-user-id gravity
+		--git-user-id BeryJu \
+		--git-repo-id gravity
 	cd ${PWD}/${GEN_API_TS} && npm i
 	\cp -rf ${PWD}/${GEN_API_TS}/* ${PWD}/web/node_modules/gravity-api
 
@@ -176,11 +178,11 @@ gen-client-ts-publish: gen-client-ts
 	git add package*.json
 
 gen-external-dns:
-	wget https://kubernetes-sigs.github.io/external-dns/v0.18.0/api/webhook.yaml -O pkg/externaldns/schema.yaml
+	wget https://kubernetes-sigs.github.io/external-dns/v0.21.0/api/webhook.yaml -O pkg/externaldns/schema.yaml
 	docker run \
 		--rm -v ${PWD}:/local \
 		--user ${UID}:${GID} \
-		openapitools/openapi-generator-cli:v7.15.0 generate \
+		openapitools/openapi-generator-cli:v7.22.0 generate \
 		--git-host beryju.io \
 		--git-user-id gravity \
 		--git-repo-id api \
@@ -191,10 +193,10 @@ gen-external-dns:
 		-o /local/${GEN_ED_GO} \
 		-c /local/${GEN_API_GO}/config.yaml
 	cd ${PWD}/${GEN_ED_GO}/
-	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/routers.go
+	sed -i 's|application/json; charset=UTF-8|application/external.dns.webhook+json;version=1|g' externaldnsapi/*
 	rm -f .travis.yml go.mod go.sum main.go Dockerfile
 	go fmt ${PWD}/${GEN_ED_GO}/externaldnsapi
-	gofumpt -l -w ${PWD}/${GEN_ED_GO}/ || true
+	go tool mvdan.cc/gofumpt -l -w ${PWD}/${GEN_ED_GO}/
 	git add ${PWD}/${GEN_ED_GO}/
 
 gen-go-tidy:
@@ -215,6 +217,7 @@ test-env-stop:
 	docker compose --project-name gravity-test-env down -v
 
 install-deps:
+	sudo apt-get update
 	sudo apt-get install -y nmap libpcap-dev tshark
 	sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
 	$(MAKE) internal/resources/macoui internal/resources/blocky internal/resources/tftp

@@ -15,7 +15,7 @@ const TestZone = "example.com."
 const TestZone2 = "example.net."
 
 func TestRoleDNS_Etcd(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -65,7 +65,7 @@ func TestRoleDNS_Etcd(t *testing.T) {
 
 // Test DNS Entry at root of zone
 func TestRoleDNS_Etcd_Root(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -114,7 +114,7 @@ func TestRoleDNS_Etcd_Root(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -163,7 +163,7 @@ func TestRoleDNS_Etcd_Wildcard(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_CNAME(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -256,7 +256,7 @@ func TestRoleDNS_Etcd_CNAME(t *testing.T) {
 
 // Test DNS CNAME that points to another zone
 func TestRoleDNS_Etcd_CNAME_MultiZone(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -341,7 +341,7 @@ func TestRoleDNS_Etcd_CNAME_MultiZone(t *testing.T) {
 
 // Test DNS CNAME that points to another zone, recursive
 func TestRoleDNS_Etcd_CNAME_Recursive(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -443,7 +443,7 @@ func TestRoleDNS_Etcd_CNAME_Recursive(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -495,7 +495,7 @@ func TestRoleDNS_Etcd_WildcardNested(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -547,7 +547,7 @@ func TestRoleDNS_Etcd_MixedCase(t *testing.T) {
 }
 
 func TestRoleDNS_Etcd_MixedCase_Reverse(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

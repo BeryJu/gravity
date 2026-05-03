@@ -14,7 +14,7 @@ import (
 )
 
 func TestRoleDNS_IPForwarder_v4(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -49,7 +49,7 @@ func TestRoleDNS_IPForwarder_v4(t *testing.T) {
 }
 
 func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -105,7 +105,7 @@ func TestRoleDNS_IPForwarder_v4_Cache(t *testing.T) {
 
 // Test caching of a DNS Record in the apex of a zone
 func TestRoleDNS_IPForwarder_v4_Cache_Zone(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -160,7 +160,7 @@ func TestRoleDNS_IPForwarder_v4_Cache_Zone(t *testing.T) {
 }
 
 func TestRoleDNS_IPForwarder_v6(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

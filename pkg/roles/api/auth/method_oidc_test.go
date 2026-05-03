@@ -17,7 +17,7 @@ import (
 )
 
 func TestAuthOIDC(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -45,7 +45,7 @@ func TestAuthOIDC(t *testing.T) {
 }
 
 func TestAuthOIDC_Token(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 
 	// get initial token from Dex
 	// https://dexidp.io/docs/connectors/local/

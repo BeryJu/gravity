@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/netip"
 	"runtime"
 	"strings"
@@ -13,6 +14,7 @@ import (
 	"beryju.io/gravity/pkg/storage"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/protobuf/proto"
@@ -24,7 +26,7 @@ var (
 	testContextCancel context.CancelFunc
 )
 
-func PanicIfError(args ...interface{}) {
+func PanicIfError(args ...any) {
 	for _, arg := range args {
 		if e, ok := arg.(error); ok && e != nil {
 			panic(arg)
@@ -32,7 +34,7 @@ func PanicIfError(args ...interface{}) {
 	}
 }
 
-func MustJSON(in interface{}) string {
+func MustJSON(in any) string {
 	j, err := json.Marshal(in)
 	if err != nil {
 		panic(err)
@@ -49,6 +51,7 @@ func MustProto(in protoreflect.ProtoMessage) []byte {
 }
 
 func MustParseNetIP(t *testing.T, r string) netip.Addr {
+	t.Helper()
 	i, err := netip.ParseAddr(r)
 	assert.NoError(t, err)
 	return i
@@ -63,7 +66,12 @@ func RandomString(prefix ...string) string {
 	return strings.Join(str, "-")
 }
 
+func RandomMAC() net.HardwareAddr {
+	return net.HardwareAddr(securecookie.GenerateRandomKey(6))
+}
+
 func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...interface{}) {
+	t.Helper()
 	args := []clientv3.OpOption{}
 	if key.IsPrefix() {
 		args = append(args, clientv3.WithPrefix())
@@ -88,7 +96,8 @@ func AssertEtcd(t *testing.T, c *storage.Client, key *storage.Key, expected ...i
 	}
 }
 
-func ResetEtcd(t *testing.T) {
+func ResetEtcd(t testing.TB) {
+	t.Helper()
 	ctx := Context()
 	_, err := extconfig.Get().EtcdClient().Delete(
 		ctx,
@@ -100,14 +109,15 @@ func ResetEtcd(t *testing.T) {
 	}
 }
 
-func Setup(t *testing.T) func() {
-	ctx, cn := context.WithCancel(context.Background())
+func Setup(t testing.TB) {
+	t.Helper()
+	ctx, cn := context.WithCancel(t.Context())
 	testSpan = sentry.StartTransaction(ctx, "test")
 	testContextCancel = cn
 	ResetEtcd(t)
-	return func() {
+	t.Cleanup(func() {
 		testContextCancel()
-	}
+	})
 }
 
 func Listen(port int32) string {

@@ -177,7 +177,7 @@ export class RolesPage extends TablePage<Role> {
                         ${this.renderSidebarAfter()}
                     </div>
                     ${this.data?.results.map((role) => {
-                        return html`<ak-forms-modal id="${role.id}">
+                        return html`<ak-forms-modal id=${role.id}>
                             <span slot="submit"> ${"Update"} </span>
                             <span slot="header"> ${`Update ${role.name} Role config`} </span>
                             ${this.renderRoleConfigForm(role)}

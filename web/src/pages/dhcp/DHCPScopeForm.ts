@@ -10,7 +10,7 @@ import "../../elements/CodeMirror";
 import "../../elements/forms/FormGroup";
 import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, firstElement } from "../../utils";
+import { KV, first, firstElement } from "../../utils";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
@@ -34,6 +34,9 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     send = (data: DhcpAPIScope): Promise<void> => {
         if (data.ipam) {
             data.ipam.type = "internal";
+            Object.keys(data.ipam).map((key) => {
+                data.ipam![key] = data.ipam![key].toString();
+            });
         }
         if (!data.options) {
             data.options = [];
@@ -65,7 +68,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
             <ak-form-element-horizontal label="Subnet CIDR" required name="subnetCidr">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.subnetCidr)}"
+                    value=${ifDefined(this.instance?.subnetCidr)}
                     class="pf-c-form-control"
                     required
                 />
@@ -76,12 +79,12 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
             <ak-form-element-horizontal label="Router" name="router">
                 <input
                     type="text"
-                    value="${ifDefined(
+                    value=${ifDefined(
                         this.instance?.options
                             ?.filter((op) => op.tagName === "router")
                             .map((op) => op.value || "")
                             .join(""),
-                    )}"
+                    )}
                     class="pf-c-form-control"
                 />
                 <p class="pf-c-form__helper-text">Router for the subnet.</p>
@@ -103,7 +106,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
             <ak-form-element-horizontal label="TTL" required name="ttl">
                 <input
                     type="number"
-                    value="${this.instance?.ttl || 86400}"
+                    value=${this.instance?.ttl || 86400}
                     class="pf-c-form-control"
                     required
                 />
@@ -119,7 +122,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     >
                         <input
                             type="text"
-                            value="${ifDefined(this.instance?.ipam?.range_start)}"
+                            value=${ifDefined(this.instance?.ipam?.range_start)}
                             class="pf-c-form-control"
                             required
                         />
@@ -128,11 +131,26 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     <ak-form-element-horizontal label="IP Range End" required name="ipam.range_end">
                         <input
                             type="text"
-                            value="${ifDefined(this.instance?.ipam?.range_end)}"
+                            value=${ifDefined(this.instance?.ipam?.range_end)}
                             class="pf-c-form-control"
                             required
                         />
                         <p class="pf-c-form__helper-text">End of the IP range, exclusive.</p>
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal name="ipam.should_ping">
+                        <div class="pf-c-check">
+                            <input
+                                type="checkbox"
+                                class="pf-c-check__input"
+                                ?checked=${first(
+                                    this.instance?.ipam?.should_ping as unknown as boolean,
+                                    false,
+                                )}
+                            />
+                            <label class="pf-c-check__label"
+                                >Ping IP Address before assigning it.</label
+                            >
+                        </div>
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>
@@ -142,7 +160,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                     <ak-form-element-horizontal label="DNS Zone" name="dns.zone">
                         <input
                             type="text"
-                            value="${ifDefined(this.instance?.dns?.zone)}"
+                            value=${ifDefined(this.instance?.dns?.zone)}
                             class="pf-c-form-control"
                         />
                         <p class="pf-c-form__helper-text">
@@ -157,10 +175,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                 <span slot="header">Advanced settings</span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal label=${"DHCP Options"} name="options">
-                        <ak-codemirror
-                            mode="yaml"
-                            value="${YAML.stringify(this.instance?.options)}"
-                        >
+                        <ak-codemirror mode="yaml" value=${YAML.stringify(this.instance?.options)}>
                         </ak-codemirror>
                         <p class="pf-c-form__helper-text">
                             Add additional DHCP options
@@ -170,7 +185,7 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
                         </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal label=${"Hook"} name="hook">
-                        <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
+                        <ak-codemirror mode="javascript" value=${this.instance?.hook || ""}>
                         </ak-codemirror>
                         <p class="pf-c-form__helper-text">
                             Dynamically alter the DHCP request/response after it is received and

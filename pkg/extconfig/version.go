@@ -9,6 +9,7 @@ import (
 var (
 	Version   = "99.99.99"
 	BuildHash = ""
+	Debug     = false
 )
 
 const ReleaseBuildHash = "release"
@@ -31,6 +32,9 @@ func FullVersion() string {
 		} else {
 			version.WriteString(BuildHash)
 		}
+	}
+	if Debug {
+		version.WriteString("-debug")
 	}
 	return version.String()
 }

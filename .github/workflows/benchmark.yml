@@ -14,12 +14,12 @@ jobs:
     name: Benchmark
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v5
       - uses: ./.github/actions/setup
       - run: make bench
       - if: ${{ always() }}
         run: make test-env-stop
-      - uses: benchmark-action/github-action-benchmark@v1
+      - uses: benchmark-action/github-action-benchmark@a60cea5bc7b49e15c1f58f411161f99e0df48372 # v1
         with:
           name: Gravity Benchmark
           tool: 'go'

@@ -69,7 +69,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
             <ak-form-element-horizontal label="Default TTL" required name="defaultTTL">
                 <input
                     type="number"
-                    value="${this.instance?.defaultTTL || 0}"
+                    value=${this.instance?.defaultTTL || 0}
                     class="pf-c-form-control"
                     required
                 />
@@ -80,9 +80,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
             <ak-form-element-horizontal label=${"Handler Configs"} name="handlerConfigs">
                 <ak-codemirror
                     mode="yaml"
-                    value="${YAML.stringify(
-                        this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG,
-                    )}"
+                    value=${YAML.stringify(this.instance?.handlerConfigs || DEFAULT_HANDLER_CONFIG)}
                 >
                 </ak-codemirror>
                 <p class="pf-c-form__helper-text">
@@ -94,7 +92,7 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
                 </p>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${"Hook"} name="hook">
-                <ak-codemirror mode="javascript" value="${this.instance?.hook || ""}">
+                <ak-codemirror mode="javascript" value=${this.instance?.hook || ""}>
                 </ak-codemirror>
                 <p class="pf-c-form__helper-text">
                     Dynamically alter the DNS request/response after it is received and before it is

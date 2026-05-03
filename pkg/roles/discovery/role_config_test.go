@@ -11,7 +11,7 @@ import (
 )
 
 func TestAPIRoleConfigGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()
@@ -26,7 +26,7 @@ func TestAPIRoleConfigGet(t *testing.T) {
 }
 
 func TestAPIRoleConfigPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	extconfig.Get().ListenOnlyMode = false
 	rootInst := instance.New()
 	ctx := tests.Context()

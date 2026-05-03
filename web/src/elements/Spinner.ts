@@ -25,7 +25,7 @@ export class Spinner extends AKElement {
         return html`<span
             class="pf-c-spinner ${this.size.toString()}"
             role="progressbar"
-            aria-valuetext="${"Loading..."}"
+            aria-valuetext=${"Loading..."}
         >
             <span class="pf-c-spinner__clipper"></span>
             <span class="pf-c-spinner__lead-ball"></span>

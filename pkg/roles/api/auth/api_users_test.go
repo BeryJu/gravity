@@ -14,7 +14,7 @@ import (
 )
 
 func TestAPIUsersGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -38,7 +38,7 @@ func TestAPIUsersGet(t *testing.T) {
 }
 
 func TestAPIUsersPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
@@ -75,7 +75,7 @@ func TestAPIUsersPut(t *testing.T) {
 }
 
 func TestAPIUsersDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)

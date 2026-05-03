@@ -13,7 +13,7 @@ import (
 )
 
 func BenchmarkRoleDHCP_Request(b *testing.B) {
-	defer tests.Setup(nil)()
+	tests.Setup(b)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -85,7 +85,7 @@ func BenchmarkRoleDHCP_Request(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		rr := &dhcpv4.DHCPv4{
 			GatewayIPAddr: net.ParseIP(c.Addr().Next().String()),
-			ClientHWAddr:  generateHW(),
+			ClientHWAddr:  tests.RandomMAC(),
 			OpCode:        dhcpv4.OpcodeBootRequest,
 		}
 		rr.UpdateOption(dhcpv4.OptMessageType(dhcpv4.MessageTypeRequest))

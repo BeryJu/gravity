@@ -14,7 +14,7 @@ import (
 )
 
 func TestMigrate_ClusterVersion(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	ri := rootInst.ForRole("migrate", ctx)
@@ -61,7 +61,7 @@ func TestMigrate_ClusterVersion(t *testing.T) {
 }
 
 func TestMigrate(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	ri := rootInst.ForRole("migrate", ctx)
@@ -87,7 +87,7 @@ func TestMigrate(t *testing.T) {
 }
 
 func TestMigrate_Hook(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	ri := rootInst.ForRole("migrate", ctx)
@@ -121,7 +121,7 @@ func TestMigrate_Hook(t *testing.T) {
 }
 
 func TestMigrate_Cleanup(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	ri := rootInst.ForRole("migrate", ctx)

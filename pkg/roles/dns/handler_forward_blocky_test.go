@@ -12,7 +12,7 @@ import (
 )
 
 func TestRoleDNS_BlockyForwarder(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)
@@ -51,7 +51,7 @@ func TestRoleDNS_BlockyForwarder(t *testing.T) {
 }
 
 func TestRoleDNS_BlockyForwarder_Allow(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

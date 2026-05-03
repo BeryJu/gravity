@@ -11,7 +11,7 @@ import (
 )
 
 func TestAPIToolTraceroute(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	if syscall.Getuid() != 0 {
 		t.Skip("Traceroute requires root permissions")
 	}

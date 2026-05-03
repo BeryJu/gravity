@@ -95,7 +95,7 @@ export class ModalForm extends ModalButton {
                               }}
                               class="pf-m-primary"
                           >
-                              <slot name="${this.submitKeepOpen}"></slot> </ak-spinner-button
+                              <slot name=${this.submitKeepOpen}></slot> </ak-spinner-button
                           >&nbsp;
                       `
                     : html``}

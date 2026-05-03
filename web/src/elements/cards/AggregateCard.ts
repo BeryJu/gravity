@@ -52,7 +52,7 @@ export class AggregateCard extends AKElement {
 
     renderHeaderLink(): TemplateResult {
         return html`${this.headerLink
-            ? html`<a href="${this.headerLink}">
+            ? html`<a href=${this.headerLink}>
                   <i class="fa fa-link"> </i>
               </a>`
             : ""}`;
@@ -62,7 +62,7 @@ export class AggregateCard extends AKElement {
         return html`<div class="pf-c-card pf-c-card-aggregate">
             <div class="pf-c-card__header pf-l-flex pf-m-justify-content-space-between">
                 <div class="pf-c-card__title">
-                    <i class="${ifDefined(this.icon)}"></i>&nbsp;${this.header ? this.header : ""}
+                    <i class=${ifDefined(this.icon)}></i>&nbsp;${this.header ? this.header : ""}
                 </div>
                 ${this.renderHeaderLink()}
             </div>

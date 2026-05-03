@@ -53,7 +53,7 @@ export class DHCPUsageTable extends Table<DhcpAPIScope & { statistics: { usage: 
                     role="progressbar"
                     aria-valuemin="0"
                     aria-valuemax="100"
-                    aria-valuenow="${item.statistics.usage}"
+                    aria-valuenow=${item.statistics.usage}
                     aria-labelledby="progress-sm-example-description"
                 >
                     <div

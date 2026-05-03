@@ -12,7 +12,7 @@ import (
 )
 
 func TestRoleDNS_SOA(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dns", ctx)

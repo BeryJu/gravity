@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Address** | Pointer to **string** |  | [optional] 
-**ElapsedTime** | Pointer to **int32** |  | [optional] 
+**ElapsedTime** | Pointer to **int64** |  | [optional] 
 **Success** | Pointer to **bool** |  | [optional] 
 
 ## Methods
@@ -54,20 +54,20 @@ HasAddress returns a boolean if a field has been set.
 
 ### GetElapsedTime
 
-`func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int32`
+`func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTime() int64`
 
 GetElapsedTime returns the ElapsedTime field if non-nil, zero value otherwise.
 
 ### GetElapsedTimeOk
 
-`func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int32, bool)`
+`func (o *ApiAPIToolTracerouteOutputHop) GetElapsedTimeOk() (*int64, bool)`
 
 GetElapsedTimeOk returns a tuple with the ElapsedTime field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetElapsedTime
 
-`func (o *ApiAPIToolTracerouteOutputHop) SetElapsedTime(v int32)`
+`func (o *ApiAPIToolTracerouteOutputHop) SetElapsedTime(v int64)`
 
 SetElapsedTime sets ElapsedTime field to given value.
 

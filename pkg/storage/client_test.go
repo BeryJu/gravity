@@ -13,7 +13,7 @@ import (
 )
 
 func TestClient(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	c := storage.NewClient("/gravity", nil, false, "localhost:2379")
 	assert.NotNil(t, c)
 	assert.Panics(t, func() {
@@ -22,7 +22,7 @@ func TestClient(t *testing.T) {
 }
 
 func TestClient_Hook_Get(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	ctx := tests.Context()
 
 	t.Run("empty", func(t *testing.T) {
@@ -89,7 +89,7 @@ func TestClient_Hook_Get(t *testing.T) {
 }
 
 func TestClient_Hook_Delete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	ctx := tests.Context()
 
 	c := extconfig.Get().EtcdClient()
@@ -160,7 +160,7 @@ func TestClient_Hook_Delete(t *testing.T) {
 }
 
 func TestClient_Hook_Put(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	ctx := tests.Context()
 
 	t.Run("empty", func(t *testing.T) {

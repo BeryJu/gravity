@@ -148,7 +148,7 @@ func (c *Converter) convertReservation(scope string, ctx context.Context, r Rese
 	lease := api.DhcpAPILeasesPutInput{
 		Address:  r.IPAddress,
 		Hostname: r.Name,
-		Expiry:   api.PtrInt32(-1),
+		Expiry:   api.PtrInt64(-1),
 	}
 	_, err := c.a.RolesDhcpAPI.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(r.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
 	return err

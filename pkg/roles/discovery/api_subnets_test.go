@@ -11,7 +11,7 @@ import (
 )
 
 func TestAPISubnetsGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -33,7 +33,7 @@ func TestAPISubnetsGet(t *testing.T) {
 }
 
 func TestAPISubnetsPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)
@@ -57,7 +57,7 @@ func TestAPISubnetsPut(t *testing.T) {
 }
 
 func TestAPISubnetsDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("discovery", ctx)

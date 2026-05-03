@@ -88,7 +88,7 @@ func (l *Lease) setLeaseIP(req *Request4) {
 	if ip == nil {
 		return
 	}
-	req.log.Debug("using next free IP from IPAM")
+	req.log.Debug("using next free IP from IPAM", zap.String("ip", ip.String()))
 	l.Address = ip.String()
 	l.scope.ipam.UseIP(*ip, l.Identifier)
 }

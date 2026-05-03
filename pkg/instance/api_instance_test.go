@@ -10,7 +10,7 @@ import (
 )
 
 func TestAPIInstanceInfo(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 
 	var output instance.APIInstanceInfo
@@ -20,7 +20,7 @@ func TestAPIInstanceInfo(t *testing.T) {
 }
 
 func TestAPIInstances(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 
 	var output instance.APIClusterInfoOutput

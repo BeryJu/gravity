@@ -17,7 +17,7 @@ func TestDHCP4_handle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("Test only supported on linux")
 	}
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)

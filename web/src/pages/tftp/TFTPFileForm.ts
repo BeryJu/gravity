@@ -50,7 +50,7 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
         return html`<ak-form-element-horizontal label="Name" required name="name">
                 <input
                     type="text"
-                    value="${this.instance?.name || ""}"
+                    value=${this.instance?.name || ""}
                     class="pf-c-form-control"
                     required
                 />
@@ -59,7 +59,7 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
             <ak-form-element-horizontal label="Host" required name="host">
                 <input
                     type="text"
-                    value="${this.instance?.host || ""}"
+                    value=${this.instance?.host || ""}
                     class="pf-c-form-control"
                     required
                 />

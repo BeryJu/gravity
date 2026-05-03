@@ -27,7 +27,7 @@ func (it IncomingTransfer) Size() (n int64, ok bool) {
 }
 
 func TestTFTP_Write(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tftp", ctx)

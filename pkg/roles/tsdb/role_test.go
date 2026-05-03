@@ -15,7 +15,7 @@ import (
 )
 
 func TestRoleStartNoConfig(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 
@@ -34,7 +34,7 @@ func TestRoleStartNoConfig(t *testing.T) {
 }
 
 func TestRoleStartEmptyConfig(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)
@@ -45,7 +45,7 @@ func TestRoleStartEmptyConfig(t *testing.T) {
 }
 
 func TestRoleStartNotEnabled(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)
@@ -58,7 +58,7 @@ func TestRoleStartNotEnabled(t *testing.T) {
 }
 
 func TestRoleWrite(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("tsdb", ctx)

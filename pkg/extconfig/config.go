@@ -26,15 +26,23 @@ type ExtConfig struct {
 		Interface  string `env:"INSTANCE_INTERFACE"`
 		Listen     string `env:"INSTANCE_LISTEN"`
 	}
-	LogLevel       string   `env:"LOG_LEVEL,default=info"`
+	LogLevel       string   `env:"LOG_LEVEL,default=info,etcd=error"`
 	DataPath       string   `env:"DATA_PATH,default=./data"`
 	BootstrapRoles string   `env:"BOOTSTRAP_ROLES,default=dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp"`
 	FallbackDNS    string   `env:"FALLBACK_DNS,default=1.1.1.1:53"`
 	ImportConfigs  []string `env:"IMPORT_CONFIGS"`
 
-	Sentry struct {
-		DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
-		Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+	Observability struct {
+		Sentry struct {
+			Enabled bool   `env:"SENTRY_ENABLED,default=false"`
+			DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
+		}
+		Pyroscope struct {
+			Enabled  bool   `env:"PYROSCOPE_ENABLED,default=false"`
+			Server   string `env:"PYROSCOPE_SERVER"`
+			Username string `env:"PYROSCOPE_USERNAME"`
+			Password string `env:"PYROSCOPE_PASSWORD"`
+		}
 	}
 
 	Debug          bool `env:"DEBUG,default=false"`
@@ -60,7 +68,7 @@ func Get() *ExtConfig {
 	if err != nil {
 		panic(err)
 	}
-	cfg.load()
+	cfg.Build()
 	globalExtConfig = &cfg
 	return &cfg
 }
@@ -99,7 +107,7 @@ func (e *ExtConfig) Listen(port int32) string {
 	return Listen(listen, port)
 }
 
-func (e *ExtConfig) load() {
+func (e *ExtConfig) Build() {
 	e.logger = e.BuildLogger()
 	if e.Instance.Identifier == "" {
 		h, err := os.Hostname()
@@ -124,5 +132,4 @@ func (e *ExtConfig) load() {
 			e.Instance.Interface = i.Name
 		}
 	}
-	e.logger = e.BuildLogger()
 }

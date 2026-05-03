@@ -9,7 +9,7 @@ description: Configure Gravity's inbuilt backup system to upload snapshots to S3
 Gravity's inbuilt backup regularly saves etcd snapshots to a user-configured S3 endpoint and bucket. These snapshots can then be used to restore a cluster from scratch.
 
 Starting with 0.4.5, Gravity will also keep 1 snapshot locally without any additional configuration, in the `/data/backup` directory.
-This snapshot is created/updated with the same schedule as configured in the [Role configuration's `Cron Schedule`](./role_config.md#local-and-s3-related-settings)
+This snapshot is created/updated with the same schedule as configured in the [Role configuration's `Cron Schedule`](./role_config#local-and-s3-related-settings)
 This snapshot can be restored just like other snapshots.
 
 ### Restore

@@ -4,10 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/getsentry/sentry-go"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -81,6 +79,7 @@ func (i *Instance) Role(id string) roles.Role {
 func (i *Instance) Start() {
 	i.log.Info("Gravity starting", zap.String("version", extconfig.FullVersion()))
 	i.startSentry()
+	i.startPyroscope()
 	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		if !i.startEtcd(bs.Context()) {
@@ -107,35 +106,6 @@ func (i *Instance) startEtcd(ctx context.Context) bool {
 		return false
 	}
 	return true
-}
-
-func (i *Instance) startSentry() {
-	if !extconfig.Get().Sentry.Enabled || extconfig.Get().CI {
-		return
-	}
-	release := fmt.Sprintf("gravity@%s", extconfig.FullVersion())
-	rate := 0.5
-	if extconfig.Get().Debug {
-		rate = 1
-	}
-	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              extconfig.Get().Sentry.DSN,
-		Release:          release,
-		EnableTracing:    true,
-		TracesSampleRate: rate,
-		HTTPTransport:    extconfig.NewUserAgentTransport(release, extconfig.Transport()),
-		Debug:            extconfig.Get().Debug,
-		DebugWriter:      NewSentryWriter(i.log.Named("sentry")),
-	})
-	if err != nil {
-		i.log.Warn("failed to init sentry", zap.Error(err))
-		return
-	}
-	sentry.ConfigureScope(func(scope *sentry.Scope) {
-		scope.SetTag("gravity.instance", extconfig.Get().Instance.Identifier)
-		scope.SetTag("gravity.version", extconfig.Version)
-		scope.SetTag("gravity.hash", extconfig.BuildHash)
-	})
 }
 
 func (i *Instance) Log() *zap.Logger {
@@ -180,7 +150,12 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		default:
 			span := sentry.StartSpan(ctx, "gravity.instance.bootstrap.role")
 			span.SetTag("gravity.role", roleId)
-			rc.Role = roles.GetRole(roleId)(rc.RoleInstance)
+			constr := roles.GetRole(roleId)
+			if constr == nil {
+				i.log.Warn("could not find role", zap.String("roleId", roleId))
+				continue
+			}
+			rc.Role = constr(rc.RoleInstance)
 			span.Finish()
 		}
 		i.rolesM.Lock()
@@ -386,5 +361,6 @@ func (i *Instance) Stop() {
 		i.etcd.Stop()
 	}
 	i.rootContextCancel(ErrInstanceStopping)
-	sentry.Flush(2 * time.Second)
+	i.stopSentry()
+	i.stopPyroscope()
 }

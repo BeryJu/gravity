@@ -1,13 +1,13 @@
 //go:build e2e
-// +build e2e
 
 package tests
 
 import (
+	"net/netip"
 	"testing"
 
 	"beryju.io/gravity/tests/gravity"
-	dockernetwork "github.com/docker/docker/api/types/network"
+	mobynetwork "github.com/moby/moby/api/types/network"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/network"
@@ -18,11 +18,11 @@ func TestDiscovery_Simple(t *testing.T) {
 
 	net, err := network.New(
 		ctx,
-		network.WithIPAM(&dockernetwork.IPAM{
+		network.WithIPAM(&mobynetwork.IPAM{
 			Driver: "default",
-			Config: []dockernetwork.IPAMConfig{
+			Config: []mobynetwork.IPAMConfig{
 				{
-					Subnet: "10.100.0.0/29",
+					Subnet: netip.MustParsePrefix("10.100.0.0/29"),
 				},
 			},
 		}),

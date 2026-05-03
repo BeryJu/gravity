@@ -3,7 +3,6 @@
 // LICENSE file in the root directory of this source tree.
 
 //go:build linux
-// +build linux
 
 package dhcp
 

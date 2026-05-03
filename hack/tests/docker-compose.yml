@@ -10,7 +10,7 @@ networks:
 
 services:
   etcd:
-    image: quay.io/coreos/etcd:v3.6.4
+    image: quay.io/coreos/etcd:v3.6.10
     ports:
       - 2385:2385
     networks:
@@ -19,7 +19,7 @@ services:
     command: |
       /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2385 --advertise-client-urls http://127.0.0.1:2385
   minio:
-    image: minio/minio
+    image: docker.io/minio/minio
     ports:
       - 9001:9000
       - 9002:9001
@@ -32,7 +32,7 @@ services:
     command: server /data --console-address ":9001"
   coredns:
     hostname: coredns.t.gravity.beryju.io
-    image: docker.io/coredns/coredns:1.12.4
+    image: docker.io/coredns/coredns:1.14.3
     ports:
       - "1053:53"
       - "1053:53/udp"
@@ -52,7 +52,7 @@ services:
     volumes:
       - ./nginx:/usr/share/nginx/html
   dex:
-    image: ghcr.io/dexidp/dex:v2.44.0
+    image: ghcr.io/dexidp/dex:v2.45.1
     ports:
       - 5556:5556
     networks:

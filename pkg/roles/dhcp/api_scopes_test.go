@@ -30,7 +30,7 @@ func testScope() dhcp.Scope {
 }
 
 func TestAPIScopesGet(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -63,7 +63,7 @@ func TestAPIScopesGet(t *testing.T) {
 }
 
 func TestAPIScopesPut(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)
@@ -114,7 +114,7 @@ func TestAPIScopesPut(t *testing.T) {
 }
 
 func TestAPIScopesDelete(t *testing.T) {
-	defer tests.Setup(t)()
+	tests.Setup(t)
 	rootInst := instance.New()
 	ctx := tests.Context()
 	inst := rootInst.ForRole("dhcp", ctx)

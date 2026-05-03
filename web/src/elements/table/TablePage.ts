@@ -31,7 +31,7 @@ export abstract class TablePage<T extends object> extends Table<T> {
         return super.renderEmpty(html`
             ${inner
                 ? inner
-                : html`<ak-empty-state icon=${this.pageIcon()} header="${"No objects found."}">
+                : html`<ak-empty-state icon=${this.pageIcon()} header=${"No objects found."}>
                       <div slot="body">
                           ${this.searchEnabled() ? this.renderEmptyClearSearch() : html``}
                       </div>

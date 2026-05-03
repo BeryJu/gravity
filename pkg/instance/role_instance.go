@@ -21,7 +21,9 @@ type RoleInstance struct {
 
 func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {
 	ri := &RoleInstance{
-		log:     extconfig.Get().Logger().Named("role." + roleId),
+		log: extconfig.Get().Logger().Named("role." + roleId).WithOptions(
+			extconfig.SetLevel(extconfig.Get().LogLevelFor(roleId)),
+		),
 		roleId:  roleId,
 		parent:  i,
 		context: ctx,

@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Enabled** | Pointer to **bool** |  | [optional] 
-**Expire** | Pointer to **int32** |  | [optional] 
-**Scrape** | Pointer to **int32** |  | [optional] 
+**Expire** | Pointer to **int64** |  | [optional] 
+**Scrape** | Pointer to **int64** |  | [optional] 
 
 ## Methods
 
@@ -54,20 +54,20 @@ HasEnabled returns a boolean if a field has been set.
 
 ### GetExpire
 
-`func (o *TsdbRoleConfig) GetExpire() int32`
+`func (o *TsdbRoleConfig) GetExpire() int64`
 
 GetExpire returns the Expire field if non-nil, zero value otherwise.
 
 ### GetExpireOk
 
-`func (o *TsdbRoleConfig) GetExpireOk() (*int32, bool)`
+`func (o *TsdbRoleConfig) GetExpireOk() (*int64, bool)`
 
 GetExpireOk returns a tuple with the Expire field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetExpire
 
-`func (o *TsdbRoleConfig) SetExpire(v int32)`
+`func (o *TsdbRoleConfig) SetExpire(v int64)`
 
 SetExpire sets Expire field to given value.
 
@@ -79,20 +79,20 @@ HasExpire returns a boolean if a field has been set.
 
 ### GetScrape
 
-`func (o *TsdbRoleConfig) GetScrape() int32`
+`func (o *TsdbRoleConfig) GetScrape() int64`
 
 GetScrape returns the Scrape field if non-nil, zero value otherwise.
 
 ### GetScrapeOk
 
-`func (o *TsdbRoleConfig) GetScrapeOk() (*int32, bool)`
+`func (o *TsdbRoleConfig) GetScrapeOk() (*int64, bool)`
 
 GetScrapeOk returns a tuple with the Scrape field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetScrape
 
-`func (o *TsdbRoleConfig) SetScrape(v int32)`
+`func (o *TsdbRoleConfig) SetScrape(v int64)`
 
 SetScrape sets Scrape field to given value.
 

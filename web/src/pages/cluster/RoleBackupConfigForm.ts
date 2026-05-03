@@ -35,7 +35,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
         return html` <ak-form-element-horizontal label="Cron Schedule" required name="cronExpr">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.cronExpr)}"
+                    value=${ifDefined(this.instance?.cronExpr)}
                     class="pf-c-form-control"
                     required
                 />
@@ -44,7 +44,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             <ak-form-element-horizontal label="Endpoint" required name="endpoint">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.endpoint)}"
+                    value=${ifDefined(this.instance?.endpoint)}
                     class="pf-c-form-control"
                     required
                 />
@@ -53,7 +53,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             <ak-form-element-horizontal label="Bucket" required name="bucket">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.bucket)}"
+                    value=${ifDefined(this.instance?.bucket)}
                     class="pf-c-form-control"
                     required
                 />
@@ -61,7 +61,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             <ak-form-element-horizontal label="Access key" required name="accessKey">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.accessKey)}"
+                    value=${ifDefined(this.instance?.accessKey)}
                     class="pf-c-form-control"
                     required
                 />
@@ -69,7 +69,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             <ak-form-element-horizontal label="Secret Key" required name="secretKey">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.secretKey)}"
+                    value=${ifDefined(this.instance?.secretKey)}
                     class="pf-c-form-control"
                     required
                 />
@@ -77,7 +77,7 @@ export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
             <ak-form-element-horizontal label="Path" required name="path">
                 <input
                     type="text"
-                    value="${ifDefined(this.instance?.path)}"
+                    value=${ifDefined(this.instance?.path)}
                     class="pf-c-form-control"
                     required
                 />

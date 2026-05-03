@@ -234,9 +234,7 @@ export abstract class Table<T extends object> extends AKElement {
                     <div class="pf-l-bullseye">
                         ${inner
                             ? inner
-                            : html`<ak-empty-state
-                                  header="${"No objects found."}"
-                              ></ak-empty-state>`}
+                            : html`<ak-empty-state header=${"No objects found."}></ak-empty-state>`}
                     </div>
                 </td>
             </tr>
@@ -244,7 +242,7 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     renderError(): TemplateResult {
-        return html`<ak-empty-state header="${"Failed to fetch objects."}" icon="fa-times">
+        return html`<ak-empty-state header=${"Failed to fetch objects."} icon="fa-times">
             <div slot="body">${this.hasError?.toString()}</div>
         </ak-empty-state>`;
     }
@@ -277,7 +275,7 @@ export abstract class Table<T extends object> extends AKElement {
         return items.map((item) => {
             return html`<tbody
                 role="rowgroup"
-                class="${this.expandedElements.indexOf(item) > -1 ? "pf-m-expanded" : ""}"
+                class=${this.expandedElements.indexOf(item) > -1 ? "pf-m-expanded" : ""}
             >
                 <tr role="row">
                     ${this.checkbox
