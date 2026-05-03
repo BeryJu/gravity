@@ -371,5 +371,5 @@ tool (
 )
 
 ignore (
-	./node_modules
+	./web/node_modules
 )
