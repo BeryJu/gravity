@@ -102,6 +102,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
             new TableColumn("Hostname"),
             new TableColumn("Record Type"),
             new TableColumn("Data"),
+            new TableColumn("TTL"),
             new TableColumn("Actions"),
         ];
     }
@@ -111,6 +112,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
             html`${item.hostname}${item.uid === "" ? html`` : html` (${item.uid})`}`,
             html`${item.type}`,
             html`<pre>${item.data}</pre>`,
+            html`${item.ttl}`,
             html`<ak-forms-modal>
                 <span slot="submit"> ${"Update"} </span>
                 <span slot="header"> ${"Update Zone"} </span>
@@ -242,7 +244,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
                     .request=${{
                         role: TypesAPIMetricsRole.Dns,
                         category: "zones",
-                        extraKeys: [this.zone],
+                        extraKeys: [this.zone!],
                     }}
                 ></gravity-overview-charts-dns-requests>
             </div>
