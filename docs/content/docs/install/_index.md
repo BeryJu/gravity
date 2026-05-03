@@ -54,6 +54,8 @@ You can reach Gravity by going to `http://<server IP or hostname>:8008` in your 
 
 The following environment variables can be set.
 
+{{% alert color="warning" %}} Environment variable values should _not_ contain quotation marks. {{% /alert %}}
+
 ### Common
 
 - `BOOTSTRAP_ROLES`: Configure which roles this instance should bootstrap. Defaults to `dns;dhcp;api;etcd;discovery;backup;monitoring;tsdb;tftp`.
