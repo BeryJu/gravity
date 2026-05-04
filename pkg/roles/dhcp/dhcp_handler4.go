@@ -46,6 +46,26 @@ const MaxDatagram = 1 << 16
 
 type Handler4 func(req *Request4) *dhcpv4.DHCPv4
 
+func isLocalAddress(ip net.IP) (bool, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return false, err
+	}
+	for _, addr := range addrs {
+		var localIP net.IP
+		switch v := addr.(type) {
+		case *net.IPNet:
+			localIP = v.IP
+		case *net.IPAddr:
+			localIP = v.IP
+		}
+		if localIP.Equal(ip) {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 func (h *handler4) Serve() error {
 	for {
 		b := *bufpool.Get().(*[]byte)
@@ -110,15 +130,20 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	useEthernet := false
 	var p *net.UDPAddr
 	if !r.GatewayIPAddr.IsUnspecified() {
-		r.log.Debug("sending response to gateway")
+		l, err := isLocalAddress(r.GatewayIPAddr)
 		// giaddr should be set to the Relay's IP Address, however it is the IP of the subnet
 		// the client should get an IP for. We might not always be able to directly reply to that IP
 		// especially in environments where we can't adjust firewall/routing rules. (like e2e tests)
-		// when this environment variable is set, reply directly to the IP we got the UDP request from,
+		// Also if the giaddr is a local IP (on the same host), then we can't directly send traffic
+		// via it as it won't get routed correctly.
+		// When this environment variable is set, reply directly to the IP we got the UDP request from,
 		// which is not the RFC defined behaviour
-		p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
-		if debugDHCPGatewayReplyPeer {
-			p.IP = getIP(r.peer)
+		if debugDHCPGatewayReplyPeer || err != nil && l {
+			r.log.Debug("sending response to gateway via local ip")
+			p = &net.UDPAddr{IP: getIP(r.peer), Port: dhcpv4.ServerPort}
+		} else {
+			r.log.Debug("sending response to gateway")
+			p = &net.UDPAddr{IP: r.GatewayIPAddr, Port: dhcpv4.ServerPort}
 		}
 	} else if resp.MessageType() == dhcpv4.MessageTypeNak {
 		r.log.Debug("sending response to bcast (NAK)")
