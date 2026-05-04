@@ -38,7 +38,7 @@ func main() {
 	zone := "zone_example" // string | 
 	hostname := "hostname_example" // string | 
 	uid := "uid_example" // string | 
-	type_ := "type__example" // string | 
+	type_ := openapiclient.TypesDNSRecordType("A") // TypesDNSRecordType | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -64,7 +64,7 @@ Name | Type | Description  | Notes
  **zone** | **string** |  | 
  **hostname** | **string** |  | 
  **uid** | **string** |  | 
- **type_** | **string** |  | 
+ **type_** | [**TypesDNSRecordType**](TypesDNSRecordType.md) |  | 
 
 ### Return type
 
@@ -427,7 +427,7 @@ func main() {
 	zone := "zone_example" // string | 
 	hostname := "hostname_example" // string | 
 	uid := "uid_example" // string |  (optional)
-	dnsAPIRecordsPutInput := *openapiclient.NewDnsAPIRecordsPutInput("Data_example", int64(123), "Type_example") // DnsAPIRecordsPutInput |  (optional)
+	dnsAPIRecordsPutInput := *openapiclient.NewDnsAPIRecordsPutInput("Data_example", int64(123), openapiclient.TypesDNSRecordType("A")) // DnsAPIRecordsPutInput |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

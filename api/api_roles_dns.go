@@ -27,7 +27,7 @@ type ApiDnsDeleteRecordsRequest struct {
 	zone       *string
 	hostname   *string
 	uid        *string
-	type_      *string
+	type_      *TypesDNSRecordType
 }
 
 func (r ApiDnsDeleteRecordsRequest) Zone(zone string) ApiDnsDeleteRecordsRequest {
@@ -45,7 +45,7 @@ func (r ApiDnsDeleteRecordsRequest) Uid(uid string) ApiDnsDeleteRecordsRequest {
 	return r
 }
 
-func (r ApiDnsDeleteRecordsRequest) Type_(type_ string) ApiDnsDeleteRecordsRequest {
+func (r ApiDnsDeleteRecordsRequest) Type_(type_ TypesDNSRecordType) ApiDnsDeleteRecordsRequest {
 	r.type_ = &type_
 	return r
 }

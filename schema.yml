@@ -958,7 +958,7 @@ paths:
         name: type
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
       responses:
         "204":
           description: No Content
@@ -2375,7 +2375,7 @@ components:
           format: int64
           type: integer
         type:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
         uid:
           type: string
       required:
@@ -2416,7 +2416,7 @@ components:
           format: int64
           type: integer
         type:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
       required:
       - type
       - ttl
@@ -2814,6 +2814,17 @@ components:
           nullable: true
           type: array
       type: object
+    TypesDNSRecordType:
+      enum:
+      - A
+      - AAAA
+      - PTR
+      - SRV
+      - MX
+      - CNAME
+      - TXT
+      - SOA
+      type: string
     TypesOIDCConfig:
       properties:
         clientID:

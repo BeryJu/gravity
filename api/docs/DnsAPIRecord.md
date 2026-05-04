@@ -12,14 +12,14 @@ Name | Type | Description | Notes
 **SrvPriority** | Pointer to **int32** |  | [optional] 
 **SrvWeight** | Pointer to **int32** |  | [optional] 
 **Ttl** | **int64** |  | 
-**Type** | **string** |  | 
+**Type** | [**TypesDNSRecordType**](TypesDNSRecordType.md) |  | 
 **Uid** | **string** |  | 
 
 ## Methods
 
 ### NewDnsAPIRecord
 
-`func NewDnsAPIRecord(data string, fqdn string, hostname string, ttl int64, type_ string, uid string, ) *DnsAPIRecord`
+`func NewDnsAPIRecord(data string, fqdn string, hostname string, ttl int64, type_ TypesDNSRecordType, uid string, ) *DnsAPIRecord`
 
 NewDnsAPIRecord instantiates a new DnsAPIRecord object
 This constructor will assign default values to properties that have it defined,
@@ -216,20 +216,20 @@ SetTtl sets Ttl field to given value.
 
 ### GetType
 
-`func (o *DnsAPIRecord) GetType() string`
+`func (o *DnsAPIRecord) GetType() TypesDNSRecordType`
 
 GetType returns the Type field if non-nil, zero value otherwise.
 
 ### GetTypeOk
 
-`func (o *DnsAPIRecord) GetTypeOk() (*string, bool)`
+`func (o *DnsAPIRecord) GetTypeOk() (*TypesDNSRecordType, bool)`
 
 GetTypeOk returns a tuple with the Type field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetType
 
-`func (o *DnsAPIRecord) SetType(v string)`
+`func (o *DnsAPIRecord) SetType(v TypesDNSRecordType)`
 
 SetType sets Type field to given value.
 
