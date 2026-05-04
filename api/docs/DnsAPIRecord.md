@@ -8,6 +8,11 @@ Name | Type | Description | Notes
 **Fqdn** | **string** |  | 
 **Hostname** | **string** |  | 
 **MxPreference** | Pointer to **int32** |  | [optional] 
+**SoaExpire** | Pointer to **int32** |  | [optional] 
+**SoaMbox** | Pointer to **string** |  | [optional] 
+**SoaRefresh** | Pointer to **int32** |  | [optional] 
+**SoaRetry** | Pointer to **int32** |  | [optional] 
+**SoaSerial** | Pointer to **int32** |  | [optional] 
 **SrvPort** | Pointer to **int32** |  | [optional] 
 **SrvPriority** | Pointer to **int32** |  | [optional] 
 **SrvWeight** | Pointer to **int32** |  | [optional] 
@@ -118,6 +123,131 @@ SetMxPreference sets MxPreference field to given value.
 `func (o *DnsAPIRecord) HasMxPreference() bool`
 
 HasMxPreference returns a boolean if a field has been set.
+
+### GetSoaExpire
+
+`func (o *DnsAPIRecord) GetSoaExpire() int32`
+
+GetSoaExpire returns the SoaExpire field if non-nil, zero value otherwise.
+
+### GetSoaExpireOk
+
+`func (o *DnsAPIRecord) GetSoaExpireOk() (*int32, bool)`
+
+GetSoaExpireOk returns a tuple with the SoaExpire field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaExpire
+
+`func (o *DnsAPIRecord) SetSoaExpire(v int32)`
+
+SetSoaExpire sets SoaExpire field to given value.
+
+### HasSoaExpire
+
+`func (o *DnsAPIRecord) HasSoaExpire() bool`
+
+HasSoaExpire returns a boolean if a field has been set.
+
+### GetSoaMbox
+
+`func (o *DnsAPIRecord) GetSoaMbox() string`
+
+GetSoaMbox returns the SoaMbox field if non-nil, zero value otherwise.
+
+### GetSoaMboxOk
+
+`func (o *DnsAPIRecord) GetSoaMboxOk() (*string, bool)`
+
+GetSoaMboxOk returns a tuple with the SoaMbox field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaMbox
+
+`func (o *DnsAPIRecord) SetSoaMbox(v string)`
+
+SetSoaMbox sets SoaMbox field to given value.
+
+### HasSoaMbox
+
+`func (o *DnsAPIRecord) HasSoaMbox() bool`
+
+HasSoaMbox returns a boolean if a field has been set.
+
+### GetSoaRefresh
+
+`func (o *DnsAPIRecord) GetSoaRefresh() int32`
+
+GetSoaRefresh returns the SoaRefresh field if non-nil, zero value otherwise.
+
+### GetSoaRefreshOk
+
+`func (o *DnsAPIRecord) GetSoaRefreshOk() (*int32, bool)`
+
+GetSoaRefreshOk returns a tuple with the SoaRefresh field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaRefresh
+
+`func (o *DnsAPIRecord) SetSoaRefresh(v int32)`
+
+SetSoaRefresh sets SoaRefresh field to given value.
+
+### HasSoaRefresh
+
+`func (o *DnsAPIRecord) HasSoaRefresh() bool`
+
+HasSoaRefresh returns a boolean if a field has been set.
+
+### GetSoaRetry
+
+`func (o *DnsAPIRecord) GetSoaRetry() int32`
+
+GetSoaRetry returns the SoaRetry field if non-nil, zero value otherwise.
+
+### GetSoaRetryOk
+
+`func (o *DnsAPIRecord) GetSoaRetryOk() (*int32, bool)`
+
+GetSoaRetryOk returns a tuple with the SoaRetry field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaRetry
+
+`func (o *DnsAPIRecord) SetSoaRetry(v int32)`
+
+SetSoaRetry sets SoaRetry field to given value.
+
+### HasSoaRetry
+
+`func (o *DnsAPIRecord) HasSoaRetry() bool`
+
+HasSoaRetry returns a boolean if a field has been set.
+
+### GetSoaSerial
+
+`func (o *DnsAPIRecord) GetSoaSerial() int32`
+
+GetSoaSerial returns the SoaSerial field if non-nil, zero value otherwise.
+
+### GetSoaSerialOk
+
+`func (o *DnsAPIRecord) GetSoaSerialOk() (*int32, bool)`
+
+GetSoaSerialOk returns a tuple with the SoaSerial field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaSerial
+
+`func (o *DnsAPIRecord) SetSoaSerial(v int32)`
+
+SetSoaSerial sets SoaSerial field to given value.
+
+### HasSoaSerial
+
+`func (o *DnsAPIRecord) HasSoaSerial() bool`
+
+HasSoaSerial returns a boolean if a field has been set.
 
 ### GetSrvPort
 

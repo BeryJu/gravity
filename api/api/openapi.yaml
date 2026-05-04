@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 0.32.0
+  version: 0.32.1
 servers:
 - url: /
 paths:
@@ -3004,15 +3004,20 @@ components:
     DnsAPIRecord:
       example:
         srvPort: 0
-        uid: uid
-        hostname: hostname
         mxPreference: 0
         data: data
         fqdn: fqdn
         srvPriority: 0
-        srvWeight: 0
         type: A
-        ttl: 5
+        ttl: 3
+        soaExpire: 0
+        soaRefresh: 0
+        uid: uid
+        hostname: hostname
+        soaMbox: soaMbox
+        srvWeight: 0
+        soaRetry: 0
+        soaSerial: 0
       properties:
         data:
           type: string
@@ -3021,6 +3026,20 @@ components:
         hostname:
           type: string
         mxPreference:
+          minimum: 0
+          type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
           minimum: 0
           type: integer
         srvPort:
@@ -3051,25 +3070,35 @@ components:
       example:
         records:
         - srvPort: 0
-          uid: uid
-          hostname: hostname
           mxPreference: 0
           data: data
           fqdn: fqdn
           srvPriority: 0
-          srvWeight: 0
           type: A
-          ttl: 5
+          ttl: 3
+          soaExpire: 0
+          soaRefresh: 0
+          uid: uid
+          hostname: hostname
+          soaMbox: soaMbox
+          srvWeight: 0
+          soaRetry: 0
+          soaSerial: 0
         - srvPort: 0
-          uid: uid
-          hostname: hostname
           mxPreference: 0
           data: data
           fqdn: fqdn
           srvPriority: 0
-          srvWeight: 0
           type: A
-          ttl: 5
+          ttl: 3
+          soaExpire: 0
+          soaRefresh: 0
+          uid: uid
+          hostname: hostname
+          soaMbox: soaMbox
+          srvWeight: 0
+          soaRetry: 0
+          soaSerial: 0
       properties:
         records:
           items:
@@ -3081,17 +3110,36 @@ components:
       type: object
     DnsAPIRecordsPutInput:
       example:
+        soaRefresh: 0
         srvPort: 0
+        soaMbox: soaMbox
         mxPreference: 0
         data: data
         srvPriority: 0
         srvWeight: 0
+        soaRetry: 0
+        soaSerial: 0
         type: A
-        ttl: 5
+        ttl: 3
+        soaExpire: 0
       properties:
         data:
           type: string
         mxPreference:
+          minimum: 0
+          type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
           minimum: 0
           type: integer
         srvPort:

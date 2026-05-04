@@ -6,6 +6,11 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Data** | **string** |  | 
 **MxPreference** | Pointer to **int32** |  | [optional] 
+**SoaExpire** | Pointer to **int32** |  | [optional] 
+**SoaMbox** | Pointer to **string** |  | [optional] 
+**SoaRefresh** | Pointer to **int32** |  | [optional] 
+**SoaRetry** | Pointer to **int32** |  | [optional] 
+**SoaSerial** | Pointer to **int32** |  | [optional] 
 **SrvPort** | Pointer to **int32** |  | [optional] 
 **SrvPriority** | Pointer to **int32** |  | [optional] 
 **SrvWeight** | Pointer to **int32** |  | [optional] 
@@ -75,6 +80,131 @@ SetMxPreference sets MxPreference field to given value.
 `func (o *DnsAPIRecordsPutInput) HasMxPreference() bool`
 
 HasMxPreference returns a boolean if a field has been set.
+
+### GetSoaExpire
+
+`func (o *DnsAPIRecordsPutInput) GetSoaExpire() int32`
+
+GetSoaExpire returns the SoaExpire field if non-nil, zero value otherwise.
+
+### GetSoaExpireOk
+
+`func (o *DnsAPIRecordsPutInput) GetSoaExpireOk() (*int32, bool)`
+
+GetSoaExpireOk returns a tuple with the SoaExpire field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaExpire
+
+`func (o *DnsAPIRecordsPutInput) SetSoaExpire(v int32)`
+
+SetSoaExpire sets SoaExpire field to given value.
+
+### HasSoaExpire
+
+`func (o *DnsAPIRecordsPutInput) HasSoaExpire() bool`
+
+HasSoaExpire returns a boolean if a field has been set.
+
+### GetSoaMbox
+
+`func (o *DnsAPIRecordsPutInput) GetSoaMbox() string`
+
+GetSoaMbox returns the SoaMbox field if non-nil, zero value otherwise.
+
+### GetSoaMboxOk
+
+`func (o *DnsAPIRecordsPutInput) GetSoaMboxOk() (*string, bool)`
+
+GetSoaMboxOk returns a tuple with the SoaMbox field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaMbox
+
+`func (o *DnsAPIRecordsPutInput) SetSoaMbox(v string)`
+
+SetSoaMbox sets SoaMbox field to given value.
+
+### HasSoaMbox
+
+`func (o *DnsAPIRecordsPutInput) HasSoaMbox() bool`
+
+HasSoaMbox returns a boolean if a field has been set.
+
+### GetSoaRefresh
+
+`func (o *DnsAPIRecordsPutInput) GetSoaRefresh() int32`
+
+GetSoaRefresh returns the SoaRefresh field if non-nil, zero value otherwise.
+
+### GetSoaRefreshOk
+
+`func (o *DnsAPIRecordsPutInput) GetSoaRefreshOk() (*int32, bool)`
+
+GetSoaRefreshOk returns a tuple with the SoaRefresh field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaRefresh
+
+`func (o *DnsAPIRecordsPutInput) SetSoaRefresh(v int32)`
+
+SetSoaRefresh sets SoaRefresh field to given value.
+
+### HasSoaRefresh
+
+`func (o *DnsAPIRecordsPutInput) HasSoaRefresh() bool`
+
+HasSoaRefresh returns a boolean if a field has been set.
+
+### GetSoaRetry
+
+`func (o *DnsAPIRecordsPutInput) GetSoaRetry() int32`
+
+GetSoaRetry returns the SoaRetry field if non-nil, zero value otherwise.
+
+### GetSoaRetryOk
+
+`func (o *DnsAPIRecordsPutInput) GetSoaRetryOk() (*int32, bool)`
+
+GetSoaRetryOk returns a tuple with the SoaRetry field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaRetry
+
+`func (o *DnsAPIRecordsPutInput) SetSoaRetry(v int32)`
+
+SetSoaRetry sets SoaRetry field to given value.
+
+### HasSoaRetry
+
+`func (o *DnsAPIRecordsPutInput) HasSoaRetry() bool`
+
+HasSoaRetry returns a boolean if a field has been set.
+
+### GetSoaSerial
+
+`func (o *DnsAPIRecordsPutInput) GetSoaSerial() int32`
+
+GetSoaSerial returns the SoaSerial field if non-nil, zero value otherwise.
+
+### GetSoaSerialOk
+
+`func (o *DnsAPIRecordsPutInput) GetSoaSerialOk() (*int32, bool)`
+
+GetSoaSerialOk returns a tuple with the SoaSerial field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSoaSerial
+
+`func (o *DnsAPIRecordsPutInput) SetSoaSerial(v int32)`
+
+SetSoaSerial sets SoaSerial field to given value.
+
+### HasSoaSerial
+
+`func (o *DnsAPIRecordsPutInput) HasSoaSerial() bool`
+
+HasSoaSerial returns a boolean if a field has been set.
 
 ### GetSrvPort
 

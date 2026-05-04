@@ -12,7 +12,7 @@ To see how to make this your own, look here:
 [README](https://openapi-generator.tech)
 
 - API version: v0.15.0
-- Build date: 2026-05-03T19:07:16.754495849Z[Etc/UTC]
+- Build date: 2026-05-04T11:37:47.437781632Z[Etc/UTC]
 - Generator version: 7.22.0
 For more information, please visit [https://github.com/kubernetes-sigs/external-dns](https://github.com/kubernetes-sigs/external-dns)
 
