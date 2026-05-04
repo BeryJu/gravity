@@ -25,11 +25,19 @@ type APIRecord struct {
 	Type     types.DNSRecordType `json:"type" required:"true"`
 	TTL      int64               `json:"ttl" required:"true"`
 
-	Data         string `json:"data" required:"true"`
+	Data string `json:"data" required:"true"`
+
 	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	SRVPort     uint16 `json:"srvPort,omitempty"`
+	SRVPriority uint16 `json:"srvPriority,omitempty"`
+	SRVWeight   uint16 `json:"srvWeight,omitempty"`
+
+	SOAMbox    string `json:"soaMbox,omitempty"`
+	SOASerial  uint32 `json:"soaSerial,omitempty"`
+	SOARefresh uint32 `json:"soaRefresh,omitempty"`
+	SOARetry   uint32 `json:"soaRetry,omitempty"`
+	SOAExpire  uint32 `json:"soaExpire,omitempty"`
 }
 type APIRecordsGetOutput struct {
 	Records []APIRecord `json:"records" required:"true"`
@@ -91,6 +99,11 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				SRVPort:      rec.SRVPort,
 				SRVPriority:  rec.SRVPriority,
 				SRVWeight:    rec.SRVWeight,
+				SOAMbox:      rec.SOAMbox,
+				SOASerial:    rec.SOASerial,
+				SOARefresh:   rec.SOARefresh,
+				SOARetry:     rec.SOARetry,
+				SOAExpire:    rec.SOAExpire,
 			})
 		}
 		return nil
@@ -110,11 +123,19 @@ type APIRecordsPutInput struct {
 	Type types.DNSRecordType `json:"type" required:"true"`
 	TTL  int64               `json:"ttl" required:"true"`
 
-	Data         string `json:"data" required:"true"`
+	Data string `json:"data" required:"true"`
+
 	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	SRVPort     uint16 `json:"srvPort,omitempty"`
+	SRVPriority uint16 `json:"srvPriority,omitempty"`
+	SRVWeight   uint16 `json:"srvWeight,omitempty"`
+
+	SOAMbox    string `json:"soaMbox,omitempty"`
+	SOASerial  uint32 `json:"soaSerial,omitempty"`
+	SOARefresh uint32 `json:"soaRefresh,omitempty"`
+	SOARetry   uint32 `json:"soaRetry,omitempty"`
+	SOAExpire  uint32 `json:"soaExpire,omitempty"`
 }
 
 func (r *Role) APIRecordsPut() usecase.Interactor {
@@ -144,6 +165,11 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		rec.SRVPort = input.SRVPort
 		rec.SRVPriority = input.SRVPriority
 		rec.SRVWeight = input.SRVWeight
+		rec.SOAMbox = input.SOAMbox
+		rec.SOASerial = input.SOASerial
+		rec.SOARefresh = input.SOARefresh
+		rec.SOARetry = input.SOARetry
+		rec.SOAExpire = input.SOAExpire
 		rec.TTL = uint32(input.TTL)
 		err = rec.put(ctx, -1)
 		if err != nil {

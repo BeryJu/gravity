@@ -2362,6 +2362,20 @@ components:
         mxPreference:
           minimum: 0
           type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
+          minimum: 0
+          type: integer
         srvPort:
           minimum: 0
           type: integer
@@ -2401,6 +2415,20 @@ components:
         data:
           type: string
         mxPreference:
+          minimum: 0
+          type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
           minimum: 0
           type: integer
         srvPort:

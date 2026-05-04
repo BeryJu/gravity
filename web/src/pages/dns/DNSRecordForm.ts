@@ -114,6 +114,51 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                             required
                         />
                     </ak-form-element-horizontal>`;
+            case TypesDNSRecordType.Soa:
+                return html`<ak-form-element-horizontal
+                        label="SOA Expire"
+                        required
+                        name="soaExpire"
+                    >
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaExpire)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Mailbox" required name="soaMbox">
+                        <input
+                            type="text"
+                            value=${ifDefined(this.instance?.soaMbox)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Refresh" required name="soaRefresh">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaRefresh)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Retry" required name="soaRetry">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaRetry)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Serial" required name="soaSerial">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaSerial)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>`;
         }
         return html``;
     }
