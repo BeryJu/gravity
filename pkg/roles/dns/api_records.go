@@ -19,11 +19,11 @@ type APIRecordsGetInput struct {
 	UID      string `query:"uid"`
 }
 type APIRecord struct {
-	UID      string `json:"uid" required:"true"`
-	FQDN     string `json:"fqdn" required:"true"`
-	Hostname string `json:"hostname" required:"true"`
-	Type     string `json:"type" required:"true"`
-	TTL      int64  `json:"ttl" required:"true"`
+	UID      string              `json:"uid" required:"true"`
+	FQDN     string              `json:"fqdn" required:"true"`
+	Hostname string              `json:"hostname" required:"true"`
+	Type     types.DNSRecordType `json:"type" required:"true"`
+	TTL      int64               `json:"ttl" required:"true"`
 
 	Data         string `json:"data" required:"true"`
 	MXPreference uint16 `json:"mxPreference,omitempty"`
@@ -84,7 +84,7 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				UID:          rec.uid,
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + types.DNSSep + zone.Name,
-				Type:         rec.Type,
+				Type:         types.DNSRecordType(rec.Type),
 				TTL:          int64(rec.TTL),
 				Data:         rec.Data,
 				MXPreference: rec.MXPreference,
@@ -107,8 +107,8 @@ type APIRecordsPutInput struct {
 	Hostname string `query:"hostname" required:"true" maxLength:"255"`
 	UID      string `query:"uid" maxLength:"255"`
 
-	Type string `json:"type" required:"true"`
-	TTL  int64  `json:"ttl" required:"true"`
+	Type types.DNSRecordType `json:"type" required:"true"`
+	TTL  int64               `json:"ttl" required:"true"`
 
 	Data         string `json:"data" required:"true"`
 	MXPreference uint16 `json:"mxPreference,omitempty"`
@@ -134,9 +134,9 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
-		rec := zone.newRecord(input.Hostname, input.Type)
+		rec := zone.newRecord(input.Hostname, string(input.Type))
 		rec.uid = input.UID
-		if strings.EqualFold(input.Type, types.DNSRecordTypePTR) || strings.EqualFold(input.Type, types.DNSRecordTypeCNAME) {
+		if strings.EqualFold(string(input.Type), types.DNSRecordTypePTR) || strings.EqualFold(string(input.Type), types.DNSRecordTypeCNAME) {
 			input.Data = utils.EnsureTrailingPeriod(input.Data)
 		}
 		rec.Data = input.Data
@@ -159,10 +159,10 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 }
 
 type APIRecordsDeleteInput struct {
-	Zone     string `query:"zone" required:"true"`
-	Hostname string `query:"hostname" required:"true"`
-	UID      string `query:"uid" required:"true"`
-	Type     string `query:"type" required:"true"`
+	Zone     string              `query:"zone" required:"true"`
+	Hostname string              `query:"hostname" required:"true"`
+	UID      string              `query:"uid" required:"true"`
+	Type     types.DNSRecordType `query:"type" required:"true"`
 }
 
 func (r *Role) APIRecordsDelete() usecase.Interactor {
@@ -187,7 +187,7 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 			types.KeyZones,
 			input.Zone,
 			input.Hostname,
-			input.Type,
+			string(input.Type),
 		)
 		if input.UID != "" {
 			key = key.Add(input.UID)
