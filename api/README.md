@@ -238,6 +238,7 @@ Class | Method | HTTP request | Description
  - [TypesAPIMetricsRecord](docs/TypesAPIMetricsRecord.md)
  - [TypesAPIMetricsRole](docs/TypesAPIMetricsRole.md)
  - [TypesDHCPOption](docs/TypesDHCPOption.md)
+ - [TypesDNSRecordType](docs/TypesDNSRecordType.md)
  - [TypesOIDCConfig](docs/TypesOIDCConfig.md)
  - [TypesPermission](docs/TypesPermission.md)
 

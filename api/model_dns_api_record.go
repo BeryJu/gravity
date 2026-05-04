@@ -21,16 +21,16 @@ var _ MappedNullable = &DnsAPIRecord{}
 
 // DnsAPIRecord struct for DnsAPIRecord
 type DnsAPIRecord struct {
-	Data         string `json:"data"`
-	Fqdn         string `json:"fqdn"`
-	Hostname     string `json:"hostname"`
-	MxPreference *int32 `json:"mxPreference,omitempty"`
-	SrvPort      *int32 `json:"srvPort,omitempty"`
-	SrvPriority  *int32 `json:"srvPriority,omitempty"`
-	SrvWeight    *int32 `json:"srvWeight,omitempty"`
-	Ttl          int64  `json:"ttl"`
-	Type         string `json:"type"`
-	Uid          string `json:"uid"`
+	Data         string             `json:"data"`
+	Fqdn         string             `json:"fqdn"`
+	Hostname     string             `json:"hostname"`
+	MxPreference *int32             `json:"mxPreference,omitempty"`
+	SrvPort      *int32             `json:"srvPort,omitempty"`
+	SrvPriority  *int32             `json:"srvPriority,omitempty"`
+	SrvWeight    *int32             `json:"srvWeight,omitempty"`
+	Ttl          int64              `json:"ttl"`
+	Type         TypesDNSRecordType `json:"type"`
+	Uid          string             `json:"uid"`
 }
 
 type _DnsAPIRecord DnsAPIRecord
@@ -39,7 +39,7 @@ type _DnsAPIRecord DnsAPIRecord
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDnsAPIRecord(data string, fqdn string, hostname string, ttl int64, type_ string, uid string) *DnsAPIRecord {
+func NewDnsAPIRecord(data string, fqdn string, hostname string, ttl int64, type_ TypesDNSRecordType, uid string) *DnsAPIRecord {
 	this := DnsAPIRecord{}
 	this.Data = data
 	this.Fqdn = fqdn
@@ -283,9 +283,9 @@ func (o *DnsAPIRecord) SetTtl(v int64) {
 }
 
 // GetType returns the Type field value
-func (o *DnsAPIRecord) GetType() string {
+func (o *DnsAPIRecord) GetType() TypesDNSRecordType {
 	if o == nil {
-		var ret string
+		var ret TypesDNSRecordType
 		return ret
 	}
 
@@ -294,7 +294,7 @@ func (o *DnsAPIRecord) GetType() string {
 
 // GetTypeOk returns a tuple with the Type field value
 // and a boolean to check if the value has been set.
-func (o *DnsAPIRecord) GetTypeOk() (*string, bool) {
+func (o *DnsAPIRecord) GetTypeOk() (*TypesDNSRecordType, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -302,7 +302,7 @@ func (o *DnsAPIRecord) GetTypeOk() (*string, bool) {
 }
 
 // SetType sets field value
-func (o *DnsAPIRecord) SetType(v string) {
+func (o *DnsAPIRecord) SetType(v TypesDNSRecordType) {
 	o.Type = v
 }
 

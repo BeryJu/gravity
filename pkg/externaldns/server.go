@@ -144,7 +144,7 @@ func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, e
 			endpoints = append(endpoints, externaldnsapi.Endpoint{
 				DnsName:    strings.TrimSuffix(record.Fqdn, types.DNSSep),
 				Targets:    []string{record.Data},
-				RecordType: record.Type,
+				RecordType: string(record.Type),
 				RecordTTL:  int64(zone.DefaultTTL),
 				ProviderSpecific: []externaldnsapi.ProviderSpecificProperty{
 					{
@@ -199,7 +199,7 @@ func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.E
 			DnsDeleteRecords(ctx).
 			Zone(zone.Name).
 			Hostname(hostname).
-			Type_(endpoint.RecordType).
+			Type_(api.TypesDNSRecordType(endpoint.RecordType)).
 			Uid(s.recordUIDEndpointTarget(endpoint, target)).
 			Execute()
 		if err != nil {
@@ -221,7 +221,7 @@ func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.En
 			Hostname(hostname).
 			Uid(s.recordUIDEndpointTarget(endpoint, target)).
 			DnsAPIRecordsPutInput(api.DnsAPIRecordsPutInput{
-				Type: endpoint.RecordType,
+				Type: api.TypesDNSRecordType(endpoint.RecordType),
 				Data: target,
 			}).
 			Execute()
