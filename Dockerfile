@@ -16,7 +16,7 @@ COPY ./web /work/web
 RUN make web-build
 
 # Stage 2: Prepare external files
-FROM --platform=${BUILDPLATFORM} docker.io/library/ubuntu:24.04 AS downloader
+FROM --platform=${BUILDPLATFORM} docker.io/library/ubuntu:26.04 AS downloader
 
 WORKDIR /workspace
 COPY Makefile .
