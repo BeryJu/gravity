@@ -227,6 +227,12 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                         MX
                     </option>
                     <option
+                        value=${TypesDNSRecordType.Soa}
+                        ?selected=${this.recordType === TypesDNSRecordType.Soa}
+                    >
+                        SOA
+                    </option>
+                    <option
                         value=${TypesDNSRecordType.Srv}
                         ?selected=${this.recordType === TypesDNSRecordType.Srv}
                     >
