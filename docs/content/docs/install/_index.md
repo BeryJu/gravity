@@ -71,13 +71,13 @@ The following environment variables can be set.
 
 - `DATA_PATH`: Path to store etcd data. Defaults to `./data`.
 - `INSTANCE_IDENTIFIER`: Unique identifier of an instance, should ideally not change. Defaults to the detected hostname. When running in Docker, this is configured via the `hostname` attribute.
-- `INSTANCE_IP`: This instance's reachable IP. When running in Docker and not using `network_mode: host`, this should be the host's IP.
+- `INSTANCE_IP`: This instance's reachable IP address or a comma-separated list of IP addresses. The first address acts as the primary identifier for the instance (cluster membership, API, etcd). DHCP, DNS, and TFTP will each listen on the interface/address of every configured IP. When running in Docker and not using `network_mode: host`, this should be the host's IP.
 - `LISTEN_ONLY`: Enable listen-only mode. In listen-only mode, Gravity will not reply to any DHCP packets and will not run [discovery](../discovery).
 
 ### Advanced
 
 - `DEBUG`: Enable debug mode. This should not be set manually in most cases and is only intended for development environments.
-- `INSTANCE_LISTEN`: By default the instance will listen on `INSTANCE_IP`, but this option will override that. Set to 0.0.0.0 when using Docker.
+- `INSTANCE_LISTEN`: By default the instance will listen on the addresses in `INSTANCE_IP`, but this option will override that with a single address. Set to 0.0.0.0 when using Docker.
 - `ADMIN_PASSWORD`: Optionally set a default password for the admin user. If unset, a random password will be generated as described [above](#first-time-use).
 - `ADMIN_TOKEN`: Optionally set a token to be created on first start. If unset, no token will be created.
 - `SENTRY_ENABLED`: Enable Sentry error reporting and tracing. Defaults to `false`.
@@ -112,7 +112,7 @@ Gravity is designed so that you ideally don't have to explicitly define environm
 Example:
 ```yaml
     environment:
-      INSTANCE_IP: 192.168.2.8
+      INSTANCE_IP: 192.168.2.8,10.0.0.1  # comma-separated for multiple interfaces
       BOOTSTRAP_ROLES: dns;api;etcd;discovery;monitoring;tsdb
       INSTANCE_IDENTIFIER: my-gravity-server
 ```

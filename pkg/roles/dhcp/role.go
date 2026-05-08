@@ -31,8 +31,8 @@ type Role struct {
 
 	cfg *RoleConfig
 
-	s4  *handler4
-	log *zap.Logger
+	servers4 []*handler4
+	log      *zap.Logger
 
 	oui *oui.OuiDb
 }
@@ -85,9 +85,6 @@ func New(instance roles.Instance) *Role {
 		}),
 	)
 
-	r.s4 = &handler4{
-		role: r,
-	}
 	r.i.AddEventListener(types.EventTopicDHCPCreateLease, r.eventCreateLease)
 	r.i.AddEventListener(apitypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
@@ -108,11 +105,11 @@ func New(instance roles.Instance) *Role {
 
 // Deprecated: FunctionName is deprecated.
 func (r *Role) Handle4(re *Request4) *dhcpv4.DHCPv4 {
-	return r.s4.HandleRequest(re)
+	return r.servers4[0].HandleRequest(re)
 }
 
 func (r *Role) Handler4() *handler4 {
-	return r.s4
+	return r.servers4[0]
 }
 
 func (r *Role) Start(ctx context.Context, config []byte) error {
@@ -128,17 +125,11 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 		return nil
 	}
 
-	err := r.initServer4()
-	if err != nil {
+	if err := r.initServer4(); err != nil {
 		r.log.Warn("failed to setup server", zap.Error(err))
 		return err
 	}
-	go func() {
-		err := r.startServer4()
-		if err != nil {
-			r.log.Warn("failed to listen", zap.Error(err))
-		}
-	}()
+	r.startServer4()
 	return nil
 }
 
@@ -147,33 +138,30 @@ func (r *Role) initServer4() error {
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: r.cfg.Port,
 	}
-	ifName := extconfig.Get().Instance.Interface
-	udpConn, err := server4.NewIPv4UDPConn(ifName, laddr)
-	if err != nil {
-		return err
-	}
-	r.s4.pc = ipv4.NewPacketConn(udpConn)
-	var ifi *net.Interface
-	if ifName != "" {
-		ifi, err = net.InterfaceByName(ifName)
+	for _, ipStr := range extconfig.Get().Instance.IPs {
+		ifi, err := extconfig.Get().GetInterfaceForIP(net.ParseIP(ipStr))
 		if err != nil {
-			return fmt.Errorf("DHCPv4: Listen could not find interface %s: %v", ifName, err)
+			r.log.Warn("skipping IP, no interface found", zap.String("ip", ipStr), zap.Error(err))
+			continue
 		}
-		r.s4.iface = *ifi
-	} else {
-		// When not bound to an interface, we need the information in each
-		// packet to know which interface it came on
-		err = r.s4.pc.SetControlMessage(ipv4.FlagInterface, true)
+		udpConn, err := server4.NewIPv4UDPConn(ifi.Name, laddr)
 		if err != nil {
 			return err
 		}
-	}
-
-	if laddr.IP.IsMulticast() {
-		err = r.s4.pc.JoinGroup(ifi, laddr)
-		if err != nil {
-			return err
+		h := &handler4{
+			role:  r,
+			pc:    ipv4.NewPacketConn(udpConn),
+			iface: *ifi,
 		}
+		if laddr.IP.IsMulticast() {
+			if err = h.pc.JoinGroup(ifi, laddr); err != nil {
+				return err
+			}
+		}
+		r.servers4 = append(r.servers4, h)
+	}
+	if len(r.servers4) == 0 {
+		return fmt.Errorf("no DHCP interfaces configured for IPs %v", extconfig.Get().Instance.IPs)
 	}
 	return nil
 }
@@ -189,10 +177,14 @@ func isErrNetClosing(err error) bool {
 }
 
 func (r *Role) startServer4() error {
-	r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port), zap.String("interface", extconfig.Get().Instance.Interface))
-	err := r.s4.Serve()
-	if !isErrNetClosing(err) {
-		return err
+	for _, h := range r.servers4 {
+		h := h
+		r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port), zap.String("interface", h.iface.Name))
+		go func() {
+			if err := h.Serve(); !isErrNetClosing(err) && err != nil {
+				r.log.Warn("failed to listen", zap.Error(err))
+			}
+		}()
 	}
 	return nil
 }
@@ -200,10 +192,11 @@ func (r *Role) startServer4() error {
 func (r *Role) Stop() {
 	r.scopes.Stop()
 	r.leases.Stop()
-	if r.s4 != nil && r.s4.pc != nil {
-		err := r.s4.pc.Close()
-		if err != nil {
-			r.log.Warn("Failed to stop packet conn", zap.Error(err))
+	for _, h := range r.servers4 {
+		if h.pc != nil {
+			if err := h.pc.Close(); err != nil {
+				r.log.Warn("Failed to stop packet conn", zap.Error(err))
+			}
 		}
 	}
 }

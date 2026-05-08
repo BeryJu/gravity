@@ -26,7 +26,7 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 	}
 	ap.oidc = config
 	red := strings.ReplaceAll(config.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
-	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().Instance.IP)
+	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().PrimaryIP())
 	ap.oidcConfig = oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,

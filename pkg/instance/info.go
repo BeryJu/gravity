@@ -32,7 +32,7 @@ func (i *Instance) getInfo() *InstanceInfo {
 		Version:    extconfig.FullVersion(),
 		Roles:      roles,
 		Identifier: extconfig.Get().Instance.Identifier,
-		IP:         extconfig.Get().Instance.IP,
+		IP:         extconfig.Get().PrimaryIP(),
 	}
 	vm, err := mem.VirtualMemory()
 	if err != nil {

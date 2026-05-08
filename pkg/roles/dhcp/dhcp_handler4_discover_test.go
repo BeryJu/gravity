@@ -67,7 +67,7 @@ func TestDHCPDiscover_Gateway(t *testing.T) {
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 
-	extconfig.Get().Instance.IP = "10.82.7.103"
+	extconfig.Get().Instance.IPs = []string{"10.82.7.103"}
 
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
@@ -143,7 +143,7 @@ func TestDHCPDiscover_RequestedIP_WrongSubnet(t *testing.T) {
 	inst := rootInst.ForRole("dhcp", ctx)
 	role := dhcp.New(inst)
 
-	extconfig.Get().Instance.IP = "10.82.7.103"
+	extconfig.Get().Instance.IPs = []string{"10.82.7.103"}
 
 	tests.PanicIfError(inst.KV().Put(
 		ctx,

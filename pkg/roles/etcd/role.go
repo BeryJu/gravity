@@ -76,16 +76,16 @@ func New(instance roles.Instance) *Role {
 	}
 	cfg.AdvertiseClientUrls = []url.URL{
 		urlMustParse("http://localhost:2379"),
-		urlMustParse(fmt.Sprintf("http://%s", extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.ClientPort))),
+		urlMustParse(fmt.Sprintf("http://%s", extconfig.Listen(extconfig.Get().PrimaryIP(), extconfig.Get().Etcd.ClientPort))),
 	}
 	cfg.ListenPeerUrls = []url.URL{
 		urlMustParse(fmt.Sprintf("https://%s", extconfig.Get().Listen(int32(extconfig.Get().Etcd.PeerPort)))),
 	}
 	cfg.AdvertisePeerUrls = []url.URL{
-		urlMustParse(fmt.Sprintf("https://%s", extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.PeerPort))),
+		urlMustParse(fmt.Sprintf("https://%s", extconfig.Listen(extconfig.Get().PrimaryIP(), extconfig.Get().Etcd.PeerPort))),
 	}
 	cfg.Name = extconfig.Get().Instance.Identifier
-	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().Instance.IP, extconfig.Get().Etcd.PeerPort))
+	cfg.InitialCluster = fmt.Sprintf("%s=https://%s", cfg.Name, extconfig.Listen(extconfig.Get().PrimaryIP(), extconfig.Get().Etcd.PeerPort))
 	cfg.PeerAutoTLS = true
 	cfg.PeerTLSInfo.ClientCertFile = path.Join(r.certDir, "peer", relInstCertPath)
 	cfg.PeerTLSInfo.ClientKeyFile = path.Join(r.certDir, "peer", relInstKeyPath)
@@ -149,7 +149,7 @@ func (ee *Role) prepareJoin(cfg *embed.Config) error {
 					Peer: api.PtrString(
 						fmt.Sprintf(
 							"https://%s:%d",
-							extconfig.Get().Instance.IP,
+							extconfig.Get().PrimaryIP(),
 							extconfig.Get().Etcd.PeerPort,
 						),
 					),

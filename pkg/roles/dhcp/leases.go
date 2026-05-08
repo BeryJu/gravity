@@ -211,7 +211,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 	}
 
 	// DNS Options
-	rep.UpdateOption(dhcpv4.OptDNS(net.ParseIP(extconfig.Get().Instance.IP)))
+	rep.UpdateOption(dhcpv4.OptDNS(net.ParseIP(extconfig.Get().PrimaryIP())))
 	if l.scope.DNS != nil {
 		rep.UpdateOption(dhcpv4.OptDomainName(l.scope.DNS.Zone))
 		if len(l.scope.DNS.Search) > 0 {
@@ -237,7 +237,7 @@ func (l *Lease) createReply(req *Request4) *dhcpv4.DHCPv4 {
 		rep.UpdateOption(dhcpv4.OptHostName(strings.TrimSuffix(hostname, ".")))
 	}
 
-	rep.ServerIPAddr = net.ParseIP(extconfig.Get().Instance.IP)
+	rep.ServerIPAddr = net.ParseIP(extconfig.Get().PrimaryIP())
 	rep.UpdateOption(dhcpv4.OptServerIdentifier(rep.ServerIPAddr))
 	rep.YourIPAddr = net.ParseIP(l.Address)
 

@@ -86,7 +86,7 @@ func New(instance roles.Instance) *Role {
 }
 
 func GetCIDRFromIP() (string, error) {
-	ip := net.ParseIP(extconfig.Get().Instance.IP)
+	ip := net.ParseIP(extconfig.Get().PrimaryIP())
 	intf, err := extconfig.Get().GetInterfaceForIP(ip)
 	if err != nil {
 		return "", err

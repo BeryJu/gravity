@@ -48,6 +48,6 @@ func (ap *AuthProvider) FirstStart(ev *roles.Event) {
 		}
 		text += fmt.Sprintf("\nToken: '%s'", token)
 	}
-	text += fmt.Sprintf(firstStartFooter, extconfig.Get().Instance.IP)
+	text += fmt.Sprintf(firstStartFooter, extconfig.Get().PrimaryIP())
 	fmt.Print(text)
 }

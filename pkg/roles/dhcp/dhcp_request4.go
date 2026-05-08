@@ -36,7 +36,7 @@ func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
 
 // Use the instance ip unless the the interface is not bound
 func (req *Request4) LocalIP() string {
-	ip := extconfig.Get().Instance.IP
+	ip := extconfig.Get().PrimaryIP()
 	if req.oob != nil {
 		ief, err := net.InterfaceByIndex(req.oob.IfIndex)
 		if err != nil {

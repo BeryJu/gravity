@@ -118,34 +118,27 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	if r.cfg.Port < 1 {
 		return nil
 	}
-	listen := extconfig.Get().Listen(r.cfg.Port)
+	addrs := extconfig.Get().ListenAddrs(r.cfg.Port)
 	if runtime.GOOS == "darwin" {
-		listen = fmt.Sprintf(":%d", r.cfg.Port)
+		addrs = []string{fmt.Sprintf(":%d", r.cfg.Port)}
 	}
 
-	srv := func(idx int) {
-		server := r.servers[idx]
-		r.log.Info("starting DNS Server", zap.String("listen", listen), zap.String("proto", server.Net))
-		err := server.ListenAndServe()
-		if err != nil {
-			r.log.Warn("failed to start dns server", zap.String("listen", listen), zap.String("proto", server.Net), zap.Error(err))
-		}
+	for _, addr := range addrs {
+		r.servers = append(r.servers,
+			&dns.Server{Addr: addr, Net: "udp", Handler: r.m},
+			&dns.Server{Addr: addr, Net: "tcp", Handler: r.m},
+		)
 	}
 
-	r.servers = []*dns.Server{
-		{
-			Addr:    listen,
-			Net:     "udp",
-			Handler: r.m,
-		},
-		{
-			Addr:    listen,
-			Net:     "tcp",
-			Handler: r.m,
-		},
+	for _, server := range r.servers {
+		server := server
+		r.log.Info("starting DNS Server", zap.String("listen", server.Addr), zap.String("proto", server.Net))
+		go func() {
+			if err := server.ListenAndServe(); err != nil {
+				r.log.Warn("failed to start dns server", zap.String("listen", server.Addr), zap.String("proto", server.Net), zap.Error(err))
+			}
+		}()
 	}
-	go srv(0)
-	go srv(1)
 	return nil
 }
 

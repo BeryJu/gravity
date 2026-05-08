@@ -79,7 +79,7 @@ func (i *Instance) APIInstanceInfo() usecase.Interactor {
 		output.Version = extconfig.Version
 		output.BuildHash = extconfig.BuildHash
 		output.Dirs = extconfig.Get().Dirs()
-		output.InstanceIP = extconfig.Get().Instance.IP
+		output.InstanceIP = extconfig.Get().PrimaryIP()
 		output.InstanceIdentifier = extconfig.Get().Instance.Identifier
 		return nil
 	})
