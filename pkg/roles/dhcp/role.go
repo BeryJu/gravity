@@ -121,16 +121,15 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.scopes.Start(r.ctx)
 	r.leases.Start(r.ctx)
 
-	if r.cfg.Port < 1 {
-		return nil
-	}
-
 	if err := r.initServer4(); err != nil {
 		r.log.Warn("failed to setup server", zap.Error(err))
 		return err
 	}
-	r.startServer4()
-	return nil
+
+	if r.cfg.Port < 1 {
+		return nil
+	}
+	return r.startServer4()
 }
 
 func (r *Role) initServer4() error {
@@ -140,18 +139,27 @@ func (r *Role) initServer4() error {
 	}
 	for _, ipStr := range extconfig.Get().Instance.IPs {
 		ifi, err := extconfig.Get().GetInterfaceForIP(net.ParseIP(ipStr))
+		ifName := ""
+		var iface net.Interface
 		if err != nil {
-			r.log.Warn("skipping IP, no interface found", zap.String("ip", ipStr), zap.Error(err))
-			continue
+			r.log.Warn("no interface found for IP, listening without interface binding", zap.String("ip", ipStr), zap.Error(err))
+		} else {
+			ifName = ifi.Name
+			iface = *ifi
 		}
-		udpConn, err := server4.NewIPv4UDPConn(ifi.Name, laddr)
+		udpConn, err := server4.NewIPv4UDPConn(ifName, laddr)
 		if err != nil {
 			return err
 		}
 		h := &handler4{
 			role:  r,
 			pc:    ipv4.NewPacketConn(udpConn),
-			iface: *ifi,
+			iface: iface,
+		}
+		if ifName == "" {
+			if err = h.pc.SetControlMessage(ipv4.FlagInterface, true); err != nil {
+				return err
+			}
 		}
 		if laddr.IP.IsMulticast() {
 			if err = h.pc.JoinGroup(ifi, laddr); err != nil {
