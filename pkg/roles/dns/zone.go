@@ -89,6 +89,16 @@ func (z *Zone) resolveUpdateMetrics(dur time.Duration, q *utils.DNSRequest, h Ha
 	}
 }
 
+func stripOPTRecords(extra []dns.RR) []dns.RR {
+	filtered := make([]dns.RR, 0, len(extra))
+	for _, rr := range extra {
+		if rr.Header().Rrtype != dns.TypeOPT {
+			filtered = append(filtered, rr)
+		}
+	}
+	return filtered
+}
+
 func getIP(addr net.Addr) *netip.Addr {
 	clientIP := ""
 	switch addr := addr.(type) {
@@ -132,7 +142,14 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			if i := getIP(w.RemoteAddr()); i != nil && (i.IsPrivate() || i.IsLoopback()) {
 				handlerReply.RecursionAvailable = r.RecursionDesired
 			}
-			handlerReply.SetEdns0(4000, false)
+			// Strip any OPT records from upstream to avoid duplicate OPT records,
+			// which violates RFC 6891 and causes "overflowing header size" errors downstream.
+			handlerReply.Extra = stripOPTRecords(handlerReply.Extra)
+			// Only add EDNS0 if the client advertised support for it, and mirror
+			// the client's advertised UDP size and DO bit.
+			if clientOpt := r.IsEdns0(); clientOpt != nil {
+				handlerReply.SetEdns0(clientOpt.UDPSize(), clientOpt.Do())
+			}
 			handlerReply.SetReply(r.Msg)
 			z.inst.ExecuteHook(roles.HookOptions{
 				Source: z.Hook,

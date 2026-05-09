@@ -31,6 +31,18 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: vars
         run: make ci--env
+      - id: image-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "tags<<EOF" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:pr-${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "tags<<EOF" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:latest" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
       - id: meta
         uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
@@ -41,10 +53,8 @@ jobs:
       - uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         id: push
         with:
-          tags: |
-            ghcr.io/beryju/gravity:latest
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.image-tag.outputs.tags }}
+          push: true
           platforms: linux/amd64,linux/arm64
           sbom: true
           provenance: true
@@ -78,6 +88,18 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: vars
         run: make ci--env
+      - id: image-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "tags<<EOF" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:pr-${{ github.event.pull_request.number }}-debug" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "tags<<EOF" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:latest-debug" >> $GITHUB_OUTPUT
+            echo "ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}-debug" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
       - id: meta
         uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
@@ -88,10 +110,8 @@ jobs:
       - uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         id: push
         with:
-          tags: |
-            ghcr.io/beryju/gravity:latest-debug
-            ghcr.io/beryju/gravity:${{ steps.vars.outputs.sha }}-debug
-          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.image-tag.outputs.tags }}
+          push: true
           platforms: linux/amd64,linux/arm64
           sbom: true
           provenance: true
@@ -107,6 +127,40 @@ jobs:
           subject-name: ghcr.io/beryju/gravity
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+  comment-pr:
+    name: Comment PR image tags
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [build, build-debug]
+    permissions:
+      pull-requests: write
+    steps:
+      - id: find-comment
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: <!-- pr-image-comment -->
+      - uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            <!-- pr-image-comment -->
+            ## Docker Images
+
+            This PR has been built and pushed to the container registry.
+
+            **Standard image:**
+            ```
+            docker pull ghcr.io/beryju/gravity:pr-${{ github.event.pull_request.number }}
+            ```
+
+            **Debug image:**
+            ```
+            docker pull ghcr.io/beryju/gravity:pr-${{ github.event.pull_request.number }}-debug
+            ```
   build-cli:
     name: Build CLI
     runs-on: ubuntu-latest

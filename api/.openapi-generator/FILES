@@ -122,6 +122,7 @@ docs/TypesAPIMetricsGetOutput.md
 docs/TypesAPIMetricsRecord.md
 docs/TypesAPIMetricsRole.md
 docs/TypesDHCPOption.md
+docs/TypesDNSRecordType.md
 docs/TypesOIDCConfig.md
 docs/TypesPermission.md
 git_push.sh
@@ -223,6 +224,7 @@ model_types_api_metrics_get_output.go
 model_types_api_metrics_record.go
 model_types_api_metrics_role.go
 model_types_dhcp_option.go
+model_types_dns_record_type.go
 model_types_oidc_config.go
 model_types_permission.go
 response.go
