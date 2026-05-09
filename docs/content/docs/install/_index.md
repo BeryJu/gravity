@@ -112,7 +112,7 @@ Gravity is designed so that you ideally don't have to explicitly define environm
 Example:
 ```yaml
     environment:
-      INSTANCE_IP: 192.168.2.8,10.0.0.1  # comma-separated for multiple interfaces
+      INSTANCE_IP: 192.168.2.8|10.0.0.1  # pipe-separated for multiple interfaces
       BOOTSTRAP_ROLES: dns;api;etcd;discovery;monitoring;tsdb
       INSTANCE_IDENTIFIER: my-gravity-server
 ```

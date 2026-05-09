@@ -22,7 +22,7 @@ type ExtConfig struct {
 	}
 	Instance struct {
 		Identifier string   `env:"INSTANCE_IDENTIFIER"`
-		IPs        []string `env:"INSTANCE_IP,separator=,"`
+		IPs        []string `env:"INSTANCE_IP"`
 		Interface  string   `env:"INSTANCE_INTERFACE"`
 		Listen     string   `env:"INSTANCE_LISTEN"`
 	}
