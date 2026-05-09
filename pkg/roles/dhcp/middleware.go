@@ -3,7 +3,7 @@ package dhcp
 import (
 	"encoding/hex"
 
-	"github.com/getsentry/sentry-go"
+	"beryju.io/gravity/pkg/extconfig"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"go.uber.org/zap"
 )
@@ -15,12 +15,7 @@ func (r *Role) recoverMiddleware4(inner Handler4) Handler4 {
 			if err == nil {
 				return
 			}
-			if e, ok := err.(error); ok {
-				r.log.Error("recover in dhcp handler", zap.Error(e))
-				sentry.CaptureException(e)
-			} else {
-				r.log.Error("recover in dhcp handler", zap.Any("panic", err))
-			}
+			extconfig.LogPanic(err)
 		}()
 		return inner(req)
 	}

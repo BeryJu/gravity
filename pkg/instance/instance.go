@@ -244,12 +244,7 @@ func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback 
 		if err == nil {
 			return
 		}
-		if e, ok := err.(error); ok {
-			i.log.Error("recover in role", zap.String("roleId", id), zap.Error(e))
-			sentry.CaptureException(e)
-		} else {
-			i.log.Error("recover in role", zap.String("roleId", id), zap.Any("panic", err))
-		}
+		extconfig.LogPanic(err, zap.String("roleId", id))
 	}()
 	// Load current config
 	config, err := i.kv.Get(

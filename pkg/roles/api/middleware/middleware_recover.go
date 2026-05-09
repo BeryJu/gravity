@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
+	"beryju.io/gravity/pkg/extconfig"
 	"go.uber.org/zap"
 )
 
@@ -15,12 +15,7 @@ func NewRecoverMiddleware(l *zap.Logger) func(h http.Handler) http.Handler {
 				if err == nil {
 					return
 				}
-				if e, ok := err.(error); ok {
-					l.Error("recover in API handler", zap.Error(e))
-					sentry.CaptureException(e)
-				} else {
-					l.Error("recover in API Handler", zap.Any("panic", err))
-				}
+				extconfig.LogPanic(err)
 				w.WriteHeader(http.StatusInternalServerError)
 				var er error
 				if r.Header.Get("Accept") == "application/json" {

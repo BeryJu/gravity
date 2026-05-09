@@ -3,8 +3,8 @@ package dns
 import (
 	"time"
 
+	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles/dns/utils"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 )
@@ -16,12 +16,7 @@ func (r *Role) recoverMiddleware(inner dns.HandlerFunc) dns.HandlerFunc {
 			if err == nil {
 				return
 			}
-			if e, ok := err.(error); ok {
-				r.log.Error("recover in dns handler", zap.Error(e))
-				sentry.CaptureException(e)
-			} else {
-				r.log.Error("recover in dns handler", zap.Any("panic", err))
-			}
+			extconfig.LogPanic(err)
 			// ensure DNS query gets some sort of response to prevent
 			// clients hanging
 			fallback := new(dns.Msg)
