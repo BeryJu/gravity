@@ -155,6 +155,7 @@ func (r *Role) initServer4() error {
 			role:  r,
 			pc:    ipv4.NewPacketConn(udpConn),
 			iface: iface,
+			ip:    ipStr,
 		}
 		if ifName == "" {
 			if err = h.pc.SetControlMessage(ipv4.FlagInterface, true); err != nil {
