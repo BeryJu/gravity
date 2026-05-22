@@ -52,7 +52,7 @@ require (
 	go.etcd.io/etcd/etcdutl/v3 v3.6.11
 	go.etcd.io/etcd/server/v3 v3.6.11
 	go.uber.org/zap v1.28.0
-	golang.org/x/crypto v0.51.0
+	golang.org/x/crypto v0.52.0
 	golang.org/x/exp v0.0.0-20260209203927-2842357ff358
 	golang.org/x/net v0.54.0
 	golang.org/x/oauth2 v0.36.0
@@ -329,7 +329,7 @@ require (
 	golang.org/x/arch v0.11.0 // indirect
 	golang.org/x/mod v0.35.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.44.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/telemetry v0.0.0-20260409153401-be6f6cb8b1fa // indirect
 	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
