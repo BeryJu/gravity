@@ -300,8 +300,8 @@ github.com/glebarez/sqlite v1.11.0 h1:wSG0irqzP6VurnMEpFGer5Li19RpIRi2qvQz++w0GM
 github.com/glebarez/sqlite v1.11.0/go.mod h1:h8/o8j5wiAsqSPoWELDUdJXhjAhsVliSn7bWZjOhrgQ=
 github.com/go-chi/chi/v5 v5.3.0 h1:halUjDxhshgXHMrao5bB8eNBXo/rnzwr8m5m36glehM=
 github.com/go-chi/chi/v5 v5.3.0/go.mod h1:R+tYY2hNuVUUjxoPtqUdgBqevM9s9njzkTLutVsOCto=
-github.com/go-delve/delve v1.26.3 h1:uCWPnLLYmVRXLt0yhw305sCi5lQLHzYB2fZ0FB3KLUI=
-github.com/go-delve/delve v1.26.3/go.mod h1:Ua/k2AAu4cLrUXGSRVH1b2Nzq2aCK188b9EYlAojlz4=
+github.com/go-delve/delve v1.27.0 h1:i66Einw/sQhm0hlbjLNUNxrwCmKdTcIqpyHVqSWAbd0=
+github.com/go-delve/delve v1.27.0/go.mod h1:l6Xb1ype6VEKoKZCaOg7mGN5B8Zi3Sn+K7qs5Pqqc8k=
 github.com/go-delve/liner v1.2.3-0.20231231155935-4726ab1d7f62 h1:IGtvsNyIuRjl04XAOFGACozgUD7A82UffYxZt4DWbvA=
 github.com/go-delve/liner v1.2.3-0.20231231155935-4726ab1d7f62/go.mod h1:biJCRbqp51wS+I92HMqn5H8/A0PAhxn2vyOT+JqhiGI=
 github.com/go-errors/errors v1.4.2 h1:J6MZopCL4uSllY1OfXM374weqZFFItUbrImctkmUxIA=
