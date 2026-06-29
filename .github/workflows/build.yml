@@ -63,7 +63,7 @@ jobs:
             BUILD=${{ steps.vars.outputs.build }}
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v3
+      - uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           subject-name: ghcr.io/beryju/gravity
@@ -121,7 +121,7 @@ jobs:
             GIT_BUILD_HASH=${{ steps.vars.outputs.sha }}
             GRAVITY_BUILD_ARGS=GO_BUILD_FLAGS=-tags=debug
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v3
+      - uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           subject-name: ghcr.io/beryju/gravity
