@@ -29,7 +29,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		types.KeyRole,
 		types.KeyUsers,
 		username,
-	).String(), tests.MustJSON(auth.User{
+	).String(), tests.MustJSON(&types.User{
 		Username: username,
 		Permissions: []*types.Permission{
 			{
