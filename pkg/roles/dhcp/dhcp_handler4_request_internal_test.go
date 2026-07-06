@@ -8,24 +8,26 @@ import (
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/storage/watcher"
+	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 )
 
 func TestDHCPRequest_ReusesStoredLeaseAndReassignsScopeOnWatcherMiss(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -36,14 +38,14 @@ func TestDHCPRequest_ReusesStoredLeaseAndReassignsScopeOnWatcherMiss(t *testing.
 			},
 		}),
 	))
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test2",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.200.0.0/24",
 			TTL:        86400,
 			IPAM: map[string]string{
@@ -54,7 +56,7 @@ func TestDHCPRequest_ReusesStoredLeaseAndReassignsScopeOnWatcherMiss(t *testing.
 		}),
 	))
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{
 		Port:                  0,
 		LeaseNegotiateTimeout: 30,
 	}))))
@@ -68,7 +70,7 @@ func TestDHCPRequest_ReusesStoredLeaseAndReassignsScopeOnWatcherMiss(t *testing.
 	lease.scope = scope
 	lease.ScopeKey = scope.Name
 	lease.Address = "10.100.0.100"
-	panicIfError(lease.Put(ctx, 3600))
+	tests.PanicIfError(lease.Put(ctx, 3600))
 
 	assert.Eventually(t, func() bool {
 		match, ok := role.leases.GetPrefix(lease.Identifier)
@@ -104,22 +106,23 @@ func TestDHCPRequest_ReusesStoredLeaseAndReassignsScopeOnWatcherMiss(t *testing.
 		lease.Identifier,
 	)
 	storedResp, err := inst.KV().Get(ctx, storedKey.String())
-	panicIfError(err)
+	tests.PanicIfError(err)
 	assert.Len(t, storedResp.Kvs, 1)
 
 	stored, err := role.leaseFromKV(storedResp.Kvs[0])
-	panicIfError(err)
+	tests.PanicIfError(err)
 	assert.Equal(t, "test2", stored.ScopeKey)
 	assert.Equal(t, "10.200.0.100", stored.Address)
 	assert.Greater(t, stored.Expiry, time.Now().Add(time.Hour).Unix())
 }
 
 func TestDHCPRequest_ReturnsNilWhenNoScopeMatches(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{Port: 0}))))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{Port: 0}))))
 	defer role.Stop()
 
 	req := &dhcpv4.DHCPv4{
@@ -133,18 +136,19 @@ func TestDHCPRequest_ReturnsNilWhenNoScopeMatches(t *testing.T) {
 }
 
 func TestDHCPRequest_ReturnsNilWhenCreateLeaseFails(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -156,7 +160,7 @@ func TestDHCPRequest_ReturnsNilWhenCreateLeaseFails(t *testing.T) {
 		}),
 	))
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{Port: 0}))))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{Port: 0}))))
 	defer role.Stop()
 
 	req := &dhcpv4.DHCPv4{

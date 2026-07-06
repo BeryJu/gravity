@@ -10,6 +10,7 @@ import (
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/storage"
 	"beryju.io/gravity/pkg/tests"
+	"beryju.io/gravity/pkg/tests/apitest"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
@@ -146,7 +147,7 @@ func TestBindImport(t *testing.T) {
 		},
 	}
 
-	api, stop := tests.APIClient(rootInst)
+	api, stop := apitest.APIClient(rootInst)
 	defer stop()
 
 	for _, file := range cases {

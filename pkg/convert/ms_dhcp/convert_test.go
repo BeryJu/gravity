@@ -8,6 +8,7 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	"beryju.io/gravity/pkg/roles/dhcp"
 	"beryju.io/gravity/pkg/tests"
+	"beryju.io/gravity/pkg/tests/apitest"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +25,7 @@ func TestDHCPImport(t *testing.T) {
 		"./fixtures/test_c.xml",
 	}
 
-	api, stop := tests.APIClient(rootInst)
+	api, stop := apitest.APIClient(rootInst)
 	defer stop()
 
 	for _, file := range files {

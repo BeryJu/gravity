@@ -7,24 +7,26 @@ import (
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/storage/watcher"
+	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 )
 
 func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -36,7 +38,7 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 		}),
 	))
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{
 		Port:                  0,
 		LeaseNegotiateTimeout: 30,
 	}))))
@@ -50,7 +52,7 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 	lease.scope = scope
 	lease.ScopeKey = scope.Name
 	lease.Address = "10.100.0.100"
-	panicIfError(lease.Put(ctx, 3600))
+	tests.PanicIfError(lease.Put(ctx, 3600))
 
 	assert.Eventually(t, func() bool {
 		match, ok := role.leases.GetPrefix(lease.Identifier)
@@ -85,11 +87,12 @@ func TestDHCPDiscover_ReusesExistingLeaseWithoutDowngradingTTL(t *testing.T) {
 }
 
 func TestDHCPDiscover_ReturnsNilWhenNoScopeMatches(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{Port: 0}))))
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{Port: 0}))))
 	defer role.Stop()
 
 	req := &dhcpv4.DHCPv4{
@@ -103,18 +106,19 @@ func TestDHCPDiscover_ReturnsNilWhenNoScopeMatches(t *testing.T) {
 }
 
 func TestDHCPDiscover_ReturnsNilWhenCreateLeaseFails(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -126,7 +130,7 @@ func TestDHCPDiscover_ReturnsNilWhenCreateLeaseFails(t *testing.T) {
 		}),
 	))
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{
 		Port:                  0,
 		LeaseNegotiateTimeout: 30,
 	}))))
@@ -147,18 +151,19 @@ func TestDHCPDiscover_ReturnsNilWhenCreateLeaseFails(t *testing.T) {
 }
 
 func TestDHCPDiscover_ReturnsOfferWhenExistingLeaseRefreshFails(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
 			types.KeyScopes,
 			"test",
 		).String(),
-		mustJSON(Scope{
+		tests.MustJSON(Scope{
 			SubnetCIDR: "10.100.0.0/24",
 			Default:    true,
 			TTL:        86400,
@@ -170,7 +175,7 @@ func TestDHCPDiscover_ReturnsOfferWhenExistingLeaseRefreshFails(t *testing.T) {
 		}),
 	))
 
-	panicIfError(role.Start(ctx, []byte(mustJSON(RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(RoleConfig{
 		Port:                  0,
 		LeaseNegotiateTimeout: 30,
 	}))))
@@ -184,7 +189,7 @@ func TestDHCPDiscover_ReturnsOfferWhenExistingLeaseRefreshFails(t *testing.T) {
 	lease.scope = scope
 	lease.ScopeKey = scope.Name
 	lease.Address = "10.100.0.100"
-	panicIfError(lease.Put(ctx, 3600))
+	tests.PanicIfError(lease.Put(ctx, 3600))
 
 	assert.Eventually(t, func() bool {
 		match, ok := role.leases.GetPrefix(lease.Identifier)

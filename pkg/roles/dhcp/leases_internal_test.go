@@ -7,13 +7,15 @@ import (
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/storage"
+	"beryju.io/gravity/pkg/tests"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/stretchr/testify/assert"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func TestFindLeaseInStore_GetError(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	inst.kv = inst.KV().WithHooks(storage.StorageHook{
 		GetPre: func(context.Context, string, ...clientv3.OpOption) error {
@@ -30,7 +32,8 @@ func TestFindLeaseInStore_GetError(t *testing.T) {
 }
 
 func TestFindLeaseInStore_EmptyResult(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
@@ -42,11 +45,12 @@ func TestFindLeaseInStore_EmptyResult(t *testing.T) {
 }
 
 func TestFindLeaseInStore_ParseError(t *testing.T) {
-	ctx := setupDHCPInternalTest(t)
+	tests.Setup(t)
+	ctx := tests.Context()
 	inst := newDHCPTestInstance(ctx)
 	role := New(inst)
 
-	panicIfError(inst.KV().Put(
+	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
 			types.KeyRole,
