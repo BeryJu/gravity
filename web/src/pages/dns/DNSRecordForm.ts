@@ -1,4 +1,4 @@
-import { DnsAPIRecord, RolesDnsApi } from "gravity-api";
+import { DnsAPIRecord, RolesDnsApi, TypesDNSRecordType } from "gravity-api";
 
 import { TemplateResult, html, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -14,7 +14,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
     zone: string | undefined;
 
     @property()
-    recordType = "A";
+    recordType: TypesDNSRecordType = TypesDNSRecordType.A;
 
     async loadInstance(pk: string): Promise<DnsAPIRecord> {
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
@@ -60,18 +60,107 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
 
     getLabel(): string {
         switch (this.recordType) {
-            case "CNAME":
+            case TypesDNSRecordType.Cname:
                 return "CNAME Target";
-            case "SRV":
+            case TypesDNSRecordType.Srv:
                 return "SRV Target";
-            case "MX":
+            case TypesDNSRecordType.Mx:
                 return "Mail server";
-            case "AAAA":
-            case "A":
+            case TypesDNSRecordType.Aaaa:
+            case TypesDNSRecordType.A:
                 return "IP Address";
             default:
                 return "Data";
         }
+    }
+
+    renderTypeSpecific() {
+        switch (this.recordType) {
+            case TypesDNSRecordType.Mx:
+                return html`<ak-form-element-horizontal
+                    label="MX Preference"
+                    required
+                    name="mxPreference"
+                >
+                    <input
+                        type="number"
+                        value=${ifDefined(this.instance?.mxPreference)}
+                        class="pf-c-form-control"
+                        required
+                    />
+                </ak-form-element-horizontal>`;
+            case TypesDNSRecordType.Srv:
+                return html`<ak-form-element-horizontal label="SRV Port" required name="srvPort">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvPort)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvPriority)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.srvWeight)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>`;
+            case TypesDNSRecordType.Soa:
+                return html`<ak-form-element-horizontal
+                        label="SOA Expire"
+                        required
+                        name="soaExpire"
+                    >
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaExpire)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Mailbox" required name="soaMbox">
+                        <input
+                            type="text"
+                            value=${ifDefined(this.instance?.soaMbox)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Refresh" required name="soaRefresh">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaRefresh)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Retry" required name="soaRetry">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaRetry)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>
+                    <ak-form-element-horizontal label="SOA Serial" required name="soaSerial">
+                        <input
+                            type="number"
+                            value=${ifDefined(this.instance?.soaSerial)}
+                            class="pf-c-form-control"
+                            required
+                        />
+                    </ak-form-element-horizontal>`;
+        }
+        return html``;
     }
 
     renderForm(): TemplateResult {
@@ -104,17 +193,57 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     class="pf-c-form-control"
                     @change=${(ev: Event) => {
                         const current = (ev.target as HTMLInputElement).value;
-                        this.recordType = current;
+                        this.recordType = current as TypesDNSRecordType;
                     }}
                 >
-                    <option value="A" ?selected=${this.recordType === "A"}>A</option>
-                    <option value="AAAA" ?selected=${this.recordType === "AAAA"}>AAAA</option>
-                    <option value="CNAME" ?selected=${this.recordType === "CNAME"}>CNAME</option>
-                    <option value="PTR" ?selected=${this.recordType === "PTR"}>PTR</option>
-                    <option value="NS" ?selected=${this.recordType === "NS"}>NS</option>
-                    <option value="MX" ?selected=${this.recordType === "MX"}>MX</option>
-                    <option value="SRV" ?selected=${this.recordType === "SRV"}>SRV</option>
-                    <option value="TXT" ?selected=${this.recordType === "TXT"}>TXT</option>
+                    <option
+                        value=${TypesDNSRecordType.A}
+                        ?selected=${this.recordType === TypesDNSRecordType.A}
+                    >
+                        A
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Aaaa}
+                        ?selected=${this.recordType === TypesDNSRecordType.Aaaa}
+                    >
+                        AAAA
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Cname}
+                        ?selected=${this.recordType === TypesDNSRecordType.Cname}
+                    >
+                        CNAME
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Ptr}
+                        ?selected=${this.recordType === TypesDNSRecordType.Ptr}
+                    >
+                        PTR
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Mx}
+                        ?selected=${this.recordType === TypesDNSRecordType.Mx}
+                    >
+                        MX
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Soa}
+                        ?selected=${this.recordType === TypesDNSRecordType.Soa}
+                    >
+                        SOA
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Srv}
+                        ?selected=${this.recordType === TypesDNSRecordType.Srv}
+                    >
+                        SRV
+                    </option>
+                    <option
+                        value=${TypesDNSRecordType.Txt}
+                        ?selected=${this.recordType === TypesDNSRecordType.Txt}
+                    >
+                        TXT
+                    </option>
                 </select>
             </ak-form-element-horizontal>
             <ak-form-element-horizontal label=${this.getLabel()} required name="data">
@@ -125,49 +254,14 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                     required
                 />
             </ak-form-element-horizontal>
-            ${this.recordType === "MX"
-                ? html`
-                      <ak-form-element-horizontal
-                          label="MX Preference"
-                          required
-                          name="mxPreference"
-                      >
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.mxPreference)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                  `
-                : html``}
-            ${this.recordType === "SRV"
-                ? html`
-                      <ak-form-element-horizontal label="SRV Port" required name="srvPort">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvPort)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                      <ak-form-element-horizontal label="SRV Priority" required name="srvPriority">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvPriority)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                      <ak-form-element-horizontal label="SRV Weight" required name="srvWeight">
-                          <input
-                              type="number"
-                              value=${ifDefined(this.instance?.srvWeight)}
-                              class="pf-c-form-control"
-                              required
-                          />
-                      </ak-form-element-horizontal>
-                  `
-                : html``}`;
+            <ak-form-element-horizontal label="TTL" required name="ttl">
+                <input
+                    type="number"
+                    value=${this.instance?.ttl ?? 500}
+                    class="pf-c-form-control"
+                    required
+                />
+            </ak-form-element-horizontal>
+            ${this.renderTypeSpecific()}`;
     }
 }

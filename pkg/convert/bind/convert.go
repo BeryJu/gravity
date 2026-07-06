@@ -100,7 +100,7 @@ func (c *Converter) createZone(rr dns.RR, ctx context.Context) error {
 
 func (c *Converter) convertRecord(rr dns.RR, ctx context.Context) error {
 	req := api.DnsAPIRecordsPutInput{
-		Type: dns.TypeToString[rr.Header().Rrtype],
+		Type: api.TypesDNSRecordType(dns.TypeToString[rr.Header().Rrtype]),
 	}
 
 	switch v := rr.(type) {

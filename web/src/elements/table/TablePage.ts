@@ -1,4 +1,4 @@
-import { CSSResult } from "lit";
+import { CSSResult, nothing } from "lit";
 import { TemplateResult, html } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -27,13 +27,17 @@ export abstract class TablePage<T extends object> extends Table<T> {
         return html``;
     }
 
+    renderAboveTable(): TemplateResult {
+        return html``;
+    }
+
     renderEmpty(inner?: TemplateResult): TemplateResult {
         return super.renderEmpty(html`
             ${inner
                 ? inner
                 : html`<ak-empty-state icon=${this.pageIcon()} header=${"No objects found."}>
                       <div slot="body">
-                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : html``}
+                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : nothing}
                       </div>
                       <div slot="primary">${this.renderObjectCreate()}</div>
                   </ak-empty-state>`}
@@ -79,6 +83,7 @@ export abstract class TablePage<T extends object> extends Table<T> {
                     <div class="pf-c-sidebar__main">
                         ${this.renderSidebarBefore()}
                         <div class="pf-c-sidebar__content">
+                            ${this.renderAboveTable()}
                             <div class="pf-c-card">${this.renderTable()}</div>
                         </div>
                         ${this.renderSidebarAfter()}

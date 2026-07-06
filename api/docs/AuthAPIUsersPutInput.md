@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Password** | **string** |  | 
-**Permissions** | [**[]AuthPermission**](AuthPermission.md) |  | 
+**Permissions** | [**[]TypesPermission**](TypesPermission.md) |  | 
 
 ## Methods
 
 ### NewAuthAPIUsersPutInput
 
-`func NewAuthAPIUsersPutInput(password string, permissions []AuthPermission, ) *AuthAPIUsersPutInput`
+`func NewAuthAPIUsersPutInput(password string, permissions []TypesPermission, ) *AuthAPIUsersPutInput`
 
 NewAuthAPIUsersPutInput instantiates a new AuthAPIUsersPutInput object
 This constructor will assign default values to properties that have it defined,
@@ -48,20 +48,20 @@ SetPassword sets Password field to given value.
 
 ### GetPermissions
 
-`func (o *AuthAPIUsersPutInput) GetPermissions() []AuthPermission`
+`func (o *AuthAPIUsersPutInput) GetPermissions() []TypesPermission`
 
 GetPermissions returns the Permissions field if non-nil, zero value otherwise.
 
 ### GetPermissionsOk
 
-`func (o *AuthAPIUsersPutInput) GetPermissionsOk() (*[]AuthPermission, bool)`
+`func (o *AuthAPIUsersPutInput) GetPermissionsOk() (*[]TypesPermission, bool)`
 
 GetPermissionsOk returns a tuple with the Permissions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPermissions
 
-`func (o *AuthAPIUsersPutInput) SetPermissions(v []AuthPermission)`
+`func (o *AuthAPIUsersPutInput) SetPermissions(v []TypesPermission)`
 
 SetPermissions sets Permissions field to given value.
 

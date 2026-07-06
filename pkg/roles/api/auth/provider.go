@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"encoding/gob"
-	"encoding/json"
 	"net/http"
 
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
@@ -40,7 +39,7 @@ func NewAuthProvider(r roles.Role, inst roles.Instance) *AuthProvider {
 			"/api/v1/openapi.json",
 		},
 	}
-	gob.Register(User{})
+	gob.Register(types.User{})
 	inst.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		mux := ev.Payload.Data["mux"].(*mux.Router)
@@ -70,28 +69,24 @@ func (ap *AuthProvider) CreateUser(ctx context.Context, username, password strin
 		return err
 	}
 
-	user := User{
+	user := types.User{
 		Password: string(hashedPw),
-		Permissions: []Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 			},
 		},
 	}
-	userJson, err := json.Marshal(user)
-	if err != nil {
-		return err
-	}
 
-	_, err = ap.inst.KV().Put(
+	_, err = ap.inst.KV().PutObj(
 		ctx,
 		ap.inst.KV().Key(
 			types.KeyRole,
 			types.KeyUsers,
 			username,
 		).String(),
-		string(userJson),
+		&user,
 	)
 	if err != nil {
 		return err

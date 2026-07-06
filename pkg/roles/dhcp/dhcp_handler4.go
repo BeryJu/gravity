@@ -35,6 +35,7 @@ type handler4 struct {
 	role  *Role
 	pc    *ipv4.PacketConn
 	iface net.Interface
+	ip    string
 }
 
 // XXX: performance-wise, Pool may or may not be good (see https://github.com/golang/go/issues/23199)
@@ -83,6 +84,7 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	r.peer = peer
 	r.Context = context
 	r.oob = oob
+	r.BindIP = h.ip
 
 	span := sentry.StartTransaction(r.Context, h.role.DeviceIdentifier(r.DHCPv4))
 	span.Op = "gravity.dhcp.request"

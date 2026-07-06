@@ -1,7 +1,12 @@
 import { ChartData } from "chart.js";
-import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
+import {
+    ClusterApi,
+    RolesTsdbApi,
+    TypesAPIMetricsGetOutput,
+    TypesAPIMetricsRole,
+} from "gravity-api";
 
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../../api/Config";
 import { groupBy } from "../../../common/utils";
@@ -10,7 +15,12 @@ import { AKChart } from "../../../elements/charts/Chart";
 
 @customElement("gravity-overview-charts-memory-usage")
 export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
-    apiRequest(): Promise<TypesAPIMetricsGetOutput> {
+    @state()
+    maxAvailableMemory = 0;
+
+    async apiRequest(): Promise<TypesAPIMetricsGetOutput> {
+        const clusterInfo = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
+        this.maxAvailableMemory = clusterInfo.instances?.map((i) => i.memoryBytes).sort()[0] || 0;
         return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
             role: TypesAPIMetricsRole.System,
             category: "memory",
@@ -23,7 +33,11 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
 
     getOptions() {
         const opts = super.getOptions();
-        opts.scales!.y!.min = 0;
+        if (this.maxAvailableMemory > 0) {
+            opts.scales!.y!.max = this.maxAvailableMemory / 1024 / 1024;
+        } else {
+            opts.scales!.y!.min = 0;
+        }
         return opts;
     }
 

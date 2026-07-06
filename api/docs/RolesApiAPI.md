@@ -784,7 +784,7 @@ import (
 
 func main() {
 	username := "username_example" // string | 
-	authAPIUsersPutInput := *openapiclient.NewAuthAPIUsersPutInput("Password_example", []openapiclient.AuthPermission{*openapiclient.NewAuthPermission()}) // AuthAPIUsersPutInput |  (optional)
+	authAPIUsersPutInput := *openapiclient.NewAuthAPIUsersPutInput("Password_example", []openapiclient.TypesPermission{*openapiclient.NewTypesPermission()}) // AuthAPIUsersPutInput |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

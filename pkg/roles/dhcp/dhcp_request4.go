@@ -19,6 +19,9 @@ type Request4 struct {
 	Context   context.Context
 	oob       *ipv4.ControlMessage
 	requestId string
+	// BindIP is the instance IP that the handler receiving this request is bound to.
+	// Set by handler4.Handle so findScopeForRequest can match the correct scope.
+	BindIP string
 }
 
 type contextRequestID struct{}
@@ -36,7 +39,12 @@ func (r *Role) NewRequest4(dhcp *dhcpv4.DHCPv4) *Request4 {
 
 // Use the instance ip unless the the interface is not bound
 func (req *Request4) LocalIP() string {
-	ip := extconfig.Get().Instance.IP
+	// BindIP is set by handler4 to the specific IP this handler is bound to.
+	// This is required for correct scope matching when multiple IPs are configured.
+	if req.BindIP != "" {
+		return req.BindIP
+	}
+	ip := extconfig.Get().PrimaryIP()
 	if req.oob != nil {
 		ief, err := net.InterfaceByIndex(req.oob.IfIndex)
 		if err != nil {
@@ -47,7 +55,11 @@ func (req *Request4) LocalIP() string {
 			return ip
 		}
 		for _, addr := range addrs {
-			if ipv4Addr := addr.(*net.IPNet).IP.To4(); ipv4Addr != nil {
+			ipNet, ok := addr.(*net.IPNet)
+			if !ok {
+				continue
+			}
+			if ipv4Addr := ipNet.IP.To4(); ipv4Addr != nil {
 				ip = ipv4Addr.String()
 				req.log.Debug("Unbound interface found", zap.String("ifname", ief.Name), zap.String("ip", ip))
 				return ip

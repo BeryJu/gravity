@@ -11,8 +11,8 @@ import (
 
 	"beryju.io/gravity/api"
 	"beryju.io/gravity/pkg/extconfig"
-	"github.com/docker/docker/api/types/container"
 	"github.com/gorilla/securecookie"
+	"github.com/moby/moby/api/types/container"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"

@@ -9,13 +9,6 @@ const (
 )
 
 const (
-	DNSRecordTypeA     = "A"
-	DNSRecordTypeAAAA  = "AAAA"
-	DNSRecordTypePTR   = "PTR"
-	DNSRecordTypeCNAME = "CNAME"
-)
-
-const (
 	DNSWildcard = "*"
 	// Special name for DNS records at the zone apex
 	DNSRootRecord = "@"

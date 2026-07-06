@@ -1,4 +1,4 @@
-import { AuthAPIUser, AuthPermission, RolesApiApi } from "gravity-api";
+import { AuthAPIUser, RolesApiApi, TypesPermission } from "gravity-api";
 import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
@@ -10,7 +10,7 @@ import "../../elements/forms/HorizontalFormElement";
 import { ModelForm } from "../../elements/forms/ModelForm";
 import { KV, firstElement } from "../../utils";
 
-export const DEFAULT_ADMIN_PERMISSIONS: AuthPermission[] = [
+export const DEFAULT_ADMIN_PERMISSIONS: TypesPermission[] = [
     {
         path: "/*",
         methods: ["GET", "POST", "PUT", "HEAD", "DELETE"],

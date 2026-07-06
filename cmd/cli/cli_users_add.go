@@ -24,7 +24,7 @@ var cliUsersAddCmd = &cobra.Command{
 		fmt.Println("")
 		hr, err := apiClient.RolesApiAPI.ApiPutUsers(cmd.Context()).Username(username).AuthAPIUsersPutInput(api.AuthAPIUsersPutInput{
 			Password: string(bytePassword),
-			Permissions: []api.AuthPermission{
+			Permissions: []api.TypesPermission{
 				{
 					Path:    api.PtrString("/*"),
 					Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},

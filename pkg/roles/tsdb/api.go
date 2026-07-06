@@ -13,7 +13,6 @@ import (
 	"github.com/swaggest/usecase/status"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/proto"
 )
 
 func (r *Role) APIMetrics() usecase.Interactor {
@@ -52,7 +51,7 @@ func (r *Role) APIMetrics() usecase.Interactor {
 				continue
 			}
 			v := types.MetricsRecord{}
-			err = proto.Unmarshal(kv.Value, &v)
+			err = r.i.KV().Unmarshal(kv.Value, &v)
 			if err != nil {
 				value, err := strconv.ParseInt(string(kv.Value), 10, 0)
 				if err != nil {

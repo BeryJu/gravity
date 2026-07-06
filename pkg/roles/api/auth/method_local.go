@@ -10,6 +10,7 @@ import (
 	"github.com/swaggest/usecase/status"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/protobuf/proto"
 )
 
 type APILoginInput struct {
@@ -50,7 +51,7 @@ func (ap *AuthProvider) APILogin() usecase.Interactor {
 			return status.Unauthenticated
 		}
 		session := ctx.Value(types.RequestSession).(*sessions.Session)
-		session.Values[types.SessionKeyUser] = user
+		session.Values[types.SessionKeyUser], _ = proto.Marshal(user)
 		session.Values[types.SessionKeyDirty] = true
 		output.Successful = true
 		return nil

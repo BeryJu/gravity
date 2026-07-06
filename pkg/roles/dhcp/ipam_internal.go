@@ -1,6 +1,7 @@
 package dhcp
 
 import (
+	"context"
 	"math/big"
 	"net"
 	"net/netip"
@@ -16,7 +17,10 @@ import (
 	"go.uber.org/zap"
 )
 
-const InternalIPAMType = "internal"
+const (
+	InternalIPAMType = "internal"
+	scopeLockTimeout = 5 * time.Second
+)
 
 type InternalIPAM struct {
 	Start netip.Addr
@@ -29,7 +33,7 @@ type InternalIPAM struct {
 	SubnetCIDR netip.Prefix
 
 	shouldPing bool
-	scopeLock  sync.Locker
+	scopeLock  *concurrency.Mutex
 }
 
 func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
@@ -43,7 +47,7 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 	if err != nil {
 		return nil, err
 	}
-	ipam.scopeLock = concurrency.NewLocker(sess, role.i.KV().Key(
+	ipam.scopeLock = concurrency.NewMutex(sess, role.i.KV().Key(
 		types.KeyRole,
 		types.KeyIPAM,
 		s.Name,
@@ -53,6 +57,30 @@ func NewInternalIPAM(role *Role, s *Scope) (*InternalIPAM, error) {
 		return nil, err
 	}
 	return ipam, nil
+}
+
+// lockScope tries to acquire the cluster-wide scope lock with a short timeout.
+// On failure (e.g. etcd unreachable) it logs and returns false; callers fall
+// back to in-process serialization via ipf rather than panicking the role.
+func (i *InternalIPAM) lockScope() bool {
+	ctx, cancel := context.WithTimeout(i.role.ctx, scopeLockTimeout)
+	defer cancel()
+	if err := i.scopeLock.Lock(ctx); err != nil {
+		i.log.Warn("failed to acquire scope lock, proceeding with local-only serialization", zap.Error(err))
+		return false
+	}
+	return true
+}
+
+func (i *InternalIPAM) unlockScope(locked bool) {
+	if !locked {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), scopeLockTimeout)
+	defer cancel()
+	if err := i.scopeLock.Unlock(ctx); err != nil {
+		i.log.Warn("failed to release scope lock", zap.Error(err))
+	}
 }
 
 func (i *InternalIPAM) UpdateConfig(s *Scope) error {
@@ -115,23 +143,23 @@ func (i *InternalIPAM) UseIP(ip netip.Addr, identifier string) {
 }
 
 func (i *InternalIPAM) IsIPFree(ip netip.Addr, identifier *string) bool {
-	i.scopeLock.Lock()
+	locked := i.lockScope()
 	if identifier != nil {
 		l := i.role.leases.Get(*identifier)
 		if l != nil && l.Address == ip.String() {
 			i.log.Debug("allowing", zap.String("ip", ip.String()), zap.String("reason", "existing IP of lease"))
-			i.scopeLock.Unlock()
+			i.unlockScope(locked)
 			return true
 		}
 	}
 	for _, l := range i.role.leases.Iter() {
 		if l.Address == ip.String() {
 			i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "used (in memory)"))
-			i.scopeLock.Unlock()
+			i.unlockScope(locked)
 			return false
 		}
 	}
-	i.scopeLock.Unlock()
+	i.unlockScope(locked)
 	// IP is less than the start of the range
 	if i.Start.Compare(ip) == 1 {
 		i.log.Debug("discarding", zap.String("ip", ip.String()), zap.String("reason", "before started"))

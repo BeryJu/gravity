@@ -5,14 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Authenticated** | **bool** |  | 
-**Permissions** | [**[]AuthPermission**](AuthPermission.md) |  | 
+**Permissions** | [**[]TypesPermission**](TypesPermission.md) |  | 
 **Username** | **string** |  | 
 
 ## Methods
 
 ### NewAuthAPIMeOutput
 
-`func NewAuthAPIMeOutput(authenticated bool, permissions []AuthPermission, username string, ) *AuthAPIMeOutput`
+`func NewAuthAPIMeOutput(authenticated bool, permissions []TypesPermission, username string, ) *AuthAPIMeOutput`
 
 NewAuthAPIMeOutput instantiates a new AuthAPIMeOutput object
 This constructor will assign default values to properties that have it defined,
@@ -49,20 +49,20 @@ SetAuthenticated sets Authenticated field to given value.
 
 ### GetPermissions
 
-`func (o *AuthAPIMeOutput) GetPermissions() []AuthPermission`
+`func (o *AuthAPIMeOutput) GetPermissions() []TypesPermission`
 
 GetPermissions returns the Permissions field if non-nil, zero value otherwise.
 
 ### GetPermissionsOk
 
-`func (o *AuthAPIMeOutput) GetPermissionsOk() (*[]AuthPermission, bool)`
+`func (o *AuthAPIMeOutput) GetPermissionsOk() (*[]TypesPermission, bool)`
 
 GetPermissionsOk returns a tuple with the Permissions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPermissions
 
-`func (o *AuthAPIMeOutput) SetPermissions(v []AuthPermission)`
+`func (o *AuthAPIMeOutput) SetPermissions(v []TypesPermission)`
 
 SetPermissions sets Permissions field to given value.
 

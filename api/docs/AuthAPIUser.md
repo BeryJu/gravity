@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Permissions** | [**[]AuthPermission**](AuthPermission.md) |  | 
+**Permissions** | [**[]TypesPermission**](TypesPermission.md) |  | 
 **Username** | **string** |  | 
 
 ## Methods
 
 ### NewAuthAPIUser
 
-`func NewAuthAPIUser(permissions []AuthPermission, username string, ) *AuthAPIUser`
+`func NewAuthAPIUser(permissions []TypesPermission, username string, ) *AuthAPIUser`
 
 NewAuthAPIUser instantiates a new AuthAPIUser object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetPermissions
 
-`func (o *AuthAPIUser) GetPermissions() []AuthPermission`
+`func (o *AuthAPIUser) GetPermissions() []TypesPermission`
 
 GetPermissions returns the Permissions field if non-nil, zero value otherwise.
 
 ### GetPermissionsOk
 
-`func (o *AuthAPIUser) GetPermissionsOk() (*[]AuthPermission, bool)`
+`func (o *AuthAPIUser) GetPermissionsOk() (*[]TypesPermission, bool)`
 
 GetPermissionsOk returns a tuple with the Permissions field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPermissions
 
-`func (o *AuthAPIUser) SetPermissions(v []AuthPermission)`
+`func (o *AuthAPIUser) SetPermissions(v []TypesPermission)`
 
 SetPermissions sets Permissions field to given value.
 

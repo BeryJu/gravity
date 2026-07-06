@@ -1,7 +1,12 @@
 import { ChartData } from "chart.js";
-import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
+import {
+    RolesTsdbApi,
+    TsdbGetMetricsRequest,
+    TypesAPIMetricsGetOutput,
+    TypesAPIMetricsRole,
+} from "gravity-api";
 
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 import { DEFAULT_CONFIG } from "../../../api/Config";
 import { groupBy } from "../../../common/utils";
@@ -10,11 +15,14 @@ import { AKChart } from "../../../elements/charts/Chart";
 
 @customElement("gravity-overview-charts-dns-requests")
 export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
+    @property({ type: Object })
+    request: TsdbGetMetricsRequest = {
+        role: TypesAPIMetricsRole.Dns,
+        category: "handler",
+    };
+
     apiRequest(): Promise<TypesAPIMetricsGetOutput> {
-        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
-            role: TypesAPIMetricsRole.Dns,
-            category: "handler",
-        });
+        return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics(this.request);
     }
 
     getChartType(): string {

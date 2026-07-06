@@ -15,8 +15,8 @@ type APIUsersGetInput struct {
 	Username string `query:"username" description:"Optional username of a user to get"`
 }
 type APIUser struct {
-	Username    string       `json:"username" required:"true"`
-	Permissions []Permission `json:"permissions" required:"true"`
+	Username    string              `json:"username" required:"true"`
+	Permissions []*types.Permission `json:"permissions" required:"true"`
 }
 type APIUsersGetOutput struct {
 	Users []APIUser `json:"users" required:"true"`
@@ -64,8 +64,8 @@ func (ap *AuthProvider) APIUsersGet() usecase.Interactor {
 type APIUsersPutInput struct {
 	Username string `query:"username" required:"true"`
 
-	Password    string       `json:"password" required:"true"`
-	Permissions []Permission `json:"permissions" required:"true"`
+	Password    string              `json:"password" required:"true"`
+	Permissions []*types.Permission `json:"permissions" required:"true"`
 }
 
 func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
@@ -78,7 +78,7 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 				input.Username,
 			).String(),
 		)
-		var oldUser *User
+		var oldUser *types.User
 		if err == nil && len(rawUsers.Kvs) > 0 {
 			user, err := ap.userFromKV(rawUsers.Kvs[0])
 			if err != nil {
@@ -89,10 +89,9 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 			oldUser = user
 		}
 
-		user := &User{
+		user := &types.User{
 			Username:    input.Username,
 			Permissions: input.Permissions,
-			ap:          ap,
 		}
 		if input.Password != "" {
 			hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
@@ -103,7 +102,7 @@ func (ap *AuthProvider) APIUsersPut() usecase.Interactor {
 		} else if oldUser != nil {
 			user.Password = oldUser.Password
 		}
-		err = user.put(ctx)
+		err = ap.putUser(user, ctx)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

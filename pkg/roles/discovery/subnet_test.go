@@ -92,14 +92,14 @@ func TestDiscoveryConvert(t *testing.T) {
 	dnsr := dns.New(rootInst.ForRole("dns", ctx))
 	assert.NotNil(t, dnsr)
 	assert.Nil(t, dnsr.Start(ctx, []byte(tests.MustJSON(dns.RoleConfig{
-		Port: -1,
+		Port: 0,
 	}))))
 	defer dnsr.Stop()
 
 	dhcpr := dhcp.New(rootInst.ForRole("dhcp", ctx))
 	assert.NotNil(t, dhcpr)
 	assert.Nil(t, dhcpr.Start(ctx, []byte(tests.MustJSON(dhcp.RoleConfig{
-		Port: -1,
+		Port: 0,
 	}))))
 	defer dhcpr.Stop()
 

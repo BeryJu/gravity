@@ -29,6 +29,12 @@ type Record struct {
 	SRVPort      uint16 `json:"srvPort,omitempty"`
 	SRVPriority  uint16 `json:"srvPriority,omitempty"`
 	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	SOAMbox    string `json:"soaMbox,omitempty"`
+	SOASerial  uint32 `json:"soaSerial,omitempty"`
+	SOARefresh uint32 `json:"soaRefresh,omitempty"`
+	SOARetry   uint32 `json:"soaRetry,omitempty"`
+	SOAExpire  uint32 `json:"soaExpire,omitempty"`
 }
 
 func (z *Zone) recordFromKV(kv *mvccpb.KeyValue) (*Record, error) {
@@ -79,6 +85,8 @@ func (r *Record) RRType() uint16 {
 		return dns.TypeCNAME
 	case "txt":
 		return dns.TypeTXT
+	case "soa":
+		return dns.TypeSOA
 	}
 	return dns.TypeNone
 }
@@ -146,6 +154,17 @@ func (r *Record) ToDNS(qname string) dns.RR {
 		rr = &dns.TXT{
 			Hdr: hdr,
 			Txt: strings.Split(r.Data, types.TXTSeparator),
+		}
+	case dns.TypeSOA:
+		rr = &dns.SOA{
+			Hdr:     hdr,
+			Ns:      r.Data,
+			Mbox:    r.SOAMbox,
+			Serial:  r.SOASerial,
+			Refresh: r.SOARefresh,
+			Retry:   r.SOARetry,
+			Expire:  r.SOAExpire,
+			Minttl:  hdr.Ttl,
 		}
 	}
 	return rr

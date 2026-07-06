@@ -108,6 +108,10 @@ html > form > input {
     margin-bottom: 6px;
 }
 
+.pf-c-page__sidebar {
+    --pf-c-page__sidebar--ZIndex: 100;
+}
+
 @media (prefers-color-scheme: light) {
     .pf-c-page__sidebar {
         color: var(--pf-global--Color--100);

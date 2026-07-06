@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 99.99.99
+  version: 0.33.0
 servers:
 - url: /
 paths:
@@ -1041,7 +1041,7 @@ paths:
         name: type
         required: true
         schema:
-          type: string
+          $ref: "#/components/schemas/TypesDNSRecordType"
         style: form
       responses:
         "204":
@@ -2164,7 +2164,7 @@ components:
           type: boolean
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2227,7 +2227,7 @@ components:
       properties:
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
         username:
@@ -2285,27 +2285,12 @@ components:
           type: string
         permissions:
           items:
-            $ref: "#/components/schemas/AuthPermission"
+            $ref: "#/components/schemas/TypesPermission"
           nullable: true
           type: array
       required:
       - password
       - permissions
-      type: object
-    AuthPermission:
-      example:
-        path: path
-        methods:
-        - methods
-        - methods
-      properties:
-        methods:
-          items:
-            type: string
-          nullable: true
-          type: array
-        path:
-          type: string
       type: object
     BackupAPIBackupStatus:
       example:
@@ -3019,14 +3004,20 @@ components:
     DnsAPIRecord:
       example:
         srvPort: 0
-        uid: uid
-        hostname: hostname
         mxPreference: 0
         data: data
         fqdn: fqdn
         srvPriority: 0
+        type: A
+        ttl: 3
+        soaExpire: 0
+        soaRefresh: 0
+        uid: uid
+        hostname: hostname
+        soaMbox: soaMbox
         srvWeight: 0
-        type: type
+        soaRetry: 0
+        soaSerial: 0
       properties:
         data:
           type: string
@@ -3035,6 +3026,20 @@ components:
         hostname:
           type: string
         mxPreference:
+          minimum: 0
+          type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
           minimum: 0
           type: integer
         srvPort:
@@ -3046,14 +3051,18 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
-          type: string
+          $ref: "#/components/schemas/TypesDNSRecordType"
         uid:
           type: string
       required:
       - data
       - fqdn
       - hostname
+      - ttl
       - type
       - uid
       type: object
@@ -3061,23 +3070,35 @@ components:
       example:
         records:
         - srvPort: 0
-          uid: uid
-          hostname: hostname
           mxPreference: 0
           data: data
           fqdn: fqdn
           srvPriority: 0
+          type: A
+          ttl: 3
+          soaExpire: 0
+          soaRefresh: 0
+          uid: uid
+          hostname: hostname
+          soaMbox: soaMbox
           srvWeight: 0
-          type: type
+          soaRetry: 0
+          soaSerial: 0
         - srvPort: 0
-          uid: uid
-          hostname: hostname
           mxPreference: 0
           data: data
           fqdn: fqdn
           srvPriority: 0
+          type: A
+          ttl: 3
+          soaExpire: 0
+          soaRefresh: 0
+          uid: uid
+          hostname: hostname
+          soaMbox: soaMbox
           srvWeight: 0
-          type: type
+          soaRetry: 0
+          soaSerial: 0
       properties:
         records:
           items:
@@ -3089,16 +3110,36 @@ components:
       type: object
     DnsAPIRecordsPutInput:
       example:
+        soaRefresh: 0
         srvPort: 0
+        soaMbox: soaMbox
         mxPreference: 0
         data: data
         srvPriority: 0
         srvWeight: 0
-        type: type
+        soaRetry: 0
+        soaSerial: 0
+        type: A
+        ttl: 3
+        soaExpire: 0
       properties:
         data:
           type: string
         mxPreference:
+          minimum: 0
+          type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
           minimum: 0
           type: integer
         srvPort:
@@ -3110,10 +3151,14 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
-          type: string
+          $ref: "#/components/schemas/TypesDNSRecordType"
       required:
       - data
+      - ttl
       - type
       type: object
     DnsAPIRoleConfigInput:
@@ -3334,12 +3379,14 @@ components:
         clusterVersionShort: clusterVersionShort
         instances:
         - identifier: identifier
+          memoryBytes: 0
           ip: ip
           roles:
           - roles
           - roles
           version: version
         - identifier: identifier
+          memoryBytes: 0
           ip: ip
           roles:
           - roles
@@ -3400,6 +3447,7 @@ components:
     InstanceInstanceInfo:
       example:
         identifier: identifier
+        memoryBytes: 0
         ip: ip
         roles:
         - roles
@@ -3410,6 +3458,9 @@ components:
           type: string
         ip:
           type: string
+        memoryBytes:
+          minimum: 0
+          type: integer
         roles:
           items:
             type: string
@@ -3420,6 +3471,7 @@ components:
       required:
       - identifier
       - ip
+      - memoryBytes
       - roles
       - version
       type: object
@@ -3700,6 +3752,17 @@ components:
           nullable: true
           type: array
       type: object
+    TypesDNSRecordType:
+      enum:
+      - A
+      - AAAA
+      - PTR
+      - SRV
+      - MX
+      - CNAME
+      - TXT
+      - SOA
+      type: string
     TypesOIDCConfig:
       example:
         tokenUsernameField: tokenUsernameField
@@ -3725,5 +3788,19 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesPermission:
+      example:
+        path: path
+        methods:
+        - methods
+        - methods
+      properties:
+        methods:
+          items:
+            type: string
+          type: array
+        path:
           type: string
       type: object

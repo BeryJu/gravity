@@ -24,7 +24,7 @@ const sharedNamespace = "shared"
 
 type Role struct {
 	localfs fs.FS
-	s       *tftp.Server
+	servers []*tftp.Server
 
 	log *zap.Logger
 	i   roles.Instance
@@ -45,10 +45,6 @@ func New(instance roles.Instance) *Role {
 		ctx:     instance.Context(),
 		localfs: os.DirFS(extconfig.Get().Dirs().TFTPLocalDir),
 	}
-	s := tftp.NewServer(r.Reader, r.Writer)
-	s.SetHook(r)
-	r.s = s
-	s.SetTimeout(5 * time.Second)
 	r.i.AddEventListener(apiTypes.EventTopicAPIMuxSetup, func(ev *roles.Event) {
 		svc := ev.Payload.Data["svc"].(*web.Service)
 		svc.Get("/api/v1/tftp/files", r.APIFilesGet())
@@ -64,21 +60,24 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
-	listen := extconfig.Get().Listen(r.cfg.Port)
-
-	r.log.Info("starting tftp server", zap.String("listen", listen))
-	go func() {
-		err := r.s.ListenAndServe(listen)
-		if err != nil && err != http.ErrServerClosed {
-			r.log.Warn("failed to listen", zap.Error(err))
-		}
-	}()
+	for _, addr := range extconfig.Get().ListenAddrs(r.cfg.Port) {
+		s := tftp.NewServer(r.Reader, r.Writer)
+		s.SetHook(r)
+		s.SetTimeout(5 * time.Second)
+		r.servers = append(r.servers, s)
+		r.log.Info("starting tftp server", zap.String("listen", addr))
+		go func(s *tftp.Server, addr string) {
+			if err := s.ListenAndServe(addr); err != nil && err != http.ErrServerClosed {
+				r.log.Warn("failed to listen", zap.String("listen", addr), zap.Error(err))
+			}
+		}(s, addr)
+	}
 	return nil
 }
 
 func (r *Role) Stop() {
-	if r.s != nil {
-		r.s.Shutdown()
+	for _, s := range r.servers {
+		s.Shutdown()
 	}
 }
 

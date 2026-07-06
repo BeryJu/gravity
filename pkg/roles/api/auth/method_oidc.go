@@ -14,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
+	"google.golang.org/protobuf/proto"
 )
 
 func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *types.OIDCConfig) error {
@@ -25,7 +26,7 @@ func (ap *AuthProvider) ConfigureOpenIDConnect(ctx context.Context, config *type
 	}
 	ap.oidc = config
 	red := strings.ReplaceAll(config.RedirectURL, "$INSTANCE_IDENTIFIER", extconfig.Get().Instance.Identifier)
-	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().Instance.IP)
+	red = strings.ReplaceAll(red, "$INSTANCE_IP", extconfig.Get().PrimaryIP())
 	ap.oidcConfig = oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
@@ -92,17 +93,17 @@ func (ap *AuthProvider) oidcCallback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to authenticate", http.StatusBadRequest)
 		return
 	}
-	user := User{
+	user := &types.User{
 		Username: claims.Email,
 		Password: "",
-		Permissions: []Permission{
+		Permissions: []*types.Permission{
 			{
 				Path:    "/*",
 				Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
 			},
 		},
 	}
-	session.Values[types.SessionKeyUser] = user
+	session.Values[types.SessionKeyUser], _ = proto.Marshal(user)
 	session.Values[types.SessionKeyDirty] = true
 	http.Redirect(w, r, "/ui/#/overview", http.StatusFound)
 }
@@ -150,6 +151,6 @@ func (ap *AuthProvider) checkJWTToken(r *http.Request) bool {
 		return false
 	}
 	session := r.Context().Value(types.RequestSession).(*sessions.Session)
-	session.Values[types.SessionKeyUser] = *user
+	session.Values[types.SessionKeyUser], _ = proto.Marshal(user)
 	return false
 }

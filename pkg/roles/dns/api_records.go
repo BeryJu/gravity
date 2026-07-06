@@ -19,16 +19,25 @@ type APIRecordsGetInput struct {
 	UID      string `query:"uid"`
 }
 type APIRecord struct {
-	UID      string `json:"uid" required:"true"`
-	FQDN     string `json:"fqdn" required:"true"`
-	Hostname string `json:"hostname" required:"true"`
-	Type     string `json:"type" required:"true"`
+	UID      string              `json:"uid" required:"true"`
+	FQDN     string              `json:"fqdn" required:"true"`
+	Hostname string              `json:"hostname" required:"true"`
+	Type     types.DNSRecordType `json:"type" required:"true"`
+	TTL      int64               `json:"ttl" required:"true"`
 
-	Data         string `json:"data" required:"true"`
+	Data string `json:"data" required:"true"`
+
 	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	SRVPort     uint16 `json:"srvPort,omitempty"`
+	SRVPriority uint16 `json:"srvPriority,omitempty"`
+	SRVWeight   uint16 `json:"srvWeight,omitempty"`
+
+	SOAMbox    string `json:"soaMbox,omitempty"`
+	SOASerial  uint32 `json:"soaSerial,omitempty"`
+	SOARefresh uint32 `json:"soaRefresh,omitempty"`
+	SOARetry   uint32 `json:"soaRetry,omitempty"`
+	SOAExpire  uint32 `json:"soaExpire,omitempty"`
 }
 type APIRecordsGetOutput struct {
 	Records []APIRecord `json:"records" required:"true"`
@@ -83,12 +92,18 @@ func (r *Role) APIRecordsGet() usecase.Interactor {
 				UID:          rec.uid,
 				Hostname:     rec.Name,
 				FQDN:         rec.Name + types.DNSSep + zone.Name,
-				Type:         rec.Type,
+				Type:         types.DNSRecordType(rec.Type),
+				TTL:          int64(rec.TTL),
 				Data:         rec.Data,
 				MXPreference: rec.MXPreference,
 				SRVPort:      rec.SRVPort,
 				SRVPriority:  rec.SRVPriority,
 				SRVWeight:    rec.SRVWeight,
+				SOAMbox:      rec.SOAMbox,
+				SOASerial:    rec.SOASerial,
+				SOARefresh:   rec.SOARefresh,
+				SOARetry:     rec.SOARetry,
+				SOAExpire:    rec.SOAExpire,
 			})
 		}
 		return nil
@@ -105,13 +120,22 @@ type APIRecordsPutInput struct {
 	Hostname string `query:"hostname" required:"true" maxLength:"255"`
 	UID      string `query:"uid" maxLength:"255"`
 
-	Type string `json:"type" required:"true"`
+	Type types.DNSRecordType `json:"type" required:"true"`
+	TTL  int64               `json:"ttl" required:"true"`
 
-	Data         string `json:"data" required:"true"`
+	Data string `json:"data" required:"true"`
+
 	MXPreference uint16 `json:"mxPreference,omitempty"`
-	SRVPort      uint16 `json:"srvPort,omitempty"`
-	SRVPriority  uint16 `json:"srvPriority,omitempty"`
-	SRVWeight    uint16 `json:"srvWeight,omitempty"`
+
+	SRVPort     uint16 `json:"srvPort,omitempty"`
+	SRVPriority uint16 `json:"srvPriority,omitempty"`
+	SRVWeight   uint16 `json:"srvWeight,omitempty"`
+
+	SOAMbox    string `json:"soaMbox,omitempty"`
+	SOASerial  uint32 `json:"soaSerial,omitempty"`
+	SOARefresh uint32 `json:"soaRefresh,omitempty"`
+	SOARetry   uint32 `json:"soaRetry,omitempty"`
+	SOAExpire  uint32 `json:"soaExpire,omitempty"`
 }
 
 func (r *Role) APIRecordsPut() usecase.Interactor {
@@ -131,9 +155,9 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}
-		rec := zone.newRecord(input.Hostname, input.Type)
+		rec := zone.newRecord(input.Hostname, string(input.Type))
 		rec.uid = input.UID
-		if strings.EqualFold(input.Type, types.DNSRecordTypePTR) || strings.EqualFold(input.Type, types.DNSRecordTypeCNAME) {
+		if strings.EqualFold(string(input.Type), types.DNSRecordTypePTR) || strings.EqualFold(string(input.Type), types.DNSRecordTypeCNAME) {
 			input.Data = utils.EnsureTrailingPeriod(input.Data)
 		}
 		rec.Data = input.Data
@@ -141,6 +165,12 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 		rec.SRVPort = input.SRVPort
 		rec.SRVPriority = input.SRVPriority
 		rec.SRVWeight = input.SRVWeight
+		rec.SOAMbox = input.SOAMbox
+		rec.SOASerial = input.SOASerial
+		rec.SOARefresh = input.SOARefresh
+		rec.SOARetry = input.SOARetry
+		rec.SOAExpire = input.SOAExpire
+		rec.TTL = uint32(input.TTL)
 		err = rec.put(ctx, -1)
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -155,10 +185,10 @@ func (r *Role) APIRecordsPut() usecase.Interactor {
 }
 
 type APIRecordsDeleteInput struct {
-	Zone     string `query:"zone" required:"true"`
-	Hostname string `query:"hostname" required:"true"`
-	UID      string `query:"uid" required:"true"`
-	Type     string `query:"type" required:"true"`
+	Zone     string              `query:"zone" required:"true"`
+	Hostname string              `query:"hostname" required:"true"`
+	UID      string              `query:"uid" required:"true"`
+	Type     types.DNSRecordType `query:"type" required:"true"`
 }
 
 func (r *Role) APIRecordsDelete() usecase.Interactor {
@@ -183,7 +213,7 @@ func (r *Role) APIRecordsDelete() usecase.Interactor {
 			types.KeyZones,
 			input.Zone,
 			input.Hostname,
-			input.Type,
+			string(input.Type),
 		)
 		if input.UID != "" {
 			key = key.Add(input.UID)

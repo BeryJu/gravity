@@ -21,10 +21,10 @@ type ExtConfig struct {
 		JoinCluster string `env:"ETCD_JOIN_CLUSTER"`
 	}
 	Instance struct {
-		Identifier string `env:"INSTANCE_IDENTIFIER"`
-		IP         string `env:"INSTANCE_IP"`
-		Interface  string `env:"INSTANCE_INTERFACE"`
-		Listen     string `env:"INSTANCE_LISTEN"`
+		Identifier string   `env:"INSTANCE_IDENTIFIER"`
+		IPs        []string `env:"INSTANCE_IP"`
+		Interface  string   `env:"INSTANCE_INTERFACE"`
+		Listen     string   `env:"INSTANCE_LISTEN"`
 	}
 	LogLevel       string   `env:"LOG_LEVEL,default=info,etcd=error"`
 	DataPath       string   `env:"DATA_PATH,default=./data"`
@@ -99,12 +99,27 @@ func Listen(addr string, port int32) string {
 	return fmt.Sprintf("[%s]:%d", ip.String(), port)
 }
 
+func (e *ExtConfig) PrimaryIP() string {
+	return e.Instance.IPs[0]
+}
+
 func (e *ExtConfig) Listen(port int32) string {
-	listen := e.Instance.IP
+	listen := e.PrimaryIP()
 	if e.Instance.Listen != "" {
 		listen = e.Instance.Listen
 	}
 	return Listen(listen, port)
+}
+
+func (e *ExtConfig) ListenAddrs(port int32) []string {
+	if e.Instance.Listen != "" {
+		return []string{Listen(e.Instance.Listen, port)}
+	}
+	addrs := make([]string, 0, len(e.Instance.IPs))
+	for _, ip := range e.Instance.IPs {
+		addrs = append(addrs, Listen(ip, port))
+	}
+	return addrs
 }
 
 func (e *ExtConfig) Build() {
@@ -116,15 +131,15 @@ func (e *ExtConfig) Build() {
 		}
 		e.Instance.Identifier = h
 	}
-	if e.Instance.IP == "" {
+	if len(e.Instance.IPs) == 0 {
 		instIp, err := e.GetIP()
 		if err != nil {
 			panic(err)
 		}
-		e.Instance.IP = instIp.String()
+		e.Instance.IPs = []string{instIp.String()}
 	}
 	if e.Instance.Interface == "" {
-		i, err := e.GetInterfaceForIP(net.ParseIP(e.Instance.IP))
+		i, err := e.GetInterfaceForIP(net.ParseIP(e.PrimaryIP()))
 		if err != nil || i == nil {
 			e.logger.Warn("defaulting to all interfaces", zap.Error(err))
 			e.Instance.Interface = ""

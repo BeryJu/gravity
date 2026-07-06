@@ -10,7 +10,7 @@ title: "Role configuration"
   - `issuer`: OpenID Issuer, sometimes also called "Configuration URL". Ensure `.well-known/openid-configuration` suffix is removed.
   - `redirectURL`: Redirect URL Gravity is reachable under. Should end in `/auth/oidc/callback`.
 
-    The placeholder `$INSTANCE_IDENTIFIER` will be replaced by the instance's name and `$INSTANCE_IP` will be replaced by the instances IP.
+    The placeholder `$INSTANCE_IDENTIFIER` will be replaced by the instance's name and `$INSTANCE_IP` will be replaced by the instance's primary IP (the first address in `INSTANCE_IP`).
 
   - `scopes`: Array of scopes that are requested. Should contain `openid` and `email`.
   - `tokenUsernameField`: Field used from JWT tokens to find the user when JWT is used for token authentication.

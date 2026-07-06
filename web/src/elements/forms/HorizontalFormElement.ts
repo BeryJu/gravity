@@ -88,6 +88,7 @@ export class HorizontalFormElement extends AKElement {
                     case "ak-codemirror":
                     case "ak-chip-group":
                     case "ak-search-select":
+                    case "gravity-dns-handler-config-editor":
                         (input as HTMLInputElement).name = this.name;
                         break;
                     default:

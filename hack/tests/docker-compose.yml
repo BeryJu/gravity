@@ -10,7 +10,7 @@ networks:
 
 services:
   etcd:
-    image: quay.io/coreos/etcd:v3.6.10
+    image: quay.io/coreos/etcd:v3.6.13
     ports:
       - 2385:2385
     networks:
@@ -32,7 +32,7 @@ services:
     command: server /data --console-address ":9001"
   coredns:
     hostname: coredns.t.gravity.beryju.io
-    image: docker.io/coredns/coredns:1.14.2
+    image: docker.io/coredns/coredns:1.14.4
     ports:
       - "1053:53"
       - "1053:53/udp"

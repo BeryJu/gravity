@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Identifier** | **string** |  | 
 **Ip** | **string** |  | 
+**MemoryBytes** | **int32** |  | 
 **Roles** | **[]string** |  | 
 **Version** | **string** |  | 
 
@@ -13,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewInstanceInstanceInfo
 
-`func NewInstanceInstanceInfo(identifier string, ip string, roles []string, version string, ) *InstanceInstanceInfo`
+`func NewInstanceInstanceInfo(identifier string, ip string, memoryBytes int32, roles []string, version string, ) *InstanceInstanceInfo`
 
 NewInstanceInstanceInfo instantiates a new InstanceInstanceInfo object
 This constructor will assign default values to properties that have it defined,
@@ -66,6 +67,26 @@ and a boolean to check if the value has been set.
 `func (o *InstanceInstanceInfo) SetIp(v string)`
 
 SetIp sets Ip field to given value.
+
+
+### GetMemoryBytes
+
+`func (o *InstanceInstanceInfo) GetMemoryBytes() int32`
+
+GetMemoryBytes returns the MemoryBytes field if non-nil, zero value otherwise.
+
+### GetMemoryBytesOk
+
+`func (o *InstanceInstanceInfo) GetMemoryBytesOk() (*int32, bool)`
+
+GetMemoryBytesOk returns a tuple with the MemoryBytes field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMemoryBytes
+
+`func (o *InstanceInstanceInfo) SetMemoryBytes(v int32)`
+
+SetMemoryBytes sets MemoryBytes field to given value.
 
 
 ### GetRoles

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: gravity
-  version: 99.99.99
+  version: 0.33.0
 paths:
   /api/v1/auth/config:
     get:
@@ -958,7 +958,7 @@ paths:
         name: type
         required: true
         schema:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
       responses:
         "204":
           description: No Content
@@ -1879,7 +1879,7 @@ components:
           type: boolean
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: '#/components/schemas/TypesPermission'
           nullable: true
           type: array
         username:
@@ -1920,7 +1920,7 @@ components:
       properties:
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: '#/components/schemas/TypesPermission'
           nullable: true
           type: array
         username:
@@ -1945,22 +1945,12 @@ components:
           type: string
         permissions:
           items:
-            $ref: '#/components/schemas/AuthPermission'
+            $ref: '#/components/schemas/TypesPermission'
           nullable: true
           type: array
       required:
       - password
       - permissions
-      type: object
-    AuthPermission:
-      properties:
-        methods:
-          items:
-            type: string
-          nullable: true
-          type: array
-        path:
-          type: string
       type: object
     BackupAPIBackupStatus:
       properties:
@@ -2372,6 +2362,20 @@ components:
         mxPreference:
           minimum: 0
           type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
+          minimum: 0
+          type: integer
         srvPort:
           minimum: 0
           type: integer
@@ -2381,8 +2385,11 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
         uid:
           type: string
       required:
@@ -2390,6 +2397,7 @@ components:
       - fqdn
       - hostname
       - type
+      - ttl
       - data
       type: object
     DnsAPIRecordsGetOutput:
@@ -2409,6 +2417,20 @@ components:
         mxPreference:
           minimum: 0
           type: integer
+        soaExpire:
+          minimum: 0
+          type: integer
+        soaMbox:
+          type: string
+        soaRefresh:
+          minimum: 0
+          type: integer
+        soaRetry:
+          minimum: 0
+          type: integer
+        soaSerial:
+          minimum: 0
+          type: integer
         srvPort:
           minimum: 0
           type: integer
@@ -2418,10 +2440,14 @@ components:
         srvWeight:
           minimum: 0
           type: integer
+        ttl:
+          format: int64
+          type: integer
         type:
-          type: string
+          $ref: '#/components/schemas/TypesDNSRecordType'
       required:
       - type
+      - ttl
       - data
       type: object
     DnsAPIRoleConfigInput:
@@ -2610,6 +2636,9 @@ components:
           type: string
         ip:
           type: string
+        memoryBytes:
+          minimum: 0
+          type: integer
         roles:
           items:
             type: string
@@ -2622,6 +2651,7 @@ components:
       - roles
       - identifier
       - ip
+      - memoryBytes
       type: object
     MonitoringAPIRoleConfigInput:
       properties:
@@ -2812,6 +2842,17 @@ components:
           nullable: true
           type: array
       type: object
+    TypesDNSRecordType:
+      enum:
+      - A
+      - AAAA
+      - PTR
+      - SRV
+      - MX
+      - CNAME
+      - TXT
+      - SOA
+      type: string
     TypesOIDCConfig:
       properties:
         clientID:
@@ -2828,5 +2869,14 @@ components:
           nullable: true
           type: array
         tokenUsernameField:
+          type: string
+      type: object
+    TypesPermission:
+      properties:
+        methods:
+          items:
+            type: string
+          type: array
+        path:
           type: string
       type: object

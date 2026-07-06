@@ -68,7 +68,13 @@ func New(instance roles.Instance) *Role {
 		Repanic: true,
 	}).Handle)
 	r.m.Use(r.SessionMiddleware)
-	r.m.Use(middleware.NewLoggingMiddleware(r.log, nil))
+	r.m.Use(middleware.NewLoggingMiddleware(r.log, func(l *zap.Logger, req *http.Request) *zap.Logger {
+		u := r.auth.GetUserFromSession(req.Context())
+		if u != nil {
+			return l.With(zap.String("user", u.Username))
+		}
+		return l
+	}))
 	r.m.Use(NewAPIConfigMiddleware())
 	r.setupUI()
 	r.i.AddEventListener(types.EventTopicAPIMuxSetup, func(ev *roles.Event) {
@@ -184,10 +190,10 @@ func (r *Role) ListenAndServeSocket() {
 	r.socketServer = &http.Server{}
 	r.socketServer.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		ctx := context.WithValue(req.Context(), types.RequestSession, &sessions.Session{
-			Values: map[interface{}]interface{}{
-				types.SessionKeyUser: auth.User{
+			Values: map[any]any{
+				types.SessionKeyUser: &types.User{
 					Username: "gravity-socket",
-					Permissions: []auth.Permission{
+					Permissions: []*types.Permission{
 						{
 							Path:    "/*",
 							Methods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodHead, http.MethodDelete},
