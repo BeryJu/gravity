@@ -42,7 +42,7 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 		types.KeyRole,
 		types.KeyTokens,
 		token,
-	).String(), tests.MustJSON(auth.Token{
+	).String(), tests.MustJSON(&types.Token{
 		Key:      token,
 		Username: username,
 	})))
