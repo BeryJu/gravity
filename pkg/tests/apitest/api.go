@@ -1,4 +1,4 @@
-package tests
+package apitest
 
 import (
 	"encoding/base64"
@@ -10,25 +10,26 @@ import (
 	"beryju.io/gravity/pkg/instance"
 	roleAPI "beryju.io/gravity/pkg/roles/api"
 	"beryju.io/gravity/pkg/roles/api/types"
+	"beryju.io/gravity/pkg/tests"
 	"github.com/gorilla/securecookie"
 )
 
 func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
-	ctx := Context()
+	ctx := tests.Context()
 	inst := rootInst.ForRole("api", ctx)
 	role := roleAPI.New(inst)
-	PanicIfError(role.Start(ctx, []byte(MustJSON(roleAPI.RoleConfig{
+	tests.PanicIfError(role.Start(ctx, []byte(tests.MustJSON(roleAPI.RoleConfig{
 		ListenOverride: "localhost:8008",
 	}))))
 
 	username := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 	token := base64.RawStdEncoding.EncodeToString(securecookie.GenerateRandomKey(64))
 
-	PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
+	tests.PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
 		types.KeyRole,
 		types.KeyUsers,
 		username,
-	).String(), MustJSON(&types.User{
+	).String(), tests.MustJSON(&types.User{
 		Username: username,
 		Permissions: []*types.Permission{
 			{
@@ -37,11 +38,11 @@ func APIClient(rootInst *instance.Instance) (*api.APIClient, func()) {
 			},
 		},
 	})))
-	PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
+	tests.PanicIfError(inst.KV().Put(ctx, inst.KV().Key(
 		types.KeyRole,
 		types.KeyTokens,
 		token,
-	).String(), MustJSON(&types.Token{
+	).String(), tests.MustJSON(&types.Token{
 		Key:      token,
 		Username: username,
 	})))
