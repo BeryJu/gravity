@@ -415,19 +415,20 @@ export class DNSHandlerConfigEditor extends AKElement {
 
     render(): TemplateResult {
         return html`
-            ${this.configs.length === 0
-                ? html`<div class="empty-state">No handlers configured. Add one below.</div>`
-                : html`
-                      <ul class="handler-list">
-                          ${this.configs.map((config, index) => {
+            ${
+                this.configs.length === 0
+                    ? html`<div class="empty-state">No handlers configured. Add one below.</div>`
+                    : html`
+                          <ul class="handler-list">
+                              ${this.configs.map((config, index) => {
                               const meta = this.handlerMeta(config.type);
                               const isDragging = this.dragIndex === index;
                               const isDragOver = this.dragOverIndex === index && !isDragging;
                               return html`
                                   <li
-                                      class="handler-item${isDragging
-                                          ? " dragging"
-                                          : ""}${isDragOver ? " drag-over" : ""}"
+                                      class="handler-item${
+                                          isDragging ? " dragging" : ""
+                                      }${isDragOver ? " drag-over" : ""}"
                                       draggable="true"
                                       @dragstart=${(e: DragEvent) => this.onDragStart(e, index)}
                                       @dragover=${(e: DragEvent) => this.onDragOver(e, index)}
@@ -442,11 +443,13 @@ export class DNSHandlerConfigEditor extends AKElement {
                                           <span class="drag-handle" title="Drag to reorder">⠿</span>
                                           <div class="handler-type-info">
                                               <div class="handler-type-name">${meta.label}</div>
-                                              ${meta.description
-                                                  ? html`<div class="handler-type-desc">
-                                                        ${meta.description}
-                                                    </div>`
-                                                  : nothing}
+                                              ${
+                                                  meta.description
+                                                      ? html`<div class="handler-type-desc">
+                                                            ${meta.description}
+                                                        </div>`
+                                                      : nothing
+                                              }
                                           </div>
                                           <button
                                               class="pf-c-button pf-m-plain"
@@ -462,8 +465,9 @@ export class DNSHandlerConfigEditor extends AKElement {
                                   </li>
                               `;
                           })}
-                      </ul>
-                  `}
+                          </ul>
+                      `
+            }
             <div class="add-row">
                 <select
                     class="pf-c-form-control"

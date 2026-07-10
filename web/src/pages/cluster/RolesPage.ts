@@ -141,9 +141,9 @@ export class RolesPage extends TablePage<Role> {
                         <div class="pf-c-sidebar__content pf-l-grid pf-m-gutter">
                             ${this.data?.results.map((role) => {
                                 const card = html` <div
-                                    class="pf-c-card ${role.settingsAvailable
-                                        ? "pf-m-hoverable-raised"
-                                        : ""} pf-l-grid__item pf-m-3-col"
+                                    class="pf-c-card ${
+                                        role.settingsAvailable ? "pf-m-hoverable-raised" : ""
+                                    } pf-l-grid__item pf-m-3-col"
                                     @click=${() => {
                                         if (!role.settingsAvailable) {
                                             return;

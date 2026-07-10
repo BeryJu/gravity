@@ -25,11 +25,12 @@ export class Chip extends AKElement {
                 <span class="pf-c-chip__text">
                     <slot></slot>
                 </span>
-                ${this.removable
-                    ? html`<button
-                          class="pf-c-button pf-m-plain"
-                          type="button"
-                          @click=${() => {
+                ${
+                    this.removable
+                        ? html`<button
+                              class="pf-c-button pf-m-plain"
+                              type="button"
+                              @click=${() => {
                               this.dispatchEvent(
                                   new CustomEvent("remove", {
                                       bubbles: true,
@@ -37,10 +38,11 @@ export class Chip extends AKElement {
                                   }),
                               );
                           }}
-                      >
-                          <i class="fas fa-times" aria-hidden="true"></i>
-                      </button>`
-                    : html``}
+                          >
+                              <i class="fas fa-times" aria-hidden="true"></i>
+                          </button>`
+                        : html``
+                }
             </div>
         </li>`;
     }

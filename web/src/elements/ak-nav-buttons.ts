@@ -75,13 +75,15 @@ export class NavigationButtons extends AKElement {
                 </div>
                 <slot name="extra"></slot>
             </div>
-            ${this.userDisplayName != ""
-                ? html`<div class="pf-c-page__header-tools-group">
-                      <div class="pf-c-page__header-tools-item pf-m-hidden pf-m-visible-on-md">
-                          ${this.userDisplayName}
-                      </div>
-                  </div>`
-                : nothing}
+            ${
+                this.userDisplayName != ""
+                    ? html`<div class="pf-c-page__header-tools-group">
+                          <div class="pf-c-page__header-tools-item pf-m-hidden pf-m-visible-on-md">
+                              ${this.userDisplayName}
+                          </div>
+                      </div>`
+                    : nothing
+            }
         </div>`;
     }
 }

@@ -127,13 +127,15 @@ export class ActionWizardPage extends WizardPage {
                                         <div class="pf-c-progress-stepper__step-title">
                                             ${state.action.displayName}
                                         </div>
-                                        ${state.action.subText
-                                            ? html`<div
-                                                  class="pf-c-progress-stepper__step-description"
-                                              >
-                                                  ${state.action.subText}
-                                              </div>`
-                                            : html``}
+                                        ${
+                                            state.action.subText
+                                                ? html`<div
+                                                      class="pf-c-progress-stepper__step-description"
+                                                  >
+                                                      ${state.action.subText}
+                                                  </div>`
+                                                : html``
+                                        }
                                     </div>
                                 </li>`;
                             })}

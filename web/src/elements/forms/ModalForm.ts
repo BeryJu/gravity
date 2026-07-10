@@ -56,9 +56,9 @@ export class ModalForm extends ModalButton {
     }
 
     renderModalInner(): TemplateResult {
-        return html`${this.loading
-                ? html`<ak-loading-overlay topMost></ak-loading-overlay>`
-                : html``}
+        return html`${
+                this.loading ? html`<ak-loading-overlay topMost></ak-loading-overlay>` : html``
+            }
             <section class="pf-c-modal-box__header pf-c-page__main-section pf-m-light">
                 <div class="pf-c-content">
                     <h1 class="pf-c-title pf-m-2xl">
@@ -70,22 +70,25 @@ export class ModalForm extends ModalButton {
                 <slot name="form"></slot>
             </section>
             <footer class="pf-c-modal-box__footer">
-                ${this.showSubmitButton
-                    ? html`<ak-spinner-button
-                              .callAction=${() => {
+                ${
+                    this.showSubmitButton
+                        ? html`<ak-spinner-button
+                                  .callAction=${() => {
                                   this.loading = true;
                                   this.locked = true;
                                   return this.confirm();
                               }}
-                              class="pf-m-primary"
-                          >
-                              <slot name="submit"></slot> </ak-spinner-button
-                          >&nbsp;`
-                    : html``}
-                ${this.submitKeepOpen
-                    ? html`
-                          <ak-spinner-button
-                              .callAction=${() => {
+                                  class="pf-m-primary"
+                              >
+                                  <slot name="submit"></slot> </ak-spinner-button
+                              >&nbsp;`
+                        : html``
+                }
+                ${
+                    this.submitKeepOpen
+                        ? html`
+                              <ak-spinner-button
+                                  .callAction=${() => {
                                   this.loading = true;
                                   this.locked = true;
                                   this.closeAfterSuccessfulSubmit = false;
@@ -93,12 +96,13 @@ export class ModalForm extends ModalButton {
                                       this.closeAfterSuccessfulSubmit = true;
                                   });
                               }}
-                              class="pf-m-primary"
-                          >
-                              <slot name=${this.submitKeepOpen}></slot> </ak-spinner-button
-                          >&nbsp;
-                      `
-                    : html``}
+                                  class="pf-m-primary"
+                              >
+                                  <slot name=${this.submitKeepOpen}></slot> </ak-spinner-button
+                              >&nbsp;
+                          `
+                        : html``
+                }
                 <ak-spinner-button
                     .callAction=${async () => {
                         this.resetForms();

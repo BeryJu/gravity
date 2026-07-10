@@ -98,15 +98,19 @@ export class LoginPage extends AKElement {
                     <div class="pf-c-login__main-body">
                         <gravity-login-form></gravity-login-form>
                     </div>
-                    ${this.authConfig?.oidc
-                        ? html`
-                              <div class="pf-c-login__main-body">
-                                  <a class="pf-c-button pf-m-primary pf-m-block" href="/auth/oidc"
-                                      >Login with SSO</a
-                                  >
-                              </div>
-                          `
-                        : html``}
+                    ${
+                        this.authConfig?.oidc
+                            ? html`
+                                  <div class="pf-c-login__main-body">
+                                      <a
+                                          class="pf-c-button pf-m-primary pf-m-block"
+                                          href="/auth/oidc"
+                                          >Login with SSO</a
+                                      >
+                                  </div>
+                              `
+                            : html``
+                    }
                 </main>
             </div>
         </div>`;

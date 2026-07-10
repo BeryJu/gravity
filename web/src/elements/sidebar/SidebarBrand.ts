@@ -62,11 +62,12 @@ export class SidebarBrand extends AKElement {
     }
 
     render(): TemplateResult {
-        return html` ${window.innerWidth <= MIN_WIDTH
-                ? html`
-                      <button
-                          class="sidebar-trigger pf-c-button"
-                          @click=${() => {
+        return html` ${
+                window.innerWidth <= MIN_WIDTH
+                    ? html`
+                          <button
+                              class="sidebar-trigger pf-c-button"
+                              @click=${() => {
                               this.dispatchEvent(
                                   new CustomEvent(EVENT_SIDEBAR_TOGGLE, {
                                       bubbles: true,
@@ -74,11 +75,12 @@ export class SidebarBrand extends AKElement {
                                   }),
                               );
                           }}
-                      >
-                          <i class="fas fa-bars"></i>
-                      </button>
-                  `
-                : html``}
+                          >
+                              <i class="fas fa-bars"></i>
+                          </button>
+                      `
+                    : html``
+            }
             <a href="#/" class="pf-c-page__header-brand-link">
                 <div class="pf-c-brand ak-brand">
                     <img src="static/assets/images/logo-color.png" alt="gravity logo" />

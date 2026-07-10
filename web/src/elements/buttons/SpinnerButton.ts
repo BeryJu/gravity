@@ -77,11 +77,13 @@ export class SpinnerButton extends AKElement {
                 }
             }}
         >
-            ${this.isRunning
-                ? html`<span class="pf-c-button__progress">
-                      <ak-spinner size=${PFSize.Medium}></ak-spinner>
-                  </span>`
-                : ""}
+            ${
+                this.isRunning
+                    ? html`<span class="pf-c-button__progress">
+                          <ak-spinner size=${PFSize.Medium}></ak-spinner>
+                      </span>`
+                    : ""
+            }
             <slot></slot>
         </button>`;
     }
