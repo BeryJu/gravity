@@ -31,13 +31,13 @@ export class Chip extends AKElement {
                               class="pf-c-button pf-m-plain"
                               type="button"
                               @click=${() => {
-                              this.dispatchEvent(
-                                  new CustomEvent("remove", {
-                                      bubbles: true,
-                                      composed: true,
-                                  }),
-                              );
-                          }}
+                                  this.dispatchEvent(
+                                      new CustomEvent("remove", {
+                                          bubbles: true,
+                                          composed: true,
+                                      }),
+                                  );
+                              }}
                           >
                               <i class="fas fa-times" aria-hidden="true"></i>
                           </button>`

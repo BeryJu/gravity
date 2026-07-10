@@ -291,29 +291,29 @@ export abstract class Table<T extends object> extends AKElement {
                                       type="checkbox"
                                       .checked=${this.selectedElements.indexOf(item) >= 0}
                                       @input=${(ev: InputEvent) => {
-                                      if ((ev.target as HTMLInputElement).checked) {
-                                          // Add item to selected
-                                          this.selectedElements.push(item);
-                                      } else {
-                                          // Get index of item and remove if selected
-                                          const index = this.selectedElements.indexOf(item);
-                                          if (index <= -1) return;
-                                          this.selectedElements.splice(index, 1);
-                                      }
-                                      this.requestUpdate();
-                                      // Unset select-all if selectedElements is empty
-                                      if (this.selectedElements.length < 1) {
-                                          const selectAllCheckbox =
-                                              this.shadowRoot?.querySelector<HTMLInputElement>(
-                                                  "[name=select-all]",
-                                              );
-                                          if (!selectAllCheckbox) {
-                                              return;
+                                          if ((ev.target as HTMLInputElement).checked) {
+                                              // Add item to selected
+                                              this.selectedElements.push(item);
+                                          } else {
+                                              // Get index of item and remove if selected
+                                              const index = this.selectedElements.indexOf(item);
+                                              if (index <= -1) return;
+                                              this.selectedElements.splice(index, 1);
                                           }
-                                          selectAllCheckbox.checked = false;
                                           this.requestUpdate();
-                                      }
-                                  }}
+                                          // Unset select-all if selectedElements is empty
+                                          if (this.selectedElements.length < 1) {
+                                              const selectAllCheckbox =
+                                                  this.shadowRoot?.querySelector<HTMLInputElement>(
+                                                      "[name=select-all]",
+                                                  );
+                                              if (!selectAllCheckbox) {
+                                                  return;
+                                              }
+                                              selectAllCheckbox.checked = false;
+                                              this.requestUpdate();
+                                          }
+                                      }}
                                   />
                               </td>`
                             : html``
@@ -323,21 +323,21 @@ export abstract class Table<T extends object> extends AKElement {
                             ? html`<td class="pf-c-table__toggle" role="cell">
                                   <button
                                       class="pf-c-button pf-m-plain ${
-                                      this.expandedElements.indexOf(item) > -1
-                                          ? "pf-m-expanded"
-                                          : ""
-                                  }"
+                                          this.expandedElements.indexOf(item) > -1
+                                              ? "pf-m-expanded"
+                                              : ""
+                                      }"
                                       @click=${() => {
-                                      const idx = this.expandedElements.indexOf(item);
-                                      if (idx <= -1) {
-                                          // Element is not expanded, add it
-                                          this.expandedElements.push(item);
-                                      } else {
-                                          // Element is expanded, remove it
-                                          this.expandedElements.splice(idx, 1);
-                                      }
-                                      this.requestUpdate();
-                                  }}
+                                          const idx = this.expandedElements.indexOf(item);
+                                          if (idx <= -1) {
+                                              // Element is not expanded, add it
+                                              this.expandedElements.push(item);
+                                          } else {
+                                              // Element is expanded, remove it
+                                              this.expandedElements.splice(idx, 1);
+                                          }
+                                          this.requestUpdate();
+                                      }}
                                   >
                                       <div class="pf-c-table__toggle-icon">
                                           &nbsp;<i class="fas fa-angle-down" aria-hidden="true"></i
@@ -418,9 +418,9 @@ export abstract class Table<T extends object> extends AKElement {
                               class="pf-c-toolbar__item pf-m-pagination"
                               .pages=${this.data?.pagination}
                               .pageChangeHandler=${(page: number) => {
-                              this.page = page;
-                              this.fetch();
-                          }}
+                                  this.page = page;
+                                  this.fetch();
+                              }}
                           >
                           </ak-table-pagination>`
                         : html``
@@ -438,8 +438,8 @@ export abstract class Table<T extends object> extends AKElement {
                 this.checkbox && this.checkboxChip
                     ? html`<ak-chip-group>
                           ${this.selectedElements.map((el) => {
-                          return html`<ak-chip>${this.renderSelectedChip(el)}</ak-chip>`;
-                      })}
+                              return html`<ak-chip>${this.renderSelectedChip(el)}</ak-chip>`;
+                          })}
                       </ak-chip-group>`
                     : html``
             }
@@ -455,13 +455,13 @@ export abstract class Table<T extends object> extends AKElement {
                                           type="checkbox"
                                           aria-label=${"Select all rows"}
                                           @input=${(ev: InputEvent) => {
-                                          if ((ev.target as HTMLInputElement).checked) {
-                                              this.selectedElements =
-                                                  this.data?.results.slice(0) || [];
-                                          } else {
-                                              this.selectedElements = [];
-                                          }
-                                      }}
+                                              if ((ev.target as HTMLInputElement).checked) {
+                                                  this.selectedElements =
+                                                      this.data?.results.slice(0) || [];
+                                              } else {
+                                                  this.selectedElements = [];
+                                              }
+                                          }}
                                       />
                                   </td>`
                                 : html``
@@ -479,9 +479,9 @@ export abstract class Table<T extends object> extends AKElement {
                               class="pf-c-toolbar__item pf-m-pagination"
                               .pages=${this.data?.pagination}
                               .pageChangeHandler=${(page: number) => {
-                              this.page = page;
-                              this.fetch();
-                          }}
+                                  this.page = page;
+                                  this.fetch();
+                              }}
                           >
                           </ak-table-pagination>
                       </div>`

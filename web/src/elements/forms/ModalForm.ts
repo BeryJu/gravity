@@ -74,10 +74,10 @@ export class ModalForm extends ModalButton {
                     this.showSubmitButton
                         ? html`<ak-spinner-button
                                   .callAction=${() => {
-                                  this.loading = true;
-                                  this.locked = true;
-                                  return this.confirm();
-                              }}
+                                      this.loading = true;
+                                      this.locked = true;
+                                      return this.confirm();
+                                  }}
                                   class="pf-m-primary"
                               >
                                   <slot name="submit"></slot> </ak-spinner-button
@@ -89,13 +89,13 @@ export class ModalForm extends ModalButton {
                         ? html`
                               <ak-spinner-button
                                   .callAction=${() => {
-                                  this.loading = true;
-                                  this.locked = true;
-                                  this.closeAfterSuccessfulSubmit = false;
-                                  return this.confirm().finally(() => {
-                                      this.closeAfterSuccessfulSubmit = true;
-                                  });
-                              }}
+                                      this.loading = true;
+                                      this.locked = true;
+                                      this.closeAfterSuccessfulSubmit = false;
+                                      return this.confirm().finally(() => {
+                                          this.closeAfterSuccessfulSubmit = true;
+                                      });
+                                  }}
                                   class="pf-m-primary"
                               >
                                   <slot name=${this.submitKeepOpen}></slot> </ak-spinner-button

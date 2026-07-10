@@ -140,8 +140,8 @@ export class Wizard extends ModalButton {
                               type="button"
                               aria-label=${"Close"}
                               @click=${() => {
-                              this.reset();
-                          }}
+                                  this.reset();
+                              }}
                           >
                               <i class="fas fa-times" aria-hidden="true"></i>
                           </button>`
@@ -222,13 +222,13 @@ export class Wizard extends ModalButton {
                                       class="pf-c-button pf-m-secondary"
                                       type="button"
                                       @click=${() => {
-                                      const prevPage = this.querySelector<WizardPage>(
-                                          `[slot=${this.steps[currentIndex - 1]}]`,
-                                      );
-                                      if (prevPage) {
-                                          this.currentStep = prevPage;
-                                      }
-                                  }}
+                                          const prevPage = this.querySelector<WizardPage>(
+                                              `[slot=${this.steps[currentIndex - 1]}]`,
+                                          );
+                                          if (prevPage) {
+                                              this.currentStep = prevPage;
+                                          }
+                                      }}
                                   >
                                       ${"Back"}
                                   </button>
@@ -242,8 +242,8 @@ export class Wizard extends ModalButton {
                                       class="pf-c-button pf-m-link"
                                       type="button"
                                       @click=${() => {
-                                      this.reset();
-                                  }}
+                                          this.reset();
+                                      }}
                                   >
                                       ${"Cancel"}
                                   </button>

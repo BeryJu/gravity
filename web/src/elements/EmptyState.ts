@@ -37,8 +37,8 @@ export class EmptyState extends AKElement {
                           </div>`
                         : html`<i
                               class="pf-icon fa ${
-                              this.icon || "fa-question-circle"
-                          } pf-c-empty-state__icon"
+                                  this.icon || "fa-question-circle"
+                              } pf-c-empty-state__icon"
                               aria-hidden="true"
                           ></i>`
                 }

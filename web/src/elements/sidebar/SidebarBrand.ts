@@ -68,13 +68,13 @@ export class SidebarBrand extends AKElement {
                           <button
                               class="sidebar-trigger pf-c-button"
                               @click=${() => {
-                              this.dispatchEvent(
-                                  new CustomEvent(EVENT_SIDEBAR_TOGGLE, {
-                                      bubbles: true,
-                                      composed: true,
-                                  }),
-                              );
-                          }}
+                                  this.dispatchEvent(
+                                      new CustomEvent(EVENT_SIDEBAR_TOGGLE, {
+                                          bubbles: true,
+                                          composed: true,
+                                      }),
+                                  );
+                              }}
                           >
                               <i class="fas fa-bars"></i>
                           </button>

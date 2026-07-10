@@ -421,50 +421,52 @@ export class DNSHandlerConfigEditor extends AKElement {
                     : html`
                           <ul class="handler-list">
                               ${this.configs.map((config, index) => {
-                              const meta = this.handlerMeta(config.type);
-                              const isDragging = this.dragIndex === index;
-                              const isDragOver = this.dragOverIndex === index && !isDragging;
-                              return html`
-                                  <li
-                                      class="handler-item${
-                                          isDragging ? " dragging" : ""
-                                      }${isDragOver ? " drag-over" : ""}"
-                                      draggable="true"
-                                      @dragstart=${(e: DragEvent) => this.onDragStart(e, index)}
-                                      @dragover=${(e: DragEvent) => this.onDragOver(e, index)}
-                                      @dragleave=${() => {
-                                          if (this.dragOverIndex === index)
-                                              this.dragOverIndex = null;
-                                      }}
-                                      @drop=${(e: DragEvent) => this.onDrop(e, index)}
-                                      @dragend=${() => this.onDragEnd()}
-                                  >
-                                      <div class="handler-header">
-                                          <span class="drag-handle" title="Drag to reorder">⠿</span>
-                                          <div class="handler-type-info">
-                                              <div class="handler-type-name">${meta.label}</div>
-                                              ${
-                                                  meta.description
-                                                      ? html`<div class="handler-type-desc">
-                                                            ${meta.description}
-                                                        </div>`
-                                                      : nothing
-                                              }
+                                  const meta = this.handlerMeta(config.type);
+                                  const isDragging = this.dragIndex === index;
+                                  const isDragOver = this.dragOverIndex === index && !isDragging;
+                                  return html`
+                                      <li
+                                          class="handler-item${
+                                              isDragging ? " dragging" : ""
+                                          }${isDragOver ? " drag-over" : ""}"
+                                          draggable="true"
+                                          @dragstart=${(e: DragEvent) => this.onDragStart(e, index)}
+                                          @dragover=${(e: DragEvent) => this.onDragOver(e, index)}
+                                          @dragleave=${() => {
+                                              if (this.dragOverIndex === index)
+                                                  this.dragOverIndex = null;
+                                          }}
+                                          @drop=${(e: DragEvent) => this.onDrop(e, index)}
+                                          @dragend=${() => this.onDragEnd()}
+                                      >
+                                          <div class="handler-header">
+                                              <span class="drag-handle" title="Drag to reorder"
+                                                  >⠿</span
+                                              >
+                                              <div class="handler-type-info">
+                                                  <div class="handler-type-name">${meta.label}</div>
+                                                  ${
+                                                      meta.description
+                                                          ? html`<div class="handler-type-desc">
+                                                                ${meta.description}
+                                                            </div>`
+                                                          : nothing
+                                                  }
+                                              </div>
+                                              <button
+                                                  class="pf-c-button pf-m-plain"
+                                                  type="button"
+                                                  title="Remove handler"
+                                                  @click=${() => this.removeHandler(index)}
+                                                  aria-label="Remove ${meta.label} handler"
+                                              >
+                                                  <i class="fas fa-times" aria-hidden="true"></i>
+                                              </button>
                                           </div>
-                                          <button
-                                              class="pf-c-button pf-m-plain"
-                                              type="button"
-                                              title="Remove handler"
-                                              @click=${() => this.removeHandler(index)}
-                                              aria-label="Remove ${meta.label} handler"
-                                          >
-                                              <i class="fas fa-times" aria-hidden="true"></i>
-                                          </button>
-                                      </div>
-                                      ${this.renderHandlerBody(config, index)}
-                                  </li>
-                              `;
-                          })}
+                                          ${this.renderHandlerBody(config, index)}
+                                      </li>
+                                  `;
+                              })}
                           </ul>
                       `
             }
