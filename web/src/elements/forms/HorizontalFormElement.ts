@@ -113,29 +113,37 @@ export class HorizontalFormElement extends AKElement {
             <div class="pf-c-form__group-label">
                 <label class="pf-c-form__label">
                     <span class="pf-c-form__label-text">${this.label}</span>
-                    ${this.required
-                        ? html`<span class="pf-c-form__label-required" aria-hidden="true">*</span>`
-                        : html``}
+                    ${
+                        this.required
+                            ? html`<span class="pf-c-form__label-required" aria-hidden="true"
+                                  >*</span
+                              >`
+                            : html``
+                    }
                 </label>
             </div>
             <div class="pf-c-form__group-control">
-                ${this.writeOnly && !this.writeOnlyActivated
-                    ? html`<div class="pf-c-form__horizontal-group">
-                          <input
-                              class="pf-c-form-control"
-                              type="password"
-                              disabled
-                              value="**************"
-                          />
-                      </div>`
-                    : html``}
+                ${
+                    this.writeOnly && !this.writeOnlyActivated
+                        ? html`<div class="pf-c-form__horizontal-group">
+                              <input
+                                  class="pf-c-form-control"
+                                  type="password"
+                                  disabled
+                                  value="**************"
+                              />
+                          </div>`
+                        : html``
+                }
                 <slot class="pf-c-form__horizontal-group"></slot>
                 <div class="pf-c-form__horizontal-group">
-                    ${this.writeOnly
-                        ? html`<p class="pf-c-form__helper-text" aria-live="polite">
-                              ${"Click to change value"}
-                          </p>`
-                        : html``}
+                    ${
+                        this.writeOnly
+                            ? html`<p class="pf-c-form__helper-text" aria-live="polite">
+                                  ${"Click to change value"}
+                              </p>`
+                            : html``
+                    }
                     ${this.errorMessages.map((message) => {
                         return html`<p class="pf-c-form__helper-text pf-m-error" aria-live="polite">
                             ${message}

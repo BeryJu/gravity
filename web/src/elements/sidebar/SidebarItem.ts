@@ -182,20 +182,22 @@ export class SidebarItem extends AKElement {
             </li>`;
         }
         return html`<li class="pf-c-nav__item">
-            ${this.path
-                ? html`
-                      <a
-                          href="${this.isAbsoluteLink ? "" : "#"}${this.path}"
-                          class="pf-c-nav__link ${this.isActive ? "pf-m-current" : ""}"
-                      >
-                          <slot name="label"></slot>
-                      </a>
-                  `
-                : html`
-                      <span class="pf-c-nav__link">
-                          <slot name="label"></slot>
-                      </span>
-                  `}
+            ${
+                this.path
+                    ? html`
+                          <a
+                              href="${this.isAbsoluteLink ? "" : "#"}${this.path}"
+                              class="pf-c-nav__link ${this.isActive ? "pf-m-current" : ""}"
+                          >
+                              <slot name="label"></slot>
+                          </a>
+                      `
+                    : html`
+                          <span class="pf-c-nav__link">
+                              <slot name="label"></slot>
+                          </span>
+                      `
+            }
         </li>`;
     }
 }

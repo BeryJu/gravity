@@ -38,9 +38,11 @@ export abstract class AdminStatusCard<T> extends AggregateCard {
                     })
                     .then((status) => {
                         return html`<p><i class=${status.icon}></i>&nbsp;${this.renderValue()}</p>
-                            ${status.message
-                                ? html`<p class="subtext">${status.message}</p>`
-                                : html``}`;
+                            ${
+                                status.message
+                                    ? html`<p class="subtext">${status.message}</p>`
+                                    : html``
+                            }`;
                     }),
                 html`<ak-spinner size=${PFSize.Large}></ak-spinner>`,
             )}

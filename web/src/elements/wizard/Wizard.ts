@@ -133,18 +133,20 @@ export class Wizard extends ModalButton {
         }
         return html`<div class="pf-c-wizard">
             <div class="pf-c-wizard__header">
-                ${this.canCancel
-                    ? html`<button
-                          class="pf-c-button pf-m-plain pf-c-wizard__close"
-                          type="button"
-                          aria-label=${"Close"}
-                          @click=${() => {
-                              this.reset();
-                          }}
-                      >
-                          <i class="fas fa-times" aria-hidden="true"></i>
-                      </button>`
-                    : html``}
+                ${
+                    this.canCancel
+                        ? html`<button
+                              class="pf-c-button pf-m-plain pf-c-wizard__close"
+                              type="button"
+                              aria-label=${"Close"}
+                              @click=${() => {
+                                  this.reset();
+                              }}
+                          >
+                              <i class="fas fa-times" aria-hidden="true"></i>
+                          </button>`
+                        : html``
+                }
                 <h1 class="pf-c-title pf-m-3xl pf-c-wizard__title">${this.header}</h1>
                 <p class="pf-c-wizard__description">${this.description}</p>
             </div>
@@ -159,9 +161,9 @@ export class Wizard extends ModalButton {
                                 return html`
                                     <li class="pf-c-wizard__nav-item">
                                         <button
-                                            class="pf-c-wizard__nav-link ${idx === currentIdx
-                                                ? "pf-m-current"
-                                                : ""}"
+                                            class="pf-c-wizard__nav-link ${
+                                                idx === currentIdx ? "pf-m-current" : ""
+                                            }"
                                             ?disabled=${currentIdx < idx}
                                             @click=${() => {
                                                 const stepEl = this.querySelector<WizardPage>(
@@ -212,38 +214,42 @@ export class Wizard extends ModalButton {
                     >
                         ${lastPage ? "Finish" : "Next"}
                     </button>
-                    ${(this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0) > 0 &&
-                    this.canBack
-                        ? html`
-                              <button
-                                  class="pf-c-button pf-m-secondary"
-                                  type="button"
-                                  @click=${() => {
-                                      const prevPage = this.querySelector<WizardPage>(
-                                          `[slot=${this.steps[currentIndex - 1]}]`,
-                                      );
-                                      if (prevPage) {
-                                          this.currentStep = prevPage;
-                                      }
-                                  }}
-                              >
-                                  ${"Back"}
-                              </button>
-                          `
-                        : html``}
-                    ${this.canCancel
-                        ? html`<div class="pf-c-wizard__footer-cancel">
-                              <button
-                                  class="pf-c-button pf-m-link"
-                                  type="button"
-                                  @click=${() => {
-                                      this.reset();
-                                  }}
-                              >
-                                  ${"Cancel"}
-                              </button>
-                          </div>`
-                        : html``}
+                    ${
+                        (this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0) > 0 &&
+                        this.canBack
+                            ? html`
+                                  <button
+                                      class="pf-c-button pf-m-secondary"
+                                      type="button"
+                                      @click=${() => {
+                                          const prevPage = this.querySelector<WizardPage>(
+                                              `[slot=${this.steps[currentIndex - 1]}]`,
+                                          );
+                                          if (prevPage) {
+                                              this.currentStep = prevPage;
+                                          }
+                                      }}
+                                  >
+                                      ${"Back"}
+                                  </button>
+                              `
+                            : html``
+                    }
+                    ${
+                        this.canCancel
+                            ? html`<div class="pf-c-wizard__footer-cancel">
+                                  <button
+                                      class="pf-c-button pf-m-link"
+                                      type="button"
+                                      @click=${() => {
+                                          this.reset();
+                                      }}
+                                  >
+                                      ${"Cancel"}
+                                  </button>
+                              </div>`
+                            : html``
+                    }
                 </footer>
             </div>
         </div>`;

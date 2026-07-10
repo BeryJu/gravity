@@ -51,11 +51,13 @@ export class AggregateCard extends AKElement {
     }
 
     renderHeaderLink(): TemplateResult {
-        return html`${this.headerLink
-            ? html`<a href=${this.headerLink}>
-                  <i class="fa fa-link"> </i>
-              </a>`
-            : ""}`;
+        return html`${
+            this.headerLink
+                ? html`<a href=${this.headerLink}>
+                      <i class="fa fa-link"> </i>
+                  </a>`
+                : ""
+        }`;
     }
 
     render(): TemplateResult {
@@ -67,9 +69,9 @@ export class AggregateCard extends AKElement {
                 ${this.renderHeaderLink()}
             </div>
             <div
-                class="${this.flush ? "" : "pf-c-card__body"} ${this.isCenter
-                    ? "center-value"
-                    : ""}"
+                class="${this.flush ? "" : "pf-c-card__body"} ${
+                    this.isCenter ? "center-value" : ""
+                }"
             >
                 ${this.renderInner()}
             </div>

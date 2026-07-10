@@ -253,27 +253,34 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
 
     renderEmpty(inner?: TemplateResult): TemplateResult {
         return super.renderEmpty(html`
-            ${inner
-                ? inner
-                : html`<ak-empty-state
-                      icon=${this.zoneCanStoreRecords ? this.pageIcon() : "fa fa-times"}
-                      header=${this.zoneCanStoreRecords
-                          ? "No objects found."
-                          : "Zone cannot store records."}
-                  >
-                      <div slot="body">
-                          ${this.zoneCanStoreRecords
-                              ? nothing
-                              : html`<span
-                                    >Zone is not configured with an <code>etcd</code> handler and
-                                    cannot store records.</span
-                                >`}
-                          ${this.searchEnabled() ? this.renderEmptyClearSearch() : nothing}
-                      </div>
-                      <div slot="primary">
-                          ${this.zoneCanStoreRecords ? this.renderObjectCreate() : nothing}
-                      </div>
-                  </ak-empty-state>`}
+            ${
+                inner
+                    ? inner
+                    : html`<ak-empty-state
+                          icon=${this.zoneCanStoreRecords ? this.pageIcon() : "fa fa-times"}
+                          header=${
+                              this.zoneCanStoreRecords
+                                  ? "No objects found."
+                                  : "Zone cannot store records."
+                          }
+                      >
+                          <div slot="body">
+                              ${
+                                  this.zoneCanStoreRecords
+                                      ? nothing
+                                      : html`<span
+                                            >Zone is not configured with an
+                                            <code>etcd</code> handler and cannot store
+                                            records.</span
+                                        >`
+                              }
+                              ${this.searchEnabled() ? this.renderEmptyClearSearch() : nothing}
+                          </div>
+                          <div slot="primary">
+                              ${this.zoneCanStoreRecords ? this.renderObjectCreate() : nothing}
+                          </div>
+                      </ak-empty-state>`
+            }
         `);
     }
 }

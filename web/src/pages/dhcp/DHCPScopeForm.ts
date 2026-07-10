@@ -60,11 +60,13 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     };
 
     renderForm(): TemplateResult {
-        return html` ${this.instance
-                ? html``
-                : html`<ak-form-element-horizontal label="Name" required name="scope">
-                      <input type="text" class="pf-c-form-control" required />
-                  </ak-form-element-horizontal>`}
+        return html` ${
+                this.instance
+                    ? html``
+                    : html`<ak-form-element-horizontal label="Name" required name="scope">
+                          <input type="text" class="pf-c-form-control" required />
+                      </ak-form-element-horizontal>`
+            }
             <ak-form-element-horizontal label="Subnet CIDR" required name="subnetCidr">
                 <input
                     type="text"

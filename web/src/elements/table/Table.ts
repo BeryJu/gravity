@@ -76,9 +76,11 @@ export class TableColumn {
             scope="col"
             class="
                 ${this.orderBy ? "pf-c-table__sort " : " "}
-                ${table.order === this.orderBy || table.order === `-${this.orderBy}`
-                ? "pf-m-selected "
-                : ""}
+                ${
+                    table.order === this.orderBy || table.order === `-${this.orderBy}`
+                        ? "pf-m-selected "
+                        : ""
+                }
             "
         >
             ${this.orderBy ? this.renderSortable(table) : html`${this.title}`}
@@ -232,9 +234,13 @@ export abstract class Table<T extends object> extends AKElement {
             <tr role="row">
                 <td role="cell" colspan="8">
                     <div class="pf-l-bullseye">
-                        ${inner
-                            ? inner
-                            : html`<ak-empty-state header=${"No objects found."}></ak-empty-state>`}
+                        ${
+                            inner
+                                ? inner
+                                : html`<ak-empty-state
+                                      header=${"No objects found."}
+                                  ></ak-empty-state>`
+                        }
                     </div>
                 </td>
             </tr>
@@ -278,73 +284,77 @@ export abstract class Table<T extends object> extends AKElement {
                 class=${this.expandedElements.indexOf(item) > -1 ? "pf-m-expanded" : ""}
             >
                 <tr role="row">
-                    ${this.checkbox
-                        ? html`<td class="pf-c-table__check" role="cell">
-                              <input
-                                  type="checkbox"
-                                  .checked=${this.selectedElements.indexOf(item) >= 0}
-                                  @input=${(ev: InputEvent) => {
-                                      if ((ev.target as HTMLInputElement).checked) {
-                                          // Add item to selected
-                                          this.selectedElements.push(item);
-                                      } else {
-                                          // Get index of item and remove if selected
-                                          const index = this.selectedElements.indexOf(item);
-                                          if (index <= -1) return;
-                                          this.selectedElements.splice(index, 1);
-                                      }
-                                      this.requestUpdate();
-                                      // Unset select-all if selectedElements is empty
-                                      if (this.selectedElements.length < 1) {
-                                          const selectAllCheckbox =
-                                              this.shadowRoot?.querySelector<HTMLInputElement>(
-                                                  "[name=select-all]",
-                                              );
-                                          if (!selectAllCheckbox) {
-                                              return;
+                    ${
+                        this.checkbox
+                            ? html`<td class="pf-c-table__check" role="cell">
+                                  <input
+                                      type="checkbox"
+                                      .checked=${this.selectedElements.indexOf(item) >= 0}
+                                      @input=${(ev: InputEvent) => {
+                                          if ((ev.target as HTMLInputElement).checked) {
+                                              // Add item to selected
+                                              this.selectedElements.push(item);
+                                          } else {
+                                              // Get index of item and remove if selected
+                                              const index = this.selectedElements.indexOf(item);
+                                              if (index <= -1) return;
+                                              this.selectedElements.splice(index, 1);
                                           }
-                                          selectAllCheckbox.checked = false;
                                           this.requestUpdate();
-                                      }
-                                  }}
-                              />
-                          </td>`
-                        : html``}
-                    ${this.expandable
-                        ? html`<td class="pf-c-table__toggle" role="cell">
-                              <button
-                                  class="pf-c-button pf-m-plain ${this.expandedElements.indexOf(
-                                      item,
-                                  ) > -1
-                                      ? "pf-m-expanded"
-                                      : ""}"
-                                  @click=${() => {
-                                      const idx = this.expandedElements.indexOf(item);
-                                      if (idx <= -1) {
-                                          // Element is not expanded, add it
-                                          this.expandedElements.push(item);
-                                      } else {
-                                          // Element is expanded, remove it
-                                          this.expandedElements.splice(idx, 1);
-                                      }
-                                      this.requestUpdate();
-                                  }}
-                              >
-                                  <div class="pf-c-table__toggle-icon">
-                                      &nbsp;<i class="fas fa-angle-down" aria-hidden="true"></i
-                                      >&nbsp;
-                                  </div>
-                              </button>
-                          </td>`
-                        : html``}
+                                          // Unset select-all if selectedElements is empty
+                                          if (this.selectedElements.length < 1) {
+                                              const selectAllCheckbox =
+                                                  this.shadowRoot?.querySelector<HTMLInputElement>(
+                                                      "[name=select-all]",
+                                                  );
+                                              if (!selectAllCheckbox) {
+                                                  return;
+                                              }
+                                              selectAllCheckbox.checked = false;
+                                              this.requestUpdate();
+                                          }
+                                      }}
+                                  />
+                              </td>`
+                            : html``
+                    }
+                    ${
+                        this.expandable
+                            ? html`<td class="pf-c-table__toggle" role="cell">
+                                  <button
+                                      class="pf-c-button pf-m-plain ${
+                                          this.expandedElements.indexOf(item) > -1
+                                              ? "pf-m-expanded"
+                                              : ""
+                                      }"
+                                      @click=${() => {
+                                          const idx = this.expandedElements.indexOf(item);
+                                          if (idx <= -1) {
+                                              // Element is not expanded, add it
+                                              this.expandedElements.push(item);
+                                          } else {
+                                              // Element is expanded, remove it
+                                              this.expandedElements.splice(idx, 1);
+                                          }
+                                          this.requestUpdate();
+                                      }}
+                                  >
+                                      <div class="pf-c-table__toggle-icon">
+                                          &nbsp;<i class="fas fa-angle-down" aria-hidden="true"></i
+                                          >&nbsp;
+                                      </div>
+                                  </button>
+                              </td>`
+                            : html``
+                    }
                     ${this.row(item).map((col) => {
                         return html`<td role="cell">${col}</td>`;
                     })}
                 </tr>
                 <tr
-                    class="pf-c-table__expandable-row ${this.expandedElements.indexOf(item) > -1
-                        ? "pf-m-expanded"
-                        : ""}"
+                    class="pf-c-table__expandable-row ${
+                        this.expandedElements.indexOf(item) > -1 ? "pf-m-expanded" : ""
+                    }"
                     role="row"
                 >
                     <td></td>
@@ -402,17 +412,19 @@ export abstract class Table<T extends object> extends AKElement {
                 <div class="pf-c-toolbar__bulk-select">${this.renderToolbar()}</div>
                 <div class="pf-c-toolbar__group">${this.renderToolbarAfter()}</div>
                 <div class="pf-c-toolbar__group">${this.renderToolbarSelected()}</div>
-                ${this.paginated
-                    ? html`<ak-table-pagination
-                          class="pf-c-toolbar__item pf-m-pagination"
-                          .pages=${this.data?.pagination}
-                          .pageChangeHandler=${(page: number) => {
-                              this.page = page;
-                              this.fetch();
-                          }}
-                      >
-                      </ak-table-pagination>`
-                    : html``}
+                ${
+                    this.paginated
+                        ? html`<ak-table-pagination
+                              class="pf-c-toolbar__item pf-m-pagination"
+                              .pages=${this.data?.pagination}
+                              .pageChangeHandler=${(page: number) => {
+                                  this.page = page;
+                                  this.fetch();
+                              }}
+                          >
+                          </ak-table-pagination>`
+                        : html``
+                }
             </div>
         </div>`;
     }
@@ -422,53 +434,59 @@ export abstract class Table<T extends object> extends AKElement {
     }
 
     renderTable(): TemplateResult {
-        return html` ${this.checkbox && this.checkboxChip
-                ? html`<ak-chip-group>
-                      ${this.selectedElements.map((el) => {
-                          return html`<ak-chip>${this.renderSelectedChip(el)}</ak-chip>`;
-                      })}
-                  </ak-chip-group>`
-                : html``}
+        return html` ${
+                this.checkbox && this.checkboxChip
+                    ? html`<ak-chip-group>
+                          ${this.selectedElements.map((el) => {
+                              return html`<ak-chip>${this.renderSelectedChip(el)}</ak-chip>`;
+                          })}
+                      </ak-chip-group>`
+                    : html``
+            }
             ${this.renderToolbarContainer()}
             <table class="pf-c-table pf-m-compact pf-m-grid-md pf-m-expandable">
                 <thead>
                     <tr role="row">
-                        ${this.checkbox
-                            ? html`<td class="pf-c-table__check" role="cell">
-                                  <input
-                                      name="select-all"
-                                      type="checkbox"
-                                      aria-label=${"Select all rows"}
-                                      @input=${(ev: InputEvent) => {
-                                          if ((ev.target as HTMLInputElement).checked) {
-                                              this.selectedElements =
-                                                  this.data?.results.slice(0) || [];
-                                          } else {
-                                              this.selectedElements = [];
-                                          }
-                                      }}
-                                  />
-                              </td>`
-                            : html``}
+                        ${
+                            this.checkbox
+                                ? html`<td class="pf-c-table__check" role="cell">
+                                      <input
+                                          name="select-all"
+                                          type="checkbox"
+                                          aria-label=${"Select all rows"}
+                                          @input=${(ev: InputEvent) => {
+                                              if ((ev.target as HTMLInputElement).checked) {
+                                                  this.selectedElements =
+                                                      this.data?.results.slice(0) || [];
+                                              } else {
+                                                  this.selectedElements = [];
+                                              }
+                                          }}
+                                      />
+                                  </td>`
+                                : html``
+                        }
                         ${this.expandable ? html`<td role="cell"></td>` : html``}
                         ${this.columns().map((col) => col.render(this))}
                     </tr>
                 </thead>
                 ${this.isLoading || !this.data ? this.renderLoading() : this.renderRows()}
             </table>
-            ${this.paginated
-                ? html` <div class="pf-c-pagination pf-m-bottom">
-                      <ak-table-pagination
-                          class="pf-c-toolbar__item pf-m-pagination"
-                          .pages=${this.data?.pagination}
-                          .pageChangeHandler=${(page: number) => {
-                              this.page = page;
-                              this.fetch();
-                          }}
-                      >
-                      </ak-table-pagination>
-                  </div>`
-                : html``}`;
+            ${
+                this.paginated
+                    ? html` <div class="pf-c-pagination pf-m-bottom">
+                          <ak-table-pagination
+                              class="pf-c-toolbar__item pf-m-pagination"
+                              .pages=${this.data?.pagination}
+                              .pageChangeHandler=${(page: number) => {
+                                  this.page = page;
+                                  this.fetch();
+                              }}
+                          >
+                          </ak-table-pagination>
+                      </div>`
+                    : html``
+            }`;
     }
 
     render(): TemplateResult {
