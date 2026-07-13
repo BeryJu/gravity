@@ -11,7 +11,7 @@ require (
 	github.com/api7/etcdstore v1.1.0
 	github.com/avast/retry-go/v4 v4.7.0
 	github.com/coredns/caddy v1.1.4
-	github.com/coredns/coredns v1.14.5
+	github.com/coredns/coredns v1.14.6
 	github.com/coreos/go-oidc/v3 v3.20.0
 	github.com/creasty/defaults v1.8.0
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
