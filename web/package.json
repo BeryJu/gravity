@@ -42,7 +42,7 @@
         "eslint-plugin-wc": "^3.0.2",
         "globals": "^17.7.0",
         "gravity-api": "^0.33.0",
-        "ip-num": "^1.5.2",
+        "ip-num": "^1.6.1",
         "lit": "^3.3.3",
         "prettier": "^3.9.5",
         "rapidoc": "^9.3.8",
