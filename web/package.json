@@ -44,7 +44,7 @@
         "gravity-api": "^0.33.0",
         "ip-num": "^1.6.1",
         "lit": "^3.3.3",
-        "prettier": "^3.9.5",
+        "prettier": "^3.9.6",
         "rapidoc": "^9.3.8",
         "rollup": "^4.62.2",
         "rollup-plugin-copy": "^3.5.0",
