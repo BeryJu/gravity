@@ -1,0 +1,52 @@
+---
+# Manual test setup for the DHCP reservation-expiry feature.
+#
+# Brings up a gravity instance with a DHCP scope pre-configured (via
+# IMPORT_CONFIGS, see ./import/dhcp-scope.json) and a client container that
+# immediately requests a real DHCP lease from it, so you can:
+#   1. Open http://localhost:8008 (user: admin, password: gravity-test)
+#   2. Go to DHCP -> test -> Leases and see the client's lease with its expiry
+#   3. Select it and click "Turn to reservation"
+#   4. Confirm the row still shows "Reservation" *and* the last known expiry
+#
+# Run with: docker compose -f hack/dhcp-test/docker-compose.yml up --build
+networks:
+  dhcp-test:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.200.50.0/24
+
+services:
+  gravity:
+    build:
+      context: ../..
+      dockerfile: hack/dhcp-test/Dockerfile
+    hostname: gravity-test
+    environment:
+      ADMIN_TOKEN: gravity-test-token
+      ADMIN_PASSWORD: gravity-test
+      LOG_LEVEL: info,dhcp=debug
+      INSTANCE_IP: 10.200.50.10
+      INSTANCE_LISTEN: 0.0.0.0
+      IMPORT_CONFIGS: file:///import/dhcp-scope.json
+    networks:
+      dhcp-test:
+        ipv4_address: 10.200.50.10
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./import:/import:ro
+
+  host:
+    build:
+      context: ../e2e
+      dockerfile: dhcp-client.Dockerfile
+    depends_on:
+      - gravity
+    networks:
+      - dhcp-test
+    cap_add:
+      - NET_ADMIN
+    command: ["sh", "-c", "ip addr flush eth0 && exec dhclient -v -d eth0"]
