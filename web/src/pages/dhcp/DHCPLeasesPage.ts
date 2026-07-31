@@ -274,12 +274,14 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`${
                 item.reservation
                     ? html`<div>Reservation</div>
-                          ${(item.expiry || 0) > 0
-                              ? html`<small>
-                                    Last leased until
-                                    ${new Date((item.expiry || 0) * 1000).toLocaleString()}
-                                </small>`
-                              : nothing}`
+                          ${
+                              (item.expiry || 0) > 0
+                                  ? html`<small>
+                                        Last leased until
+                                        ${new Date((item.expiry || 0) * 1000).toLocaleString()}
+                                    </small>`
+                                  : nothing
+                          }`
                     : html`<div>${new Date((item.expiry || 0) * 1000).toLocaleString()}</div>
                           <small>${formatElapsedTime(new Date((item.expiry || 0) * 1000))}</small>`
             }`,
