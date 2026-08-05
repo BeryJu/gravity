@@ -24,7 +24,7 @@
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-typescript": "^12.3.0",
         "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-        "@types/codemirror": "5.60.17",
+        "@types/codemirror": "5.60.18",
         "@types/sha.js": "^2.4.4",
         "@typescript-eslint/eslint-plugin": "^8.54.0",
         "@typescript-eslint/parser": "^8.32.1",
