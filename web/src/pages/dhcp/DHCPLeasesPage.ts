@@ -211,7 +211,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                 .callAction=${async () => {
                     return Promise.all(
                         this.selectedElements.map((item) => {
-                            item.expiry = -1;
+                            item.reservation = true;
                             return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
                                 identifier: item.identifier,
                                 scope: this.scope,
@@ -272,8 +272,16 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
             html`<pre>${item.identifier}</pre>
                 ${item.info ? html` (${item.info.vendor})` : nothing}`,
             html`${
-                (item.expiry || 0) <= -1
-                    ? html`Reservation`
+                item.reservation
+                    ? html`<div>Reservation</div>
+                          ${
+                              (item.expiry || 0) > 0
+                                  ? html`<small>
+                                        Last leased until
+                                        ${new Date((item.expiry || 0) * 1000).toLocaleString()}
+                                    </small>`
+                                  : nothing
+                          }`
                     : html`<div>${new Date((item.expiry || 0) * 1000).toLocaleString()}</div>
                           <small>${formatElapsedTime(new Date((item.expiry || 0) * 1000))}</small>`
             }`,

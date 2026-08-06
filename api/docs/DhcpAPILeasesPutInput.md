@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **DnsZone** | Pointer to **string** |  | [optional] 
 **Expiry** | Pointer to **int64** |  | [optional] 
 **Hostname** | **string** |  | 
+**Reservation** | Pointer to **bool** |  | [optional] 
 
 ## Methods
 
@@ -164,6 +165,31 @@ and a boolean to check if the value has been set.
 
 SetHostname sets Hostname field to given value.
 
+
+### GetReservation
+
+`func (o *DhcpAPILeasesPutInput) GetReservation() bool`
+
+GetReservation returns the Reservation field if non-nil, zero value otherwise.
+
+### GetReservationOk
+
+`func (o *DhcpAPILeasesPutInput) GetReservationOk() (*bool, bool)`
+
+GetReservationOk returns a tuple with the Reservation field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetReservation
+
+`func (o *DhcpAPILeasesPutInput) SetReservation(v bool)`
+
+SetReservation sets Reservation field to given value.
+
+### HasReservation
+
+`func (o *DhcpAPILeasesPutInput) HasReservation() bool`
+
+HasReservation returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

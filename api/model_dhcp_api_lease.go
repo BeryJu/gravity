@@ -29,6 +29,7 @@ type DhcpAPILease struct {
 	Hostname         string            `json:"hostname"`
 	Identifier       string            `json:"identifier"`
 	Info             *DhcpAPILeaseInfo `json:"info,omitempty"`
+	Reservation      bool              `json:"reservation"`
 	ScopeKey         string            `json:"scopeKey"`
 }
 
@@ -38,13 +39,14 @@ type _DhcpAPILease DhcpAPILease
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDhcpAPILease(address string, addressLeaseTime string, description string, hostname string, identifier string, scopeKey string) *DhcpAPILease {
+func NewDhcpAPILease(address string, addressLeaseTime string, description string, hostname string, identifier string, reservation bool, scopeKey string) *DhcpAPILease {
 	this := DhcpAPILease{}
 	this.Address = address
 	this.AddressLeaseTime = addressLeaseTime
 	this.Description = description
 	this.Hostname = hostname
 	this.Identifier = identifier
+	this.Reservation = reservation
 	this.ScopeKey = scopeKey
 	return &this
 }
@@ -273,6 +275,30 @@ func (o *DhcpAPILease) SetInfo(v DhcpAPILeaseInfo) {
 	o.Info = &v
 }
 
+// GetReservation returns the Reservation field value
+func (o *DhcpAPILease) GetReservation() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.Reservation
+}
+
+// GetReservationOk returns a tuple with the Reservation field value
+// and a boolean to check if the value has been set.
+func (o *DhcpAPILease) GetReservationOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Reservation, true
+}
+
+// SetReservation sets field value
+func (o *DhcpAPILease) SetReservation(v bool) {
+	o.Reservation = v
+}
+
 // GetScopeKey returns the ScopeKey field value
 func (o *DhcpAPILease) GetScopeKey() string {
 	if o == nil {
@@ -321,6 +347,7 @@ func (o DhcpAPILease) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Info) {
 		toSerialize["info"] = o.Info
 	}
+	toSerialize["reservation"] = o.Reservation
 	toSerialize["scopeKey"] = o.ScopeKey
 	return toSerialize, nil
 }
@@ -335,6 +362,7 @@ func (o *DhcpAPILease) UnmarshalJSON(data []byte) (err error) {
 		"description",
 		"hostname",
 		"identifier",
+		"reservation",
 		"scopeKey",
 	}
 
