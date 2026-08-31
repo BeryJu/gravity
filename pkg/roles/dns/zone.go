@@ -8,15 +8,17 @@ import (
 	"strings"
 	"time"
 
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	tsdbTypes "beryju.io/gravity/pkg/roles/tsdb/types"
 	"beryju.io/gravity/pkg/storage"
 	"beryju.io/gravity/pkg/storage/watcher"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -114,18 +116,19 @@ func getIP(addr net.Addr) *netip.Addr {
 	return &i
 }
 
-func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.Span) {
+func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span trace.Span) {
 	z.inst.ExecuteHook(roles.HookOptions{
 		Source: z.Hook,
 		Method: "onDNSRequestBefore",
 	}, r)
 	for idx, handler := range z.Handlers() {
-		ss := span.StartChild("gravity.dns.request.handler")
-		ss.Description = handler.Identifier()
+		hStart := time.Now()
+		hctx, ss := o11y.Tracer.Start(r.Context(), "gravity.dns.request.handler", trace.WithAttributes(
+			attribute.String("gravity.dns.handler", handler.Identifier()),
+		))
 		z.log.Debug("sending request to handler", zap.String("handler", handler.Identifier()))
-		ss.SetTag("gravity.dns.handler", handler.Identifier())
 		// Create new request for handler with the correct context
-		hr := r.Chain(r.Msg, ss.Context(), utils.DNSRoutingMeta{
+		hr := r.Chain(r.Msg, hctx, utils.DNSRoutingMeta{
 			HandlerIdx:      idx,
 			HasMoreHandlers: len(z.h)-(idx+1) > 0,
 			ResolveRequest: func(w dns.ResponseWriter, r *utils.DNSRequest) {
@@ -135,7 +138,8 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 		})
 
 		handlerReply := handler.Handle(utils.NewFakeDNSWriter(w), hr)
-		ss.Finish()
+		ss.End()
+		hDur := time.Since(hStart)
 
 		if handlerReply != nil {
 			z.log.Debug("returning reply from handler", zap.String("handler", handler.Identifier()))
@@ -159,7 +163,7 @@ func (z *Zone) resolve(w dns.ResponseWriter, r *utils.DNSRequest, span *sentry.S
 			if err != nil {
 				z.log.Warn("failed to write response", zap.Error(err))
 			}
-			z.resolveUpdateMetrics(ss.EndTime.Sub(ss.StartTime), r, handler)
+			z.resolveUpdateMetrics(hDur, r, handler)
 			return
 		}
 		z.log.Debug("no reply, trying next handler", zap.String("handler", handler.Identifier()))

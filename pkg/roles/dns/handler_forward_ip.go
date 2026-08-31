@@ -5,10 +5,12 @@ import (
 	"strconv"
 	"strings"
 
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -88,10 +90,11 @@ func (ipf *IPForwarderHandler) canCacheRecord(ans dns.RR) bool {
 }
 
 func (ipf *IPForwarderHandler) cacheToEtcd(r *utils.DNSRequest, query dns.Question, ans dns.RR, idx int) {
-	cs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.cache")
-	cs.SetTag("gravity.dns.handler.forward_ip.cache.query", query.String())
-	cs.SetTag("gravity.dns.handler.forward_ip.cache.ans", ans.String())
-	defer cs.Finish()
+	_, cs := o11y.Tracer.Start(r.Context(), "gravity.dns.handler.forward_ip.cache", trace.WithAttributes(
+		attribute.String("gravity.dns.handler.forward_ip.cache.query", query.String()),
+		attribute.String("gravity.dns.handler.forward_ip.cache.ans", ans.String()),
+	))
+	defer cs.End()
 	if ans == nil || !ipf.canCacheRecord(ans) {
 		return
 	}
@@ -163,13 +166,13 @@ func (ipf *IPForwarderHandler) Handle(w *utils.FakeDNSWriter, r *utils.DNSReques
 		return nil
 	}
 	question := r.Question[0]
-	fs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_ip.lookup")
+	_, fs := o11y.Tracer.Start(r.Context(), "gravity.dns.handler.forward_ip.lookup")
 	resolver := ipf.pickResolver()
-	fs.SetTag("resolver", resolver)
+	fs.SetAttributes(attribute.String("resolver", resolver))
 	ipf.log.Debug("sending message to resolve", zap.String("resolver", resolver), zap.String("dnsMsg", r.String()))
 	m, rtt, err := ipf.c.ExchangeContext(r.Context(), r.Msg, resolver)
 	ipf.log.Debug("dns rtt", zap.Duration("rtt", rtt))
-	fs.Finish()
+	fs.End()
 
 	if err != nil {
 		ipf.log.Warn("failed to forward", zap.Error(err))

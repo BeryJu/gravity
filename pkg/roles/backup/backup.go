@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles/backup/types"
-	"github.com/getsentry/sentry-go"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 )
@@ -111,16 +111,15 @@ func (r *Role) snapshotToFile(ctx context.Context) (*os.File, error) {
 }
 
 func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
-	tr := sentry.StartTransaction(ctx, "gravity.backup.snapshot")
-	tr.Op = "gravity.backup.snapshot"
-	defer tr.Finish()
+	tctx, tr := o11y.Tracer.Start(ctx, "gravity.backup.snapshot")
+	defer tr.End()
 	start := time.Now()
 	status := &BackupStatus{
 		Status: BackupStatusFailed,
 		Time:   start,
 	}
-	defer r.setStatus(tr.Context(), status)
-	file, err := r.snapshotToFile(tr.Context())
+	defer r.setStatus(tctx, status)
+	file, err := r.snapshotToFile(tctx)
 	if err != nil {
 		status.Error = err.Error()
 		return status
@@ -145,7 +144,7 @@ func (r *Role) SaveSnapshot(ctx context.Context) *BackupStatus {
 		return status
 	}
 	fileName := r.GetBackupName()
-	i, err := r.mc.PutObject(tr.Context(), r.cfg.Bucket, fileName, file, stat.Size(), minio.PutObjectOptions{})
+	i, err := r.mc.PutObject(tctx, r.cfg.Bucket, fileName, file, stat.Size(), minio.PutObjectOptions{})
 	if err != nil {
 		r.log.Warn("failed to upload snapshot", zap.Error(err))
 		status.Error = err.Error()

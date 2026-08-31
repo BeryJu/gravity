@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	apitypes "beryju.io/gravity/pkg/roles/api/types"
 	"beryju.io/gravity/pkg/roles/dhcp/oui"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/storage/watcher"
-	"github.com/getsentry/sentry-go"
 	"github.com/swaggest/rest/web"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/zap"
@@ -115,8 +115,8 @@ func (r *Role) Handler4() *handler4 {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
-	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dhcp.start")
-	defer start.Finish()
+	_, start := o11y.Tracer.Start(ctx, "gravity.dhcp.start")
+	defer start.End()
 
 	r.scopes.Start(r.ctx)
 	r.leases.Start(r.ctx)

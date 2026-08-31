@@ -7,13 +7,16 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/getsentry/sentry-go"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
+
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/concurrency"
 	"go.uber.org/zap"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/types"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/storage"
 )
@@ -79,27 +82,28 @@ func (i *Instance) Role(id string) roles.Role {
 func (i *Instance) Start() {
 	i.log.Info("Gravity starting", zap.String("version", extconfig.FullVersion()))
 	i.startSentry()
+	i.startOTel()
 	i.startPyroscope()
-	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
+	bctx, _ := o11y.Tracer.Start(i.rootContext, "gravity.instance.bootstrap")
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
-		if !i.startEtcd(bs.Context()) {
+		if !i.startEtcd(bctx) {
 			return
 		}
 	}
-	i.bootstrap(bs.Context())
+	i.bootstrap(bctx)
 	<-i.rootContext.Done()
 }
 
 func (i *Instance) startEtcd(ctx context.Context) bool {
 	i.log.Info("'etcd' in bootstrap roles, starting embedded etcd")
-	es := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.bootstrap_etcd")
-	defer es.Finish()
-	i.etcd = roles.GetRole("etcd")(i.ForRole("etcd", es.Context()))
+	ectx, es := o11y.Tracer.Start(ctx, "gravity.instance.bootstrap_etcd")
+	defer es.End()
+	i.etcd = roles.GetRole("etcd")(i.ForRole("etcd", ectx))
 	if i.etcd == nil {
 		i.Stop()
 		return false
 	}
-	err := i.etcd.Start(es.Context(), []byte{})
+	err := i.etcd.Start(ectx, []byte{})
 	if err != nil {
 		i.log.Warn("failed to start etcd", zap.Error(err))
 		i.Stop()
@@ -148,15 +152,14 @@ func (i *Instance) bootstrap(ctx context.Context) {
 			// Special handling
 			continue
 		default:
-			span := sentry.StartSpan(ctx, "gravity.instance.bootstrap.role")
-			span.SetTag("gravity.role", roleId)
+			_, span := o11y.Tracer.Start(ctx, "gravity.instance.bootstrap.role", trace.WithAttributes(attribute.String("gravity.role", roleId)))
 			constr := roles.GetRole(roleId)
 			if constr == nil {
 				i.log.Warn("could not find role", zap.String("roleId", roleId))
 				continue
 			}
 			rc.Role = constr(rc.RoleInstance)
-			span.Finish()
+			span.End()
 		}
 		i.rolesM.Lock()
 		i.roles[roleId] = rc
@@ -178,7 +181,7 @@ func (i *Instance) bootstrap(ctx context.Context) {
 	go func() {
 		wg.Wait()
 		i.DispatchEvent(types.EventTopicRolesStarted, roles.NewEvent(ctx, map[string]interface{}{}))
-		sentry.TransactionFromContext(ctx).Finish()
+		trace.SpanFromContext(ctx).End()
 	}()
 }
 
@@ -186,12 +189,10 @@ func (i *Instance) eventRoleRestart(ev *roles.Event) {
 	id := ev.Payload.Data["id"].(string)
 	config := ev.Payload.Data["config"].([]byte)
 	ctx := context.Background()
-	tx := sentry.StartTransaction(ctx, "gravity.instance.role.restart")
-	tx.Description = id
-	tx.SetTag("gravity.role", id)
-	defer tx.Finish()
-	i.stopRole(tx.Context(), ErrRoleRestarting, id)
-	i.startRole(tx.Context(), id, config)
+	tctx, tx := o11y.Tracer.Start(ctx, "gravity.instance.role.restart", trace.WithAttributes(attribute.String("gravity.role", id)))
+	defer tx.End()
+	i.stopRole(tctx, ErrRoleRestarting, id)
+	i.startRole(tctx, id, config)
 }
 
 func (i *Instance) checkFirstStart(ctx context.Context) {
@@ -287,17 +288,15 @@ func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback 
 }
 
 func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) bool {
-	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.role.start")
-	srs.Description = id
-	srs.SetTag("gravity.role", id)
-	defer srs.Finish()
-	defer i.putInstanceInfo(srs.Context())
+	sctx, srs := o11y.Tracer.Start(ctx, "gravity.instance.role.start", trace.WithAttributes(attribute.String("gravity.role", id)))
+	defer srs.End()
+	defer i.putInstanceInfo(sctx)
 	instanceRoleStarted.WithLabelValues(id).SetToCurrentTime()
 	client := i.roles[id].RoleInstance.kv
 	if mr, ok := i.roles[id].Role.(roles.MigratableRole); ok {
 		mr.RegisterMigrations()
 		// Run migrations
-		_client, err := i.roles[id].RoleInstance.Migrator().Run(srs.Context())
+		_client, err := i.roles[id].RoleInstance.Migrator().Run(sctx)
 		if err != nil {
 			i.log.Warn("failed to run migrations for role", zap.String("roleId", id))
 			return false
@@ -307,7 +306,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	// Overwrite role's KV client with the potentially hooked client for migrations
 	i.roles[id].RoleInstance.kv = client
 	// Start role
-	err := i.roles[id].Role.Start(srs.Context(), rawConfig)
+	err := i.roles[id].Role.Start(sctx, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
 		i.log.Info("role not configured", zap.String("roleId", id))
 	} else if err != nil {
@@ -316,7 +315,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 	}
 	i.log.Info("Started role", zap.String("roleId", id))
 	i.DispatchEvent(types.EventTopicRoleStarted, roles.NewEvent(
-		srs.Context(),
+		sctx,
 		map[string]interface{}{
 			"role":   id,
 			"config": rawConfig,
@@ -326,10 +325,8 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 }
 
 func (i *Instance) stopRole(ctx context.Context, cause error, id string) {
-	srs := sentry.TransactionFromContext(ctx).StartChild("gravity.instance.role.stop")
-	srs.Description = id
-	srs.SetTag("gravity.role", id)
-	defer srs.Finish()
+	_, srs := o11y.Tracer.Start(ctx, "gravity.instance.role.stop", trace.WithAttributes(attribute.String("gravity.role", id)))
+	defer srs.End()
 	i.log.Info("stopping role", zap.String("roleId", id))
 	i.roles[id].Role.Stop()
 	// Cancel context and re-create the context
@@ -357,5 +354,6 @@ func (i *Instance) Stop() {
 	}
 	i.rootContextCancel(ErrInstanceStopping)
 	i.stopSentry()
+	i.stopOTel()
 	i.stopPyroscope()
 }

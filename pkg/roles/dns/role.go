@@ -7,12 +7,12 @@ import (
 
 	"beryju.io/gravity/pkg/extconfig"
 	instanceTypes "beryju.io/gravity/pkg/instance/types"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	dhcpTypes "beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/storage/watcher"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	"github.com/swaggest/rest/web"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -102,10 +102,10 @@ func New(instance roles.Instance) *Role {
 func (r *Role) Start(ctx context.Context, config []byte) error {
 	r.cfg = r.decodeRoleConfig(config)
 
-	start := sentry.TransactionFromContext(ctx).StartChild("gravity.dns.start")
-	defer start.Finish()
+	sctx, start := o11y.Tracer.Start(ctx, "gravity.dns.start")
+	defer start.End()
 
-	r.zones.Start(start.Context())
+	r.zones.Start(sctx)
 
 	r.m.HandleFunc(
 		types.DNSRootZone,

@@ -10,15 +10,17 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	apiTypes "beryju.io/gravity/pkg/roles/api/types"
 	debugTypes "beryju.io/gravity/pkg/roles/debug/types"
 	"beryju.io/gravity/pkg/roles/tsdb/types"
-	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/mux"
 	"github.com/struCoder/pidusage"
 	"github.com/swaggest/rest/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -141,25 +143,23 @@ func (r *Role) Start(ctx context.Context, config []byte) error {
 }
 
 func (r *Role) write(ctx context.Context) {
-	ss := sentry.StartTransaction(ctx, "gravity.tsdb.write")
-	ss.Op = "gravity.tsdb.write"
-	defer ss.Finish()
+	sctx, ss := o11y.Tracer.Start(ctx, "gravity.tsdb.write")
+	defer ss.End()
 	r.log.Debug("writing metrics")
-	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(ss.Context(), map[string]interface{}{}))
+	r.i.DispatchEvent(types.EventTopicTSDBBeforeWrite, roles.NewEvent(sctx, map[string]interface{}{}))
 	r.ms.RLock()
 	defer r.ms.RUnlock()
 	// Don't bother granting a lease if we don't have any metrics
 	if len(r.m) < 1 {
 		return
 	}
-	lease, err := r.i.KV().Grant(ss.Context(), r.cfg.Expire)
+	lease, err := r.i.KV().Grant(sctx, r.cfg.Expire)
 	if err != nil {
 		r.log.Warn("failed to grant lease, skipping write", zap.Error(err))
 		return
 	}
 	for rkey, value := range r.m {
-		ks := ss.StartChild("gravity.tsdb.write_key")
-		ks.Description = rkey
+		kctx, ks := o11y.Tracer.Start(sctx, "gravity.tsdb.write_key", trace.WithAttributes(attribute.String("gravity.tsdb.key", rkey)))
 		key := r.i.KV().Key(
 			types.KeyRole,
 			rkey,
@@ -170,7 +170,7 @@ func (r *Role) write(ctx context.Context) {
 			Value: int64(value.Value),
 		}
 		_, err = r.i.KV().PutObj(
-			ks.Context(),
+			kctx,
 			key,
 			&v,
 			clientv3.WithLease(lease.ID),
@@ -182,7 +182,7 @@ func (r *Role) write(ctx context.Context) {
 			value.Value = 0
 			r.m[rkey] = value
 		}
-		ks.Finish()
+		ks.End()
 	}
 }
 
