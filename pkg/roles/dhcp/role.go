@@ -190,7 +190,7 @@ func (r *Role) startServer4() error {
 		h := h
 		r.log.Info("starting DHCP Server", zap.Int("port", r.cfg.Port), zap.String("interface", h.iface.Name))
 		go func() {
-			if err := h.Serve(); !isErrNetClosing(err) && err != nil {
+			if err := h.Serve(); !isErrNetClosing(err) {
 				r.log.Warn("failed to listen", zap.Error(err))
 			}
 		}()
