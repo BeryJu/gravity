@@ -304,7 +304,7 @@ func (i *Instance) startRole(ctx context.Context, id string, rawConfig []byte) b
 		client = _client
 	}
 	// Overwrite role's KV client with the potentially hooked client for migrations
-	i.roles[id].RoleInstance.kv = client
+	i.roles[id].RoleInstance.setKV(client)
 	// Start role
 	err := i.roles[id].Role.Start(sctx, rawConfig)
 	if err == roles.ErrRoleNotConfigured {
@@ -329,16 +329,18 @@ func (i *Instance) stopRole(ctx context.Context, cause error, id string) {
 	defer srs.End()
 	i.log.Info("stopping role", zap.String("roleId", id))
 	i.roles[id].Role.Stop()
-	// Cancel context and re-create the context
+	// Cancel the context this run of the role used, and hand its instance the
+	// context for the next one. The instance is rebound rather than replaced
+	// because the role holds the one it was constructed with, and would
+	// otherwise go on using the context that was just cancelled.
 	i.roles[id].ContextCancelFunc(cause)
-	ctx, cancel := context.WithCancelCause(i.rootContext)
+	roleCtx, cancel := context.WithCancelCause(i.rootContext)
 	i.rolesM.Lock()
-	i.roles[id] = RoleContext{
-		Role:              i.roles[id].Role,
-		RoleInstance:      i.ForRole(id, ctx),
-		ContextCancelFunc: cancel,
-	}
-	i.rolesM.Unlock()
+	defer i.rolesM.Unlock()
+	rc := i.roles[id]
+	rc.RoleInstance.rebind(roleCtx)
+	rc.ContextCancelFunc = cancel
+	i.roles[id] = rc
 }
 
 func (i *Instance) Stop() {
