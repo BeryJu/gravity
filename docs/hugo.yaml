@@ -43,3 +43,7 @@ imaging:
   resampleFilter: CatmullRom
   quality: 75
   anchor: Smart
+
+caches:
+  images:
+    dir: ':cacheDir/images'

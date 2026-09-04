@@ -3,12 +3,29 @@ framework = "hugo"
 
 [build]
 publish = "public"
-command = "hugo mod get && hugo --gc --minify"
+command = """\
+  mkdir -p "${HOME}/.local" && \
+  curl -sfLO "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  tar -C "${HOME}/.local" -xf "dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  rm "dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  export PATH="${HOME}/.local/dart-sass:${PATH}" && \
+  hugo mod get && \
+  hugo --gc --minify
+  """
 
 [build.environment]
   HUGO_ENV = "production"
   HUGO_EXTENDED = "true"
   HUGO_VERSION = "0.165.0"
+  DART_SASS_VERSION = "1.102.0"
 
 [context.deploy-preview]
-command = "hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL"
+command = """\
+  mkdir -p "${HOME}/.local" && \
+  curl -sfLO "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  tar -C "${HOME}/.local" -xf "dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  rm "dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" && \
+  export PATH="${HOME}/.local/dart-sass:${PATH}" && \
+  hugo mod get && \
+  hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL
+  """
