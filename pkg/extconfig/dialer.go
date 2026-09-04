@@ -21,8 +21,8 @@ func Transport() http.RoundTripper {
 		Resolver: Resolver(),
 	}
 	return NewUserAgentTransport(fmt.Sprintf("gravity/%s", FullVersion()), &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		Dial:  dialer.Dial,
+		Proxy:       http.ProxyFromEnvironment,
+		DialContext: dialer.DialContext,
 	})
 }
 

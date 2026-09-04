@@ -2,6 +2,7 @@ package instance
 
 import (
 	"context"
+	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/instance/migrate"
@@ -11,11 +12,18 @@ import (
 )
 
 type RoleInstance struct {
+	log    *zap.Logger
+	parent *Instance
+	roleId string
+
+	// A role is constructed once and started again on every configuration
+	// change, so the fields belonging to a single run are swapped in place
+	// rather than by replacing the instance: roles keep a reference to the
+	// instance they were constructed with, and replacing it would leave them
+	// reading the state of a run that has already been stopped.
+	m        sync.RWMutex
 	kv       *storage.Client
 	context  context.Context
-	log      *zap.Logger
-	parent   *Instance
-	roleId   string
 	migrator *migrate.Migrator
 }
 
@@ -34,7 +42,15 @@ func (i *Instance) ForRole(roleId string, ctx context.Context) *RoleInstance {
 }
 
 func (ri *RoleInstance) KV() *storage.Client {
+	ri.m.RLock()
+	defer ri.m.RUnlock()
 	return ri.kv
+}
+
+func (ri *RoleInstance) setKV(kv *storage.Client) {
+	ri.m.Lock()
+	defer ri.m.Unlock()
+	ri.kv = kv
 }
 
 func (ri *RoleInstance) Log() *zap.Logger {
@@ -42,11 +58,29 @@ func (ri *RoleInstance) Log() *zap.Logger {
 }
 
 func (ri *RoleInstance) Context() context.Context {
+	ri.m.RLock()
+	defer ri.m.RUnlock()
 	return ri.context
 }
 
 func (ri *RoleInstance) Migrator() roles.RoleMigrator {
+	ri.m.RLock()
+	defer ri.m.RUnlock()
 	return ri.migrator
+}
+
+// rebind points the instance at the context for a fresh run of the role. The
+// migrator is rebuilt along with it because roles register their migrations
+// again on every start, and would otherwise accumulate duplicates.
+func (ri *RoleInstance) rebind(ctx context.Context) {
+	ri.m.Lock()
+	ri.context = ctx
+	ri.m.Unlock()
+	// Built outside the lock: the migrator reads back from the instance.
+	migrator := migrate.New(ri)
+	ri.m.Lock()
+	ri.migrator = migrator
+	ri.m.Unlock()
 }
 
 func (ri *RoleInstance) DispatchEvent(topic string, ev *roles.Event) {
