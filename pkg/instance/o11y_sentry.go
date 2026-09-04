@@ -14,18 +14,12 @@ func (i *Instance) startSentry() {
 		return
 	}
 	release := fmt.Sprintf("gravity@%s", extconfig.FullVersion())
-	rate := 0.5
-	if extconfig.Get().Debug {
-		rate = 1
-	}
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              extconfig.Get().Observability.Sentry.DSN,
-		Release:          release,
-		EnableTracing:    true,
-		TracesSampleRate: rate,
-		HTTPTransport:    extconfig.NewUserAgentTransport(release, extconfig.Transport()),
-		Debug:            extconfig.Get().Debug,
-		DebugWriter:      NewSentryWriter(i.log.Named("o11y.sentry")),
+		Dsn:           extconfig.Get().Observability.Sentry.DSN,
+		Release:       release,
+		HTTPTransport: extconfig.NewUserAgentTransport(release, extconfig.Transport()),
+		Debug:         extconfig.Get().Debug,
+		DebugWriter:   NewSentryWriter(i.log.Named("o11y.sentry")),
 	})
 	if err != nil {
 		i.log.Warn("failed to init sentry", zap.Error(err))

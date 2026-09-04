@@ -3,8 +3,10 @@ package trace
 import (
 	"context"
 
-	"github.com/getsentry/sentry-go"
+	"beryju.io/gravity/pkg/o11y"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.opentelemetry.io/otel/attribute"
+	oteltrace "go.opentelemetry.io/otel/trace"
 )
 
 type opWithoutSpan func(op clientv3.Op)
@@ -31,17 +33,17 @@ func NameFromOp(op clientv3.Op) string {
 }
 
 func (kv traceKV) trace(ctx context.Context, op clientv3.Op) func() {
-	tx := sentry.TransactionFromContext(ctx)
-	if tx == nil {
+	if !oteltrace.SpanFromContext(ctx).IsRecording() {
 		kv.opWithoutSpan(op)
 		return func() {}
 	}
-	span := tx.StartChild("db")
-	span.Description = string(op.KeyBytes())
-	span.SetTag("db.system", "other_sql")
-	span.SetTag("db.operation.name", NameFromOp(op))
+	_, span := o11y.Tracer.Start(ctx, "db", oteltrace.WithAttributes(
+		attribute.String("db.statement", string(op.KeyBytes())),
+		attribute.String("db.system", "other_sql"),
+		attribute.String("db.operation.name", NameFromOp(op)),
+	))
 	return func() {
-		span.Finish()
+		span.End()
 	}
 }
 

@@ -13,6 +13,7 @@ import (
 
 	"github.com/avast/retry-go/v4"
 	sentryhttp "github.com/getsentry/sentry-go/http"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"beryju.io/gravity/pkg/extconfig"
 	"beryju.io/gravity/pkg/roles"
@@ -64,6 +65,7 @@ func New(instance roles.Instance) *Role {
 	}
 	r.auth = auth.NewAuthProvider(r, r.i)
 	r.m.Use(middleware.NewRecoverMiddleware(r.log))
+	r.m.Use(otelhttp.NewMiddleware("gravity.api"))
 	r.m.Use(sentryhttp.New(sentryhttp.Options{
 		Repanic: true,
 	}).Handle)

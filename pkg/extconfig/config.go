@@ -37,6 +37,9 @@ type ExtConfig struct {
 			Enabled bool   `env:"SENTRY_ENABLED,default=false"`
 			DSN     string `env:"SENTRY_DSN,default=https://731a93aa4a1a42a2960ac9eecee628c5@sentry.beryju.org/2"`
 		}
+		OTel struct {
+			Enabled bool `env:"OTEL_ENABLED,default=false"`
+		}
 		Pyroscope struct {
 			Enabled  bool   `env:"PYROSCOPE_ENABLED,default=false"`
 			Server   string `env:"PYROSCOPE_SERVER"`

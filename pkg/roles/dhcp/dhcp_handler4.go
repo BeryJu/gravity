@@ -10,8 +10,10 @@ import (
 	"sync"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"github.com/getsentry/sentry-go"
 	"github.com/insomniacslk/dhcp/dhcpv4"
+	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/ipv4"
@@ -86,9 +88,8 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 	r.oob = oob
 	r.BindIP = h.ip
 
-	span := sentry.StartTransaction(r.Context, h.role.DeviceIdentifier(r.DHCPv4))
-	span.Op = "gravity.dhcp.request"
-	hub := sentry.GetHubFromContext(span.Context())
+	_, span := o11y.Tracer.Start(r.Context, h.role.DeviceIdentifier(r.DHCPv4))
+	hub := sentry.GetHubFromContext(r.Context)
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
@@ -97,8 +98,8 @@ func (h *handler4) Handle(buf []byte, oob *ipv4.ControlMessage, peer net.Addr) e
 		IPAddress: strings.Split(peer.String(), ":")[0],
 	})
 
-	span.SetData("http.request.method", m.MessageType().String())
-	defer span.Finish()
+	span.SetAttributes(attribute.String("http.request.method", m.MessageType().String()))
+	defer span.End()
 	resp := h.HandleRequest(r)
 
 	if resp == nil {
