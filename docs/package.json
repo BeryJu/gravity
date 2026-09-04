@@ -9,5 +9,8 @@
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.13",
     "postcss-cli": "^10.1.0"
-  }
+  },
+  "workspaces": [
+    "packages/hugoautogen"
+  ]
 }
