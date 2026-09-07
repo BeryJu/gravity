@@ -6,8 +6,10 @@ import (
 	"errors"
 	"io"
 
+	"beryju.io/gravity/pkg/o11y"
 	"github.com/getsentry/sentry-go"
 	"github.com/pin/tftp/v3"
+	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 )
 
@@ -21,11 +23,10 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 	it := wt.(tftp.IncomingTransfer)
 	ctx, canc := context.WithCancel(context.Background())
 	defer canc()
-	span := sentry.StartTransaction(ctx, filename)
-	span.Op = "gravity.tftp.request"
-	span.SetData("http.request.method", "PUT")
-	defer span.Finish()
-	hub := sentry.GetHubFromContext(span.Context())
+	sctx, span := o11y.Tracer.Start(ctx, filename)
+	span.SetAttributes(attribute.String("http.request.method", "PUT"))
+	defer span.End()
+	hub := sentry.GetHubFromContext(sctx)
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
@@ -46,7 +47,7 @@ func (r *Role) writeHandler(filename string, wt io.WriterTo) error {
 		return err
 	}
 	_, err = r.i.KV().Put(
-		span.Context(),
+		sctx,
 		r.getPath(filename, it.RemoteAddr()).String(),
 		buf.String(),
 	)

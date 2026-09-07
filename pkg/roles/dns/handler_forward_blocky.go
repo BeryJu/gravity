@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/creasty/defaults"
-	"github.com/getsentry/sentry-go"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
@@ -235,9 +235,9 @@ func (bfwd *BlockyForwarder) Handle(w *utils.FakeDNSWriter, r *utils.DNSRequest)
 		bfwd.log.Debug("Blocky not started/setup yet, falling through to next handler")
 		return nil
 	}
-	bs := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.forward_blocky.handle")
+	_, bs := o11y.Tracer.Start(r.Context(), "gravity.dns.handler.forward_blocky.handle")
 	bfwd.b.OnRequest(r.Context(), w, r.Msg)
-	bs.Finish()
+	bs.End()
 	// fall to next handler when no record is found
 	if w.Msg().Rcode == dns.RcodeNameError {
 		return nil

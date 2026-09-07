@@ -5,10 +5,13 @@ import (
 	"net"
 	"strings"
 
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -32,8 +35,7 @@ func (r *Role) FindZone(fqdn string) *Zone {
 }
 
 func (ro *Role) handler(w dns.ResponseWriter, r *dns.Msg) {
-	span := sentry.StartTransaction(context.TODO(), "")
-	span.Op = "gravity.dns.request"
+	ctx, span := o11y.Tracer.Start(context.TODO(), "gravity.dns.request")
 	clientIP := ""
 	switch addr := w.RemoteAddr().(type) {
 	case *net.UDPAddr:
@@ -41,15 +43,15 @@ func (ro *Role) handler(w dns.ResponseWriter, r *dns.Msg) {
 	case *net.TCPAddr:
 		clientIP = addr.IP.String()
 	}
-	hub := sentry.GetHubFromContext(span.Context())
+	hub := sentry.GetHubFromContext(ctx)
 	if hub == nil {
 		hub = sentry.CurrentHub()
 	}
 	hub.Scope().SetUser(sentry.User{
 		IPAddress: clientIP,
 	})
-	defer span.Finish()
-	req := utils.NewRequest(r, span.Context(), utils.DNSRoutingMeta{})
+	defer span.End()
+	req := utils.NewRequest(r, ctx, utils.DNSRoutingMeta{})
 	ro.rootHandler(w, req)
 }
 
@@ -66,11 +68,13 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 	}
 	lastLongest := 0
 	var longestZone *Zone
-	span := sentry.SpanFromContext(r.Context())
+	span := trace.SpanFromContext(r.Context())
 	for _, question := range r.Question {
-		span.Name = question.Name
-		span.SetData("http.request.method", dns.TypeToString[question.Qtype])
-		span.SetTag("gravity.dns.query.type", dns.TypeToString[question.Qtype])
+		span.SetName(question.Name)
+		span.SetAttributes(
+			attribute.String("http.request.method", dns.TypeToString[question.Qtype]),
+			attribute.String("gravity.dns.query.type", dns.TypeToString[question.Qtype]),
+		)
 		for name, zone := range ro.zones.IterRelativeKey() {
 			// Zone doesn't have the correct suffix for the question
 			if !strings.HasSuffix(strings.ToLower(question.Name), strings.ToLower(name)) {
@@ -96,6 +100,6 @@ func (ro *Role) rootHandler(w dns.ResponseWriter, r *utils.DNSRequest) {
 		return
 	}
 	ro.log.Debug("routing request to zone", zap.String("zone", longestZone.etcdKey))
-	span.SetTag("gravity.dns.zone", longestZone.Name)
+	span.SetAttributes(attribute.String("gravity.dns.zone", longestZone.Name))
 	longestZone.resolve(w, r, span)
 }

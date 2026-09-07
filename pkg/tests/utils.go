@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/storage"
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	testSpan          *sentry.Span
+	testCtx           context.Context
 	testContextCancel context.CancelFunc
 )
 
@@ -58,7 +58,7 @@ func MustParseNetIP(t *testing.T, r string) netip.Addr {
 }
 
 func Context() context.Context {
-	return testSpan.Context()
+	return testCtx
 }
 
 func RandomString(prefix ...string) string {
@@ -116,7 +116,7 @@ func ResetEtcd(t testing.TB) {
 func Setup(t testing.TB) {
 	t.Helper()
 	ctx, cn := context.WithCancel(t.Context())
-	testSpan = sentry.StartTransaction(ctx, "test")
+	testCtx, _ = o11y.Tracer.Start(ctx, "test")
 	testContextCancel = cn
 	ResetEtcd(t)
 	t.Cleanup(func() {

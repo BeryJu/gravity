@@ -3,12 +3,13 @@ package dns
 import (
 	"strings"
 
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles/dns/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
 	"beryju.io/gravity/pkg/storage"
-	"github.com/getsentry/sentry-go"
 	"github.com/miekg/dns"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
 )
 
@@ -32,11 +33,11 @@ func NewEtcdHandler(z *Zone, config map[string]interface{}) *EtcdHandler {
 	}
 	eh.lookupKey = func(k *storage.Key, qname string, r *utils.DNSRequest) []dns.RR {
 		answers := []dns.RR{}
-		es := sentry.TransactionFromContext(r.Context()).StartChild("gravity.dns.handler.etcd.get")
-		defer es.Finish()
+		_, es := o11y.Tracer.Start(r.Context(), "gravity.dns.handler.etcd.get")
+		defer es.End()
 		key := k.String()
 		eh.log.Debug("fetching kv key", zap.String("key", key))
-		es.SetTag("gravity.dns.handler.etcd.key", key)
+		es.SetAttributes(attribute.String("gravity.dns.handler.etcd.key", key))
 		res, err := eh.z.inst.KV().Get(r.Context(), key, clientv3.WithPrefix())
 		if err != nil || len(res.Kvs) < 1 {
 			return answers

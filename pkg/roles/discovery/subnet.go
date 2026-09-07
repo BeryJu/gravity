@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"beryju.io/gravity/pkg/extconfig"
+	"beryju.io/gravity/pkg/o11y"
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/discovery/types"
 	"github.com/Ullaakut/nmap/v2"
-	"github.com/getsentry/sentry-go"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/concurrency"
@@ -55,9 +55,8 @@ func (r *Role) subnetFromKV(raw *mvccpb.KeyValue) (*Subnet, error) {
 
 func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 	dev := []Device{}
-	tr := sentry.StartTransaction(ctx, "gravity.discovery.run")
-	tr.Op = "gravity.discovery.run"
-	defer tr.Finish()
+	tctx, tr := o11y.Tracer.Start(ctx, "gravity.discovery.run")
+	defer tr.End()
 	se, err := concurrency.NewSession(s.inst.KV().Client)
 	if err != nil {
 		s.log.Warn("Failed to create concurrency session", zap.Error(err))
@@ -68,23 +67,23 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 		se,
 		s.role.i.KV().Key(types.KeyRole, types.KeySubnets, s.Identifier).String(),
 	)
-	err = m.Lock(tr.Context())
+	err = m.Lock(tctx)
 	if err != nil {
 		s.log.Warn("failed to acquire discovery lock", zap.Error(err))
 		return dev
 	}
 	defer func() {
-		err := m.Unlock(tr.Context())
+		err := m.Unlock(tctx)
 		if err != nil {
 			s.log.Warn("failed to unlock discovery lock", zap.Error(err))
 		}
 	}()
 
 	s.log.Info("starting scan for subnet")
-	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(tr.Context(), map[string]interface{}{
+	s.inst.DispatchEvent(types.EventTopicDiscoveryStarted, roles.NewEvent(tctx, map[string]interface{}{
 		"subnet": s,
 	}))
-	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(tr.Context(), map[string]interface{}{
+	defer s.inst.DispatchEvent(types.EventTopicDiscoveryEnded, roles.NewEvent(tctx, map[string]interface{}{
 		"subnet": s,
 	}))
 
@@ -94,7 +93,7 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 	}
 
 	scanner, err := nmap.NewScanner(
-		nmap.WithContext(tr.Context()),
+		nmap.WithContext(tctx),
 		nmap.WithTargets(s.CIDR),
 		nmap.WithPingScan(),
 		nmap.WithForcedDNSResolution(),
@@ -133,7 +132,7 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 			continue
 		}
 		devices = append(devices, *dev)
-		err := dev.put(tr.Context(), int64(s.DiscoveryTTL))
+		err := dev.put(tctx, int64(s.DiscoveryTTL))
 		if err != nil {
 			s.log.Warn("ignoring device", zap.Error(err))
 		}
