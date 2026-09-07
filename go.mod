@@ -29,7 +29,7 @@ require (
 	github.com/k8s-gateway/k8s_gateway v1.8.2
 	github.com/miekg/dns v1.1.73
 	github.com/minio/minio-go/v7 v7.3.0
-	github.com/moby/moby/api v1.55.0
+	github.com/moby/moby/api v1.56.0
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/pin/tftp/v3 v3.2.0
 	github.com/pkg/errors v0.9.1
