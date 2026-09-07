@@ -52,7 +52,7 @@ require (
 	go.etcd.io/etcd/etcdutl/v3 v3.7.1
 	go.etcd.io/etcd/server/v3 v3.7.1
 	go.uber.org/zap v1.28.0
-	golang.org/x/crypto v0.55.0
+	golang.org/x/crypto v0.56.0
 	golang.org/x/exp v0.0.0-20260209203927-2842357ff358
 	golang.org/x/net v0.58.0
 	golang.org/x/oauth2 v0.36.0
