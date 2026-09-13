@@ -16,6 +16,7 @@ import (
 	"beryju.io/gravity/pkg/roles"
 	"beryju.io/gravity/pkg/roles/dhcp/types"
 	"beryju.io/gravity/pkg/roles/dns/utils"
+	"beryju.io/gravity/pkg/storage"
 	"github.com/insomniacslk/dhcp/dhcpv4"
 	"github.com/insomniacslk/dhcp/rfc1035label"
 	"go.etcd.io/etcd/api/v3/mvccpb"
@@ -43,9 +44,31 @@ type Lease struct {
 }
 
 func (r *Role) FindLease(req *Request4) *Lease {
-	lease, ok := r.leases.GetPrefix(r.DeviceIdentifier(req.DHCPv4))
+	expectedScope := r.findScopeForRequest(req)
+	if expectedScope == nil {
+		return nil
+	}
+	identifier := r.DeviceIdentifier(req.DHCPv4)
+	if lease, ok := r.leases.GetPrefix(types.KeyReservations, expectedScope.Name, identifier); ok {
+		return lease
+	}
+
+	// Dynamic leases use the legacy, identifier-only key. If that key contains a
+	// reservation created before reservations were scope-qualified, migrate it
+	// before processing the request so a dynamic lease cannot overwrite it.
+	lease, ok := r.leases.GetPrefix(identifier)
 	if !ok {
 		return nil
+	}
+	if lease.IsReservation() {
+		if err := r.migrateLegacyReservation(req.Context, lease); err != nil {
+			r.log.Warn("failed to migrate legacy reservation", zap.Error(err))
+			return nil
+		}
+		if lease.ScopeKey != expectedScope.Name {
+			return nil
+		}
+		return lease
 	}
 	return r.ensureLeaseScope(req, lease)
 }
@@ -68,12 +91,28 @@ func (r *Role) ensureLeaseScope(req *Request4, lease *Lease) *Lease {
 }
 
 func (r *Role) FindLeaseInStore(req *Request4) *Lease {
-	leaseKey := r.i.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-		r.DeviceIdentifier(req.DHCPv4),
-	)
+	expectedScope := r.findScopeForRequest(req)
+	if expectedScope == nil {
+		return nil
+	}
+	identifier := r.DeviceIdentifier(req.DHCPv4)
+	leaseKey := r.reservationKey(expectedScope.Name, identifier)
 	res, err := r.i.KV().Get(req.Context, leaseKey.String())
+	if err != nil {
+		r.log.Warn("failed to fetch lease from store", zap.Error(err))
+		return nil
+	}
+	if len(res.Kvs) > 0 {
+		lease, err := r.leaseFromKV(res.Kvs[0])
+		if err != nil {
+			r.log.Warn("failed to parse lease from store", zap.Error(err))
+			return nil
+		}
+		return lease
+	}
+
+	leaseKey = r.leaseKey(identifier)
+	res, err = r.i.KV().Get(req.Context, leaseKey.String())
 	if err != nil {
 		r.log.Warn("failed to fetch lease from store", zap.Error(err))
 		return nil
@@ -86,7 +125,36 @@ func (r *Role) FindLeaseInStore(req *Request4) *Lease {
 		r.log.Warn("failed to parse lease from store", zap.Error(err))
 		return nil
 	}
+	if lease.IsReservation() {
+		if err := r.migrateLegacyReservation(req.Context, lease); err != nil {
+			r.log.Warn("failed to migrate legacy reservation", zap.Error(err))
+			return nil
+		}
+		if lease.ScopeKey != expectedScope.Name {
+			return nil
+		}
+		return lease
+	}
 	return r.ensureLeaseScope(req, lease)
+}
+
+func (r *Role) leaseKey(identifier string) *storage.Key {
+	return r.i.KV().Key(types.KeyRole, types.KeyLeases, identifier)
+}
+
+func (r *Role) reservationKey(scope, identifier string) *storage.Key {
+	return r.i.KV().Key(types.KeyRole, types.KeyLeases, types.KeyReservations, scope, identifier)
+}
+
+func (r *Role) migrateLegacyReservation(ctx context.Context, lease *Lease) error {
+	if !lease.IsReservation() {
+		return nil
+	}
+	if err := lease.Put(ctx, -1); err != nil {
+		return err
+	}
+	_, err := r.i.KV().Delete(ctx, r.leaseKey(lease.Identifier).String())
+	return err
 }
 
 func (r *Role) NewLease(identifier string) *Lease {
@@ -125,6 +193,9 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 		types.KeyLeases,
 	).Prefix(true).String()
 	identifier := strings.TrimPrefix(string(raw.Key), prefix)
+	if parts := strings.Split(identifier, "/"); len(parts) > 1 {
+		identifier = parts[len(parts)-1]
+	}
 	l := r.NewLease(identifier)
 	err := json.Unmarshal(raw.Value, &l)
 	if err != nil {
@@ -145,16 +216,32 @@ func (l *Lease) IsReservation() bool {
 }
 
 func (l *Lease) Delete(ctx context.Context) error {
-	leaseKey := l.inst.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-		l.Identifier,
-	)
+	leaseKey := l.key()
+	if l.etcdKey != "" {
+		leaseKey = storage.KeyFromString(l.etcdKey)
+	}
 	_, err := l.inst.KV().Delete(
 		ctx,
 		leaseKey.String(),
 	)
 	return err
+}
+
+func (l *Lease) key() *storage.Key {
+	if l.IsReservation() {
+		return l.inst.KV().Key(
+			types.KeyRole,
+			types.KeyLeases,
+			types.KeyReservations,
+			l.ScopeKey,
+			l.Identifier,
+		)
+	}
+	return l.inst.KV().Key(
+		types.KeyRole,
+		types.KeyLeases,
+		l.Identifier,
+	)
 }
 
 func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
@@ -173,11 +260,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 		return err
 	}
 
-	leaseKey := l.inst.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-		l.Identifier,
-	)
+	leaseKey := l.key()
 	_, err = l.inst.KV().Put(
 		ctx,
 		leaseKey.String(),
@@ -187,6 +270,7 @@ func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption
 	if err != nil {
 		return err
 	}
+	l.etcdKey = leaseKey.String()
 
 	l.afterPut(ctx, expiry, opts...)
 	return nil
@@ -211,11 +295,7 @@ func (r *Role) CreateLeaseIfAbsent(ctx context.Context, lease *Lease, expiry int
 		return nil, false, err
 	}
 
-	leaseKey := lease.inst.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-		lease.Identifier,
-	)
+	leaseKey := lease.key()
 	res, err := lease.inst.KV().Txn(ctx).
 		If(clientv3.Compare(clientv3.CreateRevision(leaseKey.String()), "=", 0)).
 		Then(clientv3.OpPut(leaseKey.String(), string(raw), opts...)).
@@ -225,6 +305,7 @@ func (r *Role) CreateLeaseIfAbsent(ctx context.Context, lease *Lease, expiry int
 		return nil, false, err
 	}
 	if res.Succeeded {
+		lease.etcdKey = leaseKey.String()
 		lease.afterPut(ctx, expiry, opts...)
 		return lease, true, nil
 	}
@@ -249,11 +330,7 @@ func (r *Role) CreateLeaseIfAbsent(ctx context.Context, lease *Lease, expiry int
 }
 
 func (l *Lease) afterPut(ctx context.Context, expiry int64, opts ...clientv3.OpOption) {
-	leaseKey := l.inst.KV().Key(
-		types.KeyRole,
-		types.KeyLeases,
-		l.Identifier,
-	)
+	leaseKey := l.key()
 
 	var zone string
 	if l.scope != nil && l.scope.DNS != nil {

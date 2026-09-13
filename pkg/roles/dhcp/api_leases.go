@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -52,12 +53,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 		leaseKey := r.i.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,
-		)
-		if input.Identifier == "" {
-			leaseKey = leaseKey.Prefix(true)
-		} else {
-			leaseKey = leaseKey.Add(input.Identifier)
-		}
+		).Prefix(true)
 		rawLeases, err := r.i.KV().Get(ctx, leaseKey.String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -69,6 +65,9 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 				continue
 			}
 			if l.ScopeKey != input.ScopeName {
+				continue
+			}
+			if input.Identifier != "" && l.Identifier != input.Identifier {
 				continue
 			}
 			al := &APILease{
@@ -163,8 +162,11 @@ type APILeasesWOLInput struct {
 
 func (r *Role) APILeasesWOL() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
-		l, ok := r.leases.GetPrefix(input.Identifier)
+		l, ok := r.leases.GetPrefix(types.KeyReservations, input.Scope, input.Identifier)
 		if !ok {
+			l, ok = r.leases.GetPrefix(input.Identifier)
+		}
+		if !ok || l.ScopeKey != input.Scope {
 			return status.InvalidArgument
 		}
 		err := l.sendWOL()
@@ -187,15 +189,27 @@ type APILeasesDeleteInput struct {
 
 func (r *Role) APILeasesDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesDeleteInput, output *struct{}) error {
-		key := r.i.KV().Key(
-			types.KeyRole,
-			types.KeyLeases,
-			input.Identifier,
-		)
-		_, err := r.i.KV().Delete(
-			ctx,
-			key.String(),
-		)
+		_, err := r.i.KV().Delete(ctx, r.reservationKey(input.Scope, input.Identifier).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		key := r.leaseKey(input.Identifier)
+		rawLease, err := r.i.KV().Get(ctx, key.String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if len(rawLease.Kvs) == 0 {
+			return nil
+		}
+		lease := &Lease{}
+		err = json.Unmarshal(rawLease.Kvs[0].Value, lease)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if lease.ScopeKey != input.Scope {
+			return nil
+		}
+		_, err = r.i.KV().Delete(ctx, key.String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

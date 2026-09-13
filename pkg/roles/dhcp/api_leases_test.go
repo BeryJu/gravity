@@ -36,6 +36,7 @@ func TestAPILeasesGet(t *testing.T) {
 		tests.MustJSON(scope),
 	))
 	lease := testLease()
+	lease.ScopeKey = scope.Name
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
@@ -112,6 +113,7 @@ func TestAPILeasesDelete(t *testing.T) {
 		tests.MustJSON(scope),
 	))
 	lease := testLease()
+	lease.ScopeKey = scope.Name
 	tests.PanicIfError(inst.KV().Put(
 		ctx,
 		inst.KV().Key(
