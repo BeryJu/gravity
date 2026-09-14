@@ -18,18 +18,18 @@ services:
         ipv4_address: 10.200.0.2
     command: |
       /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2385 --advertise-client-urls http://127.0.0.1:2385
-  minio:
-    image: docker.io/minio/minio
+  seaweedfs:
+    image: docker.io/chrislusf/seaweedfs:4.47
     ports:
-      - 9001:9000
-      - 9002:9001
+      - 9001:8333
+      - 9002:8888
     networks:
       default:
         ipv4_address: 10.200.0.3
-    environment:
-      MINIO_ROOT_USER: gravity
-      MINIO_ROOT_PASSWORD: gravity-key
-    command: server /data --console-address ":9001"
+    configs:
+      - source: seaweed
+        target: /etc/seaweedfs/s3.json
+    command: server -dir=/data -s3 -s3.config=/etc/seaweedfs/s3.json
   coredns:
     hostname: coredns.t.gravity.beryju.io
     image: docker.io/coredns/coredns:1.14.7
@@ -40,8 +40,9 @@ services:
       default:
         ipv4_address: 10.200.0.4
     command: -conf /etc/coredns/Corefile
-    volumes:
-      - ./coredns/Corefile:/etc/coredns/Corefile
+    configs:
+      - source: coredns
+        target: /etc/coredns/Corefile
   nginx:
     image: docker.io/library/nginx
     ports:
@@ -49,8 +50,9 @@ services:
     networks:
       default:
         ipv4_address: 10.200.0.5
-    volumes:
-      - ./nginx:/usr/share/nginx/html
+    configs:
+      - source: nginx
+        target: /usr/share/nginx/html/blocky_file.txt
   dex:
     image: ghcr.io/dexidp/dex:v2.45.1
     ports:
@@ -59,5 +61,73 @@ services:
       default:
         ipv4_address: 10.200.0.6
     command: dex serve /config/config.yml
-    volumes:
-      - ./dex/config.yml:/config/config.yml
+    configs:
+      - source: dex
+        target: /config/config.yml
+
+configs:
+  coredns:
+    content: |
+      .:53 {
+          errors
+          log
+          health
+          hosts {
+              10.0.0.1 gravity.beryju.io
+              10.200.0.2 etcd.t.gravity.beryju.io
+              10.200.0.3 seaweedfs.t.gravity.beryju.io
+              10.200.0.4 coredns.t.gravity.beryju.io
+              10.200.0.5 nginx.t.gravity.beryju.io
+              10.200.0.6 dex.t.gravity.beryju.io
+              fe80::1 ipv6.t.gravity.beryju.io
+          }
+      }
+  nginx:
+    content: |
+      192.0.2.1   gravity.beryju.io
+  dex:
+    content: |
+      enablePasswordDB: true
+      issuer: "http://127.0.0.1:5556/dex"
+      logger:
+        level: "debug"
+      staticClients:
+        - id: "gravity"
+          name: "Gravity"
+          secret: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+          redirectURIs:
+            - http://localhost:8008/auth/oidc/callback
+      staticPasswords:
+        - email: "admin@example.com"
+          # hash for password
+          hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"
+          userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+          username: "admin"
+      oauth2:
+        passwordConnector: local
+      storage:
+        config:
+          file: /tmp/dex.db
+        type: "sqlite3"
+      web:
+        http: "0.0.0.0:5556"
+  seaweed:
+    content: |
+      {
+        "identities": [
+          {
+            "name": "gravity",
+            "credentials": [
+              {
+                "accessKey": "gravity",
+                "secretKey": "gravity-key"
+              }
+            ],
+            "actions": [
+              "Admin",
+              "Read",
+              "Write"
+            ]
+          }
+        ]
+      }
