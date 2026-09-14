@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	TestingSeaweedfsAccessKey = "gravity"
-	TestingSeaweedfsSecretKey = "gravity-key"
+	TestingMinioAccessKey = "gravity"
+	TestingMinioSecretKey = "gravity-key"
 )
 
 func getRole() *backup.Role {
@@ -23,8 +23,8 @@ func getRole() *backup.Role {
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
 		Endpoint:  "http://localhost:9001",
-		AccessKey: TestingSeaweedfsAccessKey,
-		SecretKey: TestingSeaweedfsSecretKey,
+		AccessKey: TestingMinioAccessKey,
+		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
 		Path:      "foo",
 		CronExpr:  "",
@@ -59,8 +59,8 @@ func TestSaveBackup(t *testing.T) {
 
 	cfg := tests.MustJSON(&backup.RoleConfig{
 		Endpoint:  "http://localhost:9001",
-		AccessKey: TestingSeaweedfsAccessKey,
-		SecretKey: TestingSeaweedfsSecretKey,
+		AccessKey: TestingMinioAccessKey,
+		SecretKey: TestingMinioSecretKey,
 		Bucket:    "gravity",
 		Path:      "foo",
 		CronExpr:  "",
