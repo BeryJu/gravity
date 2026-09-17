@@ -146,6 +146,13 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 			r.log.Warn("failed to put lease", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
+		if l.IsReservation() {
+			err = r.deleteDynamicLeaseForScope(ctx, input.Scope, input.Identifier)
+			if err != nil {
+				r.log.Warn("failed to delete replaced dynamic lease", zap.Error(err))
+				return status.Wrap(err, status.Internal)
+			}
+		}
 		return nil
 	})
 	u.SetName("dhcp.put_leases")
@@ -153,6 +160,26 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 	u.SetTags("roles/dhcp")
 	u.SetExpectedErrors(status.Internal, status.InvalidArgument)
 	return u
+}
+
+// deleteDynamicLeaseForScope removes the identifier-only dynamic lease replaced
+// by a reservation. Dynamic leases predate scope-qualified reservations, so only
+// delete it when it belongs to the reservation's scope.
+func (r *Role) deleteDynamicLeaseForScope(ctx context.Context, scope, identifier string) error {
+	key := r.leaseKey(identifier)
+	rawLease, err := r.i.KV().Get(ctx, key.String())
+	if err != nil || len(rawLease.Kvs) == 0 {
+		return err
+	}
+	lease := &Lease{}
+	if err := json.Unmarshal(rawLease.Kvs[0].Value, lease); err != nil {
+		return err
+	}
+	if lease.IsReservation() || lease.ScopeKey != scope {
+		return nil
+	}
+	_, err = r.i.KV().Delete(ctx, key.String())
+	return err
 }
 
 type APILeasesWOLInput struct {

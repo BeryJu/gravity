@@ -116,6 +116,15 @@ func TestAPILeasesPutReservation(t *testing.T) {
 		inst.KV().Key(types.KeyRole, types.KeyScopes, scope.Name).String(),
 		tests.MustJSON(scope),
 	))
+	// A reservation replaces an existing dynamic lease in the same scope.
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(types.KeyRole, types.KeyLeases, identifier).String(),
+		tests.MustJSON(dhcp.Lease{
+			ScopeKey: scope.Name,
+			Address:  "10.200.0.100",
+		}),
+	))
 	assert.NoError(t, role.APILeasesPut().Interact(ctx, dhcp.APILeasesPutInput{
 		Identifier: identifier,
 		Scope:      scope.Name,
@@ -132,6 +141,50 @@ func TestAPILeasesPutReservation(t *testing.T) {
 			Address:  "10.200.0.150",
 			Expiry:   -1,
 		},
+	)
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(types.KeyRole, types.KeyLeases, identifier),
+	)
+}
+
+func TestAPILeasesPutReservationPreservesDynamicLeaseInOtherScope(t *testing.T) {
+	tests.Setup(t)
+	rootInst := instance.New()
+	ctx := tests.Context()
+	inst := rootInst.ForRole("dhcp", ctx)
+	role := dhcp.New(inst)
+
+	reservationScope := testScope()
+	dynamicScope := testScope()
+	identifier := tests.RandomString()
+	for _, scope := range []dhcp.Scope{reservationScope, dynamicScope} {
+		tests.PanicIfError(inst.KV().Put(
+			ctx,
+			inst.KV().Key(types.KeyRole, types.KeyScopes, scope.Name).String(),
+			tests.MustJSON(scope),
+		))
+	}
+	dynamicLease := dhcp.Lease{ScopeKey: dynamicScope.Name, Address: "10.200.0.100"}
+	tests.PanicIfError(inst.KV().Put(
+		ctx,
+		inst.KV().Key(types.KeyRole, types.KeyLeases, identifier).String(),
+		tests.MustJSON(dynamicLease),
+	))
+
+	assert.NoError(t, role.APILeasesPut().Interact(ctx, dhcp.APILeasesPutInput{
+		Identifier: identifier,
+		Scope:      reservationScope.Name,
+		Address:    "10.200.0.150",
+		Expiry:     -1,
+	}, &struct{}{}))
+
+	tests.AssertEtcd(
+		t,
+		inst.KV(),
+		inst.KV().Key(types.KeyRole, types.KeyLeases, identifier),
+		dynamicLease,
 	)
 }
 
