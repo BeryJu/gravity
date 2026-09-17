@@ -13,7 +13,7 @@ require (
 	github.com/coredns/caddy v1.1.4
 	github.com/coredns/coredns v1.14.7
 	github.com/coreos/go-oidc/v3 v3.21.0
-	github.com/creasty/defaults v1.9.0
+	github.com/creasty/defaults v1.10.0
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
 	github.com/felixge/fgprof v0.9.5
 	github.com/getsentry/sentry-go v0.49.0
