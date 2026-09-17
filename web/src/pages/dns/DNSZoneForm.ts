@@ -1,13 +1,13 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { ModelForm } from "../../elements/forms/ModelForm";
+import { firstElement } from "../../utils";
+
 import { DnsAPIZone, RolesDnsApi } from "gravity-api";
+import "../../elements/CodeMirror";
+import "../../elements/forms/HorizontalFormElement";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/CodeMirror";
-import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
-import { firstElement } from "../../utils";
 import "./DNSHandlerConfigEditor";
 
 export const DEFAULT_HANDLER_CONFIG = [

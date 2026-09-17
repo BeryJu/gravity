@@ -1,8 +1,8 @@
-import { customElement, property } from "lit/decorators.js";
-
 import { MessageLevel } from "../../common/messages";
 import { showMessage } from "../messages/MessageContainer";
 import { SpinnerButton } from "./SpinnerButton";
+
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-action-button")
 export class ActionButton extends SpinnerButton {

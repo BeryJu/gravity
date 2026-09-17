@@ -1,18 +1,17 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
+
 import { DnsAPIRecord, DnsAPIZone, RolesDnsApi, TypesAPIMetricsRole } from "gravity-api";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
 
 import { CSSResult, TemplateResult, css, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
-
-import PFCard from "@patternfly/patternfly/components/Card/card.css";
-import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
-import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
-import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
 import "./DNSRecordForm";
 import "./DNSZoneForm";
 

@@ -1,14 +1,13 @@
-import { CSSResult, css } from "lit";
-import { TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { convertToSlug } from "../../common/utils";
+import { AKElement } from "../Base";
+import { FormGroup } from "../forms/FormGroup";
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { convertToSlug } from "../../common/utils";
-import { AKElement } from "../Base";
-import { FormGroup } from "../forms/FormGroup";
+import { CSSResult, css } from "lit";
+import { TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-form-element-horizontal")
 export class HorizontalFormElement extends AKElement {

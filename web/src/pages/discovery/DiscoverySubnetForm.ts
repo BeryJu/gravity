@@ -1,12 +1,13 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { ModelForm } from "../../elements/forms/ModelForm";
+
 import { DiscoveryAPISubnet, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
+
+import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("gravity-discovery-subnet-form")
 export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {

@@ -1,14 +1,14 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { ModelForm } from "../../elements/forms/ModelForm";
+import { KV, firstElement } from "../../utils";
+
 import { AuthAPIUser, RolesApiApi, TypesPermission } from "gravity-api";
 import YAML from "yaml";
+import "../../elements/CodeMirror";
+import "../../elements/forms/HorizontalFormElement";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/CodeMirror";
-import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, firstElement } from "../../utils";
 
 export const DEFAULT_ADMIN_PERMISSIONS: TypesPermission[] = [
     {

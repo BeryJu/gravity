@@ -1,9 +1,9 @@
+import { EVENT_REFRESH } from "../../../common/constants";
+import { AggregateCard } from "../../../elements/cards/AggregateCard";
+import { PFSize } from "../../../elements/Spinner";
+
 import { TemplateResult, html } from "lit";
 import { until } from "lit/directives/until.js";
-
-import { EVENT_REFRESH } from "../../../common/constants";
-import { PFSize } from "../../../elements/Spinner";
-import { AggregateCard } from "../../../elements/cards/AggregateCard";
 
 export interface AdminStatus {
     icon: string;

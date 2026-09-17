@@ -1,12 +1,11 @@
-import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
-import { CSSResult, TemplateResult, html } from "lit";
-import { property } from "lit/decorators.js";
-
+import { AKElement } from "../../../elements/Base";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFRadio from "@patternfly/patternfly/components/Radio/radio.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../../../elements/Base";
+import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
+import { CSSResult, TemplateResult, html } from "lit";
+import { property } from "lit/decorators.js";
 import "../../../elements/wizard/Wizard";
 import "./ScopeDNSWizardPage";
 import "./ScopeImportWizardPage";

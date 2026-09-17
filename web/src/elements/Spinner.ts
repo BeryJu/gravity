@@ -1,9 +1,8 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { AKElement } from "./Base";
 import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
 
-import { AKElement } from "./Base";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export enum PFSize {
     Small = "pf-m-sm",

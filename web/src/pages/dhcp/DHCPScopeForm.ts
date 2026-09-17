@@ -1,16 +1,17 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { ModelForm } from "../../elements/forms/ModelForm";
+import { KV, first, firstElement } from "../../utils";
+
 import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 import YAML from "yaml";
 
 import { TemplateResult, html } from "lit";
-import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
 import "../../elements/CodeMirror";
 import "../../elements/forms/FormGroup";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
-import { KV, first, firstElement } from "../../utils";
+
+import { customElement } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("gravity-dhcp-scope-form")
 export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {

@@ -1,14 +1,15 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { MessageLevel } from "../../common/messages";
+import { Form } from "../../elements/forms/Form";
+import { showMessage } from "../../elements/messages/MessageContainer";
+
 import { AuthAPIToken, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { MessageLevel } from "../../common/messages";
-import { Form } from "../../elements/forms/Form";
 import "../../elements/forms/HorizontalFormElement";
-import { showMessage } from "../../elements/messages/MessageContainer";
+
+import { until } from "lit/directives/until.js";
 
 @customElement("gravity-auth-token-form")
 export class AuthTokenForm extends Form<AuthAPIToken> {

@@ -1,14 +1,14 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { KeyUnknown } from "../../../elements/forms/Form";
+import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
+import { Roles } from "../RolesPage";
+
 import { ClusterInstancesApi, RolesApiApi } from "gravity-api";
+import "../../../elements/forms/FormGroup";
+import "../../../elements/forms/HorizontalFormElement";
 
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { TemplateResult, html } from "lit";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
-import { KeyUnknown } from "../../../elements/forms/Form";
-import "../../../elements/forms/FormGroup";
-import "../../../elements/forms/HorizontalFormElement";
-import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
-import { Roles } from "../RolesPage";
 
 export const joinUserUsername = "gravity-system:cluster:join";
 

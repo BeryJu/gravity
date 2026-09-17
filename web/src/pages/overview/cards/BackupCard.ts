@@ -1,11 +1,12 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
+
 import { BackupAPIBackupStatus, BackupAPIBackupStatusOutput, RolesBackupApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
 import "../../../elements/forms/ConfirmationForm";
-import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
+
+import { customElement } from "lit/decorators.js";
 
 @customElement("gravity-overview-card-backup")
 export class BackupCard extends AdminStatusCard<BackupAPIBackupStatusOutput> {

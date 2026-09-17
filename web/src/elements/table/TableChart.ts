@@ -1,11 +1,11 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { AKChart } from "../charts/Chart";
+
 import { ChartData, ChartOptions } from "chart.js";
 import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
 
 import { css } from "lit";
 import { customElement, property } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { AKChart } from "../charts/Chart";
 
 @customElement("gravity-table-chart")
 export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {

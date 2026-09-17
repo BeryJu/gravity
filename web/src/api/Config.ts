@@ -1,8 +1,4 @@
-import {
-    Configuration,
-    Middleware,
-    ResponseContext,
-} from "gravity-api";
+import { Configuration, Middleware, ResponseContext } from "gravity-api";
 
 export class LoggingMiddleware implements Middleware {
     post(context: ResponseContext): Promise<Response | void> {
@@ -15,7 +11,5 @@ export class LoggingMiddleware implements Middleware {
 
 export const DEFAULT_CONFIG = new Configuration({
     basePath: "",
-    middleware: [
-        new LoggingMiddleware(),
-    ],
+    middleware: [new LoggingMiddleware()],
 });

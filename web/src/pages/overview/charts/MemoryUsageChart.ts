@@ -1,3 +1,8 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { groupBy } from "../../../common/utils";
+import { getColorFromString } from "../../../elements/charts/Chart";
+import { AKChart } from "../../../elements/charts/Chart";
+
 import { ChartData } from "chart.js";
 import {
     ClusterApi,
@@ -7,11 +12,6 @@ import {
 } from "gravity-api";
 
 import { customElement, state } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
-import { groupBy } from "../../../common/utils";
-import { getColorFromString } from "../../../elements/charts/Chart";
-import { AKChart } from "../../../elements/charts/Chart";
 
 @customElement("gravity-overview-charts-memory-usage")
 export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {

@@ -1,17 +1,18 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { MessageLevel } from "../../common/messages";
+import { showMessage } from "../../elements/messages/MessageContainer";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import "../../elements/buttons/ActionButton";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
+
+import { PaginationWrapper } from "../../utils";
+
 import { DiscoveryAPISubnet, RolesDiscoveryApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { MessageLevel } from "../../common/messages";
-import "../../elements/buttons/ActionButton";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
-import { showMessage } from "../../elements/messages/MessageContainer";
-import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
-import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
 import "./DiscoverySubnetForm";
 
 @customElement("gravity-discovery-subnets")

@@ -1,13 +1,12 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, Table, TableColumn } from "../../elements/table/Table";
+import { PaginationWrapper } from "../../utils";
+import PFProgress from "@patternfly/patternfly/components/Progress/progress.css";
+
 import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import PFProgress from "@patternfly/patternfly/components/Progress/progress.css";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { PaginatedResponse, Table, TableColumn } from "../../elements/table/Table";
-import { PaginationWrapper } from "../../utils";
 
 @customElement("gravity-overview-dhcp-usage-table")
 export class DHCPUsageTable extends Table<DhcpAPIScope & { statistics: { usage: number } }> {

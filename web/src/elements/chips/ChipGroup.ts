@@ -1,13 +1,12 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
+import { AKElement } from "../Base";
+import { Chip } from "../chips/Chip";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFChip from "@patternfly/patternfly/components/Chip/chip.css";
 import PFChipGroup from "@patternfly/patternfly/components/ChipGroup/chip-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../Base";
-import { Chip } from "../chips/Chip";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 @customElement("ak-chip-group")
 export class ChipGroup extends AKElement {

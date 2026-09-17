@@ -1,14 +1,13 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
+import { EVENT_SIDEBAR_TOGGLE } from "../../common/constants";
+import { AKElement } from "../Base";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFGlobal from "@patternfly/patternfly/patternfly-base.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_SIDEBAR_TOGGLE } from "../../common/constants";
-import { AKElement } from "../Base";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
 // If the viewport is wider than MIN_WIDTH, the sidebar
 // is shown besides the content, and not overlaid.

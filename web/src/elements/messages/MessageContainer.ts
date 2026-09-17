@@ -1,14 +1,14 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-import PFAlertGroup from "@patternfly/patternfly/components/AlertGroup/alert-group.css";
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
 import { EVENT_MESSAGE } from "../../common/constants";
 import { SentryIgnoredError } from "../../common/errors";
 import { AKElement } from "../Base";
-import "../messages/Message";
 import { APIMessage } from "../messages/Message";
+import PFAlertGroup from "@patternfly/patternfly/components/AlertGroup/alert-group.css";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import "../messages/Message";
+
+import { customElement, property } from "lit/decorators.js";
 
 export function showMessage(message: APIMessage, unique = false): void {
     const container = document.querySelector<MessageContainer>("ak-message-container");

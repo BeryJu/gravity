@@ -1,8 +1,6 @@
-import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement";
-
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property, query } from "lit/decorators.js";
-
+import { AKElement } from "../Base";
+import { Form, KeyUnknown, formFiles, serializeForm } from "../forms/Form";
+import { WizardPage } from "./WizardPage";
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
@@ -11,9 +9,10 @@ import PFFormControl from "@patternfly/patternfly/components/FormControl/form-co
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../Base";
-import { Form, KeyUnknown, formFiles, serializeForm } from "../forms/Form";
-import { WizardPage } from "./WizardPage";
+import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement";
+
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property, query } from "lit/decorators.js";
 
 @customElement("ak-wizard-form")
 export class WizardForm extends Form<KeyUnknown> {

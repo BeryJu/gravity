@@ -1,8 +1,8 @@
-import { ResponseError, RestErrResponse } from "gravity-api";
-
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { EVENT_REFRESH } from "../../common/constants";
+import { MessageLevel } from "../../common/messages";
+import { AKElement } from "../Base";
+import { HorizontalFormElement } from "../forms/HorizontalFormElement";
+import { showMessage } from "../messages/MessageContainer";
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
@@ -12,11 +12,10 @@ import PFFormControl from "@patternfly/patternfly/components/FormControl/form-co
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_REFRESH } from "../../common/constants";
-import { MessageLevel } from "../../common/messages";
-import { AKElement } from "../Base";
-import { HorizontalFormElement } from "../forms/HorizontalFormElement";
-import { showMessage } from "../messages/MessageContainer";
+import { ResponseError, RestErrResponse } from "gravity-api";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export interface KeyUnknown {
     [key: string]: unknown;
@@ -43,7 +42,6 @@ function assignValue(element: HTMLInputElement, value: unknown, json: KeyUnknown
 
 /**
  * Convert the elements of the form to JSON.[4]
- *
  */
 export function serializeForm<T extends KeyUnknown>(
     elements: NodeListOf<HorizontalFormElement>,

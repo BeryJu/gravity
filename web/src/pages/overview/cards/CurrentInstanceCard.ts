@@ -1,10 +1,10 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
+
 import { ClusterInstancesApi, InstanceAPIInstanceInfo } from "gravity-api";
 
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
-import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-current-instance")
 export class CurrentInstanceCard extends AdminStatusCard<InstanceAPIInstanceInfo> {

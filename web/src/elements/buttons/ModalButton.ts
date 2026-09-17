@@ -1,6 +1,5 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { AKElement } from "../Base";
+import { PFSize } from "../Spinner";
 import PFBackdrop from "@patternfly/patternfly/components/Backdrop/backdrop.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
@@ -13,8 +12,8 @@ import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../Base";
-import { PFSize } from "../Spinner";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export const MODAL_BUTTON_STYLES = css`
     :host {

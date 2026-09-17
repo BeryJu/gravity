@@ -1,14 +1,16 @@
+import { KeyUnknown } from "../../../elements/forms/Form";
+import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
+
 import YAML from "yaml";
 
-import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
-import { TemplateResult, html } from "lit";
+import "../../../elements/CodeMirror";
+import "../../../elements/CodeMirror";
 
-import "../../../elements/CodeMirror";
-import "../../../elements/CodeMirror";
-import { KeyUnknown } from "../../../elements/forms/Form";
+import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import "../../../elements/forms/FormGroup";
 import "../../../elements/forms/HorizontalFormElement";
-import { WizardFormPage } from "../../../elements/wizard/WizardFormPage";
+
+import { TemplateResult, html } from "lit";
 
 @customElement("gravity-cluster-join-compose")
 export class ClusterJoinCompose extends WizardFormPage {

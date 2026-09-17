@@ -1,11 +1,10 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
+import { AKElement } from "../Base";
 import PFNav from "@patternfly/patternfly/components/Nav/nav.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../Base";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 import "../sidebar/SidebarBrand";
 import "../sidebar/SidebarVersion";
 

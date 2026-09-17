@@ -1,20 +1,20 @@
-import { DhcpAPILease, DhcpAPIScope, RolesDhcpApi } from "gravity-api";
-
-import { CSSResult, TemplateResult, css, html, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-
-import PFCard from "@patternfly/patternfly/components/Card/card.css";
-import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
-
 import { DEFAULT_CONFIG } from "../../api/Config";
 import { MessageLevel } from "../../common/messages";
-import "../../elements/buttons/SpinnerButton";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
 import { showMessage } from "../../elements/messages/MessageContainer";
 import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
 import { TablePage } from "../../elements/table/TablePage";
 import { PaginationWrapper, firstElement, formatElapsedTime, ip, sortByIP } from "../../utils";
+import PFCard from "@patternfly/patternfly/components/Card/card.css";
+import "../../elements/buttons/SpinnerButton";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
+
+import PFDescriptionList from "@patternfly/patternfly/components/DescriptionList/description-list.css";
+
+import { DhcpAPILease, DhcpAPIScope, RolesDhcpApi } from "gravity-api";
+
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import "./DHCPLeaseForm";
 import "./DHCPScopeForm";
 

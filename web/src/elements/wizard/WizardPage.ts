@@ -1,10 +1,9 @@
-import { CSSResult, PropertyDeclaration, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
 import { AKElement } from "../Base";
 import { Wizard } from "./Wizard";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { CSSResult, PropertyDeclaration, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-wizard-page")
 export class WizardPage extends AKElement {

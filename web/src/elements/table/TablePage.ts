@@ -1,14 +1,15 @@
-import { CSSResult, nothing } from "lit";
-import { TemplateResult, html } from "lit";
-import { ifDefined } from "lit/directives/if-defined.js";
-
+import { updateURLParams } from "../router/RouteMatch";
+import { Table } from "../table/Table";
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 
+import { CSSResult, nothing } from "lit";
+
 import "../PageHeader";
-import { updateURLParams } from "../router/RouteMatch";
-import { Table } from "../table/Table";
+
+import { TemplateResult, html } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 export abstract class TablePage<T extends object> extends Table<T> {
     abstract pageTitle(): string;

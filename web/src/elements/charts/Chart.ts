@@ -1,16 +1,17 @@
+import { EVENT_REFRESH } from "../../common/constants";
+import { AKElement } from "../Base";
+
 import { Chart, ChartConfiguration, ChartData, ChartOptions, Plugin, Tick } from "chart.js";
 import { Legend, Tooltip } from "chart.js";
 import { BarController, DoughnutController, LineController } from "chart.js";
+import "chartjs-adapter-date-fns";
+
 import { ArcElement, BarElement, LineElement, PointElement } from "chart.js";
 import { Filler, LinearScale, TimeScale } from "chart.js";
-import "chartjs-adapter-date-fns";
 import { sha256 } from "sha.js";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { property } from "lit/decorators.js";
-
-import { EVENT_REFRESH } from "../../common/constants";
-import { AKElement } from "../Base";
 
 Chart.register(Legend, Tooltip);
 Chart.register(LineController, BarController, DoughnutController);

@@ -1,14 +1,13 @@
-import { ClusterApi, InstanceAPIClusterInfoOutput } from "gravity-api";
-
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, state } from "lit/decorators.js";
-
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { AKElement } from "../Base";
 import PFAvatar from "@patternfly/patternfly/components/Avatar/avatar.css";
 import PFNav from "@patternfly/patternfly/components/Nav/nav.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { AKElement } from "../Base";
+import { ClusterApi, InstanceAPIClusterInfoOutput } from "gravity-api";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
 
 @customElement("ak-sidebar-version")
 export class SidebarVersion extends AKElement {

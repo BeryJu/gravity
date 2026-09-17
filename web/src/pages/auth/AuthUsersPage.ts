@@ -1,14 +1,14 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
+
 import { AuthAPIUser, RolesApiApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
-import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
-import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
 import "./AuthUserForm";
 
 @customElement("gravity-auth-users")

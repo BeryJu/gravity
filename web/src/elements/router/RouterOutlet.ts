@@ -1,10 +1,10 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
 import { ROUTE_SEPARATOR } from "../../common/constants";
 import { AKElement } from "../Base";
 import { Route } from "../router/Route";
 import { RouteMatch } from "../router/RouteMatch";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import "../router/Router404";
 
 // Poliyfill for hashchange.newURL,

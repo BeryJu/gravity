@@ -1,13 +1,12 @@
-import { CSSResult, TemplateResult, css, html, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-
+import { AKElement } from "../../elements/Base";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFDataList from "@patternfly/patternfly/components/DataList/data-list.css";
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../../elements/Base";
+import { CSSResult, TemplateResult, css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 interface HandlerConfig {
     type: string;

@@ -1,10 +1,9 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
 import { AKElement } from "./Base";
 import { PFSize } from "./Spinner";
+import PFBase from "@patternfly/patternfly/patternfly-base.css";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-loading-overlay")
 export class LoadingOverlay extends AKElement {

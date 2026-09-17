@@ -1,13 +1,12 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { EVENT_SIDEBAR_TOGGLE, TITLE_DEFAULT } from "../common/constants";
+import { AKElement } from "./Base";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_SIDEBAR_TOGGLE, TITLE_DEFAULT } from "../common/constants";
-import { AKElement } from "./Base";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import "./ak-nav-buttons";
 
 @customElement("ak-page-header")

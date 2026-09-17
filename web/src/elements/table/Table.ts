@@ -1,7 +1,8 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { property, state } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-
+import { EVENT_REFRESH } from "../../common/constants";
+import { groupBy } from "../../common/utils";
+import { AKElement } from "../Base";
+import { getURLParam, updateURLParams } from "../router/RouteMatch";
+import { Pagination } from "../table/TablePagination";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFDropdown from "@patternfly/patternfly/components/Dropdown/dropdown.css";
 import PFPagination from "@patternfly/patternfly/components/Pagination/pagination.css";
@@ -10,16 +11,16 @@ import PFToolbar from "@patternfly/patternfly/components/Toolbar/toolbar.css";
 import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_REFRESH } from "../../common/constants";
-import { groupBy } from "../../common/utils";
-import { AKElement } from "../Base";
+import { CSSResult, TemplateResult, html } from "lit";
 import "../EmptyState";
 import "../buttons/SpinnerButton";
 import "../chips/Chip";
 import "../chips/ChipGroup";
-import { getURLParam, updateURLParams } from "../router/RouteMatch";
+
+import { property, state } from "lit/decorators.js";
 import "../table/TablePagination";
-import { Pagination } from "../table/TablePagination";
+
+import { ifDefined } from "lit/directives/if-defined.js";
 import "../table/TableSearch";
 
 export class TableColumn {
@@ -77,10 +78,10 @@ export class TableColumn {
             class="
                 ${this.orderBy ? "pf-c-table__sort " : " "}
                 ${
-                    table.order === this.orderBy || table.order === `-${this.orderBy}`
-                        ? "pf-m-selected "
-                        : ""
-                }
+                table.order === this.orderBy || table.order === `-${this.orderBy}`
+                    ? "pf-m-selected "
+                    : ""
+            }
             "
         >
             ${this.orderBy ? this.renderSortable(table) : html`${this.title}`}

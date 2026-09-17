@@ -1,9 +1,9 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
+
 import { RolesDnsApi } from "gravity-api";
 
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
-import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-dns-zones")
 export class DNSScopeCard extends AdminStatusCard<number> {

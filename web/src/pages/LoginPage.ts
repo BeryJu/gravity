@@ -1,8 +1,6 @@
-import { AuthAPIConfigOutput, AuthAPILoginInput, RolesApiApi } from "gravity-api";
-
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, state } from "lit/decorators.js";
-
+import { DEFAULT_CONFIG } from "../api/Config";
+import { AKElement } from "../elements/Base";
+import { Form } from "../elements/forms/Form";
 import PFBackgroundImage from "@patternfly/patternfly/components/BackgroundImage/background-image.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFDrawer from "@patternfly/patternfly/components/Drawer/drawer.css";
@@ -11,9 +9,10 @@ import PFLogin from "@patternfly/patternfly/components/Login/login.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { DEFAULT_CONFIG } from "../api/Config";
-import { AKElement } from "../elements/Base";
-import { Form } from "../elements/forms/Form";
+import { AuthAPIConfigOutput, AuthAPILoginInput, RolesApiApi } from "gravity-api";
+
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
 import "../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-login-form")

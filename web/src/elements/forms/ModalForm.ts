@@ -1,11 +1,12 @@
-import { TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
 import { EVENT_REFRESH } from "../../common/constants";
-import "../LoadingOverlay";
 import { ModalButton } from "../buttons/ModalButton";
-import "../buttons/SpinnerButton";
 import { Form } from "../forms/Form";
+import "../LoadingOverlay";
+
+import { TemplateResult, html } from "lit";
+import "../buttons/SpinnerButton";
+
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-forms-modal")
 export class ModalForm extends ModalButton {

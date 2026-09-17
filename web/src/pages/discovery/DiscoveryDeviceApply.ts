@@ -1,3 +1,7 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { DeleteBulkForm } from "../../elements/forms/DeleteBulkForm";
+import { Form } from "../../elements/forms/Form";
+
 import {
     DiscoveryAPIDevice,
     DiscoveryAPIDevicesApplyInput,
@@ -9,12 +13,9 @@ import {
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { DeleteBulkForm } from "../../elements/forms/DeleteBulkForm";
 import "../../elements/forms/DeleteBulkForm";
-import { Form } from "../../elements/forms/Form";
+
+import { until } from "lit/directives/until.js";
 import "../../elements/forms/HorizontalFormElement";
 
 @customElement("gravity-discover-apply-form")

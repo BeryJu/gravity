@@ -1,10 +1,10 @@
+import { DEFAULT_CONFIG } from "../../../api/Config";
+import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
+
 import { ClusterApi, InstanceAPIClusterInfoOutput } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../../api/Config";
-import { AdminStatus, AdminStatusCard } from "./AdminStatusCard";
 
 @customElement("gravity-overview-card-version")
 export class VersionCard extends AdminStatusCard<InstanceAPIClusterInfoOutput> {

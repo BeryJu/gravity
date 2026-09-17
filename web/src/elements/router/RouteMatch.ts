@@ -1,7 +1,7 @@
-import { TemplateResult } from "lit";
-
 import { ROUTE_SEPARATOR } from "../../common/constants";
 import { Route } from "../router/Route";
+
+import { TemplateResult } from "lit";
 
 export class RouteMatch {
     route: Route;

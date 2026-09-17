@@ -1,16 +1,15 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { EVENT_REFRESH } from "../../common/constants";
+import { AKElement } from "../Base";
+import { WizardAction } from "./Wizard";
+import { WizardPage } from "./WizardPage";
 import PFEmptyState from "@patternfly/patternfly/components/EmptyState/empty-state.css";
 import PFProgressStepper from "@patternfly/patternfly/components/ProgressStepper/progress-stepper.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBullseye from "@patternfly/patternfly/layouts/Bullseye/bullseye.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { EVENT_REFRESH } from "../../common/constants";
-import { AKElement } from "../Base";
-import { WizardAction } from "./Wizard";
-import { WizardPage } from "./WizardPage";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export enum ActionState {
     pending = "pending",

@@ -1,7 +1,7 @@
-import { customElement } from "lit/decorators.js";
-
 import { Form } from "../forms/Form";
 import { WizardPage } from "./WizardPage";
+
+import { customElement } from "lit/decorators.js";
 
 /**
  * This Wizard page is used for proxy forms with the older-style

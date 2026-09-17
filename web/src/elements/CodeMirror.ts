@@ -1,3 +1,5 @@
+import { AKElement } from "./Base";
+
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { LanguageSupport, StreamLanguage } from "@codemirror/language";
@@ -9,8 +11,6 @@ import { vsCodeLight } from "@fsegurai/codemirror-theme-vscode-light";
 import YAML from "yaml";
 
 import { customElement, property } from "lit/decorators.js";
-
-import { AKElement } from "./Base";
 
 @customElement("ak-codemirror")
 export class CodeMirrorTextarea extends AKElement {

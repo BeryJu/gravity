@@ -1,11 +1,12 @@
-import { TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
 import { ModalButton } from "../buttons/ModalButton";
-import "../buttons/SpinnerButton";
 import { showMessage } from "../messages/MessageContainer";
+
+import { TemplateResult, html } from "lit";
+import "../buttons/SpinnerButton";
+
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-forms-confirm")
 export class ConfirmationForm extends ModalButton {

@@ -1,14 +1,13 @@
-import { CSSResult, css } from "lit";
-import { TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { until } from "lit/directives/until.js";
-
+import { ROUTE_SEPARATOR } from "../../common/constants";
+import { AKElement } from "../Base";
 import PFNav from "@patternfly/patternfly/components/Nav/nav.css";
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { ROUTE_SEPARATOR } from "../../common/constants";
-import { AKElement } from "../Base";
+import { CSSResult, css } from "lit";
+import { TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
 
 @customElement("ak-sidebar-item")
 export class SidebarItem extends AKElement {

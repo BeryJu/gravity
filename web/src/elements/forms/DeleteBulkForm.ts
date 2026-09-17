@@ -1,15 +1,15 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-import PFList from "@patternfly/patternfly/components/List/list.css";
-
 import { EVENT_REFRESH } from "../../common/constants";
 import { MessageLevel } from "../../common/messages";
 import { ModalButton } from "../buttons/ModalButton";
-import "../buttons/SpinnerButton";
 import { showMessage } from "../messages/MessageContainer";
 import { PaginatedResponse } from "../table/Table";
 import { Table, TableColumn } from "../table/Table";
+import "../buttons/SpinnerButton";
+
+import PFList from "@patternfly/patternfly/components/List/list.css";
+
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 type BulkDeleteMetadata = { key: string; value: string }[];
 

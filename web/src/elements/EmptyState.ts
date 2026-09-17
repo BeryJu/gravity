@@ -1,12 +1,11 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { AKElement } from "./Base";
+import { PFSize } from "./Spinner";
 import PFEmptyState from "@patternfly/patternfly/components/EmptyState/empty-state.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "./Base";
-import { PFSize } from "./Spinner";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import "./Spinner";
 
 @customElement("ak-empty-state")

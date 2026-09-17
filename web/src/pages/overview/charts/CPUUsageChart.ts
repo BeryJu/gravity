@@ -1,12 +1,12 @@
-import { ChartData } from "chart.js";
-import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
-
-import { customElement } from "lit/decorators.js";
-
 import { DEFAULT_CONFIG } from "../../../api/Config";
 import { groupBy } from "../../../common/utils";
 import { getColorFromString } from "../../../elements/charts/Chart";
 import { AKChart } from "../../../elements/charts/Chart";
+
+import { ChartData } from "chart.js";
+import { RolesTsdbApi, TypesAPIMetricsGetOutput, TypesAPIMetricsRole } from "gravity-api";
+
+import { customElement } from "lit/decorators.js";
 
 @customElement("gravity-overview-charts-cpu-usage")
 export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {

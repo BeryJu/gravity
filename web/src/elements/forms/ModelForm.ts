@@ -1,8 +1,8 @@
-import { TemplateResult } from "lit";
-import { property } from "lit/decorators.js";
-
 import { EVENT_REFRESH } from "../../common/constants";
 import { Form } from "../forms/Form";
+
+import { TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
 
 export abstract class ModelForm<T, PKT extends string | number> extends Form<T> {
     abstract loadInstance(pk: PKT): Promise<T>;

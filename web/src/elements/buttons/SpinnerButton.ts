@@ -1,13 +1,12 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { ERROR_CLASS, PROGRESS_CLASS, SUCCESS_CLASS } from "../../common/constants";
+import { AKElement } from "../Base";
+import { PFSize } from "../Spinner";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { ERROR_CLASS, PROGRESS_CLASS, SUCCESS_CLASS } from "../../common/constants";
-import { AKElement } from "../Base";
-import { PFSize } from "../Spinner";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("ak-spinner-button")
 export class SpinnerButton extends AKElement {

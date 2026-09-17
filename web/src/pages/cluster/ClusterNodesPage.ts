@@ -1,3 +1,12 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
+import "../../elements/chips/Chip";
+import "../../elements/chips/ChipGroup";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
+
 import {
     ClusterApi,
     EtcdAPIMembersOutput,
@@ -5,19 +14,10 @@ import {
     RolesEtcdApi,
     TypesAPIMetricsRole,
 } from "gravity-api";
+import "../../elements/table/TableChart";
 
 import { TemplateResult, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/chips/Chip";
-import "../../elements/chips/ChipGroup";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
-import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
-import "../../elements/table/TableChart";
-import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
 import "./wizard/ClusterJoinWizard";
 
 @customElement("gravity-cluster-nodes")

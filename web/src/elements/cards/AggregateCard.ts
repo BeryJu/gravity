@@ -1,12 +1,11 @@
-import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-
+import { AKElement } from "../Base";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
 import PFFlex from "@patternfly/patternfly/layouts/Flex/flex.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../Base";
+import { CSSResult, TemplateResult, css, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("ak-aggregate-card")
 export class AggregateCard extends AKElement {

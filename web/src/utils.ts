@@ -1,6 +1,6 @@
-import { AbstractIPNum, IPv4, IPv4CidrRange, IPv6, IPv6CidrRange } from "ip-num";
-
 import { PaginatedResponse } from "./elements/table/Table";
+
+import { AbstractIPNum, IPv4, IPv4CidrRange, IPv6, IPv6CidrRange } from "ip-num";
 
 export interface KV {
     [key: string]: string;

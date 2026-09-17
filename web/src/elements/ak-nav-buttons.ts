@@ -1,8 +1,5 @@
-import { AuthAPIMeOutput, RolesApiApi } from "gravity-api";
-
-import { css, html, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-
+import { DEFAULT_CONFIG } from "../api/Config";
+import { AKElement } from "./Base";
 import PFAvatar from "@patternfly/patternfly/components/Avatar/avatar.css";
 import PFBrand from "@patternfly/patternfly/components/Brand/brand.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -13,8 +10,10 @@ import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 import PFDisplay from "@patternfly/patternfly/utilities/Display/display.css";
 
-import { DEFAULT_CONFIG } from "../api/Config";
-import { AKElement } from "./Base";
+import { AuthAPIMeOutput, RolesApiApi } from "gravity-api";
+
+import { css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("ak-nav-buttons")
 export class NavigationButtons extends AKElement {

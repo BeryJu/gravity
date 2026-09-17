@@ -1,14 +1,13 @@
-import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
-import { CSSResult, TemplateResult, html } from "lit";
-
+import { AKElement } from "../../../elements/Base";
+import { WizardPage } from "../../../elements/wizard/WizardPage";
+import { TypeCreate } from "../../dns/wizard/ZonePresetWizardPage";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFRadio from "@patternfly/patternfly/components/Radio/radio.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { AKElement } from "../../../elements/Base";
-import { WizardPage } from "../../../elements/wizard/WizardPage";
-import { TypeCreate } from "../../dns/wizard/ZonePresetWizardPage";
+import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
+import { CSSResult, TemplateResult, html } from "lit";
 
 @customElement("gravity-dhcp-wizard-type")
 export class ScopePresetWizardPage extends WizardPage {

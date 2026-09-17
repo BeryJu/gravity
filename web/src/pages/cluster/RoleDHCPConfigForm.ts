@@ -1,12 +1,13 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { first } from "../../common/utils";
+import { ModelForm } from "../../elements/forms/ModelForm";
+
 import { DhcpRoleConfig, RolesDhcpApi } from "gravity-api";
 
 import { TemplateResult, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { first } from "../../common/utils";
 import "../../elements/forms/HorizontalFormElement";
-import { ModelForm } from "../../elements/forms/ModelForm";
+
+import { customElement } from "lit/decorators.js";
 
 @customElement("gravity-cluster-role-dhcp-config")
 export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {

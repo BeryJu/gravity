@@ -1,16 +1,15 @@
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
+import { TablePage } from "../../elements/table/TablePage";
+import { PaginationWrapper } from "../../utils";
+import PFProgress from "@patternfly/patternfly/components/Progress/progress.css";
+import "../../elements/forms/DeleteBulkForm";
+import "../../elements/forms/ModalForm";
+
 import { DhcpAPIScope, RolesDhcpApi } from "gravity-api";
 
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement } from "lit/decorators.js";
-
-import PFProgress from "@patternfly/patternfly/components/Progress/progress.css";
-
-import { DEFAULT_CONFIG } from "../../api/Config";
-import "../../elements/forms/DeleteBulkForm";
-import "../../elements/forms/ModalForm";
-import { PaginatedResponse, TableColumn } from "../../elements/table/Table";
-import { TablePage } from "../../elements/table/TablePage";
-import { PaginationWrapper } from "../../utils";
 import "./DHCPScopeForm";
 import "./wizard/DHCPScopeWizard";
 

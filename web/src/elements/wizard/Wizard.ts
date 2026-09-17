@@ -1,13 +1,13 @@
+import { ModalButton } from "../buttons/ModalButton";
+import { WizardPage } from "./WizardPage";
+import PFWizard from "@patternfly/patternfly/components/Wizard/wizard.css";
+
 import { customElement } from "@lit/reactive-element/decorators/custom-element.js";
 import { property } from "@lit/reactive-element/decorators/property.js";
 import { CSSResult, TemplateResult, html } from "lit";
-import { state } from "lit/decorators.js";
-
-import PFWizard from "@patternfly/patternfly/components/Wizard/wizard.css";
-
-import { ModalButton } from "../buttons/ModalButton";
 import "./ActionWizardPage";
-import { WizardPage } from "./WizardPage";
+
+import { state } from "lit/decorators.js";
 
 export interface WizardAction {
     displayName: string;

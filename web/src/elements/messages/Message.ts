@@ -1,13 +1,12 @@
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
+import { MessageLevel } from "../../common/messages";
+import { AKElement } from "../Base";
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFAlertGroup from "@patternfly/patternfly/components/AlertGroup/alert-group.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
-import { MessageLevel } from "../../common/messages";
-import { AKElement } from "../Base";
+import { CSSResult, TemplateResult, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 export interface APIMessage {
     level: MessageLevel;

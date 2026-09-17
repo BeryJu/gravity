@@ -1,13 +1,7 @@
-import {
-    ApiAPIToolPingOutput,
-    ApiAPIToolPortmapOutput,
-    ApiAPIToolTracerouteOutput,
-    RolesApiApi,
-} from "gravity-api";
-
-import { CSSResult, TemplateResult, html } from "lit";
-import { customElement, state } from "lit/decorators.js";
-
+import { DEFAULT_CONFIG } from "../../api/Config";
+import { AKElement } from "../../elements/Base";
+import { PFColor } from "../../elements/Label";
+import { getURLParam, updateURLParams } from "../../elements/router/RouteMatch";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFCard from "@patternfly/patternfly/components/Card/card.css";
 import PFContent from "@patternfly/patternfly/components/Content/content.css";
@@ -19,12 +13,18 @@ import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-gro
 import PFPage from "@patternfly/patternfly/components/Page/page.css";
 import PFSidebar from "@patternfly/patternfly/components/Sidebar/sidebar.css";
 
-import { DEFAULT_CONFIG } from "../../api/Config";
-import { AKElement } from "../../elements/Base";
-import { PFColor } from "../../elements/Label";
+import {
+    ApiAPIToolPingOutput,
+    ApiAPIToolPortmapOutput,
+    ApiAPIToolTracerouteOutput,
+    RolesApiApi,
+} from "gravity-api";
+
+import { CSSResult, TemplateResult, html } from "lit";
 import "../../elements/PageHeader";
 import "../../elements/buttons/SpinnerButton";
-import { getURLParam, updateURLParams } from "../../elements/router/RouteMatch";
+
+import { customElement, state } from "lit/decorators.js";
 
 @customElement("gravity-tools")
 export class ToolPage extends AKElement {
