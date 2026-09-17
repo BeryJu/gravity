@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "strict": true,
-        "baseUrl": ".",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
@@ -9,7 +8,6 @@
         "sourceMap": true,
         "target": "esnext",
         "module": "esnext",
-        "moduleResolution": "node",
         "lib": [
             "ES5",
             "ES2015",

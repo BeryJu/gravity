@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - prettier-check
+          - format-check
           - lint-check
           - lit-analyse
           - tsc

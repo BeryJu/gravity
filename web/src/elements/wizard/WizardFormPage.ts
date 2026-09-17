@@ -1,5 +1,6 @@
 import { AKElement } from "../Base";
 import { Form, KeyUnknown, formFiles, serializeForm } from "../forms/Form";
+import { HorizontalFormElement } from "../forms/HorizontalFormElement";
 import { WizardPage } from "./WizardPage";
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -8,8 +9,6 @@ import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
 import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
-
-import { HorizontalFormElement } from "src/elements/forms/HorizontalFormElement";
 
 import { CSSResult, TemplateResult, html } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
