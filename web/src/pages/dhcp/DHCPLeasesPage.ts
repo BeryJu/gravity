@@ -65,21 +65,27 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         const scope = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
             name: this.scope,
         });
+
         this._scope = scope.scopes![0];
+
         const leases = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetLeases({
             scope: this.scope,
         });
+
         const data = (leases.leases || []).filter(
             (l) =>
                 l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.address.includes(this.search),
         );
+
         data.sort(sortByIP((i) => i.address));
+
         try {
             this.nextAddress = await this.getNextFreeIP(data);
         } catch {
             /* */
         }
+
         return PaginationWrapper(data);
     }
 
@@ -89,18 +95,24 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
             name: this.scope,
         });
+
         const scope = firstElement(scopes.scopes);
+
         if (!scope || !scope?.ipam?.range_start) {
             return;
         }
+
         // Start of IPAM but previous by one IP
         const ipamStart = ip(scope.ipam.range_start as string).previousIPNumber();
         const afterIPAM = leases.filter((v) => ip(v.address) < ipamStart);
+
         while (true) {
             const nextIP = ipamStart.nextIPNumber();
+
             if (afterIPAM.filter((v) => ip(v.address) === nextIP).length > 0) {
                 continue;
             }
+
             return nextIP.toString();
         }
     }
@@ -185,6 +197,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
                 objectLabel=${"DHCP Lease(s)"}
                 .objects=${this.selectedElements}
@@ -212,6 +225,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                     return Promise.all(
                         this.selectedElements.map((item) => {
                             item.expiry = -1;
+
                             return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
                                 identifier: item.identifier,
                                 scope: this.scope,
@@ -224,6 +238,7 @@ export class DHCPLeasesPage extends TablePage<DhcpAPILease> {
                                 message: `Successfully converted ${this.selectedElements.length} lease(s) to reservation(s).`,
                                 level: MessageLevel.success,
                             });
+
                             this.fetch();
                         })
                         .catch((exc: Error) => {

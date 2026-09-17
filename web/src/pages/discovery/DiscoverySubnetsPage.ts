@@ -34,14 +34,19 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
 
     async apiEndpoint(): Promise<PaginatedResponse<DiscoveryAPISubnet>> {
         const subnets = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets();
+
         const data = (subnets.subnets || []).filter((l) =>
             l.name.toLowerCase().includes(this.search.toLowerCase()),
         );
+
         data.sort((a, b) => {
             if (a.name > b.name) return 1;
+
             if (a.name < b.name) return -1;
+
             return 0;
         });
+
         return PaginationWrapper(data);
     }
 
@@ -69,6 +74,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
                             identifier: item.name,
                             wait: false,
                         });
+
                         showMessage({
                             level: MessageLevel.info,
                             message: "Started discovery",
@@ -93,6 +99,7 @@ export class DiscoverySubnetsPage extends TablePage<DiscoveryAPISubnet> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"Discovery subnets(s)"}
             .objects=${this.selectedElements}

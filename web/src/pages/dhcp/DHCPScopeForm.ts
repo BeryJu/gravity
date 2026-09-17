@@ -19,8 +19,11 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes({
             name: pk,
         });
+
         const zone = firstElement(scopes.scopes);
+
         if (!zone) throw new Error("No scope");
+
         return zone;
     }
 
@@ -35,25 +38,31 @@ export class DHCPScopeForm extends ModelForm<DhcpAPIScope, string> {
     send = (data: DhcpAPIScope): Promise<void> => {
         if (data.ipam) {
             data.ipam.type = "internal";
+
             Object.keys(data.ipam).map((key) => {
                 data.ipam![key] = data.ipam![key].toString();
             });
         }
+
         if (!data.options) {
             data.options = [];
         }
+
         const routerOpts = data.options.filter((op) => op.tagName === "router");
+
         if (routerOpts.length < 1) {
             data.options.push({
                 tagName: "router",
                 value: (data as unknown as KV)["router"],
             });
         }
+
         routerOpts
             .filter((op) => op.tagName === "router")
             .forEach((op) => {
                 op.value = (data as unknown as KV)["router"];
             });
+
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
             scope: this.instance?.scope || data.scope,
             dhcpAPIScopesPutInput: data,

@@ -20,12 +20,14 @@ export class VersionCard extends AdminStatusCard<InstanceAPIClusterInfoOutput> {
             value.instances?.filter((inst) => {
                 return inst.version === value.clusterVersion;
             }).length === value.instances?.length;
+
         if (!matching) {
             return Promise.resolve<AdminStatus>({
                 icon: "fa fa-exclamation-triangle pf-m-warning",
                 message: html`Mismatched version in cluster!`,
             });
         }
+
         return Promise.resolve<AdminStatus>({
             icon: "fa fa-check-circle pf-m-success",
             message: html`Matching versions across nodes.`,

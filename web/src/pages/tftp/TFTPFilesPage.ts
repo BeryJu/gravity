@@ -32,11 +32,15 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
     async apiEndpoint(): Promise<PaginatedResponse<TftpAPIFile>> {
         const files = await new RolesTftpApi(DEFAULT_CONFIG).tftpGetFiles();
         const data = files.files || [];
+
         data.sort((a, b) => {
             if (a.name > b.name) return 1;
+
             if (a.name < b.name) return -1;
+
             return 0;
         });
+
         return PaginationWrapper(data);
     }
 
@@ -56,7 +60,8 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
         for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
             const slice = byteCharacters.slice(offset, offset + sliceSize);
 
-            const byteNumbers = new Array(slice.length);
+            const byteNumbers = Array.from<number>({ length: slice.length });
+
             for (let i = 0; i < slice.length; i++) {
                 byteNumbers[i] = slice.charCodeAt(i);
             }
@@ -66,6 +71,7 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
         }
 
         const blob = new Blob(byteArrays, { type: contentType });
+
         return blob;
     }
 
@@ -91,6 +97,7 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
                         host: item.host,
                         name: item.name,
                     });
+
                     this.download(data.data, item.name);
                 }}
             >
@@ -101,6 +108,7 @@ export class TFTPFilesPage extends TablePage<TftpAPIFile> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"TFTP File(s)"}
             .objects=${this.selectedElements}

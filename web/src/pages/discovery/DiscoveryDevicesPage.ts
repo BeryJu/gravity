@@ -32,13 +32,16 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
 
     async apiEndpoint(): Promise<PaginatedResponse<DiscoveryAPIDevice>> {
         const devices = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetDevices();
+
         const data = (devices.devices || []).filter(
             (l) =>
                 l.hostname.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.mac.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.ip.includes(this.search),
         );
+
         data.sort(sortByIP((i) => i.ip));
+
         return PaginationWrapper(data);
     }
 
@@ -62,6 +65,7 @@ export class DiscoveryDevicesPage extends TablePage<DiscoveryAPIDevice> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<gravity-discovery-apply
                 objectLabel=${"Discovered Device(s)"}
                 .objects=${this.selectedElements}

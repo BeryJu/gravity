@@ -98,10 +98,12 @@ export class ZonePresetWizardPage extends WizardPage {
                         ?checked=${idx === 0}
                         @change=${() => {
                             type.callback(this.host);
+
                             this.host.steps = [
                                 "gravity-dns-wizard-initial",
                                 "gravity-dns-wizard-type",
                             ].concat(...type.components);
+
                             this.host.isValid = true;
                         }}
                     />

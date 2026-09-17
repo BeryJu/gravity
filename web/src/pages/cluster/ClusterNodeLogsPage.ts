@@ -29,10 +29,13 @@ export class ClusterNodeLogsPage extends TablePage<ApiAPILogMessage> {
 
     async apiEndpoint(): Promise<PaginatedResponse<ApiAPILogMessage>> {
         const logs = await new RolesApiApi(DEFAULT_CONFIG).apiGetLogMessages();
+
         if (!logs.messages) {
             logs.messages = [];
         }
+
         logs.messages.reverse();
+
         return PaginationWrapper(logs.messages);
     }
 

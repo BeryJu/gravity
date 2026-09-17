@@ -27,21 +27,27 @@ export class ModalForm extends ModalButton {
 
     async confirm(): Promise<void> {
         const form = this.querySelector<Form<unknown>>("[slot=form]");
+
         if (!form) {
             return Promise.reject("No form found");
         }
+
         const formPromise = form.submit(new Event("submit"));
+
         if (!formPromise) {
             return Promise.reject("Form didn't return a promise for submitting");
         }
+
         return formPromise
             .then(() => {
                 if (this.closeAfterSuccessfulSubmit) {
                     this.open = false;
                     form?.resetForm();
                 }
+
                 this.loading = false;
                 this.locked = false;
+
                 this.dispatchEvent(
                     new CustomEvent(EVENT_REFRESH, {
                         bubbles: true,
@@ -77,6 +83,7 @@ export class ModalForm extends ModalButton {
                                   .callAction=${() => {
                                       this.loading = true;
                                       this.locked = true;
+
                                       return this.confirm();
                                   }}
                                   class="pf-m-primary"
@@ -93,6 +100,7 @@ export class ModalForm extends ModalButton {
                                       this.loading = true;
                                       this.locked = true;
                                       this.closeAfterSuccessfulSubmit = false;
+
                                       return this.confirm().finally(() => {
                                           this.closeAfterSuccessfulSubmit = true;
                                       });

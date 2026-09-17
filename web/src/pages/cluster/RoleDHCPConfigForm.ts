@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleDHCPConfigForm extends ModelForm<DhcpRoleConfig, string> {
     async loadInstance(): Promise<DhcpRoleConfig> {
         const config = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetRoleConfig();
+
         return config.config;
     }
 

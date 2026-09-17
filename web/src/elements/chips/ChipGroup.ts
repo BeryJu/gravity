@@ -34,9 +34,11 @@ export class ChipGroup extends AKElement {
 
     get value(): (string | number | undefined)[] {
         const values: (string | number | undefined)[] = [];
+
         this.querySelectorAll<Chip>("ak-chip").forEach((chip) => {
             values.push(chip.value);
         });
+
         return values;
     }
 

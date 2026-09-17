@@ -6,7 +6,7 @@ import PFSpinner from "@patternfly/patternfly/components/Spinner/spinner.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("ak-spinner-button")
 export class SpinnerButton extends AKElement {
@@ -18,6 +18,9 @@ export class SpinnerButton extends AKElement {
 
     @property({ type: Boolean })
     disabled = false;
+
+    @state()
+    statusClass?: string;
 
     static get styles(): CSSResult[] {
         return [
@@ -41,30 +44,29 @@ export class SpinnerButton extends AKElement {
 
     setLoading(): void {
         this.isRunning = true;
-        this.classList.add(PROGRESS_CLASS);
-        this.requestUpdate();
+        this.statusClass = PROGRESS_CLASS;
     }
 
     setDone(statusClass: string): void {
         this.isRunning = false;
-        this.classList.remove(PROGRESS_CLASS);
-        this.classList.add(statusClass);
-        this.requestUpdate();
+        this.statusClass = statusClass;
+
         setTimeout(() => {
-            this.classList.remove(statusClass);
-            this.requestUpdate();
+            this.statusClass = undefined;
         }, 1000);
     }
 
     render(): TemplateResult {
         return html`<button
-            class="pf-c-button pf-m-progress ${this.classList.toString()}"
+            class="pf-c-button pf-m-progress ${this.statusClass ?? ""}"
             ?disabled=${this.disabled}
             @click=${() => {
                 if (this.isRunning === true) {
                     return;
                 }
+
                 this.setLoading();
+
                 if (this.callAction) {
                     this.callAction()
                         .then(() => {

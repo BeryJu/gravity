@@ -39,9 +39,12 @@ export class TableSearch extends AKElement {
             method="get"
             @submit=${(e: Event) => {
                 e.preventDefault();
+
                 if (!this.onSearch) return;
                 const el = this.shadowRoot?.querySelector<HTMLInputElement>("input[type=search]");
+
                 if (!el) return;
+
                 if (el.value === "") return;
                 this.onSearch(el?.value);
             }}

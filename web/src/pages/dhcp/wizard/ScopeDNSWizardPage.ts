@@ -31,10 +31,13 @@ export class ScopeDNSWizardPage extends WizardFormPage {
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const req = this.host.state["scopeReq"] as DhcpAPIScopesPutInput;
+
         req.dns = {
             zone: data.zone as string,
         };
+
         this.host.state["scopeReq"] = req;
+
         if (data.createZone) {
             this.host.addActionAfter(
                 "Create DNS Zone (forward)",
@@ -44,10 +47,12 @@ export class ScopeDNSWizardPage extends WizardFormPage {
                         zone: data.zone as string,
                         dnsAPIZonesPutInput: defaultDNSZoneSettings,
                     });
+
                     return true;
                 },
             );
         }
+
         if (data.createReverseZone) {
             this.host.addActionAfter(
                 "Create DNS Zone (reverse)",
@@ -57,10 +62,12 @@ export class ScopeDNSWizardPage extends WizardFormPage {
                         zone: subnetToDnsZone(IPv4CidrRange.fromCidr(req.subnetCidr)),
                         dnsAPIZonesPutInput: defaultDNSZoneSettings,
                     });
+
                     return true;
                 },
             );
         }
+
         return true;
     };
 

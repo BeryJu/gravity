@@ -56,6 +56,7 @@ export class HorizontalFormElement extends AKElement {
         this._invalid = v;
         // check if we're in a form group, and expand that form group
         const parent = this.parentElement?.parentElement;
+
         if (parent && "expanded" in parent) {
             (parent as FormGroup).expanded = true;
         }
@@ -71,6 +72,7 @@ export class HorizontalFormElement extends AKElement {
         this.querySelectorAll<HTMLInputElement>("input[autofocus]").forEach((input) => {
             input.focus();
         });
+
         if (this.name === "slug" || this.slugMode) {
             this.querySelectorAll<HTMLInputElement>("input[type='text']").forEach((input) => {
                 input.addEventListener("keyup", () => {
@@ -78,6 +80,7 @@ export class HorizontalFormElement extends AKElement {
                 });
             });
         }
+
         this.querySelectorAll("*").forEach((input) => {
             if (this.name && this.name !== "") {
                 switch (input.tagName.toLowerCase()) {
@@ -94,14 +97,17 @@ export class HorizontalFormElement extends AKElement {
                         return;
                 }
             }
+
             if (this.writeOnly && !this.writeOnlyActivated) {
                 const i = input as HTMLInputElement;
                 i.setAttribute("hidden", "true");
+
                 const handler = () => {
                     i.removeAttribute("hidden");
                     this.writeOnlyActivated = true;
                     i.parentElement?.removeEventListener("click", handler);
                 };
+
                 i.parentElement?.addEventListener("click", handler);
             }
         });

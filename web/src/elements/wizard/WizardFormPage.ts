@@ -22,26 +22,33 @@ export class WizardForm extends Form<KeyUnknown> {
 
     submit(): Promise<boolean> | undefined {
         const data = this.serializeForm();
+
         if (!data) {
             return;
         }
+
         const finalData = Object.assign({}, data);
+
         return this.nextDataCallback(finalData);
     }
 
     getFormFiles(): { [key: string]: File } {
         const elements = this.querySelectorAll<HorizontalFormElement>("ak-form-element-horizontal");
+
         if (!elements) {
             return {};
         }
+
         return formFiles(elements);
     }
 
     serializeForm(): KeyUnknown | undefined {
         const elements = this.querySelectorAll<HorizontalFormElement>("ak-form-element-horizontal");
+
         if (!elements) {
             return {} as KeyUnknown;
         }
+
         return serializeForm(elements) as KeyUnknown;
     }
 }
@@ -65,23 +72,30 @@ export class WizardFormPage extends WizardPage {
 
     inputCallback(): void {
         const form = this.shadowRoot?.querySelector<HTMLFormElement>("form");
+
         if (!form) {
             return;
         }
+
         const state = form.checkValidity();
         this.host.isValid = state;
     }
 
     nextCallback = async (): Promise<boolean> => {
         const form = this.shadowRoot?.querySelector<WizardForm>("ak-wizard-form");
+
         if (!form) {
             console.warn("authentik/wizard: could not find form element");
+
             return false;
         }
+
         const response = await form.submit();
+
         if (response === undefined) {
             return false;
         }
+
         return response;
     };
 

@@ -23,16 +23,19 @@ export function firstElement<T>(items: T[] | null | undefined): T | undefined {
     if (items !== undefined && items !== null && items.length > 0) {
         return items[0];
     }
+
     return undefined;
 }
 
 export function first<T>(...args: Array<T | undefined | null>): T {
     for (let index = 0; index < args.length; index++) {
         const element = args[index];
+
         if (element !== undefined && element !== null) {
             return element;
         }
     }
+
     throw new Error(`No compatible arg given: ${args}`);
 }
 
@@ -52,8 +55,11 @@ export function sortByIP<T>(getter: (item: T) => string): (a: T, b: T) => number
     return (a: T, b: T) => {
         const aIP = ip(getter(a));
         const bIP = ip(getter(b));
+
         if (aIP.getValue() > bIP.getValue()) return 1;
+
         if (aIP.getValue() < bIP.getValue()) return -1;
+
         return 0;
     };
 }
@@ -126,11 +132,13 @@ export function formatElapsedTime(d1: Date, d2: Date = new Date()): string {
             return rtf.format(rounded, unit);
         }
     }
+
     return rtf.format(Math.round(elapsed / 1000), "second");
 }
 
 export function subnetToDnsZone(subnet: IPv4CidrRange | IPv6CidrRange) {
     const prefix = Number(subnet.cidrPrefix.value);
+
     if (subnet instanceof IPv4CidrRange) {
         // IPv4 reverse zone
         const octets = subnet.getFirst().toString().split(".").map(Number);
@@ -141,6 +149,7 @@ export function subnetToDnsZone(subnet: IPv4CidrRange | IPv6CidrRange) {
 
         const octetCount = prefix / 8;
         const reversed = octets.slice(0, octetCount).reverse().join(".");
+
         return `${reversed}.in-addr.arpa`;
     } else if (subnet instanceof IPv6CidrRange) {
         // IPv6 reverse zone
@@ -152,6 +161,7 @@ export function subnetToDnsZone(subnet: IPv4CidrRange | IPv6CidrRange) {
         }
 
         const nibbles = expanded.slice(0, nibbleCount).split("").reverse().join(".");
+
         return `${nibbles}.ip6.arpa`;
     }
 

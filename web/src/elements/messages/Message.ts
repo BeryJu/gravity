@@ -40,6 +40,7 @@ export class Message extends AKElement {
     firstUpdated(): void {
         setTimeout(() => {
             if (!this.message) return;
+
             if (!this.onRemove) return;
             this.onRemove(this.message);
         }, this.removeAfter);
@@ -68,6 +69,7 @@ export class Message extends AKElement {
                         type="button"
                         @click=${() => {
                             if (!this.message) return;
+
                             if (!this.onRemove) return;
                             this.onRemove(this.message);
                         }}

@@ -26,17 +26,23 @@ export interface KeyUnknown {
  */
 function assignValue(element: HTMLInputElement, value: unknown, json: KeyUnknown): void {
     let parent = json;
+
     if (!element.name?.includes(".")) {
         parent[element.name] = value;
+
         return;
     }
+
     const nameElements = element.name.split(".");
+
     for (let index = 0; index < nameElements.length - 1; index++) {
         const nameEl = nameElements[index];
+
         // Ensure all nested structures exist
         if (!(nameEl in parent)) parent[nameEl] = {};
         parent = parent[nameEl] as { [key: string]: unknown };
     }
+
     parent[nameElements[nameElements.length - 1]] = value;
 }
 
@@ -47,22 +53,27 @@ export function serializeForm<T extends KeyUnknown>(
     elements: NodeListOf<HorizontalFormElement>,
 ): T | undefined {
     const json: { [key: string]: unknown } = {};
+
     elements.forEach((element) => {
         element.requestUpdate();
         const inputElements = element.querySelectorAll<HTMLInputElement>("[name]");
+
         inputElements.forEach((inputElement) => {
             if (element.hidden || !inputElement) {
                 return;
             }
+
             // Skip elements that are writeOnly where the user hasn't clicked on the value
             if (element.writeOnly && !element.writeOnlyActivated) {
                 return;
             }
+
             if (
                 inputElement.tagName.toLowerCase() === "select" &&
                 "multiple" in inputElement.attributes
             ) {
                 const selectElement = inputElement as unknown as HTMLSelectElement;
+
                 assignValue(
                     inputElement,
                     Array.from(selectElement.selectedOptions).map((v) => v.value),
@@ -98,6 +109,7 @@ export function serializeForm<T extends KeyUnknown>(
                 if (!inputElement.checked) {
                     return;
                 }
+
                 assignValue(inputElement, inputElement.value, json);
             } else if (
                 inputElement.tagName.toLowerCase() === "input" &&
@@ -111,25 +123,31 @@ export function serializeForm<T extends KeyUnknown>(
             }
         });
     });
+
     return json as unknown as T;
 }
 
 export function formFiles(elements: NodeListOf<HorizontalFormElement>): { [key: string]: File } {
     const files: { [key: string]: File } = {};
+
     for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
         element.requestUpdate();
         const inputElement = element.querySelector<HTMLInputElement>("[name]");
+
         if (!inputElement) {
             continue;
         }
+
         if (inputElement.tagName.toLowerCase() === "input" && inputElement.type === "file") {
             if ((inputElement.files || []).length < 1) {
                 continue;
             }
+
             files[element.name] = (inputElement.files || [])[0];
         }
     }
+
     return files;
 }
 
@@ -167,6 +185,7 @@ export class Form<T> extends AKElement {
 
     get isInViewport(): boolean {
         const rect = this.getBoundingClientRect();
+
         return !(rect.x + rect.y + rect.width + rect.height === 0);
     }
 
@@ -183,9 +202,11 @@ export class Form<T> extends AKElement {
         const elements = this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
             "ak-form-element-horizontal",
         );
+
         if (!elements) {
             return {} as T;
         }
+
         return serializeForm(elements) as T;
     }
 
@@ -199,57 +220,72 @@ export class Form<T> extends AKElement {
         const elements = this.shadowRoot?.querySelectorAll<HorizontalFormElement>(
             "ak-form-element-horizontal",
         );
+
         if (!elements) {
             return {};
         }
+
         return formFiles(elements);
     }
 
     submit(ev: Event): Promise<unknown> | undefined {
         ev.preventDefault();
         const data = this.serializeForm();
+
         if (!data) {
             return;
         }
+
         return this.send(data)
             .then((r) => {
                 const message = this.getSuccessMessage();
+
                 if (message) {
                     showMessage({
                         level: MessageLevel.success,
                         message: this.getSuccessMessage(),
                     });
                 }
+
                 this.dispatchEvent(
                     new CustomEvent(EVENT_REFRESH, {
                         bubbles: true,
                         composed: true,
                     }),
                 );
+
                 return r;
             })
             .catch(async (ex: Error | ResponseError) => {
                 console.warn(ex);
+
                 if (!(ex instanceof ResponseError)) {
                     throw ex;
                 }
+
                 let msg = ex.response.statusText;
+
                 if (ex.response.status > 399 && ex.response.status < 500) {
                     const errorMessage: RestErrResponse = await ex.response.json();
+
                     if (!errorMessage) return errorMessage;
+
                     if (errorMessage instanceof Error) {
                         throw errorMessage;
                     }
+
                     if (errorMessage.error) {
                         this.nonFieldErrors = [errorMessage.error];
                         msg = errorMessage.error;
                     }
                 }
+
                 // error is local or not from rest_framework
                 showMessage({
                     message: msg,
                     level: MessageLevel.error,
                 });
+
                 // rethrow the error so the form doesn't close
                 throw ex;
             });
@@ -259,6 +295,7 @@ export class Form<T> extends AKElement {
         if (!this.nonFieldErrors) {
             return html``;
         }
+
         return html`<div class="pf-c-form__alert">
             ${this.nonFieldErrors.map((err) => {
                 return html`<div class="pf-c-alert pf-m-inline pf-m-danger">
@@ -273,6 +310,7 @@ export class Form<T> extends AKElement {
 
     renderFormWrapper(): TemplateResult {
         const inline = this.renderForm();
+
         if (inline) {
             return html`<form
                 class="pf-c-form pf-m-horizontal"
@@ -283,6 +321,7 @@ export class Form<T> extends AKElement {
                 ${inline}
             </form>`;
         }
+
         return html`<slot></slot>`;
     }
 
@@ -298,6 +337,7 @@ export class Form<T> extends AKElement {
         if (this.viewportCheck && !this.isInViewport) {
             return html``;
         }
+
         return this.renderVisible();
     }
 }

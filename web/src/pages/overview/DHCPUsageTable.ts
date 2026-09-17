@@ -18,6 +18,7 @@ export class DHCPUsageTable extends Table<DhcpAPIScope & { statistics: { usage: 
         PaginatedResponse<DhcpAPIScope & { statistics: { usage: number } }>
     > {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
+
         const data = (scopes.scopes || []).map((sc) => {
             const ssc = {
                 ...sc,
@@ -26,13 +27,18 @@ export class DHCPUsageTable extends Table<DhcpAPIScope & { statistics: { usage: 
                     usage: Math.round((sc.statistics.used * 100) / sc.statistics.usable),
                 },
             };
+
             return ssc;
         });
+
         data.sort((a, b) => {
             if (a.scope > b.scope) return 1;
+
             if (a.scope < b.scope) return -1;
+
             return 0;
         });
+
         return PaginationWrapper(data);
     }
 

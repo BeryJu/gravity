@@ -26,11 +26,13 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
+
             reader.onload = () => {
                 let data = reader.result as string;
                 data = data.split(";base64,")[1];
                 resolve(data);
             };
+
             reader.onerror = reject;
         });
     }
@@ -38,10 +40,13 @@ export class TFTPFileForm extends ModelForm<TftpAPIFilesPutInput, string> {
     send = async (data: TftpAPIFilesPutInput): Promise<void> => {
         const file = this.getFormFiles()["file"];
         const b64 = await this.toBase64(file);
+
         if (!b64) {
             throw new Error("Empty file");
         }
+
         data.data = b64;
+
         return new RolesTftpApi(DEFAULT_CONFIG).tftpPutFiles({
             tftpAPIFilesPutInput: data,
         });

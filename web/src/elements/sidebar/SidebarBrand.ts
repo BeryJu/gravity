@@ -55,6 +55,7 @@ export class SidebarBrand extends AKElement {
 
     constructor() {
         super();
+
         window.addEventListener("resize", () => {
             this.requestUpdate();
         });

@@ -49,11 +49,14 @@ export class Wizard extends ModalButton {
     set steps(steps: string[]) {
         const addApplyActionsSlot = this.steps.includes(ApplyActionsSlot);
         this._steps = steps;
+
         if (addApplyActionsSlot) {
             this.steps.push(ApplyActionsSlot);
         }
+
         this.steps.forEach((step) => {
             const exists = this.querySelector(`[slot=${step}]`) !== null;
+
             if (!exists) {
                 const el = document.createElement(step);
                 el.slot = step;
@@ -61,6 +64,7 @@ export class Wizard extends ModalButton {
                 this.appendChild(el);
             }
         });
+
         this.requestUpdate();
     }
 
@@ -74,6 +78,7 @@ export class Wizard extends ModalButton {
 
     set currentStep(value: WizardPage | undefined) {
         this._currentStep = value;
+
         if (this._currentStep) {
             this._currentStep.activeCallback();
             this._currentStep.requestUpdate();
@@ -101,6 +106,7 @@ export class Wizard extends ModalButton {
      */
     addActionBefore(displayName: string, uid: string, run: () => Promise<boolean>): void {
         this.actions = this.actions.filter((action) => action.uid !== uid);
+
         this.actions.unshift({
             displayName,
             run,
@@ -113,6 +119,7 @@ export class Wizard extends ModalButton {
      */
     addActionAfter(displayName: string, uid: string, run: () => Promise<boolean>): void {
         this.actions = this.actions.filter((action) => action.uid !== uid);
+
         this.actions.push({
             displayName,
             run,
@@ -122,15 +129,19 @@ export class Wizard extends ModalButton {
 
     renderModalInner(): TemplateResult {
         const firstPage = this.querySelector<WizardPage>(`[slot=${this.steps[0]}]`);
+
         if (!this.currentStep && firstPage) {
             this.currentStep = firstPage;
         }
+
         const currentIndex = this.currentStep ? this.steps.indexOf(this.currentStep.slot) : 0;
         let lastPage = currentIndex === this.steps.length - 1;
+
         if (lastPage && !this.steps.includes("ak-wizard-page-action") && this.actions.length > 0) {
             this.steps = this.steps.concat("ak-wizard-page-action");
             lastPage = currentIndex === this.steps.length - 1;
         }
+
         return html`<div class="pf-c-wizard">
             <div class="pf-c-wizard__header">
                 ${
@@ -158,6 +169,7 @@ export class Wizard extends ModalButton {
                                 const currentIdx = this.currentStep
                                     ? this.steps.indexOf(this.currentStep.slot)
                                     : 0;
+
                                 return html`
                                     <li class="pf-c-wizard__nav-item">
                                         <button
@@ -169,6 +181,7 @@ export class Wizard extends ModalButton {
                                                 const stepEl = this.querySelector<WizardPage>(
                                                     `[slot=${step}]`,
                                                 );
+
                                                 if (stepEl) {
                                                     this.currentStep = stepEl;
                                                 }
@@ -196,9 +209,11 @@ export class Wizard extends ModalButton {
                         ?disabled=${!this.isValid}
                         @click=${async () => {
                             const cb = await this.currentStep?.nextCallback();
+
                             if (!cb) {
                                 return;
                             }
+
                             if (lastPage) {
                                 await this.finalHandler();
                                 this.reset();
@@ -206,6 +221,7 @@ export class Wizard extends ModalButton {
                                 const nextPage = this.querySelector<WizardPage>(
                                     `[slot=${this.steps[currentIndex + 1]}]`,
                                 );
+
                                 if (nextPage) {
                                     this.currentStep = nextPage;
                                 }
@@ -225,6 +241,7 @@ export class Wizard extends ModalButton {
                                           const prevPage = this.querySelector<WizardPage>(
                                               `[slot=${this.steps[currentIndex - 1]}]`,
                                           );
+
                                           if (prevPage) {
                                               this.currentStep = prevPage;
                                           }
@@ -257,9 +274,11 @@ export class Wizard extends ModalButton {
 
     reset(): void {
         this.open = false;
+
         this.querySelectorAll("[data-wizardmanaged=true]").forEach((el) => {
             el.remove();
         });
+
         this.steps = this._initialSteps;
         this.actions = [];
         this.state = {};

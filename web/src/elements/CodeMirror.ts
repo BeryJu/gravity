@@ -40,6 +40,7 @@ export class CodeMirrorTextarea extends AKElement {
         // Value might be an object if within an iron-form, as that calls the getter of value
         // in the beginning and the calls this setter on reset
         let textValue = v;
+
         if (!(typeof v === "string" || v instanceof String)) {
             switch (this.mode.toLowerCase()) {
                 case "yaml":
@@ -50,6 +51,7 @@ export class CodeMirrorTextarea extends AKElement {
                     break;
             }
         }
+
         if (this.editor) {
             this.editor.dispatch({
                 changes: { from: 0, to: this.editor.state.doc.length, insert: textValue },
@@ -70,6 +72,7 @@ export class CodeMirrorTextarea extends AKElement {
             }
         } catch (e) {
             console.warn(e);
+
             return this.getInnerValue();
         }
     }
@@ -78,6 +81,7 @@ export class CodeMirrorTextarea extends AKElement {
         if (!this.editor) {
             return "";
         }
+
         return this.editor.state.doc.toString();
     }
 
@@ -88,22 +92,27 @@ export class CodeMirrorTextarea extends AKElement {
             case "yaml":
                 return new LanguageSupport(StreamLanguage.define(yamlMode.yaml));
         }
+
         return undefined;
     }
 
     firstUpdated(): void {
         const matcher = window.matchMedia("(prefers-color-scheme: light)");
+
         const handler = (ev?: MediaQueryListEvent) => {
             let theme;
+
             if (ev?.matches || matcher.matches) {
                 theme = this.themeLight;
             } else {
                 theme = this.themeDark;
             }
+
             this.editor?.dispatch({
                 effects: [this.theme.reconfigure(theme)],
             });
         };
+
         const extensions = [
             history(),
             keymap.of([...defaultKeymap, ...historyKeymap]),
@@ -115,11 +124,13 @@ export class CodeMirrorTextarea extends AKElement {
             EditorState.tabSize.of(2),
             this.theme.of(this.themeLight),
         ];
+
         this.editor = new EditorView({
             extensions: extensions.filter((p) => p) as Extension[],
             root: this.shadowRoot || document,
             doc: this._value,
         });
+
         this.shadowRoot?.appendChild(this.editor.dom);
         matcher.addEventListener("change", handler);
         handler();

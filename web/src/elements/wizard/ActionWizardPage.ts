@@ -45,13 +45,15 @@ export class ActionWizardPage extends WizardPage {
 
     activeCallback = async (): Promise<void> => {
         this.states = [];
+
         this.host.actions.map((act, idx) => {
             this.states.push({
                 action: act,
                 state: ActionState.pending,
-                idx: idx,
+                idx,
             });
         });
+
         this.host.canBack = false;
         this.host.canCancel = false;
         await this.run();
@@ -64,10 +66,12 @@ export class ActionWizardPage extends WizardPage {
     async run(): Promise<void> {
         this.currentStep = this.states[0];
         await new Promise((r) => setTimeout(r, 500));
+
         for await (const bundle of this.states) {
             this.currentStep = bundle;
             this.currentStep.state = ActionState.running;
             this.requestUpdate();
+
             try {
                 await bundle.action.run();
                 await new Promise((r) => setTimeout(r, 500));
@@ -77,10 +81,13 @@ export class ActionWizardPage extends WizardPage {
                 this.currentStep.action.subText = (exc as Error).toString();
                 this.currentStep.state = ActionState.failed;
                 this.requestUpdate();
+
                 return;
             }
         }
+
         this.host.isValid = true;
+
         this.dispatchEvent(
             new CustomEvent(EVENT_REFRESH, {
                 bubbles: true,
@@ -99,6 +106,7 @@ export class ActionWizardPage extends WizardPage {
                         <ol class="pf-c-progress-stepper pf-m-vertical">
                             ${this.states.map((state) => {
                                 let cls = "";
+
                                 switch (state.state) {
                                     case ActionState.pending:
                                         cls = "pf-m-pending";
@@ -113,9 +121,11 @@ export class ActionWizardPage extends WizardPage {
                                         cls = "pf-m-danger";
                                         break;
                                 }
+
                                 if (state.idx === this.currentStep?.idx) {
                                     cls += " pf-m-current";
                                 }
+
                                 return html` <li class="pf-c-progress-stepper__step ${cls}">
                                     <div class="pf-c-progress-stepper__step-connector">
                                         <span class="pf-c-progress-stepper__step-icon">

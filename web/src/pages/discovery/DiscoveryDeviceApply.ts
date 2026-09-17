@@ -72,16 +72,21 @@ export class DiscoveryDeviceApply extends DeleteBulkForm {
         const form = this.shadowRoot?.querySelector<DiscoveryDeviceApplyForm>(
             "gravity-discover-apply-form",
         );
+
         if (!form) {
             return Promise.reject("No form found");
         }
+
         const data = form.serializeForm() as DiscoveryAPIDevicesApplyInput;
+
         if (data.to === DiscoveryAPIDevicesApplyInputToEnum.Dhcp && data.dhcpScope === "") {
             throw Error("DHCP Scope needs to be set to import to DHCP.");
         }
+
         if (data.to === DiscoveryAPIDevicesApplyInputToEnum.Dns && data.dnsZone === "") {
             throw Error("DNS Zone needs to be set to import to DNS.");
         }
+
         return Promise.resolve(data);
     };
 
@@ -92,9 +97,11 @@ export class DiscoveryDeviceApply extends DeleteBulkForm {
         if (item.mac === "" && extraData.to === DiscoveryAPIDevicesApplyInputToEnum.Dhcp) {
             return Promise.reject();
         }
+
         if (item.hostname === "" && extraData.to === DiscoveryAPIDevicesApplyInputToEnum.Dns) {
             return Promise.reject();
         }
+
         return new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryApplyDevice({
             identifier: item.identifier,
             discoveryAPIDevicesApplyInput: extraData,

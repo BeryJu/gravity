@@ -16,6 +16,7 @@ export class ScopeInitialWizardPage extends WizardFormPage {
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const name = data.name as string;
+
         const scope: DhcpAPIScopesPutInput = {
             // placeholder, this is overwritten later
             subnetCidr: "10.0.0.0/8",
@@ -24,15 +25,20 @@ export class ScopeInitialWizardPage extends WizardFormPage {
             options: [],
             hook: "",
         };
+
         this.host.state["scopeReq"] = scope;
+
         this.host.addActionBefore("Create scope", "create-scope", async (): Promise<boolean> => {
             this.host.state["scope"] = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutScopes({
                 scope: name,
                 dhcpAPIScopesPutInput: this.host.state["scopeReq"] as DhcpAPIScopesPutInput,
             });
+
             this.host.state["name"] = name;
+
             return true;
         });
+
         return true;
     };
 

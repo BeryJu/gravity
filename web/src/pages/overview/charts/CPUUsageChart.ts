@@ -25,6 +25,7 @@ export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
         const opts = super.getOptions();
         opts.scales!.y!.min = 0;
         opts.scales!.y!.max = 100;
+
         return opts;
     }
 
@@ -32,9 +33,11 @@ export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
+
         groupBy(data?.records || [], (record) => record.node).forEach(([node, records]) => {
             const background = getColorFromString(node);
             background.a = 0.3;
+
             chartData.datasets.push({
                 label: node,
                 borderColor: getColorFromString(node).toString(),
@@ -51,6 +54,7 @@ export class CPUUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
                 }),
             });
         });
+
         return chartData;
     }
 }

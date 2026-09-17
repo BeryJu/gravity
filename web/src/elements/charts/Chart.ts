@@ -36,15 +36,19 @@ export class RGBAColor {
 export function getColorFromString(stringInput: string): RGBAColor {
     let hash = 0;
     const hashedString = new sha256().update(stringInput).digest("hex");
+
     for (let i = 0; i < hashedString.length; i++) {
         hash = hashedString.charCodeAt(i) + ((hash << 5) - hash);
         hash = hash & hash;
     }
+
     const rgb = [0, 0, 0];
+
     for (let i = 0; i < 3; i++) {
         const value = (hash >> (i * 8)) & 255;
         rgb[i] = value;
     }
+
     return new RGBAColor(rgb[0], rgb[1], rgb[2]);
 }
 
@@ -75,11 +79,13 @@ export abstract class AKChart<T> extends AKElement {
 
     constructor() {
         super();
+
         window.addEventListener("resize", () => {
             if (this.chart) {
                 this.chart.resize();
             }
         });
+
         window.addEventListener(EVENT_REFRESH, () => {
             this.apiRequest().then((r: T) => {
                 if (!this.chart) return;
@@ -87,15 +93,19 @@ export abstract class AKChart<T> extends AKElement {
                 this.chart.update();
             });
         });
+
         const matcher = window.matchMedia("(prefers-color-scheme: light)");
+
         const handler = (ev?: MediaQueryListEvent) => {
             if (ev?.matches || matcher.matches) {
                 this.fontColour = FONT_COLOUR_LIGHT_MODE;
             } else {
                 this.fontColour = FONT_COLOUR_DARK_MODE;
             }
+
             this.chart?.update();
         };
+
         matcher.addEventListener("change", handler);
         handler();
     }
@@ -103,16 +113,23 @@ export abstract class AKChart<T> extends AKElement {
     firstUpdated(): void {
         this.apiRequest().then((r) => {
             const canvas = this.shadowRoot?.querySelector<HTMLCanvasElement>("canvas");
+
             if (!canvas) {
                 console.warn("Failed to get canvas element");
+
                 return false;
             }
+
             const ctx = canvas.getContext("2d");
+
             if (!ctx) {
                 console.warn("failed to get 2d context");
+
                 return false;
             }
+
             this.chart = this.configureChart(r, ctx);
+
             return true;
         });
     }
@@ -127,6 +144,7 @@ export abstract class AKChart<T> extends AKElement {
                 id: "center-text",
                 beforeDraw: (chart) => {
                     if (!chart.ctx) return;
+
                     if (!this.centerText) return;
                     const width = chart.width || 0;
                     const height = chart.height || 0;
@@ -139,6 +157,7 @@ export abstract class AKChart<T> extends AKElement {
                     const textX = Math.round(
                         (width - chart.ctx.measureText(this.centerText).width) / 2,
                     );
+
                     const textY = height / 2;
 
                     chart.ctx.fillText(this.centerText, textX, textY);
@@ -147,10 +166,11 @@ export abstract class AKChart<T> extends AKElement {
         ];
     }
 
-    timeTickCallback(tickValue: string | number, index: number, ticks: Tick[]): string {
+    timeTickCallback(_tickValue: string | number, index: number, ticks: Tick[]): string {
         const valueStamp = ticks[index];
         const delta = Date.now() - valueStamp.value;
         const ago = Math.round(delta / 1000 / 60);
+
         return `${ago} minutes ago`;
     }
 
@@ -193,6 +213,7 @@ export abstract class AKChart<T> extends AKElement {
             options: this.getOptions(),
             plugins: this.getPlugins(),
         };
+
         return new Chart(ctx, config as ChartConfiguration);
     }
 

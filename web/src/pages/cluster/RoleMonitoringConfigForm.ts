@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleMonitoringConfigForm extends ModelForm<MonitoringRoleConfig, string> {
     async loadInstance(): Promise<MonitoringRoleConfig> {
         const config = await new RolesMonitoringApi(DEFAULT_CONFIG).monitoringGetRoleConfig();
+
         return config.config;
     }
 

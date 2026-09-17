@@ -29,8 +29,11 @@ export class DNSZoneForm extends ModelForm<DnsAPIZone, string> {
         const zones = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones({
             name: pk,
         });
+
         const zone = firstElement(zones.zones);
+
         if (!zone) throw new Error("No zone");
+
         return zone;
     }
 

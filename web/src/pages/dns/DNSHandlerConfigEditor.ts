@@ -35,7 +35,9 @@ const HANDLER_TYPES = [
 
 function toList(v: string[] | string | undefined): string[] {
     if (!v) return [];
+
     if (Array.isArray(v)) return v;
+
     return v
         .split(";")
         .map((s) => s.trim())
@@ -197,10 +199,12 @@ export class DNSHandlerConfigEditor extends AKElement {
     private updateConfig(index: number, updates: Partial<HandlerConfig>) {
         const next = [...this.configs];
         next[index] = { ...next[index], ...updates };
+
         // Remove undefined keys to keep YAML clean
         Object.keys(next[index]).forEach((k) => {
             if (next[index][k] === undefined) delete next[index][k];
         });
+
         this.configs = next;
         this.dispatchEvent(new Event("change", { bubbles: true }));
     }
@@ -212,15 +216,18 @@ export class DNSHandlerConfigEditor extends AKElement {
 
     private addHandler() {
         const base: HandlerConfig = { type: this.newHandlerType };
+
         if (this.newHandlerType.startsWith("forward_")) {
             base.to = ["8.8.8.8:53"];
         }
+
         this.configs = [...this.configs, base];
         this.dispatchEvent(new Event("change", { bubbles: true }));
     }
 
     private onDragStart(e: DragEvent, index: number) {
         this.dragIndex = index;
+
         if (e.dataTransfer) {
             e.dataTransfer.effectAllowed = "move";
             e.dataTransfer.setData("text/plain", String(index));
@@ -229,18 +236,23 @@ export class DNSHandlerConfigEditor extends AKElement {
 
     private onDragOver(e: DragEvent, index: number) {
         e.preventDefault();
+
         if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+
         if (this.dragOverIndex !== index) this.dragOverIndex = index;
     }
 
     private onDrop(e: DragEvent, dropIndex: number) {
         e.preventDefault();
         const from = this.dragIndex;
+
         if (from === null || from === dropIndex) {
             this.dragIndex = null;
             this.dragOverIndex = null;
+
             return;
         }
+
         const next = [...this.configs];
         const [moved] = next.splice(from, 1);
         next.splice(dropIndex, 0, moved);
@@ -261,6 +273,7 @@ export class DNSHandlerConfigEditor extends AKElement {
 
     private renderForwardIPBody(config: HandlerConfig, index: number): TemplateResult {
         const toVal = toList(config.to as string[] | string | undefined).join("\n");
+
         return html`
             <div class="handler-body">
                 <div class="handler-field">
@@ -287,6 +300,7 @@ export class DNSHandlerConfigEditor extends AKElement {
                         @change=${(e: Event) => {
                             const raw = (e.target as HTMLInputElement).value;
                             const v = raw === "" ? undefined : parseInt(raw, 10);
+
                             this.updateConfig(index, {
                                 cache_ttl: isNaN(v as number) ? undefined : v,
                             });
@@ -320,6 +334,7 @@ export class DNSHandlerConfigEditor extends AKElement {
         const toVal = toList(config.to as string[] | string | undefined).join("\n");
         const allowVal = toList(config.allowlists as string[] | string | undefined).join("\n");
         const blockVal = toList(config.blocklists as string[] | string | undefined).join("\n");
+
         return html`
             <div class="handler-body">
                 <div class="handler-field">
@@ -346,6 +361,7 @@ export class DNSHandlerConfigEditor extends AKElement {
                         @change=${(e: Event) => {
                             const raw = (e.target as HTMLInputElement).value;
                             const v = raw === "" ? undefined : parseInt(raw, 10);
+
                             this.updateConfig(index, {
                                 cache_ttl: isNaN(v as number) ? undefined : v,
                             });
@@ -364,6 +380,7 @@ export class DNSHandlerConfigEditor extends AKElement {
                         .value=${allowVal}
                         @change=${(e: Event) => {
                             const lines = parseTextarea((e.target as HTMLTextAreaElement).value);
+
                             this.updateConfig(index, {
                                 allowlists: lines.length ? lines : undefined,
                             });
@@ -382,6 +399,7 @@ export class DNSHandlerConfigEditor extends AKElement {
                         .value=${blockVal}
                         @change=${(e: Event) => {
                             const lines = parseTextarea((e.target as HTMLTextAreaElement).value);
+
                             this.updateConfig(index, {
                                 blocklists: lines.length ? lines : undefined,
                             });
@@ -423,6 +441,7 @@ export class DNSHandlerConfigEditor extends AKElement {
                                   const meta = this.handlerMeta(config.type);
                                   const isDragging = this.dragIndex === index;
                                   const isDragOver = this.dragOverIndex === index && !isDragging;
+
                                   return html`
                                       <li
                                           class="handler-item${

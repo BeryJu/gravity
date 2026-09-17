@@ -36,17 +36,22 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
 
     async apiEndpoint(): Promise<PaginatedResponse<DhcpAPIScope>> {
         const scopes = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpGetScopes();
+
         const data = (scopes.scopes || []).filter(
             (l) =>
                 l.scope.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.dns?.zone?.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.subnetCidr.includes(this.search),
         );
+
         data.sort((a, b) => {
             if (a.scope > b.scope) return 1;
+
             if (a.scope < b.scope) return -1;
+
             return 0;
         });
+
         return PaginationWrapper(data);
     }
 
@@ -61,6 +66,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
 
     row(item: DhcpAPIScope): TemplateResult[] {
         const usage = Math.round((item.statistics.used * 100) / item.statistics.usable);
+
         return [
             html`<a href=${`#/dhcp/scopes/${item.scope}`}>${item.scope}</a>`,
             html`<pre>${item.subnetCidr}</pre>`,
@@ -93,6 +99,7 @@ export class DHCPScopesPage extends TablePage<DhcpAPIScope> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"DHCP Scope(s)"}
             .objects=${this.selectedElements}

@@ -58,6 +58,7 @@ export class ToolPage extends AKElement {
 
     renderPing(): TemplateResult {
         if (!this.pingOutput) return html``;
+
         return html`<dl class="pf-c-description-list pf-m-horizontal">
             <div class="pf-c-description-list__group">
                 <dt class="pf-c-description-list__term">
@@ -106,6 +107,7 @@ export class ToolPage extends AKElement {
 
     renderTraceroute(): TemplateResult {
         if (!this.tracerouteOutput) return html``;
+
         return html`<ul class="pf-c-data-list">
             ${this.tracerouteOutput.hops?.map((hop) => {
                 return html`<li
@@ -130,6 +132,7 @@ export class ToolPage extends AKElement {
 
     renderPortmap(): TemplateResult {
         if (!this.portmapOutput) return html``;
+
         return html`<ul class="pf-c-data-list">
             ${this.portmapOutput.ports?.map((port) => {
                 return html`<li
@@ -150,8 +153,11 @@ export class ToolPage extends AKElement {
 
     renderResult(): TemplateResult {
         if (this.pingOutput) return this.renderPing();
+
         if (this.tracerouteOutput) return this.renderTraceroute();
+
         if (this.portmapOutput) return this.renderPortmap();
+
         return html`<p>No tool used yet</p>`;
     }
 

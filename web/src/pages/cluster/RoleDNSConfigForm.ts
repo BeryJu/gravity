@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleDNSConfigForm extends ModelForm<DnsRoleConfig, string> {
     async loadInstance(): Promise<DnsRoleConfig> {
         const config = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRoleConfig();
+
         return config.config;
     }
 

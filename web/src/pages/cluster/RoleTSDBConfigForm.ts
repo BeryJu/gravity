@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleTSDBConfigForm extends ModelForm<TsdbRoleConfig, string> {
     async loadInstance(): Promise<TsdbRoleConfig> {
         const config = await new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetRoleConfig();
+
         return config.config;
     }
 

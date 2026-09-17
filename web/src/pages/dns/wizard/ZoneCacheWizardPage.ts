@@ -15,19 +15,25 @@ export class ZoneCacheWizardPage extends WizardFormPage {
         if (!(data["enableCache"] as boolean)) {
             return true;
         }
+
         const config = this.host.state["handlerConfigs"] as KeyUnknown[];
+
         const forwarderConfig = config.filter((config) =>
             (config.type as string).startsWith("forward_"),
         );
+
         forwarderConfig.forEach((conf) => {
             conf["cache_ttl"] = (data["cacheTTL"] as number).toString();
         });
+
         forwarderConfig.splice(0, 1, {
             type: "memory",
         });
+
         forwarderConfig.splice(1, 1, {
             type: "etcd",
         });
+
         return true;
     };
 

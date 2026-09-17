@@ -10,9 +10,11 @@ export abstract class ModelForm<T, PKT extends string | number> extends Form<T> 
     @property({ attribute: false })
     set instancePk(value: PKT) {
         this._instancePk = value;
+
         if (this.viewportCheck && !this.isInViewport) {
             return;
         }
+
         this.loadInstance(value).then((instance) => {
             this.instance = instance;
             this.requestUpdate();
@@ -32,8 +34,10 @@ export abstract class ModelForm<T, PKT extends string | number> extends Form<T> 
 
     constructor() {
         super();
+
         this.addEventListener(EVENT_REFRESH, () => {
             if (!this._instancePk) return;
+
             this.loadInstance(this._instancePk).then((instance) => {
                 this.instance = instance;
             });
@@ -57,6 +61,7 @@ export abstract class ModelForm<T, PKT extends string | number> extends Form<T> 
                 this._initialLoad = true;
             }
         }
+
         return super.render();
     }
 }

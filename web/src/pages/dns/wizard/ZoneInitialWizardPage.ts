@@ -16,27 +16,35 @@ export class ZoneInitialWizardPage extends WizardFormPage {
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         let name = data.name as string;
+
         if (!name.endsWith(".")) {
             name += ".";
         }
+
         const zone: DnsAPIZonesPutInput = {
             authoritative: data.authoritative as boolean,
             handlerConfigs: [],
             defaultTTL: 86400,
             hook: "",
         };
+
         this.host.state["handlerConfigs"] = [];
+
         this.host.addActionBefore("Create zone", "create-zone", async (): Promise<boolean> => {
             zone.handlerConfigs = this.host.state["handlerConfigs"] as {
                 [key: string]: string;
             }[];
+
             this.host.state["zone"] = await new RolesDnsApi(DEFAULT_CONFIG).dnsPutZones({
                 zone: name,
                 dnsAPIZonesPutInput: zone,
             });
+
             this.host.state["name"] = name;
+
             return true;
         });
+
         return true;
     };
 

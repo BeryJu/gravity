@@ -40,6 +40,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
     async apiEndpoint(): Promise<PaginatedResponse<InstanceInstanceInfo>> {
         const inst = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
         this.etcdNodes = await new RolesEtcdApi(DEFAULT_CONFIG).etcdGetMembers();
+
         return PaginationWrapper(inst.instances || []);
     }
 
@@ -74,6 +75,7 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"Cluster Node(s)"}
             .objects=${this.selectedElements}
@@ -87,9 +89,11 @@ export class ClusterNodePage extends TablePage<InstanceInstanceInfo> {
                 const peerId =
                     this.etcdNodes?.members?.filter((member) => member.name === item.identifier) ||
                     [];
+
                 if (peerId?.length < 1) {
                     return;
                 }
+
                 return new RolesEtcdApi(DEFAULT_CONFIG).etcdRemoveMember({
                     peerID: peerId[0].id!,
                 });

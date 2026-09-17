@@ -30,14 +30,19 @@ export class AuthUsersPage extends TablePage<AuthAPIUser> {
 
     async apiEndpoint(): Promise<PaginatedResponse<AuthAPIUser>> {
         const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers();
+
         const data = (users.users || []).filter((l) =>
             l.username.toLowerCase().includes(this.search.toLowerCase()),
         );
+
         data.sort((a, b) => {
             if (a.username > b.username) return 1;
+
             if (a.username < b.username) return -1;
+
             return 0;
         });
+
         return PaginationWrapper(data);
     }
 
@@ -62,6 +67,7 @@ export class AuthUsersPage extends TablePage<AuthAPIUser> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"User(s)"}
             .objects=${this.selectedElements}

@@ -26,23 +26,28 @@ export class RouteMatch {
 
 export function getURLParam<T>(key: string, fallback: T): T {
     const params = getURLParams();
+
     if (key in params) {
         return params[key] as T;
     }
+
     return fallback;
 }
 
 export function getURLParams(): { [key: string]: unknown } {
     const params = {};
+
     if (window.location.hash.includes(ROUTE_SEPARATOR)) {
         const urlParts = window.location.hash.slice(1, Infinity).split(ROUTE_SEPARATOR, 2);
         const rawParams = decodeURIComponent(urlParts[1]);
+
         try {
             return JSON.parse(rawParams);
         } catch {
             return params;
         }
     }
+
     return params;
 }
 
@@ -50,6 +55,7 @@ export function setURLParams(params: { [key: string]: unknown }, replace = true)
     const paramsString = JSON.stringify(params);
     const currentUrl = window.location.hash.slice(1, Infinity).split(ROUTE_SEPARATOR)[0];
     const newUrl = `#${currentUrl};${encodeURIComponent(paramsString)}`;
+
     if (replace) {
         history.replaceState(undefined, "", newUrl);
     } else {
@@ -59,8 +65,10 @@ export function setURLParams(params: { [key: string]: unknown }, replace = true)
 
 export function updateURLParams(params: { [key: string]: unknown }, replace = true): void {
     const currentParams = getURLParams();
+
     for (const key in params) {
         currentParams[key] = params[key] as string;
     }
+
     setURLParams(currentParams, replace);
 }

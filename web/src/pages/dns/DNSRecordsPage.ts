@@ -69,30 +69,40 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
         if ((this.zone || "").endsWith(".in-addr.arpa.")) {
             this.isReverseZone = true;
         }
+
         const zone = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetZones({
             name: this.zone,
         });
+
         this._zone = zone.zones![0];
+
         this.zoneCanStoreRecords =
             (this._zone.handlerConfigs || []).filter((h) => h.type.toLowerCase() === "etcd")
                 .length > 0;
+
         if (!this.zoneCanStoreRecords) {
             return PaginationWrapper([]);
         }
+
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
             zone: this.zone || ".",
         });
+
         const data = (records.records || []).filter(
             (l) =>
                 l.fqdn.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.type.toLowerCase().includes(this.search.toLowerCase()) ||
                 l.data.includes(this.search),
         );
+
         data.sort((a, b) => {
             if (a.fqdn > b.fqdn) return 1;
+
             if (a.fqdn < b.fqdn) return -1;
+
             return parseInt(a.uid) - parseInt(b.uid);
         });
+
         return PaginationWrapper(data);
     }
 
@@ -130,6 +140,7 @@ export class DNSRecordsPage extends TablePage<DnsAPIRecord> {
 
     renderToolbarSelected(): TemplateResult {
         const disabled = this.selectedElements.length < 1;
+
         return html`<ak-forms-delete-bulk
             objectLabel=${"DNS Record(s)"}
             .objects=${this.selectedElements}

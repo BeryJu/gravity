@@ -21,15 +21,19 @@ export class ClusterJoinInitial extends WizardFormPage {
 
         const roles: string[] = [];
         const prefix = "role_";
+
         Object.keys(data).forEach((key) => {
             if (!key.startsWith(prefix)) {
                 return;
             }
+
             if (!data[key]) {
                 return;
             }
+
             roles.push(key.replaceAll(prefix, ""));
         });
+
         this.host.state["roles"] = roles.join(";");
 
         const info = await new ClusterInstancesApi(DEFAULT_CONFIG).clusterGetInstanceInfo();
@@ -51,7 +55,9 @@ export class ClusterJoinInitial extends WizardFormPage {
         const token = await new RolesApiApi(DEFAULT_CONFIG).apiPutTokens({
             username: joinUserUsername,
         });
+
         this.host.state["join_token"] = token.key;
+
         return true;
     };
 

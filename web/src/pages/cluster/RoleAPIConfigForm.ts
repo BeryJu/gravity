@@ -16,6 +16,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
     async loadInstance(): Promise<ApiRoleConfig> {
         const config = await new RolesApiApi(DEFAULT_CONFIG).apiGetRoleConfig();
+
         return config.config;
     }
 
@@ -32,7 +33,9 @@ export class RoleAPIConfigForm extends ModelForm<ApiRoleConfig, string> {
             const kv = data.oidc as unknown as KV;
             data.oidc.scopes = kv.scopesList.split(" ");
         }
+
         data.port = parseInt(data.port as unknown as string);
+
         return new RolesApiApi(DEFAULT_CONFIG).apiPutRoleConfig({
             apiAPIRoleConfigInput: {
                 config: data,

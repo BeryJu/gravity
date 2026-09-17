@@ -27,9 +27,11 @@ export class PageHeader extends AKElement {
     set header(value: string) {
         let title = TITLE_DEFAULT;
         title = `Admin - ${title}`;
+
         if (value !== "") {
             title = `${value} - ${title}`;
         }
+
         document.title = title;
         this._header = value;
     }
@@ -86,9 +88,12 @@ export class PageHeader extends AKElement {
             if (this.iconImage && !this.icon.startsWith("fa://")) {
                 return html`<img class="pf-icon" src=${this.icon} />&nbsp;`;
             }
+
             const icon = this.icon.replaceAll("fa://", "fa ");
+
             return html`<i class=${icon}></i>&nbsp;`;
         }
+
         return html``;
     }
 

@@ -14,7 +14,9 @@ export class DiscoverySubnetForm extends ModelForm<DiscoveryAPISubnet, string> {
     async loadInstance(pk: string): Promise<DiscoveryAPISubnet> {
         const subnets = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetSubnets();
         const subnet = subnets.subnets?.find((z) => z.name === pk);
+
         if (!subnet) throw new Error("No subnet");
+
         return subnet;
     }
 

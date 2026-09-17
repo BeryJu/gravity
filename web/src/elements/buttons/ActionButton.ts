@@ -13,8 +13,10 @@ export class ActionButton extends SpinnerButton {
 
     constructor() {
         super();
+
         this.callAction = (): Promise<unknown> => {
             this.setLoading();
+
             return this.apiRequest().catch((e: Error | Response) => {
                 if (e instanceof Error) {
                     showMessage({

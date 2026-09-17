@@ -49,10 +49,12 @@ export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {
 
     firstUpdated(): void {
         super.firstUpdated();
+
         // This is a bit hacky but required to make the chart sit well in the table
         if (!this.parentElement) {
             return;
         }
+
         this.parentElement.style.width = "25rem";
         this.parentElement.style.padding = "0";
     }
@@ -85,6 +87,7 @@ export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
+
         chartData.datasets.push({
             label: this.label ?? this.extraKeys[0],
             backgroundColor: "rgba(0,0,0,0)",
@@ -107,6 +110,7 @@ export class TableChart extends AKChart<TypesAPIMetricsGetOutput> {
                         };
                     }) || [],
         });
+
         return chartData;
     }
 }

@@ -38,6 +38,7 @@ export class WizardPage extends AKElement {
                 (el as AKElement).requestUpdate();
             }
         });
+
         return super.requestUpdate(name, oldValue, options);
     }
 

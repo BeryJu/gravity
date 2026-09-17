@@ -19,6 +19,7 @@ export abstract class AdminStatusCard<T> extends AggregateCard {
 
     constructor() {
         super();
+
         this.addEventListener(EVENT_REFRESH, () => {
             this.requestUpdate();
         });
@@ -34,6 +35,7 @@ export abstract class AdminStatusCard<T> extends AggregateCard {
                 this.getPrimaryValue()
                     .then((v) => {
                         this.value = v;
+
                         return this.getStatus(v);
                     })
                     .then((status) => {

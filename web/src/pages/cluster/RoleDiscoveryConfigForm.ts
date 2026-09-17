@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleDiscoveryConfigForm extends ModelForm<DiscoveryRoleConfig, string> {
     async loadInstance(): Promise<DiscoveryRoleConfig> {
         const config = await new RolesDiscoveryApi(DEFAULT_CONFIG).discoveryGetRoleConfig();
+
         return config.config;
     }
 

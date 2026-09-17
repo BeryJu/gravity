@@ -27,14 +27,17 @@ export class ScopeInternalWizardPage extends WizardFormPage {
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const req = this.host.state["scopeReq"] as DhcpAPIScopesPutInput;
         req.subnetCidr = data.subnet as string;
+
         if (data.router !== "") {
             req.options?.push({
                 tagName: "router",
                 value: data.router as string,
             });
         }
+
         req.ipam = data.ipam as { [key: string]: string };
         this.host.state["scopeReq"] = req;
+
         return true;
     };
 

@@ -23,8 +23,11 @@ export class AuthUserForm extends ModelForm<AuthAPIUser, string> {
         const users = await new RolesApiApi(DEFAULT_CONFIG).apiGetUsers({
             username: pk,
         });
+
         const user = firstElement(users.users);
+
         if (!user) throw new Error("No user");
+
         return user;
     }
 

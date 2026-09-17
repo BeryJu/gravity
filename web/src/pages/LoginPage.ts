@@ -21,6 +21,7 @@ export class LoginForm extends Form<AuthAPILoginInput> {
         const a = await new RolesApiApi(DEFAULT_CONFIG).apiLoginUser({
             authAPILoginInput: data,
         });
+
         if (a.successful) {
             window.location.hash = "#/";
             window.location.reload();
@@ -78,6 +79,7 @@ export class LoginPage extends AKElement {
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiAuthConfig().then((config) => {
             this.authConfig = config;
+
             if (this.authConfig.oidc && !window.location.search.includes("local")) {
                 window.location.assign("/auth/oidc");
             }

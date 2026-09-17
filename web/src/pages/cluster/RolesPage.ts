@@ -73,6 +73,7 @@ export class RolesPage extends TablePage<Role> {
     async apiEndpoint(): Promise<PaginatedResponse<Role>> {
         const inst = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
         this.instances = inst.instances || [];
+
         return PaginationWrapper(Roles);
     }
 
@@ -148,12 +149,15 @@ export class RolesPage extends TablePage<Role> {
                                         if (!role.settingsAvailable) {
                                             return;
                                         }
+
                                         const form = this.shadowRoot?.querySelector<ModalForm>(
                                             `#${role.id}`,
                                         );
+
                                         if (!form) {
                                             return;
                                         }
+
                                         form.onClick();
                                     }}
                                     slot="trigger"
@@ -171,6 +175,7 @@ export class RolesPage extends TablePage<Role> {
                                         >
                                     </div>
                                 </div>`;
+
                                 return card;
                             })}
                         </div>

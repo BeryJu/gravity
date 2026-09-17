@@ -51,11 +51,13 @@ export abstract class TablePage<T extends object> extends Table<T> {
         if (this.search === "") {
             return html``;
         }
+
         return html`<button
             @click=${() => {
                 this.search = "";
                 this.requestUpdate();
                 this.fetch();
+
                 updateURLParams({
                     search: "",
                 });

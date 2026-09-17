@@ -13,6 +13,7 @@ import { customElement } from "lit/decorators.js";
 export class RoleTFTPConfigForm extends ModelForm<TftpRoleConfig, string> {
     async loadInstance(): Promise<TftpRoleConfig> {
         const config = await new RolesTftpApi(DEFAULT_CONFIG).tftpGetRoleConfig();
+
         return config.config;
     }
 

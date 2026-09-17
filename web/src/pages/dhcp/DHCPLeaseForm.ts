@@ -23,8 +23,11 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
             scope: this.scope,
             identifier: pk,
         });
+
         const lease = firstElement(leases.leases);
+
         if (!lease) throw new Error("No lease");
+
         return lease;
     }
 
@@ -40,7 +43,9 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
         if (!this.instance) {
             return false;
         }
+
         if (data.identifier !== this.instance.identifier) return true;
+
         return false;
     }
 
@@ -48,17 +53,20 @@ export class DHCPLeaseForm extends ModelForm<DhcpAPILease, string> {
         if (!data.addressLeaseTime) {
             data.addressLeaseTime = "0";
         }
+
         if (!this.instance) {
             data.expiry = -1;
         } else {
             data.expiry = this.instance.expiry;
         }
+
         if (this.instance && this.needsRecreate(data)) {
             await new RolesDhcpApi(DEFAULT_CONFIG).dhcpDeleteLeases({
                 scope: this.scope || "",
                 identifier: this.instance.identifier,
             });
         }
+
         return new RolesDhcpApi(DEFAULT_CONFIG).dhcpPutLeases({
             scope: this.scope || "",
             identifier: data.identifier,

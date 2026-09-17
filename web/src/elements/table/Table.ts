@@ -38,11 +38,13 @@ export class TableColumn {
         if (!this.orderBy) {
             return;
         }
+
         if (table.order === this.orderBy) {
             table.order = `-${this.orderBy}`;
         } else {
             table.order = this.orderBy;
         }
+
         table.fetch();
     }
 
@@ -110,6 +112,7 @@ export abstract class Table<T extends object> extends AKElement {
         if (this.expandable) {
             throw new Error("Expandable is enabled but renderExpanded is not overridden!");
         }
+
         return html`${item}`;
     }
 
@@ -161,6 +164,7 @@ export abstract class Table<T extends object> extends AKElement {
 
     constructor() {
         super();
+
         this.addEventListener(EVENT_REFRESH, () => {
             this.fetch();
         });
@@ -176,15 +180,19 @@ export abstract class Table<T extends object> extends AKElement {
         if (this.isLoading) {
             return;
         }
+
         this.isLoading = true;
+
         try {
             this.data = await this.apiEndpoint(this.page);
             this.hasError = undefined;
             this.page = this.data.pagination.current;
             const newSelected: T[] = [];
             const newExpanded: T[] = [];
+
             this.data.results.forEach((res) => {
                 const jsonRes = JSON.stringify(res);
+
                 // So because we're dealing with complex objects here, we can't use indexOf
                 // since it checks strict equality, and we also can't easily check in findIndex()
                 // Instead we default to comparing the JSON of both objects, which is quite slow
@@ -193,6 +201,7 @@ export abstract class Table<T extends object> extends AKElement {
                 let comp = (item: T) => {
                     return JSON.stringify(item) === jsonRes;
                 };
+
                 if ("pk" in res) {
                     comp = (item: T) => {
                         return (
@@ -203,14 +212,18 @@ export abstract class Table<T extends object> extends AKElement {
                 }
 
                 const selectedIndex = this.selectedElements.findIndex(comp);
+
                 if (selectedIndex > -1) {
                     newSelected.push(res);
                 }
+
                 const expandedIndex = this.expandedElements.findIndex(comp);
+
                 if (expandedIndex > -1) {
                     newExpanded.push(res);
                 }
             });
+
             this.isLoading = false;
             this.selectedElements = newSelected;
             this.expandedElements = newExpanded;
@@ -258,16 +271,21 @@ export abstract class Table<T extends object> extends AKElement {
         if (this.hasError) {
             return [this.renderEmpty(this.renderError())];
         }
+
         if (!this.data) {
             return;
         }
+
         if (this.data.pagination.count === 0) {
             return [this.renderEmpty()];
         }
+
         const groupedResults = this.groupBy(this.data.results);
+
         if (groupedResults.length === 1) {
             return this.renderRowGroup(groupedResults[0][1]);
         }
+
         return groupedResults.map(([group, items]) => {
             return html`<thead>
                     <tr role="row">
@@ -298,19 +316,24 @@ export abstract class Table<T extends object> extends AKElement {
                                           } else {
                                               // Get index of item and remove if selected
                                               const index = this.selectedElements.indexOf(item);
+
                                               if (index <= -1) return;
                                               this.selectedElements.splice(index, 1);
                                           }
+
                                           this.requestUpdate();
+
                                           // Unset select-all if selectedElements is empty
                                           if (this.selectedElements.length < 1) {
                                               const selectAllCheckbox =
                                                   this.shadowRoot?.querySelector<HTMLInputElement>(
                                                       "[name=select-all]",
                                                   );
+
                                               if (!selectAllCheckbox) {
                                                   return;
                                               }
+
                                               selectAllCheckbox.checked = false;
                                               this.requestUpdate();
                                           }
@@ -330,6 +353,7 @@ export abstract class Table<T extends object> extends AKElement {
                                       }"
                                       @click=${() => {
                                           const idx = this.expandedElements.indexOf(item);
+
                                           if (idx <= -1) {
                                               // Element is not expanded, add it
                                               this.expandedElements.push(item);
@@ -337,6 +361,7 @@ export abstract class Table<T extends object> extends AKElement {
                                               // Element is expanded, remove it
                                               this.expandedElements.splice(idx, 1);
                                           }
+
                                           this.requestUpdate();
                                       }}
                                   >
@@ -388,12 +413,14 @@ export abstract class Table<T extends object> extends AKElement {
         if (!this.searchEnabled()) {
             return html``;
         }
+
         return html`<ak-table-search
             class="pf-c-toolbar__item pf-m-search-filter"
             value=${ifDefined(this.search)}
             .onSearch=${(value: string) => {
                 this.search = value;
                 this.fetch();
+
                 updateURLParams({
                     search: value,
                 });

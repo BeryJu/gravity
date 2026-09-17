@@ -20,62 +20,77 @@ export const ROUTES = [
     new Route(new RegExp("^/$")).redirect("/overview"),
     new Route(new RegExp("^/login$"), async () => {
         await import("./pages/LoginPage");
+
         return html`<gravity-login></gravity-login>`;
     }),
     new Route(new RegExp("^/overview$"), async () => {
         await import("./pages/overview/OverviewPage");
+
         return html`<gravity-overview></gravity-overview>`;
     }),
     new Route(new RegExp("^/dns/zones$"), async () => {
         await import("./pages/dns/DNSZonesPage");
+
         return html`<gravity-dns-zones></gravity-dns-zones>`;
     }),
     new Route(new RegExp("^/dns/zones/(?<zone>.*)$"), async (args) => {
         await import("./pages/dns/DNSRecordsPage");
+
         return html`<gravity-dns-records zone=${args.zone}></gravity-dns-records>`;
     }),
     new Route(new RegExp("^/dhcp/scopes$"), async () => {
         await import("./pages/dhcp/DHCPScopesPage");
+
         return html`<gravity-dhcp-scopes></gravity-dhcp-scopes>`;
     }),
     new Route(new RegExp("^/dhcp/scopes/(?<scope>.*)$"), async (args) => {
         await import("./pages/dhcp/DHCPLeasesPage");
+
         return html`<gravity-dhcp-leases scope=${args.scope}></gravity-dhcp-leases>`;
     }),
     new Route(new RegExp("^/discovery/devices$"), async () => {
         await import("./pages/discovery/DiscoveryDevicesPage");
+
         return html`<gravity-discovery-devices></gravity-discovery-devices>`;
     }),
     new Route(new RegExp("^/discovery/subnets$"), async () => {
         await import("./pages/discovery/DiscoverySubnetsPage");
+
         return html`<gravity-discovery-subnets></gravity-discovery-subnets>`;
     }),
     new Route(new RegExp("^/tftp/files$"), async () => {
         await import("./pages/tftp/TFTPFilesPage");
+
         return html`<gravity-tftp-files></gravity-tftp-files>`;
     }),
     new Route(new RegExp("^/cluster/roles$"), async () => {
         await import("./pages/cluster/RolesPage");
+
         return html`<gravity-cluster-roles></gravity-cluster-roles>`;
     }),
     new Route(new RegExp("^/cluster/nodes/logs$"), async () => {
         await import("./pages/cluster/ClusterNodeLogsPage");
+
         return html`<gravity-cluster-node-logs></gravity-cluster-node-logs>`;
     }),
     new Route(new RegExp("^/cluster/nodes$"), async () => {
         await import("./pages/cluster/ClusterNodesPage");
+
         return html`<gravity-cluster-nodes></gravity-cluster-nodes>`;
     }),
     new Route(new RegExp("^/auth/users$"), async () => {
         await import("./pages/auth/AuthUsersPage");
+
         return html`<gravity-auth-users></gravity-auth-users>`;
     }),
     new Route(new RegExp("^/auth/tokens$"), async () => {
         await import("./pages/auth/AuthTokensPage");
+
         return html`<gravity-auth-tokens></gravity-auth-tokens>`;
     }),
     new Route(new RegExp("^/tools$"), async () => {
         await import("./pages/tools/ToolPage");
+
         return html`<gravity-tools></gravity-tools>`;
     }),
 ];
@@ -121,10 +136,12 @@ export class AdminInterface extends AKElement {
     constructor() {
         super();
         this.showSidebar = window.innerWidth >= 1280;
+
         window.addEventListener("resize", () => {
             if (!this.isAuthenticated) return;
             this.showSidebar = window.innerWidth >= 1280;
         });
+
         window.addEventListener(EVENT_SIDEBAR_TOGGLE, () => {
             if (!this.isAuthenticated) return;
             this.showSidebar = !this.showSidebar;
@@ -134,8 +151,10 @@ export class AdminInterface extends AKElement {
     firstUpdated(): void {
         new RolesApiApi(DEFAULT_CONFIG).apiUsersMe().then((me) => {
             this.isAuthenticated = me.authenticated;
+
             if (!me.authenticated) {
                 this.showSidebar = false;
+
                 if (window.location.hash !== "#/login") {
                     window.location.hash = "#/login";
                     window.location.reload();
@@ -155,6 +174,7 @@ export class AdminInterface extends AKElement {
             >
             </ak-router-outlet>`;
         }
+
         return html`<div class="pf-c-page">
             <ak-sidebar
                 class="pf-c-page__sidebar ${this.showSidebar ? "pf-m-expanded" : "pf-m-collapsed"}"

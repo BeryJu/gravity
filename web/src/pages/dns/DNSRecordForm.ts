@@ -21,9 +21,12 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
         const records = await new RolesDnsApi(DEFAULT_CONFIG).dnsGetRecords({
             zone: this.zone,
         });
+
         const record = records.records?.find((z) => z.hostname + z.uid === pk);
+
         if (!record) throw new Error("No record");
         this.recordType = record.type;
+
         return record;
     }
 
@@ -39,9 +42,13 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
         if (!this.instance) {
             return false;
         }
+
         if (data.hostname !== this.instance.hostname) return true;
+
         if (data.uid !== this.instance.uid) return true;
+
         if (data.type !== this.instance.type) return true;
+
         return false;
     }
 
@@ -52,6 +59,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                 ...this.instance,
             });
         }
+
         return new RolesDnsApi(DEFAULT_CONFIG).dnsPutRecords({
             zone: this.zone || "",
             ...data,
@@ -161,6 +169,7 @@ export class DNSRecordForm extends ModelForm<DnsAPIRecord, string> {
                         />
                     </ak-form-element-horizontal>`;
         }
+
         return html``;
     }
 

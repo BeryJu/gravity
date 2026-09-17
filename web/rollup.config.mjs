@@ -69,10 +69,11 @@ export default {
     preserveEntrySignatures: "strict",
     cache: true,
     context: "window",
-    onwarn: function (warning, warn) {
+    onwarn(warning, warn) {
         if (warning.code === "UNRESOLVED_IMPORT") {
             throw Object.assign(new Error(), warning);
         }
+
         warn(warning);
     },
 };

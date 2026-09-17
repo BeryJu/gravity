@@ -99,6 +99,7 @@ export class ModalButton extends AKElement {
 
     onClick(): void {
         this.open = true;
+
         this.querySelectorAll("*").forEach((child) => {
             if ("requestUpdate" in child) {
                 (child as AKElement).requestUpdate();

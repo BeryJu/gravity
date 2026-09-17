@@ -12,9 +12,11 @@ import { customElement, property } from "lit/decorators.js";
 
 export function showMessage(message: APIMessage, unique = false): void {
     const container = document.querySelector<MessageContainer>("ak-message-container");
+
     if (!container) {
         throw new SentryIgnoredError("failed to find message container");
     }
+
     container.addMessage(message, unique);
     container.requestUpdate();
 }
@@ -39,6 +41,7 @@ export class MessageContainer extends AKElement {
 
     constructor() {
         super();
+
         this.addEventListener(EVENT_MESSAGE, ((e: CustomEvent<APIMessage>) => {
             this.addMessage(e.detail);
         }) as EventListener);
@@ -46,11 +49,13 @@ export class MessageContainer extends AKElement {
 
     addMessage(message: APIMessage, unique = false): void {
         if (unique) {
-            const matchingMessages = this.messages.filter((m) => m.message == message.message);
+            const matchingMessages = this.messages.filter((m) => m.message === message.message);
+
             if (matchingMessages.length > 0) {
                 return;
             }
         }
+
         this.messages.push(message);
     }
 

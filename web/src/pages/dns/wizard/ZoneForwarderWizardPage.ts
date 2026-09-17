@@ -13,12 +13,15 @@ export class ZoneForwarderWizardPage extends WizardFormPage {
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const config = this.host.state["handlerConfigs"] as KeyUnknown[];
+
         const forwarderConfig = config.filter((config) =>
             (config.type as string).startsWith("forward_"),
         );
+
         forwarderConfig.forEach((conf) => {
             conf["to"] = data.to;
         });
+
         return true;
     };
 

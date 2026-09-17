@@ -21,6 +21,7 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
     async apiRequest(): Promise<TypesAPIMetricsGetOutput> {
         const clusterInfo = await new ClusterApi(DEFAULT_CONFIG).clusterGetClusterInfo();
         this.maxAvailableMemory = clusterInfo.instances?.map((i) => i.memoryBytes).sort()[0] || 0;
+
         return new RolesTsdbApi(DEFAULT_CONFIG).tsdbGetMetrics({
             role: TypesAPIMetricsRole.System,
             category: "memory",
@@ -33,11 +34,13 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
 
     getOptions() {
         const opts = super.getOptions();
+
         if (this.maxAvailableMemory > 0) {
             opts.scales!.y!.max = this.maxAvailableMemory / 1024 / 1024;
         } else {
             opts.scales!.y!.min = 0;
         }
+
         return opts;
     }
 
@@ -45,9 +48,11 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
+
         groupBy(data?.records || [], (record) => record.node).forEach(([node, records]) => {
             const background = getColorFromString(node);
             background.a = 0.3;
+
             chartData.datasets.push({
                 label: node,
                 borderColor: getColorFromString(node).toString(),
@@ -64,6 +69,7 @@ export class MemoryUsageChart extends AKChart<TypesAPIMetricsGetOutput> {
                 }),
             });
         });
+
         return chartData;
     }
 }

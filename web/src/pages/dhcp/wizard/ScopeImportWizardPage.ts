@@ -19,21 +19,27 @@ export class ScopeImportWizardPage extends WizardFormPage {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsText(file);
+
             reader.onload = () => {
                 resolve(reader.result as string);
             };
+
             reader.onerror = reject;
         });
     }
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const file = this.form?.getFormFiles()["file"];
+
         if (!file) {
             return false;
         }
+
         const contents = await this.FileToString(file);
+
         this.host.addActionAfter("Importing leases", "import", async () => {
             const name = this.host.state["name"] as string;
+
             const result = await new RolesDhcpApi(DEFAULT_CONFIG).dhcpImportScopes({
                 scope: name,
                 dhcpAPIScopesImportInput: {
@@ -41,8 +47,10 @@ export class ScopeImportWizardPage extends WizardFormPage {
                     type: data.type as DhcpAPIScopesImporterType,
                 },
             });
+
             return result.successful || false;
         });
+
         return true;
     };
 

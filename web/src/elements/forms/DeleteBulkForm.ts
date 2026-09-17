@@ -74,12 +74,15 @@ export class DeleteBulkForm extends ModalButton {
     metadata: (item: any) => BulkDeleteMetadata = (item: any) => {
         const rec = item as Record<string, unknown>;
         const meta = [];
+
         if (Object.prototype.hasOwnProperty.call(rec, "name")) {
             meta.push({ key: "Name", value: rec.name as string });
         }
+
         if (Object.prototype.hasOwnProperty.call(rec, "pk")) {
             meta.push({ key: "ID", value: rec.pk as string });
         }
+
         return meta;
     };
 
@@ -96,6 +99,7 @@ export class DeleteBulkForm extends ModalButton {
     async confirm(): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let extraData: any = undefined;
+
         try {
             extraData = await this.preDelete();
         } catch (exc) {
@@ -103,8 +107,10 @@ export class DeleteBulkForm extends ModalButton {
                 message: (exc as Error).toString(),
                 level: MessageLevel.error,
             });
+
             return Promise.reject();
         }
+
         return Promise.all(
             this.objects.map((item) => {
                 return this.delete(item, extraData);
@@ -113,6 +119,7 @@ export class DeleteBulkForm extends ModalButton {
             .then(() => {
                 this.onSuccess();
                 this.open = false;
+
                 this.dispatchEvent(
                     new CustomEvent(EVENT_REFRESH, {
                         bubbles: true,

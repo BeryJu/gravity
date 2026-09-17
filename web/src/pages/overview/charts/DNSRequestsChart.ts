@@ -32,6 +32,7 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
     getOptions() {
         const opts = super.getOptions();
         opts.scales!.y!.min = 0;
+
         return opts;
     }
 
@@ -39,16 +40,19 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
         const chartData: ChartData = {
             datasets: [],
         };
+
         groupBy(data.records || [], (record) => record.node).forEach(([node, records]) => {
             groupBy(records, (record) => {
                 // TODO: Remove in the future
                 if (record.keys?.length === 3) {
                     return record.keys![1] && record.keys![2];
                 }
+
                 return record.keys![1];
             }).forEach(([handler, records]) => {
                 const background = getColorFromString(handler);
                 background.a = 0.3;
+
                 chartData.datasets.push({
                     label: `${node} - ${handler}`,
                     borderColor: getColorFromString(handler).toString(),
@@ -65,6 +69,7 @@ export class DNSRequestsChart extends AKChart<TypesAPIMetricsGetOutput> {
                 });
             });
         });
+
         return chartData;
     }
 }

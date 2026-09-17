@@ -13,6 +13,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 export class RoleBackupConfigForm extends ModelForm<BackupRoleConfig, string> {
     async loadInstance(): Promise<BackupRoleConfig> {
         const config = await new RolesBackupApi(DEFAULT_CONFIG).backupGetRoleConfig();
+
         return config.config;
     }
 

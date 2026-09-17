@@ -35,6 +35,7 @@ export class ScopePresetWizardPage extends WizardPage {
     activeCallback = async () => {
         this.host.isValid = true;
         this.applicationTypes[0].callback(this.host);
+
         this.host.steps = ["gravity-dhcp-wizard-initial", "gravity-dhcp-wizard-type"].concat(
             ...this.applicationTypes[0].components,
         );
@@ -52,10 +53,12 @@ export class ScopePresetWizardPage extends WizardPage {
                         ?checked=${idx === 0}
                         @change=${() => {
                             type.callback(this.host);
+
                             this.host.steps = [
                                 "gravity-dhcp-wizard-initial",
                                 "gravity-dhcp-wizard-type",
                             ].concat(...type.components);
+
                             this.host.isValid = true;
                         }}
                     />

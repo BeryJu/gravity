@@ -94,6 +94,7 @@ export class SidebarItem extends AKElement {
     get childItems(): SidebarItem[] {
         const children = Array.from(this.querySelectorAll<SidebarItem>("ak-sidebar-item") || []);
         children.forEach((child) => (child.parent = this));
+
         return children;
     }
 
@@ -111,9 +112,11 @@ export class SidebarItem extends AKElement {
 
     onHashChange(): void {
         const activePath = window.location.hash.slice(1, Infinity).split(ROUTE_SEPARATOR)[0];
+
         this.childItems.forEach((item) => {
             this.expandParentRecursive(activePath, item);
         });
+
         this.isActive = this.matchesPath(activePath);
     }
 
@@ -121,17 +124,22 @@ export class SidebarItem extends AKElement {
         if (!this.path) {
             return false;
         }
+
         if (this.path) {
             const ourPath = this.path.split(";")[0];
+
             if (new RegExp(`^${ourPath}$`).exec(path)) {
                 return true;
             }
         }
+
         return this.activeMatchers.some((v) => {
             const match = v.exec(path);
+
             if (match !== null) {
                 return true;
             }
+
             return false;
         });
     }
@@ -141,6 +149,7 @@ export class SidebarItem extends AKElement {
             item.parent.expanded = true;
             this.requestUpdate();
         }
+
         item.childItems.forEach((i) => this.expandParentRecursive(activePath, i));
     }
 
@@ -151,10 +160,12 @@ export class SidebarItem extends AKElement {
     async renderInner(): Promise<TemplateResult> {
         if (this.condition) {
             const result = await this.condition();
+
             if (!result) {
                 return html``;
             }
         }
+
         if (this.childItems.length > 0) {
             return html`<li
                 class="pf-c-nav__item ${this.expanded ? "pf-m-expandable pf-m-expanded" : ""}"
@@ -180,6 +191,7 @@ export class SidebarItem extends AKElement {
                 </section>
             </li>`;
         }
+
         return html`<li class="pf-c-nav__item">
             ${
                 this.path

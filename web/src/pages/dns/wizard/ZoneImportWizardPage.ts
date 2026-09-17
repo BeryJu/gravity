@@ -19,21 +19,27 @@ export class ZoneImportWizardPage extends WizardFormPage {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsText(file);
+
             reader.onload = () => {
                 resolve(reader.result as string);
             };
+
             reader.onerror = reject;
         });
     }
 
     nextDataCallback = async (data: KeyUnknown): Promise<boolean> => {
         const file = this.form?.getFormFiles()["file"];
+
         if (!file) {
             return false;
         }
+
         const contents = await this.FileToString(file);
+
         this.host.addActionAfter("Importing records", "import", async () => {
             const name = this.host.state["name"] as string;
+
             const result = await new RolesDnsApi(DEFAULT_CONFIG).dnsImportZones({
                 zone: name,
                 dnsAPIZonesImportInput: {
@@ -41,8 +47,10 @@ export class ZoneImportWizardPage extends WizardFormPage {
                     type: data.type as DnsAPIZonesImporterType,
                 },
             });
+
             return result.successful || false;
         });
+
         return true;
     };
 
