@@ -123,7 +123,9 @@ func (s *Subnet) RunDiscovery(ctx context.Context) []Device {
 		}
 		for _, addr := range host.Addresses {
 			if addr.AddrType == "mac" {
-				dev.MAC = addr.Addr
+				// nmap reports devices with upper-case MAC,
+				// we use all lowercase
+				dev.MAC = strings.ToLower(addr.Addr)
 			} else {
 				dev.IP = addr.Addr
 				dev.Identifier = addr.Addr
