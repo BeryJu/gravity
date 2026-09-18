@@ -1,4 +1,5 @@
 import { cpSync, readFileSync } from "node:fs";
+
 import * as esbuild from "esbuild";
 
 export const isProdBuild = process.env.NODE_ENV === "production";
@@ -11,6 +12,7 @@ const cssStyleSheetPlugin = {
     setup(build) {
         build.onLoad({ filter: /\.css$/ }, (args) => {
             const text = readFileSync(args.path, "utf8");
+
             return {
                 contents: `const sheet = new CSSStyleSheet();\nsheet.replaceSync(${JSON.stringify(text)});\nexport default sheet;\n`,
                 loader: "js",
