@@ -3,8 +3,8 @@
     "version": "0.33.0",
     "description": "",
     "scripts": {
-        "build": "rm -rf dist/ && rollup -c",
-        "watch": "rm -rf dist/ && rollup -c -w",
+        "build": "rm -rf dist/ && NODE_ENV=production node esbuild.config.mjs",
+        "watch": "rm -rf dist/ && node esbuild.config.mjs --watch",
         "format": "oxfmt --write .",
         "format-check": "oxfmt --check .",
         "lint": "oxlint --fix",
@@ -13,7 +13,6 @@
         "tsc": "tsc --noEmit -p ."
     },
     "dependencies": {
-        "@codecov/rollup-plugin": "^2.0.1",
         "@codemirror/lang-javascript": "^6.2.5",
         "@codemirror/legacy-modes": "^6.5.4",
         "@fsegurai/codemirror-theme-vscode-dark": "^6.2.8",
@@ -21,10 +20,6 @@
         "@goauthentik/oxfmt-config": "^9.1.0",
         "@goauthentik/oxlint-config": "^1.0.0",
         "@patternfly/patternfly": "^4.224.2",
-        "@rollup/plugin-commonjs": "^29.0.3",
-        "@rollup/plugin-json": "^6.1.0",
-        "@rollup/plugin-node-resolve": "^16.0.3",
-        "@rollup/plugin-typescript": "^12.3.0",
         "@types/codemirror": "5.60.18",
         "@types/sha.js": "^2.4.4",
         "@webcomponents/webcomponentsjs": "^2.8.0",
@@ -42,13 +37,9 @@
         "oxfmt": "^0.68.0",
         "oxlint": "^1.83.0",
         "rapidoc": "^9.3.8",
-        "rollup": "^4.63.3",
-        "rollup-plugin-copy": "^3.5.0",
-        "rollup-plugin-cssimport": "^1.0.3",
-        "rollup-plugin-esbuild": "^6.2.1",
         "sha.js": "^2.4.12",
         "ts-lit-plugin": "^2.0.2",
-        "typescript": "^6.0.3",
+        "typescript": "^7.0.2",
         "yaml": "^2.9.1"
     },
     "engines": {
