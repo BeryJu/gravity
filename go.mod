@@ -43,7 +43,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/struCoder/pidusage v0.2.1
 	github.com/swaggest/openapi-go v0.2.61
-	github.com/swaggest/rest v0.2.75
+	github.com/swaggest/rest v0.2.76
 	github.com/swaggest/usecase v1.3.1
 	github.com/testcontainers/testcontainers-go v0.44.0
 	go.etcd.io/etcd/api/v3 v3.7.1
@@ -296,7 +296,7 @@ require (
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/swaggest/form/v5 v5.1.1 // indirect
-	github.com/swaggest/jsonschema-go v0.3.78 // indirect
+	github.com/swaggest/jsonschema-go v0.3.79 // indirect
 	github.com/swaggest/refl v1.4.0 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/tklauser/go-sysconf v0.4.0 // indirect
