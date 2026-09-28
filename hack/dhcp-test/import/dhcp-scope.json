@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {
+      "key": "/dhcp/scopes/test",
+      "value": "eyJkbnMiOnsiem9uZSI6IiIsInNlYXJjaCI6W10sImFkZFpvbmVJbkhvc3RuYW1lIjpmYWxzZX0sImlwYW0iOnsidHlwZSI6ImludGVybmFsIiwicmFuZ2Vfc3RhcnQiOiIxMC4yMDAuNTAuMTAwIiwicmFuZ2VfZW5kIjoiMTAuMjAwLjUwLjIwMCJ9LCJzdWJuZXRDaWRyIjoiMTAuMjAwLjUwLjAvMjQiLCJvcHRpb25zIjpbXSwidHRsIjo2MDAsImRlZmF1bHQiOnRydWUsImhvb2siOiIifQ=="
+    }
+  ]
+}
