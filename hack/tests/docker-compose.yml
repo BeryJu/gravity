@@ -19,7 +19,7 @@ services:
     command: |
       /usr/local/bin/etcd --listen-client-urls http://0.0.0.0:2385 --advertise-client-urls http://127.0.0.1:2385
   seaweedfs:
-    image: docker.io/chrislusf/seaweedfs:4.47
+    image: docker.io/chrislusf/seaweedfs:4.48
     ports:
       - 9001:8333
       - 9002:8888
