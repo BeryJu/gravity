@@ -26,7 +26,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/grafana/pyroscope-go v1.4.2
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
-	github.com/k8s-gateway/k8s_gateway v1.8.3
+	github.com/k8s-gateway/k8s_gateway v1.8.4
 	github.com/miekg/dns v1.1.73
 	github.com/minio/minio-go/v7 v7.3.0
 	github.com/moby/moby/api v1.56.0
@@ -53,7 +53,7 @@ require (
 	go.etcd.io/etcd/server/v3 v3.7.2
 	go.uber.org/zap v1.28.0
 	golang.org/x/crypto v0.57.0
-	golang.org/x/exp v0.0.0-20260209203927-2842357ff358
+	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f
 	golang.org/x/net v0.59.0
 	golang.org/x/oauth2 v0.37.0
 	golang.org/x/term v0.46.0
@@ -356,10 +356,10 @@ require (
 	gorm.io/driver/mysql v1.6.0 // indirect
 	gorm.io/driver/postgres v1.6.2 // indirect
 	gorm.io/gorm v1.31.2 // indirect
-	k8s.io/api v0.36.3 // indirect
-	k8s.io/apiextensions-apiserver v0.36.2 // indirect
-	k8s.io/apimachinery v0.36.3 // indirect
-	k8s.io/client-go v0.36.3 // indirect
+	k8s.io/api v0.37.0 // indirect
+	k8s.io/apiextensions-apiserver v0.37.0 // indirect
+	k8s.io/apimachinery v0.37.0 // indirect
+	k8s.io/client-go v0.37.0 // indirect
 	k8s.io/klog/v2 v2.140.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20260721132016-d427ff9ee9ad // indirect
 	k8s.io/utils v0.0.0-20260707023825-cf1189d6abe3 // indirect
@@ -370,7 +370,7 @@ require (
 	mvdan.cc/gofumpt v0.9.2 // indirect
 	sigs.k8s.io/controller-runtime v0.24.1 // indirect
 	sigs.k8s.io/external-dns v0.22.0 // indirect
-	sigs.k8s.io/gateway-api v1.6.1 // indirect
+	sigs.k8s.io/gateway-api v1.6.2 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/mcs-api v0.5.2 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
