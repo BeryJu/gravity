@@ -35,7 +35,7 @@
         "date-fns": "^4.4.0",
         "deepmerge": "^4.3.1",
         "esbuild": "^0.28.2",
-        "globals": "^17.12.0",
+        "globals": "^17.13.0",
         "gravity-api": "^0.33.0",
         "ip-num": "^1.6.2",
         "lit": "^3.3.3",
