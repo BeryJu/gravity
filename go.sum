@@ -537,8 +537,8 @@ github.com/jstemmer/go-junit-report/v2 v2.1.0/go.mod h1:mgHVr7VUo5Tn8OLVr1cKnLuE
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/k8s-gateway/k8s_gateway v1.8.4 h1:ETiPAVgcyZS03purjmgjqXSXss4vQjqEmUix2EIVCF4=
-github.com/k8s-gateway/k8s_gateway v1.8.4/go.mod h1:J+UnViLD7NFyQut6441E9OWJLTF/v1NnF0OWe2C2Urg=
+github.com/k8s-gateway/k8s_gateway v1.9.0 h1:gdZ2fQRESYMIz6D+pvXlr1sBcfLsIC1ivL43kanUHnA=
+github.com/k8s-gateway/k8s_gateway v1.9.0/go.mod h1:J+UnViLD7NFyQut6441E9OWJLTF/v1NnF0OWe2C2Urg=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.19.2 h1:hMRETovs/pu/dVWN7zIT1PGG8t509MwT6bO7XSi26R8=
