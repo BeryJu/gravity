@@ -173,16 +173,11 @@ func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes)
 			return s.errorResponse(err)
 		}
 	}
-	return externaldnsapi.Response(http.StatusOK, struct{}{}), nil
+	return externaldnsapi.Response(http.StatusNoContent, nil), nil
 }
 
 func (s *Server) AdjustRecords(ctx context.Context, endpoints []externaldnsapi.Endpoint) (externaldnsapi.ImplResponse, error) {
-	for _, endpoint := range endpoints {
-		if _, err := s.endpointToWrite(ctx, endpoint); err != nil {
-			return s.errorResponse(err)
-		}
-	}
-	return externaldnsapi.Response(http.StatusOK, []externaldnsapi.Endpoint{}), nil
+	return externaldnsapi.Response(http.StatusOK, endpoints), nil
 }
 
 func (s *Server) recordUID(uid string) string {
