@@ -2,8 +2,8 @@ package instance
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"sync"
 
@@ -76,18 +76,22 @@ func (i *Instance) Role(id string) roles.Role {
 	return role.Role
 }
 
-func (i *Instance) Start() {
+func (i *Instance) Start() error {
 	i.log.Info("Gravity starting", zap.String("version", extconfig.FullVersion()))
 	i.startSentry()
 	i.startPyroscope()
 	bs := sentry.StartTransaction(i.rootContext, "gravity.instance.bootstrap")
 	if strings.Contains(extconfig.Get().BootstrapRoles, "etcd") {
 		if !i.startEtcd(bs.Context()) {
-			return
+			return errors.New("failed to start embedded etcd")
 		}
 	}
-	i.bootstrap(bs.Context())
+	if err := i.bootstrap(bs.Context()); err != nil {
+		i.Stop()
+		return err
+	}
 	<-i.rootContext.Done()
+	return nil
 }
 
 func (i *Instance) startEtcd(ctx context.Context) bool {
@@ -131,7 +135,7 @@ func (i *Instance) getRoles(ctx context.Context) []string {
 	return strings.Split(roles, ";")
 }
 
-func (i *Instance) bootstrap(ctx context.Context) {
+func (i *Instance) bootstrap(ctx context.Context) error {
 	i.log.Debug("bootstrapping instance")
 	i.keepAliveInstanceInfo(ctx)
 	i.setupInstanceAPI()
@@ -167,7 +171,9 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		types.EventTopicInstanceBootstrapped,
 		roles.NewEvent(i.rootContext, map[string]interface{}{}),
 	)
-	i.checkFirstStart(ctx)
+	if err := i.checkFirstStart(ctx); err != nil {
+		return fmt.Errorf("failed to initialize cluster configuration: %w", err)
+	}
 	wg := sync.WaitGroup{}
 	for roleId := range i.roles {
 		wg.Add(1)
@@ -180,6 +186,7 @@ func (i *Instance) bootstrap(ctx context.Context) {
 		i.DispatchEvent(types.EventTopicRolesStarted, roles.NewEvent(ctx, map[string]interface{}{}))
 		sentry.TransactionFromContext(ctx).Finish()
 	}()
+	return nil
 }
 
 func (i *Instance) eventRoleRestart(ev *roles.Event) {
@@ -194,48 +201,32 @@ func (i *Instance) eventRoleRestart(ev *roles.Event) {
 	i.startRole(tx.Context(), id, config)
 }
 
-func (i *Instance) checkFirstStart(ctx context.Context) {
+func (i *Instance) checkFirstStart(ctx context.Context) error {
+	if i.instanceSession == nil {
+		return errors.New("etcd session unavailable")
+	}
 	inst := i.ForRole("root", ctx)
-	cluster, err := inst.KV().Get(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyCluster,
-		).String(),
-	)
+	lock := concurrency.NewMutex(i.instanceSession, inst.KV().Key(types.KeyRole, types.KeyCluster, "startup").String())
+	if err := lock.Lock(ctx); err != nil {
+		return err
+	}
+	defer func() { _ = lock.Unlock(ctx) }()
+
+	key := inst.KV().Key(types.KeyRole, types.KeyCluster).String()
+	cluster, err := inst.KV().Get(ctx, key)
 	if err != nil {
-		return
+		return err
 	}
 	if len(cluster.Kvs) > 0 {
-		return
+		return nil
 	}
 	i.log.Info("Initial startup")
-	i.autoImportConfig()
-	inst.DispatchEvent(
-		types.EventTopicInstanceFirstStart,
-		roles.NewEvent(ctx, map[string]interface{}{}),
-	)
-
-	clusterJson, err := json.Marshal(&ClusterInfo{
-		Setup: true,
-	})
-	if err != nil {
-		i.log.Warn("failed to marshall cluster info", zap.Error(err))
-		return
+	inst.DispatchEvent(types.EventTopicInstanceFirstStart, roles.NewEvent(ctx, map[string]interface{}{}))
+	if err := i.autoImportConfig(ctx); err != nil {
+		return err
 	}
-
-	_, err = inst.KV().Put(
-		ctx,
-		inst.KV().Key(
-			types.KeyRole,
-			types.KeyCluster,
-		).String(),
-		string(clusterJson),
-	)
-	if err != nil {
-		i.log.Warn("failed to put cluster info", zap.Error(err))
-		return
-	}
+	_, err = inst.KV().PutObj(ctx, key, &ClusterInfo{Setup: true})
+	return err
 }
 
 func (i *Instance) startWatchRole(ctx context.Context, id string, startCallback func()) {

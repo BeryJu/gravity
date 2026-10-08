@@ -12,7 +12,7 @@ import (
 var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Run Gravity server",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		inst := instance.New()
 
 		sigs := make(chan os.Signal, 1)
@@ -21,7 +21,7 @@ var serverCmd = &cobra.Command{
 			<-sigs
 			inst.Stop()
 		}()
-		inst.Start()
+		return inst.Start()
 	},
 }
 
