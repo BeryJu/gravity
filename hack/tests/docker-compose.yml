@@ -54,7 +54,7 @@ services:
       - source: nginx
         target: /usr/share/nginx/html/blocky_file.txt
   dex:
-    image: ghcr.io/dexidp/dex:v2.45.1
+    image: ghcr.io/dexidp/dex:v2.46.0
     ports:
       - 5556:5556
     networks:
