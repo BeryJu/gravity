@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 
@@ -20,10 +21,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
-)
-
-const (
-	ProviderSpecificUid = "gravity_uid"
 )
 
 type Server struct {
@@ -135,35 +132,49 @@ func (s *Server) Negotiate(ctx context.Context) (externaldnsapi.ImplResponse, er
 
 func (s *Server) GetRecords(ctx context.Context) (externaldnsapi.ImplResponse, error) {
 	endpoints := []externaldnsapi.Endpoint{}
+	grouped := map[[2]string]int{}
 	for _, zone := range s.zones {
 		records, hr, err := s.api.RolesDnsAPI.DnsGetRecords(ctx).Zone(zone.Name).Execute()
 		if err != nil {
 			return s.errorResponse(s.apiError(hr, err))
 		}
 		for _, record := range records.Records {
+			if record.Type == "CNAME" || record.Type == "PTR" {
+				record.Data = strings.TrimSuffix(record.Data, types.DNSSep)
+			}
 			ttl := record.Ttl
 			if ttl < 1 {
 				ttl = int64(zone.DefaultTTL)
 			}
+			name := strings.TrimSuffix(record.Fqdn, types.DNSSep)
+			key := [2]string{name, string(record.Type)}
+			// The TXT registry reads each ownership record separately.
+			if record.Type != "TXT" {
+				if index, ok := grouped[key]; ok {
+					endpoint := &endpoints[index]
+					endpoint.Targets = append(endpoint.Targets, record.Data)
+					endpoint.RecordTTL = min(endpoint.RecordTTL, ttl)
+					continue
+				}
+				grouped[key] = len(endpoints)
+			}
 			endpoints = append(endpoints, externaldnsapi.Endpoint{
-				DnsName:    strings.TrimSuffix(record.Fqdn, types.DNSSep),
+				DnsName:    name,
 				Targets:    []string{record.Data},
 				RecordType: string(record.Type),
 				RecordTTL:  ttl,
-				ProviderSpecific: []externaldnsapi.ProviderSpecificProperty{
-					{
-						Name:  ProviderSpecificUid,
-						Value: record.Uid,
-					},
-				},
 			})
 		}
+	}
+	for index := range endpoints {
+		slices.Sort(endpoints[index].Targets)
+		endpoints[index].Targets = slices.Compact(endpoints[index].Targets)
 	}
 	return externaldnsapi.Response(http.StatusOK, endpoints), nil
 }
 
 func (s *Server) SetRecords(ctx context.Context, changes externaldnsapi.Changes) (externaldnsapi.ImplResponse, error) {
-	for _, endpoint := range changes.Delete {
+	for _, endpoint := range append(changes.Delete, changes.UpdateOld...) {
 		if err := s.endpointToDelete(ctx, endpoint); err != nil {
 			return s.errorResponse(err)
 		}
@@ -193,7 +204,16 @@ func (s *Server) endpointToDelete(ctx context.Context, endpoint externaldnsapi.E
 	if zone == nil {
 		return fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
 	}
-	for _, target := range endpoint.Targets {
+	targets := endpoint.Targets
+	if endpoint.RecordType == "CNAME" || endpoint.RecordType == "PTR" {
+		targets = nil
+		for _, target := range endpoint.Targets {
+			target = strings.TrimSuffix(target, types.DNSSep)
+			// Also remove IDs written with a trailing dot by older versions.
+			targets = append(targets, target, target+types.DNSSep)
+		}
+	}
+	for _, target := range targets {
 		hr, err := s.api.RolesDnsAPI.
 			DnsDeleteRecords(ctx).
 			Zone(zone.Name).
@@ -214,6 +234,9 @@ func (s *Server) endpointToWrite(ctx context.Context, endpoint externaldnsapi.En
 		return nil, fmt.Errorf("zone not found for record: %s", endpoint.DnsName)
 	}
 	for _, target := range endpoint.Targets {
+		if endpoint.RecordType == "CNAME" || endpoint.RecordType == "PTR" {
+			target = strings.TrimSuffix(target, types.DNSSep)
+		}
 		hr, err := s.api.RolesDnsAPI.
 			DnsPutRecords(ctx).
 			Zone(zone.Name).
