@@ -39,7 +39,9 @@ func GenerateSchema(ctx context.Context, format string, callback func(schema []b
 		}
 		callback(out)
 	})
-	rootInst.Start()
+	if err := rootInst.Start(); err != nil {
+		rootInst.Log().Warn("failed to start schema generator", zap.Error(err))
+	}
 }
 
 // generateSchemaCmd represents the generateSchema command

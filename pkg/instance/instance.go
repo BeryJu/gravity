@@ -87,6 +87,9 @@ func (i *Instance) Start() error {
 		}
 	}
 	if err := i.bootstrap(bs.Context()); err != nil {
+		if i.rootContext.Err() != nil {
+			return nil
+		}
 		i.Stop()
 		return err
 	}
