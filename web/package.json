@@ -41,7 +41,7 @@
         "lit": "^3.3.3",
         "oxfmt": "^0.72.0",
         "oxlint": "^1.87.0",
-        "rapidoc": "^9.3.8",
+        "rapidoc": "^10.1.0",
         "rollup": "^4.64.0",
         "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-cssimport": "^1.0.3",
