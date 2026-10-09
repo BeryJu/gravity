@@ -29,7 +29,7 @@ func TestStart(t *testing.T) {
 
 		called = true
 	})
-	rootInst.Start()
+	assert.NoError(t, rootInst.Start())
 	assert.True(t, called)
 }
 
@@ -44,7 +44,7 @@ func TestFirstStart(t *testing.T) {
 
 		called = true
 	})
-	rootInst.Start()
+	assert.NoError(t, rootInst.Start())
 	assert.True(t, called)
 }
 
@@ -102,6 +102,6 @@ func TestWatch(t *testing.T) {
 		}),
 	))
 
-	rootInst.Start()
+	assert.NoError(t, rootInst.Start())
 	assert.Equal(t, 2, called)
 }
