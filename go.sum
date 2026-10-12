@@ -537,8 +537,8 @@ github.com/jstemmer/go-junit-report/v2 v2.1.0/go.mod h1:mgHVr7VUo5Tn8OLVr1cKnLuE
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/k8s-gateway/k8s_gateway v1.9.1 h1:4JGRicGjiphRo17r9Pk+wWJBaYa3ZGaPdmwOg1AlGPc=
-github.com/k8s-gateway/k8s_gateway v1.9.1/go.mod h1:J+UnViLD7NFyQut6441E9OWJLTF/v1NnF0OWe2C2Urg=
+github.com/k8s-gateway/k8s_gateway v1.9.2 h1:7s8WqH/U2msongd44AwfaEYE/mFmCCNbgW6JtMQBbQc=
+github.com/k8s-gateway/k8s_gateway v1.9.2/go.mod h1:aMB2WBqJi04fVjG5OOL/MYxSyl01m6PMC8k1K5kQCUw=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.20.1 h1:T7kKElXUMXrUJ2E9QhQhxFtcK5rPyLdsGZvdbLMPdiQ=
@@ -1269,8 +1269,8 @@ sigs.k8s.io/controller-runtime v0.24.1 h1:miPEwrmirImAvgME1L9qebGHrOnGJoVmVdtOU9
 sigs.k8s.io/controller-runtime v0.24.1/go.mod h1:vFkfY5fGt5xAC/sKb8IBFKgWPNKG9OUG29dR8Y2wImw=
 sigs.k8s.io/external-dns v0.22.0 h1:+ASJ3KF7DLqHo2LsG8Qinuh2J389MS86I19i/r8ewUc=
 sigs.k8s.io/external-dns v0.22.0/go.mod h1:5Kj6tZDGAyyxQNqFAqR5k0HY4Y5y3V3fiB63pfm9ejk=
-sigs.k8s.io/gateway-api v1.6.2 h1:vh5YzKlbdBivEaLX61+APKLGRq4tZ7Fj4XfGkv08xB4=
-sigs.k8s.io/gateway-api v1.6.2/go.mod h1:FVfx3t389ybeXOqvDghLbdvJdSCfI/PReqCUI3lu3mY=
+sigs.k8s.io/gateway-api v1.6.3 h1:lKpJa5bGlraC/QeACvCpsHLdmO6y0iKfzVl6gzaFEYc=
+sigs.k8s.io/gateway-api v1.6.3/go.mod h1:FVfx3t389ybeXOqvDghLbdvJdSCfI/PReqCUI3lu3mY=
 sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 h1:IpInykpT6ceI+QxKBbEflcR5EXP7sU1kvOlxwZh5txg=
 sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730/go.mod h1:mdzfpAEoE6DHQEN0uh9ZbOCuHbLK5wOm7dK4ctXE9Tg=
 sigs.k8s.io/mcs-api v0.5.2 h1:N+vrRiCIb0WJ0dxbBo7VfNv2WJigOHEo4gsLXpffVs8=
