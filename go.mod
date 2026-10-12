@@ -26,7 +26,7 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/grafana/pyroscope-go v1.4.3
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
-	github.com/k8s-gateway/k8s_gateway v1.9.1
+	github.com/k8s-gateway/k8s_gateway v1.9.2
 	github.com/miekg/dns v1.1.73
 	github.com/minio/minio-go/v7 v7.3.0
 	github.com/moby/moby/api v1.56.1
@@ -370,7 +370,7 @@ require (
 	mvdan.cc/gofumpt v0.9.2 // indirect
 	sigs.k8s.io/controller-runtime v0.24.1 // indirect
 	sigs.k8s.io/external-dns v0.22.0 // indirect
-	sigs.k8s.io/gateway-api v1.6.2 // indirect
+	sigs.k8s.io/gateway-api v1.6.3 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/mcs-api v0.5.2 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
