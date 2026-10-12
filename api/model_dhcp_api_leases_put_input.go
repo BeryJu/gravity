@@ -27,6 +27,7 @@ type DhcpAPILeasesPutInput struct {
 	DnsZone          *string `json:"dnsZone,omitempty"`
 	Expiry           *int64  `json:"expiry,omitempty"`
 	Hostname         string  `json:"hostname"`
+	Reservation      *bool   `json:"reservation,omitempty"`
 }
 
 type _DhcpAPILeasesPutInput DhcpAPILeasesPutInput
@@ -219,6 +220,38 @@ func (o *DhcpAPILeasesPutInput) SetHostname(v string) {
 	o.Hostname = v
 }
 
+// GetReservation returns the Reservation field value if set, zero value otherwise.
+func (o *DhcpAPILeasesPutInput) GetReservation() bool {
+	if o == nil || IsNil(o.Reservation) {
+		var ret bool
+		return ret
+	}
+	return *o.Reservation
+}
+
+// GetReservationOk returns a tuple with the Reservation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DhcpAPILeasesPutInput) GetReservationOk() (*bool, bool) {
+	if o == nil || IsNil(o.Reservation) {
+		return nil, false
+	}
+	return o.Reservation, true
+}
+
+// HasReservation returns a boolean if a field has been set.
+func (o *DhcpAPILeasesPutInput) HasReservation() bool {
+	if o != nil && !IsNil(o.Reservation) {
+		return true
+	}
+
+	return false
+}
+
+// SetReservation gets a reference to the given bool and assigns it to the Reservation field.
+func (o *DhcpAPILeasesPutInput) SetReservation(v bool) {
+	o.Reservation = &v
+}
+
 func (o DhcpAPILeasesPutInput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -241,6 +274,9 @@ func (o DhcpAPILeasesPutInput) ToMap() (map[string]interface{}, error) {
 		toSerialize["expiry"] = o.Expiry
 	}
 	toSerialize["hostname"] = o.Hostname
+	if !IsNil(o.Reservation) {
+		toSerialize["reservation"] = o.Reservation
+	}
 	return toSerialize, nil
 }
 
