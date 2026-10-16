@@ -28,7 +28,7 @@ require (
 	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
 	github.com/k8s-gateway/k8s_gateway v1.9.2
 	github.com/miekg/dns v1.1.73
-	github.com/minio/minio-go/v7 v7.3.0
+	github.com/minio/minio-go/v7 v7.4.1
 	github.com/moby/moby/api v1.56.1
 	github.com/netdata/go.d.plugin v0.58.1
 	github.com/pin/tftp/v3 v3.2.0
@@ -234,8 +234,8 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
 	github.com/magiconair/properties v1.8.10 // indirect
 	github.com/mattn/go-colorable v0.1.15 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.23 // indirect
+	github.com/mattn/go-isatty v0.0.22 // indirect
+	github.com/mattn/go-runewidth v0.0.24 // indirect
 	github.com/mdlayher/socket v0.6.0 // indirect
 	github.com/mdlayher/vsock v1.3.0 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
@@ -367,7 +367,7 @@ require (
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
 	modernc.org/sqlite v1.23.1 // indirect
-	mvdan.cc/gofumpt v0.9.2 // indirect
+	mvdan.cc/gofumpt v0.12.0 // indirect
 	sigs.k8s.io/controller-runtime v0.24.1 // indirect
 	sigs.k8s.io/external-dns v0.22.0 // indirect
 	sigs.k8s.io/gateway-api v1.6.3 // indirect
