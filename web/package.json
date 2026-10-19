@@ -20,7 +20,7 @@
         "@fsegurai/codemirror-theme-vscode-light": "^6.2.8",
         "@goauthentik/oxfmt-config": "^9.1.0",
         "@goauthentik/oxlint-config": "^1.0.1",
-        "@patternfly/patternfly": "^4.224.2",
+        "@patternfly/patternfly": "^6.7.0",
         "@rollup/plugin-commonjs": "^29.0.3",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.3",
