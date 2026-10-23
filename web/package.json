@@ -40,7 +40,7 @@
         "ip-num": "^1.6.2",
         "lit": "^3.3.3",
         "oxfmt": "^0.73.0",
-        "oxlint": "^1.88.0",
+        "oxlint": "^1.89.0",
         "rapidoc": "^9.3.8",
         "rollup": "^4.64.10",
         "rollup-plugin-copy": "^3.5.0",
