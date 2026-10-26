@@ -32,7 +32,7 @@ services:
     command: server -dir=/data -s3 -s3.config=/etc/seaweedfs/s3.json
   coredns:
     hostname: coredns.t.gravity.beryju.io
-    image: docker.io/coredns/coredns:1.14.7
+    image: docker.io/coredns/coredns:1.15.0
     ports:
       - "1053:53"
       - "1053:53/udp"
