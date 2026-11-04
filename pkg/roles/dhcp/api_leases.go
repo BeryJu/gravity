@@ -2,6 +2,7 @@ package dhcp
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"beryju.io/gravity/pkg/roles/dhcp/types"
@@ -52,12 +53,7 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 		leaseKey := r.i.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,
-		)
-		if input.Identifier == "" {
-			leaseKey = leaseKey.Prefix(true)
-		} else {
-			leaseKey = leaseKey.Add(input.Identifier)
-		}
+		).Prefix(true)
 		rawLeases, err := r.i.KV().Get(ctx, leaseKey.String(), clientv3.WithPrefix())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
@@ -69,6 +65,9 @@ func (r *Role) APILeasesGet() usecase.Interactor {
 				continue
 			}
 			if l.ScopeKey != input.ScopeName {
+				continue
+			}
+			if input.Identifier != "" && l.Identifier != input.Identifier {
 				continue
 			}
 			al := &APILease{
@@ -147,6 +146,13 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 			r.log.Warn("failed to put lease", zap.Error(err))
 			return status.Wrap(err, status.Internal)
 		}
+		if l.IsReservation() {
+			err = r.deleteDynamicLeaseForScope(ctx, input.Scope, input.Identifier)
+			if err != nil {
+				r.log.Warn("failed to delete replaced dynamic lease", zap.Error(err))
+				return status.Wrap(err, status.Internal)
+			}
+		}
 		return nil
 	})
 	u.SetName("dhcp.put_leases")
@@ -156,6 +162,26 @@ func (r *Role) APILeasesPut() usecase.Interactor {
 	return u
 }
 
+// deleteDynamicLeaseForScope removes the identifier-only dynamic lease replaced
+// by a reservation. Dynamic leases predate scope-qualified reservations, so only
+// delete it when it belongs to the reservation's scope.
+func (r *Role) deleteDynamicLeaseForScope(ctx context.Context, scope, identifier string) error {
+	key := r.leaseKey(identifier)
+	rawLease, err := r.i.KV().Get(ctx, key.String())
+	if err != nil || len(rawLease.Kvs) == 0 {
+		return err
+	}
+	lease := &Lease{}
+	if err := json.Unmarshal(rawLease.Kvs[0].Value, lease); err != nil {
+		return err
+	}
+	if lease.IsReservation() || lease.ScopeKey != scope {
+		return nil
+	}
+	_, err = r.i.KV().Delete(ctx, key.String())
+	return err
+}
+
 type APILeasesWOLInput struct {
 	Identifier string `query:"identifier" required:"true"`
 	Scope      string `query:"scope" required:"true"`
@@ -163,8 +189,11 @@ type APILeasesWOLInput struct {
 
 func (r *Role) APILeasesWOL() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesWOLInput, output *struct{}) error {
-		l, ok := r.leases.GetPrefix(input.Identifier)
+		l, ok := r.leases.GetPrefix(types.KeyReservations, input.Scope, input.Identifier)
 		if !ok {
+			l, ok = r.leases.GetPrefix(input.Identifier)
+		}
+		if !ok || l.ScopeKey != input.Scope {
 			return status.InvalidArgument
 		}
 		err := l.sendWOL()
@@ -187,15 +216,27 @@ type APILeasesDeleteInput struct {
 
 func (r *Role) APILeasesDelete() usecase.Interactor {
 	u := usecase.NewInteractor(func(ctx context.Context, input APILeasesDeleteInput, output *struct{}) error {
-		key := r.i.KV().Key(
-			types.KeyRole,
-			types.KeyLeases,
-			input.Identifier,
-		)
-		_, err := r.i.KV().Delete(
-			ctx,
-			key.String(),
-		)
+		_, err := r.i.KV().Delete(ctx, r.reservationKey(input.Scope, input.Identifier).String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		key := r.leaseKey(input.Identifier)
+		rawLease, err := r.i.KV().Get(ctx, key.String())
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if len(rawLease.Kvs) == 0 {
+			return nil
+		}
+		lease := &Lease{}
+		err = json.Unmarshal(rawLease.Kvs[0].Value, lease)
+		if err != nil {
+			return status.Wrap(err, status.Internal)
+		}
+		if lease.ScopeKey != input.Scope {
+			return nil
+		}
+		_, err = r.i.KV().Delete(ctx, key.String())
 		if err != nil {
 			return status.Wrap(err, status.Internal)
 		}

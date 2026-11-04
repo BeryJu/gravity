@@ -77,7 +77,7 @@ func New(instance roles.Instance) *Role {
 		r.i.KV().Key(
 			types.KeyRole,
 			types.KeyLeases,
-		).Prefix(true), watcher.WithAfterInitialLoad[*Lease](func() {
+		).Prefix(true), watcher.WithPrefix[*Lease](), watcher.WithAfterInitialLoad[*Lease](func() {
 			// Re-calculate scope usage after all leases are loaded
 			for _, s := range r.scopes.Iter() {
 				s.calculateUsage()
