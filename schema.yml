@@ -2062,6 +2062,8 @@ components:
           type: string
         info:
           $ref: '#/components/schemas/DhcpAPILeaseInfo'
+        reservation:
+          type: boolean
         scopeKey:
           type: string
       required:
@@ -2070,6 +2072,7 @@ components:
       - hostname
       - addressLeaseTime
       - scopeKey
+      - reservation
       - description
       type: object
     DhcpAPILeaseInfo:
@@ -2106,6 +2109,8 @@ components:
         hostname:
           maxLength: 255
           type: string
+        reservation:
+          type: boolean
       required:
       - address
       - hostname
