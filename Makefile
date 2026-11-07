@@ -172,9 +172,15 @@ gen-client-ts:
 
 gen-client-ts-publish: gen-client-ts
 	cd ${PWD}/${GEN_API_TS}
-	npm publish
+	npm view gravity-api@${VERSION} version >/dev/null 2>&1 || npm publish
 	@echo "Waiting for NPM package to become available"
-	sleep 30
+	for attempt in {1..30}; do
+		if npm view gravity-api@${VERSION} version >/dev/null 2>&1; then
+			break
+		fi
+		sleep 10
+	done
+	npm view gravity-api@${VERSION} version >/dev/null
 	cd ${PWD}/web
 	npm i gravity-api@${VERSION}
 	npm version ${VERSION} || true
