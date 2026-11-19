@@ -108,6 +108,8 @@ jobs:
       - run: make bench
       - if: ${{ always() }}
         run: make test-env-stop
+      - name: Discard generated external-dns README changes
+        run: git checkout -- pkg/externaldns/generated/README.md
       - uses: benchmark-action/github-action-benchmark@4322e5726e6334590d251fc4f92bec0efafc45dc # v1
         with:
           name: Gravity Benchmark
