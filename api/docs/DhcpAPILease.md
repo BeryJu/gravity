@@ -12,13 +12,14 @@ Name | Type | Description | Notes
 **Hostname** | **string** |  | 
 **Identifier** | **string** |  | 
 **Info** | Pointer to [**DhcpAPILeaseInfo**](DhcpAPILeaseInfo.md) |  | [optional] 
+**Reservation** | **bool** |  | 
 **ScopeKey** | **string** |  | 
 
 ## Methods
 
 ### NewDhcpAPILease
 
-`func NewDhcpAPILease(address string, addressLeaseTime string, description string, hostname string, identifier string, scopeKey string, ) *DhcpAPILease`
+`func NewDhcpAPILease(address string, addressLeaseTime string, description string, hostname string, identifier string, reservation bool, scopeKey string, ) *DhcpAPILease`
 
 NewDhcpAPILease instantiates a new DhcpAPILease object
 This constructor will assign default values to properties that have it defined,
@@ -207,6 +208,26 @@ SetInfo sets Info field to given value.
 `func (o *DhcpAPILease) HasInfo() bool`
 
 HasInfo returns a boolean if a field has been set.
+
+### GetReservation
+
+`func (o *DhcpAPILease) GetReservation() bool`
+
+GetReservation returns the Reservation field if non-nil, zero value otherwise.
+
+### GetReservationOk
+
+`func (o *DhcpAPILease) GetReservationOk() (*bool, bool)`
+
+GetReservationOk returns a tuple with the Reservation field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetReservation
+
+`func (o *DhcpAPILease) SetReservation(v bool)`
+
+SetReservation sets Reservation field to given value.
+
 
 ### GetScopeKey
 

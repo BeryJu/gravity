@@ -146,9 +146,9 @@ func (c *Converter) convertReservation(scope string, ctx context.Context, r Rese
 		return fmt.Errorf("failed to parse IP")
 	}
 	lease := api.DhcpAPILeasesPutInput{
-		Address:  r.IPAddress,
-		Hostname: r.Name,
-		Expiry:   api.PtrInt64(-1),
+		Address:     r.IPAddress,
+		Hostname:    r.Name,
+		Reservation: api.PtrBool(true),
 	}
 	_, err := c.a.RolesDhcpAPI.DhcpPutLeases(ctx).Scope(scope).Identifier(c.getIdentifier(r.ClientId)).DhcpAPILeasesPutInput(lease).Execute()
 	return err

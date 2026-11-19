@@ -35,8 +35,14 @@ type Lease struct {
 	AddressLeaseTime string `json:"addressLeaseTime,omitempty"`
 	ScopeKey         string `json:"scopeKey"`
 	DNSZone          string `json:"dnsZone,omitempty"`
-	// Set to -1 for a reservation
-	Expiry      int64  `json:"expiry"`
+	// Expiry always tracks the actual DHCP lease time handed out to the client,
+	// regardless of Reservation. For reservations this is purely informational:
+	// it does not cause the underlying etcd record to expire.
+	Expiry int64 `json:"expiry"`
+	// Reservation marks this lease as a static reservation, whose etcd record
+	// never expires. Legacy records predating this field used Expiry == -1 to
+	// mean the same thing; leaseFromKV migrates those on read.
+	Reservation bool   `json:"reservation,omitempty"`
 	Description string `json:"description"`
 
 	etcdKey string
@@ -131,6 +137,10 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 		return l, err
 	}
 	l.etcdKey = string(raw.Key)
+	if l.Expiry == -1 {
+		// Migrate legacy reservations that predate the Reservation field
+		l.Reservation = true
+	}
 
 	scope, ok := r.scopes.GetPrefix(l.ScopeKey)
 	if !ok {
@@ -141,7 +151,7 @@ func (r *Role) leaseFromKV(raw *mvccpb.KeyValue) (*Lease, error) {
 }
 
 func (l *Lease) IsReservation() bool {
-	return l.Expiry == -1
+	return l.Reservation
 }
 
 func (l *Lease) Delete(ctx context.Context) error {
@@ -158,14 +168,16 @@ func (l *Lease) Delete(ctx context.Context) error {
 }
 
 func (l *Lease) Put(ctx context.Context, expiry int64, opts ...clientv3.OpOption) error {
-	if expiry > 0 && !l.IsReservation() {
+	if expiry > 0 {
 		l.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
-		exp, err := l.inst.KV().Grant(ctx, expiry)
-		if err != nil {
-			return err
+		if !l.IsReservation() {
+			exp, err := l.inst.KV().Grant(ctx, expiry)
+			if err != nil {
+				return err
+			}
+			opts = append(opts, clientv3.WithLease(exp.ID))
 		}
-		opts = append(opts, clientv3.WithLease(exp.ID))
 	}
 
 	raw, err := json.Marshal(l)
@@ -196,14 +208,16 @@ func (r *Role) CreateLeaseIfAbsent(ctx context.Context, lease *Lease, expiry int
 	opts := []clientv3.OpOption{}
 	var leaseGrant *clientv3.LeaseGrantResponse
 	var err error
-	if expiry > 0 && !lease.IsReservation() {
+	if expiry > 0 {
 		lease.Expiry = time.Now().Add(time.Duration(expiry) * time.Second).Unix()
 
-		leaseGrant, err = lease.inst.KV().Grant(ctx, expiry)
-		if err != nil {
-			return nil, false, err
+		if !lease.IsReservation() {
+			leaseGrant, err = lease.inst.KV().Grant(ctx, expiry)
+			if err != nil {
+				return nil, false, err
+			}
+			opts = append(opts, clientv3.WithLease(leaseGrant.ID))
 		}
-		opts = append(opts, clientv3.WithLease(leaseGrant.ID))
 	}
 
 	raw, err := json.Marshal(lease)
