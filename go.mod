@@ -46,11 +46,11 @@ require (
 	github.com/swaggest/rest v0.2.76
 	github.com/swaggest/usecase v1.3.1
 	github.com/testcontainers/testcontainers-go v0.45.0
-	go.etcd.io/etcd/api/v3 v3.7.3
-	go.etcd.io/etcd/client/v3 v3.7.3
-	go.etcd.io/etcd/etcdctl/v3 v3.7.3
-	go.etcd.io/etcd/etcdutl/v3 v3.7.3
-	go.etcd.io/etcd/server/v3 v3.7.3
+	go.etcd.io/etcd/api/v3 v3.7.4
+	go.etcd.io/etcd/client/v3 v3.7.4
+	go.etcd.io/etcd/etcdctl/v3 v3.7.4
+	go.etcd.io/etcd/etcdutl/v3 v3.7.4
+	go.etcd.io/etcd/server/v3 v3.7.4
 	go.uber.org/zap v1.28.0
 	golang.org/x/crypto v0.59.0
 	golang.org/x/exp v0.0.0-20260529124908-c761662dc8c9
@@ -305,8 +305,8 @@ require (
 	github.com/zeebo/blake3 v0.2.4 // indirect
 	github.com/zeebo/xxh3 v1.1.0 // indirect
 	go.etcd.io/bbolt v1.5.0 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.7.3 // indirect
-	go.etcd.io/etcd/pkg/v3 v3.7.3 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.7.4 // indirect
+	go.etcd.io/etcd/pkg/v3 v3.7.4 // indirect
 	go.etcd.io/raft/v3 v3.7.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/collector/component v1.61.0 // indirect
